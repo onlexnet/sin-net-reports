@@ -1,0 +1,11 @@
+package net.siudek;
+
+import lombok.Value;
+
+/**
+ * Name of en Entity allows to recognize the entity
+ */
+@Value(staticConstructor = "of")
+public class Name {
+    private String value;
+}
