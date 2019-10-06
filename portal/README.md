@@ -2,6 +2,12 @@
 
 to collect timesheets and produce PDF attachments for invoices sent to client.
 
+[![Known Vulnerabilities](https://snyk.io/test/github/{username}/{repo}/badge.svg)](https://snyk.io/test/github/{username}/{repo})
+
+### Quick start
+- **npm start**
+- open *http://localhost:3000*
+
 ### technical notes
 
 Interesting links
