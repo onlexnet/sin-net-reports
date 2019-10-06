@@ -11,5 +11,14 @@
 
     <artifactId>psa-domain</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.axonframework</groupId>
+            <artifactId>axon-core</artifactId>
+            <version>4.0-M2</version>
+        </dependency>
+
+    </dependencies>
+
 
 </project>
