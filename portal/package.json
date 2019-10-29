@@ -16,14 +16,17 @@
     "react-dom": "^16.8.6",
     "react-router-dom": "^5.0.1",
     "react-scripts": "3.0.1",
-    "typescript": "3.5.2"
+    "typescript": "3.5.2",
+    "snyk": "^1.219.0"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "schema-gen": "graphql-codegen --config ./src/generate-config.yml"
+    "schema-gen": "graphql-codegen --config ./src/generate-config.yml",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -52,5 +55,6 @@
     "apollo": "^2.14.1",
     "graphql-tools": "^4.0.5",
     "react-test-renderer": "^16.8.6"
-  }
+  },
+  "snyk": true
 }
