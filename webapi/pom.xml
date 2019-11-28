@@ -90,7 +90,7 @@
       <dependency>
         <groupId>org.springframework.cloud</groupId>
         <artifactId>spring-cloud-stream-test-support</artifactId>
-        <version>${spring.cloud.version}</version>
+        <version>3.0.0.RELEASE</version>
         <scope>test</scope>
     </dependency>
 
