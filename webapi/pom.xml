@@ -16,9 +16,12 @@
   <properties>
     <axon.version>4.2.1</axon.version>
     <junit.version>5.6.0-M1</junit.version>
+    <spring.boot.version>2.2.1.RELEASE</spring.boot.version>
+    <spring.cloud.version>2.2.0.RELEASE</spring.cloud.version>
   </properties>
 
   <dependencies>
+
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
@@ -65,6 +68,31 @@
         <artifactId>axon-modelling</artifactId>
         <version>${axon.version}</version>
       </dependency>
+
+
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter</artifactId>
+        <version>${spring.boot.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-test</artifactId>
+        <version>${spring.boot.version}</version>
+        <scope>test</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-bus</artifactId>
+        <version>${spring.cloud.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-stream-test-support</artifactId>
+        <version>${spring.cloud.version}</version>
+        <scope>test</scope>
+    </dependency>
 
     </dependencies>
   </dependencyManagement>
