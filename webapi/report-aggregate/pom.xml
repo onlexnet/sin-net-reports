@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <artifactId>sinnet</artifactId>
+    <groupId>net.siudek</groupId>
+    <version>1.0-SNAPSHOT</version>
+  </parent>
+
+  <groupId>net.siudek</groupId>
+  <artifactId>report-aggregate</artifactId>
+  <version>0.0.0</version>
+
+  <name>report-aggregate</name>
+
+  <properties>
+    <sonar.projectKey>sinnet-reports</sonar.projectKey>
+    <sonar.organization>sin-net-pl</sonar.organization>
+    <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+    <sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/site/jacoco-aggregate/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+    <sonar.login>afdb40925880ed6c936de768d5208ee50b6d7060</sonar.login>
+  </properties>
+
+
+  <dependencies>
+    <dependency>
+      <groupId>net.siudek</groupId>
+      <artifactId>bus-models</artifactId>
+      <version>1.0-SNAPSHOT</version>
+      <scope>compile</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>net.siudek</groupId>
+      <artifactId>domain</artifactId>
+      <version>1.0-SNAPSHOT</version>
+      <scope>compile</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <version>${jacoco.version}</version>
+        <executions>
+          <execution>
+            <id>report-aggregate</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>report-aggregate</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>

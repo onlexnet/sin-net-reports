@@ -20,9 +20,9 @@
     <dependencies>
         <dependency>
             <groupId>net.siudek</groupId>
-            <artifactId>iomodels</artifactId>
+            <artifactId>bus-models</artifactId>
             <version>1.0-SNAPSHOT</version>
-            <scope></scope>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.axonframework</groupId>
@@ -58,34 +58,4 @@
 
     </dependencies>
 
-    <profiles>
-        <profile>
-            <id>coverage</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.jacoco</groupId>
-                        <artifactId>jacoco-maven-plugin</artifactId>
-                        <version>0.8.5</version>
-
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>prepare-agent</goal>
-                                </goals>
-                            </execution>
-
-                            <execution>
-                                <id>report</id>
-                                <phase>prepare-package</phase>
-                                <goals>
-                                    <goal>report</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 </project>

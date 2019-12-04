@@ -8,10 +8,10 @@
   </parent>
 
   <groupId>net.siudek</groupId>
-  <artifactId>iomodels</artifactId>
+  <artifactId>bus-models</artifactId>
   <version>1.0-SNAPSHOT</version>
 
-  <name>sinnet-iomodels</name>
+  <name>sinnet-busmodels</name>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
