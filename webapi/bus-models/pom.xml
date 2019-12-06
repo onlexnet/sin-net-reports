@@ -19,10 +19,4 @@
     <sonar.projectKey>sinnet-reports-bus-models</sonar.projectKey>
   </properties>
 
-  <dependencies>
-    <dependency>
-      <groupId>org.springframework.cloud</groupId>
-      <artifactId>spring-cloud-bus</artifactId>
-    </dependency>
-  </dependencies>
 </project>
