@@ -1,4 +1,7 @@
-# sin-net-reports
+# SinNet Reports
+
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=net.siudek%3Asinnet&metric=alert_status)](https://sonarcloud.io/dashboard?id=net.siudek%3Asinnet)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=net.siudek%3Asinnet&metric=coverage)](https://sonarcloud.io/dashboard?id=net.siudek%3Asinnet)
 
 Small project created for [Sin.Net](http://www.sin.net.pl/)
 
