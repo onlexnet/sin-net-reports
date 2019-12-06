@@ -7,3 +7,4 @@
 - **[mvn project-info-reports:licenses]
 
 <https://www.freecodecamp.org/news/cjn-junit-test-with-maven-in-vscode/>
+https://github.com/SonarSource/sonar-scanning-examples/blob/master/doc/jacoco.md

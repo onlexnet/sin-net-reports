@@ -14,11 +14,8 @@
   <name>report-aggregate</name>
 
   <properties>
-    <sonar.projectKey>sinnet-reports</sonar.projectKey>
-    <sonar.organization>sin-net-pl</sonar.organization>
-    <sonar.host.url>https://sonarcloud.io</sonar.host.url>
-    <sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/site/jacoco-aggregate/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
-    <sonar.login>afdb40925880ed6c936de768d5208ee50b6d7060</sonar.login>
+    <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/../${aggregate.report.dir}</sonar.coverage.jacoco.xmlReportPaths>
+    <sonar.projectKey>sinnet-reports-report-aggregate</sonar.projectKey>
   </properties>
 
 
@@ -43,12 +40,11 @@
         <artifactId>jacoco-maven-plugin</artifactId>
         <executions>
           <execution>
-            <id>report-aggregate</id>
-            <!-- <phase>verify</phase> -->
-            <phase>prepare-package</phase>
+            <id>report</id>
             <goals>
               <goal>report-aggregate</goal>
             </goals>
+            <phase>verify</phase>
           </execution>
         </executions>
       </plugin>

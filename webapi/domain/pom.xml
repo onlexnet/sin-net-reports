@@ -11,10 +11,8 @@
     <name>sinnet-domain</name>
 
     <properties>
-        <sonar.projectKey>sinnet-reports</sonar.projectKey>
-        <sonar.organization>sin-net-pl</sonar.organization>
-        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
-        <sonar.login>afdb40925880ed6c936de768d5208ee50b6d7060</sonar.login>
+        <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/../${aggregate.report.dir}</sonar.coverage.jacoco.xmlReportPaths>
+        <sonar.projectKey>sinnet-reports-domain</sonar.projectKey>
     </properties>
 
     <dependencies>
