@@ -14,7 +14,6 @@
   <name>sinnet-busmodels</name>
 
   <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/../${aggregate.report.dir}</sonar.coverage.jacoco.xmlReportPaths>
     <sonar.projectKey>sinnet-reports-bus-models</sonar.projectKey>
   </properties>
