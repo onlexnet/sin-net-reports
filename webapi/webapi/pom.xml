@@ -18,7 +18,6 @@
     <kotlin.version>1.3.10</kotlin.version>
 
     <sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/../report-aggregate/target/site/jacoco-aggregate/jacoco3.xml</sonar.coverage.jacoco.xmlReportPaths>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <sonar.projectKey>sinnet-reports-webapi</sonar.projectKey>
   </properties>
 
