@@ -78,6 +78,11 @@
         <artifactId>axon-modelling</artifactId>
         <version>${axon.version}</version>
       </dependency>
+      <dependency>
+        <groupId>org.axonframework</groupId>
+        <artifactId>axon-messaging</artifactId>
+        <version>${axon.version}</version>
+      </dependency>
 
 
       <dependency>
@@ -87,7 +92,7 @@
       </dependency>
       <dependency>
         <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-web</artifactId>
+        <artifactId>spring-boot-starter-webflux</artifactId>
         <version>${spring.boot.version}</version>
       </dependency>
       <dependency>
@@ -126,14 +131,17 @@
 
       <plugin>
         <artifactId>maven-failsafe-plugin</artifactId>
-        <version>2.22.0</version>
-        <configuration>
-            <includes>
-                <include>**/*RestIT</include>
-                <include>**/RestITCase</include>
-            </includes>
-        </configuration>
-    </plugin>
+        <version>3.0.0-M4</version>
+        <executions>
+          <execution>
+            <id>verify</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>verify</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
 
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -155,6 +163,32 @@
           </execution>
         </executions>
       </plugin>
+
+      <!--
+        Checking for Violations as Part of the Build
+        https://maven.apache.org/plugins/maven-checkstyle-plugin/usage.html
+      -->
+      <!-- <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <version>3.1.0</version>
+        <configuration>
+          <configLocation>checkstyle.xml</configLocation>
+          <encoding>UTF-8</encoding>
+          <consoleOutput>true</consoleOutput>
+          <failsOnError>true</failsOnError>
+          <linkXRef>false</linkXRef>
+        </configuration>
+        <executions>
+          <execution>
+            <id>validate</id>
+            <phase>validate</phase>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin> -->
 
     </plugins>
 

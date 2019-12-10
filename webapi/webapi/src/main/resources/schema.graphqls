@@ -1,27 +1,28 @@
-type Book {
-    id: ID!
-    title: String!
-    pagesCount: Int
-    author: Author
-}
- 
-type Author {
-    id: ID!
-    name: String!
-    books: [Book]!
-}
-
 type Subscription {
     time: Int
 }
 
+type ServiceModel {
+    whenProvided: String
+    forWhatCustomer: String
+}
+
+input ServiceEntry {
+    whenProvided: String
+    forWhatCustomer: ID
+}
+
+input ServicesFilter {
+    whenProvided: String
+    forWhatCustomer: String
+}
+
 # The Root Query for the application
 type Query {
-    getBooks: [Book]!
-    getBook(id: ID!): Book
+    getServices(filter: ServicesFilter): [ServiceModel]!
 }
  
 # The Root Mutation for the application
 type Mutation {
-    addBook(title: String!, authorId: String!) : Book!
+    addService(entry: ServiceEntry) : ServiceModel!
 }

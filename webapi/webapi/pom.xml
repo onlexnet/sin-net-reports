@@ -19,6 +19,7 @@
 
     <sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/../report-aggregate/target/site/jacoco-aggregate/jacoco3.xml</sonar.coverage.jacoco.xmlReportPaths>
     <sonar.projectKey>sinnet-reports-webapi</sonar.projectKey>
+    <graphql-java-kickstart.version>6.0.0</graphql-java-kickstart.version>
   </properties>
 
   <dependencies>
@@ -28,7 +29,7 @@
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-web</artifactId>
+      <artifactId>spring-boot-starter-webflux</artifactId>
     </dependency>
 
     <dependency>
@@ -39,16 +40,21 @@
     </dependency>
 
     <dependency>
+      <groupId>org.axonframework</groupId>
+      <artifactId>axon-messaging</artifactId>
+    </dependency>
+
+    <dependency>
       <!-- embeds the GraphiQL tool for schema introspection and query debugging (see GraphiQL) -->
       <groupId>com.graphql-java-kickstart</groupId>
       <artifactId>graphiql-spring-boot-starter</artifactId>
-      <version>6.0.0</version>
+      <version>${graphql-java-kickstart.version}</version>
     </dependency>
 
     <dependency>
       <groupId>com.graphql-java-kickstart</groupId>
       <artifactId>graphql-spring-boot-starter</artifactId>
-      <version>6.0.0</version>
+      <version>${graphql-java-kickstart.version}</version>
     </dependency>
 
 
@@ -63,10 +69,9 @@
     <dependency>
       <groupId>com.graphql-java-kickstart</groupId>
       <artifactId>graphql-spring-boot-starter-test</artifactId>
-      <version>6.0.0</version>
+      <version>${graphql-java-kickstart.version}</version>
       <scope>test</scope>
     </dependency>
-
   </dependencies>
 
   <build>
