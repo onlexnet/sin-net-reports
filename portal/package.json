@@ -25,6 +25,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "schema-gen": "graphql-codegen --config ./src/generate-config.yml",
+    "start-dev": "run-p graphql-generate-components start",
     "snyk-protect": "snyk protect",
     "prepare": "npm run snyk-protect"
   },

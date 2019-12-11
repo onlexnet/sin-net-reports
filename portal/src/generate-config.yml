@@ -1,12 +1,7 @@
-schema: 
-  - http://127.0.0.1:8000/graphql/
-  - src/my-client-schema.graphql
-overwrite: true
-documents:
-  - ./src/**/*.tsx
-  - ./src/**/*.graphql
+schema: ../webapi/webapi/src/main/resources/**/*.graphqls
+documents: 'src/**/*.graphql'
 generates:
-  ./src/schema-types.d.tsx:
+  src/components/.generated/components.tsx:
     plugins:
       - typescript
       - typescript-operations
