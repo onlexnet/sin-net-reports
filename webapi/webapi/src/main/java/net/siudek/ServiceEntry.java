@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class ServiceEntry {
-    private String whenProvided;
-    private String forWhatCustomer;
+  private String whenProvided;
+  private String forWhatCustomer;
 }

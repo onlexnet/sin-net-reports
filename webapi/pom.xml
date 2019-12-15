@@ -106,7 +106,7 @@
             <artifactId>junit-vintage-engine</artifactId>
           </exclusion>
         </exclusions>
-  
+
 
       </dependency>
     </dependencies>
@@ -176,7 +176,7 @@
         Checking for Violations as Part of the Build
         https://maven.apache.org/plugins/maven-checkstyle-plugin/usage.html
       -->
-      <!-- <plugin>
+      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>
         <version>3.1.0</version>
@@ -185,7 +185,6 @@
           <encoding>UTF-8</encoding>
           <consoleOutput>true</consoleOutput>
           <failsOnError>true</failsOnError>
-          <linkXRef>false</linkXRef>
         </configuration>
         <executions>
           <execution>
@@ -196,7 +195,7 @@
             </goals>
           </execution>
         </executions>
-      </plugin> -->
+      </plugin>
 
     </plugins>
 
