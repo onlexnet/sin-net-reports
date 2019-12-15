@@ -1,5 +1,0 @@
-mutation CreateBook($text:String){
-    createBook(text:$text){
-        id
-    }
-}

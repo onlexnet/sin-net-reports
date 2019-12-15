@@ -1,0 +1,6 @@
+mutation AddService($entry: ServiceEntry) {
+  addService(entry: $entry) {
+    whenProvided
+    forWhatCustomer
+  }
+}
