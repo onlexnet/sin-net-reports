@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import lombok.Value;
 import lombok.With;
 
+/** Register details about provided service. */
 @Value
 public class RegisterNewServiceCommand {
 

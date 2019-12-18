@@ -6,10 +6,17 @@ import com.coxautodev.graphql.tools.GraphQLQueryResolver;
 
 import org.springframework.stereotype.Component;
 
+/** FixMe. */
 @Component
 public class Query implements GraphQLQueryResolver {
 
-    public Iterable<ServiceModel> getServices(ServicesFilter filter) {
+    /**
+     * FixMe.
+     *
+     * @param filter fixme.
+     * @return fixme
+     */
+    public Iterable<ServiceModel> getServices(final ServicesFilter filter) {
         return Collections.emptyList();
     }
 

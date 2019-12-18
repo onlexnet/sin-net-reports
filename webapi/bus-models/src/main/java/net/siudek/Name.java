@@ -3,9 +3,10 @@ package net.siudek;
 import lombok.Value;
 
 /**
- * Name of en Entity allows to recognize the entity
+ * Name of en Entity allows to recognize the entity.
  */
 @Value(staticConstructor = "of")
 public class Name {
+    /** FixMe. */
     private String value;
 }
