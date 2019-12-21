@@ -1,4 +1,4 @@
-ARG APP_ENV=dev
+ARG SONAR_TOKEN
 
 #----------
 # more images see https://hub.docker.com/_/microsoft-java-jdk
@@ -18,6 +18,12 @@ FROM install-packages as test-runner
 # run verify because aggregation of code coverage is done in verify phase by report-aggregate module
 # additionally in verify phase checkstyle audit is applied.
 RUN ./mvnw test verify
+
+
+#----------
+FROM test-runner as test-runner
+# push data to sonar
+RUN ./mvnw sonar:sonar -Dsonar.login=${SONAR_TOKEN}
 
 
 #----------
