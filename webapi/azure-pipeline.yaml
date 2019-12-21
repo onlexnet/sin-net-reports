@@ -34,6 +34,9 @@ jobs:
       vmImage: $(vmImageName)
 
     variables:
+      # We have enabled the build pipelines for Pull Request vs master.
+      # There are some differences between a normal build and the build triggered by a PR though:
+      # The build triggered from a PR do not push the docker images to any docker registry.
       buildImage: $[ eq(variables['build.sourceBranch'], 'refs/heads/master') ]
       buildImageAndPush: $[ startsWith(variables['build.sourceBranch'], 'refs/heads/release/backend/v') ]
       
