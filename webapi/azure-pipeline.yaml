@@ -2,14 +2,17 @@ resources:
   - repo: self
 
 variables:
+  # connection, defined manually.
+  # The connection used in pipeline allows to access to ACR sinnetapps.azurecr.io
   dockerRegistryServiceConnection: "sinnetapps-dockerregistry-service-connection"
+  # image name (without tags) used to build final image
   imageName: "services-webapi"
+  # name of the registry where the image is hosted on.
+  # in Docker world, it is also part of image name (prefix)
   containerRegistry: "sinnetapps.azurecr.io"
-  dockerfilePath: "webapi/Dockerfile"
+  
+  dockerfilePath: "webapi/build.dockerfile"
   branchTag: "$(Build.SourceBranchName)"
-
-  # Agent VM image name
-  vmImageName: "ubuntu-latest"
 
 name: $(build.sourceBranch)-$(Date:yyyyMMdd)$(Rev:.rr)
 
@@ -24,68 +27,105 @@ trigger:
       - /webapi/
 
 jobs:
-  - job: test
-    displayName: Backend CI build
+  - job: CICD
+    displayName: Webapi CI build
     pool:
-      vmImage: $(vmImageName)
+      vmImage: ubuntu-latest
 
     variables:
       # We have enabled the build pipelines for Pull Request vs master.
       # There are some differences between a normal build and the build triggered by a PR though:
       # The build triggered from a PR do not push the docker images to any docker registry.
-      buildImage: $[ eq(variables['build.sourceBranch'], 'refs/heads/master') ]
-      buildImageAndPush: $[ startsWith(variables['build.sourceBranch'], 'refs/heads/release/backend/v') ]
-      
+      buildImageOnMaster: $[ eq(variables['build.sourceBranch'], 'refs/heads/master') ]
+      buildImageAndPush: $[ startsWith(variables['build.sourceBranch'], 'refs/heads/release/webapi/v') ]
       testImageName: build-test-image-$(Build.BuildId)
+      # pom.xml uses APP_SONAR_TOKEN, on CICI is defined as SONAR_TOKEN.
+      APP_SONAR_TOKEN: $(SONAR_TOKEN)
 
     steps:
-      - task: CmdLine@2
-        displayName: Produce result of tests and code coverage (JUnit and JaCoCo)
+      - task: Maven@3
+        # https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/build/maven
+        displayName: 'Project compilation with Maven'
         inputs:
-          script: |
-            docker build -t $(testImageName) --target test-runner ./backend
-            docker run -d --name myTestImageName $(testImageName)
-            docker cp myTestImageName:app/report-aggregate/target/aggregated-output-surefire ./local-surefire-aggregate
-            docker cp myTestImageName:app/report-aggregate/target/site/jacoco-aggregate ./local-jacoco-aggregate
-            docker rm --force myTestImageName
+          mavenPomFile: 'webapi/pom.xml'
+          goals: 'verify'
+          javaHomeOption: 'JDKVersion'
+          jdkVersionOption: '1.11'
+          jdkArchitectureOption: 'x64'
+          publishJUnitResults: false
+          # options:
+          #  - disable log entries (a lot of entries) related to artifacts downloaded by maven
+          #  - define token value for sonar plugin based on pipeline variable
+          options: -B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
+          sonarQubeRunAnalysis: true
+          sqMavenPluginVersionChoice: 'latest' # Required when sonarQubeRunAnalysis == True# Options: latest, pom
+          checkStyleRunAnalysis: true # Optional
 
-      # Build, test, and publish results with a Docker file
-      # In this approach, you build your code and run tests inside the container using a Docker file.
-      # more @ https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/test/publish-test-results?view=azure-devops&tabs=yaml#define-the-build-pipeline
-      - task: PublishCodeCoverageResults@1
-        displayName: Publish code coverage
-        inputs:
-          codeCoverageTool: 'JaCoCo'
-          summaryFileLocation: ./local-jacoco-aggregate/jacoco.xml
-          failIfCoverageEmpty: true
-          pathToSources: ./local-jacoco-aggregate
+      # - task: SonarCloudPrepare@1
+      #   displayName: 'Prepare SonarCloud analysis'
+      #   inputs:
+      #     SonarCloud: 'sinnetapps-sonarcloud-connection'
+      #     organization: 'sin-net-pl'
+      #     projectKey: 'sin-net-pl-services'
+      #     projectName: 'sin-net-pl-services'
+      #     projectVersion: '$(Build.BuildNumber)'
+      #     extraProperties: |
+      #       sonar.jacoco.reportPath=./local-jacoco-aggregate
+      #       sonar.surefire.reportsPath=./local-surefire-aggregate
 
-      
-      - task: PublishTestResults@2
-        displayName: Publish test results
-        inputs:
-          testResultsFormat: 'JUnit'
-          testResultsFiles: 'local-surefire-aggregate/*/TEST-*.xml'
-          failTaskOnFailedTests: true
-          mergeTestResults: true
+      # - task: CmdLine@2
+      #   displayName: Produce result of tests and code coverage (JUnit and JaCoCo)
+      #   inputs:
+      #     workingDirectory: ./webapi
+      #     script: |
+      #       docker build -t $(testImageName) --target test-runner -f build.dockerfile .
+      #       docker run -d --name myTestImageName $(testImageName)
+      #       docker cp myTestImageName:app/report-aggregate/target/aggregated-output-surefire ./local-surefire-aggregate
+      #       docker cp myTestImageName:app/report-aggregate/target/site/jacoco-aggregate ./local-jacoco-aggregate
+      #       docker rm --force myTestImageName
+
+      # - task: SonarCloudAnalyze@1
+      #   displayName: 'Run SonarCloud code analysis'
+
+      # - task: SonarCloudPublish@1
+      #   displayName: 'Publish SonarCloud quality gate results'
+
+      # # Build, test, and publish results with a Docker file
+      # # In this approach, you build your code and run tests inside the container using a Docker file.
+      # # more @ https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/test/publish-test-results?view=azure-devops&tabs=yaml#define-the-build-pipeline
+      # - task: PublishCodeCoverageResults@1
+      #   displayName: Publish code coverage
+      #   inputs:
+      #     codeCoverageTool: 'JaCoCo'
+      #     summaryFileLocation: ./local-jacoco-aggregate/jacoco.xml
+      #     failIfCoverageEmpty: true
+      #     pathToSources: ./local-jacoco-aggregate
+
+      # - task: PublishTestResults@2
+      #   displayName: Publish test results
+      #   inputs:
+      #     testResultsFormat: 'JUnit'
+      #     testResultsFiles: 'local-surefire-aggregate/*/TEST-*.xml'
+      #     failTaskOnFailedTests: true
+      #     mergeTestResults: true
           
-      - task: Docker@2
-        condition: or(eq(variables['buildImage'],True),eq(variables['buildImageAndPush'],True))
-        displayName: Build an image
-        inputs:
-          command: build
-          repository: $(imageName)
-          dockerfile: $(dockerfilePath)
-          containerRegistry: $(dockerRegistryServiceConnection)
-          tags: |
-            $(branchTag)
+      # - task: Docker@2
+      #   condition: or(eq(variables['buildImageOnMaster'],True),eq(variables['buildImageAndPush'],True))
+      #   displayName: Build an image
+      #   inputs:
+      #     command: build
+      #     repository: $(imageName)
+      #     dockerfile: $(dockerfilePath)
+      #     containerRegistry: $(dockerRegistryServiceConnection)
+      #     tags: |
+      #       $(branchTag)
 
-      - task: Docker@2
-        condition: eq(variables['buildImageAndPush'],True)
-        displayName: Push an image
-        inputs:
-          command: push
-          repository: $(imageName)
-          containerRegistry: $(dockerRegistryServiceConnection)
-          tags: |
-            $(branchTag)
+      # - task: Docker@2
+      #   condition: eq(variables['buildImageAndPush'],True)
+      #   displayName: Push an image
+      #   inputs:
+      #     command: push
+      #     repository: $(imageName)
+      #     containerRegistry: $(dockerRegistryServiceConnection)
+      #     tags: |
+      #       $(branchTag)

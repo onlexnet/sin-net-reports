@@ -1,13 +1,12 @@
-ARG SONAR_TOKEN
-
 #----------
 # more images see https://hub.docker.com/_/microsoft-java-jdk
-FROM mcr.microsoft.com/java/jdk:8u192-zulu-alpine:11u5-zulu-alpine as install-packages
-WORKDIR /app
+FROM mcr.microsoft.com/java/jdk:11u5-zulu-alpine as install-packages
 
+WORKDIR /app
 COPY . .
 
-# download maven depoendencies and disable log entries (a lot of entries) related to downloaded artifacts
+RUN chmod +x ./mvnw
+# download maven dependencies and disable log entries (a lot of entries) related to downloaded artifacts
 # source @ https://blogs.itemis.com/en/in-a-nutshell-removing-artifact-messages-from-maven-log-output
 RUN ./mvnw clean install -B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
 
@@ -18,13 +17,6 @@ FROM install-packages as test-runner
 # run verify because aggregation of code coverage is done in verify phase by report-aggregate module
 # additionally in verify phase checkstyle audit is applied.
 RUN ./mvnw test verify
-
-
-#----------
-FROM test-runner as test-runner
-# push data to sonar
-RUN ./mvnw sonar:sonar -Dsonar.login=${SONAR_TOKEN}
-
 
 #----------
 FROM test-runner as build
