@@ -1,0 +1,92 @@
+# Bofore changes in the script, please be familiar with
+# * https://docs.microsoft.com/en-us/azure/architecture/microservices/ci-cd-kubernetes
+# * https://docs.microsoft.com/en-us/azure/devops/repos/git/git-branching-guidance?view=azure-devops
+
+resources:
+  - repo: self
+
+variables:
+  dockerRegistryServiceConnection: "dockerregistry-service-connection"
+  imageName: "services-webapi"
+  containerRegistry: "sinnetapps.azurecr.io"
+  dockerfilePath: "webapi/Dockerfile"
+  branchTag: "$(Build.SourceBranchName)"
+
+  # Agent VM image name
+  vmImageName: "ubuntu-latest"
+
+name: $(build.sourceBranch)-$(Date:yyyyMMdd)$(Rev:.rr)
+
+trigger:
+  batch: true
+  branches:
+    include:
+      - master
+      - release/webapi/v*
+  paths:
+    include:
+      - /webapi/
+
+jobs:
+  - job: test
+    displayName: Backend CI build
+    pool:
+      vmImage: $(vmImageName)
+
+    variables:
+      buildImage: $[ eq(variables['build.sourceBranch'], 'refs/heads/master') ]
+      buildImageAndPush: $[ startsWith(variables['build.sourceBranch'], 'refs/heads/release/backend/v') ]
+      
+      testImageName: build-test-image-$(Build.BuildId)
+
+    steps:
+      - task: CmdLine@2
+        displayName: Produce result of tests and code coverage (JUnit and JaCoCo)
+        inputs:
+          script: |
+            docker build -t $(testImageName) --target test-runner ./backend
+            docker run -d --name myTestImageName $(testImageName)
+            docker cp myTestImageName:app/report-aggregate/target/aggregated-output-surefire ./local-surefire-aggregate
+            docker cp myTestImageName:app/report-aggregate/target/site/jacoco-aggregate ./local-jacoco-aggregate
+            docker rm --force myTestImageName
+
+      # Build, test, and publish results with a Docker file
+      # In this approach, you build your code and run tests inside the container using a Docker file.
+      # more @ https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/test/publish-test-results?view=azure-devops&tabs=yaml#define-the-build-pipeline
+      - task: PublishCodeCoverageResults@1
+        displayName: Publish code coverage
+        inputs:
+          codeCoverageTool: 'JaCoCo'
+          summaryFileLocation: ./local-jacoco-aggregate/jacoco.xml
+          failIfCoverageEmpty: true
+          pathToSources: ./local-jacoco-aggregate
+
+      
+      - task: PublishTestResults@2
+        displayName: Publish test results
+        inputs:
+          testResultsFormat: 'JUnit'
+          testResultsFiles: 'local-surefire-aggregate/*/TEST-*.xml'
+          failTaskOnFailedTests: true
+          mergeTestResults: true
+          
+      - task: Docker@2
+        condition: or(eq(variables['buildImage'],True),eq(variables['buildImageAndPush'],True))
+        displayName: Build an image
+        inputs:
+          command: build
+          repository: $(imageName)
+          dockerfile: $(dockerfilePath)
+          containerRegistry: $(dockerRegistryServiceConnection)
+          tags: |
+            $(branchTag)
+
+      - task: Docker@2
+        condition: eq(variables['buildImageAndPush'],True)
+        displayName: Push an image
+        inputs:
+          command: push
+          repository: $(imageName)
+          containerRegistry: $(dockerRegistryServiceConnection)
+          tags: |
+            $(branchTag)
