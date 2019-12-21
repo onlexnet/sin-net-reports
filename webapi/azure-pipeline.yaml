@@ -1,12 +1,8 @@
-# Bofore changes in the script, please be familiar with
-# * https://docs.microsoft.com/en-us/azure/architecture/microservices/ci-cd-kubernetes
-# * https://docs.microsoft.com/en-us/azure/devops/repos/git/git-branching-guidance?view=azure-devops
-
 resources:
   - repo: self
 
 variables:
-  dockerRegistryServiceConnection: "dockerregistry-service-connection"
+  dockerRegistryServiceConnection: "sinnetapps-dockerregistry-service-connection"
   imageName: "services-webapi"
   containerRegistry: "sinnetapps.azurecr.io"
   dockerfilePath: "webapi/Dockerfile"
