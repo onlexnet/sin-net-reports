@@ -3,11 +3,17 @@ package sinnet;
 import java.time.Duration;
 import java.time.LocalDate;
 
-import lombok.Value;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.With;
 
 /** Register details about provided service. */
-@Value
+@NoArgsConstructor
+@Data
+@AllArgsConstructor
+@Builder
 public class RegisterNewServiceCommand {
 
     /** Unique ID of service action. */

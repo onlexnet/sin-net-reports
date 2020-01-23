@@ -16,8 +16,7 @@
 
   <properties>
     <axon.version>4.2.1</axon.version>
-    <junit.version>5.6.0-M1</junit.version>
-    <spring.boot.version>2.2.2.RELEASE</spring.boot.version>
+    <spring-boot.version>2.2.4.RELEASE</spring-boot.version>
     <jacoco.version>0.8.5</jacoco.version>
 
     <sonar.organization>sin-net-pl</sonar.organization>
@@ -39,34 +38,30 @@
       <version>1.18.10</version>
       <scope>provided</scope>
     </dependency>
-
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-api</artifactId>
-      <version>${junit.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-engine</artifactId>
-      <version>${junit.version}</version>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.assertj</groupId>
-      <artifactId>assertj-core</artifactId>
-      <version>3.14.0</version>
-      <scope>test</scope>
-    </dependency>
   </dependencies>
 
   <dependencyManagement>
     <dependencies>
+
+       <dependency>
+           <groupId>org.springframework.boot</groupId>
+           <artifactId>spring-boot-dependencies</artifactId>
+           <version>${spring-boot.version}</version>
+           <type>pom</type>
+           <scope>import</scope>
+       </dependency>
+
+
       <dependency>
         <groupId>org.axonframework</groupId>
-        <artifactId>axon-spring-boot-autoconfigure</artifactId>
+        <artifactId>axon-spring-boot-starter</artifactId>
         <version>${axon.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.axonframework</groupId>
+            <artifactId>axon-server-connector</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
       <dependency>
         <groupId>org.axonframework</groupId>
@@ -84,37 +79,12 @@
         <artifactId>axon-messaging</artifactId>
         <version>${axon.version}</version>
       </dependency>
-
-
       <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter</artifactId>
-        <version>${spring.boot.version}</version>
+        <groupId>org.axonframework</groupId>
+        <artifactId>axon-configuration</artifactId>
+        <version>${axon.version}</version>
       </dependency>
-      <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-webflux</artifactId>
-        <version>${spring.boot.version}</version>
-      </dependency>
-       <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-data-jpa</artifactId>
-        <version>${spring.boot.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-test</artifactId>
-        <version>${spring.boot.version}</version>
-        <scope>test</scope>
-        <exclusions>
-          <exclusion>
-            <groupId>org.junit.vintage</groupId>
-            <artifactId>junit-vintage-engine</artifactId>
-          </exclusion>
-        </exclusions>
-
-
-      </dependency>
+      
     </dependencies>
   </dependencyManagement>
 
