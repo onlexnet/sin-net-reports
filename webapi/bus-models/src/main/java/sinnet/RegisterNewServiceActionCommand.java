@@ -14,7 +14,7 @@ import lombok.With;
 @Data
 @AllArgsConstructor
 @Builder
-public class RegisterNewServiceCommand {
+public class RegisterNewServiceActionCommand {
 
     /** Unique ID of service action. */
     @With

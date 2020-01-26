@@ -10,9 +10,13 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class Given {
 
-    public static RegisterNewServiceCommand registerNewServiceCommand() {
+    /** FixMe.
+     *
+     * @return fixme
+    */
+    public static RegisterNewServiceActionCommand registerNewServiceActionCommand() {
         val serviceActionId = UUID.randomUUID().toString();
-        return new RegisterNewServiceCommand(
+        return new RegisterNewServiceActionCommand(
             serviceActionId,
             Name.of("who"),
             LocalDate.now(),

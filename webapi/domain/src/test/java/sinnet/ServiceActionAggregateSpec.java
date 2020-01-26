@@ -22,9 +22,13 @@ public final class ServiceActionAggregateSpec {
   @Test
   public void testCommandHandlerCase() {
     val serviceActionId = UUID.randomUUID().toString();
+    var cmd = Given
+      .registerNewServiceActionCommand()
+      .withServiceActionId(serviceActionId);
+    var evt = new NewServiceRegistered(serviceActionId, cmd.getWhen());
     fixture
       .givenNoPriorActivity()
-      .when(Given.registerNewServiceCommand().withServiceActionId(serviceActionId))
-      .expectEvents(new NewServiceRegistered(serviceActionId));
+      .when(cmd)
+      .expectEvents(evt);
   }
 }

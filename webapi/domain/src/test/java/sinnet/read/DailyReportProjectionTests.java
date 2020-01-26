@@ -16,7 +16,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import lombok.SneakyThrows;
 import sinnet.AppTestContext;
 import sinnet.DailyReport;
-import sinnet.RegisterNewServiceCommand;
+import sinnet.RegisterNewServiceActionCommand;
 
 /** Tests for DailyReportProjection. */
 @ExtendWith(SpringExtension.class)
@@ -37,7 +37,7 @@ public class DailyReportProjectionTests {
     @SneakyThrows
     public void shouldProduceReport() {
         var now = LocalDate.of(2001, 2, 3);
-        var cmd = RegisterNewServiceCommand.builder().when(now);
+        var cmd = RegisterNewServiceActionCommand.builder().when(now);
         commandGateway.send(cmd);
 
         var actual = queryGateway
@@ -45,7 +45,8 @@ public class DailyReportProjectionTests {
             .get(300, TimeUnit.MILLISECONDS);
 
         var expected = DailyReport.Reply.Some.builder()
-            .entry(new DailyReport.ServiceSummary(now));
+            .entry(new DailyReport.ServiceSummary(now))
+            .build();
         Assertions.assertThat(actual).isEqualTo(expected);
     }
 }

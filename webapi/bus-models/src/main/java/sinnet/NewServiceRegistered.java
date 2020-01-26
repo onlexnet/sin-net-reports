@@ -1,14 +1,21 @@
 package sinnet;
 
+import java.time.LocalDate;
+
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/** FixMe. */
-@Data
+/** New service has been just registered in the System. */
 @NoArgsConstructor
+@Data
 @AllArgsConstructor
+@Builder
 public class NewServiceRegistered {
-    /** FixMe. */
-    private String serviceActionId;
+/** Unique Service ID. */
+    private String id;
+
+    /** Date when the service has been provided. */
+    private LocalDate when;
 }

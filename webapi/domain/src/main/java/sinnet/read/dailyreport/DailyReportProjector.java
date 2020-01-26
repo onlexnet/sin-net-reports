@@ -30,6 +30,7 @@ public class DailyReportProjector {
     @QueryHandler
     public DailyReport.Reply reply(final DailyReport.Ask ask) {
         var summary = new DailyReport.ServiceSummary();
+        summary.setWhen(ask.getWhen());
         return DailyReport.Reply.Some.builder().entry(summary).build();
     }
 }

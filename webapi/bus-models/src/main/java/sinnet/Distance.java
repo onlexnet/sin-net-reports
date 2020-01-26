@@ -5,6 +5,9 @@ import lombok.Value;
 /** Type to keep distance between geo points. Unit - kilometers */
 @Value
 public class Distance {
-    /** FixMe. */
+
+    /**
+     * Value of the distance.
+     * Invariant: value >=0. */
     private int value;
 }
