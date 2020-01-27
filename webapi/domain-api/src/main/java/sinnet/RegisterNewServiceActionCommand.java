@@ -2,6 +2,7 @@ package sinnet;
 
 import java.time.Duration;
 import java.time.LocalDate;
+import java.util.UUID;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,7 +19,7 @@ public class RegisterNewServiceActionCommand {
 
     /** Unique ID of service action. */
     @With
-    private String serviceActionId;
+    private String serviceActionId = UUID.randomUUID().toString();
 
     /** Serviceman who did the service. */
     private Name who;

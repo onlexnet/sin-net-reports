@@ -25,10 +25,11 @@ public final class ServiceActionAggregateSpec {
     var cmd = Given
       .registerNewServiceActionCommand()
       .withServiceActionId(serviceActionId);
-    var evt = new NewServiceRegistered(serviceActionId, cmd.getWhen());
+
+    var expected = new NewServiceRegistered(serviceActionId, cmd.getWhen());
     fixture
       .givenNoPriorActivity()
       .when(cmd)
-      .expectEvents(evt);
+      .expectEvents(expected);
   }
 }

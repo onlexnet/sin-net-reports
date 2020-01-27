@@ -1,36 +1,60 @@
 package sinnet;
 
+import java.time.LocalDate;
+
 import org.assertj.core.api.Assertions;
-import org.axonframework.commandhandling.CommandBus;
-import org.axonframework.commandhandling.SimpleCommandBus;
+import org.axonframework.commandhandling.gateway.CommandGateway;
+import org.axonframework.queryhandling.QueryGateway;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
+import lombok.SneakyThrows;
+
+/** Create and close report. */
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = DomainSpec.AppContext.class)
+@EnableAutoConfiguration
 public class DomainSpec {
 
     @Autowired
-    private CommandBus commandBus;
+    private CommandGateway gateway;
+
+    @Autowired
+    private QueryGateway queryGateway;
+
 
     @Test
+    @SneakyThrows
     public void shouldInitialize() {
-        Assertions.assertThat(commandBus).isNotNull();
+        var now = LocalDate.now();
+        var cmd = Given
+            .registerNewServiceActionCommand()
+            .builder().when(now).build();
+
+        gateway.sendAndWait(cmd);
+
+        var ask = new RegisteredServices.Ask(now, null);
+        var info = queryGateway
+            .query(ask, RegisteredServices.Reply.class)
+            .get();
+
+        Assertions.assertThat(gateway).isNotNull();
+        Assertions.assertThat(info.getEntries().length).isEqualTo(1);
     }
 
-    // @AnnotationDriven
+    /** Local config to override / produce locally required beans. */
     @Configuration
     static class AppContext {
 
-        @Bean
-        public CommandBus commandBus() {
-            return SimpleCommandBus.builder().build();
-        }
+        // @Bean
+        // public CommandBus commandBus() {
+        //     return SimpleCommandBus.builder().build();
+        // }
 
         // @Bean(name = "annotatedHandler")
         // public AnnotatedEventHandlerWithResources createHandler() {

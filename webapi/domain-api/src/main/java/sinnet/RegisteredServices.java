@@ -2,7 +2,9 @@ package sinnet;
 
 import java.time.LocalDate;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * Container class for related Query, Response and Application Notification
@@ -14,8 +16,10 @@ public abstract class RegisteredServices {
      * Query about data where returned projection should be already
      * limited to given date and serviceman.
      */
+    @NoArgsConstructor
     @Data
-    public final class Query {
+    @AllArgsConstructor
+    public static final class Ask {
         /** FixMe. */
         private LocalDate filterToDay;
         /** FixMe. */
@@ -24,7 +28,7 @@ public abstract class RegisteredServices {
 
     /** Containsata produced as result of querying via {@link Query}. */
     @Data
-    public final class Reply {
+    public static final class Reply {
         /** FixMe. */
         private ServiceEntry[] entries;
     }
