@@ -7,8 +7,8 @@
   <version>1.0-SNAPSHOT</version>
 
   <modules>
-    <module>domain</module>
-    <module>bus-models</module>
+    <module>domain-api</module>
+    <module>domain-core</module>
     <module>webapi</module>
     <module>report-aggregate</module>
   </modules>

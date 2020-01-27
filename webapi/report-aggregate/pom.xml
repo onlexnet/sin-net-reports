@@ -22,13 +22,13 @@
   <dependencies>
     <dependency>
       <groupId>net.siudek</groupId>
-      <artifactId>bus-models</artifactId>
+      <artifactId>domain-api</artifactId>
       <version>1.0-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>net.siudek</groupId>
-      <artifactId>domain</artifactId>
+      <artifactId>domain-core</artifactId>
       <version>1.0-SNAPSHOT</version>
     </dependency>
 
