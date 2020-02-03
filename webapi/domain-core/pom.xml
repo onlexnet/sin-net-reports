@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <parent>
-        <artifactId>sinnet</artifactId>
-        <groupId>net.siudek</groupId>
-        <version>1.0-SNAPSHOT</version>
-    </parent>
-    <modelVersion>4.0.0</modelVersion>
+<project>
+  <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>domain-core</artifactId>
-    <name>sinnet-domain-core</name>
+  <parent>
+    <groupId>net.siudek</groupId>
+    <artifactId>sinnet</artifactId>
+    <version>1.0-SNAPSHOT</version>
+  </parent>
 
-    <properties>
-        <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/../${aggregate.report.dir}</sonar.coverage.jacoco.xmlReportPaths>
-        <sonar.projectKey>sinnet-domain-core</sonar.projectKey>
-    </properties>
+  <artifactId>domain-core</artifactId>
+
+  <properties>
+      <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/../${aggregate.report.dir}</sonar.coverage.jacoco.xmlReportPaths>
+      <sonar.projectKey>sinnet-domain-core</sonar.projectKey>
+  </properties>
 
     <dependencies>
 
@@ -26,8 +26,6 @@
         <dependency>
             <groupId>net.siudek</groupId>
             <artifactId>domain-api</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <scope>compile</scope>
         </dependency>
         
         <dependency>

@@ -23,7 +23,7 @@ public final class ServiceActionAggregateSpec {
   public void testCommandHandlerCase() {
     val serviceActionId = UUID.randomUUID().toString();
     var cmd = Given
-      .registerNewServiceActionCommand()
+      .createRegisterNewServiceAction()
       .withServiceActionId(serviceActionId);
 
     var expected = new NewServiceRegistered(serviceActionId, cmd.getWhen());

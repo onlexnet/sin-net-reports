@@ -10,18 +10,20 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import lombok.SneakyThrows;
 import sinnet.AppTestContext;
 import sinnet.DailyReport;
-import sinnet.RegisterNewServiceActionCommand;
+import sinnet.RegisterNewServiceAction;
 
 /** Tests for DailyReportProjection. */
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = { AppTestContext.class })
 @EnableAutoConfiguration
+@ComponentScan("sinnet")
 public class DailyReportProjectionTests {
 
     /** Command Gateway. */
@@ -37,7 +39,7 @@ public class DailyReportProjectionTests {
     @SneakyThrows
     public void shouldProduceReport() {
         var now = LocalDate.of(2001, 2, 3);
-        var cmd = RegisterNewServiceActionCommand.builder().when(now);
+        var cmd = RegisterNewServiceAction.builder().when(now);
         commandGateway.send(cmd);
 
         var actual = queryGateway

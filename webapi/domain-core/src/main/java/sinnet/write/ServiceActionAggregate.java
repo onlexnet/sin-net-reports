@@ -7,7 +7,7 @@ import org.axonframework.spring.stereotype.Aggregate;
 
 import lombok.NoArgsConstructor;
 import sinnet.NewServiceRegistered;
-import sinnet.RegisterNewServiceActionCommand;
+import sinnet.RegisterNewServiceAction;
 
 import static org.axonframework.modelling.command.AggregateLifecycle.apply;
 
@@ -30,7 +30,7 @@ public class ServiceActionAggregate {
      * @param cmd fixme
      */
     @CommandHandler
-    public ServiceActionAggregate(final RegisterNewServiceActionCommand cmd) {
+    public ServiceActionAggregate(final RegisterNewServiceAction cmd) {
         var evt = NewServiceRegistered.builder()
                     .id(cmd.getServiceActionId())
                     .when(cmd.getWhen())

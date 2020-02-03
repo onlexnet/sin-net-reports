@@ -5,25 +5,24 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 import lombok.val;
-import lombok.experimental.UtilityClass;
 
-@UtilityClass
-public class Given {
+/** Utility class. */
+public final class Given {
 
     /** FixMe.
      *
      * @return fixme
     */
-    public static RegisterNewServiceActionCommand registerNewServiceActionCommand() {
+    public static RegisterNewServiceAction createRegisterNewServiceAction() {
         val serviceActionId = UUID.randomUUID().toString();
-        return new RegisterNewServiceActionCommand(
+        return new RegisterNewServiceAction(
             serviceActionId,
             Name.of("who"),
             LocalDate.now(),
             Name.of("whom"),
             "what",
             Duration.ofHours(1),
-            new Distance(0));
+            Distance.of(2));
     }
 
 }

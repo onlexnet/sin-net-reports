@@ -5,22 +5,13 @@
   <groupId>net.siudek</groupId>
   <artifactId>sinnet</artifactId>
   <version>1.0-SNAPSHOT</version>
-
-  <modules>
-    <module>domain-api</module>
-    <module>domain-core</module>
-    <module>webapi</module>
-    <module>host</module>
-    <module>report-aggregate</module>
-  </modules>
   <packaging>pom</packaging>
 
   <properties>
-
-    <sonar.organization>sin-net-pl</sonar.organization>
-    <sonar.host.url>https://sonarcloud.io</sonar.host.url>
-    <!-- Environment variable is already defined in CIDD as SONAR_TOKEN -->
-    <sonar.login>${env.APP_SONAR_TOKEN}</sonar.login>
+    <my.version>1.0-SNAPSHOT</my.version>
+    <axon.version>4.2.1</axon.version>
+    <spring-boot.version>2.2.4.RELEASE</spring-boot.version>
+    <jacoco.version>0.8.5</jacoco.version>
 
     <aggregate.report.dir>report-aggregate/target/site/jacoco-aggregate/jacoco.xml</aggregate.report.dir>
 
@@ -28,7 +19,8 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
-  <dependencies>
+  <dependencyManagement>
+    <dependencies>
 
     <dependency>
       <groupId>org.projectlombok</groupId>
@@ -36,10 +28,6 @@
       <version>1.18.10</version>
       <scope>provided</scope>
     </dependency>
-  </dependencies>
-
-  <dependencyManagement>
-    <dependencies>
 
       <dependency>
         <groupId>net.siudek</groupId>

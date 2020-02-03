@@ -7,11 +7,9 @@
     <version>1.0-SNAPSHOT</version>
   </parent>
 
-  <groupId>net.siudek</groupId>
   <artifactId>host</artifactId>
-  <version>1.0-SNAPSHOT</version>
 
-  <name>sinnet-host</name>
+  <name>domain-core</name>
 
   <properties>
     <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/../${aggregate.report.dir}</sonar.coverage.jacoco.xmlReportPaths>
@@ -37,6 +35,7 @@
         <!-- Allows to use spring-boot:run -->
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
+        <version>${spring-boot.version}</version>
       </plugin>
     </plugins>
   </build>

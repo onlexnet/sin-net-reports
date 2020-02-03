@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -18,22 +19,24 @@ import lombok.SneakyThrows;
 /** Create and close report. */
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = DomainSpec.AppContext.class)
-@EnableAutoConfiguration
 public class DomainSpec {
 
+    /** fixme. */
     @Autowired
     private CommandGateway gateway;
 
+    /** fixme. */
     @Autowired
     private QueryGateway queryGateway;
 
 
+    /** fixme. */
     @Test
     @SneakyThrows
     public void shouldInitialize() {
         var now = LocalDate.now();
         var cmd = Given
-            .registerNewServiceActionCommand()
+            .createRegisterNewServiceAction()
             .builder().when(now).build();
 
         gateway.sendAndWait(cmd);
@@ -49,6 +52,8 @@ public class DomainSpec {
 
     /** Local config to override / produce locally required beans. */
     @Configuration
+    @EnableAutoConfiguration
+    @ComponentScan(basePackageClasses = {sinnet.PackageMarker.class})
     static class AppContext {
 
         // @Bean
@@ -71,18 +76,6 @@ public class DomainSpec {
         // @Bean
         // public DuplicateResourceHandler duplicateResourceHandler() {
         // return new DuplicateResourceHandler();
-        // }
-
-        // @Bean
-        // public DuplicateResourceWithQualifier duplicateResourceWithQualifier1() {
-        // return new DuplicateResourceWithQualifier() {
-        // };
-        // }
-
-        // @Bean("qualifiedByName")
-        // public DuplicateResourceWithQualifier duplicateResourceWithQualifier2() {
-        // return new DuplicateResourceWithQualifier() {
-        // };
         // }
 
         // @Bean
