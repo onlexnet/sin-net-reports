@@ -5,7 +5,7 @@ import org.axonframework.queryhandling.QueryHandler;
 import org.springframework.stereotype.Service;
 
 import sinnet.DailyReport;
-
+import sinnet.RegisteredServices;
 import sinnet.events.ServiceRegistered;
 
 /**
@@ -32,5 +32,15 @@ public class DailyReportProjector {
         var summary = new DailyReport.ServiceSummary();
         summary.setWhen(ask.getWhen());
         return DailyReport.Reply.Some.builder().entry(summary).build();
+    }
+
+    /**
+     * Query handler. See {@link RegisteredServices}
+     * @param ask see {@link RegisteredServices.Ask}
+     * @return see {@link RegisteredServices.Reply}
+     */
+    @QueryHandler
+    public RegisteredServices.Reply reply(final RegisteredServices.Ask ask) {
+        return new RegisteredServices.Reply();
     }
 }

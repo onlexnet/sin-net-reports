@@ -23,6 +23,8 @@ import lombok.SneakyThrows;
 /** Create and close report. */
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = DomainSpec.AppContext.class)
+@ComponentScan
+@EnableAutoConfiguration
 public class DomainSpec {
 
     /** fixme. */
