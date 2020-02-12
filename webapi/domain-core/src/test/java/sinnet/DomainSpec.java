@@ -4,7 +4,11 @@ import java.time.LocalDate;
 
 import org.assertj.core.api.Assertions;
 import org.axonframework.commandhandling.gateway.CommandGateway;
+import org.axonframework.eventsourcing.eventstore.EmbeddedEventStore;
+import org.axonframework.eventsourcing.eventstore.EventStorageEngine;
+import org.axonframework.eventsourcing.eventstore.EventStore;
 import org.axonframework.queryhandling.QueryGateway;
+import org.axonframework.spring.config.AxonConfiguration;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +41,7 @@ public class DomainSpec {
         var now = LocalDate.now();
         var cmd = Given
             .createRegisterNewServiceAction()
-            .builder().when(now).build();
+            .toBuilder().when(now).build();
 
         gateway.sendAndWait(cmd);
 
@@ -56,6 +60,15 @@ public class DomainSpec {
     @ComponentScan(basePackageClasses = {sinnet.PackageMarker.class})
     static class AppContext {
 
+        // EmbeddedEventStore added yto avoid problems same as 
+        // https://stackoverflow.com/questions/55706454/domain-event-entry-table-is-not-created-by-axon
+        public EmbeddedEventStore eventStore(EventStorageEngine storageEngine, AxonConfiguration configuration) {
+            return EmbeddedEventStore.builder()
+                                     .storageEngine(storageEngine)
+                                     .messageMonitor(configuration.messageMonitor(EventStore.class, "eventStore"))
+                                     .build();
+        }
+        
         // @Bean
         // public CommandBus commandBus() {
         //     return SimpleCommandBus.builder().build();

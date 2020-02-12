@@ -14,7 +14,7 @@ import lombok.With;
 @NoArgsConstructor
 @Data
 @AllArgsConstructor
-@Builder
+@Builder(toBuilder = true)
 public class RegisterNewServiceAction {
 
     /** Unique ID of service action. */

@@ -6,6 +6,7 @@
   <version>1.0-SNAPSHOT</version>
 
   <modules>
+    <module>base-pom</module>
     <module>domain-api</module>
     <module>domain-core</module>
     <module>webapi</module>
