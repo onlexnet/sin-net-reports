@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import lombok.val;
+import sinnet.events.NewServiceRegistered;
 import sinnet.write.ServiceActionAggregate;
 
 public final class ServiceActionAggregateSpec {

@@ -2,6 +2,8 @@ package sinnet;
 
 import java.time.LocalDate;
 
+import javax.sql.DataSource;
+
 import org.assertj.core.api.Assertions;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.eventsourcing.eventstore.EmbeddedEventStore;
@@ -13,8 +15,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -52,26 +56,22 @@ public class DomainSpec {
             .query(ask, RegisteredServices.Reply.class)
             .get();
 
-        Assertions.assertThat(gateway).isNotNull();
         Assertions.assertThat(info.getEntries().length).isEqualTo(1);
     }
 
     /** Local config to override / produce locally required beans. */
     @Configuration
+    @EnableJpaRepositories
     @EnableAutoConfiguration
     @ComponentScan(basePackageClasses = {sinnet.PackageMarker.class})
     static class AppContext {
 
-        // EmbeddedEventStore added yto avoid problems same as 
-        // https://stackoverflow.com/questions/55706454/domain-event-entry-table-is-not-created-by-axon
-        public EmbeddedEventStore eventStore(EventStorageEngine storageEngine, AxonConfiguration configuration) {
-            return EmbeddedEventStore.builder()
-                                     .storageEngine(storageEngine)
-                                     .messageMonitor(configuration.messageMonitor(EventStore.class, "eventStore"))
-                                     .build();
-        }
-        
         // @Bean
+        // public DataSource dataSource() {
+        //   var builder = new EmbeddedDatabaseBuilder();
+        //   return builder.setType(EmbeddedDatabaseType.H2).build();
+        // }
+                // @Bean
         // public CommandBus commandBus() {
         //     return SimpleCommandBus.builder().build();
         // }

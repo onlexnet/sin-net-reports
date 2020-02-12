@@ -6,8 +6,8 @@ import org.axonframework.modelling.command.AggregateIdentifier;
 import org.axonframework.spring.stereotype.Aggregate;
 
 import lombok.NoArgsConstructor;
-import sinnet.NewServiceRegistered;
 import sinnet.RegisterNewServiceAction;
+import sinnet.events.NewServiceRegistered;
 
 import static org.axonframework.modelling.command.AggregateLifecycle.apply;
 

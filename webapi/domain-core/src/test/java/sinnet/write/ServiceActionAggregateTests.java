@@ -9,8 +9,8 @@ import org.junit.jupiter.api.Test;
 
 import sinnet.Distance;
 import sinnet.Name;
-import sinnet.NewServiceRegistered;
 import sinnet.RegisterNewServiceAction;
+import sinnet.events.NewServiceRegistered;
 
 /** unit tests for ServiceActionAggregate. */
 public class ServiceActionAggregateTests {

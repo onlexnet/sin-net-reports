@@ -34,8 +34,9 @@ public abstract class RegisteredServices {
     }
 
     /** Data type used by {@link Reply}. */
+    @NoArgsConstructor
     @Data
-    public final class ServiceEntry {
+    public static final class ServiceEntry {
         /** FixMe. */
         private String who;
         /** FixMe. */

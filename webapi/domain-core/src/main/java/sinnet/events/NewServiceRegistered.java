@@ -1,4 +1,4 @@
-package sinnet;
+package sinnet.events;
 
 import java.time.LocalDate;
 
