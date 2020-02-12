@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 
 /** Class "loads" Axon framework and domain logic. */
 @Configuration
-@ComponentScan
+@ComponentScan(basePackageClasses = {sinnet.PackageMarker.class})
 @EnableAutoConfiguration
 public class AppTestContext {
 }

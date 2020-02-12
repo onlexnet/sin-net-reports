@@ -23,7 +23,6 @@ import sinnet.RegisterNewServiceAction;
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = { AppTestContext.class })
 @EnableAutoConfiguration
-@ComponentScan("sinnet")
 public class DailyReportProjectionTests {
 
     /** Command Gateway. */
