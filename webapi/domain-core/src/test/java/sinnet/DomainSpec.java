@@ -41,6 +41,9 @@ public class DomainSpec {
 
         gateway.sendAndWait(cmd);
 
+        // TODO wait for update
+        Thread.sleep(1000);
+        
         var ask = new RegisteredServices.Ask(now, null);
         var info = queryGateway
             .query(ask, RegisteredServices.Reply.class)
