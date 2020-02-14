@@ -1,10 +1,11 @@
-package sinnet;
+package sinnet.read;
 
 import java.time.LocalDate;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import sinnet.Name;
 
 /**
  * Container class for related Query, Response and Application Notification

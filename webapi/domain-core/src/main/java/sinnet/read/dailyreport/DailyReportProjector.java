@@ -8,10 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
-import sinnet.DailyReport;
-import sinnet.RegisteredServices;
+import lombok.Setter;
 import sinnet.appevents.ServicesProjection;
 import sinnet.events.NewServiceRegistered;
+import sinnet.read.DailyReports;
 
 /**
  * Manages projection of services provided for clients.
@@ -21,10 +21,12 @@ public class DailyReportProjector {
 
     /** Projection storage. */
     @Autowired
+    @Setter
     private DailyReportRepository repository;
 
     /** Used to inform about changes in projection. */
     @Autowired
+    @Setter
     private ApplicationEventPublisher publisher;
 
     /**
@@ -46,10 +48,10 @@ public class DailyReportProjector {
      * @return an answer
      */
     @QueryHandler
-    public DailyReport.Reply reply(final DailyReport.Ask ask) {
-        var summary = new DailyReport.ServiceSummary();
+    public DailyReports.Reply reply(final DailyReports.Ask ask) {
+        var summary = new DailyReports.ServiceSummary();
         summary.setWhen(ask.getWhen());
-        return DailyReport.Reply.Some.builder().entry(summary).build();
+        return DailyReports.Reply.Some.builder().entry(summary).build();
     }
 
     /**

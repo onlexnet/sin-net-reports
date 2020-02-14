@@ -10,43 +10,47 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import lombok.SneakyThrows;
 import sinnet.AppTestContext;
-import sinnet.DailyReport;
+import sinnet.read.DailyReports;
 import sinnet.RegisterNewServiceAction;
+import sinnet.events.NewServiceRegistered;
+import sinnet.read.dailyreport.DailyReportProjector;
+import sinnet.read.dailyreport.DailyReportRepository;
 
 /** Tests for DailyReportProjection. */
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = { AppTestContext.class })
-@EnableAutoConfiguration
+@DataJpaTest
 public class DailyReportProjectionTests {
 
-    /** Command Gateway. */
     @Autowired
-    private CommandGateway commandGateway;
-
-    /** Query Gateway. */
-    @Autowired
-    private QueryGateway queryGateway;
-
+    private DailyReportRepository repository;
+    
     /** Should produce report. */
     @Test
-    @SneakyThrows
     public void shouldProduceReport() {
-        var now = LocalDate.of(2001, 2, 3);
-        var cmd = RegisterNewServiceAction.builder().when(now);
-        commandGateway.send(cmd);
 
-        var actual = queryGateway
-            .query(new DailyReport.Ask(now), DailyReport.Reply.class)
-            .get(300, TimeUnit.MILLISECONDS);
+        var sut = new DailyReportProjector();
+        sut.setPublisher(it -> {});
+        sut.setRepository(repository);
 
-        var expected = DailyReport.Reply.Some.builder()
-            .entry(new DailyReport.ServiceSummary(now))
+        var now = LocalDate.now();
+
+        var evt = new NewServiceRegistered();
+        evt.setWhen(now);
+
+        sut.on(evt);
+
+        var actual = sut.reply(new DailyReports.Ask(now));
+
+        var expected = DailyReports.Reply.Some.builder()
+            .entry(new DailyReports.ServiceSummary(now))
             .build();
+            
         Assertions.assertThat(actual).isEqualTo(expected);
     }
 }

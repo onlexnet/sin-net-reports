@@ -1,4 +1,4 @@
-package sinnet;
+package sinnet.read;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.Singular;
 
 /** Container class for 'DailyReport' Query. */
-public abstract class DailyReport {
+public abstract class DailyReports {
 
     /** Ask part of Query. */
     @NoArgsConstructor
