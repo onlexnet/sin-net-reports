@@ -1,7 +1,5 @@
 package sinnet.read.dailyreport;
 
-import org.springframework.data.domain.Example;
-
 import org.axonframework.eventhandling.EventHandler;
 import org.axonframework.queryhandling.QueryHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,9 +41,9 @@ public class DailyReportProjector {
     }
 
     /**
-     * Query handler.
-     * @param ask query
-     * @return an answer
+     * Query handler. See {@link DailyReports}
+     * @param ask see {@link DailyReports.Ask}
+     * @return see {@link DailyReports.Reply}
      */
     @QueryHandler
     public DailyReports.Reply reply(final DailyReports.Ask ask) {
@@ -54,24 +52,4 @@ public class DailyReportProjector {
         return DailyReports.Reply.Some.builder().entry(summary).build();
     }
 
-    /**
-     * Query handler. See {@link RegisteredServices}
-     * @param ask see {@link RegisteredServices.Ask}
-     * @return see {@link RegisteredServices.Reply}
-     */
-    @QueryHandler
-    public RegisteredServices.Reply reply(final RegisteredServices.Ask ask) {
-
-        var probe = new DailyReportEntry();
-        probe.setWhen(ask.getFilterToDay());
-        var example = Example.of(probe);
-
-        var items = repository.findAll(example).stream()
-                    .map(it -> new RegisteredServices.ServiceEntry())
-                    .toArray(RegisteredServices.ServiceEntry[]::new);
-
-        var result = new RegisteredServices.Reply();
-        result.setEntries(items);
-        return result;
-    }
 }

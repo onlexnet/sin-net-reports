@@ -17,6 +17,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import lombok.SneakyThrows;
 import reactor.core.publisher.EmitterProcessor;
 import sinnet.appevents.ServicesProjection;
+import sinnet.read.DailyReports;
 
 /** Create and close report. */
 @ExtendWith(SpringExtension.class)
@@ -40,20 +41,18 @@ public class DomainSpec {
     @SneakyThrows
     public void shouldInitialize() {
         var now = LocalDate.now();
-        var cmd = Given
-            .createRegisterNewServiceAction()
-            .toBuilder().when(now).build();
+        var cmd = Given.createRegisterNewServiceAction().toBuilder().when(now).build();
 
         gateway.sendAndWait(cmd);
 
         appEvents.notifications.blockFirst();
-        
-        var ask = new RegisteredServices.Ask(now, null);
-        var info = queryGateway
-            .query(ask, RegisteredServices.Reply.class)
+
+        var ask = new DailyReports.Ask(now);
+        var actual = (DailyReports.Reply.Some) queryGateway
+            .query(ask, DailyReports.Reply.class)
             .get();
 
-        Assertions.assertThat(info.getEntries().length).isEqualTo(1);
+        Assertions.assertThat(actual.getEntries().size()).isEqualTo(1);
     }
 
 
