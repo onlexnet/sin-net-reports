@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project>
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>net.siudek</groupId>
+    <artifactId>sinnet</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <relativePath>../base-pom/pom.xml</relativePath>
+  </parent>
+
+  <artifactId>domain-core</artifactId>
+
+  <properties>
+      <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/../${aggregate.report.dir}</sonar.coverage.jacoco.xmlReportPaths>
+      <sonar.projectKey>sinnet-domain-core</sonar.projectKey>
+  </properties>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>io.projectreactor</groupId>
+            <artifactId>reactor-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.reactivestreams</groupId>
+            <artifactId>reactive-streams</artifactId>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>3.14.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>net.siudek</groupId>
+            <artifactId>domain-api</artifactId>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.axonframework</groupId>
+            <artifactId>axon-modelling</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.axonframework</groupId>
+            <artifactId>axon-test</artifactId>
+        </dependency>
+
+        <dependency>
+          <groupId>org.axonframework</groupId>
+          <artifactId>axon-configuration</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>org.axonframework</groupId>
+          <artifactId>axon-spring-boot-starter</artifactId>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+        </dependency>
+        
+        <!-- 
+            depepdency added to fix mvn test: java.lang.NoClassDefFoundError: org/hamcrest/Description 
+            Try to remove it after changine dependencies to newwest versions
+        -->
+        <!-- <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-all</artifactId>
+            <version>1.3</version>
+            <scope>test</scope>
+        </dependency> -->
+
+    </dependencies>
+
+</project>

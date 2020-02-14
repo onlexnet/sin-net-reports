@@ -1,26 +1,17 @@
-<project>
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>net.siudek</groupId>
-  <artifactId>sinnet-group</artifactId>
+  <artifactId>sinnet</artifactId>
   <version>1.0-SNAPSHOT</version>
-
-  <modules>
-    <module>base-pom</module>
-    <module>domain-api</module>
-    <module>domain-core</module>
-    <module>webapi</module>
-    <module>host</module>
-    <module>report-aggregate</module>
-  </modules>
   <packaging>pom</packaging>
 
   <properties>
-
-    <sonar.organization>sin-net-pl</sonar.organization>
-    <sonar.host.url>https://sonarcloud.io</sonar.host.url>
-    <!-- Environment variable is already defined in CIDD as SONAR_TOKEN -->
-    <sonar.login>${env.APP_SONAR_TOKEN}</sonar.login>
+    <my.version>1.0-SNAPSHOT</my.version>
+    <axon.version>4.2.1</axon.version>
+    <spring-boot.version>2.2.4.RELEASE</spring-boot.version>
+    <jacoco.version>0.8.5</jacoco.version>
 
     <aggregate.report.dir>report-aggregate/target/site/jacoco-aggregate/jacoco.xml</aggregate.report.dir>
 
@@ -28,7 +19,8 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
-  <dependencies>
+  <dependencyManagement>
+    <dependencies>
 
     <dependency>
       <groupId>org.projectlombok</groupId>
@@ -36,7 +28,65 @@
       <version>1.18.10</version>
       <scope>provided</scope>
     </dependency>
-  </dependencies>
+
+      <dependency>
+        <groupId>net.siudek</groupId>
+        <artifactId>webapi</artifactId>
+        <version>${my.version}</version>
+        <scope>compile</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>net.siudek</groupId>
+        <artifactId>domain-api</artifactId>
+        <version>${my.version}</version>
+        <scope>compile</scope>
+      </dependency>
+
+       <dependency>
+           <groupId>org.springframework.boot</groupId>
+           <artifactId>spring-boot-dependencies</artifactId>
+           <version>${spring-boot.version}</version>
+           <type>pom</type>
+           <scope>import</scope>
+       </dependency>
+
+
+      <dependency>
+        <groupId>org.axonframework</groupId>
+        <artifactId>axon-spring-boot-starter</artifactId>
+        <version>${axon.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.axonframework</groupId>
+            <artifactId>axon-server-connector</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>org.axonframework</groupId>
+        <artifactId>axon-test</artifactId>
+        <version>${axon.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.axonframework</groupId>
+        <artifactId>axon-modelling</artifactId>
+        <version>${axon.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.axonframework</groupId>
+        <artifactId>axon-messaging</artifactId>
+        <version>${axon.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.axonframework</groupId>
+        <artifactId>axon-configuration</artifactId>
+        <version>${axon.version}</version>
+      </dependency>
+      
+    </dependencies>
+  </dependencyManagement>
 
   <build>
     <plugins>
