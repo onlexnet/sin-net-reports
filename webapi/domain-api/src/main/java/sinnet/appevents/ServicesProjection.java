@@ -7,6 +7,6 @@ package sinnet.appevents;
 public abstract class ServicesProjection {
 
     /** Emited when ServiceProject has changed. */
-    public final class Changed {
+    public static final class Changed {
     }
 }

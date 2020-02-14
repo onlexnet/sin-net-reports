@@ -9,15 +9,18 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Scope;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import lombok.SneakyThrows;
+import reactor.core.publisher.EmitterProcessor;
+import sinnet.appevents.ServicesProjection;
 
 /** Create and close report. */
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = { AppTestContext.class })
+@ContextConfiguration(classes = { AppTestContext.class, DomainSpec.class })
 @EnableAutoConfiguration
 public class DomainSpec {
 
@@ -29,6 +32,8 @@ public class DomainSpec {
     @Autowired
     private QueryGateway queryGateway;
 
+    @Autowired
+    private AppEvents appEvents;
 
     /** fixme. */
     @Test
@@ -41,8 +46,7 @@ public class DomainSpec {
 
         gateway.sendAndWait(cmd);
 
-        // TODO wait for update
-        Thread.sleep(1000);
+        appEvents.notifications.blockFirst();
         
         var ask = new RegisteredServices.Ask(now, null);
         var info = queryGateway
@@ -50,5 +54,20 @@ public class DomainSpec {
             .get();
 
         Assertions.assertThat(info.getEntries().length).isEqualTo(1);
+    }
+
+
+    @Bean
+    @Scope("prototype")
+    public static AppEvents appEvents() {
+        return new AppEvents();
+    }
+
+    static class AppEvents {
+        private EmitterProcessor<ServicesProjection.Changed> notifications = EmitterProcessor.create();
+
+        public void onApplicationEvent(ServicesProjection.Changed event) {
+            notifications.onNext(event);
+        }
     }
 }

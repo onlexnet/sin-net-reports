@@ -5,10 +5,12 @@ import org.springframework.data.domain.Example;
 import org.axonframework.eventhandling.EventHandler;
 import org.axonframework.queryhandling.QueryHandler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import sinnet.DailyReport;
 import sinnet.RegisteredServices;
+import sinnet.appevents.ServicesProjection;
 import sinnet.events.NewServiceRegistered;
 
 /**
@@ -21,6 +23,10 @@ public class DailyReportProjector {
     @Autowired
     private DailyReportRepository repository;
 
+    /** Used to inform about changes in projection. */
+    @Autowired
+    private ApplicationEventPublisher publisher;
+
     /**
      * Include just created service in list of services.
      * @param evt event
@@ -30,6 +36,8 @@ public class DailyReportProjector {
         var model = new DailyReportEntry();
         model.setWhen(evt.getWhen());
         repository.save(model);
+
+        publisher.publishEvent(new ServicesProjection.Changed());
     }
 
     /**
