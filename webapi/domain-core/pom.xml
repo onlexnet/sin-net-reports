@@ -84,17 +84,6 @@
             <artifactId>h2</artifactId>
         </dependency>
         
-        <!-- 
-            depepdency added to fix mvn test: java.lang.NoClassDefFoundError: org/hamcrest/Description 
-            Try to remove it after changine dependencies to newwest versions
-        -->
-        <!-- <dependency>
-            <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest-all</artifactId>
-            <version>1.3</version>
-            <scope>test</scope>
-        </dependency> -->
-
     </dependencies>
 
 </project>

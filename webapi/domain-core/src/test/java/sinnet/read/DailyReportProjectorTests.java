@@ -1,31 +1,19 @@
 package sinnet.read;
 
 import java.time.LocalDate;
-import java.util.concurrent.TimeUnit;
 
 import org.assertj.core.api.Assertions;
-import org.axonframework.commandhandling.gateway.CommandGateway;
-import org.axonframework.queryhandling.QueryGateway;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import lombok.SneakyThrows;
-import sinnet.AppTestContext;
-import sinnet.read.DailyReports;
-import sinnet.RegisterNewServiceAction;
 import sinnet.events.NewServiceRegistered;
 import sinnet.read.dailyreport.DailyReportProjector;
 import sinnet.read.dailyreport.DailyReportRepository;
 
-/** Tests for DailyReportProjection. */
-@ExtendWith(SpringExtension.class)
-@DataJpaTest
-public class DailyReportProjectionTests {
+/** Tests for {@link DailyReportProjector}. */
+@DataJpaTest(showSql = true)
+public class DailyReportProjectorTests {
 
     @Autowired
     private DailyReportRepository repository;
