@@ -16,8 +16,7 @@
     "react-dom": "^16.8.6",
     "react-router-dom": "^5.0.1",
     "react-scripts": "3.3.0",
-    "typescript": "3.5.2",
-    "snyk": "^1.258.2"
+    "typescript": "3.5.2"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -25,9 +24,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "schema-gen": "graphql-codegen --config ./src/generate-config.yml",
-    "start-dev": "run-p graphql-generate-components start",
-    "snyk-protect": "snyk protect",
-    "prepare": "npm run snyk-protect"
+    "start-dev": "run-p graphql-generate-components start"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -56,6 +53,5 @@
     "apollo": "^2.14.1",
     "graphql-tools": "^4.0.5",
     "react-test-renderer": "^16.8.6"
-  },
-  "snyk": true
+  }
 }
