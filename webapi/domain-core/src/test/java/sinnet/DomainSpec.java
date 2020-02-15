@@ -11,17 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Scope;
 import org.springframework.context.event.EventListener;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import lombok.SneakyThrows;
 import reactor.core.publisher.ReplayProcessor;
 import sinnet.appevents.ServicesProjection;
 import sinnet.read.DailyReports;
-
-import sinnet.AppTestContext;
 
 /** Create and close report. */
 @ExtendWith(SpringExtension.class)

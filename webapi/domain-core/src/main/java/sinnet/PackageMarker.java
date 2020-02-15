@@ -1,6 +1,6 @@
 package sinnet;
 
-/** TODO. */
+/** Simple class used as reference to its package. */
 public abstract class PackageMarker {
 
 }
