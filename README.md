@@ -12,3 +12,7 @@ In scope:
 - Define list of clients
 - Register time and distance of provided service through Web site
 - Create PDF attachments per client for given period on demand
+
+## To run locally for tests
+
+- **docker-compose up**
