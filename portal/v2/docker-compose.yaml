@@ -1,0 +1,22 @@
+# https://github.com/mvcds/docker-reacts-to-hot-reload
+version: '3.7'
+services:
+  app:
+    build:
+      context: ./
+      dockerfile: hot.Dockerfile
+    ports:
+    - "3000:3000" # well-known react development port
+    volumes:
+      - type: bind
+        source: ./
+        target: /usr/src/app
+        read_only: false
+        
+      # - .:/usr/src/app/:rw
+    command: bash -c "
+      cd /usr/src/app
+      && yarn install
+      && yarn start
+      "
+
