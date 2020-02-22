@@ -16,3 +16,4 @@ In scope:
 ## To run locally for tests
 
 - **docker-compose up**
+- goto **http://localhost:3000**
