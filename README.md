@@ -16,4 +16,8 @@ In scope:
 ## To run locally for tests
 
 - **docker-compose up**
-- goto **http://localhost:3000**
+- goto **http://localhost:3000** to see UI
+- goto **http://localhost:8080/graphiql** to see webapi
+
+## Used articles
+- https://itnext.io/cluster-recipe-external-proxy-for-kubernetes-ingress-or-docker-compose-ingress-with-haproxy-on-f81e3adee5ef

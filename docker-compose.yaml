@@ -1,7 +1,8 @@
 # https://github.com/mvcds/docker-reacts-to-hot-reload
 version: '3.7'
 services:
-  app:
+  
+  portal:
     build:
       context: ./portal/v2
       dockerfile: hot.Dockerfile
@@ -13,10 +14,30 @@ services:
         target: /usr/src/app
         read_only: false
         
-      # - .:/usr/src/app/:rw
     command: bash -c "
       cd /usr/src/app
       && yarn install
       && yarn start
       "
 
+  webapi:
+    build:
+      context: ./webapi
+      dockerfile: hot.Dockerfile
+    ports:
+    - "8080:8080" # well-known spring development port
+    volumes:
+      - type: bind
+        source: ./webapi
+        target: /usr/src/app
+        read_only: false
+        
+    command: bash -c "
+      cd /usr/src/app
+      && chmod +x mvnw
+      && ./mvnw install -DskipTests -Dcheckstyle.skip=true
+      && ./mvnw -pl host spring-boot:run
+      "
+
+
+      
