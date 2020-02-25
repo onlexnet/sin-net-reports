@@ -2,6 +2,7 @@ import React from 'react';
 import { Stack, Text, Link, FontWeights } from 'office-ui-fabric-react';
 
 import logo from './fabric.png';
+import { NavBasicExample } from './NavBar';
 
 const boldStyle = {
   root: { fontWeight: FontWeights.semibold }
@@ -9,6 +10,8 @@ const boldStyle = {
 
 export const App: React.FunctionComponent = () => {
   return (
+    <>
+    <NavBasicExample />
     <Stack
       horizontalAlign="center"
       verticalAlign="center"
@@ -46,5 +49,6 @@ export const App: React.FunctionComponent = () => {
         <Link href="https://developer.microsoft.com/en-us/fabric#/styles/themegenerator">Theme</Link>
       </Stack>
     </Stack>
+    </>
   );
 };

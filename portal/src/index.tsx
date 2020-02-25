@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { App } from './App';
-import { mergeStyles } from 'office-ui-fabric-react';
+import { mergeStyles, Fabric } from 'office-ui-fabric-react';
 
 // Inject some global styles
 mergeStyles({
@@ -14,4 +14,8 @@ mergeStyles({
   }
 });
 
-ReactDOM.render(<App />, document.getElementById('app'));
+ReactDOM.render(
+  <Fabric>
+    <App/>
+  </Fabric>,
+  document.getElementById('app'));
