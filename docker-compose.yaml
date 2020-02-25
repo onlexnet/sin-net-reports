@@ -4,13 +4,13 @@ services:
   
   webapp:
     build:
-      context: ./portal/v2
+      context: ./portal
       dockerfile: hot.Dockerfile
     ports:
     - "3000:3000" # well-known react development port
     volumes:
       - type: bind
-        source: ./portal/v2
+        source: ./portal
         target: /usr/src/app
         read_only: false
     command: bash -c "
