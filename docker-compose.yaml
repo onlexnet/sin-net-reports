@@ -2,7 +2,7 @@
 version: '3.7'
 services:
   
-  portal:
+  webapp:
     build:
       context: ./portal/v2
       dockerfile: hot.Dockerfile
@@ -13,7 +13,6 @@ services:
         source: ./portal/v2
         target: /usr/src/app
         read_only: false
-        
     command: bash -c "
       cd /usr/src/app
       && yarn install
@@ -38,6 +37,3 @@ services:
       && ./mvnw install -DskipTests -Dcheckstyle.skip=true
       && ./mvnw -pl host spring-boot:run
       "
-
-
-      
