@@ -1,24 +1,44 @@
 {
-  "name": "aaa-single",
+  "name": "v1",
   "version": "0.1.0",
-  "license": "MIT",
-  "main": "lib-commonjs/index.js",
-  "module": "lib/index.js",
-  "scripts": {
-    "build": "just-scripts build",
-    "just": "just-scripts",
-    "start": "just-scripts start",
-    "test": "just-scripts test",
-    "change": "npx beachball change",
-    "gen": "npx plop"
-  },
+  "private": true,
   "dependencies": {
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6",
-    "office-ui-fabric-react": "^7.0.0"
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.5.0",
+    "@testing-library/user-event": "^7.2.1",
+    "@types/jest": "^24.9.1",
+    "@types/node": "^12.12.29",
+    "@types/react": "^16.9.23",
+    "@types/react-dom": "^16.9.5",
+    "office-ui-fabric-react": "^7.100.0",
+    "react": "^16.13.0",
+    "react-dom": "^16.13.0",
+    "react-router-dom": "^5.1.2",
+    "react-scripts": "3.4.0",
+    "typescript": "^3.7.5"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   },
   "devDependencies": {
-    "just-stack-react": "^1.0.0",
-    "just-scripts": "^0.27.0"
+    "@types/react-router-dom": "^5.1.3"
   }
 }

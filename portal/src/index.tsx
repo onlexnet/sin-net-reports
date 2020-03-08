@@ -1,7 +1,18 @@
+
+
+
+
+
+
+
+
+
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { App } from './App';
 import { mergeStyles, Fabric } from 'office-ui-fabric-react';
+import * as serviceWorker from './serviceWorker';
 
 // Inject some global styles
 mergeStyles({
@@ -14,8 +25,16 @@ mergeStyles({
   }
 });
 
+
 ReactDOM.render(
-  <Fabric>
-    <App/>
-  </Fabric>,
-  document.getElementById('app'));
+    <Fabric>
+      <App/>
+    </Fabric>,
+    document.getElementById('app'));
+  
+    
+
+// If you want your app to work offline and load faster, you can change
+// unregister() to register() below. Note this comes with some pitfalls.
+// Learn more about service workers: https://bit.ly/CRA-PWA
+serviceWorker.unregister();

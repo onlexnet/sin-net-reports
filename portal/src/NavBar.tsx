@@ -1,7 +1,11 @@
 import * as React from 'react';
 import { Nav, INavLink } from 'office-ui-fabric-react/lib/Nav';
+import { RouteComponentProps } from "react-router-dom";
 
-export const NavBasicExample: React.FunctionComponent = () => {
+//Child component related stuff
+interface ChildComponentProps extends RouteComponentProps<any> {}
+
+export const NavBasicExample: React.FC<ChildComponentProps> = (props) => {
   return (
     <Nav
       onLinkClick={_onLinkClick}
@@ -21,8 +25,9 @@ export const NavBasicExample: React.FunctionComponent = () => {
         {
           links: [
             {
-              name: 'Home',
-              url: 'http://example.com',
+              name: 'Usługi',
+              onClick: () => props.history.push('/services'),
+              url: '',
               expandAriaLabel: 'Expand Home section',
               collapseAriaLabel: 'Collapse Home section',
               links: [
@@ -43,37 +48,19 @@ export const NavBasicExample: React.FunctionComponent = () => {
               isExpanded: true
             },
             {
-              name: 'Documents',
-              url: 'http://example.com',
+              name: 'Klienci',
+              onClick: () => props.history.push('/customers'),
+              url: '',
               key: 'key3',
               isExpanded: true,
               target: '_blank'
             },
             {
-              name: 'Pages',
+              name: 'Raporty',
               url: 'http://msn.com',
               key: 'key4',
               target: '_blank'
             },
-            {
-              name: 'Notebook',
-              url: 'http://msn.com',
-              key: 'key5',
-              disabled: true
-            },
-            {
-              name: 'Communication and Media',
-              url: 'http://msn.com',
-              key: 'key6',
-              target: '_blank'
-            },
-            {
-              name: 'News',
-              url: 'http://cnn.com',
-              icon: 'News',
-              key: 'key7',
-              target: '_blank'
-            }
           ]
         }
       ]}
