@@ -1,38 +1,17 @@
+import React from "react";
+import ReactDOM from "react-dom";
+import { App } from "./App";
+import { Fabric } from "office-ui-fabric-react";
+import * as serviceWorker from "./serviceWorker";
 
-
-
-
-
-
-
-
-
-
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { App } from './App';
-import { mergeStyles, Fabric } from 'office-ui-fabric-react';
-import * as serviceWorker from './serviceWorker';
-
-// Inject some global styles
-mergeStyles({
-  selectors: {
-    ':global(body), :global(html), :global(#app)': {
-      margin: 0,
-      padding: 0,
-      height: '100vh'
-    }
-  }
-});
-
+import 'office-ui-fabric-react/dist/css/fabric.css';
 
 ReactDOM.render(
-    <Fabric>
-      <App/>
-    </Fabric>,
-    document.getElementById('app'));
-  
-    
+  <Fabric>
+    <App />
+  </Fabric>,
+  document.getElementById("app")
+);
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
