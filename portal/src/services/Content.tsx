@@ -72,7 +72,7 @@ export interface IDocument {
   fileSizeRaw: number;
 }
 
-export class Services extends React.Component<{}, IDetailsListDocumentsExampleState> {
+export class Content extends React.Component<{}, IDetailsListDocumentsExampleState> {
   private _selection: Selection;
   private _allItems: IDocument[];
 
