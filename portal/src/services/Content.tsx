@@ -6,6 +6,7 @@ import { Announced } from 'office-ui-fabric-react/lib/Announced';
 import { DetailsList, DetailsListLayoutMode, Selection, SelectionMode, IColumn } from 'office-ui-fabric-react/lib/DetailsList';
 import { MarqueeSelection } from 'office-ui-fabric-react/lib/MarqueeSelection';
 import { mergeStyleSets } from 'office-ui-fabric-react/lib/Styling';
+import { _randomDate, _randomUserName } from './DummyData';
 
 const classNames = mergeStyleSets({
   fileIconHeaderIcon: {
@@ -84,7 +85,7 @@ export class Content extends React.Component<{}, IDetailsListDocumentsExampleSta
     const columns: IColumn[] = [
       {
         key: 'column1',
-        name: 'File Type',
+        name: 'Ikona',
         className: classNames.fileIconCell,
         iconClassName: classNames.fileIconHeaderIcon,
         ariaLabel: 'Column operations for File type, Press to sort on File type',
@@ -100,7 +101,7 @@ export class Content extends React.Component<{}, IDetailsListDocumentsExampleSta
       },
       {
         key: 'column2',
-        name: 'Name',
+        name: 'Klient',
         fieldName: 'name',
         minWidth: 210,
         maxWidth: 350,
@@ -116,7 +117,7 @@ export class Content extends React.Component<{}, IDetailsListDocumentsExampleSta
       },
       {
         key: 'column3',
-        name: 'Date Modified',
+        name: 'Data',
         fieldName: 'dateModifiedValue',
         minWidth: 70,
         maxWidth: 90,
@@ -130,7 +131,7 @@ export class Content extends React.Component<{}, IDetailsListDocumentsExampleSta
       },
       {
         key: 'column4',
-        name: 'Modified By',
+        name: 'Usługa',
         fieldName: 'modifiedBy',
         minWidth: 70,
         maxWidth: 90,
@@ -145,7 +146,21 @@ export class Content extends React.Component<{}, IDetailsListDocumentsExampleSta
       },
       {
         key: 'column5',
-        name: 'File Size',
+        name: 'Czas',
+        fieldName: 'fileSizeRaw',
+        minWidth: 70,
+        maxWidth: 90,
+        isResizable: true,
+        isCollapsible: true,
+        data: 'number',
+        onColumnClick: this._onColumnClick,
+        onRender: (item: IDocument) => {
+          return <span>{item.fileSize}</span>;
+        }
+      },
+      {
+        key: 'column6',
+        name: 'Dojazd',
         fieldName: 'fileSizeRaw',
         minWidth: 70,
         maxWidth: 90,
@@ -316,17 +331,13 @@ function _copyAndSort<T>(items: T[], columnKey: string, isSortedDescending?: boo
 
 function _generateDocuments() {
   const items: IDocument[] = [];
-  for (let i = 0; i < 500; i++) {
+  for (let i = 0; i <10; i++) {
     const randomDate = _randomDate(new Date(2012, 0, 1), new Date());
     const randomFileSize = _randomFileSize();
     const randomFileType = _randomFileIcon();
     let fileName = _lorem(2);
     fileName = fileName.charAt(0).toUpperCase() + fileName.slice(1).concat(`.${randomFileType.docType}`);
-    let userName = _lorem(2);
-    userName = userName
-      .split(' ')
-      .map((name: string) => name.charAt(0).toUpperCase() + name.slice(1))
-      .join(' ');
+    const userName = _randomUserName();
     items.push({
       key: i.toString(),
       name: fileName,
@@ -341,14 +352,6 @@ function _generateDocuments() {
     });
   }
   return items;
-}
-
-function _randomDate(start: Date, end: Date): { value: number; dateFormatted: string } {
-  const date: Date = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
-  return {
-    value: date.valueOf(),
-    dateFormatted: date.toLocaleDateString()
-  };
 }
 
 const FILE_ICONS: { name: string }[] = [
