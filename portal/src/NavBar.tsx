@@ -30,21 +30,6 @@ export const NavBasicExample: React.FC<ChildComponentProps> = (props) => {
               url: '',
               expandAriaLabel: 'Expand Home section',
               collapseAriaLabel: 'Collapse Home section',
-              links: [
-                {
-                  name: 'Activity',
-                  url: 'http://msn.com',
-                  key: 'key1',
-                  target: '_blank'
-                },
-                {
-                  name: 'MSN',
-                  url: 'http://msn.com',
-                  disabled: true,
-                  key: 'key2',
-                  target: '_blank'
-                }
-              ],
               isExpanded: true
             },
             {
