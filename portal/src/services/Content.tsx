@@ -1,53 +1,63 @@
-import * as React from 'react';
-import { TextField } from 'office-ui-fabric-react/lib/TextField';
-import { Toggle } from 'office-ui-fabric-react/lib/Toggle';
-import { Fabric } from 'office-ui-fabric-react/lib/Fabric';
-import { Announced } from 'office-ui-fabric-react/lib/Announced';
-import { DetailsList, DetailsListLayoutMode, Selection, SelectionMode, IColumn } from 'office-ui-fabric-react/lib/DetailsList';
-import { MarqueeSelection } from 'office-ui-fabric-react/lib/MarqueeSelection';
-import { mergeStyleSets } from 'office-ui-fabric-react/lib/Styling';
-import { _randomDate, _randomUserName } from './DummyData';
+import * as React from "react";
+import { TextField } from "office-ui-fabric-react/lib/TextField";
+import { Toggle } from "office-ui-fabric-react/lib/Toggle";
+import { Fabric } from "office-ui-fabric-react/lib/Fabric";
+import { Announced } from "office-ui-fabric-react/lib/Announced";
+import {
+  DetailsList,
+  DetailsListLayoutMode,
+  Selection,
+  SelectionMode,
+  IColumn
+} from "office-ui-fabric-react/lib/DetailsList";
+import { MarqueeSelection } from "office-ui-fabric-react/lib/MarqueeSelection";
+import { mergeStyleSets } from "office-ui-fabric-react/lib/Styling";
+import {
+  _randomDate,
+  _randomEmployeeName,
+  _randomCustomerName
+} from "./DummyData";
 
 const classNames = mergeStyleSets({
   fileIconHeaderIcon: {
     padding: 0,
-    fontSize: '16px'
+    fontSize: "16px"
   },
   fileIconCell: {
-    textAlign: 'center',
+    textAlign: "center",
     selectors: {
-      '&:before': {
-        content: '.',
-        display: 'inline-block',
-        verticalAlign: 'middle',
-        height: '100%',
-        width: '0px',
-        visibility: 'hidden'
+      "&:before": {
+        content: ".",
+        display: "inline-block",
+        verticalAlign: "middle",
+        height: "100%",
+        width: "0px",
+        visibility: "hidden"
       }
     }
   },
   fileIconImg: {
-    verticalAlign: 'middle',
-    maxHeight: '16px',
-    maxWidth: '16px'
+    verticalAlign: "middle",
+    maxHeight: "16px",
+    maxWidth: "16px"
   },
   controlWrapper: {
-    display: 'flex',
-    flexWrap: 'wrap'
+    display: "flex",
+    flexWrap: "wrap"
   },
   exampleToggle: {
-    display: 'inline-block',
-    marginBottom: '10px',
-    marginRight: '30px'
+    display: "inline-block",
+    marginBottom: "10px",
+    marginRight: "30px"
   },
   selectionDetails: {
-    marginBottom: '20px'
+    marginBottom: "20px"
   }
 });
 const controlStyles = {
   root: {
-    margin: '0 30px 20px 0',
-    maxWidth: '300px'
+    margin: "0 30px 20px 0",
+    maxWidth: "300px"
   }
 };
 
@@ -62,7 +72,7 @@ export interface IDetailsListDocumentsExampleState {
 
 export interface IDocument {
   key: string;
-  name: string;
+  customer: string;
   value: string;
   iconName: string;
   fileType: string;
@@ -73,7 +83,14 @@ export interface IDocument {
   fileSizeRaw: number;
 }
 
-export class Content extends React.Component<{}, IDetailsListDocumentsExampleState> {
+export interface TypedColumn extends IColumn {
+  fieldName: keyof IDocument;
+}
+
+export class Content extends React.Component<
+  {},
+  IDetailsListDocumentsExampleState
+> {
   private _selection: Selection;
   private _allItems: IDocument[];
 
@@ -82,62 +99,46 @@ export class Content extends React.Component<{}, IDetailsListDocumentsExampleSta
 
     this._allItems = _generateDocuments();
 
-    const columns: IColumn[] = [
+    const columns: TypedColumn[] = [
       {
-        key: 'column1',
-        name: 'Ikona',
-        className: classNames.fileIconCell,
-        iconClassName: classNames.fileIconHeaderIcon,
-        ariaLabel: 'Column operations for File type, Press to sort on File type',
-        iconName: 'Page',
-        isIconOnly: true,
-        fieldName: 'name',
-        minWidth: 16,
-        maxWidth: 16,
-        onColumnClick: this._onColumnClick,
-        onRender: (item: IDocument) => {
-          return <img src={item.iconName} className={classNames.fileIconImg} alt={item.fileType + ' file icon'} />;
-        }
-      },
-      {
-        key: 'column2',
-        name: 'Klient',
-        fieldName: 'name',
+        key: "column2",
+        name: "Klient",
+        fieldName: "customer",
         minWidth: 210,
         maxWidth: 350,
         isRowHeader: true,
         isResizable: true,
         isSorted: true,
         isSortedDescending: false,
-        sortAscendingAriaLabel: 'Sorted A to Z',
-        sortDescendingAriaLabel: 'Sorted Z to A',
+        sortAscendingAriaLabel: "Sorted A to Z",
+        sortDescendingAriaLabel: "Sorted Z to A",
         onColumnClick: this._onColumnClick,
-        data: 'string',
+        data: "string",
         isPadded: true
       },
       {
-        key: 'column3',
-        name: 'Data',
-        fieldName: 'dateModifiedValue',
+        key: "column3",
+        name: "Data",
+        fieldName: "dateModifiedValue",
         minWidth: 70,
         maxWidth: 90,
         isResizable: true,
         onColumnClick: this._onColumnClick,
-        data: 'number',
+        data: "number",
         onRender: (item: IDocument) => {
           return <span>{item.dateModified}</span>;
         },
         isPadded: true
       },
       {
-        key: 'column4',
-        name: 'Usługa',
-        fieldName: 'modifiedBy',
+        key: "column4",
+        name: "Pracownik",
+        fieldName: "modifiedBy",
         minWidth: 70,
         maxWidth: 90,
         isResizable: true,
         isCollapsible: true,
-        data: 'string',
+        data: "string",
         onColumnClick: this._onColumnClick,
         onRender: (item: IDocument) => {
           return <span>{item.modifiedBy}</span>;
@@ -145,28 +146,28 @@ export class Content extends React.Component<{}, IDetailsListDocumentsExampleSta
         isPadded: true
       },
       {
-        key: 'column5',
-        name: 'Czas',
-        fieldName: 'fileSizeRaw',
+        key: "column5",
+        name: "Czas",
+        fieldName: "fileSizeRaw",
         minWidth: 70,
         maxWidth: 90,
         isResizable: true,
         isCollapsible: true,
-        data: 'number',
+        data: "number",
         onColumnClick: this._onColumnClick,
         onRender: (item: IDocument) => {
           return <span>{item.fileSize}</span>;
         }
       },
       {
-        key: 'column6',
-        name: 'Dojazd',
-        fieldName: 'fileSizeRaw',
+        key: "column6",
+        name: "Dojazd",
+        fieldName: "fileSizeRaw",
         minWidth: 70,
         maxWidth: 90,
         isResizable: true,
         isCollapsible: true,
-        data: 'number',
+        data: "number",
         onColumnClick: this._onColumnClick,
         onRender: (item: IDocument) => {
           return <span>{item.fileSize}</span>;
@@ -193,7 +194,14 @@ export class Content extends React.Component<{}, IDetailsListDocumentsExampleSta
   }
 
   public render() {
-    const { columns, isCompactMode, items, selectionDetails, isModalSelection, announcedMessage } = this.state;
+    const {
+      columns,
+      isCompactMode,
+      items,
+      selectionDetails,
+      isModalSelection,
+      announcedMessage
+    } = this.state;
 
     return (
       <Fabric>
@@ -214,12 +222,22 @@ export class Content extends React.Component<{}, IDetailsListDocumentsExampleSta
             offText="Normal"
             styles={controlStyles}
           />
-          <TextField label="Filter by name:" onChange={this._onChangeText} styles={controlStyles} />
-          <Announced message={`Number of items after filter applied: ${items.length}.`} />
+          <TextField
+            label="Filter by name:"
+            onChange={this._onChangeText}
+            styles={controlStyles}
+          />
+          <Announced
+            message={`Number of items after filter applied: ${items.length}.`}
+          />
         </div>
         <div className={classNames.selectionDetails}>{selectionDetails}</div>
         <Announced message={selectionDetails} />
-        {announcedMessage ? <Announced message={announcedMessage} /> : undefined}
+        {announcedMessage ? (
+          <Announced message={announcedMessage} />
+        ) : (
+          undefined
+        )}
         {isModalSelection ? (
           <MarqueeSelection selection={this._selection}>
             <DetailsList
@@ -257,8 +275,14 @@ export class Content extends React.Component<{}, IDetailsListDocumentsExampleSta
     );
   }
 
-  public componentDidUpdate(previousProps: any, previousState: IDetailsListDocumentsExampleState) {
-    if (previousState.isModalSelection !== this.state.isModalSelection && !this.state.isModalSelection) {
+  public componentDidUpdate(
+    previousProps: any,
+    previousState: IDetailsListDocumentsExampleState
+  ) {
+    if (
+      previousState.isModalSelection !== this.state.isModalSelection &&
+      !this.state.isModalSelection
+    ) {
       this._selection.setAllSelected(false);
     }
   }
@@ -267,19 +291,29 @@ export class Content extends React.Component<{}, IDetailsListDocumentsExampleSta
     return item.key;
   }
 
-  private _onChangeCompactMode = (ev: React.MouseEvent<HTMLElement>, checked?: boolean): void => {
+  private _onChangeCompactMode = (
+    ev: React.MouseEvent<HTMLElement>,
+    checked?: boolean
+  ): void => {
     const a = checked ?? false;
-    this.setState({ isCompactMode: a});
+    this.setState({ isCompactMode: a });
   };
 
-
-  private _onChangeModalSelection = (ev: React.MouseEvent<HTMLElement>, checked?: boolean): void => {
+  private _onChangeModalSelection = (
+    ev: React.MouseEvent<HTMLElement>,
+    checked?: boolean
+  ): void => {
     this.setState({ isModalSelection: checked ?? false });
   };
 
-  private _onChangeText = (ev: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, text?: string): void => {
+  private _onChangeText = (
+    ev: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
+    text?: string
+  ): void => {
     this.setState({
-      items: text ? this._allItems.filter(i => i.name.toLowerCase().indexOf(text) > -1) : this._allItems
+      items: text
+        ? this._allItems.filter(i => i.customer.toLowerCase().indexOf(text) > -1)
+        : this._allItems
     });
   };
 
@@ -292,31 +326,45 @@ export class Content extends React.Component<{}, IDetailsListDocumentsExampleSta
 
     switch (selectionCount) {
       case 0:
-        return 'No items selected';
+        return "No items selected";
       case 1:
-        return '1 item selected: ' + (this._selection.getSelection()[0] as IDocument).name;
+        return (
+          "1 item selected: " +
+          (this._selection.getSelection()[0] as IDocument).customer
+        );
       default:
         return `${selectionCount} items selected`;
     }
   }
 
-  private _onColumnClick = (ev: React.MouseEvent<HTMLElement>, column: IColumn): void => {
+  private _onColumnClick = (
+    ev: React.MouseEvent<HTMLElement>,
+    column: IColumn
+  ): void => {
     const { columns, items } = this.state;
     const newColumns: IColumn[] = columns.slice();
-    const currColumn: IColumn = newColumns.filter(currCol => column.key === currCol.key)[0];
+    const currColumn: IColumn = newColumns.filter(
+      currCol => column.key === currCol.key
+    )[0];
     newColumns.forEach((newCol: IColumn) => {
       if (newCol === currColumn) {
         currColumn.isSortedDescending = !currColumn.isSortedDescending;
         currColumn.isSorted = true;
         this.setState({
-          announcedMessage: `${currColumn.name} is sorted ${currColumn.isSortedDescending ? 'descending' : 'ascending'}`
+          announcedMessage: `${currColumn.name} is sorted ${
+            currColumn.isSortedDescending ? "descending" : "ascending"
+          }`
         });
       } else {
         newCol.isSorted = false;
         newCol.isSortedDescending = true;
       }
     });
-    const newItems = _copyAndSort(items, currColumn.fieldName!, currColumn.isSortedDescending);
+    const newItems = _copyAndSort(
+      items,
+      currColumn.fieldName!,
+      currColumn.isSortedDescending
+    );
     this.setState({
       columns: newColumns,
       items: newItems
@@ -324,27 +372,36 @@ export class Content extends React.Component<{}, IDetailsListDocumentsExampleSta
   };
 }
 
-function _copyAndSort<T>(items: T[], columnKey: string, isSortedDescending?: boolean): T[] {
+function _copyAndSort<T>(
+  items: T[],
+  columnKey: string,
+  isSortedDescending?: boolean
+): T[] {
   const key = columnKey as keyof T;
-  return items.slice(0).sort((a: T, b: T) => ((isSortedDescending ? a[key] < b[key] : a[key] > b[key]) ? 1 : -1));
+  return items
+    .slice(0)
+    .sort((a: T, b: T) =>
+      (isSortedDescending ? a[key] < b[key] : a[key] > b[key]) ? 1 : -1
+    );
 }
 
 function _generateDocuments() {
   const items: IDocument[] = [];
-  for (let i = 0; i <10; i++) {
+  for (let i = 0; i < 10; i++) {
     const randomDate = _randomDate(new Date(2012, 0, 1), new Date());
     const randomFileSize = _randomFileSize();
     const randomFileType = _randomFileIcon();
     let fileName = _lorem(2);
-    fileName = fileName.charAt(0).toUpperCase() + fileName.slice(1).concat(`.${randomFileType.docType}`);
-    const userName = _randomUserName();
+    fileName =
+      fileName.charAt(0).toUpperCase() +
+      fileName.slice(1).concat(`.${randomFileType.docType}`);
     items.push({
       key: i.toString(),
-      name: fileName,
+      customer: _randomCustomerName(),
       value: fileName,
       iconName: randomFileType.url,
       fileType: randomFileType.docType,
-      modifiedBy: userName,
+      modifiedBy: _randomEmployeeName(),
       dateModified: randomDate.dateFormatted,
       dateModifiedValue: randomDate.value,
       fileSize: randomFileSize.value,
@@ -355,25 +412,26 @@ function _generateDocuments() {
 }
 
 const FILE_ICONS: { name: string }[] = [
-  { name: 'accdb' },
-  { name: 'csv' },
-  { name: 'docx' },
-  { name: 'dotx' },
-  { name: 'mpt' },
-  { name: 'odt' },
-  { name: 'one' },
-  { name: 'onepkg' },
-  { name: 'onetoc' },
-  { name: 'pptx' },
-  { name: 'pub' },
-  { name: 'vsdx' },
-  { name: 'xls' },
-  { name: 'xlsx' },
-  { name: 'xsn' }
+  { name: "accdb" },
+  { name: "csv" },
+  { name: "docx" },
+  { name: "dotx" },
+  { name: "mpt" },
+  { name: "odt" },
+  { name: "one" },
+  { name: "onepkg" },
+  { name: "onetoc" },
+  { name: "pptx" },
+  { name: "pub" },
+  { name: "vsdx" },
+  { name: "xls" },
+  { name: "xlsx" },
+  { name: "xsn" }
 ];
 
 function _randomFileIcon(): { docType: string; url: string } {
-  const docType: string = FILE_ICONS[Math.floor(Math.random() * FILE_ICONS.length)].name;
+  const docType: string =
+    FILE_ICONS[Math.floor(Math.random() * FILE_ICONS.length)].name;
   return {
     docType,
     url: `https://static2.sharepointonline.com/files/fabric/assets/brand-icons/document/svg/${docType}_16x1.svg`
@@ -389,14 +447,15 @@ function _randomFileSize(): { value: string; rawSize: number } {
 }
 
 const LOREM_IPSUM = (
-  'lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut ' +
-  'labore et dolore magna aliqua ut enim ad minim veniam quis nostrud exercitation ullamco laboris nisi ut ' +
-  'aliquip ex ea commodo consequat duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore ' +
-  'eu fugiat nulla pariatur excepteur sint occaecat cupidatat non proident sunt in culpa qui officia deserunt '
-).split(' ');
+  "lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut " +
+  "labore et dolore magna aliqua ut enim ad minim veniam quis nostrud exercitation ullamco laboris nisi ut " +
+  "aliquip ex ea commodo consequat duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore " +
+  "eu fugiat nulla pariatur excepteur sint occaecat cupidatat non proident sunt in culpa qui officia deserunt "
+).split(" ");
 let loremIndex = 0;
 function _lorem(wordCount: number): string {
-  const startIndex = loremIndex + wordCount > LOREM_IPSUM.length ? 0 : loremIndex;
+  const startIndex =
+    loremIndex + wordCount > LOREM_IPSUM.length ? 0 : loremIndex;
   loremIndex = startIndex + wordCount;
-  return LOREM_IPSUM.slice(startIndex, loremIndex).join(' ');
+  return LOREM_IPSUM.slice(startIndex, loremIndex).join(" ");
 }
