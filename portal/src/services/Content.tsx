@@ -15,7 +15,9 @@ import { mergeStyleSets } from "office-ui-fabric-react/lib/Styling";
 import {
   _randomDate,
   _randomEmployeeName,
-  _randomCustomerName
+  _randomCustomerName,
+  _randomDuration,
+  _randomDistance
 } from "./DummyData";
 
 const classNames = mergeStyleSets({
@@ -74,13 +76,11 @@ export interface IDocument {
   key: string;
   customer: string;
   description: string;
-  iconName: string;
-  fileType: string;
   modifiedBy: string;
   dateModified: string;
   dateModifiedValue: number;
-  fileSize: string;
-  fileSizeRaw: number;
+  duration: number;
+  distance: number;
 }
 
 export interface TypedColumn extends IColumn {
@@ -159,7 +159,7 @@ export class Content extends React.Component<
       {
         key: "column5",
         name: "Czas",
-        fieldName: "fileSizeRaw",
+        fieldName: "duration",
         minWidth: 70,
         maxWidth: 90,
         isResizable: true,
@@ -167,13 +167,13 @@ export class Content extends React.Component<
         data: "number",
         onColumnClick: this._onColumnClick,
         onRender: (item: IDocument) => {
-          return <span>{item.fileSize}</span>;
+          return <span>{item.duration}</span>;
         }
       },
       {
         key: "column7",
         name: "Dojazd",
-        fieldName: "fileSizeRaw",
+        fieldName: "distance",
         minWidth: 70,
         maxWidth: 90,
         isResizable: true,
@@ -181,7 +181,7 @@ export class Content extends React.Component<
         data: "number",
         onColumnClick: this._onColumnClick,
         onRender: (item: IDocument) => {
-          return <span>{item.fileSize}</span>;
+          return <span>{item.distance}</span>;
         }
       }
     ];
@@ -401,52 +401,19 @@ function _generateDocuments() {
   for (let i = 0; i < 10; i++) {
     const randomDate = _randomDate(new Date(2012, 0, 1), new Date());
     const randomFileSize = _randomFileSize();
-    const randomFileType = _randomFileIcon();
     let fileName = _lorem(2);
-    fileName =
-      fileName.charAt(0).toUpperCase() +
-      fileName.slice(1).concat(`.${randomFileType.docType}`);
     items.push({
       key: i.toString(),
       customer: _randomCustomerName(),
       description: 'jakaś usługa',
-      iconName: randomFileType.url,
-      fileType: randomFileType.docType,
       modifiedBy: _randomEmployeeName(),
       dateModified: randomDate.dateFormatted,
       dateModifiedValue: randomDate.value,
-      fileSize: randomFileSize.value,
-      fileSizeRaw: randomFileSize.rawSize
+      duration: _randomDuration(),
+      distance: _randomDistance()
     });
   }
   return items;
-}
-
-const FILE_ICONS: { name: string }[] = [
-  { name: "accdb" },
-  { name: "csv" },
-  { name: "docx" },
-  { name: "dotx" },
-  { name: "mpt" },
-  { name: "odt" },
-  { name: "one" },
-  { name: "onepkg" },
-  { name: "onetoc" },
-  { name: "pptx" },
-  { name: "pub" },
-  { name: "vsdx" },
-  { name: "xls" },
-  { name: "xlsx" },
-  { name: "xsn" }
-];
-
-function _randomFileIcon(): { docType: string; url: string } {
-  const docType: string =
-    FILE_ICONS[Math.floor(Math.random() * FILE_ICONS.length)].name;
-  return {
-    docType,
-    url: `https://static2.sharepointonline.com/files/fabric/assets/brand-icons/document/svg/${docType}_16x1.svg`
-  };
 }
 
 function _randomFileSize(): { value: string; rawSize: number } {

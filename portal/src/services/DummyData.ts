@@ -22,3 +22,6 @@ export const _randomCustomerName = () : string => {
 
   return candidates[Math.floor(Math.random() * candidates.length)];
 }
+
+export const _randomDuration = () => Math.floor(Math.random() * 8) + 1;
+export const _randomDistance = () => Math.floor(Math.random() * 50);
