@@ -1,5 +1,6 @@
 import { shallow } from 'enzyme';
 import { Main } from '.';
+import React from 'react';
 
 describe('<Main />', () => {
   it('renders three <Main /> components', () => {

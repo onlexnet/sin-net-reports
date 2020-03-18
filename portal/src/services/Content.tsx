@@ -73,7 +73,7 @@ export interface IDetailsListDocumentsExampleState {
 export interface IDocument {
   key: string;
   customer: string;
-  value: string;
+  description: string;
   iconName: string;
   fileType: string;
   modifiedBy: string;
@@ -101,19 +101,18 @@ export class Content extends React.Component<
 
     const columns: TypedColumn[] = [
       {
-        key: "column2",
-        name: "Klient",
-        fieldName: "customer",
-        minWidth: 210,
-        maxWidth: 350,
-        isRowHeader: true,
+        key: "column4",
+        name: "Pracownik",
+        fieldName: "modifiedBy",
+        minWidth: 70,
+        maxWidth: 90,
         isResizable: true,
-        isSorted: true,
-        isSortedDescending: false,
-        sortAscendingAriaLabel: "Sorted A to Z",
-        sortDescendingAriaLabel: "Sorted Z to A",
-        onColumnClick: this._onColumnClick,
+        isCollapsible: true,
         data: "string",
+        onColumnClick: this._onColumnClick,
+        onRender: (item: IDocument) => {
+          return <span>{item.modifiedBy}</span>;
+        },
         isPadded: true
       },
       {
@@ -131,19 +130,31 @@ export class Content extends React.Component<
         isPadded: true
       },
       {
-        key: "column4",
-        name: "Pracownik",
-        fieldName: "modifiedBy",
-        minWidth: 70,
-        maxWidth: 90,
+        key: "column2",
+        name: "Klient",
+        fieldName: "customer",
+        minWidth: 210,
+        maxWidth: 350,
+        isRowHeader: true,
+        isResizable: true,
+        isSorted: true,
+        isSortedDescending: false,
+        sortAscendingAriaLabel: "Sorted A to Z",
+        sortDescendingAriaLabel: "Sorted Z to A",
+        onColumnClick: this._onColumnClick,
+        data: "string",
+        isPadded: true
+      },
+      {
+        key: "column6",
+        name: "Usługa",
+        fieldName: "description",
+        minWidth: 300,
+        maxWidth: 300,
         isResizable: true,
         isCollapsible: true,
-        data: "string",
-        onColumnClick: this._onColumnClick,
-        onRender: (item: IDocument) => {
-          return <span>{item.modifiedBy}</span>;
-        },
-        isPadded: true
+        data: "number",
+        onColumnClick: this._onColumnClick
       },
       {
         key: "column5",
@@ -160,7 +171,7 @@ export class Content extends React.Component<
         }
       },
       {
-        key: "column6",
+        key: "column7",
         name: "Dojazd",
         fieldName: "fileSizeRaw",
         minWidth: 70,
@@ -398,7 +409,7 @@ function _generateDocuments() {
     items.push({
       key: i.toString(),
       customer: _randomCustomerName(),
-      value: fileName,
+      description: 'jakaś usługa',
       iconName: randomFileType.url,
       fileType: randomFileType.docType,
       modifiedBy: _randomEmployeeName(),
