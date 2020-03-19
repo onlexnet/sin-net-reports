@@ -10,8 +10,6 @@ export const NavBasicExample: React.FC<ChildComponentProps> = (props) => {
     <Nav
       onLinkClick={_onLinkClick}
       selectedKey="key1"
-      selectedAriaLabel="Selected"
-      ariaLabel="Nav basic example"
       styles={{
         root: {
           width: 208,
@@ -28,8 +26,6 @@ export const NavBasicExample: React.FC<ChildComponentProps> = (props) => {
               name: 'Usługi',
               onClick: () => props.history.push('/services'),
               url: '',
-              expandAriaLabel: 'Expand Home section',
-              collapseAriaLabel: 'Collapse Home section',
               isExpanded: true
             },
             {
