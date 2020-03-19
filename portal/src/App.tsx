@@ -7,6 +7,7 @@ import { Home } from "./Home";
 import { NotFound } from "./NotFound";
 import { Customers } from "./Customers";
 import { Main } from "./services";
+import { Reports } from "./reports/Reports";
 
 export const App: React.FunctionComponent = () => {
   return (
@@ -19,7 +20,8 @@ export const App: React.FunctionComponent = () => {
           <div className="ms-Grid-col ms-sm6 ms-md8 ms-lg10">
             <Route path="/services" component={Main} />
             <Route path="/customers" component={Customers} />
-            <Route path="/" component={Home} />
+            <Route path="/reports" component={Reports} />
+            <Route path="/" exact component={Home} />
           </div>
         </div>
       </div>

@@ -9,7 +9,7 @@ export const NavBasicExample: React.FC<ChildComponentProps> = (props) => {
   return (
     <Nav
       onLinkClick={_onLinkClick}
-      selectedKey="key3"
+      selectedKey="key1"
       selectedAriaLabel="Selected"
       ariaLabel="Nav basic example"
       styles={{
@@ -42,7 +42,8 @@ export const NavBasicExample: React.FC<ChildComponentProps> = (props) => {
             },
             {
               name: 'Raporty',
-              url: 'http://msn.com',
+              onClick: () => props.history.push('/reports'),
+              url: '',
               key: 'key4',
               target: '_blank'
             },

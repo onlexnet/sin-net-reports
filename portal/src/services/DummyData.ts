@@ -25,3 +25,7 @@ export const _randomCustomerName = () : string => {
 
 export const _randomDuration = () => Math.floor(Math.random() * 8) + 1;
 export const _randomDistance = () => Math.floor(Math.random() * 50);
+export const _dandomServiceDescription = () => {
+  var candidates = "Poprawa danych,Wprowadzanie korekt,Odtwarzanie danych,konfiguracja środowisk".split(",");
+  return candidates[Math.floor(Math.random() * candidates.length)];
+}

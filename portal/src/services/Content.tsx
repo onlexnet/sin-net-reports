@@ -17,7 +17,8 @@ import {
   _randomEmployeeName,
   _randomCustomerName,
   _randomDuration,
-  _randomDistance
+  _randomDistance,
+  _dandomServiceDescription
 } from "./DummyData";
 
 const classNames = mergeStyleSets({
@@ -405,7 +406,7 @@ function _generateDocuments() {
     items.push({
       key: i.toString(),
       customer: _randomCustomerName(),
-      description: 'jakaś usługa',
+      description: _dandomServiceDescription(),
       modifiedBy: _randomEmployeeName(),
       dateModified: randomDate.dateFormatted,
       dateModifiedValue: randomDate.value,
