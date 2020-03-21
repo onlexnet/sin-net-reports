@@ -2,11 +2,9 @@ package sinnet;
 
 import lombok.Value;
 
-/**
- * Name of en Entity allows to recognize the entity.
- */
+/** Represents human-readable name of a company or a thing. */
 @Value(staticConstructor = "of")
 public class Name {
-    /** FixMe. */
+    /** Content of the Name. */
     private String value;
 }
