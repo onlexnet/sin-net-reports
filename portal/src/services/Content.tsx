@@ -69,7 +69,6 @@ export interface IDetailsListDocumentsExampleState {
   items: IDocument[];
   selectionDetails: string;
   isModalSelection: boolean;
-  isCompactMode: boolean;
   announcedMessage?: string;
 }
 
@@ -200,7 +199,6 @@ export class Content extends React.Component<
       columns: columns,
       selectionDetails: this._getSelectionDetails(),
       isModalSelection: false,
-      isCompactMode: false,
       announcedMessage: undefined
     };
   }
@@ -208,7 +206,6 @@ export class Content extends React.Component<
   public render() {
     const {
       columns,
-      isCompactMode,
       items,
       selectionDetails,
       isModalSelection,
@@ -219,8 +216,8 @@ export class Content extends React.Component<
       <Fabric>
         <div className={classNames.controlWrapper}>
           <Toggle
-            label="Enable compact mode"
-            checked={isCompactMode}
+            label="Tylko moje dane"
+            checked={false}
             onChange={this._onChangeCompactMode}
             onText="Compact"
             offText="Normal"
@@ -254,7 +251,7 @@ export class Content extends React.Component<
           <MarqueeSelection selection={this._selection}>
             <DetailsList
               items={items}
-              compact={isCompactMode}
+              compact={true}
               columns={columns}
               selectionMode={SelectionMode.multiple}
               getKey={this._getKey}
@@ -273,7 +270,7 @@ export class Content extends React.Component<
         ) : (
           <DetailsList
             items={items}
-            compact={isCompactMode}
+            compact={true}
             columns={columns}
             selectionMode={SelectionMode.none}
             getKey={this._getKey}
@@ -307,8 +304,7 @@ export class Content extends React.Component<
     ev: React.MouseEvent<HTMLElement>,
     checked?: boolean
   ): void => {
-    const a = checked ?? false;
-    this.setState({ isCompactMode: a });
+    // no-op
   };
 
   private _onChangeModalSelection = (

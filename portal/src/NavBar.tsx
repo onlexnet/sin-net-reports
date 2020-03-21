@@ -12,7 +12,7 @@ export const NavBasicExample: React.FC<ChildComponentProps> = (props) => {
       selectedKey="key1"
       styles={{
         root: {
-          width: 208,
+          maxWidth: 208,
           height: 350,
           boxSizing: 'border-box',
           border: '1px solid #eee',
