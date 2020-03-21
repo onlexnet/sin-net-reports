@@ -32,14 +32,6 @@ jobs:
     pool:
       vmImage: ubuntu-latest
 
-    env:
-      # pom.xml uses SONAR_TOKEN. On current on CI/CD pipeline it is also defined as SONAR_TOKEN env variable.
-      # Note: secrets can't be used directly as environment varianbles
-      # https://github.com/Microsoft/azure-pipelines-agent/issues/145
-      # As the result, we have to put CICD secret to build variable
-      # SONAR_TOKEN: $(SONAR_TOKEN)
-      SONAR_TOKEN: 76a2fa5b5aca5710b5a4e6c8b57754990b00dec6
-
     variables:
       # We have enabled the build pipelines for Pull Request vs master.
       # There are some differences between a normal build and the build triggered by a PR though:
@@ -50,6 +42,14 @@ jobs:
 
     steps:
       - task: Maven@3
+        env:
+          # pom.xml uses SONAR_TOKEN. On current on CI/CD pipeline it is also defined as SONAR_TOKEN env variable.
+          # Note: secrets can't be used directly as environment varianbles
+          # https://github.com/Microsoft/azure-pipelines-agent/issues/145
+          # As the result, we have to put CICD secret to build variable
+          # SONAR_TOKEN: $(SONAR_TOKEN)
+          SONAR_TOKEN: 76a2fa5b5aca5710b5a4e6c8b57754990b00dec6
+
         # https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/build/maven
         displayName: 'Project compilation with Maven'
         inputs:
