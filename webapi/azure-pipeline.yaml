@@ -39,8 +39,11 @@ jobs:
       buildImageOnMaster: $[ eq(variables['build.sourceBranch'], 'refs/heads/master') ]
       buildImageAndPush: $[ startsWith(variables['build.sourceBranch'], 'refs/heads/release/webapi/') ]
       testImageName: build-test-image-$(Build.BuildId)
-      # pom.xml uses SONAR_TOKEN. On current on CI/CD pipeline it is also defined as SONAR_TOKEN env variable..
-      APP_SONAR_TOKEN: $(SONAR_TOKEN)
+      # pom.xml uses SONAR_TOKEN. On current on CI/CD pipeline it is also defined as SONAR_TOKEN env variable.
+      # Note: secrets can't be used directly as environment varianbles
+      # https://github.com/Microsoft/azure-pipelines-agent/issues/145
+      # As the result, we have to put CICD secret to build variable
+      SONAR_TOKEN: $(SONAR_TOKEN)
 
     steps:
       - task: Maven@3
