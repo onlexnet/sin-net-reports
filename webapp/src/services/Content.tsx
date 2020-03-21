@@ -213,7 +213,7 @@ export class Content extends React.Component<
     } = this.state;
 
     return (
-      <Fabric>
+      <>
         <div className={classNames.controlWrapper}>
           <Toggle
             label="Tylko moje dane"
@@ -221,6 +221,11 @@ export class Content extends React.Component<
             onChange={this._onChangeCompactMode}
             onText="Compact"
             offText="Normal"
+            styles={controlStyles}
+          />
+          <TextField
+            label="Tylko dzień:"
+            onChange={this._onChangeText}
             styles={controlStyles}
           />
           <Toggle
@@ -280,7 +285,7 @@ export class Content extends React.Component<
             onItemInvoked={this._onItemInvoked}
           />
         )}
-      </Fabric>
+      </>
     );
   }
 
@@ -320,7 +325,9 @@ export class Content extends React.Component<
   ): void => {
     this.setState({
       items: text
-        ? this._allItems.filter(i => i.customer.toLowerCase().indexOf(text) > -1)
+        ? this._allItems.filter(
+            i => i.customer.toLowerCase().indexOf(text) > -1
+          )
         : this._allItems
     });
   };

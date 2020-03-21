@@ -1,0 +1,6 @@
+query {
+  getServices {
+    whenProvided
+    forWhatCustomer
+  }
+}
