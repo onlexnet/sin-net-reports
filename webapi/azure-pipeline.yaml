@@ -32,6 +32,14 @@ jobs:
     pool:
       vmImage: ubuntu-latest
 
+    env:
+      # pom.xml uses SONAR_TOKEN. On current on CI/CD pipeline it is also defined as SONAR_TOKEN env variable.
+      # Note: secrets can't be used directly as environment varianbles
+      # https://github.com/Microsoft/azure-pipelines-agent/issues/145
+      # As the result, we have to put CICD secret to build variable
+      # SONAR_TOKEN: $(SONAR_TOKEN)
+      SONAR_TOKEN: 76a2fa5b5aca5710b5a4e6c8b57754990b00dec6
+
     variables:
       # We have enabled the build pipelines for Pull Request vs master.
       # There are some differences between a normal build and the build triggered by a PR though:
@@ -39,12 +47,6 @@ jobs:
       buildImageOnMaster: $[ eq(variables['build.sourceBranch'], 'refs/heads/master') ]
       buildImageAndPush: $[ startsWith(variables['build.sourceBranch'], 'refs/heads/release/webapi/') ]
       testImageName: build-test-image-$(Build.BuildId)
-      # pom.xml uses SONAR_TOKEN. On current on CI/CD pipeline it is also defined as SONAR_TOKEN env variable.
-      # Note: secrets can't be used directly as environment varianbles
-      # https://github.com/Microsoft/azure-pipelines-agent/issues/145
-      # As the result, we have to put CICD secret to build variable
-      # SONAR_TOKEN: $(SONAR_TOKEN)
-      SONAR_TOKEN: 76a2fa5b5aca5710b5a4e6c8b57754990b00dec6
 
     steps:
       - task: Maven@3
@@ -63,7 +65,8 @@ jobs:
           options: -B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
           sonarQubeRunAnalysis: true
           sqMavenPluginVersionChoice: 'latest' # Required when sonarQubeRunAnalysis == True# Options: latest, pom
-          checkStyleRunAnalysis: true # Optional
+          checkStyleRunAnalysis: true # We use checkstyle in coding, so let's use it with Maven
+          
 
       # - task: SonarCloudPrepare@1
       #   displayName: 'Prepare SonarCloud analysis'
