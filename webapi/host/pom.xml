@@ -20,7 +20,7 @@
 
     <dependency>
       <groupId>net.siudek</groupId>
-      <artifactId>webapi</artifactId>
+      <artifactId>graphql</artifactId>
     </dependency>
 
     <dependency>

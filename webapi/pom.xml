@@ -9,7 +9,7 @@
     <module>base-pom</module>
     <module>domain-api</module>
     <module>domain-core</module>
-    <module>webapi</module>
+    <module>graphql</module>
     <module>host</module>
     <module>report-aggregate</module>
   </modules>

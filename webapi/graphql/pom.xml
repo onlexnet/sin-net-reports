@@ -8,10 +8,10 @@
   </parent>
 
   <groupId>net.siudek</groupId>
-  <artifactId>webapi</artifactId>
+  <artifactId>graphql</artifactId>
   <version>1.0-SNAPSHOT</version>
 
-  <name>sinnet-webapi</name>
+  <name>sinnet-graphql</name>
 
   <properties>
     <!-- required by integration with Spring. More @ https://github.com/graphql-java-kickstart/graphql-java-tools -->

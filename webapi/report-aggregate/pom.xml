@@ -34,7 +34,7 @@
 
     <dependency>
       <groupId>net.siudek</groupId>
-      <artifactId>webapi</artifactId>
+      <artifactId>graphql</artifactId>
       <version>1.0-SNAPSHOT</version>
     </dependency>
   </dependencies>
