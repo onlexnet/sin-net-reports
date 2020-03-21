@@ -61,7 +61,6 @@ jobs:
           publishJUnitResults: false
           # options:
           #  - disable log entries (a lot of entries) related to artifacts downloaded by maven
-          #  - define token value for sonar plugin based on pipeline variable
           options: -B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
           sonarQubeRunAnalysis: true
           sqMavenPluginVersionChoice: 'latest' # Required when sonarQubeRunAnalysis == True# Options: latest, pom
