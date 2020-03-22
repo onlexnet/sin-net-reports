@@ -4,9 +4,9 @@ package sinnet.appevents;
  * Container class for related Query, Response and Application Notification
  * about 'ServicesProjection'.
  */
-public abstract class ServicesProjection {
+public interface ServicesProjection {
 
-    /** Emited when ServiceProject has changed. */
+    /** Emited when ServiceProjection data have been changed (add / update / delete). */
     public static final class Changed {
     }
 }
