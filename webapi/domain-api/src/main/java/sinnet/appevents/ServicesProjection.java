@@ -6,7 +6,10 @@ package sinnet.appevents;
  */
 public interface ServicesProjection {
 
-    /** Emited when ServiceProjection data have been changed (add / update / delete). */
-    public static final class Changed {
+    /**
+     * Emited when ServiceProjection data have been changed
+     * (add / update / delete).
+     */
+    final class Changed {
     }
 }
