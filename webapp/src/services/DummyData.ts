@@ -1,12 +1,12 @@
 export const _randomDate = (
   start: Date,
   end: Date
-): { value: number; dateFormatted: string } => {
+): { value: Date; dateFormatted: string } => {
   const date: Date = new Date(
     start.getTime() + Math.random() * (end.getTime() - start.getTime())
   );
   return {
-    value: date.valueOf(),
+    value: date,
     dateFormatted: date.toLocaleDateString()
   };
 };

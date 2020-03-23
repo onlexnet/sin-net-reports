@@ -78,7 +78,7 @@ export interface IDocument {
   description: string;
   modifiedBy: string;
   dateModified: string;
-  dateModifiedValue: number;
+  dateModifiedValue: Date;
   duration: number;
   distance: number;
 }
@@ -225,7 +225,7 @@ export class Content extends React.Component<
           />
           <TextField
             label="Tylko dzień:"
-            onChange={this._onChangeText}
+            onChange={this._onChangeDay}
             styles={controlStyles}
           />
           <Toggle
@@ -332,6 +332,16 @@ export class Content extends React.Component<
     });
   };
 
+  private _onChangeDay = (ev: React.FormEvent, text?: string): void => {
+    this.setState({
+      items: text
+        ? this._allItems.filter(
+            it => it.dateModified.includes(text)
+          )
+        : this._allItems
+    });
+  };
+
   private _onItemInvoked(item: any): void {
     alert(`Item invoked: ${item.name}`);
   }
@@ -404,8 +414,6 @@ function _generateDocuments() {
   const items: IDocument[] = [];
   for (let i = 0; i < 10; i++) {
     const randomDate = _randomDate(new Date(2012, 0, 1), new Date());
-    const randomFileSize = _randomFileSize();
-    let fileName = _lorem(2);
     items.push({
       key: i.toString(),
       customer: _randomCustomerName(),
