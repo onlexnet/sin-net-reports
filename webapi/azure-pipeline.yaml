@@ -71,7 +71,7 @@ jobs:
         inputs:
           containerRegistry: $(dockerRegistryServiceConnection)
           dockerfile: webapi/build.dockerfile
-          repository: webapp
+          repository: webapi
           command: buildAndPush
           tags: |
             latest
