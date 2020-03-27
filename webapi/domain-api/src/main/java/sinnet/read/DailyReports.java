@@ -11,19 +11,19 @@ import lombok.NoArgsConstructor;
 import lombok.Singular;
 
 /** Container class for 'DailyReport' Query. */
-public abstract class DailyReports {
+public interface DailyReports {
 
     /** Ask part of Query. */
     @NoArgsConstructor
     @Data
     @AllArgsConstructor
-    public static class Ask {
+    class Ask {
         /** Date when services has been done. */
         private LocalDate when;
     }
 
     /** Marker type for Replies. */
-    public abstract static class Reply {
+    abstract class Reply {
 
         /** Private ctor to prevent creation of marker class. */
         private Reply() {
@@ -52,7 +52,7 @@ public abstract class DailyReports {
     @Data
     @AllArgsConstructor
     @Builder
-    public static class ServiceSummary {
+    class ServiceSummary {
         /** Date when services has been done. */
         private LocalDate when;
     }
