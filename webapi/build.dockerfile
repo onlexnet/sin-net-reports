@@ -12,23 +12,16 @@ RUN ./mvnw clean install -B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.tr
 
 
 #----------
-FROM install-packages as test-runner
-# run tests to see if they are working
-# run verify because aggregation of code coverage is done in verify phase by report-aggregate module
-# additionally in verify phase checkstyle audit is applied.
-RUN ./mvnw test verify
-
-#----------
-FROM test-runner as build
+FROM install-packages as build
 WORKDIR /app
 
 COPY . .
 
+# We can skip tests because they are tested in pipeline, not in the dockerfile
 RUN ./mvnw install -DskipTests
 
-
 #----------
-FROM mcr.microsoft.com/java/jre-headless:11u5-zulu-alpine
+FROM mcr.microsoft.com/java/jre-headless:11u6-zulu-alpine
 VOLUME /tmp
 COPY --from=build /app/webapi/target/*.jar /app/target/
 EXPOSE 8080

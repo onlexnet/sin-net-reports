@@ -3,8 +3,8 @@ resources:
 
 variables:
   # connection, defined manually.
-  # The connection used in pipeline allows to access to ACR sinnetapps.azurecr.io
-  dockerRegistryServiceConnection: "sinnetapps-dockerregistry-service-connection"
+  # The connection used in pipeline allows to access to ACR sinnet.azurecr.io
+  dockerRegistryServiceConnection: "sinnet-acr"
   # image name (without tags) used to build final image
   imageName: "services-webapi"
   # name of the registry where the image is hosted on.
@@ -28,7 +28,7 @@ trigger:
 
 jobs:
   - job: CICD
-    displayName: Webapi CI build
+    displayName: Webapi CI/CD build
     pool:
       vmImage: ubuntu-latest
 
@@ -65,3 +65,12 @@ jobs:
           sonarQubeRunAnalysis: true
           sqMavenPluginVersionChoice: 'latest' # Required when sonarQubeRunAnalysis == True# Options: latest, pom
           checkStyleRunAnalysis: true # We use checkstyle in coding, so let's use it with Maven
+
+      - task: Docker@2
+        displayName: Push webapi image to docker ACR
+        inputs:
+          containerRegistry: sinnet.azurecr.io
+          repository: webapp
+          command: buildAndPush
+          tags: |
+            latest
