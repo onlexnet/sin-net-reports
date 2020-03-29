@@ -1,0 +1,38 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: backend-dep
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        posesor.zone: prod
+        posesor.version: snapshot
+        posesor.service: backend
+    spec:
+      containers:
+        - name: webapi
+          image: respekto/posesor-host:latest
+          ports:
+          - containerPort: 8080
+          env:
+          - name: SECRETS_MONGODB_POSESOR_PROD
+            valueFrom:
+              secretKeyRef:
+                name: posesor-mongodb
+                key: mongodb.posesor.prod
+                
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-svc
+  labels:
+    posesor.service: backend
+spec:
+  type: NodePort
+  ports:
+  - port: 8080
+  selector:
+    posesor.service: backend
