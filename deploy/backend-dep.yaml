@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-dep
+  labels:
+    app: psa
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: psa
+  
+  template:
+    metadata:
+      labels:
+        psa.service: backend
+    
+    spec:
+      containers:
+        - name: webapi
+          image: sinnet.azurecr.io/webapi:latest
+          ports:
+          - containerPort: 8080
+          # env:
+          # - name: SECRETS_MONGODB_POSESOR_PROD
+          #   valueFrom:
+          #     secretKeyRef:
+          #       name: posesor-mongodb
+          #       key: mongodb.posesor.prod
