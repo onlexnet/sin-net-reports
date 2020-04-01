@@ -15,4 +15,4 @@ FROM mcr.microsoft.com/java/jre-headless:11u6-zulu-alpine
 VOLUME /tmp
 COPY --from=build /app/host/target/*.jar /app/target/
 EXPOSE 8080
-ENTRYPOINT ["java","-jar","/app/target/host-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java","-jar","/app/target/host-1.0-SNAPSHOT.jar"]

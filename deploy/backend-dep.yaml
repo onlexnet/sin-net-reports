@@ -21,6 +21,7 @@ spec:
       containers:
         - name: webapi
           image: sinnet.azurecr.io/webapi:latest
+          imagePullPolicy: Always
           ports:
           - containerPort: 8080
           # env:
