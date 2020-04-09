@@ -3,17 +3,17 @@ kind: Deployment
 metadata:
   name: backend-dep
   labels:
-    app: psa
+    psa.service: backend
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: psa
+      psa.service: backend
   
   template:
     metadata:
       labels:
-        app: psa
+        psa.service: backend
     
     spec:
       imagePullSecrets:
