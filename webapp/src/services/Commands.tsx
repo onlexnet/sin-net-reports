@@ -9,7 +9,6 @@ export const CommandBarBasicExample: React.FunctionComponent = () => {
     <div>
       <CommandBar
         items={_items}
-        overflowItems={_overflowItems}
         overflowButtonProps={overflowProps}
         farItems={_farItems}
         ariaLabel="Use left and right arrow keys to navigate between commands"
@@ -20,50 +19,23 @@ export const CommandBarBasicExample: React.FunctionComponent = () => {
 
 const _items: ICommandBarItemProps[] = [
   {
-    key: 'newItem',
-    text: 'New',
-    cacheKey: 'myCacheKey', // changing this key will invalidate this item's cache
-    iconProps: { iconName: 'Add' },
-    subMenuProps: {
-      items: [
-        {
-          key: 'emailMessage',
-          text: 'Email message',
-          iconProps: { iconName: 'Mail' },
-          ['data-automation-id']: 'newEmailButton' // optional
-        },
-        {
-          key: 'calendarEvent',
-          text: 'Calendar event',
-          iconProps: { iconName: 'Calendar' }
-        }
-      ]
-    }
+    key: 'newService',
+    text: 'Nowa usługa',
+    split: true,
+    iconProps: { iconName: 'Add' }
   },
   {
-    key: 'upload',
-    text: 'Upload',
-    iconProps: { iconName: 'Upload' },
-    href: 'https://dev.office.com/fabric'
+    key: 'prevMonth',
+    text: 'Poprzedni miesiąc',
+    split: true,
+    iconProps: { iconName: 'Previous' }
   },
   {
-    key: 'share',
-    text: 'Share',
-    iconProps: { iconName: 'Share' },
-    onClick: () => console.log('Share')
+    key: 'nextMonth',
+    text: 'Następny miesiąc',
+    split: true,
+    iconProps: { iconName: 'Next' }
   },
-  {
-    key: 'download',
-    text: 'Download',
-    iconProps: { iconName: 'Download' },
-    onClick: () => console.log('Download')
-  }
-];
-
-const _overflowItems: ICommandBarItemProps[] = [
-  { key: 'move', text: 'Move to...', onClick: () => console.log('Move to'), iconProps: { iconName: 'MoveToFolder' } },
-  { key: 'copy', text: 'Copy to...', onClick: () => console.log('Copy to'), iconProps: { iconName: 'Copy' } },
-  { key: 'rename', text: 'Rename...', onClick: () => console.log('Rename'), iconProps: { iconName: 'Edit' } }
 ];
 
 const _farItems: ICommandBarItemProps[] = [

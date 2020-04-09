@@ -202,7 +202,6 @@ export class Content extends React.Component<{}, IContentState> {
               <TextField label="Tylko dzień:" onChange={this._onChangeDay} styles={controlStyles} />
               <TextField label="Kontrahent:" onChange={this._onChangeText} styles={controlStyles} />
             </Stack>
-            <PrimaryButton text="Dodaj nową usługę" />
           </Stack>
         </div>
         {announcedMessage ? <Announced message={announcedMessage} /> : undefined}
