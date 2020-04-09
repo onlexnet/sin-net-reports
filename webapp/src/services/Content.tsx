@@ -1,16 +1,8 @@
 import * as React from "react";
 import { TextField } from "office-ui-fabric-react/lib/TextField";
 import { Toggle } from "office-ui-fabric-react/lib/Toggle";
-import { Fabric } from "office-ui-fabric-react/lib/Fabric";
 import { Announced } from "office-ui-fabric-react/lib/Announced";
-import {
-  DetailsList,
-  DetailsListLayoutMode,
-  Selection,
-  SelectionMode,
-  IColumn
-} from "office-ui-fabric-react/lib/DetailsList";
-import { MarqueeSelection } from "office-ui-fabric-react/lib/MarqueeSelection";
+import { DetailsList, DetailsListLayoutMode, SelectionMode, IColumn } from "office-ui-fabric-react/lib/DetailsList";
 import { mergeStyleSets } from "office-ui-fabric-react/lib/Styling";
 import {
   _randomDate,
@@ -20,6 +12,7 @@ import {
   _randomDistance,
   _dandomServiceDescription
 } from "./DummyData";
+import { IStackTokens, Stack, PrimaryButton } from "office-ui-fabric-react";
 
 const classNames = mergeStyleSets({
   fileIconHeaderIcon: {
@@ -64,10 +57,9 @@ const controlStyles = {
   }
 };
 
-export interface IDetailsListDocumentsExampleState {
+export interface IContentState {
   columns: IColumn[];
   items: IDocument[];
-  selectionDetails: string;
   isModalSelection: boolean;
   announcedMessage?: string;
 }
@@ -87,11 +79,7 @@ export interface TypedColumn extends IColumn {
   fieldName: keyof IDocument;
 }
 
-export class Content extends React.Component<
-  {},
-  IDetailsListDocumentsExampleState
-> {
-  private _selection: Selection;
+export class Content extends React.Component<{}, IContentState> {
   private _allItems: IDocument[];
 
   constructor(props: {}) {
@@ -186,159 +174,75 @@ export class Content extends React.Component<
       }
     ];
 
-    this._selection = new Selection({
-      onSelectionChanged: () => {
-        this.setState({
-          selectionDetails: this._getSelectionDetails()
-        });
-      }
-    });
-
     this.state = {
       items: this._allItems,
       columns: columns,
-      selectionDetails: this._getSelectionDetails(),
       isModalSelection: false,
       announcedMessage: undefined
     };
   }
 
   public render() {
-    const {
-      columns,
-      items,
-      selectionDetails,
-      isModalSelection,
-      announcedMessage
-    } = this.state;
+    const { columns, items, announcedMessage } = this.state;
+    const stackTokens: IStackTokens = { childrenGap: 40 };
 
     return (
       <>
         <div className={classNames.controlWrapper}>
-          <Toggle
-            label="Tylko moje dane"
-            checked={false}
-            onChange={this._onChangeCompactMode}
-            onText="Compact"
-            offText="Normal"
-            styles={controlStyles}
-          />
-          <TextField
-            label="Tylko dzień:"
-            onChange={this._onChangeDay}
-            styles={controlStyles}
-          />
-          <Toggle
-            label="Enable modal selection"
-            checked={isModalSelection}
-            onChange={this._onChangeModalSelection}
-            onText="Modal"
-            offText="Normal"
-            styles={controlStyles}
-          />
-          <TextField
-            label="Filter by name:"
-            onChange={this._onChangeText}
-            styles={controlStyles}
-          />
-          <Announced
-            message={`Number of items after filter applied: ${items.length}.`}
-          />
+          <Stack>
+            <Stack horizontal tokens={stackTokens}>
+              <Toggle
+                label="Tylko moje dane"
+                checked={false}
+                onChange={this._onChangeCompactMode}
+                onText="Compact"
+                offText="Normal"
+                styles={controlStyles}
+              />
+              <TextField label="Tylko dzień:" onChange={this._onChangeDay} styles={controlStyles} />
+              <TextField label="Kontrahent:" onChange={this._onChangeText} styles={controlStyles} />
+            </Stack>
+            <PrimaryButton text="Dodaj nową usługę" />
+          </Stack>
         </div>
-        <div className={classNames.selectionDetails}>{selectionDetails}</div>
-        <Announced message={selectionDetails} />
-        {announcedMessage ? (
-          <Announced message={announcedMessage} />
-        ) : (
-          undefined
-        )}
-        {isModalSelection ? (
-          <MarqueeSelection selection={this._selection}>
-            <DetailsList
-              items={items}
-              compact={true}
-              columns={columns}
-              selectionMode={SelectionMode.multiple}
-              getKey={this._getKey}
-              setKey="multiple"
-              layoutMode={DetailsListLayoutMode.justified}
-              isHeaderVisible={true}
-              selection={this._selection}
-              selectionPreservedOnEmptyClick={true}
-              onItemInvoked={this._onItemInvoked}
-              enterModalSelectionOnTouch={true}
-              ariaLabelForSelectionColumn="Toggle selection"
-              ariaLabelForSelectAllCheckbox="Toggle selection for all items"
-              checkButtonAriaLabel="Row checkbox"
-            />
-          </MarqueeSelection>
-        ) : (
-          <DetailsList
-            items={items}
-            compact={true}
-            columns={columns}
-            selectionMode={SelectionMode.none}
-            getKey={this._getKey}
-            setKey="none"
-            layoutMode={DetailsListLayoutMode.justified}
-            isHeaderVisible={true}
-            onItemInvoked={this._onItemInvoked}
-          />
-        )}
+        {announcedMessage ? <Announced message={announcedMessage} /> : undefined}
+
+        <DetailsList
+          items={items}
+          compact={true}
+          columns={columns}
+          selectionMode={SelectionMode.none}
+          getKey={this._getKey}
+          setKey="none"
+          layoutMode={DetailsListLayoutMode.justified}
+          isHeaderVisible={true}
+          onItemInvoked={this._onItemInvoked}
+        />
       </>
     );
-  }
-
-  public componentDidUpdate(
-    previousProps: any,
-    previousState: IDetailsListDocumentsExampleState
-  ) {
-    if (
-      previousState.isModalSelection !== this.state.isModalSelection &&
-      !this.state.isModalSelection
-    ) {
-      this._selection.setAllSelected(false);
-    }
   }
 
   private _getKey(item: any, index?: number): string {
     return item.key;
   }
 
-  private _onChangeCompactMode = (
-    ev: React.MouseEvent<HTMLElement>,
-    checked?: boolean
-  ): void => {
+  private _onChangeCompactMode = (ev: React.MouseEvent<HTMLElement>, checked?: boolean): void => {
     // no-op
   };
 
-  private _onChangeModalSelection = (
-    ev: React.MouseEvent<HTMLElement>,
-    checked?: boolean
-  ): void => {
+  private _onChangeModalSelection = (ev: React.MouseEvent<HTMLElement>, checked?: boolean): void => {
     this.setState({ isModalSelection: checked ?? false });
   };
 
-  private _onChangeText = (
-    ev: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
-    text?: string
-  ): void => {
+  private _onChangeText = (ev: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, text?: string): void => {
     this.setState({
-      items: text
-        ? this._allItems.filter(
-            i => i.customer.toLowerCase().indexOf(text) > -1
-          )
-        : this._allItems
+      items: text ? this._allItems.filter(i => i.customer.toLowerCase().indexOf(text) > -1) : this._allItems
     });
   };
 
   private _onChangeDay = (ev: React.FormEvent, text?: string): void => {
     this.setState({
-      items: text
-        ? this._allItems.filter(
-            it => it.dateModified.includes(text)
-          )
-        : this._allItems
+      items: text ? this._allItems.filter(it => it.dateModified.includes(text)) : this._allItems
     });
   };
 
@@ -346,50 +250,23 @@ export class Content extends React.Component<
     alert(`Item invoked: ${item.name}`);
   }
 
-  private _getSelectionDetails(): string {
-    const selectionCount = this._selection.getSelectedCount();
-
-    switch (selectionCount) {
-      case 0:
-        return "No items selected";
-      case 1:
-        return (
-          "1 item selected: " +
-          (this._selection.getSelection()[0] as IDocument).customer
-        );
-      default:
-        return `${selectionCount} items selected`;
-    }
-  }
-
-  private _onColumnClick = (
-    ev: React.MouseEvent<HTMLElement>,
-    column: IColumn
-  ): void => {
+  private _onColumnClick = (ev: React.MouseEvent<HTMLElement>, column: IColumn): void => {
     const { columns, items } = this.state;
     const newColumns: IColumn[] = columns.slice();
-    const currColumn: IColumn = newColumns.filter(
-      currCol => column.key === currCol.key
-    )[0];
+    const currColumn: IColumn = newColumns.filter(currCol => column.key === currCol.key)[0];
     newColumns.forEach((newCol: IColumn) => {
       if (newCol === currColumn) {
         currColumn.isSortedDescending = !currColumn.isSortedDescending;
         currColumn.isSorted = true;
         this.setState({
-          announcedMessage: `${currColumn.name} is sorted ${
-            currColumn.isSortedDescending ? "descending" : "ascending"
-          }`
+          announcedMessage: `${currColumn.name} is sorted ${currColumn.isSortedDescending ? "descending" : "ascending"}`
         });
       } else {
         newCol.isSorted = false;
         newCol.isSortedDescending = true;
       }
     });
-    const newItems = _copyAndSort(
-      items,
-      currColumn.fieldName!,
-      currColumn.isSortedDescending
-    );
+    const newItems = _copyAndSort(items, currColumn.fieldName!, currColumn.isSortedDescending);
     this.setState({
       columns: newColumns,
       items: newItems
@@ -397,17 +274,9 @@ export class Content extends React.Component<
   };
 }
 
-function _copyAndSort<T>(
-  items: T[],
-  columnKey: string,
-  isSortedDescending?: boolean
-): T[] {
+function _copyAndSort<T>(items: T[], columnKey: string, isSortedDescending?: boolean): T[] {
   const key = columnKey as keyof T;
-  return items
-    .slice(0)
-    .sort((a: T, b: T) =>
-      (isSortedDescending ? a[key] < b[key] : a[key] > b[key]) ? 1 : -1
-    );
+  return items.slice(0).sort((a: T, b: T) => ((isSortedDescending ? a[key] < b[key] : a[key] > b[key]) ? 1 : -1));
 }
 
 function _generateDocuments() {
@@ -444,8 +313,7 @@ const LOREM_IPSUM = (
 ).split(" ");
 let loremIndex = 0;
 function _lorem(wordCount: number): string {
-  const startIndex =
-    loremIndex + wordCount > LOREM_IPSUM.length ? 0 : loremIndex;
+  const startIndex = loremIndex + wordCount > LOREM_IPSUM.length ? 0 : loremIndex;
   loremIndex = startIndex + wordCount;
   return LOREM_IPSUM.slice(startIndex, loremIndex).join(" ");
 }
