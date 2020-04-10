@@ -1,43 +1,32 @@
 import React, { useState } from "react";
 import { Content } from "./Content";
-import { CommandBarBasicExample } from "./Commands";
+import { ServiceCommandBar } from "./Commands";
 import { IconButton } from "office-ui-fabric-react";
 
-export const Main: React.FC<{}> = props => {
+export const Main: React.FC<{}> = (props) => {
   const [period, setPeriod] = useState(new Date());
+
+  /**
+   * @param delta allows to change current periond (year with month).
+   *              Use only values +1 / -1 to set next month / previous month.
+   */
+  const changePeriod = (delta: number) => {
+    const newPeriod = new Date(period.getFullYear(), period.getMonth() + delta);
+    setPeriod(newPeriod);
+  };
 
   return (
     <>
-      <CommandBarBasicExample />
-      <IconButton
-        iconProps={{ iconName: "DoubleChevronLeft" }}
-        title="Poprzedni miesiąc"
-        ariaLabel="<<"
-        onClick={() => {
-          const newPeriod = new Date(
-            period.getFullYear(),
-            period.getMonth() - 1
-          );
-          setPeriod(newPeriod);
-        }}
-      />
-      <IconButton
-        iconProps={{ iconName: "DoubleChevronRight" }}
-        title="Następny miesiąc"
-        ariaLabel=">>"
-        onClick={() => {
-          const newPeriod = new Date(
-            period.getFullYear(),
-            period.getMonth() + 1
-          );
-          setPeriod(newPeriod);
-        }}
+      <ServiceCommandBar
+        onNextMonthRequested={() => changePeriod(+1)}
+        onPreviousMonthRequested={() => changePeriod(-1)}
       />
 
       {period.toLocaleString("default", {
         month: "long",
-        year: "numeric"
+        year: "numeric",
       })}
+
       <Content />
     </>
   );
