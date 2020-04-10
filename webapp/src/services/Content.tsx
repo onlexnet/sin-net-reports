@@ -1,9 +1,5 @@
 import * as React from "react";
-import { TextField } from "office-ui-fabric-react/lib/TextField";
-import { Toggle } from "office-ui-fabric-react/lib/Toggle";
-import { Announced } from "office-ui-fabric-react/lib/Announced";
-import { DetailsList, DetailsListLayoutMode, SelectionMode, IColumn } from "office-ui-fabric-react/lib/DetailsList";
-import { mergeStyleSets } from "office-ui-fabric-react/lib/Styling";
+import { DetailsList, DetailsListLayoutMode, SelectionMode, IColumn, mergeStyleSets } from "office-ui-fabric-react";
 import {
   _randomDate,
   _randomEmployeeName,
@@ -12,7 +8,7 @@ import {
   _randomDistance,
   _dandomServiceDescription
 } from "./DummyData";
-import { IStackTokens, Stack, PrimaryButton } from "office-ui-fabric-react";
+import { IStackTokens, Stack, TextField, Toggle, Announced } from "office-ui-fabric-react";
 
 const classNames = mergeStyleSets({
   fileIconHeaderIcon: {

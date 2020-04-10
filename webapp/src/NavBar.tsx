@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { Nav, INavLink } from 'office-ui-fabric-react/lib/Nav';
 import { RouteComponentProps } from "react-router-dom";
+import { Nav } from 'office-ui-fabric-react';
 
 //Child component related stuff
 interface ChildComponentProps extends RouteComponentProps<any> {}

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Content } from "./Content";
 import { CommandBarBasicExample } from "./Commands";
-import { IconButton } from "office-ui-fabric-react/lib/Button";
+import { IconButton } from "office-ui-fabric-react";
 
 export const Main: React.FC<{}> = props => {
   const [period, setPeriod] = useState(new Date());

@@ -2,6 +2,10 @@ import { shallow } from 'enzyme';
 import React from 'react';
 import { Content } from './Content';
 
+// import Adapter from 'enzyme-adapter-react-16';
+
+Enzyme.configure({ adapter: new Adapter() })
+
 describe('<Content />', () => {
   it('renders only selected days', () => {
     const wrapper = shallow(<Content />);
