@@ -1,5 +1,4 @@
 import React from "react";
-import { Stack, Text, Link, FontWeights } from "office-ui-fabric-react";
 
 import { HashRouter as Router, Route } from "react-router-dom";
 import { NavBasicExample } from "./NavBar";
@@ -15,7 +14,7 @@ const client = new ApolloClient({
   uri: 'http://localhost:8080',
 });
 
-export const App: React.FunctionComponent = () => {
+export const App: React.FC<{}> = () => {
   return (
     <Router>
       <div className="ms-Grid" dir="ltr">
