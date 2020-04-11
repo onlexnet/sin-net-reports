@@ -1,8 +1,8 @@
 package sinnet;
 
-import com.coxautodev.graphql.tools.GraphQLMutationResolver;
-
 import org.springframework.stereotype.Component;
+
+import graphql.kickstart.tools.GraphQLMutationResolver;
 
 /** FixMe. */
 @Component
