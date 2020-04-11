@@ -24,6 +24,11 @@
 
   <dependencies>
     <dependency>
+      <groupId>io.vavr</groupId>
+      <artifactId>vavr</artifactId>
+    </dependency>
+
+    <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
     </dependency>
@@ -80,6 +85,19 @@
   </dependencies>
 
   <build>
+
+    <resources>
+      <resource>
+        <!--
+          Imports GQL schema contract.
+          GraphQL schema files is located outside the project because it is shared with api consumers.
+          In the same time schema has to be imported to resources because having schema in resources is required
+          by java graphql kickstart dependency.
+         -->
+        <directory>../.api/webapi/</directory>
+      </resource>
+    </resources>
+
     <plugins>
 
       <!--
