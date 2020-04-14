@@ -81,5 +81,5 @@ jobs:
           dockerfile: webapi/build.dockerfile
           repository: webapi
           command: buildAndPush
-          tags: |
-            $(HOST_VERSION)
+          argumentsd: --tag $(HOST_VERSION)
+            
