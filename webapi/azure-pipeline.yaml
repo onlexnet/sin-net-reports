@@ -50,6 +50,9 @@ jobs:
           # https://github.com/Microsoft/azure-pipelines-agent/issues/145
           # As the result, we have to put CICD secret to build variable
           SONAR_TOKEN: $(SONAR_TOKEN)
+          # We know, initial jar is located in host module
+          # Let's use simple oneliner to retrieve host version and use it as tag for
+          # produced docker image.
           HOST_VERSION: $(mvn -pl host help:evaluate -Dexpression=project.version | grep -e '^[^\[]')
 
         # https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/build/maven
@@ -76,5 +79,4 @@ jobs:
           repository: webapi
           command: buildAndPush
           tags: |
-            latest
             $(HOST_VERSION)
