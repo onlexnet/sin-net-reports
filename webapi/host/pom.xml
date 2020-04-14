@@ -7,11 +7,7 @@
     <relativePath>../base-pom/pom.xml</relativePath>
   </parent>
 
-  <!--
-    The name of module is used by sonarcloud so do not change it to better name (e.g. host)
-    so that sonar plugin use the name and token in CICD to produce quality numbers.
-  -->
-  <artifactId>sinnet-group</artifactId>
+  <artifactId>host</artifactId>
 
   <name>host</name>
 
