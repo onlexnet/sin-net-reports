@@ -50,10 +50,6 @@ jobs:
           # https://github.com/Microsoft/azure-pipelines-agent/issues/145
           # As the result, we have to put CICD secret to build variable
           SONAR_TOKEN: $(SONAR_TOKEN)
-          # We know, initial jar is located in host module
-          # Let's use simple oneliner to retrieve host version and use it as tag for
-          # produced docker image.
-          HOST_VERSION: $(mvn -pl host help:evaluate -Dexpression=project.version | grep -e '^[^\[]')
 
         # https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/build/maven
         displayName: 'Project compilation with Maven'
@@ -72,6 +68,13 @@ jobs:
           checkStyleRunAnalysis: true # We use checkstyle in coding, so let's use it with Maven
 
       - task: Docker@2
+        
+        env:
+          # We know, initial jar is located in host module
+          # Let's use simple oneliner to retrieve host version and use it as tag for
+          # produced docker image.
+          HOST_VERSION: $(mvn -pl host help:evaluate -Dexpression=project.version | grep -e '^[^\[]')
+
         displayName: Push webapi image to docker ACR
         inputs:
           containerRegistry: $(dockerRegistryServiceConnection)
