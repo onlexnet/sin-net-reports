@@ -77,3 +77,4 @@ jobs:
           command: buildAndPush
           tags: |
             latest
+            $(HOST_VERSION)
