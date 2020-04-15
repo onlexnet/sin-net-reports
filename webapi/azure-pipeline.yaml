@@ -69,17 +69,12 @@ jobs:
 
       - task: Docker@2
         
-        env:
-          # We know, initial jar is located in host module
-          # Let's use simple oneliner to retrieve host version and use it as tag for
-          # produced docker image.
-          HOST_VERSION: $(mvn -pl host help:evaluate -Dexpression=project.version | grep -e '^[^\[]')
-
         displayName: Push webapi image to docker ACR
         inputs:
           containerRegistry: $(dockerRegistryServiceConnection)
           dockerfile: webapi/build.dockerfile
           repository: webapi
           command: buildAndPush
-          argumentsd: --tag $(HOST_VERSION)
+          tags: |
+            $(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
             
