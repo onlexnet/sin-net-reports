@@ -78,5 +78,5 @@ jobs:
           dockerfile: webapi/build.dockerfile
           repository: webapi
           command: buildAndPush
-          arguments: --tag $(IMAGE_VERSION)
+          tags: $(IMAGE_VERSION)
             
