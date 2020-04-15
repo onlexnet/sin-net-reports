@@ -33,10 +33,9 @@ jobs:
       # The build triggered from a PR do not push the docker images to any docker registry.
       buildImageOnMaster: $[ eq(variables['build.sourceBranch'], 'refs/heads/master') ]
       buildImageAndPush: $[ startsWith(variables['build.sourceBranch'], 'refs/heads/release/webapi/') ]
-      testImageName: build-test-image-$(Build.BuildId)
     
     name: $(TeamProject)_$(Build.DefinitionName)_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
-    
+
     steps:
       - task: Maven@3
         
@@ -72,5 +71,5 @@ jobs:
           dockerfile: webapi/build.dockerfile
           repository: webapi
           command: buildAndPush
-          tags: $(Build.SourceBranchName)-$(Date:yyyyMMdd)-$(Rev:.r)
+          tags: $(rev:r)-$(Build.SourceBranch)-$(Build.BuildNumber)
 
