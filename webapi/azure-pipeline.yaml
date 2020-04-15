@@ -10,11 +10,6 @@ variables:
   # name of the registry where the image is hosted on.
   # in Docker world, it is also part of image name (prefix)
   containerRegistry: "sinnetapps.azurecr.io"
-  
-  dockerfilePath: "webapi/build.dockerfile"
-  branchTag: "$(Build.SourceBranchName)"
-
-name: $(build.sourceBranch)-$(Date:yyyyMMdd)$(Rev:.rr)
 
 trigger:
   batch: true
@@ -38,9 +33,9 @@ jobs:
       # The build triggered from a PR do not push the docker images to any docker registry.
       buildImageOnMaster: $[ eq(variables['build.sourceBranch'], 'refs/heads/master') ]
       buildImageAndPush: $[ startsWith(variables['build.sourceBranch'], 'refs/heads/release/webapi/') ]
-      testImageName: build-test-image-$(Build.BuildId)
-
+    
     steps:
+
       - task: Maven@3
         
         env:
@@ -68,11 +63,12 @@ jobs:
           checkStyleRunAnalysis: true # We use checkstyle in coding, so let's use it with Maven
 
       - task: Docker@2
+        
         displayName: Push webapi image to docker ACR
         inputs:
           containerRegistry: $(dockerRegistryServiceConnection)
           dockerfile: webapi/build.dockerfile
           repository: webapi
           command: buildAndPush
-          tags: |
-            latest
+          tags: $(Build.SourceBranchName)-$(Build.BuildNumber)
+

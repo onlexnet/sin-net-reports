@@ -9,7 +9,7 @@
 
   <artifactId>host</artifactId>
 
-  <name>domain-core</name>
+  <name>host</name>
 
   <properties>
     <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/../${aggregate.report.dir}</sonar.coverage.jacoco.xmlReportPaths>
