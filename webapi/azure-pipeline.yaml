@@ -69,7 +69,7 @@ jobs:
 
       - task: Docker@2
         
-        env:
+        variables:
           IMAGE_VERSION: $(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
 
         displayName: Push webapi image to docker ACR
