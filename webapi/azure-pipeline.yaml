@@ -69,12 +69,14 @@ jobs:
 
       - task: Docker@2
         
+        env:
+          IMAGE_VERSION: $(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
+
         displayName: Push webapi image to docker ACR
         inputs:
           containerRegistry: $(dockerRegistryServiceConnection)
           dockerfile: webapi/build.dockerfile
           repository: webapi
           command: buildAndPush
-          tags: |
-            $(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
+          argumentsd: --tag $(IMAGE_VERSION)
             
