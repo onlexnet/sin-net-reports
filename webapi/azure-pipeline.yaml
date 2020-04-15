@@ -14,6 +14,9 @@ variables:
   dockerfilePath: "webapi/build.dockerfile"
   branchTag: "$(Build.SourceBranchName)"
 
+  imageTag: $(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
+
+
 name: $(build.sourceBranch)-$(Date:yyyyMMdd)$(Rev:.rr)
 
 trigger:
@@ -69,14 +72,11 @@ jobs:
 
       - task: Docker@2
         
-        env:
-          IMAGE_VERSION: $(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
-
         displayName: Push webapi image to docker ACR
         inputs:
           containerRegistry: $(dockerRegistryServiceConnection)
           dockerfile: webapi/build.dockerfile
           repository: webapi
           command: buildAndPush
-          tags: $IMAGE_VERSION
+          tags: $(imageTag)
             
