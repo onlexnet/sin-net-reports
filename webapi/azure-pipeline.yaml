@@ -10,14 +10,6 @@ variables:
   # name of the registry where the image is hosted on.
   # in Docker world, it is also part of image name (prefix)
   containerRegistry: "sinnetapps.azurecr.io"
-  
-  dockerfilePath: "webapi/build.dockerfile"
-  branchTag: "$(Build.SourceBranchName)"
-
-  imageTag: "$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)"
-
-
-name: $(build.sourceBranch)-$(Date:yyyyMMdd)$(Rev:.rr)
 
 trigger:
   batch: true
@@ -78,5 +70,4 @@ jobs:
           dockerfile: webapi/build.dockerfile
           repository: webapi
           command: buildAndPush
-          tags: $(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
-            
+          tags: $(build.sourceBranch)-$(Date:yyyyMMdd)$(Rev:.r)
