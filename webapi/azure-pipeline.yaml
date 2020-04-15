@@ -70,4 +70,5 @@ jobs:
           dockerfile: webapi/build.dockerfile
           repository: webapi
           command: buildAndPush
-          tags: $(build.sourceBranch)-$(Date:yyyyMMdd)$(Rev:.r)
+          tags: $(Build.SourceBranchName)-$(Date:yyyyMMdd)$(Rev:.r)
+
