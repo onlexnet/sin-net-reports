@@ -14,7 +14,7 @@ variables:
   dockerfilePath: "webapi/build.dockerfile"
   branchTag: "$(Build.SourceBranchName)"
 
-  imageTag: $(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
+  imageTag: "$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)"
 
 
 name: $(build.sourceBranch)-$(Date:yyyyMMdd)$(Rev:.rr)
