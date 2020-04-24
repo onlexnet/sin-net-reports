@@ -24,6 +24,10 @@ spec:
         backend:
           serviceName: backend-svc
           servicePort: 8080
+      - path: /graphiql
+        backend:
+          serviceName: backend-svc
+          servicePort: 8080
       - path: /api
         backend:
           serviceName: backend-svc

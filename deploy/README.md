@@ -35,3 +35,5 @@ So: on local env: kubectl create secret generic posesor-mongodb --from-literal=m
 how to add secret on kubecluster? kubectl create secret generic posesor-mongodb --from-literal=mongodb.posesor.prod=mongodb://posesor:jhasgdjhasTYFRYT-876ghfhg@172.16.1.4/posesor
 
 How to update image from cli to e.g. 0.0.18? kubectl set image deployment/backend-dep webapi=respekto/posesor-host:0.0.18
+
+Note: Because I use kubectl apply -f . to use wholde folder, azure.pipeline file can't have well-known name azure-pipelines.yaml because is recognized as invalid kubernetes file by kubectl, so a bit different name is used.
