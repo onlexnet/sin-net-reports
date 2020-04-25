@@ -70,5 +70,7 @@ jobs:
           dockerfile: webapi/build.dockerfile
           repository: webapi
           command: buildAndPush
-          tags: $(Build.SourceBranchName)-$(Build.BuildNumber)
+          tags: |
+            $(Build.SourceBranchName)-$(Build.BuildNumber)
+            latest
 
