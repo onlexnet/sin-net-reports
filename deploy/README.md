@@ -5,7 +5,7 @@
 1. Install [local kubernetes](https://ubuntu.com/kubernetes)
 1. Produce local configuration to integrate wit local tools (like kubectl / VSCode)  
    sudo microk8s kubectl config view --raw > $HOME/.kube/config [more]](https://github.com/ubuntu/microk8s)
-1. [Install ingress controller](https://kubernetes.github.io/ingress-nginx/deploy/)
+1. Install (or enable if delivered with release) ingress controller
 1. Login to ACR to save credentials. It is required because ACR can't provide public repose and we have images hosteted in ACR
    so some integration is required.
    more - [here](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/)
