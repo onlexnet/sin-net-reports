@@ -4,7 +4,7 @@
 
 1. Install [local kubernetes](https://ubuntu.com/kubernetes)
 1. Produce local configuration to integrate wit local tools (like kubectl / VSCode)  
-   sudo microk8s kubectl config view --raw > $HOME/.kube/config [more]](https://github.com/ubuntu/microk8s)
+   sudo microk8s kubectl config view --raw > $HOME/.kube/config [more](https://github.com/ubuntu/microk8s)
 1. Install (or enable if delivered with release) ingress controller
 1. Login to ACR to save credentials. It is required because ACR can't provide public repose and we have images hosteted in ACR
    so some integration is required.
@@ -37,3 +37,8 @@ how to add secret on kubecluster? kubectl create secret generic posesor-mongodb 
 How to update image from cli to e.g. 0.0.18? kubectl set image deployment/backend-dep webapi=respekto/posesor-host:0.0.18
 
 Note: Because I use kubectl apply -f . to use wholde folder, azure.pipeline file can't have well-known name azure-pipelines.yaml because is recognized as invalid kubernetes file by kubectl, so a bit different name is used.
+
+
+## Used articles
+
+* https://kndrck.co/posts/microk8s_ingress_example/
