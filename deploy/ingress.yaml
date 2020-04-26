@@ -8,14 +8,24 @@ spec:
   rules:
   - http:
       paths:
-        - path: /apple
+
+        - path: /graphiql
           backend:
-            serviceName: apple-service
-            servicePort: 5678
-        - path: /banana
+            serviceName: webapi
+            servicePort: 8080
+        - path: /vendor
           backend:
-            serviceName: banana-service
-            servicePort: 5678
+            serviceName: webapi
+            servicePort: 8080
+
+        - path: /graphql
+          backend:
+            serviceName: webapi
+            servicePort: 8080
+        - path: /api
+          backend:
+            serviceName: webapi
+            servicePort: 8080
 
 # ---
 # apiVersion: v1

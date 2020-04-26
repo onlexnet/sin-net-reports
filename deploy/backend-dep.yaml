@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: backend-dep
+  name: webapi
   labels:
-    psa.service: backend
+    app: webapi
 spec:
   replicas: 1
   selector:
     matchLabels:
-      psa.service: backend
+      app: webapi
   
   template:
     metadata:
       labels:
-        psa.service: backend
+        app: webapi
     
     spec:
       imagePullSecrets:
