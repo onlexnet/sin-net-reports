@@ -41,4 +41,5 @@ Note: Because I use kubectl apply -f . to use wholde folder, azure.pipeline file
 
 ## Used articles
 
+* https://github.com/hynese/k8sConfig
 * https://kndrck.co/posts/microk8s_ingress_example/
