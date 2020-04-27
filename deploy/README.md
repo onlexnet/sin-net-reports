@@ -13,7 +13,7 @@
    This will generate a config file.
    *ls -la ~/.docker/config.json*
    Now, use this this command to create secret.
-   *kubectl create secret generic regcred --type=kubernetes.io/dockerconfigjson --from-file .dockerconfigjson=$HOME/.docker/config.json*
+   *sudo microk8s.kubectl create secret generic regcred --type=kubernetes.io/dockerconfigjson --from-file .dockerconfigjson=$HOME/.docker/config.json*
    Perfect! now our kubectl is ready to pull image from private repo [using provided secret](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/#registry-secret-existing-credentials)
 
 
@@ -41,5 +41,7 @@ Note: Because I use kubectl apply -f . to use wholde folder, azure.pipeline file
 
 ## Used articles
 
+* https://cert-manager.io/
+* ? (https://runnable.com/blog/how-to-use-lets-encrypt-on-kubernetes)
 * https://github.com/hynese/k8sConfig
 * https://kndrck.co/posts/microk8s_ingress_example/
