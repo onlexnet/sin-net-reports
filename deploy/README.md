@@ -6,6 +6,7 @@
 1. Produce local configuration to integrate wit local tools (like kubectl / VSCode)  
    **sudo microk8s kubectl config view --raw > $HOME/.kube/config** [more](https://github.com/ubuntu/microk8s)
 1. microk8s enable dashboard ingress
+1. https://cert-manager.io/docs/installation/kubernetes/
 1. Login to ACR to save credentials. It is required because ACR can't provide public repose and we have images hosteted in ACR
    so some integration is required.
    more - [here](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/)
@@ -41,7 +42,7 @@ Note: Because I use kubectl apply -f . to use wholde folder, azure.pipeline file
 
 ## Used articles
 
-* https://cert-manager.io/
+* https://cert-manager.io/docs/installation/kubernetes/
 * ? (https://runnable.com/blog/how-to-use-lets-encrypt-on-kubernetes)
 * https://github.com/hynese/k8sConfig
 * https://kndrck.co/posts/microk8s_ingress_example/
