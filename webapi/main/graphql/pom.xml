@@ -99,7 +99,7 @@
           In the same time schema has to be imported to resources because having schema in resources is required
           by java graphql kickstart dependency.
          -->
-        <directory>../../webapi/api.graphql/</directory>
+        <directory>../../api.graphql/</directory>
       </resource>
     </resources>
 
