@@ -69,7 +69,7 @@ jobs:
         displayName: Push webapi image to docker ACR
         inputs:
           containerRegistry: $(dockerRegistryServiceConnection)
-          dockerfile: webapi/build.dockerfile
+          dockerfile: webapi.main/build.dockerfile
           repository: webapi
           command: buildAndPush
           tags: |
