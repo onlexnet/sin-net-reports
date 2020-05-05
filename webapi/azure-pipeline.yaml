@@ -20,8 +20,8 @@ trigger:
   paths:
     include:
       # We have to include all folders where source files are located
-      - /webapi.main/
-      - /webapi.api.graphql/
+      - /webapi/main/
+      - /webapi/api.graphql/
 
 jobs:
   - job: CICD
@@ -51,7 +51,7 @@ jobs:
         # https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/build/maven
         displayName: 'Project compilation with Maven'
         inputs:
-          mavenPomFile: 'webapi.main/pom.xml'
+          mavenPomFile: 'webapi/main/pom.xml'
           goals: 'verify'
           javaHomeOption: 'JDKVersion'
           jdkVersionOption: '1.11'
@@ -69,7 +69,7 @@ jobs:
         displayName: Build and push webapi image to docker ACR
         inputs:
           containerRegistry: $(dockerRegistryServiceConnection)
-          dockerfile: webapi.main/build.dockerfile
+          dockerfile: webapi/main/build.dockerfile
           repository: webapi
           command: buildAndPush
           tags: |
