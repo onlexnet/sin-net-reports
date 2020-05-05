@@ -14,6 +14,6 @@ RUN ./mvnw clean install -B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.tr
 #----------
 FROM mcr.microsoft.com/java/jre-headless:11u6-zulu-alpine
 VOLUME /tmp
-COPY --from=build /app/host/target/*.jar /app/main/target/
+COPY --from=build /app/main/host/target/*.jar /app/target/
 EXPOSE 8080
 ENTRYPOINT ["java","-jar","/app/target/host-1.0-SNAPSHOT.jar"]
