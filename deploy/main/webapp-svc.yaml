@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: webapp-svc
   labels:
-    app: webapp
+    app: webapp-scv
 spec:
   type: NodePort
   ports:

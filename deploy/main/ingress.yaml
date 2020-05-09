@@ -3,7 +3,6 @@ kind: Ingress
 metadata:
   name: nginx
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
     kubernetes.io/ingress.class: nginx
     # Securing Ingress Resources https://cert-manager.io/docs/usage/ingress/
     cert-manager.io/cluster-issuer: my-letsencrypt-issuer
@@ -29,6 +28,10 @@ spec:
             serviceName: webapi-svc
             servicePort: 8080
         - path: /api
+          backend:
+            serviceName: webapi-svc
+            servicePort: 8080
+        - path: /actuator
           backend:
             serviceName: webapi-svc
             servicePort: 8080
