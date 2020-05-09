@@ -23,7 +23,7 @@ trigger:
       - /webapi/api.graphql/
 
 jobs:
-  - job: CICD
+  - job: CD
     displayName: CI build
     pool:
       vmImage: ubuntu-latest
@@ -32,7 +32,8 @@ jobs:
       - task: Npm@1
         displayName: Compile webapi
         inputs:
-          command: 'run build'
+          command: custom
+          customCommand: run build
           workingDir: 'webapp'
 
       - task: Docker@2
