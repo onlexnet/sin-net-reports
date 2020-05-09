@@ -29,11 +29,17 @@ jobs:
       vmImage: ubuntu-latest
 
     steps:
+
       - task: Npm@1
-        displayName: Compile webapi
+        displayName: Install dependencies
         inputs:
-          command: custom
-          customCommand: run build
+          command: install
+          workingDir: webapp/main
+
+      - task: Npm@1
+        displayName: Install dependencies
+        inputs:
+          customCommand: run-script build
           workingDir: webapp/main
 
       - task: Docker@2
