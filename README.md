@@ -5,6 +5,8 @@
 
 Small project created for [Sin.Net](http://www.sin.net.pl/)
 
+Project site: [raport.sin.net.pl](https://raport.sin.net.pl/)
+
 Project allows register customer services and produce summarized reports.
 
 In scope:
