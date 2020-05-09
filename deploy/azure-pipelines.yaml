@@ -30,5 +30,5 @@ steps:
 
 - task: PublishBuildArtifacts@1
   inputs:
-    pathToPublish: $(Build.ArtifactStagingDirectory)/deploy
+    pathToPublish: $(System.DefaultWorkingDirectory)/deploy
     artifactName: kubernetes-cluster-files
