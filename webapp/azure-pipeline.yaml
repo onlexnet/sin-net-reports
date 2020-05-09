@@ -34,7 +34,7 @@ jobs:
         inputs:
           command: custom
           customCommand: run build
-          workingDir: 'webapp'
+          workingDir: webapp/main
 
       - task: Docker@2
         displayName: Build and push webapi image to docker ACR
