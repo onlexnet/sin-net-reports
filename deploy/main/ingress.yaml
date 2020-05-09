@@ -18,26 +18,22 @@ spec:
       paths:
         - path: /graphiql
           backend:
-            serviceName: webapi
+            serviceName: webapi-svc
             servicePort: 8080
         - path: /vendor
           backend:
-            serviceName: webapi
+            serviceName: webapi-svc
             servicePort: 8080
         - path: /graphql
           backend:
-            serviceName: webapi
+            serviceName: webapi-svc
             servicePort: 8080
         - path: /api
           backend:
-            serviceName: webapi
-            servicePort: 8080
-        - path: /api
-          backend:
-            serviceName: webapi
+            serviceName: webapi-svc
             servicePort: 8080
 
         - path: /
           backend:
-            serviceName: webapp
+            serviceName: webapp-svc
             servicePort: 80
