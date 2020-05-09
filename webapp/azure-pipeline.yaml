@@ -1,0 +1,48 @@
+resources:
+  - repo: self
+
+variables:
+  # connection, defined manually.
+  # The connection used in pipeline allows to access to ACR sinnet.azurecr.io
+  dockerRegistryServiceConnection: "sinnet-acr"
+  # image name (without tags) used to build final image
+  imageName: "webapp"
+  # name of the docker registry where the image is hosted on.
+  # in Docker world, it is also part of image name (prefix)
+  containerRegistry: "sinnetapps.azurecr.io"
+
+trigger:
+  batch: true
+  branches:
+    include:
+      - master
+  paths:
+    include:
+      # We have to include all folders where source files are located
+      - /webapp/
+      - /webapi/api.graphql/
+
+jobs:
+  - job: CICD
+    displayName: CI build
+    pool:
+      vmImage: ubuntu-latest
+
+    steps:
+      - task: Npm@1
+        displayName: Compile webapi
+        inputs:
+          command: 'run build'
+          workingDir: 'webapp'
+
+      - task: Docker@2
+        displayName: Build and push webapi image to docker ACR
+        inputs:
+          containerRegistry: $(dockerRegistryServiceConnection)
+          dockerfile: webapp/Dockerfile
+          repository: webapp
+          command: buildAndPush
+          tags: |
+            $(Build.SourceBranchName)-$(Build.BuildNumber)
+            latest
+
