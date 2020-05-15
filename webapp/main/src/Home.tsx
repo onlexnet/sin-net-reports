@@ -3,6 +3,6 @@ import React from "react";
 export const Home: React.FC<{}> = (props) => {
 
     return (
-        <h1>Strona startowa</h1>
+        <h1>Witamy w systemie ewidencji usług.</h1>
     )
 }
