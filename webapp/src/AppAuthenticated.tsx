@@ -7,9 +7,7 @@ import { Reports } from "./reports/Reports";
 import { Home } from "./Home";
 
 import { routing } from "./Routing";
-import GetAccessTokenButton from "./GetAccessTokenButton";
 import { NavBasicExample } from "./NavBar";
-
 
 interface Props {
   authProvider: MsalAuthProvider;
@@ -17,23 +15,20 @@ interface Props {
 
 export const View: React.FC<Props> = ({ authProvider }) => {
   return (
-    <>
-      <GetAccessTokenButton provider={authProvider} />
-      <Router>
-        <div className="ms-Grid" dir="ltr">
-          <div className="ms-Grid-row">
-            <div className="ms-Grid-col ms-sm6 ms-md4 ms-lg2">
-              <Route path="/" component={NavBasicExample} />
-            </div>
-            <div className="ms-Grid-col ms-sm6 ms-md8 ms-lg10">
-              <Route path={routing.services} component={Main} />
-              <Route path={routing.customers} component={Customers} />
-              <Route path={routing.reports} component={Reports} />
-              <Route path="/" exact component={Home} />
-            </div>
+    <Router>
+      <div className="ms-Grid" dir="ltr">
+        <div className="ms-Grid-row">
+          <div className="ms-Grid-col ms-sm6 ms-md4 ms-lg2">
+            <Route path="/" component={NavBasicExample} />
+          </div>
+          <div className="ms-Grid-col ms-sm6 ms-md8 ms-lg10">
+            <Route path={routing.services} component={Main} />
+            <Route path={routing.customers} component={Customers} />
+            <Route path={routing.reports} component={Reports} />
+            <Route path="/" exact component={Home} />
           </div>
         </div>
-      </Router>
-    </>
+      </div>
+    </Router>
   );
 };
