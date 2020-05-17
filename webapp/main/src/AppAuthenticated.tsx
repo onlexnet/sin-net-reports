@@ -8,6 +8,7 @@ import { Home } from "./Home";
 
 import { routing } from "./Routing";
 import { NavBasicExample } from "./NavBar";
+import { GetIdTokenButton } from "./Components/GetIdTokenButton";
 
 interface Props {
   authProvider: MsalAuthProvider;
@@ -15,6 +16,8 @@ interface Props {
 
 export const View: React.FC<Props> = ({ authProvider }) => {
   return (
+    <>
+    {/* <GetIdTokenButton provider={authProvider} /> */}
     <Router>
       <div className="ms-Grid" dir="ltr">
         <div className="ms-Grid-row">
@@ -30,5 +33,6 @@ export const View: React.FC<Props> = ({ authProvider }) => {
         </div>
       </div>
     </Router>
+    </>
   );
 };
