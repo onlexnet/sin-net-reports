@@ -20,7 +20,12 @@
 
     <dependency>
       <groupId>net.siudek</groupId>
-      <artifactId>graphql</artifactId>
+      <artifactId>web-server</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>net.siudek</groupId>
+      <artifactId>web-graphql</artifactId>
     </dependency>
 
     <dependency>

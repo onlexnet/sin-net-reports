@@ -9,7 +9,8 @@
     <module>base-pom</module>
     <module>domain-api</module>
     <module>domain-core</module>
-    <module>graphql</module>
+    <module>web-server</module>
+    <module>web-graphql</module>
     <module>host</module>
     <module>report-aggregate</module>
   </modules>
