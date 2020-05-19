@@ -15,7 +15,6 @@
 
   <properties>
     <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/../${aggregate.report.dir}</sonar.coverage.jacoco.xmlReportPaths>
-    <sonar.projectKey>sinnet-reports-webapi</sonar.projectKey>
     <graphql-java-kickstart.version>7.0.1</graphql-java-kickstart.version>
 
     <!-- required by integration with Spring.

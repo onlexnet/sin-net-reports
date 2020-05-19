@@ -15,7 +15,6 @@
 
   <properties>
     <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/../${aggregate.report.dir}</sonar.coverage.jacoco.xmlReportPaths>
-    <sonar.projectKey>sinnet-reports-webapi</sonar.projectKey>
   </properties>
 
   <dependencies>
