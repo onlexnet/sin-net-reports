@@ -68,13 +68,22 @@ jobs:
           checkStyleRunAnalysis: true # We use checkstyle in coding, so let's use it with Maven
 
       - task: Docker@2
-        
-        displayName: Build and push webapi image to docker ACR
+        displayName: Build webapi with proper arguments to build image
         inputs:
-          containerRegistry: $(dockerRegistryServiceConnection)
           dockerfile: webapi/Dockerfile
           repository: webapi
-          command: buildAndPush
+          command: build
+          arguments: --build-arg AZURE_APP_SECRET
+          tags: |
+            $(Build.SourceBranchName)-$(Build.BuildNumber)
+            latest
+
+      - task: Docker@2
+        displayName: Push webapi image to docker ACR
+        inputs:
+          containerRegistry: $(dockerRegistryServiceConnection)
+          repository: webapi
+          command: build
           arguments: --build-arg AZURE_APP_SECRET
           tags: |
             $(Build.SourceBranchName)-$(Build.BuildNumber)
