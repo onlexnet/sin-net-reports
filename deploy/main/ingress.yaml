@@ -35,6 +35,12 @@ spec:
           backend:
             serviceName: webapi-svc
             servicePort: 8080
+        - path: /login
+          # used to handle returned token from azure AD
+          # applications request address: /login/oauth2/code/azure
+          backend:
+            serviceName: webapi-svc
+            servicePort: 8080
 
         - path: /
           backend:
