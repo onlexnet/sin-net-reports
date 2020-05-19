@@ -7,10 +7,13 @@
   <version>1.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
+  <name>parent-pom</name>
+  
   <properties>
     <my.version>1.0-SNAPSHOT</my.version>
     <axon.version>4.2.1</axon.version>
-    <spring-boot.version>2.2.6.RELEASE</spring-boot.version>
+    <spring-boot-azure.version>2.2.4</spring-boot-azure.version>
+    <spring-boot.version>2.2.4.RELEASE</spring-boot.version>
     <jacoco.version>0.8.5</jacoco.version>
 
     <aggregate.report.dir>report-aggregate/target/site/jacoco-aggregate/jacoco.xml</aggregate.report.dir>
@@ -37,26 +40,46 @@
 
     <dependency>
       <groupId>net.siudek</groupId>
-      <artifactId>graphql</artifactId>
+      <artifactId>web-server</artifactId>
       <version>${my.version}</version>
       <scope>compile</scope>
     </dependency>
 
-      <dependency>
-        <groupId>net.siudek</groupId>
-        <artifactId>domain-api</artifactId>
-        <version>${my.version}</version>
-        <scope>compile</scope>
-      </dependency>
+    <dependency>
+      <groupId>net.siudek</groupId>
+      <artifactId>web-graphql</artifactId>
+      <version>${my.version}</version>
+      <scope>compile</scope>
+    </dependency>
 
-       <dependency>
-           <groupId>org.springframework.boot</groupId>
-           <artifactId>spring-boot-dependencies</artifactId>
-           <version>${spring-boot.version}</version>
-           <type>pom</type>
-           <scope>import</scope>
-       </dependency>
+    <dependency>
+      <groupId>net.siudek</groupId>
+      <artifactId>domain-core</artifactId>
+      <version>${my.version}</version>
+      <scope>compile</scope>
+    </dependency>
 
+    <dependency>
+      <groupId>net.siudek</groupId>
+      <artifactId>domain-api</artifactId>
+      <version>${my.version}</version>
+      <scope>compile</scope>
+    </dependency>
+
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-dependencies</artifactId>
+        <version>${spring-boot.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.microsoft.azure</groupId>
+      <artifactId>azure-active-directory-spring-boot-starter</artifactId>
+      <version>${spring-boot-azure.version}</version>
+      <scope>compile</scope>
+    </dependency>
 
       <dependency>
         <groupId>org.axonframework</groupId>

@@ -13,14 +13,18 @@
 
   <properties>
     <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/../${aggregate.report.dir}</sonar.coverage.jacoco.xmlReportPaths>
-    <sonar.projectKey>sinnet-reports-host</sonar.projectKey>
   </properties>
 
   <dependencies>
 
     <dependency>
       <groupId>net.siudek</groupId>
-      <artifactId>graphql</artifactId>
+      <artifactId>web-server</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>net.siudek</groupId>
+      <artifactId>web-graphql</artifactId>
     </dependency>
 
     <dependency>

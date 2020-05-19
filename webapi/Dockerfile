@@ -13,6 +13,11 @@ RUN ./mvnw clean install -B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.tr
 
 #----------
 FROM mcr.microsoft.com/java/jre-headless:11u6-zulu-alpine
+
+# The pplication needs some configuration
+ARG AZURE_APP_SECRET
+ENV AZURE_APP_SECRET=$AZURE_APP_SECRET
+
 VOLUME /tmp
 COPY --from=build /app/main/host/target/*.jar /app/target/
 EXPOSE 8080

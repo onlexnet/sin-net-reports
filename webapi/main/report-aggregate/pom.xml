@@ -15,7 +15,6 @@
 
   <properties>
     <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/../${aggregate.report.dir}</sonar.coverage.jacoco.xmlReportPaths>
-    <sonar.projectKey>sinnet-reports-report-aggregate</sonar.projectKey>
   </properties>
 
 
@@ -23,19 +22,21 @@
     <dependency>
       <groupId>net.siudek</groupId>
       <artifactId>domain-api</artifactId>
-      <version>1.0-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>net.siudek</groupId>
       <artifactId>domain-core</artifactId>
-      <version>1.0-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>net.siudek</groupId>
-      <artifactId>graphql</artifactId>
-      <version>1.0-SNAPSHOT</version>
+      <artifactId>web-server</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>net.siudek</groupId>
+      <artifactId>web-graphql</artifactId>
     </dependency>
   </dependencies>
 
