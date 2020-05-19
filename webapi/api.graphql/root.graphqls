@@ -17,9 +17,14 @@ input ServicesFilter {
     forWhatCustomer: String
 }
 
+type PrincipalModel {
+    name: String
+}
+
 # The Root Query for the application
 type Query {
     getServices(filter: ServicesFilter): [ServiceModel]!
+    getPrincipal: PrincipalModel!
 }
  
 # The Root Mutation for the application

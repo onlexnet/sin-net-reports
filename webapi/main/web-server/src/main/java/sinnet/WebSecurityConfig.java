@@ -27,6 +27,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(final HttpSecurity http) throws Exception {
         http
             .authorizeRequests()
+            
+            .antMatchers("/graphql").permitAll()
+            .antMatchers("/vendor/**").permitAll()
+            .antMatchers("/graphiql").permitAll()
+
             .anyRequest().authenticated()
             .and()
             .oauth2Login()

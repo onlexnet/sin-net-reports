@@ -47,6 +47,9 @@ jobs:
           # https://github.com/Microsoft/azure-pipelines-agent/issues/145
           # As the result, we have to put CICD secret to build variable
           SONAR_TOKEN: $(SONAR_TOKEN)
+          # to communicate with Azure we need application secret
+          # and it is delivered as env variable named AZURE_APP_SECRET
+          AZURE_APP_SECRET: $(AZURE_APP_SECRET)
 
         # https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/build/maven
         displayName: 'Project compilation with Maven'
@@ -72,6 +75,7 @@ jobs:
           dockerfile: webapi/Dockerfile
           repository: webapi
           command: buildAndPush
+          arguments: --build-arg AZURE_APP_SECRET
           tags: |
             $(Build.SourceBranchName)-$(Build.BuildNumber)
             latest
