@@ -1,6 +1,7 @@
 #----------
 # more images see https://hub.docker.com/_/microsoft-java-jdk
 FROM mcr.microsoft.com/java/jdk:11u5-zulu-alpine as build
+ARG AZURE_APP_SECRET
 
 WORKDIR /app
 COPY . .
