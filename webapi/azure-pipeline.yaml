@@ -84,7 +84,6 @@ jobs:
           containerRegistry: $(dockerRegistryServiceConnection)
           repository: webapi
           command: push
-          arguments: --build-arg AZURE_APP_SECRET
           tags: |
             $(Build.SourceBranchName)-$(Build.BuildNumber)
             latest
