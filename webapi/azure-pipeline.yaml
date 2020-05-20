@@ -70,9 +70,10 @@ jobs:
       - task: Docker@2
         displayName: Build webapi image
         inputs:
-          dockerfile: webapi/Dockerfile
-          repository: webapi
           command: build
+          dockerfile: webapi/Dockerfile
+          containerRegistry: $(dockerRegistryServiceConnection)
+          repository: webapi
           arguments: --build-arg AZURE_APP_SECRET
           tags: |
             $(Build.SourceBranchName)-$(Build.BuildNumber)
