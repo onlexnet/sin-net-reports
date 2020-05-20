@@ -81,9 +81,9 @@ jobs:
       - task: Docker@2
         displayName: Push webapi image to docker ACR
         inputs:
+          command: push
           containerRegistry: $(dockerRegistryServiceConnection)
           repository: webapi
-          command: push
           tags: |
             $(Build.SourceBranchName)-$(Build.BuildNumber)
             latest
