@@ -9,12 +9,15 @@ WORKDIR /app/main
 RUN chmod +x ./mvnw
 # download maven dependencies and disable log entries (a lot of entries) related to downloaded artifacts
 # source @ https://blogs.itemis.com/en/in-a-nutshell-removing-artifact-messages-from-maven-log-output
-RUN ./mvnw clean install -B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
+# we also skip tests because testing and build appllication is done in a different step of builds.
+RUN ./mvnw clean install -DskipTests -B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
 
 #----------
-FROM mcr.microsoft.com/java/jre-headless:11u6-zulu-alpine
+# list of images is located @ https://hub.docker.com/_/microsoft-java-jre-headless
+FROM mcr.microsoft.com/java/jre-headless:11u7-zulu-alpine
 
-# The pplication needs some configuration
+# The application needs some configuration
+# so let's provide that configuration fro mAzure secrets when image is build.
 ARG AZURE_APP_SECRET
 ENV AZURE_APP_SECRET=$AZURE_APP_SECRET
 
