@@ -7,17 +7,18 @@ Small project created for [Sin.Net](http://www.sin.net.pl/)
 
 Project site: [raport.sin.net.pl](https://raport.sin.net.pl/)
 
-Project allows register customer services and produce summarized reports.
+Project allows register customer services and produce summarized reports in form of small PDF attachments for invoices..
 
 In scope:
 
-- Define list of clients
-- Register time and distance of provided service through Web site
-- Create PDF attachments per client for given period on demand
+- [ ] Register time and distance of provided service through Web site
+- [ ] Define list of clients
+- [ ] Create PDF attachments per client for given period on demand
 
 ## To run locally for tests
 
-- **docker-compose up**
+- cd webapi/main
+- TBD
 - goto **http://localhost:3000** to see UI
 - goto **http://localhost:8080/graphiql** to see webapi
 
