@@ -40,7 +40,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .oidcUserService(oidcUserService);
 
             // .and()
-            // .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+            // .logout()
+            //  .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
             // .logoutSuccessUrl("/")
             //    .deleteCookies("JSESSIONID").invalidateHttpSession(true)
 
