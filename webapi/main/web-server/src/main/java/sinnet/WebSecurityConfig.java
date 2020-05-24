@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
+// import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 /**
  * Fixme.
@@ -28,14 +29,21 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
             .authorizeRequests()
 
-            // .antMatchers("/graphql").permitAll()
-            // .antMatchers("/vendor/**").permitAll()
-            // .antMatchers("/graphiql").permitAll()
+            .antMatchers("/graphql").permitAll()
+            .antMatchers("/vendor/**").permitAll()
+            .antMatchers("/graphiql").permitAll()
 
             .anyRequest().authenticated()
             .and()
             .oauth2Login()
             .userInfoEndpoint()
             .oidcUserService(oidcUserService);
+
+            // .and()
+            // .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+            // .logoutSuccessUrl("/")
+            //    .deleteCookies("JSESSIONID").invalidateHttpSession(true)
+
+            http.csrf().disable();
     }
 }
