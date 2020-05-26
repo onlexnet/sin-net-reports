@@ -1,7 +1,8 @@
+ARG AZURE_APP_SECRET
+
 #----------
 # more images see https://hub.docker.com/_/microsoft-java-jdk
 FROM mcr.microsoft.com/java/jdk:11u5-zulu-alpine as build
-ARG AZURE_APP_SECRET
 
 WORKDIR /app
 COPY . .
@@ -16,10 +17,10 @@ RUN ./mvnw clean install -DskipTests -B -Dorg.slf4j.simpleLogger.log.org.apache.
 #----------
 # list of images is located @ https://hub.docker.com/_/microsoft-java-jre-headless
 FROM mcr.microsoft.com/java/jre-headless:11u7-zulu-alpine
+ARG AZURE_APP_SECRET
 
 # The application needs some configuration
 # so let's provide that configuration fro mAzure secrets when image is build.
-ARG AZURE_APP_SECRET
 ENV AZURE_APP_SECRET=$AZURE_APP_SECRET
 
 VOLUME /tmp
