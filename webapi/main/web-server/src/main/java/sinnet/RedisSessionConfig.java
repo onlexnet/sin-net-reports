@@ -1,6 +1,7 @@
 package sinnet;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 
@@ -14,6 +15,10 @@ public class RedisSessionConfig {
      */
     @Bean
     public LettuceConnectionFactory connectionFactory() {
-        return new LettuceConnectionFactory();
+        // we need to provide in configuration Redis name same as service define
+        // in kubernetes cluster to override default name 'localhost'
+        var redisConf = new RedisStandaloneConfiguration();
+        redisConf.setHostName("redis-master");
+        return new LettuceConnectionFactory(redisConf);
     }
 }
