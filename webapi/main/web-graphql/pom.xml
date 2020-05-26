@@ -16,10 +16,6 @@
   <properties>
     <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/../${aggregate.report.dir}</sonar.coverage.jacoco.xmlReportPaths>
     <graphql-java-kickstart.version>7.0.1</graphql-java-kickstart.version>
-
-    <!-- required by integration with Spring.
-      More @ https://github.com/graphql-java-kickstart/graphql-java-tools -->
-    <kotlin.version>1.3.70</kotlin.version>
   </properties>
 
   <dependencies>
