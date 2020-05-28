@@ -23,7 +23,7 @@ export const authProvider = new MsalAuthProvider(
       postLogoutRedirectUri: window.location.origin,
       // address is well-known because backend parts is based on Spring with proper MS Azure library
       // to handle redirected request.
-      redirectUri: window.location.origin + "/login/oauth2/code/azure",
+      redirectUri: window.location.origin,
       validateAuthority: true,
 
       // After being redirected to the "redirectUri" page, should user
@@ -41,7 +41,7 @@ export const authProvider = new MsalAuthProvider(
     }
   },
   {
-    scopes: ["openid"]
+    scopes: ["openid", "user.read"]
   },
   {
     loginType: LoginType.Popup,

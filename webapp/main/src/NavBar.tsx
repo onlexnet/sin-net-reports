@@ -43,6 +43,13 @@ export const NavBasicExample: React.FC<ChildComponentProps> = (props) => {
               key: 'key4',
               target: '_blank'
             },
+            {
+              name: 'Diagnostyka',
+              onClick: () => props.history.push('/debug'),
+              url: '',
+              key: 'key5',
+              target: '_blank'
+            },
           ]
         }
       ]}

@@ -1,5 +1,5 @@
 import React from "react";
-import { MsalAuthProvider } from "react-aad-msal";
+import { MsalAuthProvider, IAccountInfo } from "react-aad-msal";
 import { HashRouter as Router, Route } from "react-router-dom";
 import { Main } from "./services";
 import { Customers } from "./Customers";
@@ -8,16 +8,15 @@ import { Home } from "./Home";
 
 import { routing } from "./Routing";
 import { NavBasicExample } from "./NavBar";
-import { GetIdTokenButton } from "./Components/GetIdTokenButton";
+import { Debug } from "./Debug";
 
 interface Props {
   authProvider: MsalAuthProvider;
+  accountInfo: IAccountInfo;
 }
 
-export const View: React.FC<Props> = ({ authProvider }) => {
+export const View: React.FC<Props> = (props) => {
   return (
-    <>
-    {/* <GetIdTokenButton provider={authProvider} /> */}
     <Router>
       <div className="ms-Grid" dir="ltr">
         <div className="ms-Grid-row">
@@ -28,11 +27,11 @@ export const View: React.FC<Props> = ({ authProvider }) => {
             <Route path={routing.services} component={Main} />
             <Route path={routing.customers} component={Customers} />
             <Route path={routing.reports} component={Reports} />
+            <Route path={routing.debug} render={(localProps) => <Debug {...props} />} />
             <Route path="/" exact component={Home} />
           </div>
         </div>
       </div>
     </Router>
-    </>
   );
 };

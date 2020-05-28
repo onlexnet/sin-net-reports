@@ -1,5 +1,6 @@
 export const routing = {
     services: "/services",
     customers: "/customers",
-    reports: "/reports"
+    reports: "/reports",
+    debug: "/debug"
 }
