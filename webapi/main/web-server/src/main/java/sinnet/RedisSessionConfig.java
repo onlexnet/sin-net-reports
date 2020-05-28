@@ -10,8 +10,15 @@ import org.springframework.session.data.redis.config.annotation.web.http.EnableR
 @EnableRedisHttpSession
 public class RedisSessionConfig {
 
+    /**
+     * Customised address of Redis server.
+     * <p>
+     * For local development we use Redis started by docker, on production
+     * instance is created in Kubernetes cluster for short-term caching
+     */
     @Value("${web-server.redis.host}")
     private String redisHostName;
+
     /**
      * Creates Redis connection used e.g. by Session based on REdis server.
      * @return Connection to Redis
