@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { RouteComponentProps } from "react-router-dom";
 import { Nav, INavLink } from 'office-ui-fabric-react';
+import { routing } from './Routing';
 
 //Child component related stuff
 interface ChildComponentProps extends RouteComponentProps<any> {}
@@ -24,13 +25,13 @@ export const NavBasicExample: React.FC<ChildComponentProps> = (props) => {
           links: [
             {
               name: 'Usługi',
-              onClick: () => props.history.push('/services'),
+              onClick: () => props.history.push(routing.services),
               url: '',
               isExpanded: true
             },
             {
               name: 'Klienci',
-              onClick: () => props.history.push('/customers'),
+              onClick: () => props.history.push(routing.customers),
               url: '',
               key: 'key3',
               isExpanded: true,
@@ -38,14 +39,14 @@ export const NavBasicExample: React.FC<ChildComponentProps> = (props) => {
             },
             {
               name: 'Raporty',
-              onClick: () => props.history.push('/reports'),
+              onClick: () => props.history.push(routing.reports),
               url: '',
               key: 'key4',
               target: '_blank'
             },
             {
               name: 'Diagnostyka',
-              onClick: () => props.history.push('/debug'),
+              onClick: () => props.history.push(routing.debug),
               url: '',
               key: 'key5',
               target: '_blank'
