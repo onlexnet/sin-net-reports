@@ -1,4 +1,4 @@
-query {
+query getServices {
   getServices {
     whenProvided
     forWhatCustomer

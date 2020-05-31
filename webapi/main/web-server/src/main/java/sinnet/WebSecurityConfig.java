@@ -21,11 +21,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(final HttpSecurity http) throws Exception {
 
         http
+            .cors()
+            .and()
+            .csrf()
+            .disable()
             .authorizeRequests()
-            .anyRequest()
-            .authenticated();
+            .antMatchers("/graphql", "/api/**")
+            .authenticated()
+            .and().headers().frameOptions().disable();
 
-        http.addFilterBefore(aadAuthFilter,
-                             UsernamePasswordAuthenticationFilter.class);
+            http.addFilterBefore(aadAuthFilter,
+                                 UsernamePasswordAuthenticationFilter.class);
     }
 }

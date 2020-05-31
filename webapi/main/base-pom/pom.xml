@@ -12,7 +12,7 @@
   <properties>
     <my.version>1.0-SNAPSHOT</my.version>
     <axon.version>4.2.1</axon.version>
-    <spring-boot-azure.version>2.3.0</spring-boot-azure.version>
+    <spring-boot-azure.version>2.3.1</spring-boot-azure.version>
     <spring-boot.version>2.3.0.RELEASE</spring-boot.version>
     <jacoco.version>0.8.5</jacoco.version>
 
@@ -184,29 +184,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>
-        <version>3.1.0</version>
-        <configuration>
-          <configLocation>sun_checks.xml</configLocation> 
-          <!-- 
-            There are two pre-build styles delivered with plugin, where the first one is default
-            and does not need to be declared implicitly.
-            
-            <configLocation>sun_checks.xml</configLocation> 
-            <configLocation>google_checks.xml</configLocation> 
-            -->
-          <encoding>UTF-8</encoding>
-          <consoleOutput>true</consoleOutput>
-          <failsOnError>true</failsOnError>
-        </configuration>
-        <executions>
-          <execution>
-            <id>validate</id>
-            <phase>validate</phase>
-            <goals>
-              <goal>check</goal>
-            </goals>
-          </execution>
-        </executions>
       </plugin>
 
     </plugins>
@@ -260,6 +237,38 @@
           <artifactId>jacoco-maven-plugin</artifactId>
           <version>0.8.4</version>
         </plugin>
+        <!--
+          Checking for Violations as Part of the Build
+          https://maven.apache.org/plugins/maven-checkstyle-plugin/usage.html
+        -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-checkstyle-plugin</artifactId>
+          <version>3.1.0</version>
+          <configuration>
+            <configLocation>../.checkstyle/checkstyle-configuration.xml</configLocation> 
+            <!-- 
+              There are also two pre-build styles delivered with plugin, where the first one is default
+              and does not need to be declared implicitly.
+              
+              <configLocation>sun_checks.xml</configLocation> 
+              <configLocation>google_checks.xml</configLocation> 
+              -->
+            <encoding>UTF-8</encoding>
+            <consoleOutput>true</consoleOutput>
+            <failsOnError>true</failsOnError>
+          </configuration>
+          <executions>
+            <execution>
+              <id>validate</id>
+              <phase>validate</phase>
+              <goals>
+                <goal>check</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+
 
       </plugins>
     </pluginManagement>

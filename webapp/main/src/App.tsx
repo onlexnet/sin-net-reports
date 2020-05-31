@@ -1,7 +1,5 @@
 import React from "react";
 
-import ApolloClient from "apollo-boost";
-
 import { AzureAD, AuthenticationState, IAzureADFunctionProps } from "react-aad-msal";
 import { authProvider } from "./authProvider";
 
@@ -10,10 +8,6 @@ import { basicReduxStore } from "./reduxStore";
 import { View as AuthenticatedView } from "./AppAuthenticated";
 import { View as UnauthenticatedView } from "./AppUnauthenticated";
 import { View as InProgressView } from "./AppInProgress";
-
-const client = new ApolloClient({
-  uri: "http://localhost:8080"
-});
 
 export const App: React.FC<{}> = () => {
   const [login, setLogin] = React.useState();

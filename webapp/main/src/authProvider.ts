@@ -18,6 +18,7 @@ export const authProvider = new MsalAuthProvider(
   {
     auth: {
       authority: "https://login.microsoftonline.com/common",
+      // authority: "https://login.microsoftonline.com/9188040d-6c67-4c5b-b112-36a304b66dad",
       // sinnet-prod
       clientId: "d6f91b94-e8c7-4ab7-b198-fc97a6b1741a",
       postLogoutRedirectUri: window.location.origin,
@@ -41,7 +42,7 @@ export const authProvider = new MsalAuthProvider(
     }
   },
   {
-    scopes: ["openid", "user.read"]
+    scopes: ["openid", "profile"]
   },
   {
     loginType: LoginType.Popup,
