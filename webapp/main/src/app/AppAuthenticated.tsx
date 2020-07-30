@@ -1,14 +1,14 @@
 import React from "react";
 import { MsalAuthProvider, IAccountInfo } from "react-aad-msal";
 import { HashRouter as Router, Route } from "react-router-dom";
-import { Main } from "./services";
-import { Customers } from "./Customers";
-import { Reports } from "./reports/Reports";
-import { Home } from "./Home";
+import { Main } from "../services";
+import { Customers } from "../Customers";
+import { Reports } from "../reports/Reports";
+import { Home } from "../Home";
 
-import { routing } from "./Routing";
-import { NavBasicExample } from "./NavBar";
-import { Debug } from "./Debug";
+import { routing } from "../Routing";
+import { NavBasicExample } from "../NavBar";
+import { Debug } from "../Debug";
 
 interface Props {
   authProvider: MsalAuthProvider;

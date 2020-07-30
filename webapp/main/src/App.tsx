@@ -5,9 +5,9 @@ import { authProvider } from "./authProvider";
 
 import { basicReduxStore } from "./reduxStore";
 
-import { View as AuthenticatedView } from "./AppAuthenticated";
-import { View as UnauthenticatedView } from "./AppUnauthenticated";
-import { View as InProgressView } from "./AppInProgress";
+import { View as AuthenticatedView } from "./app/AppAuthenticated";
+import { View as UnauthenticatedView } from "./app/AppUnauthenticated";
+import { View as InProgressView } from "./app/AppInProgress";
 
 export const App: React.FC<{}> = () => {
   const [login, setLogin] = React.useState();

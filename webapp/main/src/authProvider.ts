@@ -20,7 +20,7 @@ export const authProvider = new MsalAuthProvider(
       authority: "https://login.microsoftonline.com/common",
       // authority: "https://login.microsoftonline.com/9188040d-6c67-4c5b-b112-36a304b66dad",
       // sinnet-prod
-      clientId: "d6f91b94-e8c7-4ab7-b198-fc97a6b1741a",
+      clientId: "9027d226-b538-414e-82ea-abfe306461ad",
       postLogoutRedirectUri: window.location.origin,
       // address is well-known because backend parts is based on Spring with proper MS Azure library
       // to handle redirected request.
