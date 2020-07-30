@@ -28,13 +28,8 @@ export type PrincipalModel = {
 
 export type Query = {
    __typename?: 'Query';
-  getServices: Array<Maybe<ServiceModel>>;
   getPrincipal: PrincipalModel;
-};
-
-
-export type QueryGetServicesArgs = {
-  filter?: Maybe<ServicesFilter>;
+  Services: Services;
 };
 
 export type ServiceEntry = {
@@ -48,9 +43,26 @@ export type ServiceModel = {
   forWhatCustomer?: Maybe<Scalars['String']>;
 };
 
+export type Services = {
+   __typename?: 'Services';
+  search: ServicesSearchResult;
+};
+
+
+export type ServicesSearchArgs = {
+  filter?: Maybe<ServicesFilter>;
+};
+
 export type ServicesFilter = {
   whenProvided?: Maybe<Scalars['String']>;
   forWhatCustomer?: Maybe<Scalars['String']>;
+  onlyMine?: Maybe<Scalars['Boolean']>;
+};
+
+export type ServicesSearchResult = {
+   __typename?: 'ServicesSearchResult';
+  items: Array<ServiceModel>;
+  totalDistance: Scalars['Int'];
 };
 
 export type Subscription = {
@@ -63,18 +75,30 @@ export type GetServicesQueryVariables = {};
 
 export type GetServicesQuery = (
   { __typename?: 'Query' }
-  & { getServices: Array<Maybe<(
-    { __typename?: 'ServiceModel' }
-    & Pick<ServiceModel, 'whenProvided' | 'forWhatCustomer'>
-  )>> }
+  & { Services: (
+    { __typename?: 'Services' }
+    & { search: (
+      { __typename?: 'ServicesSearchResult' }
+      & Pick<ServicesSearchResult, 'totalDistance'>
+      & { items: Array<(
+        { __typename?: 'ServiceModel' }
+        & Pick<ServiceModel, 'whenProvided' | 'forWhatCustomer'>
+      )> }
+    ) }
+  ) }
 );
 
 
 export const GetServicesDocument = gql`
     query getServices {
-  getServices {
-    whenProvided
-    forWhatCustomer
+  Services {
+    search {
+      items {
+        whenProvided
+        forWhatCustomer
+      }
+      totalDistance
+    }
   }
 }
     `;
