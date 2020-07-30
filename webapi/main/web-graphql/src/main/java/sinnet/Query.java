@@ -1,10 +1,6 @@
 package sinnet;
 
-import java.time.LocalDate;
-import java.util.List;
 import java.util.Random;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import org.springframework.stereotype.Component;
 
@@ -14,26 +10,12 @@ import graphql.kickstart.tools.GraphQLQueryResolver;
 @Component
 public class Query implements GraphQLQueryResolver {
 
-    /** FixMe. */
-    static final Random RANDOM = new Random();
-
     /**
-     * FixMe.
-     *
-     * @param filter fixme.
-     * @return fixme
+     * Returns context of Services to allow provide more operations.
+     * @return the context
      */
-    public List<ServiceModel> getServices(final ServicesFilter filter) {
-        final int magic10 = 10;
-        final int magic20 = 10;
-        var count = RANDOM.nextInt(magic10) + magic20;
-        return IntStream
-            .range(1, count)
-            .boxed()
-            .map(it -> new ServiceModel(
-                LocalDate.now().toString(),
-                DummyData.randomCustomerName()))
-            .collect(Collectors.toList());
+    public Services getServices() {
+        return new Services();
     }
 
 }

@@ -26,8 +26,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .csrf()
             .disable()
             .authorizeRequests()
-            .antMatchers("/graphql", "/api/**")
+            .antMatchers("/api/**")
             .authenticated()
+            .anyRequest().permitAll()
             .and().headers().frameOptions().disable();
 
             http.addFilterBefore(aadAuthFilter,

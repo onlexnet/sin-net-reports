@@ -1,6 +1,11 @@
 query getServices {
-  getServices {
-    whenProvided
-    forWhatCustomer
+  Services {
+    search {
+      items {
+        whenProvided
+        forWhatCustomer
+      }
+      totalDistance
+    }
   }
 }

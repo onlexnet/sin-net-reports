@@ -1,0 +1,19 @@
+type Services {
+    search(filter: ServicesFilter): ServicesSearchResult!
+}
+
+type ServicesSearchResult {
+    items: [ServiceModel!]!
+    totalDistance: Int!
+}
+
+type ServiceModel {
+    whenProvided: String
+    forWhatCustomer: String
+}
+
+input ServicesFilter {
+    whenProvided: String
+    forWhatCustomer: String
+    onlyMine: Boolean
+}

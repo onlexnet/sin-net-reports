@@ -2,19 +2,9 @@ type Subscription {
     time: Int
 }
 
-type ServiceModel {
-    whenProvided: String
-    forWhatCustomer: String
-}
-
 input ServiceEntry {
     whenProvided: String
     forWhatCustomer: ID
-}
-
-input ServicesFilter {
-    whenProvided: String
-    forWhatCustomer: String
 }
 
 type PrincipalModel {
@@ -23,8 +13,8 @@ type PrincipalModel {
 
 # The Root Query for the application
 type Query {
-    getServices(filter: ServicesFilter): [ServiceModel]!
     getPrincipal: PrincipalModel!
+    Services: Services!
 }
  
 # The Root Mutation for the application
