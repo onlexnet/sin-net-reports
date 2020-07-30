@@ -196,7 +196,7 @@ export class Content extends React.Component<{}, IContentState> {
                 styles={controlStyles}
               />
               <TextField label="Tylko dzień:" onChange={this._onChangeDay} styles={controlStyles} />
-              <TextField label="Kontrahent:" onChange={this._onChangeText} styles={controlStyles} />
+              <TextField label="Kontrahent:" onChange={this._onChangeText} styles={controlStyles} placeholder="fragment nazwy kontahenta" />
             </Stack>
           </Stack>
         </div>
