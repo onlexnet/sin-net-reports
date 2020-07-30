@@ -16,7 +16,6 @@ export const App: React.FC<{}> = () => {
     <AzureAD provider={authProvider} reduxStore={basicReduxStore}>
       {({ login, authenticationState, accountInfo }: IAzureADFunctionProps) => {
         var current: JSX.Element;
-        alert('authenticationState: ' + JSON.stringify(authenticationState));
         if (authenticationState === AuthenticationState.Authenticated) {
           current = <AuthenticatedView authProvider={authProvider} accountInfo={accountInfo!} />;
         } else if (authenticationState === AuthenticationState.Unauthenticated) {

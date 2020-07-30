@@ -2,11 +2,6 @@ type Subscription {
     time: Int
 }
 
-input ServiceEntry {
-    whenProvided: String
-    forWhatCustomer: ID
-}
-
 type PrincipalModel {
     name: String
 }
@@ -15,9 +10,4 @@ type PrincipalModel {
 type Query {
     getPrincipal: PrincipalModel!
     Services: Services!
-}
- 
-# The Root Mutation for the application
-type Mutation {
-    addService(entry: ServiceEntry) : ServiceModel!
 }

@@ -1,5 +1,11 @@
 type Services {
     search(filter: ServicesFilter): ServicesSearchResult!
+    add(entry: ServiceEntry) : ServiceModel!
+}
+
+input ServiceEntry {
+    whenProvided: String
+    forWhatCustomer: ID
 }
 
 type ServicesSearchResult {

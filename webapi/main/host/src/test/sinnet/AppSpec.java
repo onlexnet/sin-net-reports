@@ -14,7 +14,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import lombok.SneakyThrows;
 
 @ExtendWith(SpringExtension.class)
-@GraphQLTest
 public class AppSpec {
 
     @Autowired
