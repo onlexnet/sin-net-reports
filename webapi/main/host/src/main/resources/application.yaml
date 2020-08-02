@@ -1,23 +1,14 @@
 azure:
   activedirectory:
-    client-id: d6f91b94-e8c7-4ab7-b198-fc97a6b1741a
-    client-secret: ${AZURE_APP_SECRET}
-    user-group:
-      allowed-groups:
-      - group1
-      - group2
-# azure:
-#   activedirectory:
-#     b2c:
-#       tenant: LexNet
-#       client-id: d6f91b94-e8c7-4ab7-b198-fc97a6b1741a
-#       client-secret: ${AZURE_APP_SECRET}
-#       reply-url: http://localhost:3000
-#       logout-success-url: http://localhost:3000/logout
-#       user-flows:
-#         sign-up-or-sign-in: B2C_1_sign-up-in
-#         # profile-edit: ${your-profile-edit-user-flow}     # optional
-#         # password-reset: ${your-password-reset-user-flow} # optional
+    b2c:
+      tenant: onlexnet.b2clogin.com
+      client-id: 9027d226-b538-414e-82ea-abfe306461ad # SinNet
+      client-secret: ${AZURE_APP_SECRET}
+      reply-url: http://localhost:3000/reply
+      user-flows:
+        sign-up-or-sign-in: B2C_1_sign-in-or-up
+        # profile-edit: ${your-profile-edit-user-flow}     # optional
+        # password-reset: ${your-password-reset-user-flow} # optional
 
 # because I use spring-boot:run to run application from sources, my expectation is application does
 # restart when some of modules are updated. To make it happen, Spring plugin shpouldshould be aware
@@ -31,8 +22,3 @@ spring:
 graphql:
     servlet:
         corsEnabled=true
-
-# azure:
-#     activedirectory.client-id=d6f91b94-e8c7-4ab7-b198-fc97a6b1741a
-# azure.activedirectory.client-secret=${AZURE_APP_SECRET}
-# azure.activedirectory.ActiveDirectoryGroups=group1,group2
