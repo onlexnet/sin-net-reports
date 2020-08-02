@@ -1,9 +1,9 @@
-import { GetIdTokenButton } from "./Components/GetIdTokenButton";
-import { GetAccessTokenButton } from "./Components/GetAccessToken";
+import { GetIdTokenButton } from "../Components/GetIdTokenButton";
+import { GetAccessTokenButton } from "../Components/GetAccessToken";
 import { MsalAuthProvider, IAccountInfo } from "react-aad-msal";
 import React from "react";
-import { useGetServicesQuery } from "./Components/.generated/components";
-import { addressProvider } from "./addressProvider";
+import { useGetServicesQuery } from "../Components/.generated/components";
+import { addressProvider } from "../addressProvider";
 import { createHttpLink } from "apollo-link-http";
 import { setContext } from "apollo-link-context";
 import { WebSocketLink } from "apollo-link-ws";
