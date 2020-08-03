@@ -41,6 +41,7 @@ const apolloClientFactory = (jwtIdToken: string) => {
     operation.setContext({
       headers: {
         "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Credentials": true,
         authorization: `Bearer ${jwtIdToken}`,
       },
     });
@@ -50,8 +51,8 @@ const apolloClientFactory = (jwtIdToken: string) => {
   var address = addressProvider().host;
   return new ApolloClient({
     cache: new InMemoryCache({}),
-    // link: middlewareLink.concat(httpLink),
     link: middlewareAuthLink.concat(httpLink),
+    connectToDevTools: true
   });
 };
 

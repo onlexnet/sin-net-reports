@@ -18,26 +18,22 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     /** Fixme. */
     @Override
     protected void configure(final HttpSecurity http) throws Exception {
-
-        // http
-            // .cors()
-            // .and()
-            // .csrf()
-            // .disable()
-            // .authorizeRequests()
-            // .antMatchers("/api/**")
-            // .authenticated()
-            // .anyRequest().permitAll()
-            // .and().headers().frameOptions().disable();
-
-            // http.addFilterBefore(aadAuthFilter,
-            //                      UsernamePasswordAuthenticationFilter.class);
-
+            // http
+            //     .authorizeRequests()
+            //     .anyRequest()
+            //     .authenticated()
+            //     .and()
+            //     .apply(configurer);
             http
+                .cors()
+                .and()
+                .csrf()
+                .disable()
                 .authorizeRequests()
                 .anyRequest()
-                .authenticated()
+                .permitAll()
                 .and()
                 .apply(configurer);
+
     }
 }

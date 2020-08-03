@@ -22,7 +22,7 @@ public class AppCorsConfigurer {
     CorsConfigurationSource corsConfigurationSource() {
         var conf = new CorsConfiguration();
         conf.setAllowedOrigins(Arrays.asList("http://localhost:3000",
-                                             "http://127.0.0.1:3000"));
+                                             "https://raport.sin.net.pl"));
         conf.setAllowedMethods(Arrays.asList("GET", "POST", "OPTIONS"));
         conf.addAllowedHeader("*");
         conf.setAllowCredentials(true);

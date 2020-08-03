@@ -11,8 +11,6 @@ const logger = new Logger(
   }
 );
 
-alert(1);
-
 // The auth provider should be a singleton. Best practice is to only have it ever instantiated once.
 // Avoid creating an instance inside the component it will be recreated on each render.
 // If two providers are created on the same page it will cause authentication errors.
@@ -20,7 +18,7 @@ export const authProvider = new MsalAuthProvider(
   {
     auth: {
       // authority: "https://login.microsoftonline.com/common",
-      authority: "https://onlexnet.b2clogin.com",
+      authority: 'https://onlexnet.b2clogin.com/f5230e02-babc-4b9d-ab7f-e76af49d1e5d/B2C_1_sign-in-or-up',
       // sinnet-prod
       clientId: "9027d226-b538-414e-82ea-abfe306461ad",
       postLogoutRedirectUri: window.location.origin,
@@ -48,13 +46,10 @@ export const authProvider = new MsalAuthProvider(
     scopes: ["openid", "profile"]
   },
   {
-    loginType: LoginType.Popup,
+    loginType: LoginType.Redirect,
     // When a token is refreshed it will be done by loading a page in an iframe.
     // Rather than reloading the same page, we can point to an empty html file which will prevent
     // site resources from being loaded twice.
     tokenRefreshUri: window.location.origin + "/auth.html"
   }
 );
-
-alert(11);
-
