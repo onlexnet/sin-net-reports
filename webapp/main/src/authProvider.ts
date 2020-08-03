@@ -11,14 +11,16 @@ const logger = new Logger(
   }
 );
 
+alert(1);
+
 // The auth provider should be a singleton. Best practice is to only have it ever instantiated once.
 // Avoid creating an instance inside the component it will be recreated on each render.
 // If two providers are created on the same page it will cause authentication errors.
 export const authProvider = new MsalAuthProvider(
   {
     auth: {
-      authority: "https://login.microsoftonline.com/common",
-      // authority: "https://login.microsoftonline.com/9188040d-6c67-4c5b-b112-36a304b66dad",
+      // authority: "https://login.microsoftonline.com/common",
+      authority: "https://onlexnet.b2clogin.com",
       // sinnet-prod
       clientId: "9027d226-b538-414e-82ea-abfe306461ad",
       postLogoutRedirectUri: window.location.origin,
@@ -29,7 +31,8 @@ export const authProvider = new MsalAuthProvider(
 
       // After being redirected to the "redirectUri" page, should user
       // be redirected back to the Url where their login originated from?
-      navigateToLoginRequestUrl: false
+      navigateToLoginRequestUrl: true,
+      knownAuthorities: ["onlexnet.b2clogin.com"]
     },
     // Enable logging of MSAL events for easier troubleshooting.
     // This should be disabled in production builds.
@@ -52,3 +55,6 @@ export const authProvider = new MsalAuthProvider(
     tokenRefreshUri: window.location.origin + "/auth.html"
   }
 );
+
+alert(11);
+
