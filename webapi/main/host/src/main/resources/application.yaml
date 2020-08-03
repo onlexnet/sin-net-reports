@@ -1,7 +1,7 @@
 azure:
   activedirectory:
     b2c:
-      tenant: onlexnet.b2clogin.com
+      tenant: onlexnet
       client-id: 9027d226-b538-414e-82ea-abfe306461ad # SinNet
       client-secret: ${AZURE_APP_SECRET}
       reply-url: http://localhost:3000/reply
