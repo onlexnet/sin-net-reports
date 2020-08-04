@@ -17,7 +17,7 @@ azure:
 spring:
     devtools:
         restart:
-            additional-paths=../web-graphql,../domain-api,../domain-core
+            additional-paths=../web-server,../web-graphql,../domain-api,../domain-core
 
 graphql:
     servlet:
