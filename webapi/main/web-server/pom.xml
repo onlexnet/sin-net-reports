@@ -32,7 +32,7 @@
     </dependency>
     <dependency>
       <groupId>com.microsoft.azure</groupId>
-      <artifactId>azure-active-directory-spring-boot-starter</artifactId>
+      <artifactId>azure-active-directory-b2c-spring-boot-starter</artifactId>
       <version>${spring-boot-azure.version}</version>
     </dependency>
 
@@ -56,6 +56,11 @@
     <dependency>
         <groupId>org.springframework.session</groupId>
         <artifactId>spring-session-data-redis</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>io.vavr</groupId>
+      <artifactId>vavr</artifactId>
     </dependency>
   </dependencies>
   
