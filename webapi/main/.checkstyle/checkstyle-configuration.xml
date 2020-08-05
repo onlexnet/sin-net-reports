@@ -87,7 +87,10 @@
 
         <!-- Checks for Javadoc comments.                     -->
         <!-- See http://checkstyle.sourceforge.net/config_javadoc.html -->
-        <module name="JavadocMethod"/>
+        <module name="JavadocMethod">
+          <property name="excludeScope" value="private"/>
+        </module>
+
         <module name="JavadocType"/>
         <module name="JavadocVariable">
           <property name="scope" value="public"/>
@@ -146,7 +149,8 @@
 
         <!-- Checks for blocks. You know, those {}'s         -->
         <!-- See http://checkstyle.sourceforge.net/config_blocks.html -->
-        <module name="AvoidNestedBlocks"/>
+        <module name="AvoidNestedBlocks">
+        </module>
         <module name="EmptyBlock"/>
         <module name="LeftCurly"/>
         <module name="NeedBraces"/>
