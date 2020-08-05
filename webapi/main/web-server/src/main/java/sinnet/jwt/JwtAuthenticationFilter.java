@@ -1,4 +1,4 @@
-package sinnet;
+package sinnet.jwt;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -23,6 +23,15 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
+
+    private final String key;
+    /**
+     * fixme.
+     * @param key fixme
+     */
+    public JwtAuthenticationFilter(final String key) {
+        this.key = key;
+    }
 
     /** fixme.
      * @param request fixme
