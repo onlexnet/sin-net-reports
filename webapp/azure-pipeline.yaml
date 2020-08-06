@@ -37,6 +37,12 @@ jobs:
           workingDir: webapp/main
 
       - task: Npm@1
+        displayName: Generate GraphQL components
+        inputs:
+          customCommand: run-script generate
+          workingDir: webapp/main
+
+      - task: Npm@1
         displayName: Build artifacts
         inputs:
           customCommand: run-script build
