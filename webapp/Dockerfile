@@ -1,4 +1,3 @@
-FROM nginx:1.17 as target
-WORKDIR /app
-COPY main/build/ /usr/share/nginx/html
+FROM nginx:1.19
+COPY main/build /usr/share/nginx/html
 EXPOSE 80
