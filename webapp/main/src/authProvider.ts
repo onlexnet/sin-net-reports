@@ -17,7 +17,6 @@ const logger = new Logger(
 export const authProvider = new MsalAuthProvider(
   {
     auth: {
-      // authority: "https://login.microsoftonline.com/common",
       authority: 'https://onlexnet.b2clogin.com/f5230e02-babc-4b9d-ab7f-e76af49d1e5d/B2C_1_sign-in-or-up',
       // sinnet-prod
       clientId: "9027d226-b538-414e-82ea-abfe306461ad",

@@ -1,2 +1,0 @@
-/** Fixme. */
-package sinnet.jwt;
