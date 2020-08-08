@@ -20,14 +20,14 @@ import { ApolloProvider } from "@apollo/react-hooks";
 //   },
 // });
 
+const graphqlUrl = addressProvider().host;
+
 const apolloClientFactory = (jwtIdToken: string) => {
   // configuration below is focused on Authentication
   // https://www.apollographql.com/docs/react/networking/authentication/
 
   const httpLink = createHttpLink({
-    // uri: 'https://raport.sin.net.pl/graphql',
-
-    uri: "http://localhost:8080/graphql",
+    uri: graphqlUrl,
 
     // Cookie
     // If your app is browser based and you are using cookies for login and session management with a backend,
