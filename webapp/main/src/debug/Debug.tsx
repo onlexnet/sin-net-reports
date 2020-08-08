@@ -20,7 +20,7 @@ import { ApolloProvider } from "@apollo/react-hooks";
 //   },
 // });
 
-const graphqlUrl = addressProvider().host;
+const graphqlUrl = `${addressProvider().host}/graphql`;
 
 const apolloClientFactory = (jwtIdToken: string) => {
   // configuration below is focused on Authentication
