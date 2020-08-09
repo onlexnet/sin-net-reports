@@ -1,14 +1,7 @@
 package sinnet;
 
-import java.util.Collection;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
 
 /** Fixme. */
@@ -17,13 +10,9 @@ public class AuthenticationConverter implements Converter<Jwt, AbstractAuthentic
     /** {@inheritDoc} */
     @Override
     public AbstractAuthenticationToken convert(final Jwt source) {
-        var authorities = Optional
-            .ofNullable(source.getClaimAsStringList("roles"))
-            .stream()
-            .flatMap(it -> it.stream())
-            .map(SimpleGrantedAuthority::new)
-            .collect(Collectors.toList());
-        return new UsernamePasswordAuthenticationToken("", "", authorities);
+        var accountId = source.getClaimAsString("oid");
+        var email = source.getClaimAsStringList("emails").get(0);
+        return new JwtAuthenticationToken(accountId, email);
     }
 
 }
@@ -31,27 +20,30 @@ public class AuthenticationConverter implements Converter<Jwt, AbstractAuthentic
 /** Fixme. */
 final class JwtAuthenticationToken extends AbstractAuthenticationToken {
 
+    private String accountId;
+    private String email;
     /**
      * Fixme.
-     * @param authorities fixme
+     * @param accountId fixme
+     * @param email fixme
      */
-    JwtAuthenticationToken(final Collection<? extends GrantedAuthority> authorities) {
-        super(authorities);
-        // TODO Auto-generated constructor stub
+    JwtAuthenticationToken(final String accountId,
+                           final String email) {
+        super(null);
+        this.accountId = accountId;
+        this.email = email;
     }
 
     private static final long serialVersionUID = 3717651672219649325L;
 
     @Override
     public Object getCredentials() {
-        // TODO Auto-generated method stub
         return null;
     }
 
     @Override
     public Object getPrincipal() {
-        // TODO Auto-generated method stub
-        return null;
+        return email;
     }
 }
 
