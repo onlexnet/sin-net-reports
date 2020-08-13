@@ -15,7 +15,8 @@ export const ServiceCommandBar: React.FC<ServiceCommandBarProps> = (props) => {
       key: 'newService',
       text: 'Nowa usługa',
       split: true,
-      iconProps: { iconName: 'Add' }
+      iconProps: { iconName: 'Add' },
+      onClick: () => alert(123)
     },
     {
       key: 'prevMonth',
