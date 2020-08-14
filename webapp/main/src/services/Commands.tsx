@@ -1,14 +1,19 @@
 import * as React from 'react';
 import { CommandBar, ICommandBarItemProps, IButtonProps } from 'office-ui-fabric-react';
+import { initialState } from '../reduxStore';
+import { Dispatch } from 'redux';
+import { connect } from 'react-redux';
+import { addService } from './redux';
 
 const overflowProps: IButtonProps = { ariaLabel: 'More commands' };
 
 interface ServiceCommandBarProps {
   onPreviousMonthRequested: () => void;
   onNextMonthRequested: () => void;
+  onTodoClick: () => void;
 }
 
-export const ServiceCommandBar: React.FC<ServiceCommandBarProps> = (props) => {
+const ServiceCommandBarView: React.FC<ServiceCommandBarProps> = (props) => {
 
   const _items: ICommandBarItemProps[] = [
     {
@@ -16,7 +21,7 @@ export const ServiceCommandBar: React.FC<ServiceCommandBarProps> = (props) => {
       text: 'Nowa usługa',
       split: true,
       iconProps: { iconName: 'Add' },
-      onClick: () => alert(123)
+      onClick: () => props.onTodoClick()
     },
     {
       key: 'prevMonth',
@@ -33,7 +38,7 @@ export const ServiceCommandBar: React.FC<ServiceCommandBarProps> = (props) => {
       onClick: props.onNextMonthRequested
     },
   ];
-  
+
   return (
     <div>
       <CommandBar
@@ -43,3 +48,15 @@ export const ServiceCommandBar: React.FC<ServiceCommandBarProps> = (props) => {
     </div>
   );
 };
+
+const mapStateToProps = (state: typeof initialState) => state;
+const mapDispatchToProps = (dispatch: Dispatch) => {
+  return {
+    onTodoClick: () => {
+      const a = addService("aaa");
+      dispatch(a);
+    }
+  }
+}
+
+export const ServiceCommandBar = connect(mapStateToProps, mapDispatchToProps)(ServiceCommandBarView);

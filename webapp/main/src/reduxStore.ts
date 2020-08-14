@@ -8,11 +8,12 @@ declare global {
   }
 }
 
-const initialState = {
+export const initialState = {
   initializing: false,
   initialized: false,
   idToken: null,
   accessToken: null,
+  fakeRows: 3,
   state: AuthenticationState.Unauthenticated
 };
 
@@ -67,7 +68,7 @@ const rootReducer: Reducer<any, any> = (
   }
 };
 
-export const basicReduxStore = createStore(
+export const store = createStore(
   rootReducer,
   // Enable the Redux DevTools extension if available
   /// See more: https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfiblj

@@ -1,14 +1,10 @@
 import * as React from "react";
 import { DetailsList, DetailsListLayoutMode, SelectionMode, IColumn, mergeStyleSets } from "office-ui-fabric-react";
-import {
-  _randomDate,
-  _randomEmployeeName,
-  _randomCustomerName,
-  _randomDuration,
-  _randomDistance,
-  _dandomServiceDescription
-} from "./DummyData";
 import { IStackTokens, Stack, TextField, Toggle, Announced } from "office-ui-fabric-react";
+import { initialState } from "../reduxStore";
+import { connect } from "react-redux";
+import { _generateDocuments } from "./DummyData";
+import { Dispatch } from "redux";
 
 const classNames = mergeStyleSets({
   fileIconHeaderIcon: {
@@ -75,8 +71,11 @@ export interface TypedColumn extends IColumn {
   fieldName: keyof IDocument;
 }
 
-export const Content: React.FC<{}> = props => {
-  const _allItems: IDocument[] = _generateDocuments();
+export interface ContentProps {
+  items: IDocument[]
+}
+
+const ContentView: React.FC<ContentProps> = props => {
 
   const _onColumnClick = (column: IColumn, columns: TypedColumn[]): void => {
     const newColumns: IColumn[] = columns.slice();
@@ -184,13 +183,13 @@ export const Content: React.FC<{}> = props => {
   ];
 
   const [state, setState] = React.useState({
-    items: _allItems,
     columns: initialColumns,
     isModalSelection: false,
     announcedMessage: ""
   });
 
-  const { columns, items, announcedMessage } = state;
+  const { columns, announcedMessage } = state;
+  const { items } = props;
   const stackTokens: IStackTokens = { childrenGap: 40 };
 
   return (
@@ -260,26 +259,25 @@ export const Content: React.FC<{}> = props => {
 // });
 // };
 
+const mapStateToProps = (state: typeof initialState)  => {
+  const items = _generateDocuments(state.fakeRows);
+  return { 
+    articles: state.fakeRows,
+    items: items
+  };
+};
+const mapDispatchToProps = (dispatch: Dispatch) => {
+  return {
+    onTodoClick: (id: string) => {
+    }
+  }
+}
+
+export const Content = connect(mapStateToProps, mapDispatchToProps)(ContentView)
+
 
 function _copyAndSort<T>(items: T[], columnKey: string, isSortedDescending?: boolean): T[] {
   const key = columnKey as keyof T;
   return items.slice(0).sort((a: T, b: T) => ((isSortedDescending ? a[key] < b[key] : a[key] > b[key]) ? 1 : -1));
 }
 
-function _generateDocuments() {
-  const items: IDocument[] = [];
-  for (let i = 0; i < 10; i++) {
-    const randomDate = _randomDate(new Date(2012, 0, 1), new Date());
-    items.push({
-      key: i.toString(),
-      customer: _randomCustomerName(),
-      description: _dandomServiceDescription(),
-      modifiedBy: _randomEmployeeName(),
-      dateModified: randomDate.dateFormatted,
-      dateModifiedValue: randomDate.value,
-      duration: _randomDuration(),
-      distance: _randomDistance()
-    });
-  }
-  return items;
-}

@@ -3,7 +3,7 @@ import React from "react";
 import { AzureAD, AuthenticationState, IAzureADFunctionProps } from "react-aad-msal";
 import { authProvider } from "../authProvider";
 
-import { basicReduxStore } from "../reduxStore";
+import { store } from "../reduxStore";
 
 import { View as AuthenticatedView } from "./AppAuthenticated";
 import { View as UnauthenticatedView } from "./AppUnauthenticated";
@@ -13,7 +13,7 @@ export const App: React.FC<{}> = () => {
   const [login, setLogin] = React.useState();
 
   return (
-    <AzureAD provider={authProvider} reduxStore={basicReduxStore}>
+    <AzureAD provider={authProvider} reduxStore={store}>
       {({ login, authenticationState, accountInfo }: IAzureADFunctionProps) => {
         var current: JSX.Element;
         if (authenticationState === AuthenticationState.Authenticated) {

@@ -7,11 +7,15 @@ import * as serviceWorker from "./serviceWorker";
 import 'office-ui-fabric-react/dist/css/fabric.css';
 
 import { initializeIcons } from '@uifabric/icons';
+import { Provider } from "react-redux";
+import { store } from "./reduxStore";
 initializeIcons();
 
 ReactDOM.render(
   <Fabric>
-    <App />
+    <Provider store={store}>
+      <App />
+    </Provider>
   </Fabric>,
   document.getElementById("app")
 );
