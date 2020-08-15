@@ -1,9 +1,8 @@
 import React from "react";
 
-import { AzureAD, AuthenticationState, IAzureADFunctionProps } from "react-aad-msal";
 import { authProvider } from "../authProvider";
 
-import { store, anyStore } from "../reduxStore";
+import { store, anyStore } from "../store/store";
 
 import { View as AuthenticatedView } from "./AppAuthenticated";
 import { View as UnauthenticatedView } from "./AppUnauthenticated";

@@ -8,7 +8,7 @@ import 'office-ui-fabric-react/dist/css/fabric.css';
 
 import { initializeIcons } from '@uifabric/icons';
 import { Provider } from "react-redux";
-import { store } from "./reduxStore";
+import { store } from "./store/store";
 initializeIcons();
 
 ReactDOM.render(
