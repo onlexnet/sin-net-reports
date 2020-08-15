@@ -1,6 +1,5 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { App } from "./app/App";
 import { Fabric } from "office-ui-fabric-react";
 import * as serviceWorker from "./serviceWorker";
 
@@ -9,6 +8,7 @@ import 'office-ui-fabric-react/dist/css/fabric.css';
 import { initializeIcons } from '@uifabric/icons';
 import { Provider } from "react-redux";
 import { store } from "./store/store";
+import App from "./app/App";
 initializeIcons();
 
 ReactDOM.render(

@@ -11,7 +11,7 @@ declare global {
 
 const rootReducer = combineReducers({
   auth: sessionReducer,
-  services: serviceReducer 
+  services: serviceReducer
 })
 
 export const store = createStore(

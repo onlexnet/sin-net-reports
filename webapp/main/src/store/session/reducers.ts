@@ -8,11 +8,9 @@ const initialState: SessionState = {
 export const sessionReducer = (state = initialState, action: SessionAction): SessionState => {
     const clone = _.cloneDeep(state);
     switch (action.type) {
-        case "START_SESSION":
+        case "UPDATE_SESSION":
+            alert('Update session');
             clone.loggedIn = true;
-            return clone;
-        case "STOP_SESSION":
-            clone.loggedIn = false;
             return clone;
         default:
             return state;
