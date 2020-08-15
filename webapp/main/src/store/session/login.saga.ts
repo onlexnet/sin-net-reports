@@ -13,7 +13,7 @@ export const generateNewNumber = (delay: number): Promise<number> => {
   return promise;
 };
 
-function* fetchUser(action: Action) {
+const fetchUser = function* (action: Action) {
   console.log('saga + ' + JSON.stringify(action));
   try {
     const user = yield call(generateNewNumber, 2000);
