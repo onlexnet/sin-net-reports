@@ -1,8 +1,8 @@
 import * as React from "react";
 import { DetailsList, DetailsListLayoutMode, SelectionMode, IColumn, mergeStyleSets } from "office-ui-fabric-react";
 import { IStackTokens, Stack, TextField, Toggle, Announced } from "office-ui-fabric-react";
-import { initialState } from "../reduxStore";
-import { connect } from "react-redux";
+import { initialState, RootState } from "../reduxStore";
+import { connect, ConnectedProps } from "react-redux";
 import { _generateDocuments } from "./DummyData";
 import { Dispatch } from "redux";
 
@@ -72,10 +72,18 @@ export interface TypedColumn extends IColumn {
 }
 
 export interface ContentProps {
-  items: IDocument[]
 }
 
-const ContentView: React.FC<ContentProps> = props => {
+const mapStateToProps = (state: RootState) => {
+  return state.services;
+};
+const mapDispatchToProps = (dispatch: Dispatch) => {
+  return {};
+}
+const connector = connect(mapStateToProps, mapDispatchToProps);
+type PropsFromRedux = ConnectedProps<typeof connector>
+
+const ConnectedContent: React.FC<ContentProps & PropsFromRedux> = props => {
 
   const _onColumnClick = (column: IColumn, columns: TypedColumn[]): void => {
     const newColumns: IColumn[] = columns.slice();
@@ -189,7 +197,9 @@ const ContentView: React.FC<ContentProps> = props => {
   });
 
   const { columns, announcedMessage } = state;
-  const { items } = props;
+  //const { items } = props;
+  const items = _generateDocuments(props.numerOfItems);
+
   const stackTokens: IStackTokens = { childrenGap: 40 };
 
   return (
@@ -222,7 +232,7 @@ const ContentView: React.FC<ContentProps> = props => {
         setKey="none"
         layoutMode={DetailsListLayoutMode.justified}
         isHeaderVisible={true}
-        // onItemInvoked={this._onItemInvoked}
+      // onItemInvoked={this._onItemInvoked}
       />
     </>
   );
@@ -259,25 +269,9 @@ const ContentView: React.FC<ContentProps> = props => {
 // });
 // };
 
-const mapStateToProps = (state: typeof initialState)  => {
-  const items = _generateDocuments(state.fakeRows);
-  return { 
-    articles: state.fakeRows,
-    items: items
-  };
-};
-const mapDispatchToProps = (dispatch: Dispatch) => {
-  return {
-    onTodoClick: (id: string) => {
-    }
-  }
-}
-
-export const Content = connect(mapStateToProps, mapDispatchToProps)(ContentView)
-
-
 function _copyAndSort<T>(items: T[], columnKey: string, isSortedDescending?: boolean): T[] {
   const key = columnKey as keyof T;
   return items.slice(0).sort((a: T, b: T) => ((isSortedDescending ? a[key] < b[key] : a[key] > b[key]) ? 1 : -1));
 }
 
+export const Content = connector(ConnectedContent);

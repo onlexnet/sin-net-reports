@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { CommandBar, ICommandBarItemProps, IButtonProps } from 'office-ui-fabric-react';
-import { initialState } from '../reduxStore';
 import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
-import { addService } from './redux';
+import { RootState } from '../reduxStore';
+import { addService } from '../store/services/actions';
 
 const overflowProps: IButtonProps = { ariaLabel: 'More commands' };
 
@@ -49,12 +49,12 @@ const ServiceCommandBarView: React.FC<ServiceCommandBarProps> = (props) => {
   );
 };
 
-const mapStateToProps = (state: typeof initialState) => state;
+
+const mapStateToProps = (state: RootState) => state.services;
 const mapDispatchToProps = (dispatch: Dispatch) => {
   return {
     onTodoClick: () => {
-      const a = addService("aaa");
-      dispatch(a);
+      dispatch(addService("aaa"));
     }
   }
 }

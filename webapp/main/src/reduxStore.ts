@@ -1,5 +1,6 @@
-import { createStore, Reducer, compose } from "redux";
+import { createStore, Reducer, compose, combineReducers } from "redux";
 import { AuthenticationActions, AuthenticationState } from "react-aad-msal";
+import { serviceReducer } from "./store/services/reducers";
 
 // add redux devtools extension as a property/method in window
 declare global {
@@ -17,10 +18,10 @@ export const initialState = {
   state: AuthenticationState.Unauthenticated
 };
 
-const rootReducer: Reducer<any, any> = (
+const sessionReducer = (
   state = initialState,
   action: { type: any; payload: { account: any } }
-) => {
+): typeof initialState => {
   switch (action.type) {
     case AuthenticationActions.Initializing:
       return {
@@ -36,13 +37,11 @@ const rootReducer: Reducer<any, any> = (
       };
     case AuthenticationActions.AcquiredIdTokenSuccess:
       return {
-        ...state,
-        idToken: action.payload
+        ...state
       };
     case AuthenticationActions.AcquiredAccessTokenSuccess:
       return {
-        ...state,
-        accessToken: action.payload
+        ...state
       };
     case AuthenticationActions.AcquiredAccessTokenError:
       return {
@@ -51,26 +50,31 @@ const rootReducer: Reducer<any, any> = (
       };
     case AuthenticationActions.LoginSuccess:
       return {
-        ...state,
-        account: action.payload.account
+        ...state
       };
     case AuthenticationActions.LoginError:
     case AuthenticationActions.AcquiredIdTokenError:
     case AuthenticationActions.LogoutSuccess:
-      return { ...state, idToken: null, accessToken: null, account: null };
+      return { ...state, idToken: null, accessToken: null };
     case AuthenticationActions.AuthenticatedStateChanged:
       return {
-        ...state,
-        state: action.payload
+        ...state
       };
     default:
       return state;
   }
 };
 
+const rootReducer = combineReducers({
+  auth: sessionReducer,
+  services: serviceReducer 
+})
 export const store = createStore(
   rootReducer,
   // Enable the Redux DevTools extension if available
   /// See more: https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfiblj
   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 );
+export const anyStore: any = store;
+
+export type RootState = ReturnType<typeof rootReducer>
