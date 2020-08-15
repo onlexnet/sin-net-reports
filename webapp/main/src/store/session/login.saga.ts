@@ -1,5 +1,5 @@
 import { call, put, takeEvery, takeLatest } from 'redux-saga/effects';
-import { INITIATE_SESSION_STARTED, INITIATE_SESSION_FINISHED } from './types';
+import { SessionActionTypes } from './types';
 import { Action } from 'redux';
 
 let initialNumber = 0;
@@ -17,7 +17,7 @@ function* fetchUser(action: Action) {
   console.log('saga + ' + JSON.stringify(action));
   try {
     const user = yield call(generateNewNumber, 2000);
-    yield put({ type: INITIATE_SESSION_FINISHED });
+    yield put({ type: SessionActionTypes.INITIATE_SESSION_FINISHED });
   } catch (e) {
     yield put({ type: "USER_FETCH_FAILED", message: e.message });
   }
@@ -28,7 +28,7 @@ function* fetchUser(action: Action) {
   Allows concurrent fetches of user.
 */
 export function* loginRequestSaga() {
-  yield takeEvery(INITIATE_SESSION_STARTED, fetchUser);
+  yield takeEvery(SessionActionTypes.INITIATE_SESSION_STARTED, fetchUser);
 }
 
 // /*
