@@ -14,7 +14,7 @@ export const generateNewNumber = (delay: number): Promise<number> => {
 };
 
 function* fetchUser(action: Action) {
-  alert('saga + ' + JSON.stringify(action));
+  console.log('saga + ' + JSON.stringify(action));
   try {
     const user = yield call(generateNewNumber, 2000);
     yield put({ type: INITIATE_SESSION_FINISHED });

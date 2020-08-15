@@ -142,7 +142,7 @@ export class AuthModule {
      * @param response 
      */
     private handleResponseInternal(resp: AuthenticationResult | null) {
-        alert('handleResponseInternal: ' + JSON.stringify(resp));
+        console.log('handleResponseInternal: ' + JSON.stringify(resp));
 
         if (resp?.account) {
             this.account = resp.account;
