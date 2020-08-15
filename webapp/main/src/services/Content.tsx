@@ -1,10 +1,10 @@
 import * as React from "react";
 import { DetailsList, DetailsListLayoutMode, SelectionMode, IColumn, mergeStyleSets } from "office-ui-fabric-react";
 import { IStackTokens, Stack, TextField, Toggle, Announced } from "office-ui-fabric-react";
-import { RootState } from "../store/store";
 import { connect, ConnectedProps } from "react-redux";
 import { Dispatch } from "redux";
 import { _generateDocuments } from "./DummyData";
+import { RootState } from "../store/reducers";
 
 const classNames = mergeStyleSets({
   fileIconHeaderIcon: {

@@ -8,9 +8,13 @@ const initialState: SessionState = {
 export const sessionReducer = (state = initialState, action: SessionAction): SessionState => {
     const clone = _.cloneDeep(state);
     switch (action.type) {
-        case "INITIATE_SESSION":
-            alert('initiate session');
+        case "INITIATE_SESSION_STARTED":
+            alert('initiate session started');
             clone.flow = SignInFlow.SessionInitiated;
+            return clone;
+        case "INITIATE_SESSION_FINISHED":
+            alert('initiate session finished');
+            clone.flow = SignInFlow.SessionEstablished
             return clone;
         default:
             return state;

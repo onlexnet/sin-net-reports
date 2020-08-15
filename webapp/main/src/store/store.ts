@@ -1,24 +1,15 @@
-import { createStore, Reducer, compose, combineReducers } from "redux";
-import { serviceReducer } from "./services/reducers";
-import { sessionReducer } from "./session/reducers";
+import { createStore, compose, combineReducers, applyMiddleware } from "redux";
+import createSagaMiddleware from 'redux-saga'
+import { composeWithDevTools } from 'redux-devtools-extension';
+import { rootReducer } from "./reducers";
+import { loginRequestSaga } from "./session/login.saga";
 
-// add redux devtools extension as a property/method in window
-declare global {
-  interface Window {
-    __REDUX_DEVTOOLS_EXTENSION__?: typeof compose;
-  }
-}
-
-const rootReducer = combineReducers({
-  auth: sessionReducer,
-  services: serviceReducer
-})
-
+const sagaMiddleware = createSagaMiddleware();
+const enhancers = composeWithDevTools(applyMiddleware(sagaMiddleware));
 export const store = createStore(
   rootReducer,
-  // Enable the Redux DevTools extension if available
-  /// See more: https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfiblj
-  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+  {},
+  enhancers
 );
 
-export type RootState = ReturnType<typeof rootReducer>
+sagaMiddleware.run(loginRequestSaga);

@@ -67,9 +67,8 @@ export class AuthModule {
         store.subscribe(() => {
             const state = store.getState().auth;
             if (state.flow === SignInFlow.SessionInitiated) {
-                const a = this.getAccount();
-                alert(JSON.stringify(a));
-                this.login();
+                // TODO - enable login and tests full flow this.login();
+                // store.dispatch()
             }
         });
 
