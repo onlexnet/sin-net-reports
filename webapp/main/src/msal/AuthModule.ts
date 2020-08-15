@@ -1,6 +1,7 @@
 import { PublicClientApplication, SilentRequest, AuthenticationResult, Configuration, LogLevel, AccountInfo, InteractionRequiredAuthError, EndSessionRequest, RedirectRequest, PopupRequest } from "@azure/msal-browser";
 import { store } from "../store/store";
-import { updateSession } from "../store/session/actions";
+import { initiateSession } from "../store/session/actions";
+import { SignInFlow } from "../store/session/types";
 
 /**
  * Configuration class for @azure/msal-browser: 
@@ -63,6 +64,14 @@ export class AuthModule {
 
         this.myMSALObj = new PublicClientApplication(MSAL_CONFIG);
         this.account = null;
+        store.subscribe(() => {
+            const state = store.getState().auth;
+            if (state.flow === SignInFlow.SessionInitiated) {
+                const a = this.getAccount();
+                alert(JSON.stringify(a));
+                this.login();
+            }
+        });
 
         this.loginRequest = {
             scopes: []
@@ -135,7 +144,7 @@ export class AuthModule {
      */
     private handleResponseInternal(resp: AuthenticationResult | null) {
         alert('handleResponseInternal: ' + JSON.stringify(resp));
-        
+
         if (resp?.account) {
             this.account = resp.account;
         } else {
@@ -143,15 +152,14 @@ export class AuthModule {
         }
 
         if (this.account) {
-            store.dispatch(updateSession({
-                loggedIn: true
-            }));
+            // store.dispatch(updateSession({
+            //     loggedIn: true
+            // }));
         } else {
-            store.dispatch(updateSession({
-                loggedIn: false
-            }));
+            // store.dispatch(updateSession({
+            //     loggedIn: false
+            // }));
         }
-        //this.sub.next(this.account);
     }
 
     login = () => {

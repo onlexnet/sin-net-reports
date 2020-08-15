@@ -9,7 +9,10 @@ import { initializeIcons } from '@uifabric/icons';
 import { Provider } from "react-redux";
 import { store } from "./store/store";
 import App from "./app/App";
+import { authModule } from "./msal/autorun";
 initializeIcons();
+
+const definedToRunSideEffect = authModule;
 
 ReactDOM.render(
   <Fabric>

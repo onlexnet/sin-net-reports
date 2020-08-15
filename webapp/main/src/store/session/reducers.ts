@@ -1,16 +1,16 @@
-import { SessionState, SessionAction } from "./types";
+import { SessionState, SessionAction, SignInFlow } from "./types";
 import _ from "lodash";
 
 const initialState: SessionState = {
-    loggedIn: false
+    flow: SignInFlow.Unknown
 }
 
 export const sessionReducer = (state = initialState, action: SessionAction): SessionState => {
     const clone = _.cloneDeep(state);
     switch (action.type) {
-        case "UPDATE_SESSION":
-            alert('Update session');
-            clone.loggedIn = true;
+        case "INITIATE_SESSION":
+            alert('initiate session');
+            clone.flow = SignInFlow.SessionInitiated;
             return clone;
         default:
             return state;

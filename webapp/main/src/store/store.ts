@@ -20,6 +20,5 @@ export const store = createStore(
   /// See more: https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfiblj
   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 );
-export const anyStore: any = store;
 
 export type RootState = ReturnType<typeof rootReducer>

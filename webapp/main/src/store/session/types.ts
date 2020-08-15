@@ -1,13 +1,17 @@
+export enum SignInFlow {
+    Unknown,
+    SessionInitiated,
+    SessionEstablished
+}
 export interface SessionState {
-    loggedIn: boolean
+    flow: SignInFlow
 }
 
-export const UPDATE_SESSION = 'UPDATE_SESSION'
-  
-interface UpdateSessionAction {
-    type: typeof UPDATE_SESSION
-    payload: SessionState
+
+export const INITIATE_SESSION = 'INITIATE_SESSION'
+
+interface InitiateSessionAction {
+    type: typeof INITIATE_SESSION
 }
-  
-export type SessionAction = UpdateSessionAction;
-  
+
+export type SessionAction = InitiateSessionAction;
