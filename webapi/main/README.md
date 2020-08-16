@@ -1,4 +1,9 @@
-# TBD
+# Dev notes
+
+## Profiles
+We support some profiles in backend code to allow run them with different configurations:
+- dev - no security, inmemory database
+- prod - ready for deployment, postgresql database
 
 ## Good development practices
 

@@ -20,7 +20,6 @@ public class AuthenticationConverter implements Converter<Jwt, AbstractAuthentic
 /** Fixme. */
 final class JwtAuthenticationToken extends AbstractAuthenticationToken {
 
-    private String accountId;
     private String email;
     /**
      * Fixme.
@@ -30,7 +29,6 @@ final class JwtAuthenticationToken extends AbstractAuthenticationToken {
     JwtAuthenticationToken(final String accountId,
                            final String email) {
         super(null);
-        this.accountId = accountId;
         this.email = email;
     }
 
