@@ -27,12 +27,15 @@
 
 ## Hints
 - DNS issue? https://kubernetes.io/docs/tasks/administer-cluster/dns-debugging-resolution/#known-issues
+- [debugging DNS in Kubernetes](https://kubernetes.io/docs/tasks/administer-cluster/dns-debugging-resolution/)
 - Run shell inside microk8s to work on inside bash: **kubectl run test --image=busybox -it --rm**
 
 ## Used articles
-https://kubernetes.io/docs/tasks/administer-cluster/dns-debugging-resolution/
-* [No public DNS resolution inside pods](https://github.com/ubuntu/microk8s/issues/75)
-* https://cert-manager.io/docs/installation/kubernetes/
-* ? (https://runnable.com/blog/how-to-use-lets-encrypt-on-kubernetes)
-* https://github.com/hynese/k8sConfig
-* https://kndrck.co/posts/microk8s_ingress_example/
+  * https://github.com/ubuntu/microk8s/issues/854
+  * [microk8s dns show running status but remains in 0/1 state](https://github.com/ubuntu/microk8s/issues/845)
+  * https://kubernetes.io/docs/tasks/administer-cluster/dns-debugging-resolution/
+  * [No public DNS resolution inside pods](https://github.com/ubuntu/microk8s/issues/75)
+  * https://cert-manager.io/docs/installation/kubernetes/
+  * ? (https://runnable.com/blog/how-to-use-lets-encrypt-on-kubernetes)
+  * https://github.com/hynese/k8sConfig
+  * https://kndrck.co/posts/microk8s_ingress_example/
