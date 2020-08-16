@@ -1,6 +1,3 @@
-import { GetIdTokenButton } from "../Components/GetIdTokenButton";
-import { GetAccessTokenButton } from "../Components/GetAccessToken";
-import { MsalAuthProvider, IAccountInfo } from "react-aad-msal";
 import React from "react";
 import { useGetServicesQuery } from "../Components/.generated/components";
 import { addressProvider } from "../addressProvider";
@@ -57,22 +54,18 @@ const apolloClientFactory = (jwtIdToken: string) => {
 };
 
 interface Props {
-  authProvider: MsalAuthProvider;
-  accountInfo: IAccountInfo;
 }
 
-export const Debug: React.FC<Props> = ({ accountInfo, authProvider }) => {
-  const client = apolloClientFactory(accountInfo.jwtIdToken);
-  const { data, loading, error } = useGetServicesQuery({ client });
+export const Debug: React.FC<Props> = () => {
+  // const client = apolloClientFactory(accountInfo.jwtIdToken);
+  //const { data, loading, error } = useGetServicesQuery({ client });
   return (
-    <ApolloProvider client={client}>
-      <p>data: {String(data)}</p>
-      <p>loading: {String(loading)}</p>
-      <p>error: {String(error)}</p>
-      <p>token: {accountInfo.jwtIdToken}</p>
+    // <ApolloProvider client={client}>
+    //   <p>data: {String(data)}</p>
+    //   <p>loading: {String(loading)}</p>
+    //   <p>error: {String(error)}</p>
 
-      <GetIdTokenButton provider={authProvider} />
-      <GetAccessTokenButton provider={authProvider} />
-    </ApolloProvider>
+    // </ApolloProvider>
+    <p>DEBUG</p>
   );
 };

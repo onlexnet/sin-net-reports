@@ -1,5 +1,4 @@
 import React from "react";
-import { MsalAuthProvider, IAccountInfo } from "react-aad-msal";
 import { HashRouter as Router, Route } from "react-router-dom";
 import { Main } from "../services";
 import { Customers } from "../Customers";
@@ -11,8 +10,6 @@ import { NavBasicExample } from "../NavBar";
 import { Debug } from "../debug/Debug";
 
 interface Props {
-  authProvider: MsalAuthProvider;
-  accountInfo: IAccountInfo;
 }
 
 export const View: React.FC<Props> = (props) => {
@@ -27,7 +24,7 @@ export const View: React.FC<Props> = (props) => {
             <Route path={routing.services} component={Main} />
             <Route path={routing.customers} component={Customers} />
             <Route path={routing.reports} component={Reports} />
-            <Route path={routing.debug} render={(localProps) => <Debug {...props} />} />
+            {/* <Route path={routing.debug} render={(localProps) => <Debug {...props} />} /> */}
             <Route path="/" exact component={Home} />
           </div>
         </div>

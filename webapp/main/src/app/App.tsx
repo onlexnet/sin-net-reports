@@ -1,30 +1,47 @@
 import React from "react";
 
-import { AzureAD, AuthenticationState, IAzureADFunctionProps } from "react-aad-msal";
-import { authProvider } from "../authProvider";
-
-import { store, anyStore } from "../reduxStore";
-
 import { View as AuthenticatedView } from "./AppAuthenticated";
 import { View as UnauthenticatedView } from "./AppUnauthenticated";
 import { View as InProgressView } from "./AppInProgress";
+import { Dispatch } from "redux";
+import { connect, ConnectedProps } from "react-redux";
+import { SessionState, SignInFlow } from "../store/session/types";
+import { initiateSession } from "../store/session/actions";
+import { RootState } from "../store/reducers";
 
-export const App: React.FC<{}> = () => {
-  const [login, setLogin] = React.useState();
+const mapStateToProps = (state: RootState): SessionState => {
+  return state.auth;
+}
+const mapDispatchToProps = (dispatch: Dispatch) => {
+  return {
+    login: () => {
+      dispatch(initiateSession());
+    }
+  }
+}
+const connector = connect(mapStateToProps, mapDispatchToProps);
+type PropsFromRedux = ConnectedProps<typeof connector>;
 
-  return (
-    <AzureAD provider={authProvider} reduxStore={anyStore}>
-      {({ login, authenticationState, accountInfo }: IAzureADFunctionProps) => {
-        var current: JSX.Element;
-        if (authenticationState === AuthenticationState.Authenticated) {
-          current = <AuthenticatedView authProvider={authProvider} accountInfo={accountInfo!} />;
-        } else if (authenticationState === AuthenticationState.Unauthenticated) {
-          current = <UnauthenticatedView login={login} />;
-        } else {
-          current = <InProgressView />
-        }
-        return current;
-      }}
-    </AzureAD>
-  );
+interface AppProps extends PropsFromRedux {
+}
+
+const App: React.FC<AppProps> = props => {
+
+  var current: JSX.Element;
+  switch (props.flow) {
+    case SignInFlow.Unknown:
+      current = <UnauthenticatedView login={props.login} />;
+      break;
+    case SignInFlow.SessionInitiated:
+      current = <InProgressView />;
+      break;
+    case SignInFlow.SessionEstablished:
+      current = <AuthenticatedView />;
+      break;
+    default:
+      current = <UnauthenticatedView login={props.login} />;
+  }
+  return current;
 };
+
+export default connector(App)
