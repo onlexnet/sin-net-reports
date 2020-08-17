@@ -21,9 +21,6 @@
     <logger name="org.hibernate" level="INFO" additivity="false">
         <appender-ref ref="CONSOLE" />
     </logger>
-    <logger name="io.lettuce" level="INFO" additivity="false">
-        <appender-ref ref="CONSOLE" />
-    </logger>
     <logger name="org.eclipse" level="INFO" additivity="false">
         <appender-ref ref="CONSOLE" />
     </logger>
