@@ -4,6 +4,8 @@ import { IStackTokens, Stack, TextField, Toggle, Announced } from "office-ui-fab
 import { connect, ConnectedProps } from "react-redux";
 import { Dispatch } from "redux";
 import { RootState } from "../store/reducers";
+import { useEffect, useState } from "react";
+import { reloadServicesBegin } from "../store/services/actions";
 
 const classNames = mergeStyleSets({
   fileIconHeaderIcon: {
@@ -77,12 +79,24 @@ const mapStateToProps = (state: RootState) => {
   return state.services;
 };
 const mapDispatchToProps = (dispatch: Dispatch) => {
-  return {};
+  return {
+    requestData: () => {
+      dispatch(reloadServicesBegin(2020, 1));
+    }
+  };
 }
 const connector = connect(mapStateToProps, mapDispatchToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>
 
 const ConnectedContent: React.FC<ContentProps & PropsFromRedux> = props => {
+
+  const [initialized, setInitialized] = useState(false);
+  
+  useEffect(() => {
+    if (initialized) return;
+    setInitialized(true);
+    props.requestData();
+  });
 
   const _onColumnClick = (column: IColumn, columns: TypedColumn[]): void => {
     const newColumns: IColumn[] = columns.slice();
