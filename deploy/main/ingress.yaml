@@ -19,6 +19,14 @@ spec:
           backend:
             serviceName: webapi-svc
             servicePort: 8080
+        - path: /voyager
+          backend:
+            serviceName: webapi-svc
+            servicePort: 8080
+        - path: /altair
+          backend:
+            serviceName: webapi-svc
+            servicePort: 8080
         - path: /vendor
           backend:
             serviceName: webapi-svc
