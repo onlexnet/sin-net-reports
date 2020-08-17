@@ -3,7 +3,6 @@ import { DetailsList, DetailsListLayoutMode, SelectionMode, IColumn, mergeStyleS
 import { IStackTokens, Stack, TextField, Toggle, Announced } from "office-ui-fabric-react";
 import { connect, ConnectedProps } from "react-redux";
 import { Dispatch } from "redux";
-import { _generateDocuments } from "./DummyData";
 import { RootState } from "../store/reducers";
 
 const classNames = mergeStyleSets({
@@ -198,7 +197,7 @@ const ConnectedContent: React.FC<ContentProps & PropsFromRedux> = props => {
 
   const { columns, announcedMessage } = state;
   //const { items } = props;
-  const items = _generateDocuments(props.numerOfItems);
+  const items = props.items;
 
   const stackTokens: IStackTokens = { childrenGap: 40 };
 

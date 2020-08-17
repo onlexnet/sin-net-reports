@@ -5,6 +5,7 @@
   "dependencies": {
     "@apollo/react-hooks": "^3.1.4",
     "@azure/msal-browser": "^2.0.2",
+    "@graphql-codegen/typescript-graphql-request": "^2.0.0",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
@@ -20,6 +21,7 @@
     "apollo-link-http": "^1.5.17",
     "apollo-link-ws": "^1.0.20",
     "graphql": "^14.6.0",
+    "graphql-request-generator": "^1.0.5",
     "lodash": "^4.17.20",
     "office-ui-fabric-react": "^7.106.0",
     "react": "^16.13.1",
@@ -57,7 +59,7 @@
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^1.13.2",
-    "@graphql-codegen/typescript-operations": "^1.13.2",
+    "@graphql-codegen/typescript-operations": "^1.17.8",
     "@graphql-codegen/typescript-react-apollo": "^1.13.2",
     "@types/enzyme": "^3.10.5",
     "@types/enzyme-adapter-react-16": "^1.0.6",

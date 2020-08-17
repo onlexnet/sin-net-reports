@@ -1,6 +1,10 @@
 import { call, put, takeEvery, takeLatest } from 'redux-saga/effects';
-import { SessionActionTypes } from './types';
 import { Action } from 'redux';
+import { sdk } from '../../api';
+import { FetchServicesQuery, ServiceModel } from '../../api/generated';
+import { REFRESH_SERVICE_LIST_REQUEST, REFRESH_SERVICE_LIST } from './types';
+import { ServiceAppModel } from './ServiceModel';
+import { reloadServicesEnd } from './actions';
 
 let initialNumber = 0;
 export const generateNewNumber = (delay: number): Promise<number> => {
@@ -13,11 +17,21 @@ export const generateNewNumber = (delay: number): Promise<number> => {
   return promise;
 };
 
-const fetchUser = function* (action: Action) {
-  console.log('saga + ' + JSON.stringify(action));
+const fetchServices = function* (action: Action<typeof REFRESH_SERVICE_LIST_REQUEST>) {
   try {
-    const user = yield call(generateNewNumber, 500);
-    yield put({ type: SessionActionTypes.INITIATE_SESSION_FINISHED });
+    const result = (yield call(sdk.FetchServices, {
+      customerName: "my customer name",
+      period: "202001"
+    })) as FetchServicesQuery;
+
+    var items = result.Services.search.items
+      .map(it => {
+        const item: ServiceAppModel = {
+          description: it.forWhatCustomer ?? "-"
+        }
+        return item;
+      });
+    yield put(reloadServicesEnd(items));
   } catch (e) {
     yield put({ type: "USER_FETCH_FAILED", message: e.message });
   }
@@ -27,8 +41,8 @@ const fetchUser = function* (action: Action) {
   Starts fetchUser on each dispatched `USER_FETCH_REQUESTED` action.
   Allows concurrent fetches of user.
 */
-export function* loginRequestSaga() {
-  yield takeEvery(SessionActionTypes.INITIATE_SESSION_STARTED, fetchUser);
+export function* reloadServiceSaga() {
+  yield takeLatest(REFRESH_SERVICE_LIST_REQUEST, fetchServices);
 }
 
 // /*

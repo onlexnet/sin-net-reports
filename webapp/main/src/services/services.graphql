@@ -1,11 +1,14 @@
-query getServices {
+query FetchServices($period: String!, $customerName: String!) {
   Services {
-    search {
+    search (filter: {
+      whenProvided: $period,
+      forWhatCustomer: $customerName,
+      onlyMine: false
+    }) {
       items {
         whenProvided
         forWhatCustomer
       }
-      totalDistance
     }
   }
 }

@@ -1,13 +1,28 @@
 import * as React from 'react';
 import { CommandBar, ICommandBarItemProps, IButtonProps } from 'office-ui-fabric-react';
 import { Dispatch } from 'redux';
-import { connect } from 'react-redux';
-import { addService } from '../store/services/actions';
+import { connect, ConnectedProps } from 'react-redux';
+import { addService, reloadServicesBegin } from '../store/services/actions';
 import { RootState } from '../store/reducers';
 
 const overflowProps: IButtonProps = { ariaLabel: 'More commands' };
 
-interface ServiceCommandBarProps {
+const mapStateToProps = (state: RootState) => state.services;
+const mapDispatchToProps = (dispatch: Dispatch) => {
+  return {
+    refreshList: () => {
+      dispatch(reloadServicesBegin(2020, 1))
+    },
+    onTodoClick: () => {
+      dispatch(addService("aaa"));
+    }
+  }
+}
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+type PropsFromRedux = ConnectedProps<typeof connector>
+
+interface ServiceCommandBarProps extends PropsFromRedux {
   onPreviousMonthRequested: () => void;
   onNextMonthRequested: () => void;
   onTodoClick: () => void;
@@ -28,7 +43,10 @@ const ServiceCommandBarView: React.FC<ServiceCommandBarProps> = (props) => {
       text: 'Poprzedni miesiąc',
       split: true,
       iconProps: { iconName: 'Previous' },
-      onClick: props.onPreviousMonthRequested
+      onClick: () => {
+        props.onPreviousMonthRequested();
+        props.refreshList();
+      }
     },
     {
       key: 'nextMonth',
@@ -49,14 +67,5 @@ const ServiceCommandBarView: React.FC<ServiceCommandBarProps> = (props) => {
   );
 };
 
-
-const mapStateToProps = (state: RootState) => state.services;
-const mapDispatchToProps = (dispatch: Dispatch) => {
-  return {
-    onTodoClick: () => {
-      dispatch(addService("aaa"));
-    }
-  }
-}
 
 export const ServiceCommandBar = connect(mapStateToProps, mapDispatchToProps)(ServiceCommandBarView);
