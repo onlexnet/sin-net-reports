@@ -20,7 +20,7 @@ public class HelloController {
      * @param principal fixme
      * @return fixme
      */
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @RequestMapping(value = "/user", method = RequestMethod.GET)
     @ResponseBody
     public String helloWorld(final Principal principal) {
         var a = (OAuth2AuthenticationToken) principal;

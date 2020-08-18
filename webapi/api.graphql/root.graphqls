@@ -11,3 +11,7 @@ type Query {
     getPrincipal: PrincipalModel!
     Services: Services!
 }
+
+type Mutation
+
+type Date

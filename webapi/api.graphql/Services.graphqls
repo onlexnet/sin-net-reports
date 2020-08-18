@@ -1,6 +1,5 @@
 type Services {
     search(filter: ServicesFilter): ServicesSearchResult!
-    add(entry: ServiceEntry) : ServiceModel!
 }
 
 input ServiceEntry {
@@ -14,12 +13,26 @@ type ServicesSearchResult {
 }
 
 type ServiceModel {
-    whenProvided: String
-    forWhatCustomer: String
+    servicemanName: String!
+    whenProvided: String!
+    forWhatCustomer: String!
 }
 
 input ServicesFilter {
     whenProvided: String
     forWhatCustomer: String
     onlyMine: Boolean
+}
+
+input When {
+    period: YearMonth
+}
+
+extend type Mutation {
+    Services: ServicesOperations!
+}
+
+type ServicesOperations {
+    # Creates new, defaulted ServiceEntry as a part of given month.
+    addNew(entry: ServiceEntry) : Boolean!
 }

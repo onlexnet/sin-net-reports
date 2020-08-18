@@ -36,6 +36,7 @@ public class ServicesSearchResolver implements GraphQLResolver<Services> {
             .range(1, count)
             .boxed()
             .map(it -> new ServiceModel(
+                "some person",
                 LocalDate.now().toString(),
                 DummyData.randomCustomerName()))
             .collect(Collectors.toList());
