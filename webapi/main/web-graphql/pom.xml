@@ -20,6 +20,11 @@
 
   <dependencies>
     <dependency>
+      <groupId>net.siudek</groupId>
+      <artifactId>domain-api</artifactId>
+    </dependency>
+    
+    <dependency>
       <groupId>io.vavr</groupId>
       <artifactId>vavr</artifactId>
     </dependency>
@@ -42,6 +47,10 @@
       <artifactId>spring-boot-starter-security</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>org.axonframework</groupId>
+      <artifactId>axon-spring-boot-starter</artifactId>
+    </dependency>
     <dependency>
       <groupId>org.axonframework</groupId>
       <artifactId>axon-messaging</artifactId>

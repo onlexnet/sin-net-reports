@@ -1,5 +1,7 @@
 package sinnet;
 
+import java.time.LocalDate;
+
 import lombok.Value;
 
 /** FixMe. */
@@ -8,7 +10,7 @@ public class ServiceModel {
     /** Fixcme. */
     private String servicemanName;
     /** FixMe. */
-    private String whenProvided;
+    private LocalDate whenProvided;
     /** FixMe. */
     private String forWhatCustomer;
 }

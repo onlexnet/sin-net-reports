@@ -3,7 +3,7 @@ type Services {
 }
 
 input ServiceEntry {
-    whenProvided: String
+    whenProvided: Date
     forWhatCustomer: ID
 }
 
@@ -14,12 +14,12 @@ type ServicesSearchResult {
 
 type ServiceModel {
     servicemanName: String!
-    whenProvided: String!
+    whenProvided: Date!
     forWhatCustomer: String!
 }
 
 input ServicesFilter {
-    whenProvided: String
+    whenProvided: Date
     forWhatCustomer: String
     onlyMine: Boolean
 }

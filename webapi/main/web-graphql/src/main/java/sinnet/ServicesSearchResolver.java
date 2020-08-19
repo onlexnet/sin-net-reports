@@ -1,24 +1,27 @@
 package sinnet;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
-import java.util.Random;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
+import java.util.concurrent.CompletableFuture;
 
+import org.axonframework.queryhandling.QueryGateway;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import graphql.kickstart.tools.GraphQLResolver;
+import io.vavr.collection.Stream;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import sinnet.read.DailyReports;
 
 /** Fixme. */
 @Component
 public class ServicesSearchResolver implements GraphQLResolver<Services> {
 
-    /** FixMe. */
-    static final Random RANDOM = new Random();
+    @Autowired
+    private QueryGateway queryGateway;
 
     /**
      * FixMe.
@@ -27,21 +30,23 @@ public class ServicesSearchResolver implements GraphQLResolver<Services> {
      * @param filter fixme.
      * @return fixme
      */
-    public ServicesSearchResult search(final Services ignored,
-                                     final ServicesFilter filter) {
-        final int magic10 = 10;
-        final int magic20 = 20;
-        var count = RANDOM.nextInt(magic10) + magic20;
-        var items = IntStream
-            .range(1, count)
-            .boxed()
-            .map(it -> new ServiceModel(
-                "some person",
-                LocalDate.now().toString(),
-                DummyData.randomCustomerName()))
-            .collect(Collectors.toList());
-        var distance = RANDOM.nextInt();
-        return new ServicesSearchResult(items, distance);
+    public CompletableFuture<ServicesSearchResult> search(final Services ignored,
+                                                          final ServicesFilter filter) {
+
+        return queryGateway
+            .query(new DailyReports.Ask(), DailyReports.Reply.class)
+            .thenApplyAsync(it -> {
+                if (!(it instanceof DailyReports.Reply.Some)) return new ServicesSearchResult();
+                var result = (DailyReports.Reply.Some) it;
+                var items = Stream
+                    .ofAll(result.getEntries())
+                    .map(i -> new ServiceModel(
+                        "a", LocalDate.now(), "c"
+                    )).toJavaList();
+                return new ServicesSearchResult(
+                    items, 1
+                );
+            });
     }
 
 }
@@ -51,6 +56,6 @@ public class ServicesSearchResolver implements GraphQLResolver<Services> {
 @NoArgsConstructor
 @AllArgsConstructor
 class ServicesSearchResult {
-    private List<ServiceModel> items;
+    private List<ServiceModel> items = Collections.emptyList();
     private int totalDistance;
 }

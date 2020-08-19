@@ -1,5 +1,7 @@
 package sinnet;
 
+import java.time.LocalDate;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ServiceEntry {
   /** FixMe. */
-  private String whenProvided;
+  private LocalDate whenProvided;
   /** FixMe. */
   private String forWhatCustomer;
 }

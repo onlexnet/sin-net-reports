@@ -1,10 +1,14 @@
 package sinnet.read.dailyreport;
 
+import java.util.stream.Collectors;
+
+import org.axonframework.config.ProcessingGroup;
 import org.axonframework.eventhandling.EventHandler;
 import org.axonframework.queryhandling.QueryHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.Setter;
 import sinnet.appevents.ServicesProjection;
@@ -15,6 +19,8 @@ import sinnet.read.DailyReports;
  * Manages projection of services provided for clients.
  */
 @Service
+@Transactional
+@ProcessingGroup(Const.PROJECTION_NAME)
 public class DailyReportProjector {
 
     /** Projection storage. */
@@ -47,9 +53,14 @@ public class DailyReportProjector {
      */
     @QueryHandler
     public DailyReports.Reply reply(final DailyReports.Ask ask) {
+        var items = repository
+            .findAll()
+            .stream()
+            .map(it -> new DailyReports.ServiceSummary(it.getWhen()))
+            .collect(Collectors.toList());
         var summary = new DailyReports.ServiceSummary();
         summary.setWhen(ask.getWhen());
-        return DailyReports.Reply.Some.builder().entry(summary).build();
+        return DailyReports.Reply.Some.builder().entries(items).build();
     }
 
 }
