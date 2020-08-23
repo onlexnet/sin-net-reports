@@ -23,10 +23,6 @@ input ServicesFilter {
     to: Date
 }
 
-input When {
-    period: YearMonth
-}
-
 extend type Mutation {
     Services: ServicesOperations!
 }
