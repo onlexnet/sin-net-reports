@@ -2,10 +2,9 @@ import { createStore, compose, combineReducers, applyMiddleware } from "redux";
 import createSagaMiddleware from 'redux-saga'
 import { composeWithDevTools } from 'redux-devtools-extension';
 import { rootReducer } from "./reducers";
-import { loginRequestSaga } from "./session/login.saga";
-import { reloadServiceSaga } from "./services/sagas";
+import { registerWithMiddleware } from "./sagas";
 
-const sagaMiddleware = createSagaMiddleware();
+export const sagaMiddleware = createSagaMiddleware();
 const enhancers = composeWithDevTools(applyMiddleware(sagaMiddleware));
 export const store = createStore(
   rootReducer,
@@ -13,5 +12,4 @@ export const store = createStore(
   enhancers
 );
 
-sagaMiddleware.run(loginRequestSaga);
-sagaMiddleware.run(reloadServiceSaga);
+registerWithMiddleware(sagaMiddleware);

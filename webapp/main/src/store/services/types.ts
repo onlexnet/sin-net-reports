@@ -1,4 +1,5 @@
 import { ServiceAppModel } from "./ServiceModel";
+import { Action } from "redux";
 
 export interface ServicesState {
     numerOfItems: number;
@@ -10,7 +11,7 @@ export const REMOVE_SERVICE = "REMOVE_SERVICE";
 export const REFRESH_SERVICE_LIST = "REFRESH_SERVICE_LIST";
 export const REFRESH_SERVICE_LIST_REQUEST = "REFRESH_SERVICE_LIST_REQUEST";
 
-interface AddServiceAction {
+export interface AddServiceAction extends Action<typeof ADD_SERVICE> {
     type: typeof ADD_SERVICE,
     payload: {
         description: string

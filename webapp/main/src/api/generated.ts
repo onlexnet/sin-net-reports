@@ -98,6 +98,19 @@ export type FetchServicesQuery = (
   ) }
 );
 
+export type NewServiceActionMutationVariables = Exact<{
+  when: Scalars['Date'];
+}>;
+
+
+export type NewServiceActionMutation = (
+  { __typename?: 'Mutation' }
+  & { Services: (
+    { __typename?: 'ServicesOperations' }
+    & Pick<ServicesOperations, 'addNew'>
+  ) }
+);
+
 
 export const FetchServicesDocument = gql`
     query FetchServices($from: Date!, $to: Date!) {
@@ -111,6 +124,13 @@ export const FetchServicesDocument = gql`
   }
 }
     `;
+export const NewServiceActionDocument = gql`
+    mutation newServiceAction($when: Date!) {
+  Services {
+    addNew(entry: {whenProvided: $when, forWhatCustomer: "GFT"})
+  }
+}
+    `;
 
 export type SdkFunctionWrapper = <T>(action: () => Promise<T>) => Promise<T>;
 
@@ -120,6 +140,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
   return {
     FetchServices(variables: FetchServicesQueryVariables): Promise<FetchServicesQuery> {
       return withWrapper(() => client.request<FetchServicesQuery>(print(FetchServicesDocument), variables));
+    },
+    newServiceAction(variables: NewServiceActionMutationVariables): Promise<NewServiceActionMutation> {
+      return withWrapper(() => client.request<NewServiceActionMutation>(print(NewServiceActionDocument), variables));
     }
   };
 }

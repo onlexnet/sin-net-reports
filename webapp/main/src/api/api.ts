@@ -13,8 +13,7 @@ import { GraphQLClient } from 'graphql-request';
 //   },
 // });
 
-// const graphqlUrl = `${addressProvider().host}/graphql`;
-const graphqlUrl = `https://raport.sin.net.pl/graphql`;
+const graphqlUrl = `${addressProvider().host}/graphql`;
 
 const apolloClientFactory = (jwtIdToken: string) => {
     // configuration below is focused on Authentication
