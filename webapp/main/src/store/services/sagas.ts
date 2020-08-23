@@ -20,8 +20,8 @@ export const generateNewNumber = (delay: number): Promise<number> => {
 const fetchServices = function* (action: Action<typeof REFRESH_SERVICE_LIST_REQUEST>) {
   try {
     const result = (yield call(sdk.FetchServices, {
-      customerName: "my customer name",
-      period: "202001"
+      from: "2010/01/01",
+      to: "2030/01/01"
     })) as FetchServicesQuery;
 
     var items = result.Services.search.items
