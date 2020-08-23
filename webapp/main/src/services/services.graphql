@@ -1,14 +1,22 @@
-query FetchServices($period: String!, $customerName: String!) {
+query FetchServices($from: Date!, $to: Date!) {
   Services {
     search (filter: {
-      whenProvided: $period,
-      forWhatCustomer: $customerName,
-      onlyMine: false
+      from: $from
+      to: $to
     }) {
       items {
         whenProvided
         forWhatCustomer
       }
     }
+  }
+}
+
+mutation newServiceAction($when: Date!) {
+  Services {
+    addNew(entry: {
+      whenProvided: $when,
+      forWhatCustomer: "GFT"
+    })
   }
 }

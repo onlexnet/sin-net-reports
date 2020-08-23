@@ -5,8 +5,15 @@
 spring:
     devtools:
         restart:
-            additional-paths=../web-server,../web-graphql,../domain-api,../domain-core
+            additional-paths: ../web-server,../web-graphql,../domain-api,../domain-core
+    h2:
+        console:
+            enabled: true
+            path: /h2
+
+    datasource:
+        url: jdbc:h2:mem:db
 
 graphql:
     servlet:
-        corsEnabled=true
+        corsEnabled: true

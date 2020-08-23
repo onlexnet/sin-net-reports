@@ -3,8 +3,8 @@ type Services {
 }
 
 input ServiceEntry {
-    whenProvided: Date
-    forWhatCustomer: ID
+    whenProvided: Date!
+    forWhatCustomer: ID!
 }
 
 type ServicesSearchResult {
@@ -19,13 +19,8 @@ type ServiceModel {
 }
 
 input ServicesFilter {
-    whenProvided: Date
-    forWhatCustomer: String
-    onlyMine: Boolean
-}
-
-input When {
-    period: YearMonth
+    from: Date
+    to: Date
 }
 
 extend type Mutation {

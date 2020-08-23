@@ -10,7 +10,9 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.Singular;
 
-/** Container class for 'DailyReport' Query. */
+/**
+ * DailyReports containse set of Service Actions provided between some dates from-to.
+ */
 public interface DailyReports {
 
     /** Ask part of Query. */

@@ -10,6 +10,13 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  Date: any;
+};
+
+
+export type Mutation = {
+  __typename?: 'Mutation';
+  Services: ServicesOperations;
 };
 
 export type PrincipalModel = {
@@ -24,20 +31,20 @@ export type Query = {
 };
 
 export type ServiceEntry = {
-  whenProvided?: Maybe<Scalars['String']>;
-  forWhatCustomer?: Maybe<Scalars['ID']>;
+  whenProvided: Scalars['Date'];
+  forWhatCustomer: Scalars['ID'];
 };
 
 export type ServiceModel = {
   __typename?: 'ServiceModel';
-  whenProvided?: Maybe<Scalars['String']>;
-  forWhatCustomer?: Maybe<Scalars['String']>;
+  servicemanName: Scalars['String'];
+  whenProvided: Scalars['Date'];
+  forWhatCustomer: Scalars['String'];
 };
 
 export type Services = {
   __typename?: 'Services';
   search: ServicesSearchResult;
-  add: ServiceModel;
 };
 
 
@@ -45,15 +52,19 @@ export type ServicesSearchArgs = {
   filter?: Maybe<ServicesFilter>;
 };
 
-
-export type ServicesAddArgs = {
-  entry?: Maybe<ServiceEntry>;
+export type ServicesFilter = {
+  from?: Maybe<Scalars['Date']>;
+  to?: Maybe<Scalars['Date']>;
 };
 
-export type ServicesFilter = {
-  whenProvided?: Maybe<Scalars['String']>;
-  forWhatCustomer?: Maybe<Scalars['String']>;
-  onlyMine?: Maybe<Scalars['Boolean']>;
+export type ServicesOperations = {
+  __typename?: 'ServicesOperations';
+  addNew: Scalars['Boolean'];
+};
+
+
+export type ServicesOperationsAddNewArgs = {
+  entry?: Maybe<ServiceEntry>;
 };
 
 export type ServicesSearchResult = {
@@ -68,8 +79,8 @@ export type Subscription = {
 };
 
 export type FetchServicesQueryVariables = Exact<{
-  period: Scalars['String'];
-  customerName: Scalars['String'];
+  from: Scalars['Date'];
+  to: Scalars['Date'];
 }>;
 
 
@@ -87,16 +98,36 @@ export type FetchServicesQuery = (
   ) }
 );
 
+export type NewServiceActionMutationVariables = Exact<{
+  when: Scalars['Date'];
+}>;
+
+
+export type NewServiceActionMutation = (
+  { __typename?: 'Mutation' }
+  & { Services: (
+    { __typename?: 'ServicesOperations' }
+    & Pick<ServicesOperations, 'addNew'>
+  ) }
+);
+
 
 export const FetchServicesDocument = gql`
-    query FetchServices($period: String!, $customerName: String!) {
+    query FetchServices($from: Date!, $to: Date!) {
   Services {
-    search(filter: {whenProvided: $period, forWhatCustomer: $customerName, onlyMine: false}) {
+    search(filter: {from: $from, to: $to}) {
       items {
         whenProvided
         forWhatCustomer
       }
     }
+  }
+}
+    `;
+export const NewServiceActionDocument = gql`
+    mutation newServiceAction($when: Date!) {
+  Services {
+    addNew(entry: {whenProvided: $when, forWhatCustomer: "GFT"})
   }
 }
     `;
@@ -109,6 +140,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
   return {
     FetchServices(variables: FetchServicesQueryVariables): Promise<FetchServicesQuery> {
       return withWrapper(() => client.request<FetchServicesQuery>(print(FetchServicesDocument), variables));
+    },
+    newServiceAction(variables: NewServiceActionMutationVariables): Promise<NewServiceActionMutation> {
+      return withWrapper(() => client.request<NewServiceActionMutation>(print(NewServiceActionDocument), variables));
     }
   };
 }
