@@ -8,7 +8,6 @@ import lombok.Data;
 @Data
 public class ServicesFilter {
     /** FixMe. */
-    private LocalDate whenProvided;
-    /** FixMe. */
-    private String forWhatCustomer;
+    private LocalDate from;
+    private LocalDate to;
 }

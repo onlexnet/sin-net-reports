@@ -24,8 +24,6 @@ public class ServicesProjectionChangedConfig {
     @TransactionalEventListener
     public void handleCustom(ServicesProjection.Changed event) {
         var msg = JsonObject.mapFrom(event);
-        System.out.println("Handling event inside a transaction BEFORE COMMIT.");
-        // eventBus.publish("aaa", msg);
         eventBus.publish("aaa", msg);
     }
 }
