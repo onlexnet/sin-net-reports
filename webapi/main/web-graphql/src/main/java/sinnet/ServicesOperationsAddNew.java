@@ -3,8 +3,6 @@ package sinnet;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
-import org.axonframework.commandhandling.callbacks.FutureCallback;
-import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -20,7 +18,7 @@ public class ServicesOperationsAddNew implements GraphQLResolver<ServicesOperati
     private Vertx vertx;
 
     @Autowired
-    private CommandGateway commandGateway;
+    private CommandEntry commandEntry;
 
     /**
      * FixMe.
@@ -47,8 +45,9 @@ public class ServicesOperationsAddNew implements GraphQLResolver<ServicesOperati
 
         var cmd = new RegisterNewServiceAction();
         cmd.setWhen(entry.getWhenProvided());
-        var callback = new FutureCallback<>();
-        commandGateway.send(cmd, callback);
+        commandEntry
+            .send(cmd)
+            .thenApply(it -> result.complete(Boolean.TRUE));
         return result;
     }
 
