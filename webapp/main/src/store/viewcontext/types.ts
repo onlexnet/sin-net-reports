@@ -1,7 +1,8 @@
 import { Action } from "redux";
+import { LocalDate } from "./LocalDate";
 
 export interface ViewContextState {
-    period: Date
+    date: LocalDate
 }
 
 const VIEWCONTEXT_PREV_PERIOD = "VIEWCONTEXT_PREV_PERIOD";

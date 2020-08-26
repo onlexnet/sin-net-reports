@@ -1,7 +1,7 @@
 import React from "react";
 import { Content } from "./Content";
 import { ServiceCommandBar } from "./Commands";
-import { IconButton } from "office-ui-fabric-react";
+import { IconButton, FirstWeekOfYear } from "office-ui-fabric-react";
 import { RootState } from "../store/reducers";
 import { ServicesState } from "../store/services/types";
 import { nextPeriod, previousPeriod } from "../store/viewcontext/actions";
@@ -29,6 +29,7 @@ interface MainProps extends PropsFromRedux {
 
 const MainView: React.FC<MainProps> = (props) => {
 
+
   return (
     <>
       <ServiceCommandBar
@@ -36,11 +37,7 @@ const MainView: React.FC<MainProps> = (props) => {
         onPreviousMonthRequested={() => props.previousPeriod()}
       />
 
-      {
-        props.period.toLocaleString("default", {
-          month: "long",
-          year: "numeric",
-        })}
+      { props.date.toString() }
 
       <Content />
     </>
