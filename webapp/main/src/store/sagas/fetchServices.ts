@@ -1,12 +1,12 @@
 import { call, put, takeEvery, takeLatest } from 'redux-saga/effects';
 import { Action } from 'redux';
 import { sdk } from '../../api';
-import { FetchServicesQuery, ServiceModel, NewServiceActionMutation } from '../../api/generated';
-import { REFRESH_SERVICE_LIST_REQUEST, REFRESH_SERVICE_LIST, ADD_SERVICE, AddServiceAction } from '../services/types';
+import { FetchServicesQuery } from '../../api/generated';
+import { REFRESH_SERVICE_LIST_BEGIN, RefreshServiceRequestAction,  } from '../services/types';
 import { ServiceAppModel } from '../services/ServiceModel';
-import { reloadServicesEnd, reloadServicesBegin } from '../services/actions';
+import { reloadServicesEnd } from '../services/actions';
 
-const fetchServices = function* (action: Action<typeof REFRESH_SERVICE_LIST_REQUEST>) {
+const fetchServices = function* (action: RefreshServiceRequestAction) {
   try {
     const result = (yield call(sdk.FetchServices, {
       from: "2010/01/01",
@@ -31,5 +31,5 @@ const fetchServices = function* (action: Action<typeof REFRESH_SERVICE_LIST_REQU
   Allows concurrent fetches of user.
 */
 export function* reloadServiceSaga() {
-  yield takeLatest(REFRESH_SERVICE_LIST_REQUEST, fetchServices);
+  yield takeLatest(REFRESH_SERVICE_LIST_BEGIN, fetchServices);
 }

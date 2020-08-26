@@ -18,6 +18,6 @@ export interface PeriodNext extends Action<typeof VIEWCONTEXT_NEXT_PERIOD> {
 }
 
 
-export type ViewcontextActionType = typeof VIEWCONTEXT_PREV_PERIOD |
+export type ViewContextActionType = typeof VIEWCONTEXT_PREV_PERIOD |
                                     typeof VIEWCONTEXT_NEXT_PERIOD
-export type ViewcontextAction = PeriodPrevious | PeriodNext
+export type ViewContextAction = PeriodPrevious | PeriodNext

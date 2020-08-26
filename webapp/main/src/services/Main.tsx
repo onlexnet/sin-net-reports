@@ -1,33 +1,50 @@
-import React, { useState } from "react";
+import React from "react";
 import { Content } from "./Content";
 import { ServiceCommandBar } from "./Commands";
 import { IconButton } from "office-ui-fabric-react";
+import { RootState } from "../store/reducers";
+import { ServicesState } from "../store/services/types";
+import { nextPeriod, previousPeriod } from "../store/viewcontext/actions";
+import { connect, ConnectedProps } from "react-redux";
+import { Dispatch } from "redux";
+import { ViewContextState } from "../store/viewcontext/types";
 
-export const Main: React.FC<{}> = (props) => {
-  const [period, setPeriod] = useState(new Date());
+const mapStateToProps = (state: RootState): ViewContextState => {
+  return state.viewContext;
+}
+const mapDispatchToProps = (dispatch: Dispatch) => {
+  return {
+    nextPeriod: () => {
+      dispatch(nextPeriod());
+    },
+    previousPeriod: () => dispatch(previousPeriod())
+  }
+}
 
-  /**
-   * @param delta allows to change current periond (year with month).
-   *              Use only values +1 / -1 to set next month / previous month.
-   */
-  const changePeriod = (delta: number) => {
-    const newPeriod = new Date(period.getFullYear(), period.getMonth() + delta);
-    setPeriod(newPeriod);
-  };
+const connector = connect(mapStateToProps, mapDispatchToProps);
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+interface MainProps extends PropsFromRedux {
+}
+
+const MainView: React.FC<MainProps> = (props) => {
 
   return (
     <>
       <ServiceCommandBar
-        onNextMonthRequested={() => changePeriod(+1)}
-        onPreviousMonthRequested={() => changePeriod(-1)}
+        onNextMonthRequested={() => props.nextPeriod()}
+        onPreviousMonthRequested={() => props.previousPeriod()}
       />
 
-      {period.toLocaleString("default", {
-        month: "long",
-        year: "numeric",
-      })}
+      {
+        props.period.toLocaleString("default", {
+          month: "long",
+          year: "numeric",
+        })}
 
       <Content />
     </>
   );
 };
+
+export const Main = connect(mapStateToProps, mapDispatchToProps)(MainView);

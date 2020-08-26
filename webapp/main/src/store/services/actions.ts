@@ -20,16 +20,19 @@ export const removeService = (): ServiceAction => {
 
 export const reloadServicesBegin = (year: number, month: number): ServiceAction => {
     return {
-        type: "REFRESH_SERVICE_LIST_REQUEST",
+        type: "REFRESH_SERVICE_LIST_BEGIN",
+        payload: {
+            year,
+            month,
+        }
     };
 }
 
 export const reloadServicesEnd = (items: ServiceAppModel[]): ServiceAction => {
     return {
-        type: "REFRESH_SERVICE_LIST",
+        type: "REFRESH_SERVICE_LIST_END",
         payload: {
             items: items
         }
     };
 }
-

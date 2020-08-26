@@ -1,11 +1,11 @@
 import _ from "lodash";
-import { ViewContextState, ViewcontextAction } from "./types";
+import { ViewContextState, ViewContextAction } from "./types";
 
 const initialState: ViewContextState = {
     period: new Date()
 }
 
-export const serviceReducer = (state = initialState, action: ViewcontextAction): ViewContextState => {
+export const viewcontextReducer = (state = initialState, action: ViewContextAction): ViewContextState => {
     const clone = _.cloneDeep(state);
     switch (action.type) {
         case "VIEWCONTEXT_NEXT_PERIOD": {
