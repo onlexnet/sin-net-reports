@@ -1,4 +1,4 @@
-import { call, put, takeEvery, takeLatest } from 'redux-saga/effects';
+import { call, put, takeEvery } from 'redux-saga/effects';
 import { Action } from 'redux';
 import { SessionActionTypes } from '../session/types';
 
@@ -23,10 +23,6 @@ const fetchUser = function* (action: Action) {
   }
 }
 
-/*
-  Starts fetchUser on each dispatched `USER_FETCH_REQUESTED` action.
-  Allows concurrent fetches of user.
-*/
 export function* loginRequestSaga() {
   yield takeEvery(SessionActionTypes.INITIATE_SESSION_STARTED, fetchUser);
 }

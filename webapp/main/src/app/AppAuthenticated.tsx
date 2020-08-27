@@ -7,7 +7,6 @@ import { Home } from "../Home";
 
 import { routing } from "../Routing";
 import { NavBasicExample } from "../NavBar";
-import { Debug } from "../debug/Debug";
 
 interface Props {
 }

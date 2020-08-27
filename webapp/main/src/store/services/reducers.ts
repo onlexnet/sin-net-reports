@@ -17,7 +17,7 @@ export const serviceReducer = (state = initialState, action: ServiceAction): Ser
             return Object.assign({}, state, {
                 numerOfItems: state.numerOfItems - 1
             });
-        case "REFRESH_SERVICE_LIST":
+        case "REFRESH_SERVICE_LIST_END":
             clone.numerOfItems = 30;
             clone.items = action.payload.items
             return clone;
