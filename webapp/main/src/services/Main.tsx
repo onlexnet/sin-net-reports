@@ -37,7 +37,7 @@ const MainView: React.FC<MainProps> = (props) => {
         onPreviousMonthRequested={() => props.previousPeriod()}
       />
 
-      { props.date.toString() }
+      { props.period.toString() }
 
       <Content />
     </>

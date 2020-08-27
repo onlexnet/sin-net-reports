@@ -1,21 +1,20 @@
 import _ from "lodash";
 import { ViewContextState, ViewContextAction } from "./types";
-import { LocalDate } from "./LocalDate";
+import { TimePeriod } from "./TimePeriod";
 
 const initialState: ViewContextState = {
-    date: new LocalDate(new Date())
+    period: new TimePeriod(new Date())
 }
 
 export const viewContextReducer = (state = initialState, action: ViewContextAction): ViewContextState => {
     const clone = _.cloneDeep(state);
     switch (action.type) {
         case "VIEWCONTEXT_NEXT_PERIOD": {
-            clone.date = clone.date.next();
+            clone.period = clone.period.next();
             return clone;
         }
         case "VIEWCONTEXT_PREV_PERIOD": {
-            const current = clone.date;
-            clone.date = clone.date.prev();
+            clone.period = clone.period.prev();
             return clone;
         }
         default:
