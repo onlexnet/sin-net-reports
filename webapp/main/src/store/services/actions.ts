@@ -1,4 +1,4 @@
-import { ServiceAction } from "./types"
+import { ServiceAction, RELOAD_SERVICE_LIST } from "./types"
 import { ServiceAppModel } from "./ServiceModel"
 
 export const addService = (description: string): ServiceAction => {
@@ -20,7 +20,7 @@ export const removeService = (): ServiceAction => {
 
 export const reloadServicesBegin = (year: number, month: number): ServiceAction => {
     return {
-        type: "REFRESH_SERVICE_LIST_BEGIN",
+        type: RELOAD_SERVICE_LIST,
         payload: {
             year,
             month,

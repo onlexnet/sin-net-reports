@@ -90,12 +90,9 @@ type PropsFromRedux = ConnectedProps<typeof connector>
 
 const ConnectedContent: React.FC<ContentProps & PropsFromRedux> = props => {
 
-  const [initialized, setInitialized] = useState(false);
-  setInitialized(true);
-  
   useEffect(() => {
     props.requestData();
-  }, [initialized]);
+  }, []);
 
   const _onColumnClick = (column: IColumn, columns: TypedColumn[]): void => {
     const newColumns: IColumn[] = columns.slice();

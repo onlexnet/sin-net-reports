@@ -2,7 +2,7 @@ import { call, put, takeEvery, takeLatest } from 'redux-saga/effects';
 import { Action } from 'redux';
 import { sdk } from '../../api';
 import { FetchServicesQuery } from '../../api/generated';
-import { REFRESH_SERVICE_LIST_BEGIN, RefreshServiceRequestAction,  } from '../services/types';
+import { RELOAD_SERVICE_LIST, RefreshServiceRequestAction,  } from '../services/types';
 import { ServiceAppModel } from '../services/ServiceModel';
 import { reloadServicesEnd } from '../services/actions';
 
@@ -31,5 +31,5 @@ const fetchServices = function* (action: RefreshServiceRequestAction) {
   Allows concurrent fetches of user.
 */
 export function* reloadServiceSaga() {
-  yield takeLatest(REFRESH_SERVICE_LIST_BEGIN, fetchServices);
+  yield takeLatest(RELOAD_SERVICE_LIST, fetchServices);
 }
