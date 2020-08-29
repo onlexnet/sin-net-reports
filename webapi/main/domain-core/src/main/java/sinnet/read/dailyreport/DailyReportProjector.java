@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.Setter;
 import sinnet.appevents.ServicesProjection;
-import sinnet.events.NewServiceRegistered;
+import sinnet.events.NewServiceActionRegistered;
 import sinnet.read.DailyReports;
 
 /**
@@ -38,7 +38,7 @@ public class DailyReportProjector {
      * @param evt event
      * */
     @EventHandler
-    public void on(final NewServiceRegistered evt) {
+    public void on(final NewServiceActionRegistered evt) {
         var model = new DailyReportEntry();
         model.setWhen(evt.getWhen());
         repository.save(model);

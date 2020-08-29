@@ -4,6 +4,8 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.util.UUID;
 
+import org.axonframework.modelling.command.TargetAggregateIdentifier;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,6 +20,7 @@ import lombok.With;
 public class RegisterNewServiceAction {
 
     /** Unique ID of service action. */
+    @TargetAggregateIdentifier
     @With
     private String serviceActionId = UUID.randomUUID().toString();
 

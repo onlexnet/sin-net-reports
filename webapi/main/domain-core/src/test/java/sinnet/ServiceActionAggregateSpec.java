@@ -8,16 +8,16 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import lombok.val;
-import sinnet.events.NewServiceRegistered;
-import sinnet.write.ServiceActionAggregate;
+import sinnet.events.NewServiceActionRegistered;
+import sinnet.write.ServiceActionsAggregate;
 
 public final class ServiceActionAggregateSpec {
 
-  FixtureConfiguration<ServiceActionAggregate> fixture;
+  FixtureConfiguration<ServiceActionsAggregate> fixture;
 
   @BeforeEach
   public void init() {
-    fixture = new AggregateTestFixture<>(ServiceActionAggregate.class);
+    fixture = new AggregateTestFixture<>(ServiceActionsAggregate.class);
   }
 
   @Test
@@ -27,7 +27,7 @@ public final class ServiceActionAggregateSpec {
       .createRegisterNewServiceAction()
       .withServiceActionId(serviceActionId);
 
-    var expected = new NewServiceRegistered(serviceActionId, cmd.getWhen());
+    var expected = new NewServiceActionRegistered(serviceActionId, cmd.getWhen());
     fixture
       .givenNoPriorActivity()
       .when(cmd)

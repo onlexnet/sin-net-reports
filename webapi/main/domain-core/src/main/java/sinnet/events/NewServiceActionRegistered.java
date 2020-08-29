@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @Builder
-public class NewServiceRegistered {
+public class NewServiceActionRegistered {
 /** Unique Service ID. */
     private String id;
 

@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-import sinnet.events.NewServiceRegistered;
+import sinnet.events.NewServiceActionRegistered;
 import sinnet.read.dailyreport.DailyReportProjector;
 import sinnet.read.dailyreport.DailyReportRepository;
 
@@ -17,7 +17,7 @@ public class DailyReportProjectorTests {
 
     @Autowired
     private DailyReportRepository repository;
-    
+
     /** Should produce report. */
     @Test
     public void shouldProduceReport() {
@@ -28,7 +28,7 @@ public class DailyReportProjectorTests {
 
         var now = LocalDate.now();
 
-        var evt = new NewServiceRegistered();
+        var evt = new NewServiceActionRegistered();
         evt.setWhen(now);
 
         sut.on(evt);
@@ -38,7 +38,7 @@ public class DailyReportProjectorTests {
         var expected = DailyReports.Reply.Some.builder()
             .entry(new DailyReports.ServiceSummary(now))
             .build();
-            
+
         Assertions.assertThat(actual).isEqualTo(expected);
     }
 }

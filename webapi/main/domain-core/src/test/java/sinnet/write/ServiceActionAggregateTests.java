@@ -10,17 +10,17 @@ import org.junit.jupiter.api.Test;
 import sinnet.Distance;
 import sinnet.Name;
 import sinnet.RegisterNewServiceAction;
-import sinnet.events.NewServiceRegistered;
+import sinnet.events.NewServiceActionRegistered;
 
 /** unit tests for ServiceActionAggregate. */
 public class ServiceActionAggregateTests {
 
     /** Allows to definei testing scenarios. */
-    private FixtureConfiguration<ServiceActionAggregate> fixture;
+    private FixtureConfiguration<ServiceActionsAggregate> fixture;
 
     /** initializes test fixture. */
     public ServiceActionAggregateTests() {
-        fixture = new AggregateTestFixture<>(ServiceActionAggregate.class);
+        fixture = new AggregateTestFixture<>(ServiceActionsAggregate.class);
     }
 
     /** Register a new service action. */
@@ -35,7 +35,7 @@ public class ServiceActionAggregateTests {
             Duration.ofHours(1),
             Distance.of(2));
 
-        var registered = new NewServiceRegistered(
+        var registered = new NewServiceActionRegistered(
             "my id",
             LocalDate.of(2001, 2, 3));
 
