@@ -1,6 +1,6 @@
 import { call, put, takeEvery, takeLatest } from 'redux-saga/effects';
 import { reloadServicesBegin } from '../services/actions';
-import { AddServiceAction, ADD_SERVICE } from '../services/types';
+import { AddServiceAction, ADD_SERVICE_COMMAND } from '../services/types';
 import { sdk } from '../../api';
 import { NewServiceActionMutation } from '../../api/generated';
 
@@ -20,5 +20,5 @@ const addService = function* (action: AddServiceAction) {
 }
 
 export function* addServiceSaga() {
-    yield takeEvery(ADD_SERVICE, addService);
+    yield takeEvery(ADD_SERVICE_COMMAND, addService);
 }

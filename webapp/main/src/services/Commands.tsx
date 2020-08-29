@@ -2,7 +2,7 @@ import * as React from 'react';
 import { CommandBar, ICommandBarItemProps, IButtonProps } from 'office-ui-fabric-react';
 import { Dispatch } from 'redux';
 import { connect, ConnectedProps } from 'react-redux';
-import { addService, reloadServicesBegin } from '../store/services/actions';
+import { addServiceCommand, reloadServicesBegin } from '../store/services/actions';
 import { RootState } from '../store/reducers';
 
 const overflowProps: IButtonProps = { ariaLabel: 'More commands' };
@@ -14,7 +14,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
       dispatch(reloadServicesBegin(2020, 1))
     },
     onTodoClick: () => {
-      dispatch(addService("aaa"));
+      dispatch(addServiceCommand("Nowa usługa ..."));
     }
   }
 }

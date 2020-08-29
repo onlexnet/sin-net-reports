@@ -1,9 +1,9 @@
-import { ServiceAction, RELOAD_SERVICE_LIST } from "./types"
+import { ServiceAction, RELOAD_SERVICE_LIST, ADD_SERVICE_COMMAND as ADD_SERVICE_COMMAND } from "./types"
 import { ServiceAppModel } from "./ServiceModel"
 
-export const addService = (description: string): ServiceAction => {
+export const addServiceCommand = (description: string): ServiceAction => {
     return {
-        type: "ADD_SERVICE",
+        type: ADD_SERVICE_COMMAND,
         payload: {
             description: description
         }

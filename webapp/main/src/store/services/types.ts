@@ -6,13 +6,13 @@ export interface ServicesState {
     items: ServiceAppModel[];    
 }
 
-export const ADD_SERVICE = "ADD_SERVICE";
+export const ADD_SERVICE_COMMAND = "ADD_SERVICE";
 export const REMOVE_SERVICE = "REMOVE_SERVICE";
 export const REFRESH_SERVICE_LIST_END = "REFRESH_SERVICE_LIST_END";
 export const RELOAD_SERVICE_LIST = "RELOAD_SERVICE_LIST";
 
-export interface AddServiceAction extends Action<typeof ADD_SERVICE> {
-    type: typeof ADD_SERVICE,
+export interface AddServiceAction extends Action<typeof ADD_SERVICE_COMMAND> {
+    type: typeof ADD_SERVICE_COMMAND,
     payload: {
         description: string
     }
@@ -40,5 +40,5 @@ export interface RefreshServiceRequestAction {
     }
 }
 
-export type ServiceActionType = typeof ADD_SERVICE | typeof REMOVE_SERVICE | typeof REFRESH_SERVICE_LIST_END | typeof RELOAD_SERVICE_LIST;
+export type ServiceActionType = typeof ADD_SERVICE_COMMAND | typeof REMOVE_SERVICE | typeof REFRESH_SERVICE_LIST_END | typeof RELOAD_SERVICE_LIST;
 export type ServiceAction = AddServiceAction | RemoveServiceAction | RefreshServiceAction | RefreshServiceRequestAction;
