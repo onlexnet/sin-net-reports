@@ -12,11 +12,12 @@ query FetchServices($from: Date!, $to: Date!) {
   }
 }
 
-mutation newServiceAction($when: Date!) {
+mutation newServiceAction($when: Date!, $what: String!) {
   Services {
     addNew(entry: {
       whenProvided: $when,
-      forWhatCustomer: "GFT"
+      forWhatCustomer: "GFT",
+      description: $what
     })
   }
 }

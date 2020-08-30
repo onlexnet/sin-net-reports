@@ -57,5 +57,6 @@ public interface DailyReports {
     class ServiceSummary {
         /** Date when services has been done. */
         private LocalDate when;
+        private String what;
     }
 }

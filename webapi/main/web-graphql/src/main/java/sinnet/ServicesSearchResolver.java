@@ -41,8 +41,8 @@ public class ServicesSearchResolver implements GraphQLResolver<Services> {
                 var items = Stream
                     .ofAll(result.getEntries())
                     .map(i -> new ServiceModel(
-                        "a", LocalDate.now(), "c"
-                    )).toJavaList();
+                        "a", LocalDate.now(), i.getWhat()))
+                    .toJavaList();
                 return new ServicesSearchResult(
                     items, 1
                 );

@@ -13,7 +13,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
     refreshList: () => {
       dispatch(reloadServicesBegin(2020, 1))
     },
-    onTodoClick: () => {
+    addNewService: () => {
       dispatch(addServiceCommand("Nowa usługa ..."));
     }
   }
@@ -25,7 +25,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>
 interface ServiceCommandBarProps extends PropsFromRedux {
   onPreviousMonthRequested: () => void;
   onNextMonthRequested: () => void;
-  onTodoClick: () => void;
+  addNewService: () => void;
 }
 
 const ServiceCommandBarView: React.FC<ServiceCommandBarProps> = (props) => {
@@ -36,7 +36,7 @@ const ServiceCommandBarView: React.FC<ServiceCommandBarProps> = (props) => {
       text: 'Nowa usługa',
       split: true,
       iconProps: { iconName: 'Add' },
-      onClick: () => props.onTodoClick()
+      onClick: () => props.addNewService()
     },
     {
       key: 'prevMonth',

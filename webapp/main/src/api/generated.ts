@@ -33,6 +33,7 @@ export type Query = {
 export type ServiceEntry = {
   whenProvided: Scalars['Date'];
   forWhatCustomer: Scalars['ID'];
+  description: Scalars['String'];
 };
 
 export type ServiceModel = {
@@ -100,6 +101,7 @@ export type FetchServicesQuery = (
 
 export type NewServiceActionMutationVariables = Exact<{
   when: Scalars['Date'];
+  what: Scalars['String'];
 }>;
 
 
@@ -125,9 +127,9 @@ export const FetchServicesDocument = gql`
 }
     `;
 export const NewServiceActionDocument = gql`
-    mutation newServiceAction($when: Date!) {
+    mutation newServiceAction($when: Date!, $what: String!) {
   Services {
-    addNew(entry: {whenProvided: $when, forWhatCustomer: "GFT"})
+    addNew(entry: {whenProvided: $when, forWhatCustomer: "GFT", description: $what})
   }
 }
     `;

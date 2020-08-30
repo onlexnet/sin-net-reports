@@ -45,6 +45,7 @@ public class ServicesOperationsAddNew implements GraphQLResolver<ServicesOperati
 
         var cmd = new RegisterNewServiceAction();
         cmd.setWhen(entry.getWhenProvided());
+        cmd.setWhat(entry.getDescription());
         commandEntry
             .send(cmd)
             .thenApply(it -> result.complete(Boolean.TRUE));

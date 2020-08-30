@@ -9,6 +9,10 @@ import lombok.val;
 /** Utility class. */
 public final class Given {
 
+    /** Utility classes should not have a public or default constructor. */
+    private Given() {
+    }
+
     /** FixMe.
      *
      * @return fixme

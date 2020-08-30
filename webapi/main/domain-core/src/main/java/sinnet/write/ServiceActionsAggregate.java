@@ -46,6 +46,7 @@ public class ServiceActionsAggregate {
         var evt = NewServiceActionRegistered.builder()
                     .id(cmd.getServiceActionId())
                     .when(cmd.getWhen())
+                    .description(cmd.getWhat())
                     .build();
         apply(evt);
     }

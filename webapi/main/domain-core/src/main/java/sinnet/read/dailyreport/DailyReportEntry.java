@@ -23,4 +23,6 @@ public class DailyReportEntry {
 
     /** When the service has been provided. */
     private LocalDate when;
+
+    private String description;
 }

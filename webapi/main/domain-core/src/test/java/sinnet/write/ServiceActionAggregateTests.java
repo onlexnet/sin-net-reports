@@ -37,7 +37,8 @@ public class ServiceActionAggregateTests {
 
         var registered = new NewServiceActionRegistered(
             "my id",
-            LocalDate.of(2001, 2, 3));
+            LocalDate.of(2001, 2, 3),
+            "what");
 
         fixture
             .givenNoPriorActivity()

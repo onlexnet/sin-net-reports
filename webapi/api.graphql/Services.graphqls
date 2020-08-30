@@ -5,6 +5,7 @@ type Services {
 input ServiceEntry {
     whenProvided: Date!
     forWhatCustomer: ID!
+    description: String!
 }
 
 type ServicesSearchResult {

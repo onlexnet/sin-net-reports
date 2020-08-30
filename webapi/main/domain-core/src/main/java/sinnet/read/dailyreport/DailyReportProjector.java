@@ -41,6 +41,7 @@ public class DailyReportProjector {
     public void on(final NewServiceActionRegistered evt) {
         var model = new DailyReportEntry();
         model.setWhen(evt.getWhen());
+        model.setDescription(evt.getDescription());
         repository.save(model);
 
         publisher.publishEvent(new ServicesProjection.Changed());
@@ -56,7 +57,7 @@ public class DailyReportProjector {
         var items = repository
             .findAll()
             .stream()
-            .map(it -> new DailyReports.ServiceSummary(it.getWhen()))
+            .map(it -> new DailyReports.ServiceSummary(it.getWhen(), it.getDescription()))
             .collect(Collectors.toList());
         var summary = new DailyReports.ServiceSummary();
         summary.setWhen(ask.getWhen());

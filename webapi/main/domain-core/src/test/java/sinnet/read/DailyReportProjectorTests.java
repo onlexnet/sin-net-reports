@@ -30,13 +30,14 @@ public class DailyReportProjectorTests {
 
         var evt = new NewServiceActionRegistered();
         evt.setWhen(now);
+        evt.setDescription("my description");
 
         sut.on(evt);
 
         var actual = sut.reply(new DailyReports.Ask(now));
 
         var expected = DailyReports.Reply.Some.builder()
-            .entry(new DailyReports.ServiceSummary(now))
+            .entry(new DailyReports.ServiceSummary(now, "my description"))
             .build();
 
         Assertions.assertThat(actual).isEqualTo(expected);

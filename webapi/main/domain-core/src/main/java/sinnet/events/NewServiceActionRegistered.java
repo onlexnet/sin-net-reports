@@ -18,4 +18,6 @@ public class NewServiceActionRegistered {
 
     /** Date when the service has been provided. */
     private LocalDate when;
+    /** What has been done as the service - tekstual description. */
+    private String description;
 }

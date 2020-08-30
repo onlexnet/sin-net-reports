@@ -22,6 +22,7 @@ public class RegisterNewServiceAction {
     /** Unique ID of service action. */
     @TargetAggregateIdentifier
     @With
+    @Builder.Default
     private String serviceActionId = UUID.randomUUID().toString();
 
     /** Serviceman who did the service. */
