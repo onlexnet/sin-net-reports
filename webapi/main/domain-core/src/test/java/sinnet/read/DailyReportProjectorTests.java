@@ -1,6 +1,7 @@
 package sinnet.read;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -32,7 +33,7 @@ public class DailyReportProjectorTests {
         evt.setWhen(now);
         evt.setDescription("my description");
 
-        sut.on(evt);
+        sut.on(evt, UUID.randomUUID());
 
         var actual = sut.reply(new DailyReports.Ask(now));
 

@@ -1,14 +1,17 @@
 package sinnet;
 
+import java.util.Collections;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 import org.axonframework.commandhandling.CommandResultMessage;
+import org.axonframework.commandhandling.GenericCommandMessage;
 import org.axonframework.commandhandling.callbacks.FutureCallback;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.springframework.stereotype.Component;
 
 public interface CommandEntry {
-    CompletableFuture<CommandResultMessage<?>> send(Object command);
+    CompletableFuture<CommandResultMessage<?>> send(Object command, UUID correlactionId);
 }
 
 @Component
@@ -20,9 +23,10 @@ class CommandEntryImpl implements CommandEntry {
     }
 
     @Override
-    public CompletableFuture<CommandResultMessage<?>> send(Object command) {
+    public CompletableFuture<CommandResultMessage<?>> send(Object command, UUID correlactionId) {
         var callback = new FutureCallback<Object, Object>();
-        commandGateway.send(command, callback);
+        var msg = new GenericCommandMessage<>(command, Collections.singletonMap("correlactionId", correlactionId));
+        commandGateway.send(msg, callback);
         return callback;
     }
 }

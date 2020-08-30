@@ -1,6 +1,10 @@
 package sinnet.appevents;
 
+import java.util.UUID;
+
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * Container class for related Query, Response and Application Notification
@@ -13,7 +17,9 @@ public interface ServicesProjection {
      * (add / update / delete).
      */
     @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
     final class Changed {
-        private boolean ignored;
+        private UUID correlactionId;
     }
 }

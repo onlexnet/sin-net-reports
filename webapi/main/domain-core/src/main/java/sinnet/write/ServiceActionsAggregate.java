@@ -2,6 +2,8 @@ package sinnet.write;
 
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventsourcing.EventSourcingHandler;
+import org.axonframework.messaging.MetaData;
+import org.axonframework.messaging.annotation.MetaDataValue;
 import org.axonframework.modelling.command.AggregateCreationPolicy;
 import org.axonframework.modelling.command.AggregateIdentifier;
 import org.axonframework.modelling.command.AggregateMember;
@@ -18,6 +20,7 @@ import static org.axonframework.modelling.command.AggregateLifecycle.apply;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Represent group of individual services for a client, done in relatively
@@ -42,13 +45,13 @@ public class ServiceActionsAggregate {
      */
     @CommandHandler
     @CreationPolicy(AggregateCreationPolicy.CREATE_IF_MISSING)
-    public void when(final RegisterNewServiceAction cmd) {
+    public void when(final RegisterNewServiceAction cmd, @MetaDataValue("correlactionId") UUID correlactionId) {
         var evt = NewServiceActionRegistered.builder()
                     .id(cmd.getServiceActionId())
                     .when(cmd.getWhen())
                     .description(cmd.getWhat())
                     .build();
-        apply(evt);
+        apply(evt, MetaData.with("correlactionId", correlactionId));
     }
 
     /**

@@ -1,9 +1,11 @@
 package sinnet.read.dailyreport;
 
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.axonframework.config.ProcessingGroup;
 import org.axonframework.eventhandling.EventHandler;
+import org.axonframework.messaging.annotation.MetaDataValue;
 import org.axonframework.queryhandling.QueryHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -38,13 +40,13 @@ public class DailyReportProjector {
      * @param evt event
      * */
     @EventHandler
-    public void on(final NewServiceActionRegistered evt) {
+    public void on(final NewServiceActionRegistered evt, @MetaDataValue("correlactionId") UUID correlactionId) {
         var model = new DailyReportEntry();
         model.setWhen(evt.getWhen());
         model.setDescription(evt.getDescription());
         repository.save(model);
 
-        publisher.publishEvent(new ServicesProjection.Changed());
+        publisher.publishEvent(new ServicesProjection.Changed(correlactionId));
     }
 
     /**

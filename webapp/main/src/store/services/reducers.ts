@@ -19,7 +19,7 @@ export const serviceReducer = (state = initialState, action: ServiceAction): Ser
             });
         case "REFRESH_SERVICE_LIST_END":
             clone.numerOfItems = 30;
-            clone.items = action.payload.items
+            clone.items = action.payload.items;
             return clone;
         default:
             return state;
