@@ -1,5 +1,5 @@
 import React from "react";
-import { Stack, IStackTokens, Button, IComboBoxOption, SelectableOptionMenuItemType, IComboBox, ComboBox, PrimaryButton } from "office-ui-fabric-react";
+import { Stack, IStackTokens, Button, IComboBoxOption, SelectableOptionMenuItemType, IComboBox, ComboBox, PrimaryButton, TextField } from "office-ui-fabric-react";
 
 export const Customers: React.FC<{}> = (props) => {
 
@@ -36,18 +36,38 @@ export const Customers: React.FC<{}> = (props) => {
 
 
     return (
-        <HorizontalSeparatorStack>
+        <div className="ms-Grid">
+            <HorizontalSeparatorStack >
+                <div className="ms-Grid-row">
+                    <div className="ms-Grid-col ms-sm3">
+                        <Button text="Dodaj nowego klienta" />
+                    </div>
+                </div>
+                <div className="ms-Grid-row">
+                    <div className="ms-Grid-col ms-sm12">
+                        <TextField placeholder="Softowanie: wprowadź fragment nazwy klienta ..." />
+                    </div>
+                </div>
+                <div className="ms-Grid-row">
+                    <div className="ms-Grid-col ms-sm12">
+                        <TextField placeholder="Filtrowanie: wprowadź filtr wyszukiwania ..." />
+                    </div>
+                </div>
+                <div className="ms-Grid-row">
+                    <div className="ms-Grid-col ms-sm3" />
+                    <div className="ms-Grid-col ms-sm3">
+                        <ComboBox
+                            componentRef={comboBoxRef}
+                            defaultSelectedKey="C"
+                            label="Basic ComboBox"
+                            allowFreeform
+                            autoComplete="on"
+                            options={comboBoxBasicOptions}
+                        />
+                    </div>
+                </div>
 
-            <Button text="Dodaj nowego klienta" />
-                <ComboBox
-                    componentRef={comboBoxRef}
-                    defaultSelectedKey="C"
-                    label="Basic ComboBox"
-                    allowFreeform
-                    autoComplete="on"
-                    options={comboBoxBasicOptions}
-                />
-
-        </HorizontalSeparatorStack>
+            </HorizontalSeparatorStack>
+        </div >
     )
 }
