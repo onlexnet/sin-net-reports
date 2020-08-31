@@ -11,6 +11,7 @@ export interface SessionState {
 
 export const SessionActionTypes = {
     INITIATE_SESSION_STARTED: 'INITIATE_SESSION_STARTED',
+    /** User is successfully logged in to the System. */
     INITIATE_SESSION_FINISHED: 'INITIATE_SESSION_FINISHED'
 }
 

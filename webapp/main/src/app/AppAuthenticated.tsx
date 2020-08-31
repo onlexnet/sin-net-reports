@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { HashRouter as Router, Route } from "react-router-dom";
 import { Main } from "../services";
 import { Customers } from "../Customers";
@@ -12,6 +12,11 @@ interface Props {
 }
 
 export const View: React.FC<Props> = (props) => {
+
+  useEffect(()=>{
+    
+  }, []);
+  
   return (
     <Router>
       <div className="ms-Grid" dir="ltr">

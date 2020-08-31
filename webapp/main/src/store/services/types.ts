@@ -32,7 +32,7 @@ interface RefreshServiceAction {
     }
 }
 
-export interface RefreshServiceRequestAction {
+export interface ReloadServiceList {
     type: typeof RELOAD_SERVICE_LIST,
     payload: {
         year: number,
@@ -41,4 +41,5 @@ export interface RefreshServiceRequestAction {
 }
 
 export type ServiceActionType = typeof ADD_SERVICE_COMMAND | typeof REMOVE_SERVICE | typeof REFRESH_SERVICE_LIST_END | typeof RELOAD_SERVICE_LIST;
-export type ServiceAction = AddServiceAction | RemoveServiceAction | RefreshServiceAction | RefreshServiceRequestAction;
+export type ServiceAction = AddServiceAction | RemoveServiceAction | RefreshServiceAction | ReloadServiceList;
+export type ServiceCommands = ReloadServiceList;
