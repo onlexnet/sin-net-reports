@@ -1,7 +1,13 @@
 import React from "react";
 import { Stack, IStackTokens, Button, IComboBoxOption, SelectableOptionMenuItemType, IComboBox, ComboBox, PrimaryButton, TextField } from "office-ui-fabric-react";
+import { RouteComponentProps } from "react-router-dom";
+import { routing } from "./Routing";
 
-export const Customers: React.FC<{}> = (props) => {
+interface CustomersProps extends RouteComponentProps<any> {
+
+}
+
+export const Customers: React.FC<CustomersProps> = (props) => {
 
     const stackTokens: IStackTokens = { childrenGap: 12 };
     const HorizontalSeparatorStack = (props: { children: JSX.Element[] }) => (
@@ -40,7 +46,7 @@ export const Customers: React.FC<{}> = (props) => {
             <HorizontalSeparatorStack >
                 <div className="ms-Grid-row">
                     <div className="ms-Grid-col ms-sm3">
-                        <Button text="Dodaj nowego klienta" />
+                        <Button text="Dodaj nowego klienta" onClick={ () => props.history.push(routing.newCustomer)  } />
                     </div>
                 </div>
                 <div className="ms-Grid-row">

@@ -7,6 +7,7 @@ import { Home } from "../Home";
 
 import { routing } from "../Routing";
 import { NavBasicExample } from "../NavBar";
+import { CustomerView } from "./customer/CustomerView";
 
 interface Props {
 }
@@ -28,6 +29,7 @@ export const View: React.FC<Props> = (props) => {
             <Route path={routing.services} component={Main} />
             <Route path={routing.customers} component={Customers} />
             <Route path={routing.reports} component={Reports} />
+            <Route path={routing.newCustomer} component={CustomerView} />
             {/* <Route path={routing.debug} render={(localProps) => <Debug {...props} />} /> */}
             <Route path="/" exact component={Home} />
           </div>
