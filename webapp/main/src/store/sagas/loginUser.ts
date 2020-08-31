@@ -1,8 +1,9 @@
-import { call, put, takeEvery } from 'redux-saga/effects';
+import { call, put, takeEvery, select } from 'redux-saga/effects';
 import { Action } from 'redux';
 import { SessionActionTypes } from '../session/types';
 import { RELOAD_SERVICE_LIST } from '../services/types';
 import { reloadServicesBegin } from '../services/actions';
+import { RootState } from '../reducers';
 
 const generateNewNumber = (): Promise<any> => {
   const promise = new Promise<number>(resolve => {
@@ -35,8 +36,8 @@ export function* loginRequestSaga() {
 */
 const reloadContext = function* () {
   try {
-    const now = new Date();
-    yield put(reloadServicesBegin(now.getFullYear(), now.getMonth()));
+    const state = yield select((it: RootState) => it.viewContext);
+    yield put(reloadServicesBegin());
   } catch (e) {
     yield put({ type: "USER_FETCH_FAILED", message: e.message });
   }

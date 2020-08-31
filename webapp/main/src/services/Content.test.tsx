@@ -4,11 +4,11 @@ import { Content } from './Content';
 
 import Adapter from 'enzyme-adapter-react-16';
 
-configure({ adapter: new Adapter() })
+// configure({ adapter: new Adapter() })
 
 describe('<Content />', () => {
   it('renders only selected days', () => {
-    const wrapper = shallow(<Content />);
+    //const wrapper = shallow(<Content />);
     //expect(wrapper.find(Foo)).to.have.lengthOf(3);
   });
 

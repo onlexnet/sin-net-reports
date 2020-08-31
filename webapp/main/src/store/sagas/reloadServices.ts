@@ -1,16 +1,22 @@
-import { call, put, takeEvery, takeLatest } from 'redux-saga/effects';
+import { call, put, takeEvery, takeLatest, select } from 'redux-saga/effects';
 import { Action } from 'redux';
 import { sdk } from '../../api';
 import { FetchServicesQuery } from '../../api/generated';
 import { RELOAD_SERVICE_LIST, ReloadServiceList,  } from '../services/types';
 import { ServiceAppModel } from '../services/ServiceModel';
 import { reloadServicesEnd } from '../services/actions';
+import { RootState } from '../reducers';
+import { ViewContextState } from '../viewcontext/types';
+import { TimePeriod } from '../viewcontext/TimePeriod';
+import { asDtoDates } from '../../api/Mapper';
 
 const fetchServices = function* (action: ReloadServiceList) {
   try {
+    const viewContext: ViewContextState = yield select((s: RootState) => s.viewContext);
+    const periodDto = asDtoDates(viewContext.period);
     const result = (yield call(sdk.FetchServices, {
-      from: "2010/01/01",
-      to: "2030/01/01"
+      from: periodDto.dateFrom,
+      to: periodDto.dateTo
     })) as FetchServicesQuery;
 
     var items = result.Services.search.items

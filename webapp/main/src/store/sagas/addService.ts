@@ -13,7 +13,7 @@ const addService = function* (action: AddServiceAction) {
 
         var addNewResult = result.Services.addNew;
         if (addNewResult) {
-            yield put(reloadServicesBegin(2020, 8));
+            yield put(reloadServicesBegin());
         }
     } catch (e) {
         yield put({ type: "USER_FETCH_FAILED", message: e.message });

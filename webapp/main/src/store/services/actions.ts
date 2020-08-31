@@ -1,5 +1,6 @@
 import { ServiceAction, RELOAD_SERVICE_LIST, ADD_SERVICE_COMMAND as ADD_SERVICE_COMMAND } from "./types"
 import { ServiceAppModel } from "./ServiceModel"
+import { TimePeriod } from "../viewcontext/TimePeriod"
 
 export const addServiceCommand = (description: string): ServiceAction => {
     return {
@@ -18,15 +19,14 @@ export const removeService = (): ServiceAction => {
     }
 }
 
-export const reloadServicesBegin = (year: number, month: number): ServiceAction => {
+export const reloadServicesBegin = (): ServiceAction => {
     return {
         type: RELOAD_SERVICE_LIST,
-        payload: {
-            year,
-            month,
-        }
+        payload: { }
     };
 }
+
+
 
 export const reloadServicesEnd = (items: ServiceAppModel[]): ServiceAction => {
     return {

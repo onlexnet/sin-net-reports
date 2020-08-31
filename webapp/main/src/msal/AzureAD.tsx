@@ -29,7 +29,6 @@ export const AzureAD: React.FC<IAzureADProps> = (props) => {
   const [state, setState] = useState<AuthenticationState>({ kind: "INITIAL" });
   const [account, setAccount] = useState<Account>();
 
-  // alert(0);
   // auth.login();
   // const setStateUnauthenticated = () =>
   //   setState({

@@ -1,5 +1,6 @@
 import { ServiceAppModel } from "./ServiceModel";
 import { Action } from "redux";
+import { TimePeriod } from "../viewcontext/TimePeriod";
 
 export interface ServicesState {
     numerOfItems: number;
@@ -34,12 +35,11 @@ interface RefreshServiceAction {
 
 export interface ReloadServiceList {
     type: typeof RELOAD_SERVICE_LIST,
-    payload: {
-        year: number,
-        month: number
-    }
+    payload: { }
 }
 
 export type ServiceActionType = typeof ADD_SERVICE_COMMAND | typeof REMOVE_SERVICE | typeof REFRESH_SERVICE_LIST_END | typeof RELOAD_SERVICE_LIST;
 export type ServiceAction = AddServiceAction | RemoveServiceAction | RefreshServiceAction | ReloadServiceList;
-export type ServiceCommands = ReloadServiceList;
+export enum ServiceCommands {
+    ReloadServiceList
+};

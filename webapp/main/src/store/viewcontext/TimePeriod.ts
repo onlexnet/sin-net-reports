@@ -1,39 +1,51 @@
+import { addMonths, addDays } from 'date-fns';
+
 export class TimePeriod {
 
     private dateFrom: PartsOfDate;
     private dateTo: PartsOfDate;
 
     constructor(initial: Date, scope: PeriodScope = 'MONTH') {
-        this.dateFrom = this.asParts(this.adjustDateFrom(initial, scope));
-        this.dateTo = this.asParts(this.adjustDateTo(initial, scope));
+        this.dateFrom = this.asPartsOfDate(this.adjustDateFrom(initial, scope));
+        this.dateTo = this.asPartsOfDate(this.adjustDateTo(initial, scope));
     }
 
     private adjustDateFrom(current: Date, scope: PeriodScope) {
-        return new Date(current.getFullYear(), current.getMonth(), 1);
+        const firstDayOfMonth = new Date(current.getFullYear(), current.getMonth(), 1);
+        return firstDayOfMonth;
     }
 
     private adjustDateTo(current: Date, scope: PeriodScope) {
-        return new Date(current.getFullYear(), current.getMonth() + 1, 1);
+        const firstDayOfMonth = new Date(current.getFullYear(), current.getMonth(), 1);
+        return addDays(addMonths(firstDayOfMonth, 1), -1);
     }
 
-    private asParts(date: Date): PartsOfDate {
+    private asPartsOfDate(date: Date): PartsOfDate {
         return {
             year: date.getFullYear(),
-            month: date.getMonth(),
-            day: 1
+            month: date.getMonth() + 1,
+            day: date.getDate()
         }
     }
-    private asDate(date: PartsOfDate, deltaInDays: number): Date {
-        return new Date(date.year, date.month, date.day);
+    private asDate(date: PartsOfDate, deltaInDays: number) {
+        const current = new Date(date.year, date.month - 1, date.day);
+        return addDays(current, deltaInDays);
+    }
+
+    getValue() {
+        return {
+            dateFrom: this.dateFrom,
+            dateTo: this.dateTo
+        }
     }
 
     next(): TimePeriod {
-        const nextDate = this.asDate(this.dateTo, +1);
+        const nextDate = this.asDate(this.dateTo, 1);
         return new TimePeriod(nextDate);
     }
 
     prev(): TimePeriod {
-        const nextDate = this.asDate(this.dateFrom, -1);
+        const nextDate =  this.asDate(this.dateFrom, -1);
         return new TimePeriod(nextDate);
     }
 
@@ -47,8 +59,10 @@ export class TimePeriod {
 }
 
 type PeriodScope = 'MONTH';
-interface PartsOfDate {
+export interface PartsOfDate {
     year: number;
+    /** Month 1-12 */
     month: number;
+    /** Day of month 1-31 */
     day: number;
 }

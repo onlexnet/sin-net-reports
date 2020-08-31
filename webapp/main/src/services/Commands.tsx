@@ -4,18 +4,24 @@ import { Dispatch } from 'redux';
 import { connect, ConnectedProps } from 'react-redux';
 import { addServiceCommand, reloadServicesBegin } from '../store/services/actions';
 import { RootState } from '../store/reducers';
+import { previousPeriodCommand, nextPeriodCommand } from '../store/viewcontext/actions';
 
 const overflowProps: IButtonProps = { ariaLabel: 'More commands' };
 
 const mapStateToProps = (state: RootState) => state.services;
 const mapDispatchToProps = (dispatch: Dispatch) => {
   return {
-    refreshList: () => {
-      dispatch(reloadServicesBegin(2020, 1))
-    },
     addNewService: () => {
       dispatch(addServiceCommand("Nowa usługa ..."));
+    },
+    onPreviousMonthRequested: () => {
+      dispatch(previousPeriodCommand())
+    },
+    onNextMonthRequested: () => {
+      dispatch(nextPeriodCommand())
     }
+
+
   }
 }
 
@@ -43,10 +49,7 @@ const ServiceCommandBarView: React.FC<ServiceCommandBarProps> = (props) => {
       text: 'Poprzedni miesiąc',
       split: true,
       iconProps: { iconName: 'Previous' },
-      onClick: () => {
-        props.onPreviousMonthRequested();
-        props.refreshList();
-      }
+      onClick: props.onPreviousMonthRequested
     },
     {
       key: 'nextMonth',

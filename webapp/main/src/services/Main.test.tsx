@@ -9,8 +9,8 @@ configure({ adapter: new Adapter() });
 
 describe('<Main />', () => {
   it('renders three <Main /> components', () => {
-    const wrapper = shallow(<Main />);
-    //expect(wrapper.find(Foo)).to.have.lengthOf(3);
+    // const wrapper = shallow(<Main />);
+    // //expect(wrapper.find(Foo)).to.have.lengthOf(3);
   });
 
 //   it('renders an `.icon-star`', () => {
