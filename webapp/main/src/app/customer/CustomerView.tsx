@@ -233,7 +233,6 @@ export const CustomerView: React.FC<{}> = () => {
                 <div className="ms-Grid-row">
                     <div className="ms-Grid-col ms-sm6 ms-smPush1">
                         <TextField
-                            label="Switches from single to multiline if more than 50 characters are entered"
                             multiline={true}
                             // eslint-disable-next-line react/jsx-no-bind
                             onChange={onChange2}
@@ -251,7 +250,6 @@ export const CustomerView: React.FC<{}> = () => {
                 <div className="ms-Grid-row">
                     <div className="ms-Grid-col ms-sm6 ms-smPush1">
                         <TextField
-                            label="Switches from single to multiline if more than 50 characters are entered"
                             multiline={true}
                             placeholder="Dane opisowe"
                             // eslint-disable-next-line react/jsx-no-bind
