@@ -241,7 +241,24 @@ export const CustomerView: React.FC<{}> = () => {
                     </div>
                 </div>
 
+
                 <Separator alignContent="start">Komercja</Separator>
+                <div className="ms-Grid-row">
+                    <div className="ms-Grid-col ms-sm5 ms-smPush1">
+                        <Checkbox label="Komercja" checked={isChecked1} onChange={onChange1} />
+                    </div>
+                </div>
+                <div className="ms-Grid-row">
+                    <div className="ms-Grid-col ms-sm6 ms-smPush1">
+                        <TextField
+                            label="Switches from single to multiline if more than 50 characters are entered"
+                            multiline={true}
+                            placeholder="Dane opisowe"
+                            // eslint-disable-next-line react/jsx-no-bind
+                            onChange={onChange2}
+                        />
+                    </div>
+                </div>
             </>
             <>
                 <Separator alignContent="start">Autoryzacja</Separator>
