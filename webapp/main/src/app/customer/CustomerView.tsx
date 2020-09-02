@@ -58,6 +58,20 @@ const comboBoxBasicOptions: IComboBoxOption[] = [
     { key: 'J', text: 'Option J' },
 ];
 
+const obsluga: IComboBoxOption[] = [
+    { key: 'Header1', text: 'First heading', itemType: SelectableOptionMenuItemType.Header },
+    { key: 'A', text: 'Obsługiwany' },
+    { key: 'B', text: 'Nie obsługiwany' },
+    { key: 'C', text: 'Obsługa czasowo zawieszona' },
+];
+
+const rozliczenia: IComboBoxOption[] = [
+    { key: 'Header1', text: 'First heading', itemType: SelectableOptionMenuItemType.Header },
+    { key: 'A', text: 'Ryczałt' },
+    { key: 'B', text: 'Godziny' },
+];
+
+
 
 const narrowTextFieldStyles: Partial<ITextFieldStyles> = { fieldGroup: { width: 100 } };
 
@@ -114,7 +128,7 @@ export const CustomerView: React.FC<{}> = () => {
                             defaultSelectedKey="B"
                             errorMessage="Oh no! This ComboBox has an error!"
 
-                            options={comboBoxBasicOptions}
+                            options={rozliczenia}
                         />
                     </div>
                 </div>
@@ -125,7 +139,7 @@ export const CustomerView: React.FC<{}> = () => {
                             defaultSelectedKey="B"
                             errorMessage="Oh no! This ComboBox has an error!"
 
-                            options={comboBoxBasicOptions}
+                            options={obsluga}
                         />
                     </div>
                 </div>
