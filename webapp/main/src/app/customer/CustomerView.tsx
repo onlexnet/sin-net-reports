@@ -273,8 +273,94 @@ export const CustomerView: React.FC<{}> = () => {
                 </div>
             </>
             <>
-                <Separator alignContent="start">Autoryzacja</Separator>
+                <Separator alignContent="start">Autoryzacje</Separator>
+                <div className="ms-Grid-row">
+
+                    <UserPasswordItem sectionName="Portal personelu" />
+                    <UserPasswordItemExt sectionName="Portal świadczeniodawcy" />
+                    <UserPasswordItem sectionName="MUS" />
+                    <UserPasswordItemExt sectionName="SIMP" />
+                    <UserPasswordItem sectionName="SZOI" />
+                    <UserPasswordItem sectionName="EWUŚ" />
+                    <UserPasswordItem sectionName="ePUB" />
+                    <UserPasswordItem sectionName="GUS" />
+                    <UserPasswordItem sectionName="DILO" />
+                </div>
+            </>
+            <>
+                <Separator alignContent="start">Dane kontaktowe</Separator>
+                <div className="ms-Grid-row">
+                    <div className="ms-Grid-col ms-smPush1">
+
+                        <Stack tokens={stackTokens}>
+                            <Stack horizontal tokens={stackTokens}>
+                                <TextField placeholder="Imię" />
+                                <TextField placeholder="Nazwisko" />
+                                <TextField placeholder="Nr telefonu" />
+                                <TextField placeholder="email" />
+                                <Button text="Usuń" />
+                            </Stack>
+                        </Stack>
+                    </div>
+                </div>
+            </>
+            <>
+                <Separator alignContent="start">Dane techniczne</Separator>
+                <div className="ms-Grid-row">
+                    <div className="ms-Grid-col ms-sm6 ms-smPush1">
+                        <TextField
+                            multiline={true}
+                            placeholder="Adresy IP serwerów, inne"
+                            // eslint-disable-next-line react/jsx-no-bind
+                            onChange={onChange2}
+                        />
+                    </div>
+                </div>
             </>
         </HorizontalSeparatorStack>
+    );
+}
+
+interface UserPasswordItemProps {
+    sectionName: string
+}
+
+const UserPasswordItem: React.FC<UserPasswordItemProps> = props => {
+    return (
+        <div className="ms-Grid-row">
+            <div className="ms-Grid-col ms-smPush1">
+                <Separator alignContent="start">{props.sectionName}</Separator>
+                <Stack tokens={stackTokens}>
+                    <Stack horizontal tokens={stackTokens}>
+                        <TextField placeholder="Użytkownik" />
+                        <TextField placeholder="Hasło" />
+                        <Button text="Usuń" />
+                    </Stack>
+                </Stack>
+            </div>
+        </div>
+    );
+}
+
+interface UserPasswordItemPropsExt {
+    sectionName: string
+}
+
+const UserPasswordItemExt: React.FC<UserPasswordItemPropsExt> = props => {
+    return (
+        <div className="ms-Grid-row">
+            <div className="ms-Grid-col ms-smPush1">
+                <Separator alignContent="start">{props.sectionName}</Separator>
+                <Stack tokens={stackTokens}>
+                    <Stack horizontal tokens={stackTokens}>
+                        <TextField placeholder="Oddział NFZ" />
+                        <TextField placeholder="Nr klienta" />
+                        <TextField placeholder="Użytkownik" />
+                        <TextField placeholder="Hasło" />
+                        <Button text="Usuń" />
+                    </Stack>
+                </Stack>
+            </div>
+        </div>
     );
 }
