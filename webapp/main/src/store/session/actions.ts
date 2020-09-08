@@ -1,8 +1,8 @@
-import { SessionAction, SessionActionTypes } from "./types"
+import { SessionAction, INITIATE_SESSION_STARTED } from "./types"
 
 export const initiateSession = (): SessionAction => {
     return {
-        type: SessionActionTypes.INITIATE_SESSION_STARTED
+        type: INITIATE_SESSION_STARTED
     }
 }
 

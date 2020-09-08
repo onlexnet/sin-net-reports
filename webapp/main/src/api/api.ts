@@ -35,7 +35,7 @@ export const apolloClientFactory = (jwtIdToken: string) => {
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Credentials": true,
-          authorization: `Bearer ${jwtIdToken}`,
+          Authorization: `Bearer ${jwtIdToken}`,
         },
       });
       return forward(operation);

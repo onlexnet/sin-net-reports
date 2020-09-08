@@ -1,7 +1,7 @@
 import { PublicClientApplication, SilentRequest, AuthenticationResult, Configuration, LogLevel, AccountInfo, InteractionRequiredAuthError, EndSessionRequest, RedirectRequest, PopupRequest } from "@azure/msal-browser";
 import { store } from "../store/store";
 import { initiateSession } from "../store/session/actions";
-import { SignInFlow } from "../store/session/types";
+import { SignInFlow, InitiateSessionFinishedAction, INITIATE_SESSION_FINISHED } from "../store/session/types";
 
 /**
  * Configuration class for @azure/msal-browser: 
@@ -137,6 +137,14 @@ export class AuthModule {
     private handleResponseInternal(resp: AuthenticationResult | null) {
         console.log('handleResponseInternal: ' + JSON.stringify(resp));
 
+        if (resp) {
+            const action: InitiateSessionFinishedAction = {
+                type: INITIATE_SESSION_FINISHED,
+                idToken: resp?.idToken ?? "undefined1"
+            }
+            store.dispatch(action);
+        }
+
         if (resp?.account) {
             this.account = resp.account;
         } else {
@@ -144,9 +152,6 @@ export class AuthModule {
         }
 
         if (this.account) {
-            // store.dispatch(updateSession({
-            //     loggedIn: true
-            // }));
         } else {
             // store.dispatch(updateSession({
             //     loggedIn: false

@@ -37,7 +37,7 @@ const ViewLocal: React.FC<Props> = (props) => {
 
   }, []);
 
-  var client = apolloClientFactory("");
+  var client = apolloClientFactory(props.idToken);
 
   return (
     <ApolloProvider client={client}>

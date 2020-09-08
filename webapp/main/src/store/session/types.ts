@@ -7,19 +7,21 @@ export enum SignInFlow {
 }
 export interface SessionState {
     flow: SignInFlow,
-    idToken: string | null
+    idToken: string
 }
 
-export const SessionActionTypes = {
-    INITIATE_SESSION_STARTED: 'INITIATE_SESSION_STARTED',
-    /** User is successfully logged in to the System. */
-    INITIATE_SESSION_FINISHED: 'INITIATE_SESSION_FINISHED'
-}
+/** Authorization request sent to B2C */
+export const INITIATE_SESSION_STARTED = 'INITIATE_SESSION_STARTED';
+/** User is successfully logged in to the System. */
+export const INITIATE_SESSION_FINISHED = 'INITIATE_SESSION_FINISHED';
 
 
-interface InitiateSessionStartedAction extends Action<typeof SessionActionTypes.INITIATE_SESSION_STARTED> {
+interface InitiateSessionStartedAction {
+    type: typeof INITIATE_SESSION_STARTED
 }
-interface InitiateSessionFinishedAction extends Action<typeof SessionActionTypes.INITIATE_SESSION_FINISHED> {
+
+export interface InitiateSessionFinishedAction {
+    type: typeof INITIATE_SESSION_FINISHED,
     idToken: string
 }
 
