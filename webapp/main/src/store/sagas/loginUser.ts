@@ -4,20 +4,12 @@ import { SessionActionTypes } from '../session/types';
 import { RELOAD_SERVICE_LIST } from '../services/types';
 import { reloadServicesBegin } from '../services/actions';
 import { RootState } from '../reducers';
-
-const generateNewNumber = (): Promise<any> => {
-  const promise = new Promise<number>(resolve => {
-    setTimeout(() => {
-      resolve();
-    }, 500);
-  });
-  return promise;
-};
+import { authModule } from '../../msal/autorun';
 
 const fetchUser = function* (action: Action) {
   console.log('saga + ' + JSON.stringify(action));
   try {
-    const user = yield call(generateNewNumber);
+    const user = yield call(authModule.login);
     yield put({ type: SessionActionTypes.INITIATE_SESSION_FINISHED });
   } catch (e) {
     yield put({ type: "USER_FETCH_FAILED", message: e.message });

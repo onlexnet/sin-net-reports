@@ -64,13 +64,6 @@ export class AuthModule {
 
         this.myMSALObj = new PublicClientApplication(MSAL_CONFIG);
         this.account = null;
-        store.subscribe(() => {
-            const state = store.getState().auth;
-            if (state.flow === SignInFlow.SessionInitiated) {
-                // TODO - enable login and tests full flow this.login();
-                // store.dispatch()
-            }
-        });
 
         this.loginRequest = {
             scopes: []
