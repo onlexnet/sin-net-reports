@@ -30,6 +30,7 @@ final class JwtAuthenticationToken extends AbstractAuthenticationToken {
                            final String email) {
         super(null);
         this.email = email;
+        this.setAuthenticated(true);
     }
 
     private static final long serialVersionUID = 3717651672219649325L;
