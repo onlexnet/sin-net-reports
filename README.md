@@ -13,7 +13,7 @@ Project site: [raport.sin.net.pl](https://raport.sin.net.pl/)
 Project allows register customer services and produce summarized reports in form of small PDF attachments for invoices..
 
 In scope:
-- [ ] Integrate login with Azure B2C
+- [x] Integrate login with Azure B2C
 - [ ] Register time and distance of provided service through Web site
 - [ ] Define list of clients
 - [ ] Create PDF attachments per client for given period on demand

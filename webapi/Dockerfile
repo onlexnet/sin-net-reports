@@ -22,7 +22,7 @@ ARG AZURE_APP_SECRET
 # The application needs some configuration
 # so let's provide that configuration fro mAzure secrets when image is build.
 ENV AZURE_APP_SECRET=$AZURE_APP_SECRET
-ENV SPRING_PROFILES_ACTIVE=dev
+ENV SPRING_PROFILES_ACTIVE=prod
 
 VOLUME /tmp
 COPY --from=build /app/main/host/target/*.jar /app/target/
