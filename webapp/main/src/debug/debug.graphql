@@ -1,0 +1,5 @@
+query UserContext {
+  getPrincipal {
+    name
+  }
+}

@@ -6,7 +6,8 @@ export enum SignInFlow {
     SessionEstablished
 }
 export interface SessionState {
-    flow: SignInFlow
+    flow: SignInFlow,
+    idToken: string | null
 }
 
 export const SessionActionTypes = {
@@ -16,9 +17,10 @@ export const SessionActionTypes = {
 }
 
 
-interface InitiateSessionStartedAction extends Action<typeof SessionActionTypes.INITIATE_SESSION_FINISHED> {
+interface InitiateSessionStartedAction extends Action<typeof SessionActionTypes.INITIATE_SESSION_STARTED> {
 }
 interface InitiateSessionFinishedAction extends Action<typeof SessionActionTypes.INITIATE_SESSION_FINISHED> {
+    idToken: string
 }
 
 

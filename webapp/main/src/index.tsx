@@ -10,6 +10,7 @@ import { Provider } from "react-redux";
 import { store } from "./store/store";
 import App from "./app/App";
 import { authModule } from "./msal/autorun";
+import { ApolloProvider } from "@apollo/react-hooks";
 initializeIcons();
 
 const definedToRunSideEffect = authModule;

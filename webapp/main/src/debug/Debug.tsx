@@ -1,5 +1,5 @@
 import React from "react";
-
+import { useUserContextQuery } from '../Components/.generated/components'
 
 
 interface Props {
@@ -7,14 +7,15 @@ interface Props {
 
 export const Debug: React.FC<Props> = () => {
   // const client = apolloClientFactory(accountInfo.jwtIdToken);
-  //const { data, loading, error } = useGetServicesQuery({ client });
+  // const { data, loading, error } = useUserContextQuery({ client });
+  const { data, loading, error } = useUserContextQuery();
   return (
-    // <ApolloProvider client={client}>
-    //   <p>data: {String(data)}</p>
-    //   <p>loading: {String(loading)}</p>
-    //   <p>error: {String(error)}</p>
+    <>
+      <p>data: {String(data)}</p>
+      <p>loading: {String(loading)}</p>
+      <p>error: {String(error)}</p>
 
-    // </ApolloProvider>
-    <p>DEBUG</p>
+      <p>DEBUG</p>
+    </>
   );
 };

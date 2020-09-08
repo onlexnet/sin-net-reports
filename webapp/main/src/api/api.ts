@@ -15,7 +15,7 @@ import { GraphQLClient } from 'graphql-request';
 
 const graphqlUrl = `${addressProvider().host}/graphql`;
 
-const apolloClientFactory = (jwtIdToken: string) => {
+export const apolloClientFactory = (jwtIdToken: string) => {
     // configuration below is focused on Authentication
     // https://www.apollographql.com/docs/react/networking/authentication/
   
@@ -50,5 +50,5 @@ const apolloClientFactory = (jwtIdToken: string) => {
   };
 
   const graphQlClient = new GraphQLClient(graphqlUrl);
-  const apolloClient = apolloClientFactory("");
+  export const apolloClient = apolloClientFactory("");
   export const sdk = getSdk(graphQlClient);

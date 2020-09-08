@@ -79,6 +79,17 @@ export type Subscription = {
   time?: Maybe<Scalars['Int']>;
 };
 
+export type UserContextQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type UserContextQuery = (
+  { __typename?: 'Query' }
+  & { getPrincipal: (
+    { __typename?: 'PrincipalModel' }
+    & Pick<PrincipalModel, 'name'>
+  ) }
+);
+
 export type FetchServicesQueryVariables = Exact<{
   from: Scalars['Date'];
   to: Scalars['Date'];
@@ -114,6 +125,13 @@ export type NewServiceActionMutation = (
 );
 
 
+export const UserContextDocument = gql`
+    query UserContext {
+  getPrincipal {
+    name
+  }
+}
+    `;
 export const FetchServicesDocument = gql`
     query FetchServices($from: Date!, $to: Date!) {
   Services {
@@ -140,6 +158,9 @@ export type SdkFunctionWrapper = <T>(action: () => Promise<T>) => Promise<T>;
 const defaultWrapper: SdkFunctionWrapper = sdkFunction => sdkFunction();
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
+    UserContext(variables?: UserContextQueryVariables): Promise<UserContextQuery> {
+      return withWrapper(() => client.request<UserContextQuery>(print(UserContextDocument), variables));
+    },
     FetchServices(variables: FetchServicesQueryVariables): Promise<FetchServicesQuery> {
       return withWrapper(() => client.request<FetchServicesQuery>(print(FetchServicesDocument), variables));
     },

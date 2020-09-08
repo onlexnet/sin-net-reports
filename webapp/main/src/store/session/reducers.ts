@@ -2,7 +2,8 @@ import { SessionState, SessionAction, SignInFlow } from "./types";
 import _ from "lodash";
 
 const initialState: SessionState = {
-    flow: SignInFlow.Unknown
+    flow: SignInFlow.Unknown,
+    idToken: null
 }
 
 export const sessionReducer = (state = initialState, action: SessionAction): SessionState => {
