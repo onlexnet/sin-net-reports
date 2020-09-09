@@ -30,11 +30,12 @@ public class ServicesSearchResolver implements GraphQLResolver<Services> {
                                        final ServicesFilter filter) {
         var items = actionService
             .find()
-            .map(it -> new ServiceModel(
-                it.getValue().getWho().getValue(),
-                it.getValue().getWhen(),
-                it.getValue().getWhom().getValue()
-            ))
+            .map(it -> ServiceModel.builder()
+                .servicemanName(it.getValue().getWho().getValue())
+                .whenProvided(it.getValue().getWhen())
+                .forWhatCustomer(it.getValue().getWhom().getValue())
+                .description(it.getValue().getWhat())
+                .build())
             .collect(Collectors.toList());
         return new ServicesSearchResult(items, 2);
     }

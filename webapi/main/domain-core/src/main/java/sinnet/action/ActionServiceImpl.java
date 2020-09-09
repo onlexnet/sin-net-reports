@@ -46,7 +46,7 @@ public class ActionServiceImpl implements ActionService {
                     Duration.ZERO,
                     Distance.of(2)
                 );
-                return new Entity(it.getEntityId(), value);
+                return new Entity<>(it.getEntityId(), value);
             });
     }
 

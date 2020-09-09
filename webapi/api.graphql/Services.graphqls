@@ -18,6 +18,7 @@ type ServiceModel {
     servicemanName: String!
     whenProvided: Date!
     forWhatCustomer: String!
+    description: String!
 }
 
 input ServicesFilter {
