@@ -3,6 +3,7 @@ import { DetailsList, DetailsListLayoutMode, SelectionMode, IColumn, mergeStyleS
 import { IStackTokens, Stack, TextField, Toggle, Announced } from "office-ui-fabric-react";
 import { connect, ConnectedProps } from "react-redux";
 import { RootState } from "../store/reducers";
+import { ServiceAppModel } from "../store/services/ServiceModel";
 
 const classNames = mergeStyleSets({
   fileIconHeaderIcon: {
@@ -54,11 +55,9 @@ export interface IContentState {
   announcedMessage?: string;
 }
 
-export interface IDocument {
+export interface IDocument extends ServiceAppModel {
   key: string;
   customer: string;
-  description: string;
-  modifiedBy: string;
   dateModified: string;
   dateModifiedValue: Date;
   duration: number;
@@ -102,7 +101,7 @@ const ConnectedContent: React.FC<ContentProps & PropsFromRedux> = props => {
     {
       key: "column4",
       name: "Pracownik",
-      fieldName: "modifiedBy",
+      fieldName: "servicemanName",
       minWidth: 70,
       maxWidth: 90,
       isResizable: true,
@@ -110,7 +109,7 @@ const ConnectedContent: React.FC<ContentProps & PropsFromRedux> = props => {
       data: "string",
       onColumnClick: (ev, col) => _onColumnClick(col, state.columns),
       onRender: (item: IDocument) => {
-        return <span>{item.modifiedBy}</span>;
+        return <span>{item.servicemanName }</span>;
       },
       isPadded: true
     },

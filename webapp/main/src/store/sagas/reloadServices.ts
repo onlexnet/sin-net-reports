@@ -1,5 +1,4 @@
-import { call, put, takeEvery, takeLatest, select } from 'redux-saga/effects';
-import { Action } from 'redux';
+import { call, put, takeLatest, select } from 'redux-saga/effects';
 import { sdk } from '../../api';
 import { FetchServicesQuery } from '../../api/generated';
 import { RELOAD_SERVICE_LIST, ReloadServiceList,  } from '../services/types';
@@ -7,10 +6,9 @@ import { ServiceAppModel } from '../services/ServiceModel';
 import { reloadServicesEnd } from '../services/actions';
 import { RootState } from '../reducers';
 import { ViewContextState } from '../viewcontext/types';
-import { TimePeriod } from '../viewcontext/TimePeriod';
 import { asDtoDates } from '../../api/Mapper';
 
-const fetchServices = function* (action: ReloadServiceList) {
+const fetchActions = function* (action: ReloadServiceList) {
   try {
     const viewContext: ViewContextState = yield select((s: RootState) => s.viewContext);
     const periodDto = asDtoDates(viewContext.period);
@@ -22,7 +20,8 @@ const fetchServices = function* (action: ReloadServiceList) {
     var items = result.Services.search.items
       .map(it => {
         const item: ServiceAppModel = {
-          description: it.forWhatCustomer ?? "-"
+          description: it.description ?? "-",
+          servicemanName: it.servicemanName ?? "-"
         }
         return item;
       });
@@ -36,6 +35,6 @@ const fetchServices = function* (action: ReloadServiceList) {
   Starts fetchUser on each dispatched `USER_FETCH_REQUESTED` action.
   Allows concurrent fetches of user.
 */
-export function* reloadServiceSaga() {
-  yield takeLatest(RELOAD_SERVICE_LIST, fetchServices);
+export function* reloadActionsSaga() {
+  yield takeLatest(RELOAD_SERVICE_LIST, fetchActions);
 }
