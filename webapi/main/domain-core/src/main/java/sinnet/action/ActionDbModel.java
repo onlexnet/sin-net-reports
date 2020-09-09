@@ -16,4 +16,5 @@ class ActionDbModel {
 
     private String description;
     private String servicemanName;
+    private String customerName;
 }

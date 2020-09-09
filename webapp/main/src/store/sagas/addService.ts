@@ -9,8 +9,8 @@ const addService = function* (action: AddServiceCommand) {
         const result = (yield call(sdk.newServiceAction, {
             when: "2020/08/01",
             what: action.payload.description,
-            who: "test user",
-            whom: "test customer"
+            who: action.payload.serviceMan,
+            whom: action.payload.customerName
         } as NewServiceActionMutationVariables )) as NewServiceActionMutation;
 
         var addNewResult = result.Services.addNew;

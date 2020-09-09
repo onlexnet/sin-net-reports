@@ -1,4 +1,8 @@
+import { PartsOfDate } from "../viewcontext/TimePeriod";
+
 export interface ServiceAppModel {
     servicemanName: string,
-    description: string
+    description: string,
+    customerName: string,
+    when: PartsOfDate
 }

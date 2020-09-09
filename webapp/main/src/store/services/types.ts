@@ -1,6 +1,6 @@
 import { ServiceAppModel } from "./ServiceModel";
 import { Action } from "redux";
-import { TimePeriod } from "../viewcontext/TimePeriod";
+import { TimePeriod, PartsOfDate } from "../viewcontext/TimePeriod";
 
 export interface ServicesState {
     items: ServiceAppModel[];    
@@ -15,7 +15,9 @@ export interface AddServiceCommand extends Action<typeof ADD_SERVICE_COMMAND> {
     type: typeof ADD_SERVICE_COMMAND,
     payload: {
         serviceMan: string,
-        description: string
+        description: string,
+        customerName: string,
+        when: PartsOfDate
     }
 }
 

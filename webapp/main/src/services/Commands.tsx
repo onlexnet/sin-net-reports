@@ -15,8 +15,10 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
       var cmd: AddServiceCommand = {
         type: 'ADD_SERVICE',
         payload: {
-          description: "Nowa usługa ...",
-          serviceMan: "Some person"
+          description: "Nowa usługa " + Date.now(),
+          serviceMan: "Some person " + Date.now(),
+          customerName: "Customer name " + Date.now(),
+          when: { year: 2002, month: 3, day: 4 }
         }
       }
       dispatch(cmd);

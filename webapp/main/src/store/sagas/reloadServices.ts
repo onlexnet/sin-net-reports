@@ -21,7 +21,9 @@ const fetchActions = function* (action: ReloadServiceList) {
       .map(it => {
         const item: ServiceAppModel = {
           description: it.description ?? "-",
-          servicemanName: it.servicemanName ?? "-"
+          servicemanName: it.servicemanName ?? "-",
+          customerName: it.forWhatCustomer,
+          when: it.whenProvided
         }
         return item;
       });

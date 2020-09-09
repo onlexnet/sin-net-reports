@@ -30,6 +30,7 @@ public class ActionServiceImpl implements ActionService {
         entry.setEntityId(UUID.randomUUID());
         entry.setDescription(entity.getWhat());
         entry.setServicemanName(entity.getWho().getValue());
+        entry.setCustomerName(entity.getWhom().getValue());
         repository.save(entry);
     }
 
@@ -39,9 +40,9 @@ public class ActionServiceImpl implements ActionService {
         return List.ofAll(repository.findAll())
             .map(it -> {
                 var value = new ServiceEntity(
-                    Name.of("some name"),
+                    Name.of(it.getServicemanName()),
                     LocalDate.now(),
-                    Name.of("some customer"),
+                    Name.of(it.getCustomerName()),
                     it.getDescription(),
                     Duration.ZERO,
                     Distance.of(2)

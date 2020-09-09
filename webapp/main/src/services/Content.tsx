@@ -56,8 +56,6 @@ export interface IContentState {
 }
 
 export interface IDocument extends ServiceAppModel {
-  key: string;
-  customer: string;
   dateModified: string;
   dateModifiedValue: Date;
   duration: number;
@@ -130,7 +128,7 @@ const ConnectedContent: React.FC<ContentProps & PropsFromRedux> = props => {
     {
       key: "column2",
       name: "Klient",
-      fieldName: "customer",
+      fieldName: "customerName",
       minWidth: 210,
       maxWidth: 350,
       isRowHeader: true,

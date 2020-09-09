@@ -11,7 +11,9 @@ export const serviceReducer = (state = initialState, action: ServiceAction): Ser
         case 'ADD_SERVICE':
             clone.items.push({
                 description: action.payload.description,
-                servicemanName: action.payload.serviceMan
+                servicemanName: action.payload.serviceMan,
+                customerName: action.payload.customerName,
+                when: action.payload.when
             });
             return clone;
         case "REMOVE_SERVICE":
