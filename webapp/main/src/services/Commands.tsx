@@ -2,9 +2,9 @@ import * as React from 'react';
 import { CommandBar, ICommandBarItemProps, IButtonProps } from 'office-ui-fabric-react';
 import { Dispatch } from 'redux';
 import { connect, ConnectedProps } from 'react-redux';
-import { addServiceCommand, reloadServicesBegin } from '../store/services/actions';
 import { RootState } from '../store/reducers';
 import { previousPeriodCommand, nextPeriodCommand } from '../store/viewcontext/actions';
+import { AddServiceCommand } from '../store/services/types';
 
 const overflowProps: IButtonProps = { ariaLabel: 'More commands' };
 
@@ -12,7 +12,14 @@ const mapStateToProps = (state: RootState) => state.services;
 const mapDispatchToProps = (dispatch: Dispatch) => {
   return {
     addNewService: () => {
-      dispatch(addServiceCommand("Nowa usługa ..."));
+      var cmd: AddServiceCommand = {
+        type: 'ADD_SERVICE',
+        payload: {
+          description: "Nowa usługa ...",
+          serviceMan: "Some person"
+        }
+      }
+      dispatch(cmd);
     },
     onPreviousMonthRequested: () => {
       dispatch(previousPeriodCommand())

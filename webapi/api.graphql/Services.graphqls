@@ -3,6 +3,7 @@ type Services {
 }
 
 input ServiceEntry {
+    servicemanName: String!
     whenProvided: Date!
     forWhatCustomer: ID!
     description: String!

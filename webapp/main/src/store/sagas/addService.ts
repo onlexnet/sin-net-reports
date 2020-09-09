@@ -1,15 +1,17 @@
 import { call, put, takeEvery, takeLatest } from 'redux-saga/effects';
 import { reloadServicesBegin } from '../services/actions';
-import { AddServiceAction, ADD_SERVICE_COMMAND } from '../services/types';
+import { AddServiceCommand, ADD_SERVICE_COMMAND } from '../services/types';
 import { sdk } from '../../api';
-import { NewServiceActionMutation } from '../../api/generated';
+import { NewServiceActionMutation, NewServiceActionMutationVariables } from '../../api/generated';
 
-const addService = function* (action: AddServiceAction) {
+const addService = function* (action: AddServiceCommand) {
     try {
         const result = (yield call(sdk.newServiceAction, {
             when: "2020/08/01",
-            what: action.payload.description
-        })) as NewServiceActionMutation;
+            what: action.payload.description,
+            who: "test user",
+            whom: "test customer"
+        } as NewServiceActionMutationVariables )) as NewServiceActionMutation;
 
         var addNewResult = result.Services.addNew;
         if (addNewResult) {

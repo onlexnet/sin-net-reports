@@ -12,9 +12,10 @@ export const REMOVE_SERVICE = "REMOVE_SERVICE";
 export const REFRESH_SERVICE_LIST_END = "REFRESH_SERVICE_LIST_END";
 export const RELOAD_SERVICE_LIST = "RELOAD_SERVICE_LIST";
 
-export interface AddServiceAction extends Action<typeof ADD_SERVICE_COMMAND> {
+export interface AddServiceCommand extends Action<typeof ADD_SERVICE_COMMAND> {
     type: typeof ADD_SERVICE_COMMAND,
     payload: {
+        serviceMan: string,
         description: string
     }
 }
@@ -39,7 +40,7 @@ export interface ReloadServiceList {
 }
 
 export type ServiceActionType = typeof ADD_SERVICE_COMMAND | typeof REMOVE_SERVICE | typeof REFRESH_SERVICE_LIST_END | typeof RELOAD_SERVICE_LIST;
-export type ServiceAction = AddServiceAction | RemoveServiceAction | RefreshServiceAction | ReloadServiceList;
+export type ServiceAction = AddServiceCommand | RemoveServiceAction | RefreshServiceAction | ReloadServiceList;
 export enum ServiceCommands {
     ReloadServiceList
 };

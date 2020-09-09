@@ -49,6 +49,6 @@ export const apolloClientFactory = (jwtIdToken: string) => {
     });
   };
 
-  const graphQlClient = new GraphQLClient(graphqlUrl);
+  export const graphQlClient = new GraphQLClient(graphqlUrl);
   export const apolloClient = apolloClientFactory("");
   export const sdk = getSdk(graphQlClient);

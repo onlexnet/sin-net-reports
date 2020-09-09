@@ -2,6 +2,7 @@ import { PublicClientApplication, SilentRequest, AuthenticationResult, Configura
 import { store } from "../store/store";
 import { initiateSession } from "../store/session/actions";
 import { SignInFlow, InitiateSessionFinishedAction, INITIATE_SESSION_FINISHED } from "../store/session/types";
+import { graphQlClient } from "../api";
 
 /**
  * Configuration class for @azure/msal-browser: 
@@ -139,9 +140,11 @@ export class AuthModule {
         if (resp) {
             const action: InitiateSessionFinishedAction = {
                 type: INITIATE_SESSION_FINISHED,
-                idToken: resp?.idToken ?? "undefined1"
+                idToken: resp.idToken ?? "undefined1",
+                email: resp.account.username
             }
             store.dispatch(action);
+            graphQlClient.setHeader("Authorization", `Bearer ${resp?.idToken}`);
         }
 
         if (resp?.account) {

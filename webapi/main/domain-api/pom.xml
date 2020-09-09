@@ -23,8 +23,8 @@
       <artifactId>lombok</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.axonframework</groupId>
-      <artifactId>axon-modelling</artifactId>
+      <groupId>io.vavr</groupId>
+      <artifactId>vavr</artifactId>
     </dependency>
   </dependencies>
 

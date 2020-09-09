@@ -31,6 +31,7 @@ export type Query = {
 };
 
 export type ServiceEntry = {
+  servicemanName: Scalars['String'];
   whenProvided: Scalars['Date'];
   forWhatCustomer: Scalars['ID'];
   description: Scalars['String'];
@@ -113,6 +114,8 @@ export type FetchServicesQuery = (
 export type NewServiceActionMutationVariables = Exact<{
   when: Scalars['Date'];
   what: Scalars['String'];
+  who: Scalars['String'];
+  whom: Scalars['ID'];
 }>;
 
 
@@ -145,9 +148,9 @@ export const FetchServicesDocument = gql`
 }
     `;
 export const NewServiceActionDocument = gql`
-    mutation newServiceAction($when: Date!, $what: String!) {
+    mutation newServiceAction($when: Date!, $what: String!, $who: String!, $whom: ID!) {
   Services {
-    addNew(entry: {whenProvided: $when, forWhatCustomer: "GFT", description: $what})
+    addNew(entry: {servicemanName: $who, whenProvided: $when, forWhatCustomer: $whom, description: $what})
   }
 }
     `;

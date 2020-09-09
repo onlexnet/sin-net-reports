@@ -11,7 +11,6 @@
   
   <properties>
     <my.version>1.0-SNAPSHOT</my.version>
-    <axon.version>4.4.2</axon.version>
     <spring-boot-azure.version>2.3.2</spring-boot-azure.version>
     <spring-boot.version>2.3.2.RELEASE</spring-boot.version>
     <jacoco.version>0.8.5</jacoco.version>
@@ -24,7 +23,6 @@
 
   <dependencyManagement>
     <dependencies>
-
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
@@ -83,42 +81,7 @@
         <scope>import</scope>
     </dependency>
 
-      <dependency>
-        <groupId>org.axonframework</groupId>
-        <artifactId>axon-spring-boot-starter</artifactId>
-        <version>${axon.version}</version>
-        <exclusions>
-          <exclusion>
-            <groupId>org.axonframework</groupId>
-            <artifactId>axon-server-connector</artifactId>
-          </exclusion>
-        </exclusions>
-      </dependency>
-      <dependency>
-        <groupId>org.axonframework</groupId>
-        <artifactId>axon-test</artifactId>
-        <version>${axon.version}</version>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.axonframework</groupId>
-        <artifactId>axon-modelling</artifactId>
-        <version>${axon.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.axonframework</groupId>
-        <artifactId>axon-messaging</artifactId>
-        <version>${axon.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.axonframework</groupId>
-        <artifactId>axon-configuration</artifactId>
-        <version>${axon.version}</version>
-      </dependency>
-      
-
-    </dependencies>
-
+      </dependencies>
   </dependencyManagement>
 
   <build>

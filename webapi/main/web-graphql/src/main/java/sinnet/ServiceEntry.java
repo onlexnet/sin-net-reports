@@ -13,6 +13,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class ServiceEntry {
+  /** Name of the person who provided the service. */
+  private String servicemanName;
   /** FixMe. */
   private LocalDate whenProvided;
   /** FixMe. */

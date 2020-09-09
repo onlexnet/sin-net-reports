@@ -2,28 +2,12 @@ package sinnet;
 
 import java.time.Duration;
 import java.time.LocalDate;
-import java.util.UUID;
 
-import org.axonframework.modelling.command.TargetAggregateIdentifier;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.With;
+import lombok.Value;
 
 /** Register details about provided service. */
-@NoArgsConstructor
-@Data
-@AllArgsConstructor
-@Builder(toBuilder = true)
-public class RegisterNewServiceAction {
-
-    /** Unique ID of service action. */
-    @TargetAggregateIdentifier
-    @With
-    @Builder.Default
-    private String serviceActionId = UUID.randomUUID().toString();
+@Value
+public class ServiceEntity {
 
     /** Serviceman who did the service. */
     private Name who;
