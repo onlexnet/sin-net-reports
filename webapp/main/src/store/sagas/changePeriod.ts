@@ -30,7 +30,8 @@ const selectPeriod = function* (command: SelectPeriodCommand) {
     var items = result.Services.search.items
       .map(it => {
         const item: ServiceAppModel = {
-          description: it.forWhatCustomer ?? "-"
+          description: it.description,
+          servicemanName: it.forWhatCustomer ?? "-"
         }
         return item;
       });

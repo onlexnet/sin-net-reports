@@ -42,6 +42,7 @@ export type ServiceModel = {
   servicemanName: Scalars['String'];
   whenProvided: Scalars['Date'];
   forWhatCustomer: Scalars['String'];
+  description: Scalars['String'];
 };
 
 export type Services = {
@@ -105,7 +106,7 @@ export type FetchServicesQuery = (
       { __typename?: 'ServicesSearchResult' }
       & { items: Array<(
         { __typename?: 'ServiceModel' }
-        & Pick<ServiceModel, 'whenProvided' | 'forWhatCustomer'>
+        & Pick<ServiceModel, 'whenProvided' | 'forWhatCustomer' | 'servicemanName' | 'description'>
       )> }
     ) }
   ) }
@@ -142,6 +143,8 @@ export const FetchServicesDocument = gql`
       items {
         whenProvided
         forWhatCustomer
+        servicemanName
+        description
       }
     }
   }

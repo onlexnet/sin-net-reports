@@ -3,7 +3,6 @@ import { Action } from "redux";
 import { TimePeriod } from "../viewcontext/TimePeriod";
 
 export interface ServicesState {
-    numerOfItems: number;
     items: ServiceAppModel[];    
 }
 
