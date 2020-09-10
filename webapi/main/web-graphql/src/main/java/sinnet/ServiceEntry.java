@@ -21,4 +21,6 @@ public class ServiceEntry {
   private String forWhatCustomer;
   /** Description of the provided service to be printed later as a position of invoice's attachment. */
   private String description;
+  private int distance;
+  private int duration;
 }

@@ -17,7 +17,9 @@ export interface AddServiceCommand extends Action<typeof ADD_SERVICE_COMMAND> {
         serviceMan: string,
         description: string,
         customerName: string,
-        when: LocalDate
+        when: LocalDate,
+        duration: number,
+        distance: number
     }
 }
 

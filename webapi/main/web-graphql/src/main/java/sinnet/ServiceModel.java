@@ -11,4 +11,6 @@ public class ServiceModel {
     private LocalDate whenProvided;
     private String forWhatCustomer;
     private String description;
+    private Integer duration;
+    private Integer distance;
 }

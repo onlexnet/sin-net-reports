@@ -29,8 +29,8 @@ public class ServicesOperationsAddNew implements GraphQLResolver<ServicesOperati
             entry.getWhenProvided(),
             Name.of(entry.getForWhatCustomer()),
             entry.getDescription(),
-            Duration.ofHours(1),
-            Distance.of(1)
+            Duration.ofMinutes(entry.getDuration()),
+            Distance.of(entry.getDistance())
         );
 
         actionService.save(model);

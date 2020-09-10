@@ -23,7 +23,9 @@ const fetchActions = function* (action: ReloadServiceList) {
           description: it.description ?? "-",
           servicemanName: it.servicemanName ?? "-",
           customerName: it.forWhatCustomer,
-          when: it.whenProvided
+          when: it.whenProvided,
+          distance: it.distance,
+          duration: it.duration
         }
         return item;
       });

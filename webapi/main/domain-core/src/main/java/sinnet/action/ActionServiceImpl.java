@@ -1,7 +1,5 @@
 package sinnet.action;
 
-import java.time.Duration;
-import java.time.LocalDate;
 import java.util.UUID;
 
 import javax.transaction.Transactional;
@@ -31,6 +29,9 @@ public class ActionServiceImpl implements ActionService {
         entry.setDescription(entity.getWhat());
         entry.setServicemanName(entity.getWho().getValue());
         entry.setCustomerName(entity.getWhom().getValue());
+        entry.setWhen(entity.getWhen());
+        entry.setDistance(entity.getHowFar().getValue());
+        entry.setDuration(entity.getHowLong());
         repository.save(entry);
     }
 
@@ -41,11 +42,11 @@ public class ActionServiceImpl implements ActionService {
             .map(it -> {
                 var value = new ServiceEntity(
                     Name.of(it.getServicemanName()),
-                    LocalDate.now(),
+                    it.getWhen(),
                     Name.of(it.getCustomerName()),
                     it.getDescription(),
-                    Duration.ZERO,
-                    Distance.of(2)
+                    it.getDuration(),
+                    Distance.of(it.getDistance())
                 );
                 return new Entity<>(it.getEntityId(), value);
             });

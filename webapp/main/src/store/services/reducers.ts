@@ -13,7 +13,9 @@ export const serviceReducer = (state = initialState, action: ServiceAction): Ser
                 description: action.payload.description,
                 servicemanName: action.payload.serviceMan,
                 customerName: action.payload.customerName,
-                when: action.payload.when
+                when: action.payload.when,
+                duration: action.payload.duration,
+                distance: action.payload.distance
             });
             return clone;
         case "REMOVE_SERVICE":

@@ -35,6 +35,8 @@ export type ServiceEntry = {
   whenProvided: Scalars['Date'];
   forWhatCustomer: Scalars['ID'];
   description: Scalars['String'];
+  distance: Scalars['Int'];
+  duration: Scalars['Int'];
 };
 
 export type ServiceModel = {
@@ -43,6 +45,8 @@ export type ServiceModel = {
   whenProvided: Scalars['Date'];
   forWhatCustomer: Scalars['String'];
   description: Scalars['String'];
+  distance: Scalars['Int'];
+  duration: Scalars['Int'];
 };
 
 export type Services = {
@@ -106,7 +110,7 @@ export type FetchServicesQuery = (
       { __typename?: 'ServicesSearchResult' }
       & { items: Array<(
         { __typename?: 'ServiceModel' }
-        & Pick<ServiceModel, 'whenProvided' | 'forWhatCustomer' | 'servicemanName' | 'description'>
+        & Pick<ServiceModel, 'whenProvided' | 'forWhatCustomer' | 'servicemanName' | 'description' | 'duration' | 'distance'>
       )> }
     ) }
   ) }
@@ -117,6 +121,8 @@ export type NewServiceActionMutationVariables = Exact<{
   what: Scalars['String'];
   who: Scalars['String'];
   whom: Scalars['ID'];
+  duration: Scalars['Int'];
+  distance: Scalars['Int'];
 }>;
 
 
@@ -145,15 +151,17 @@ export const FetchServicesDocument = gql`
         forWhatCustomer
         servicemanName
         description
+        duration
+        distance
       }
     }
   }
 }
     `;
 export const NewServiceActionDocument = gql`
-    mutation newServiceAction($when: Date!, $what: String!, $who: String!, $whom: ID!) {
+    mutation newServiceAction($when: Date!, $what: String!, $who: String!, $whom: ID!, $duration: Int!, $distance: Int!) {
   Services {
-    addNew(entry: {servicemanName: $who, whenProvided: $when, forWhatCustomer: $whom, description: $what})
+    addNew(entry: {servicemanName: $who, whenProvided: $when, forWhatCustomer: $whom, description: $what, duration: $duration, distance: $distance})
   }
 }
     `;

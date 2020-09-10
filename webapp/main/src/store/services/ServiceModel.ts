@@ -5,4 +5,6 @@ export interface ServiceAppModel {
     description: string,
     customerName: string,
     when: LocalDate
-}
+    duration: number;
+    distance: number;
+  }

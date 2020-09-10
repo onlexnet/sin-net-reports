@@ -6,7 +6,9 @@ input ServiceEntry {
     servicemanName: String!
     whenProvided: Date!
     forWhatCustomer: ID!
-    description: String!
+    description: String!,
+    distance: Int!
+    duration: Int!
 }
 
 type ServicesSearchResult {
@@ -19,6 +21,8 @@ type ServiceModel {
     whenProvided: Date!
     forWhatCustomer: String!
     description: String!
+    distance: Int!
+    duration: Int!
 }
 
 input ServicesFilter {

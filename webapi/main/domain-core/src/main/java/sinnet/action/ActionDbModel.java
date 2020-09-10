@@ -1,5 +1,7 @@
 package sinnet.action;
 
+import java.time.Duration;
+import java.time.LocalDate;
 import java.util.UUID;
 
 import javax.persistence.Entity;
@@ -17,4 +19,7 @@ class ActionDbModel {
     private String description;
     private String servicemanName;
     private String customerName;
+    private LocalDate when;
+    private Duration duration;
+    private Integer distance;
 }

@@ -56,10 +56,6 @@ export interface IContentState {
 }
 
 export interface IDocument extends ServiceAppModel {
-  dateModified: string;
-  dateModifiedValue: Date;
-  duration: number;
-  distance: number;
 }
 
 export interface TypedColumn extends IColumn {
@@ -114,14 +110,15 @@ const ConnectedContent: React.FC<ContentProps & PropsFromRedux> = props => {
     {
       key: "column3",
       name: "Data",
-      fieldName: "dateModifiedValue",
+      fieldName: "when",
       minWidth: 70,
       maxWidth: 90,
       isResizable: true,
       onColumnClick: (ev, col) => _onColumnClick(col, state.columns),
-      data: "number",
+      data: "date",
       onRender: (item: IDocument) => {
-        return <span>{item.dateModified}</span>;
+        const { year, month, day } = item.when;
+        return <span>{`${year}-${month}-${day}`}</span>;
       },
       isPadded: true
     },

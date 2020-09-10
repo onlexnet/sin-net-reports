@@ -18,7 +18,9 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
           description: "Nowa usługa " + Date.now(),
           serviceMan: "Some person " + Date.now(),
           customerName: "Customer name " + Date.now(),
-          when: { year: 2002, month: 3, day: 4 }
+          when: { year: 2002, month: 3, day: Math.floor((Math.random() * 30) + 1) },
+          distance: Math.floor((Math.random() * 10) + 10),
+          duration: Math.floor((Math.random() * 50) + 10)
         }
       }
       dispatch(cmd);
