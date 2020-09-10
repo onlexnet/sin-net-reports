@@ -2,8 +2,8 @@ import { addMonths, addDays } from 'date-fns';
 
 export class TimePeriod {
 
-    private dateFrom: PartsOfDate;
-    private dateTo: PartsOfDate;
+    private dateFrom: LocalDate;
+    private dateTo: LocalDate;
 
     constructor(initial: Date, scope: PeriodScope = 'MONTH') {
         this.dateFrom = this.asPartsOfDate(this.adjustDateFrom(initial, scope));
@@ -20,14 +20,14 @@ export class TimePeriod {
         return addDays(addMonths(firstDayOfMonth, 1), -1);
     }
 
-    private asPartsOfDate(date: Date): PartsOfDate {
+    private asPartsOfDate(date: Date): LocalDate {
         return {
             year: date.getFullYear(),
             month: date.getMonth() + 1,
             day: date.getDate()
         }
     }
-    private asDate(date: PartsOfDate, deltaInDays: number) {
+    private asDate(date: LocalDate, deltaInDays: number) {
         const current = new Date(date.year, date.month - 1, date.day);
         return addDays(current, deltaInDays);
     }
@@ -59,7 +59,8 @@ export class TimePeriod {
 }
 
 type PeriodScope = 'MONTH';
-export interface PartsOfDate {
+
+export interface LocalDate {
     year: number;
     /** Month 1-12 */
     month: number;

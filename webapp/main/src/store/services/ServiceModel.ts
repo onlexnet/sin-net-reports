@@ -1,8 +1,8 @@
-import { PartsOfDate } from "../viewcontext/TimePeriod";
+import { LocalDate } from "../viewcontext/TimePeriod";
 
 export interface ServiceAppModel {
     servicemanName: string,
     description: string,
     customerName: string,
-    when: PartsOfDate
+    when: LocalDate
 }
