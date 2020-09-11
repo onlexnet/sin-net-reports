@@ -1,5 +1,5 @@
 import { combineReducers } from "redux";
-import { serviceReducer } from "./services/reducers";
+import { serviceReducer } from "./actions/reducers";
 import { sessionReducer } from "./session/reducers";
 import { viewContextReducer } from "./viewcontext/reducers";
 

@@ -12,3 +12,4 @@ export const asDtoDates = (entry: TimePeriod) => {
         dateTo: dtoDate(current.dateTo)
     }
 }
+

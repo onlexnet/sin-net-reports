@@ -3,7 +3,7 @@ import { Content } from "./Content";
 import { ServiceCommandBar } from "./Commands";
 import { IconButton, FirstWeekOfYear } from "office-ui-fabric-react";
 import { RootState } from "../store/reducers";
-import { ServicesState } from "../store/services/types";
+import { ServicesState } from "../store/actions/types";
 import { nextPeriodCommand, previousPeriodCommand } from "../store/viewcontext/actions";
 import { connect, ConnectedProps } from "react-redux";
 import { Dispatch } from "redux";

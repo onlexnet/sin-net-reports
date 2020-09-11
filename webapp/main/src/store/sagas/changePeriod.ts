@@ -1,13 +1,14 @@
 import { call, put, takeEvery, takeLatest, select } from 'redux-saga/effects';
 import { sdk } from '../../api';
 import { FetchServicesQuery } from '../../api/generated';
-import { ServiceAppModel } from '../services/ServiceModel';
-import { reloadServicesEnd } from '../services/actions';
+import { ServiceAppModel } from '../actions/ServiceModel';
+import { reloadServicesEnd } from '../actions/actions';
 import { RootState } from '../reducers';
 import { ViewContextState, VIEWCONTEXT_SELECT_PERIOD, SelectPeriodCommand, VIEWCONTEXT_NEXT_PERIOD, PeriodNext, VIEWCONTEXT_PREV_PERIOD, PeriodPrev } from '../viewcontext/types';
 import { TimePeriod } from '../viewcontext/TimePeriod';
 import { asDtoDates } from '../../api/Mapper';
 import { periodSelected, selectPeriodCommand } from '../viewcontext/actions';
+import { toModel } from '../../api/DtoMapper';
 
 /**
  * 1) sets new date
@@ -33,7 +34,7 @@ const selectPeriod = function* (command: SelectPeriodCommand) {
           description: it.description,
           servicemanName: it.servicemanName ?? "-",
           customerName: it.forWhatCustomer,
-          when: it.whenProvided,
+          when: toModel(it.whenProvided),
           distance: it.distance,
           duration: it.duration
         }

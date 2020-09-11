@@ -1,6 +1,6 @@
 import { call, put, takeEvery, select } from 'redux-saga/effects';
 import { Action } from 'redux';
-import { reloadServicesBegin } from '../services/actions';
+import { reloadServicesBegin } from '../actions/actions';
 import { RootState } from '../reducers';
 import { authModule } from '../../msal/autorun';
 import { INITIATE_SESSION_FINISHED, INITIATE_SESSION_STARTED } from '../session/types';

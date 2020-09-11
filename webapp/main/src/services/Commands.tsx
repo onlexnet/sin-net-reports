@@ -4,7 +4,7 @@ import { Dispatch } from 'redux';
 import { connect, ConnectedProps } from 'react-redux';
 import { RootState } from '../store/reducers';
 import { previousPeriodCommand, nextPeriodCommand } from '../store/viewcontext/actions';
-import { AddServiceCommand } from '../store/services/types';
+import { AddServiceCommand } from '../store/actions/types';
 
 const overflowProps: IButtonProps = { ariaLabel: 'More commands' };
 

@@ -3,7 +3,7 @@ import { DetailsList, DetailsListLayoutMode, SelectionMode, IColumn, mergeStyleS
 import { IStackTokens, Stack, TextField, Toggle, Announced } from "office-ui-fabric-react";
 import { connect, ConnectedProps } from "react-redux";
 import { RootState } from "../store/reducers";
-import { ServiceAppModel } from "../store/services/ServiceModel";
+import { ServiceAppModel } from "../store/actions/ServiceModel";
 
 const classNames = mergeStyleSets({
   fileIconHeaderIcon: {

@@ -1,12 +1,13 @@
 import { call, put, takeLatest, select } from 'redux-saga/effects';
 import { sdk } from '../../api';
 import { FetchServicesQuery } from '../../api/generated';
-import { RELOAD_SERVICE_LIST, ReloadServiceList,  } from '../services/types';
-import { ServiceAppModel } from '../services/ServiceModel';
-import { reloadServicesEnd } from '../services/actions';
+import { RELOAD_SERVICE_LIST, ReloadServiceList,  } from '../actions/types';
+import { ServiceAppModel } from '../actions/ServiceModel';
+import { reloadServicesEnd } from '../actions/actions';
 import { RootState } from '../reducers';
 import { ViewContextState } from '../viewcontext/types';
 import { asDtoDates } from '../../api/Mapper';
+import { toModel } from '../../api/DtoMapper';
 
 const fetchActions = function* (action: ReloadServiceList) {
   try {
@@ -23,7 +24,7 @@ const fetchActions = function* (action: ReloadServiceList) {
           description: it.description ?? "-",
           servicemanName: it.servicemanName ?? "-",
           customerName: it.forWhatCustomer,
-          when: it.whenProvided,
+          when: toModel(it.whenProvided),
           distance: it.distance,
           duration: it.duration
         }

@@ -1,6 +1,6 @@
 import { call, put, select, takeEvery, takeLatest } from 'redux-saga/effects';
-import { reloadServicesBegin } from '../services/actions';
-import { AddServiceCommand, ADD_SERVICE_COMMAND } from '../services/types';
+import { reloadServicesBegin } from '../actions/actions';
+import { AddServiceCommand, ADD_SERVICE_COMMAND } from '../actions/types';
 import { sdk } from '../../api';
 import { NewServiceActionMutation, NewServiceActionMutationVariables } from '../../api/generated';
 import { RootState } from '../reducers';
