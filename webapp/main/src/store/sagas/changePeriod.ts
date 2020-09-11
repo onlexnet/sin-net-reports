@@ -31,7 +31,7 @@ const selectPeriod = function* (command: SelectPeriodCommand) {
       .map(it => {
         const item: ServiceAppModel = {
           description: it.description,
-          servicemanName: it.forWhatCustomer ?? "-",
+          servicemanName: it.servicemanName ?? "-",
           customerName: it.forWhatCustomer,
           when: it.whenProvided,
           distance: it.distance,
