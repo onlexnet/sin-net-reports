@@ -23,6 +23,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
           duration: Math.floor((Math.random() * 50) + 10)
         }
       }
+      
       dispatch(cmd);
     },
     onPreviousMonthRequested: () => {

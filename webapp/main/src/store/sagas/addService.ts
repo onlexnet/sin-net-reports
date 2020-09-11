@@ -10,7 +10,9 @@ const addService = function* (action: AddServiceCommand) {
             when: "2020/08/01",
             what: action.payload.description,
             who: action.payload.serviceMan,
-            whom: action.payload.customerName
+            whom: action.payload.customerName,
+            duration: action.payload.duration,
+            distance: action.payload.distance
         } as NewServiceActionMutationVariables )) as NewServiceActionMutation;
 
         var addNewResult = result.Services.addNew;

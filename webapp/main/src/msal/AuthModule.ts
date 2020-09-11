@@ -135,7 +135,8 @@ export class AuthModule {
      * @param response 
      */
     private handleResponseInternal(resp: AuthenticationResult | null) {
-        console.log('handleResponseInternal: ' + JSON.stringify(resp));
+        const msg = 'handleResponseInternal: ' + JSON.stringify(resp);
+        console.log(msg);
 
         if (resp) {
             const action: InitiateSessionFinishedAction = {
