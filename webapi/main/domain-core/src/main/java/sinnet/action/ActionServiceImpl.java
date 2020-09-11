@@ -1,5 +1,6 @@
 package sinnet.action;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 import javax.transaction.Transactional;
@@ -36,9 +37,10 @@ public class ActionServiceImpl implements ActionService {
     }
 
     @Override
-    public List<Entity<ServiceEntity>> find() {
+    public List<Entity<ServiceEntity>> find(LocalDate from, LocalDate to) {
 
-        return List.ofAll(repository.findAll())
+        return List
+            .ofAll(repository.findForPeriod(from, to))
             .map(it -> {
                 var value = new ServiceEntity(
                     Name.of(it.getServicemanName()),
@@ -46,8 +48,7 @@ public class ActionServiceImpl implements ActionService {
                     Name.of(it.getCustomerName()),
                     it.getDescription(),
                     it.getDuration(),
-                    Distance.of(it.getDistance())
-                );
+                    Distance.of(it.getDistance()));
                 return new Entity<>(it.getEntityId(), value);
             });
     }

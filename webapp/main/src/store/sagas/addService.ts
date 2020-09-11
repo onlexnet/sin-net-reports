@@ -1,13 +1,20 @@
-import { call, put, takeEvery, takeLatest } from 'redux-saga/effects';
+import { call, put, select, takeEvery, takeLatest } from 'redux-saga/effects';
 import { reloadServicesBegin } from '../services/actions';
 import { AddServiceCommand, ADD_SERVICE_COMMAND } from '../services/types';
 import { sdk } from '../../api';
 import { NewServiceActionMutation, NewServiceActionMutationVariables } from '../../api/generated';
+import { RootState } from '../reducers';
+import { ViewContextState } from '../viewcontext/types';
+import { asDtoDates } from '../../api/Mapper';
 
 const addService = function* (action: AddServiceCommand) {
     try {
+        const state: ViewContextState = yield select((it: RootState) => it.viewContext);
+        const { dateFrom } = asDtoDates(state.period);
+        
+        
         const result = (yield call(sdk.newServiceAction, {
-            when: "2020/08/01",
+            when: dateFrom,
             what: action.payload.description,
             who: action.payload.serviceMan,
             whom: action.payload.customerName,

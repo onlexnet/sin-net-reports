@@ -94,6 +94,10 @@
         <version>3.8.0</version>
         <configuration>
           <release>11</release>
+          <compilerArgs>
+            <arg>-Werror</arg>
+            <arg>-parameters</arg> <!-- so that @Param is not required in JPA -->
+          </compilerArgs>
         </configuration>
       </plugin>
 
