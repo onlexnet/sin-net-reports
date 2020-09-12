@@ -16,7 +16,7 @@ export const sessionReducer = (state = initialState, action: SessionAction): Ses
         case 'INITIATE_SESSION_FINISHED':
             console.log('initiate session finished');
             clone.flow = SignInFlow.SessionEstablished
-            clone.idToken = action.idToken;
+            clone.idToken = action.jwtToken;
             return clone;
         default:
             return state;

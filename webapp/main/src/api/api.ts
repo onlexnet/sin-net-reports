@@ -15,7 +15,7 @@ import { GraphQLClient } from 'graphql-request';
 
 const graphqlUrl = `${addressProvider().host}/graphql`;
 
-export const apolloClientFactory = (jwtIdToken: string) => {
+export const apolloClientFactory = (jwtToken: string) => {
     // configuration below is focused on Authentication
     // https://www.apollographql.com/docs/react/networking/authentication/
   
@@ -35,7 +35,7 @@ export const apolloClientFactory = (jwtIdToken: string) => {
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Credentials": true,
-          Authorization: `Bearer ${jwtIdToken}`,
+          Authorization: `Bearer ${jwtToken}`,
         },
       });
       return forward(operation);

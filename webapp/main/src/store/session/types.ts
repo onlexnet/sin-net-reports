@@ -22,7 +22,7 @@ interface InitiateSessionStartedAction {
 
 export interface InitiateSessionFinishedAction {
     type: typeof INITIATE_SESSION_FINISHED,
-    idToken: string,
+    jwtToken: string,
     email: string
 }
 

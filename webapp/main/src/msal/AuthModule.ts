@@ -51,7 +51,7 @@ const MSAL_CONFIG: Configuration = {
  */
 export class AuthModule {
 
-    private myMSALObj: PublicClientApplication; // https://azuread.github.io/microsoft-authentication-library-for-js/ref/msal-browser/classes/_src_app_publicclientapplication_.publicclientapplication.html
+    private msal: PublicClientApplication; // https://azuread.github.io/microsoft-authentication-library-for-js/ref/msal-browser/classes/_src_app_publicclientapplication_.publicclientapplication.html
     private account: AccountInfo | null; // https://azuread.github.io/microsoft-authentication-library-for-js/ref/msal-common/modules/_src_account_accountinfo_.html
     private loginRedirectRequest: RedirectRequest; // TODO: Publish ref docs for RedirectRequest
     private loginRequest: PopupRequest; // https://azuread.github.io/microsoft-authentication-library-for-js/ref/msal-common/modules/_src_request_authorizationurlrequest_.html
@@ -59,14 +59,16 @@ export class AuthModule {
     private profileRequest: PopupRequest;
     private mailRedirectRequest: RedirectRequest;
     private mailRequest: PopupRequest;
+    private appRedirectRequest: RedirectRequest;
+    private appRequest: PopupRequest;
 
     constructor() {
 
-        this.myMSALObj = new PublicClientApplication(MSAL_CONFIG);
+        this.msal = new PublicClientApplication(MSAL_CONFIG);
         this.account = null;
 
         this.loginRequest = {
-            scopes: []
+            scopes: ["https://onlexnet.onmicrosoft.com/posesor/Actions.Read"]
         };
 
         this.loginRedirectRequest = {
@@ -92,6 +94,15 @@ export class AuthModule {
             ...this.mailRequest,
             redirectStartPage: window.location.href
         };
+
+        this.appRequest = {
+            scopes: ["Actions.Read"]
+        };
+
+        this.appRedirectRequest = {
+            ...this.appRequest,
+            redirectStartPage: window.location.href
+        };
     }
 
     /**
@@ -102,7 +113,7 @@ export class AuthModule {
      */
     private getAccount(): AccountInfo | null {
         // need to call getAccount here?
-        const currentAccounts = this.myMSALObj.getAllAccounts();
+        const currentAccounts = this.msal.getAllAccounts();
         if (currentAccounts === null) {
             console.log("No accounts detected");
             return null;
@@ -125,7 +136,7 @@ export class AuthModule {
      * https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-browser/docs/initialization.md#redirect-apis
      */
     loadAuthModule(): void {
-        this.myMSALObj.handleRedirectPromise().then((resp: AuthenticationResult | null) => {
+        this.msal.handleRedirectPromise().then((resp: AuthenticationResult | null) => {
             this.handleResponseInternal(resp);
         }).catch(console.error);
     }
@@ -141,11 +152,11 @@ export class AuthModule {
         if (resp) {
             const action: InitiateSessionFinishedAction = {
                 type: INITIATE_SESSION_FINISHED,
-                idToken: resp.idToken ?? "undefined1",
+                jwtToken: resp.accessToken ?? "undefined1",
                 email: resp.account.username
             }
             store.dispatch(action);
-            graphQlClient.setHeader("Authorization", `Bearer ${resp?.idToken}`);
+            graphQlClient.setHeader("Authorization", `Bearer ${resp.accessToken}`);
         }
 
         if (resp?.account) {
@@ -155,6 +166,15 @@ export class AuthModule {
         }
 
         if (this.account) {
+            // alert('test1');
+            // this.getAppTokenRedirect()
+            // .then(it => {
+            //     alert(2);
+            // })
+            // .catch(ex => {
+            //     alert(3);
+            //     console.log(ex);
+            // })
         } else {
             // store.dispatch(updateSession({
             //     loggedIn: false
@@ -163,7 +183,7 @@ export class AuthModule {
     }
 
     login = () => {
-        this.myMSALObj.loginRedirect(this.loginRedirectRequest);
+        this.msal.loginRedirect(this.loginRedirectRequest);
     }
 
     /**
@@ -176,7 +196,7 @@ export class AuthModule {
             account: this.account
         };
 
-        this.myMSALObj.logout(logOutRequest);
+        this.msal.logout(logOutRequest);
     }
 
     /**
@@ -192,6 +212,18 @@ export class AuthModule {
         };
 
         return this.getTokenRedirect(silentProfileRequest, this.profileRedirectRequest);
+    }
+
+    async getAppTokenRedirect(): Promise<string> {
+        if (this.account === null) return Promise.reject();
+
+        const silentRequest = {
+            scopes: ["openid", "profile", "https://onlexnet.onmicrosoft.com/posesor/Actions.Read"],
+            account: this.account,
+            forceRefresh: true
+        };
+
+        return this.getTokenRedirect(silentRequest, this.appRedirectRequest);
     }
 
     /**
@@ -242,13 +274,13 @@ export class AuthModule {
      */
     private async getTokenPopup(silentRequest: SilentRequest, interactiveRequest: PopupRequest): Promise<string> {
         try {
-            const response: AuthenticationResult = await this.myMSALObj.acquireTokenSilent(silentRequest);
+            const response: AuthenticationResult = await this.msal.acquireTokenSilent(silentRequest);
             return response.accessToken;
         } catch (e) {
             console.log("silent token acquisition fails.");
             if (e instanceof InteractionRequiredAuthError) {
                 console.log("acquiring token using redirect");
-                return this.myMSALObj.acquireTokenPopup(interactiveRequest).then((resp) => {
+                return this.msal.acquireTokenPopup(interactiveRequest).then((resp) => {
                     return resp.accessToken;
                 }).catch((err) => {
                     console.error(err);
@@ -266,13 +298,13 @@ export class AuthModule {
      */
     private async getTokenRedirect(silentRequest: SilentRequest, interactiveRequest: RedirectRequest): Promise<string> {
         try {
-            const response = await this.myMSALObj.acquireTokenSilent(silentRequest);
+            const response = await this.msal.acquireTokenSilent(silentRequest);
             return response.accessToken;
         } catch (e) {
             console.log("silent token acquisition fails.");
             if (e instanceof InteractionRequiredAuthError) {
                 console.log("acquiring token using redirect");
-                this.myMSALObj.acquireTokenRedirect(interactiveRequest).catch(console.error);
+                this.msal.acquireTokenRedirect(interactiveRequest).catch(console.error);
             } else {
                 console.error(e);
             }
