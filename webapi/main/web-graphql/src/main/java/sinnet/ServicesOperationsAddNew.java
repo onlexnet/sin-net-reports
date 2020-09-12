@@ -21,6 +21,7 @@ public class ServicesOperationsAddNew implements GraphQLResolver<ServicesOperati
      * @param entry fixme.
      * @return fixme
      */
+    // @PreAuthorize("hasAuthority('SCOPE_Actions.Write')")
     public Boolean addNew(final ServicesOperations ignored,
                           final ServiceEntry entry) {
 
