@@ -4,6 +4,7 @@ import { IStackTokens, Stack, TextField, Toggle, Announced } from "office-ui-fab
 import { connect, ConnectedProps } from "react-redux";
 import { RootState } from "../store/reducers";
 import { ServiceAppModel } from "../store/actions/ServiceModel";
+import { useState } from "react";
 
 const classNames = mergeStyleSets({
   fileIconHeaderIcon: {
@@ -103,7 +104,7 @@ const ConnectedContent: React.FC<ContentProps & PropsFromRedux> = props => {
       data: "string",
       onColumnClick: (ev, col) => _onColumnClick(col, state.columns),
       onRender: (item: IDocument) => {
-        return <span>{item.servicemanName }</span>;
+        return <span>{item.servicemanName}</span>;
       },
       isPadded: true
     },
@@ -179,11 +180,13 @@ const ConnectedContent: React.FC<ContentProps & PropsFromRedux> = props => {
     }
   ];
 
-  const [state, setState] = React.useState({
+  const [state, setState] = useState({
     columns: initialColumns,
     isModalSelection: false,
     announcedMessage: ""
   });
+  const [selectedItem, setSelectedItem] = useState<ServiceAppModel | null>(null);
+
 
   const { columns, announcedMessage } = state;
   const { items } = props;
@@ -210,6 +213,7 @@ const ConnectedContent: React.FC<ContentProps & PropsFromRedux> = props => {
       </div>
       {announcedMessage ? <Announced message={announcedMessage} /> : undefined}
 
+      <ItemEdit item={selectedItem} />
       <DetailsList
         items={items}
         compact={true}
@@ -219,7 +223,9 @@ const ConnectedContent: React.FC<ContentProps & PropsFromRedux> = props => {
         setKey="none"
         layoutMode={DetailsListLayoutMode.justified}
         isHeaderVisible={true}
-      // onItemInvoked={this._onItemInvoked}
+        onActiveItemChanged={(item: ServiceAppModel) => {
+          setSelectedItem(item);
+        }}
       />
     </>
   );
@@ -262,3 +268,20 @@ function _copyAndSort<T>(items: T[], columnKey: string, isSortedDescending?: boo
 }
 
 export const Content = connector(ConnectedContent);
+
+const ItemEdit: React.FC<{ item: ServiceAppModel | null }> = props => {
+
+  const { item } = props;
+
+  if (!item) return (
+    <p>
+      Empty data
+    </p>
+  )
+
+  return (
+    <p>
+      { JSON.stringify(item)}
+    </p>
+  );
+}

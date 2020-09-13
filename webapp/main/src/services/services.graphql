@@ -16,7 +16,7 @@ query FetchServices($from: Date!, $to: Date!) {
   }
 }
 
-mutation newServiceAction($when: Date!, $what: String!, $who: String!, $whom: ID!, $duration: Int!, $distance: Int!) {
+mutation newServiceAction($when: Date!, $what: String!, $who: String!, $whom: String!, $duration: Int!, $distance: Int!) {
   Services {
     addNew(entry: {
       servicemanName: $who,
