@@ -2,21 +2,13 @@ import React from "react";
 import { Stack, IStackTokens, Button, IComboBoxOption, SelectableOptionMenuItemType, IComboBox, ComboBox, PrimaryButton, TextField } from "office-ui-fabric-react";
 import { RouteComponentProps } from "react-router-dom";
 import { routing } from "./Routing";
+import { HorizontalSeparatorStack } from "./Components/HorizontalSeparatorStack";
 
 interface CustomersProps extends RouteComponentProps<any> {
 
 }
 
 export const Customers: React.FC<CustomersProps> = (props) => {
-
-    const stackTokens: IStackTokens = { childrenGap: 12 };
-    const HorizontalSeparatorStack = (props: { children: JSX.Element[] }) => (
-        <>
-            {React.Children.map(props.children, child => {
-                return <Stack tokens={stackTokens}>{child}</Stack>;
-            })}
-        </>
-    );
 
     const comboBoxBasicOptions: IComboBoxOption[] = [
         { key: 'Header1', text: 'First heading', itemType: SelectableOptionMenuItemType.Header },
@@ -77,3 +69,5 @@ export const Customers: React.FC<CustomersProps> = (props) => {
         </div >
     )
 }
+
+

@@ -5,6 +5,8 @@ import { connect, ConnectedProps } from "react-redux";
 import { RootState } from "../store/reducers";
 import { ServiceAppModel } from "../store/actions/ServiceModel";
 import { useState } from "react";
+import { TimePeriod } from "../store/viewcontext/TimePeriod";
+import { HorizontalSeparatorStack } from "../Components/HorizontalSeparatorStack";
 
 const classNames = mergeStyleSets({
   fileIconHeaderIcon: {
@@ -67,8 +69,9 @@ export interface ContentProps {
 }
 
 const mapStateToProps = (state: RootState) => {
-  return state.services;
+  return { ...state.services, ...state.viewContext };
 };
+
 const connector = connect(mapStateToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>
 
@@ -92,7 +95,23 @@ const ConnectedContent: React.FC<ContentProps & PropsFromRedux> = props => {
     })
   };
 
+
   const initialColumns: TypedColumn[] = [
+    {
+      key: "col0",
+      name: "Pracownik",
+      fieldName: "servicemanName",
+      minWidth: 70,
+      maxWidth: 90,
+      isResizable: true,
+      isCollapsible: true,
+      data: "string",
+      onColumnClick: (ev, col) => _onColumnClick(col, state.columns),
+      onRender: (item: IDocument) => {
+        return <span>{item.servicemanName}</span>;
+      },
+      isPadded: true
+    },
     {
       key: "column4",
       name: "Pracownik",
@@ -186,47 +205,71 @@ const ConnectedContent: React.FC<ContentProps & PropsFromRedux> = props => {
     announcedMessage: ""
   });
   const [selectedItem, setSelectedItem] = useState<ServiceAppModel | null>(null);
-
-
   const { columns, announcedMessage } = state;
   const { items } = props;
   const stackTokens: IStackTokens = { childrenGap: 40 };
 
+  const [currentPeriod, setCurrentPeriod] = useState<TimePeriod | null>(null);
+  if (currentPeriod != props.period) {
+    setCurrentPeriod(props.period);
+    setSelectedItem(null)
+  }
+
   return (
     <>
-      <div className={classNames.controlWrapper}>
-        <Stack>
-          <Stack horizontal tokens={stackTokens}>
-            <Toggle
-              label="Tylko moje dane"
-              checked={false}
-              onText="Compact"
-              offText="Normal"
-              styles={controlStyles}
-            />
-            {/* <TextField label="Tylko dzień:" onChange={this._onChangeDay} styles={controlStyles} />
-            <TextField label="Kontrahent:" onChange={this._onChangeText} styles={controlStyles} /> */}
-            <TextField label="Tylko dzień:" styles={controlStyles} />
-            <TextField label="Kontrahent:" styles={controlStyles} />
-          </Stack>
-        </Stack>
-      </div>
-      {announcedMessage ? <Announced message={announcedMessage} /> : undefined}
 
-      <ItemEdit item={selectedItem} />
-      <DetailsList
-        items={items}
-        compact={true}
-        columns={columns}
-        selectionMode={SelectionMode.none}
-        //getKey={this._getKey}
-        setKey="none"
-        layoutMode={DetailsListLayoutMode.justified}
-        isHeaderVisible={true}
-        onActiveItemChanged={(item: ServiceAppModel) => {
-          setSelectedItem(item);
-        }}
-      />
+      <div className="ms-Grid">
+        <HorizontalSeparatorStack >
+          {/* <Separator alignContent="start">Dane ogólne: </Separator> */}
+
+          <div className="ms-Grid-row">
+            <div className="ms-Grid-col ms-sm12">
+              <div className={classNames.controlWrapper}>
+                <Stack>
+                  <Stack horizontal tokens={stackTokens}>
+                    <Toggle
+                      label="Tylko moje dane"
+                      checked={false}
+                      onText="Compact"
+                      offText="Normal"
+                      styles={controlStyles}
+                    />
+                    <TextField label="Tylko dzień:" styles={controlStyles} />
+                    <TextField label="Kontrahent:" styles={controlStyles} />
+                  </Stack>
+                </Stack>
+              </div>
+              {announcedMessage ? <Announced message={announcedMessage} /> : undefined}
+            </div>
+          </div>
+
+          <div className="ms-Grid-row">
+            <div className="ms-Grid-col ms-sm12">
+              <ItemEdit item={selectedItem} />
+            </div>
+          </div>
+
+          <div className="ms-Grid-row">
+            <div className="ms-Grid-col ms-sm12">
+              <DetailsList
+                items={items}
+                compact={true}
+                columns={columns}
+                selectionMode={SelectionMode.none}
+                //getKey={this._getKey}
+                setKey="none"
+                layoutMode={DetailsListLayoutMode.justified}
+                isHeaderVisible={true}
+                onActiveItemChanged={(item: ServiceAppModel) => {
+                  setSelectedItem(item);
+                }}
+              />
+            </div>
+          </div>
+
+        </HorizontalSeparatorStack>
+      </div>
+
     </>
   );
 }
@@ -281,6 +324,7 @@ const ItemEdit: React.FC<{ item: ServiceAppModel | null }> = props => {
 
   return (
     <p>
+      
       { JSON.stringify(item)}
     </p>
   );
