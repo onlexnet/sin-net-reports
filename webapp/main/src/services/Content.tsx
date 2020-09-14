@@ -4,7 +4,7 @@ import { IStackTokens, Stack, TextField, Toggle, Announced } from "office-ui-fab
 import { connect, ConnectedProps } from "react-redux";
 import { RootState } from "../store/reducers";
 import { ServiceAppModel } from "../store/actions/ServiceModel";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { LocalDate, TimePeriod } from "../store/viewcontext/TimePeriod";
 import { HorizontalSeparatorStack } from "../Components/HorizontalSeparatorStack";
 import { dates } from "../api/DtoMapper";
@@ -301,9 +301,14 @@ export const Content = connector(ConnectedContent);
 const ItemEdit: React.FC<{ item: ServiceAppModel | null }> = props => {
 
   const { item } = props;
+  // force to rerender if parent is changing
 
-  const [servicemanName, setServicemanName] = useState('');
-  setServicemanName(item?.servicemanName ?? '');
+  
+  const defaultServicemanName = item?.servicemanName;
+  const [servicemanName, setServicemanName] = useState(defaultServicemanName);
+  useEffect(() => {
+    setServicemanName(defaultServicemanName);
+  }, [defaultServicemanName]);
   const onChangeServicemanName = useCallback(
     (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
       setServicemanName(newValue || '');
@@ -311,9 +316,11 @@ const ItemEdit: React.FC<{ item: ServiceAppModel | null }> = props => {
     [],
   );
 
-  const [date, setDate] = useState<string>('');
-  setDate(dates(item?.when).toRawValue);
-  console.log('siudek ' + JSON.stringify(item));
+  const defaultDate = dates(item?.when).toRawValue;
+  const [date, setDate] = useState<string>(defaultDate);
+  useEffect(() => {
+    setDate(defaultDate);
+  }, [defaultDate]);
   const onChangeDate = useCallback(
     (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
       if (!newValue) return;
@@ -331,10 +338,10 @@ const ItemEdit: React.FC<{ item: ServiceAppModel | null }> = props => {
   return (
     <>
       <div className="ms-Grid-row">
-        <div className="ms-Grid-col ms-sm3">
+        <div className="ms-Grid-col ms-sm4">
           <TextField label="Pracownik" value={servicemanName} onChange={onChangeServicemanName} />
         </div>
-        <div className="ms-Grid-col ms-sm3">
+        <div className="ms-Grid-col ms-sm2">
           <MaskedTextField label="Data" value={date} onChange={onChangeDate} mask="9999/99/99" />
         </div>
       </div>
