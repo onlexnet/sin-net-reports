@@ -1,12 +1,13 @@
 import * as React from "react";
-import { DetailsList, DetailsListLayoutMode, SelectionMode, IColumn, mergeStyleSets } from "office-ui-fabric-react";
+import { DetailsList, DetailsListLayoutMode, SelectionMode, IColumn, mergeStyleSets, MaskedTextField } from "office-ui-fabric-react";
 import { IStackTokens, Stack, TextField, Toggle, Announced } from "office-ui-fabric-react";
 import { connect, ConnectedProps } from "react-redux";
 import { RootState } from "../store/reducers";
 import { ServiceAppModel } from "../store/actions/ServiceModel";
-import { useState } from "react";
-import { TimePeriod } from "../store/viewcontext/TimePeriod";
+import { useCallback, useState } from "react";
+import { LocalDate, TimePeriod } from "../store/viewcontext/TimePeriod";
 import { HorizontalSeparatorStack } from "../Components/HorizontalSeparatorStack";
+import { dates } from "../api/DtoMapper";
 
 const classNames = mergeStyleSets({
   fileIconHeaderIcon: {
@@ -97,21 +98,6 @@ const ConnectedContent: React.FC<ContentProps & PropsFromRedux> = props => {
 
 
   const initialColumns: TypedColumn[] = [
-    {
-      key: "col0",
-      name: "Pracownik",
-      fieldName: "servicemanName",
-      minWidth: 70,
-      maxWidth: 90,
-      isResizable: true,
-      isCollapsible: true,
-      data: "string",
-      onColumnClick: (ev, col) => _onColumnClick(col, state.columns),
-      onRender: (item: IDocument) => {
-        return <span>{item.servicemanName}</span>;
-      },
-      isPadded: true
-    },
     {
       key: "column4",
       name: "Pracownik",
@@ -316,6 +302,26 @@ const ItemEdit: React.FC<{ item: ServiceAppModel | null }> = props => {
 
   const { item } = props;
 
+  const [servicemanName, setServicemanName] = useState('');
+  setServicemanName(item?.servicemanName ?? '');
+  const onChangeServicemanName = useCallback(
+    (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
+      setServicemanName(newValue || '');
+    },
+    [],
+  );
+
+  const [date, setDate] = useState<string>('');
+  setDate(dates(item?.when).toRawValue);
+  console.log('siudek ' + JSON.stringify(item));
+  const onChangeDate = useCallback(
+    (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
+      if (!newValue) return;
+      setDate(newValue);
+    },
+    [],
+  );
+
   if (!item) return (
     <p>
       Empty data
@@ -323,9 +329,20 @@ const ItemEdit: React.FC<{ item: ServiceAppModel | null }> = props => {
   )
 
   return (
-    <p>
-      
-      { JSON.stringify(item)}
-    </p>
+    <>
+      <div className="ms-Grid-row">
+        <div className="ms-Grid-col ms-sm3">
+          <TextField label="Pracownik" value={servicemanName} onChange={onChangeServicemanName} />
+        </div>
+        <div className="ms-Grid-col ms-sm3">
+          <MaskedTextField label="Data" value={date} onChange={onChangeDate} mask="9999/99/99" />
+        </div>
+      </div>
+      <p>
+
+        {JSON.stringify(item)}
+      </p>
+    </>
+
   );
 }
