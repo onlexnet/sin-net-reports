@@ -25,7 +25,11 @@ spring:
         hibernate:
             ddl-auto: create-drop
 
-        
+management:
+    metrics:
+        binders:
+            jvm:
+                enabled: true      
 
 graphql:
     servlet:

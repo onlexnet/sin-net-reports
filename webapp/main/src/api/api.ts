@@ -27,7 +27,7 @@ export const apolloClientFactory = (jwtToken: string) => {
       // it's very easy to tell your network interface to send the cookie along with every request.
       // You just need to pass the credentials option. e.g. credentials: 'same-origin' as shown below,
       // if your backend server is the same domain or else credentials: 'include' if your backend is a different domain.
-      credentials: "include",
+      // credentials: "",
     });
   
     const middlewareAuthLink = new ApolloLink((operation, forward) => {
