@@ -31,6 +31,7 @@ const selectPeriod = function* (command: SelectPeriodCommand) {
     var items = result.Services.search.items
       .map(it => {
         const item: ServiceAppModel = {
+          entityId: it.entityId,
           description: it.description,
           servicemanName: it.servicemanName ?? "-",
           customerName: it.forWhatCustomer,

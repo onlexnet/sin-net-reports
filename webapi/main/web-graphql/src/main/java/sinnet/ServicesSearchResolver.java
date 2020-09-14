@@ -31,6 +31,7 @@ public class ServicesSearchResolver implements GraphQLResolver<Services> {
         var items = actionService
             .find(filter.getFrom(), filter.getTo())
             .map(it -> ServiceModel.builder()
+                .entityId(it.getEntityId())
                 .servicemanName(it.getValue().getWho().getValue())
                 .whenProvided(it.getValue().getWhen())
                 .forWhatCustomer(it.getValue().getWhom().getValue())

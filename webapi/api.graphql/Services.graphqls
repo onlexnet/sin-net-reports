@@ -5,7 +5,7 @@ type Services {
 input ServiceEntry {
     servicemanName: String!
     whenProvided: Date!
-    forWhatCustomer: ID!
+    forWhatCustomer: String!
     description: String!,
     distance: Int!
     duration: Int!
@@ -17,6 +17,7 @@ type ServicesSearchResult {
 }
 
 type ServiceModel {
+    entityId: ID!
     servicemanName: String!
     whenProvided: Date!
     forWhatCustomer: String!

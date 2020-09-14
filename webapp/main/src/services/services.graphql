@@ -5,6 +5,7 @@ query FetchServices($from: Date!, $to: Date!) {
       to: $to
     }) {
       items {
+        entityId,
         whenProvided
         forWhatCustomer
         servicemanName

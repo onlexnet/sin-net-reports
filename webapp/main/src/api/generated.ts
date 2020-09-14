@@ -33,7 +33,7 @@ export type Query = {
 export type ServiceEntry = {
   servicemanName: Scalars['String'];
   whenProvided: Scalars['Date'];
-  forWhatCustomer: Scalars['ID'];
+  forWhatCustomer: Scalars['String'];
   description: Scalars['String'];
   distance: Scalars['Int'];
   duration: Scalars['Int'];
@@ -41,6 +41,7 @@ export type ServiceEntry = {
 
 export type ServiceModel = {
   __typename?: 'ServiceModel';
+  entityId: Scalars['ID'];
   servicemanName: Scalars['String'];
   whenProvided: Scalars['Date'];
   forWhatCustomer: Scalars['String'];
@@ -110,7 +111,7 @@ export type FetchServicesQuery = (
       { __typename?: 'ServicesSearchResult' }
       & { items: Array<(
         { __typename?: 'ServiceModel' }
-        & Pick<ServiceModel, 'whenProvided' | 'forWhatCustomer' | 'servicemanName' | 'description' | 'duration' | 'distance'>
+        & Pick<ServiceModel, 'entityId' | 'whenProvided' | 'forWhatCustomer' | 'servicemanName' | 'description' | 'duration' | 'distance'>
       )> }
     ) }
   ) }
@@ -120,7 +121,7 @@ export type NewServiceActionMutationVariables = Exact<{
   when: Scalars['Date'];
   what: Scalars['String'];
   who: Scalars['String'];
-  whom: Scalars['ID'];
+  whom: Scalars['String'];
   duration: Scalars['Int'];
   distance: Scalars['Int'];
 }>;
@@ -147,6 +148,7 @@ export const FetchServicesDocument = gql`
   Services {
     search(filter: {from: $from, to: $to}) {
       items {
+        entityId
         whenProvided
         forWhatCustomer
         servicemanName
@@ -159,7 +161,7 @@ export const FetchServicesDocument = gql`
 }
     `;
 export const NewServiceActionDocument = gql`
-    mutation newServiceAction($when: Date!, $what: String!, $who: String!, $whom: ID!, $duration: Int!, $distance: Int!) {
+    mutation newServiceAction($when: Date!, $what: String!, $who: String!, $whom: String!, $duration: Int!, $distance: Int!) {
   Services {
     addNew(entry: {servicemanName: $who, whenProvided: $when, forWhatCustomer: $whom, description: $what, duration: $duration, distance: $distance})
   }

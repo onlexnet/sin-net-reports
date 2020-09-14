@@ -1,10 +1,10 @@
 import * as React from "react";
-import { DetailsList, DetailsListLayoutMode, SelectionMode, IColumn, mergeStyleSets, MaskedTextField } from "office-ui-fabric-react";
+import { DetailsList, DetailsListLayoutMode, SelectionMode, IColumn, mergeStyleSets, MaskedTextField, FocusTrapZone, PrimaryButton, DefaultButton, memoizeFunction, IStackStyles } from "office-ui-fabric-react";
 import { IStackTokens, Stack, TextField, Toggle, Announced } from "office-ui-fabric-react";
 import { connect, ConnectedProps } from "react-redux";
 import { RootState } from "../store/reducers";
 import { ServiceAppModel } from "../store/actions/ServiceModel";
-import { useCallback, useEffect, useState } from "react";
+import { KeyboardEventHandler, useCallback, useEffect, useState } from "react";
 import { LocalDate, TimePeriod } from "../store/viewcontext/TimePeriod";
 import { HorizontalSeparatorStack } from "../Components/HorizontalSeparatorStack";
 import { dates } from "../api/DtoMapper";
@@ -303,7 +303,7 @@ const ItemEdit: React.FC<{ item: ServiceAppModel | null }> = props => {
   const { item } = props;
   // force to rerender if parent is changing
 
-  
+
   const defaultServicemanName = item?.servicemanName;
   const [servicemanName, setServicemanName] = useState(defaultServicemanName);
   useEffect(() => {
@@ -329,22 +329,130 @@ const ItemEdit: React.FC<{ item: ServiceAppModel | null }> = props => {
     [],
   );
 
+  const defaultCustomerName = item?.customerName;
+  const [customerName, setCustomerName] = useState(defaultCustomerName);
+  useEffect(() => {
+    setCustomerName(defaultCustomerName);
+  }, [defaultCustomerName]);
+  const onChangeCustomerName = useCallback(
+    (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
+      setCustomerName(newValue || '');
+    },
+    [],
+  );
+
+  const propsDescription = item?.description;
+  const [description, setDescription] = useState(propsDescription);
+  useEffect(() => {
+    setDescription(propsDescription)
+  }, [propsDescription]);
+  const onChangeDescription = useCallback(
+    (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
+      setDescription(newValue || '');
+    },
+    [],
+  );
+
+  const propsDuration = "" + item?.duration;
+  const [duration, setDuration] = useState(propsDuration);
+  useEffect(() => {
+    setDuration(propsDuration)
+  }, [propsDuration]);
+  const onChangeDuration = useCallback(
+    (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
+      setDuration(newValue ?? "0");
+    },
+    [],
+  );
+
+  const propsDistance = "" + item?.distance;
+  const [distance, setDistance] = useState(propsDistance);
+  useEffect(() => {
+    setDistance(propsDistance)
+  }, [propsDistance]);
+  const onChangeDistance = useCallback(
+    (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
+      setDistance(newValue ?? "0");
+    },
+    [],
+  );
+
+  const [disabledFocusTrap, setDisabledFocusTrap] = useState(false);
+  useEffect(() => {
+    setDisabledFocusTrap(false);
+  }, [props.item?.entityId]);
+
   if (!item) return (
     <p>
       Empty data
     </p>
   )
 
+  const onKeyUp: KeyboardEventHandler<any> = (event) => {
+    if (event.charCode !== 13) return;
+    setDisabledFocusTrap(true);
+  }
+
+  const getStackStyles = memoizeFunction(
+    (useTrapZone: boolean): Partial<IStackStyles> => ({
+      root: { border: `2px solid ${useTrapZone ? '#ababab' : 'transparent'}`, padding: 10 }
+    })
+  );
+  const stackTokens = { childrenGap: 8 }
+
   return (
     <>
-      <div className="ms-Grid-row">
-        <div className="ms-Grid-col ms-sm4">
-          <TextField label="Pracownik" value={servicemanName} onChange={onChangeServicemanName} />
-        </div>
-        <div className="ms-Grid-col ms-sm2">
-          <MaskedTextField label="Data" value={date} onChange={onChangeDate} mask="9999/99/99" />
-        </div>
-      </div>
+      <FocusTrapZone disabled={disabledFocusTrap}>
+        <Stack tokens={stackTokens} styles={getStackStyles(!disabledFocusTrap)}>
+          <div className="ms-Grid-row">
+            <div className="ms-Grid-col ms-sm4">
+              <TextField label="Pracownik" value={servicemanName} onChange={onChangeServicemanName}
+                onKeyDown={onKeyUp}
+              />
+            </div>
+            <div className="ms-Grid-col ms-sm2">
+              <MaskedTextField label="Data" value={date} onChange={onChangeDate} mask="9999/99/99"
+                onKeyDown={onKeyUp}
+              />
+            </div>
+          </div>
+
+          <div className="ms-Grid-row">
+            <div className="ms-Grid-col ms-sm4">
+              <TextField label="Klient" value={customerName} onChange={onChangeCustomerName}
+                onKeyDown={onKeyUp}
+              />
+            </div>
+            <div className="ms-Grid-col ms-sm2">
+              <TextField label="Usługa" value={description} onChange={onChangeDescription}
+                onKeyDown={onKeyUp}
+              />
+            </div>
+          </div>
+
+          <div className="ms-Grid-row">
+            <div className="ms-Grid-col ms-sm4">
+              <TextField label="Czas" value={duration} onChange={onChangeDuration}
+                onKeyDown={onKeyUp}
+              />
+            </div>
+            <div className="ms-Grid-col ms-sm2">
+              <TextField label="Dojazd" value={distance} onChange={onChangeDistance}
+                onKeyDown={onKeyUp}
+              />
+            </div>
+          </div>
+
+          <div className="ms-Grid-row">
+            <div className="ms-Grid-col ms-sm12">
+              <Stack horizontal tokens={stackTokens}>
+                <PrimaryButton onClick={() => setDisabledFocusTrap(true)} />
+                <DefaultButton onClick={() => setDisabledFocusTrap(true)} />
+              </Stack>
+            </div>
+          </div>
+        </Stack>
+      </FocusTrapZone>
       <p>
 
         {JSON.stringify(item)}
