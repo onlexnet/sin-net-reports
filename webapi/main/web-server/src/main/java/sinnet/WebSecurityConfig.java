@@ -29,7 +29,10 @@ public class WebSecurityConfig {
                         .csrf().disable()
                     .authorizeRequests(conf -> {
                         conf
-                            .antMatchers("/**").permitAll(); });
+                            .antMatchers("/**").permitAll(); })
+                    .oauth2ResourceServer()
+                    .jwt()
+                    .jwtAuthenticationConverter(new JwtAuthenticationConverter());
             }
         };
     }
