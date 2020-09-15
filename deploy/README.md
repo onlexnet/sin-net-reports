@@ -21,7 +21,7 @@
 ## Apply cluster functionality
 
 - **kubectl apply -f ingress.yaml** to define ingress routing
-- **kubectl apply -f backend-svc.yaml -f backend-dep.yaml** to load backend service
+- **kubectl apply -f webapi-svc.yaml -f webapi-dep.yaml** to load backend service
 
 ## Q/A
 

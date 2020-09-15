@@ -19,6 +19,27 @@ public class WebSecurityConfig {
      */
     @Bean
     @Profile("prod")
+    public WebSecurityConfigurerAdapter webSecurityForProdTestProfile() {
+        return new WebSecurityConfigurerAdapter() {
+            @Override
+            protected void configure(final HttpSecurity http) throws Exception {
+                http
+                    .cors()
+                    .and()
+                        .csrf().disable()
+                    .authorizeRequests(conf -> {
+                        conf
+                            .antMatchers("/**").permitAll(); });
+            }
+        };
+    }
+
+    /**
+     * Configures security for 'prod' profile'.
+     * @return the configurer
+     */
+    @Bean
+    @Profile("proda")
     public WebSecurityConfigurerAdapter webSecurityForProdProfile() {
         return new WebSecurityConfigurerAdapter() {
             @Override
