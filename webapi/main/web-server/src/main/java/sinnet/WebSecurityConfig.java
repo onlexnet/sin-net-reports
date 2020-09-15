@@ -33,7 +33,7 @@ public class WebSecurityConfig {
                     .and()
                         .authorizeRequests(conf -> {
                             conf
-                                .antMatchers("/**").permitAll(); })
+                                .antMatchers("/**").authenticated(); })
                     .oauth2ResourceServer()
                     .jwt()
                     .jwtAuthenticationConverter(new JwtAuthenticationConverter());
