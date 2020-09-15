@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 
 /** Fixme. */
@@ -27,9 +28,12 @@ public class WebSecurityConfig {
                     .cors()
                     .and()
                         .csrf().disable()
-                    .authorizeRequests(conf -> {
-                        conf
-                            .antMatchers("/**").permitAll(); })
+                    .sessionManagement()
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                    .and()
+                        .authorizeRequests(conf -> {
+                            conf
+                                .antMatchers("/**").permitAll(); })
                     .oauth2ResourceServer()
                     .jwt()
                     .jwtAuthenticationConverter(new JwtAuthenticationConverter());
