@@ -29,7 +29,8 @@ public class WebSecurityConfig {
                         .csrf().disable()
                     .authorizeRequests(conf -> {
                         conf
-                            .antMatchers("/graphql/**").hasAuthority("SCOPE_Actions.Read")
+                            // .antMatchers("/graphql/**").hasAuthority("SCOPE_Actions.Read")
+                            .antMatchers("/graphql/**").permitAll()
                             .antMatchers("/actuator/**").permitAll(); })
                     .oauth2ResourceServer()
                     .jwt()
