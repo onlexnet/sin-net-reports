@@ -35,8 +35,7 @@ public class WebSecurityConfig {
                             conf
                                 .antMatchers("/**").authenticated(); })
                     .oauth2ResourceServer()
-                    .jwt()
-                    .jwtAuthenticationConverter(new JwtAuthenticationConverter());
+                    .jwt();
             }
         };
     }
