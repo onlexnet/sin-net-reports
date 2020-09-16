@@ -54,13 +54,17 @@ public class WebSecurityConfig {
                     .cors()
                     .and()
                         .csrf().disable()
-                    .authorizeRequests(conf -> {
-                        conf
-                            .antMatchers("/graphql/**").hasAuthority("SCOPE_Actions.Read")
-                            .antMatchers("/actuator/**").permitAll(); })
-                    .oauth2ResourceServer()
-                    .jwt()
-                    .jwtAuthenticationConverter(new JwtAuthenticationConverter());
+                    .and()
+                        .authorizeRequests(conf -> {
+                            conf
+                                .antMatchers("/graphql/**").hasAuthority("SCOPE_Actions.Read")
+                                .antMatchers("/actuator/**").permitAll(); })
+                    .and()
+                        .headers().frameOptions().disable() //needed for h2-console
+                    .and()
+                        .oauth2ResourceServer()
+                        .jwt()
+                        .jwtAuthenticationConverter(new JwtAuthenticationConverter());
             }
         };
     }
