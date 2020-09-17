@@ -54,13 +54,11 @@ public class WebSecurityConfig {
                     .cors()
                     .and()
                         .csrf().disable()
-                    .and()
-                        .authorizeRequests(conf -> {
+                    .authorizeRequests(conf -> {
                             conf
                                 .antMatchers("/graphql/**").hasAuthority("SCOPE_Actions.Read")
                                 .antMatchers("/actuator/**").permitAll(); })
-                    .and()
-                        .headers().frameOptions().disable() //needed for h2-console
+                    .headers().frameOptions().disable() //needed for h2-console
                     .and()
                         .oauth2ResourceServer()
                         .jwt()

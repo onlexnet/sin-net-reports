@@ -1,5 +1,5 @@
 import * as React from "react";
-import { DetailsList, DetailsListLayoutMode, SelectionMode, IColumn, mergeStyleSets, MaskedTextField, FocusTrapZone, PrimaryButton, DefaultButton, memoizeFunction, IStackStyles } from "office-ui-fabric-react";
+import { DetailsList, DetailsListLayoutMode, SelectionMode, IColumn, mergeStyleSets, MaskedTextField, FocusTrapZone, PrimaryButton, DefaultButton, memoizeFunction, IStackStyles, ComboBox, SelectableOptionMenuItemType, IComboBoxOption, IComboBox } from "office-ui-fabric-react";
 import { IStackTokens, Stack, TextField, Toggle, Announced } from "office-ui-fabric-react";
 import { connect, ConnectedProps } from "react-redux";
 import { RootState } from "../store/reducers";
@@ -310,10 +310,11 @@ const ItemEdit: React.FC<{ item: ServiceAppModel | null }> = props => {
     setServicemanName(defaultServicemanName);
   }, [defaultServicemanName]);
   const onChangeServicemanName = useCallback(
-    (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
-      setServicemanName(newValue || '');
+    (ev: React.FormEvent<IComboBox>, option?: IComboBoxOption) => {
+      const a = option?.key as string;
+      setServicemanName(a);
     },
-    [],
+    [setServicemanName],
   );
 
   const defaultDate = dates(item?.when).toRawValue;
@@ -400,13 +401,19 @@ const ItemEdit: React.FC<{ item: ServiceAppModel | null }> = props => {
   );
   const stackTokens = { childrenGap: 8 }
 
+  const comboBoxBasicOptions: IComboBoxOption[] = [
+    { key: 'user1', text: 'user1' },
+    { key: 'user2', text: 'user2' },
+    { key: 'user3', text: 'user3' }
+  ];
+  
   return (
     <>
       <FocusTrapZone disabled={disabledFocusTrap}>
         <Stack tokens={stackTokens} styles={getStackStyles(!disabledFocusTrap)}>
           <div className="ms-Grid-row">
             <div className="ms-Grid-col ms-sm4">
-              <TextField label="Pracownik" value={servicemanName} onChange={onChangeServicemanName}
+              <ComboBox label="Pracownik" selectedKey={servicemanName} options={comboBoxBasicOptions} autoComplete="on" onChange={onChangeServicemanName}
                 onKeyDown={onKeyUp}
               />
             </div>
