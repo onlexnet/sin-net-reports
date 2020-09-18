@@ -5,10 +5,12 @@ import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 import lombok.Data;
 
 @Entity
+@Table(name = "customer_db_model")
 @Data
 public class CustomerDbModel {
     private static final int MAX_NAME_LENGTH = 200;

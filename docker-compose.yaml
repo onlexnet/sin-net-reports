@@ -1,3 +1,5 @@
+# https://hub.docker.com/_/postgres/
+
 version: '3.8'
 services:
   redis:
@@ -8,6 +10,7 @@ services:
   postgres:
     image: postgres:11-alpine
     environment:
+      - POSTGRES_USER=sinnet
       - POSTGRES_PASSWORD=password
     ports:
       - 5432:5432

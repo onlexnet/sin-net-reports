@@ -6,10 +6,12 @@ import java.util.UUID;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 import lombok.Data;
 
 @Entity
+@Table(name = "action_db_model")
 @Data
 class ActionDbModel {
 
