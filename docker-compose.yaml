@@ -5,3 +5,10 @@ services:
     ports:
       - 6379:6379
     network_mode: "host"
+  postgres:
+    image: postgres:11-alpine
+    environment:
+      - POSTGRES_PASSWORD=password
+    ports:
+      - 5432:5432
+    
