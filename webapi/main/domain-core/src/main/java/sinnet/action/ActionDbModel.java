@@ -15,8 +15,7 @@ import sinnet.Const;
 @Entity
 @Table(name = "action_db_model")
 @Data
-class ActionDbModel {
-
+public class ActionDbModel {
 
     @Id
     private UUID entityId;
