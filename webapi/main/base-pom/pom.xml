@@ -14,6 +14,7 @@
     <spring-boot-azure.version>2.3.2</spring-boot-azure.version>
     <spring-boot.version>2.3.2.RELEASE</spring-boot.version>
     <jacoco.version>0.8.5</jacoco.version>
+    <testcontainers.version>1.14.3</testcontainers.version>
 
     <aggregate.report.dir>report-aggregate/target/site/jacoco-aggregate/jacoco.xml</aggregate.report.dir>
 
@@ -23,6 +24,19 @@
 
   <dependencyManagement>
     <dependencies>
+      <dependency>
+        <groupId>org.testcontainers</groupId>
+        <artifactId>junit-jupiter</artifactId>
+        <scope>test</scope>
+      </dependency>
+			<dependency>
+				<groupId>org.testcontainers</groupId>
+				<artifactId>testcontainers-bom</artifactId>
+				<version>${testcontainers.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+
       <dependency>
         <groupId>org.projectlombok</groupId>
         <artifactId>lombok</artifactId>
@@ -79,6 +93,12 @@
           <version>${spring-boot.version}</version>
           <type>pom</type>
           <scope>import</scope>
+          <exclusions>
+            <exclusion>
+              <groupId>org.junit.vintage</groupId>
+              <artifactId>junit-vintage-engine</artifactId>
+            </exclusion>
+          </exclusions>
       </dependency>
 
     </dependencies>
