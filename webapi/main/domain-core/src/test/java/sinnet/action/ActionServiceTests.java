@@ -1,5 +1,7 @@
 package sinnet.action;
 
+import java.time.LocalDate;
+
 import javax.activation.DataSource;
 
 import org.assertj.core.api.Assertions;
@@ -33,5 +35,6 @@ public class ActionServiceTests {
     @Test
     public void myTest() {
         Assertions.assertThat(sut).isNotNull();
+        sut.find(LocalDate.now(), LocalDate.now());
     }
 }
