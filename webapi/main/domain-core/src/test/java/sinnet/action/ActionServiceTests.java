@@ -2,16 +2,18 @@ package sinnet.action;
 
 import java.time.LocalDate;
 
-import javax.activation.DataSource;
+import javax.sql.DataSource;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
@@ -20,7 +22,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import sinnet.ActionService;
 import sinnet.AppTestContext;
-import sinnet.TestDb;
+import sinnet.TestDatabase;
 
 @SpringBootTest(webEnvironment = WebEnvironment.NONE)
 @ContextConfiguration(classes = AppTestContext.class)
@@ -34,7 +36,7 @@ public class ActionServiceTests {
     private ActionService sut;
 
     @Container
-    private PostgreSQLContainer<?> postgreSQLContainer = TestDb.instance();
+    private static PostgreSQLContainer<?> database = new PostgreSQLContainer<>();
 
     @Test
     public void myTest() {
@@ -45,14 +47,16 @@ public class ActionServiceTests {
     @TestConfiguration
     public static class MyConfig {
         @Bean
+        @Primary
+        @ConfigurationProperties(prefix = "datasource")
         public DataSource dataSource() {
-            var container = postgreSQLContainer;
-            var dsb = DataSourceBuilder.create();
-            dsb.url(container.getJdbcUrl());
-            dsb.username(container.getUsername());
-            dsb.password(container.getPassword());
-            dsb.driverClassName(container.getDriverClassName());
-            return dsb.build();
+            var container = database;
+            return DataSourceBuilder.create()
+                .url(container.getJdbcUrl())
+                .username(container.getUsername())
+                .password(container.getPassword())
+                .driverClassName(container.getDriverClassName())
+                .build();
         }
     }
 }
