@@ -22,7 +22,6 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import sinnet.ActionService;
 import sinnet.AppTestContext;
-import sinnet.TestDatabase;
 
 @SpringBootTest(webEnvironment = WebEnvironment.NONE)
 @ContextConfiguration(classes = AppTestContext.class)
