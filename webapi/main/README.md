@@ -5,6 +5,11 @@ We support some profiles in backend code to allow run them with different config
 - dev - no security, inmemory database
 - prod - ready for deployment, postgresql database
 
+## Database migration
+- create new entity/entities
+- see all options using **mvn -pl domain-core liquibase:help**
+- generate new changeset **mvn -pl domain-core liquibase:diff**
+
 ## Good development practices
 
 - **[mvn versions:display-dependency-updates](https://www.mojohaus.org/versions-maven-plugin/display-dependency-updates-mojo.html)** to display all dependencies that have newer versions available

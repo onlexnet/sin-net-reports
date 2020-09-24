@@ -1,0 +1,12 @@
+extend type Query {
+    users: Users
+}
+
+type Users {
+    search: User!
+}
+
+type User {
+    entityId: ID!
+    email: String!
+}

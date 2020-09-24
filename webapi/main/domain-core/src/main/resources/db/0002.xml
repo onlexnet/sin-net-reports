@@ -1,0 +1,52 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.0.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
+    <changeSet author="liquibase-docs" id="202009231948-1">  
+        <insert tableName="user">
+            <column name="entityId" value="43c684e0-b44f-48ae-b871-6dca10e76183"/>  
+            <column name="email" value="anna.rydzynska@sin.net.pl"/>
+        </insert>  
+        <insert tableName="user">
+            <column name="entityId" value="de3afb79-9515-4e72-acda-8708f39f7876"/>  
+            <column name="email" value="ewelina@sin.net.pl"/>
+        </insert>  
+        <insert tableName="user">
+            <column name="entityId" value="70224441-3ad1-4ea0-869a-9cb475a9481f"/>  
+            <column name="email" value="robert@sin.net.pl"/>
+        </insert>  
+        <insert tableName="user">
+            <column name="entityId" value="09cb3840-bfdc-49b9-97bd-3f6a78fb63ee"/>  
+            <column name="email" value="kamil@sin.net.pl"/>
+        </insert>  
+        <insert tableName="user">
+            <column name="entityId" value="e7fd2c8e-15cf-4b2c-a228-8e9752ea583b"/>  
+            <column name="email" value="anna.krzemien@sin.net.pl"/>
+        </insert>  
+        <insert tableName="user">
+            <column name="entityId" value="0cc84768-fe0e-4503-81fe-257e8886b3c2"/>  
+            <column name="email" value="karolina@sin.net.pl"/>
+        </insert>  
+        <insert tableName="user">
+            <column name="entityId" value="64e104ff-ee6b-4452-a7f2-b7455f415e2c"/>  
+            <column name="email" value="cyprian@sin.net.pl"/>
+        </insert>  
+        <insert tableName="user">
+            <column name="entityId" value="f0d128de-1f8a-4808-ba27-7920810955e2"/>  
+            <column name="email" value="katarzyna@sin.net.pl"/>
+        </insert>  
+        <insert tableName="user">
+            <column name="entityId" value="5e73da53-145a-4b17-8e74-176e11dbb132"/>  
+            <column name="email" value="marcin@sin.net.pl"/>
+        </insert>  
+        <insert tableName="user">
+            <column name="entityId" value="dba63c65-ff8f-45ec-bb45-8ab6a1c2e50b"/>  
+            <column name="email" value="biuro@sin.net.pl"/>
+        </insert>  
+        <insert tableName="user">
+            <column name="entityId" value="b0165fa3-3c8b-4ae7-9a83-cdb789d3a274"/>  
+            <column name="email" value="siudeks@sin.net.pl"/>
+        </insert>  
+    </changeSet>
+</databaseChangeLog>

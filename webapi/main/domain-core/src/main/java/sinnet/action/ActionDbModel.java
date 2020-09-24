@@ -10,7 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import lombok.Data;
-import sinnet.Const;
+import sinnet.Db;
 
 @Entity
 @Table(name = "action_db_model")
@@ -23,7 +23,7 @@ public class ActionDbModel {
     private String description;
     private String servicemanName;
 
-    @Column(name = "customer-name", nullable = false, length = Const.Customer.NAME_LENGTH)
+    @Column(name = "customer-name", nullable = false, length = Db.Customer.NAME_LENGTH)
     private String customerName;
     private LocalDate when;
     private Duration duration;
