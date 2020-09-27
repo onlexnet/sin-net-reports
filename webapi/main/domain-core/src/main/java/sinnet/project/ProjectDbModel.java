@@ -12,7 +12,7 @@ import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import sinnet.Db;
-import sinnet.user.User;
+import sinnet.user.Serviceman;
 
 @Entity
 @Table(name = "project")
@@ -26,6 +26,6 @@ public class ProjectDbModel {
     @Column(length = Db.Project.NAME_LENGTH)
     private String name;
 
-    @OneToMany(targetEntity = ProjectServicemanDbModel.class, mappedBy = "project")
-    private List<User> serviceman;
+    @OneToMany(mappedBy = "project")
+    private List<Serviceman> serviceman;
 }

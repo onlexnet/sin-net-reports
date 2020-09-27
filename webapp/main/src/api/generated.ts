@@ -26,8 +26,9 @@ export type PrincipalModel = {
 
 export type Query = {
   __typename?: 'Query';
-  getPrincipal: PrincipalModel;
   Services: Services;
+  getPrincipal: PrincipalModel;
+  users?: Maybe<Users>;
 };
 
 export type ServiceEntry = {
@@ -84,6 +85,17 @@ export type ServicesSearchResult = {
 export type Subscription = {
   __typename?: 'Subscription';
   time?: Maybe<Scalars['Int']>;
+};
+
+export type User = {
+  __typename?: 'User';
+  entityId: Scalars['ID'];
+  email: Scalars['String'];
+};
+
+export type Users = {
+  __typename?: 'Users';
+  search: User;
 };
 
 export type UserContextQueryVariables = Exact<{ [key: string]: never; }>;
