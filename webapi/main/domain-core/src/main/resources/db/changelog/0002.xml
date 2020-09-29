@@ -11,12 +11,38 @@
         <insert tableName="serviceman">
             <column name="project_entityId" value="e2dd3ba5-8ec5-42cb-8d8d-4c84a9e828a0"/>
             <column name="entityId" value="492a1acd-72f3-4923-bb38-f2751b5cfe0e"/>  
-            <column name="email" value="user1@project"/>
+            <column name="email" value="user1@project1"/>
         </insert>  
         <insert tableName="serviceman">
             <column name="project_entityId" value="e2dd3ba5-8ec5-42cb-8d8d-4c84a9e828a0"/>
             <column name="entityId" value="8421bc2e-5999-46d0-9d54-a0c6b90a3940"/>  
+            <column name="email" value="user2@project1"/>
+        </insert>  
+        <insert tableName="serviceman">
+            <column name="project_entityId" value="e2dd3ba5-8ec5-42cb-8d8d-4c84a9e828a0"/>
+            <column name="entityId" value="fa9c104f-3cea-46ab-bcb8-1e7fe299d5f9"/>  
+            <column name="email" value="user1@project"/>
+        </insert>  
+    </changeSet>
+    <changeSet author="liquibase-docs" id="202009231900-2">  
+        <insert tableName="project">
+            <column name="entityId" value="d8308611-2980-42d0-bfb0-5fbc7c730f4a"/>  
+            <column name="name" value="Test project"/>
+        </insert>
+        <insert tableName="serviceman">
+            <column name="project_entityId" value="d8308611-2980-42d0-bfb0-5fbc7c730f4a"/>
+            <column name="entityId" value="13791d68-80bd-415c-ae4c-a0c61e06910a"/>  
+            <column name="email" value="user1@project"/>
+        </insert>  
+        <insert tableName="serviceman">
+            <column name="project_entityId" value="d8308611-2980-42d0-bfb0-5fbc7c730f4a"/>
+            <column name="entityId" value="36880955-611a-446e-96f7-45f9c5caefae"/>  
             <column name="email" value="user2@project"/>
+        </insert>  
+        <insert tableName="serviceman">
+            <column name="project_entityId" value="d8308611-2980-42d0-bfb0-5fbc7c730f4a"/>
+            <column name="entityId" value="3e5db149-4bab-4a23-a7c8-d417387c145a"/>  
+            <column name="email" value="user1@project"/>
         </insert>  
     </changeSet>
 </databaseChangeLog>
