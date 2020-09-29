@@ -1,9 +1,10 @@
 extend type Query {
-    users: Users
+    # List of all users working on the same project as currently logged in user
+    Users: Users
 }
 
 type Users {
-    search: User!
+    search: [User!]!
 }
 
 type User {
