@@ -1,0 +1,7 @@
+extend type Mutation {
+    Dev: Dev
+}
+
+type Dev {
+    setUser(email: String!): Boolean
+}

@@ -16,7 +16,8 @@ public class Users implements GraphQLQueryResolver {
     }
 
     public List<User> search() {
-        return new User(UUID.randomUUID(), "aaa@bbb");
+        var user = new User(UUID.randomUUID(), "aaa@bbb");
+        return List.of(user);
     }
 
 }
