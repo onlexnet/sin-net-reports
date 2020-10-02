@@ -17,7 +17,10 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Profile("dev")
-public class DevAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
+public class DevAuthenticationFilter extends AbstractAuthenticationProcessingFilter
+                                     implements AuthenticationController {
+
+    private String emailOfLoggedUser = "user1@project";
 
     protected DevAuthenticationFilter() {
         super("/graphql");
@@ -26,8 +29,8 @@ public class DevAuthenticationFilter extends AbstractAuthenticationProcessingFil
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
-            throws AuthenticationException, IOException, ServletException {
-        return new JwtAuthenticationToken("aaa", "bbb");
+            throws IOException, ServletException {
+        return new JwtAuthenticationToken(emailOfLoggedUser, emailOfLoggedUser);
     }
 
     @Override
@@ -42,5 +45,11 @@ public class DevAuthenticationFilter extends AbstractAuthenticationProcessingFil
         public Authentication authenticate(Authentication authentication) throws AuthenticationException {
             return null;
         }
+    }
+
+    @Override
+    public void setEmail(String email) {
+        // TODO Auto-generated method stub
+
     }
 }
