@@ -8,7 +8,6 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 
 /** Fixme. */
 @Configuration
@@ -36,7 +35,8 @@ public class WebSecurityConfig {
                                 .antMatchers("/actuator/**").permitAll(); })
                     .oauth2ResourceServer()
                         .jwt()
-                        .jwtAuthenticationConverter(new JwtAuthenticationConverter());
+                        //.jwtAuthenticationConverter(new JwtAuthenticationConverter());
+                        .jwtAuthenticationConverter(new AuthenticationConverter());
             }
         };
     }
