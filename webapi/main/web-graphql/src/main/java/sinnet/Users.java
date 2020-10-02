@@ -2,22 +2,26 @@ package sinnet;
 
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import graphql.kickstart.tools.GraphQLQueryResolver;
-import io.vavr.collection.List;
 import lombok.Value;
 
 @Component
 public class Users implements GraphQLQueryResolver {
 
+    @Autowired
+    private UsersProvider usersProvider;
+
     public Users getUsers() {
         return this;
     }
 
-    public List<User> search() {
-        var user = new User(UUID.randomUUID(), "aaa@bbb");
-        return List.of(user);
+    public Iterable<User> search() {
+        return usersProvider
+            .search()
+            .map(it -> new User(UUID.randomUUID(), it.getEmail()));
     }
 
 }
