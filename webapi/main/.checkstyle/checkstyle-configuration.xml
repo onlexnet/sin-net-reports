@@ -145,8 +145,6 @@
 
         <!-- Checks for blocks. You know, those {}'s         -->
         <!-- See http://checkstyle.sourceforge.net/config_blocks.html -->
-        <module name="AvoidNestedBlocks">
-        </module>
         <module name="EmptyBlock"/>
         <module name="LeftCurly"/>
         <module name="NeedBraces">
@@ -158,9 +156,6 @@
         <!-- See http://checkstyle.sourceforge.net/config_coding.html -->
         <module name="EmptyStatement"/>
         <module name="EqualsHashCode"/>
-        <module name="HiddenField">
-          <property name="ignoreConstructorParameter" value="true"/>
-        </module>
         <module name="IllegalInstantiation"/>
         <module name="InnerAssignment"/>
         <module name="MagicNumber"/>

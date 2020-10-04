@@ -21,7 +21,7 @@ public class Users implements GraphQLQueryResolver {
     public Iterable<User> search() {
         return usersProvider
             .search()
-            .map(it -> new User(UUID.randomUUID(), it.getEmail()));
+            .map(it -> new User(UUID.randomUUID(), it.getEmail().getValue()));
     }
 
 }

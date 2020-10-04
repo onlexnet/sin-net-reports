@@ -3,54 +3,62 @@ package sinnet.action;
 import java.time.LocalDate;
 import java.util.UUID;
 
-import javax.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.r2dbc.core.DatabaseClient;
 import org.springframework.stereotype.Service;
 
 import io.vavr.collection.List;
 import sinnet.ActionService;
-import sinnet.Distance;
 import sinnet.Entity;
 import sinnet.Name;
 import sinnet.ServiceEntity;
 
 @Service
-@Transactional
 public class ActionServiceImpl implements ActionService {
 
     @Autowired
-    private ActionRepository repository;
+    private DatabaseClient client;
 
     @Override
-    public void save(ServiceEntity entity) {
+    public void save(UUID entityId, ServiceEntity entity) {
 
-        var entry = new ActionDbModel();
-        entry.setEntityId(UUID.randomUUID());
+        var entry = new ActionsDbModel();
+        entry.setEntityId(entityId);
         entry.setDescription(entity.getWhat());
         entry.setServicemanName(entity.getWho().getValue());
         entry.setCustomerName(entity.getWhom().getValue());
-        entry.setWhen(entity.getWhen());
+        entry.setDate(entity.getWhen());
         entry.setDistance(entity.getHowFar().getValue());
         entry.setDuration(entity.getHowLong());
-        repository.save(entry);
+
+        client
+            .insert()
+            .into(ActionsDbModel.class)
+            .using(entry)
+            .then()
+            .subscribe();
     }
 
     @Override
     public List<Entity<ServiceEntity>> find(LocalDate from, LocalDate to) {
 
-        return List
-            .ofAll(repository.findForPeriod(from, to))
-            .map(it -> {
-                var value = new ServiceEntity(
-                    Name.of(it.getServicemanName()),
-                    it.getWhen(),
-                    Name.of(it.getCustomerName()),
-                    it.getDescription(),
-                    it.getDuration(),
-                    Distance.of(it.getDistance()));
-                return new Entity<>(it.getEntityId(), value);
-            });
+        var items = client
+            .execute("SELECT entity_id, date, customer_name, description, serviceman_name "
+                     + "FROM actions it "
+                     + "WHERE it.date >= :from AND it.date <= :to")
+            .bind("from", from)
+            .bind("to", to)
+            .map(row -> ServiceEntity
+                .builder()
+                .when(row.get("date", LocalDate.class))
+                .whom(Name.of(row.get("customer_name", String.class)))
+                .what(row.get("description", String.class))
+                .who(Name.of(row.get("serviceman_name", String.class)))
+                .build()
+                .withId(row.get("entity_id", UUID.class)))
+            .all()
+            .toIterable();
+        return List.ofAll(items);
     }
 
 }

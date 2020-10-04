@@ -1,21 +1,21 @@
 package sinnet;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import io.vavr.collection.Stream;
-import sinnet.user.ServicemanRepository;
 
 @Service
 public class UsersProviderImpl implements UsersProvider {
 
-    @Autowired
-    private ServicemanRepository mainRepository;
+    // @Autowired
+    // private ServicemanRepository mainRepository;
 
     @Override
     public Stream<UserModel> search() {
-        return Stream
-            .ofAll(mainRepository.findAll())
-            .map(it -> new UserModel(it.getEmail()));
+        // var elements = mainRepository.findAll().toIterable();
+        // return Stream
+        //     .ofAll(elements)
+        //     .map(it -> new UserModel(Email.of(it.getEmail())));
+        return Stream.empty();
     }
 }

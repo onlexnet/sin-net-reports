@@ -1,6 +1,7 @@
 package sinnet;
 
 import java.time.Duration;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -35,7 +36,7 @@ public class ServicesOperationsAddNew implements GraphQLResolver<ServicesOperati
             Distance.of(entry.getDistance())
         );
 
-        actionService.save(model);
+        actionService.save(UUID.randomUUID(), model);
 
         return true;
     }

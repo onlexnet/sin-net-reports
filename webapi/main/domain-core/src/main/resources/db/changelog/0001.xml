@@ -4,18 +4,18 @@
         <createSequence incrementBy="1" sequenceName="hibernate_sequence" startValue="1"/>
     </changeSet>
     <changeSet author="siudeks (generated)" id="1601237109370-2">
-        <createTable tableName="action_db_model">
-            <column name="entityId" type="UUID">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="action_db_modelPK"/>
+        <createTable tableName="actions">
+            <column name="entity_id" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="actions_PK"/>
             </column>
-            <column name="customer-name" type="VARCHAR(50)">
+            <column name="customer_name" type="VARCHAR(50)">
                 <constraints nullable="false"/>
             </column>
             <column name="description" type="VARCHAR(255)"/>
             <column name="distance" type="INTEGER"/>
             <column name="duration" type="BIGINT"/>
-            <column name="servicemanName" type="VARCHAR(255)"/>
-            <column name="when" type="date"/>
+            <column name="serviceman_name" type="VARCHAR(255)"/>
+            <column name="date" type="date"/>
         </createTable>
     </changeSet>
     <changeSet author="siudeks (generated)" id="1601237109370-3">

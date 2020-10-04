@@ -3,20 +3,24 @@ package sinnet;
 import java.time.Duration;
 import java.time.LocalDate;
 
+import lombok.Builder;
 import lombok.Value;
 
 /** Register details about provided service. */
 @Value
-public class ServiceEntity {
+@Builder
+public class ServiceEntity implements ValueObject<ServiceEntity> {
 
     /** Serviceman who did the service. */
-    private Name who;
+    @Builder.Default
+    private Name who = Name.empty();
 
     /** Date when the service has been provided. */
     private LocalDate when;
 
     /** Name of the Customer whom the service has been provided. */
-    private Name whom;
+    @Builder.Default
+    private Name whom = Name.empty();
 
     /** Descriptive info what actually has been provided as the service. */
     private String what;
@@ -25,5 +29,6 @@ public class ServiceEntity {
     private Duration howLong;
 
     /** How far is distance to the place where service has been provided. */
-    private Distance howFar;
+    @Builder.Default
+    private Distance howFar = Distance.empty();
 }
