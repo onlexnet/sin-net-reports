@@ -4,10 +4,11 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 import io.vavr.collection.List;
+import reactor.core.publisher.Mono;
 
 public interface ActionService {
 
-    void save(UUID entityId, ServiceEntity entity);
+    Mono<Void> save(UUID entityId, ServiceEntity entity);
 
     List<Entity<ServiceEntity>> find(LocalDate from, LocalDate to);
 }

@@ -12,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 
+import reactor.core.publisher.Mono;
 import sinnet.ActionService;
 import sinnet.AppTestContext;
 import sinnet.BaseDbTests;
@@ -42,11 +43,16 @@ public class ActionServiceTests extends BaseDbTests {
             .when(now)
             .whom(Name.of("some Customer name"))
             .build();
-        sut.save(UUID.randomUUID(), newEntity);
+
+        Mono.when(
+            sut.save(UUID.randomUUID(), newEntity),
+            sut.save(UUID.randomUUID(), newEntity),
+            sut.save(UUID.randomUUID(), newEntity)
+        ).block();
 
         {
             var actual = sut.find(now, now);
-            Assertions.assertThat(actual).isNotEmpty();
+            Assertions.assertThat(actual).hasSize(3);
         }
     }
 }

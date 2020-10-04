@@ -8,6 +8,7 @@ import org.springframework.data.r2dbc.core.DatabaseClient;
 import org.springframework.stereotype.Service;
 
 import io.vavr.collection.List;
+import reactor.core.publisher.Mono;
 import sinnet.ActionService;
 import sinnet.Entity;
 import sinnet.Name;
@@ -20,7 +21,7 @@ public class ActionServiceImpl implements ActionService {
     private DatabaseClient client;
 
     @Override
-    public void save(UUID entityId, ServiceEntity entity) {
+    public Mono<Void> save(UUID entityId, ServiceEntity entity) {
 
         var entry = new ActionsDbModel();
         entry.setEntityId(entityId);
@@ -31,12 +32,11 @@ public class ActionServiceImpl implements ActionService {
         entry.setDistance(entity.getHowFar().getValue());
         entry.setDuration(entity.getHowLong());
 
-        client
+        return client
             .insert()
             .into(ActionsDbModel.class)
             .using(entry)
-            .then()
-            .subscribe();
+            .then();
     }
 
     @Override
