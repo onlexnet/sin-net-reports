@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.r2dbc.core.DatabaseClient;
 import org.springframework.stereotype.Service;
 
-import io.vavr.collection.List;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import sinnet.ActionService;
 import sinnet.Entity;
@@ -40,9 +40,9 @@ public class ActionServiceImpl implements ActionService {
     }
 
     @Override
-    public List<Entity<ServiceEntity>> find(LocalDate from, LocalDate to) {
+    public Flux<Entity<ServiceEntity>> find(LocalDate from, LocalDate to) {
 
-        var items = client
+        return client
             .execute("SELECT entity_id, date, customer_name, description, serviceman_name "
                      + "FROM actions it "
                      + "WHERE it.date >= :from AND it.date <= :to")
@@ -56,9 +56,7 @@ public class ActionServiceImpl implements ActionService {
                 .who(Name.of(row.get("serviceman_name", String.class)))
                 .build()
                 .withId(row.get("entity_id", UUID.class)))
-            .all()
-            .toIterable();
-        return List.ofAll(items);
+            .all();
     }
 
 }

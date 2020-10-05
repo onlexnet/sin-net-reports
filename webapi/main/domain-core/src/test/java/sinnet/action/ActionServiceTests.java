@@ -32,11 +32,10 @@ public class ActionServiceTests extends BaseDbTests {
     @Test
     public void myTest() {
         var now = LocalDate.of(2001, 2, 3);
-        var tomorrow = now.plusDays(1);
 
         {
             var actual = sut.find(now, now);
-            Assumptions.assumeThat(actual).isEmpty();
+            Assumptions.assumeThat(actual.toIterable()).isEmpty();
         }
 
         var newEntity = ServiceEntity.builder()
@@ -52,7 +51,7 @@ public class ActionServiceTests extends BaseDbTests {
 
         {
             var actual = sut.find(now, now);
-            Assertions.assertThat(actual).hasSize(3);
+            Assertions.assertThat(actual.toIterable()).hasSize(3);
         }
     }
 }

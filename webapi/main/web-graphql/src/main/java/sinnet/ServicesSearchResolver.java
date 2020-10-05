@@ -39,7 +39,8 @@ public class ServicesSearchResolver implements GraphQLResolver<Services> {
                 .duration((int) it.getValue().getHowLong().toMinutes())
                 .distance(it.getValue().getHowFar().getValue())
                 .build())
-            .collect(Collectors.toList());
+            .collect(Collectors.toList())
+            .block();
         return new ServicesSearchResult(items, 2);
     }
 
