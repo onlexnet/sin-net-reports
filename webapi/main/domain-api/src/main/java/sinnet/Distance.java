@@ -2,9 +2,11 @@ package sinnet;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 
 /** Type to keep distance between geo points. Unit - kilometers */
 @EqualsAndHashCode
+@ToString
 public final class Distance {
 
     private static Distance empty = new Distance(0);

@@ -10,6 +10,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import sinnet.AppTestContext;
+import sinnet.BaseDbTests;
 import sinnet.UsersProvider;
 
 @SpringBootTest(webEnvironment = WebEnvironment.NONE)
@@ -18,14 +19,13 @@ import sinnet.UsersProvider;
     "/domain-core.properties"
 })
 @Testcontainers
-public final class UsersProviderTests {
+public final class UsersProviderTests extends BaseDbTests {
 
     @Autowired
     private UsersProvider sut;
 
     @Test
     public void myTest() {
-        Assertions.assertThat(sut).isNotNull();
         sut.search();
     }
 }

@@ -17,6 +17,7 @@ import reactor.core.publisher.Mono;
 import sinnet.ActionService;
 import sinnet.AppTestContext;
 import sinnet.BaseDbTests;
+import sinnet.Distance;
 import sinnet.Name;
 import sinnet.ServiceEntity;
 
@@ -41,6 +42,7 @@ public class ActionServiceTests extends BaseDbTests {
         }
 
         var newEntity = ServiceEntity.builder()
+            .howFar(Distance.of(10))
             .when(now)
             .whom(Name.of("some Customer name"))
             .build();
@@ -56,6 +58,7 @@ public class ActionServiceTests extends BaseDbTests {
             Assertions.assertThat(actualItems).hasSize(3);
 
             var expected = ServiceEntity.builder()
+                .howFar(Distance.of(10))
                 .when(now)
                 .whom(Name.of("some Customer name"))
                 .build();

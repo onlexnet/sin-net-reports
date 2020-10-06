@@ -17,6 +17,7 @@ import io.vertx.sqlclient.RowSet;
 import io.vertx.sqlclient.Tuple;
 import reactor.core.publisher.Mono;
 import sinnet.ActionService;
+import sinnet.Distance;
 import sinnet.Entity;
 import sinnet.Name;
 import sinnet.ServiceEntity;
@@ -34,7 +35,7 @@ public class ActionServiceImpl implements ActionService {
     @PostConstruct
     public void init() {
         findQuery = this.pgClient
-                .preparedQuery("SELECT entity_id, date, customer_name, description, serviceman_name "
+                .preparedQuery("SELECT entity_id, distance, date, customer_name, description, serviceman_name "
                 + "FROM actions it "
                 + "WHERE it.date >= $1 AND it.date <= $2");
     }
@@ -66,6 +67,7 @@ public class ActionServiceImpl implements ActionService {
                         var value = Stream
                             .ofAll(rows)
                             .map(it -> ServiceEntity.builder()
+                                .howFar(Distance.of(it.getInteger("distance")))
                                 .whom(Name.of(it.getString("customer_name")))
                                 .what(it.getString("description"))
                                 .when(it.getLocalDate("date"))
