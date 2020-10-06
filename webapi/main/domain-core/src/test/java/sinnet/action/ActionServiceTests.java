@@ -12,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 
+import lombok.SneakyThrows;
 import reactor.core.publisher.Mono;
 import sinnet.ActionService;
 import sinnet.AppTestContext;
@@ -30,6 +31,7 @@ public class ActionServiceTests extends BaseDbTests {
     private ActionService sut;
 
     @Test
+    @SneakyThrows
     public void myTest() {
         var now = LocalDate.of(2001, 2, 3);
 

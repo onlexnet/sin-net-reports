@@ -11,6 +11,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.testcontainers.containers.PostgreSQLContainer;
 
+import io.vertx.pgclient.PgConnectOptions;
+import io.vertx.pgclient.PgPool;
+import io.vertx.sqlclient.PoolOptions;
+
 public abstract class BaseDbTests {
 
     protected BaseDbTests() {
@@ -49,6 +53,20 @@ public abstract class BaseDbTests {
                 .password(PG_CONTAINER.getPassword())
                 .driverClassName(PG_CONTAINER.getDriverClassName())
                 .build();
+        }
+
+        @Bean
+        PgPool pgClient() {
+            var connectOptions = new PgConnectOptions()
+            .setPort(PG_CONTAINER.getFirstMappedPort())
+            .setHost(PG_CONTAINER.getContainerIpAddress())
+            .setDatabase(PG_CONTAINER.getDatabaseName())
+            .setUser(PG_CONTAINER.getUsername())
+            .setPassword(PG_CONTAINER.getPassword());
+
+            var poolOptions = new PoolOptions();
+
+            return PgPool.pool(connectOptions, poolOptions);
         }
     }
 }
