@@ -37,7 +37,7 @@ public class ActionServiceTests extends BaseDbTests {
 
         {
             var actual = sut.find(now, now);
-            Assumptions.assumeThat(actual.toIterable()).isEmpty();
+            Assumptions.assumeThat(actual.block()).isEmpty();
         }
 
         var newEntity = ServiceEntity.builder()
@@ -53,7 +53,7 @@ public class ActionServiceTests extends BaseDbTests {
 
         {
             var actual = sut.find(now, now);
-            Assertions.assertThat(actual.toIterable()).hasSize(3);
+            Assertions.assertThat(actual.block()).hasSize(3);
         }
     }
 }

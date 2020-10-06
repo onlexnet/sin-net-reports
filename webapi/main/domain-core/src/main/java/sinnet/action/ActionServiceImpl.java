@@ -15,7 +15,6 @@ import io.vertx.sqlclient.PreparedQuery;
 import io.vertx.sqlclient.Row;
 import io.vertx.sqlclient.RowSet;
 import io.vertx.sqlclient.Tuple;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import sinnet.ActionService;
 import sinnet.Entity;
@@ -52,24 +51,26 @@ public class ActionServiceImpl implements ActionService {
         entry.setDistance(entity.getHowFar().getValue());
         entry.setDuration(entity.getHowLong());
 
-        return client.insert().into(ActionsDbModel.class).using(entry).then();
+        return client
+            .insert().into(ActionsDbModel.class).using(entry)
+            .then();
     }
 
 
     @Override
-    public Flux<Entity<ServiceEntity>> find(LocalDate from, LocalDate to) {
-        return Flux.create(consumer -> {
+    public Mono<Stream<Entity<ServiceEntity>>> find(LocalDate from, LocalDate to) {
+        return Mono.create(consumer -> {
                     findQuery.execute(Tuple.of(from, to), ar -> {
                     if (ar.succeeded()) {
                         var rows = ar.result();
-                        Stream
+                        var value = Stream
                             .ofAll(rows)
                             .map(it -> ServiceEntity.builder()
                                 .whom(Name.of(it.getString("customer_name")))
+                                .what(it.getString("description"))
                                 .build()
-                                .withId(it.getUUID("entity_id")))
-                            .forEach(consumer::next);
-                        consumer.complete();
+                                .withId(it.getUUID("entity_id")));
+                        consumer.success(value);
                     } else {
                         consumer.error(ar.cause());
                     }

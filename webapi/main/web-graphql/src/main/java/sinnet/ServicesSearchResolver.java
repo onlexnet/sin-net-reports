@@ -30,6 +30,7 @@ public class ServicesSearchResolver implements GraphQLResolver<Services> {
                                        final ServicesFilter filter) {
         var items = actionService
             .find(filter.getFrom(), filter.getTo())
+            .block()
             .map(it -> ServiceModel.builder()
                 .entityId(it.getEntityId())
                 .servicemanName(it.getValue().getWho().getValue())
@@ -39,8 +40,7 @@ public class ServicesSearchResolver implements GraphQLResolver<Services> {
                 .duration((int) it.getValue().getHowLong().toMinutes())
                 .distance(it.getValue().getHowFar().getValue())
                 .build())
-            .collect(Collectors.toList())
-            .block();
+            .collect(Collectors.toList());
         return new ServicesSearchResult(items, 2);
     }
 
