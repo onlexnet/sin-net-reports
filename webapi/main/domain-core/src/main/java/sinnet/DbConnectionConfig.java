@@ -11,7 +11,7 @@ import io.vertx.sqlclient.PoolOptions;
 @Configuration
 public class DbConnectionConfig {
 
-    @Value("${app.db.host")
+    @Value("${app.db.host}")
     private String dbHost;
 
     @Bean
