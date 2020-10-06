@@ -11,6 +11,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import sinnet.AppTestContext;
 import sinnet.BaseDbTests;
+import sinnet.Email;
 import sinnet.UsersProvider;
 
 @SpringBootTest(webEnvironment = WebEnvironment.NONE)
@@ -26,6 +27,13 @@ public final class UsersProviderTests extends BaseDbTests {
 
     @Test
     public void myTest() {
-        sut.search();
+        var actual = sut.search(Email.of("user1@project"))
+            .block()
+            .map(it -> it.getEmail().getValue());
+
+        Assertions.assertThat(actual).containsExactlyInAnyOrder(
+            "user1@project",
+            "user1@project1",
+            "user2@project1");
     }
 }

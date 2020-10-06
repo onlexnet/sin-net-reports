@@ -20,7 +20,7 @@
     </changeSet>
     <changeSet author="siudeks (generated)" id="1601237109370-3">
         <createTable tableName="customer_db_model">
-            <column name="entityId" type="UUID">
+            <column name="entity_id" type="UUID">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="customer_db_modelPK"/>
             </column>
             <column name="name" type="VARCHAR(200)">
@@ -39,7 +39,7 @@
     </changeSet>
     <changeSet author="siudeks (generated)" id="1601237109370-5">
         <createTable tableName="project">
-            <column name="entityId" type="UUID">
+            <column name="entity_id" type="UUID">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="projectPK"/>
             </column>
             <column name="name" type="VARCHAR(50)"/>
@@ -47,14 +47,14 @@
     </changeSet>
     <changeSet author="siudeks (generated)" id="1601237109370-6">
         <createTable tableName="serviceman">
-            <column name="entityId" type="UUID">
+            <column name="entity_id" type="UUID">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="servicemanPK"/>
             </column>
             <column name="email" type="VARCHAR(50)"/>
-            <column name="project_entityId" type="UUID"/>
+            <column name="project_entity_id" type="UUID"/>
         </createTable>
     </changeSet>
     <changeSet author="siudeks (generated)" id="1601237109370-7">
-        <addForeignKeyConstraint baseColumnNames="project_entityId" baseTableName="serviceman" constraintName="FKk0li9750mvero7hv6q9v1u8yl" deferrable="false" initiallyDeferred="false" referencedColumnNames="entityId" referencedTableName="project" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="project_entity_id" baseTableName="serviceman" constraintName="FKk0li9750mvero7hv6q9v1u8yl" deferrable="false" initiallyDeferred="false" referencedColumnNames="entity_id" referencedTableName="project" validate="true"/>
     </changeSet>
 </databaseChangeLog>

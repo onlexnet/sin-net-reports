@@ -30,6 +30,7 @@ public class ActionServiceImpl implements ActionService {
 
     @Autowired
     private PgPool pgClient;
+
     private PreparedQuery<RowSet<Row>> findQuery;
 
     @PostConstruct

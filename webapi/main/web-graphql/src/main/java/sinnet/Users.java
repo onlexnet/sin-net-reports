@@ -20,7 +20,8 @@ public class Users implements GraphQLQueryResolver {
 
     public Iterable<User> search() {
         return usersProvider
-            .search()
+            .search(Email.of("user1@project"))
+            .block()
             .map(it -> new User(UUID.randomUUID(), it.getEmail().getValue()));
     }
 

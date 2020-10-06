@@ -5,43 +5,43 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.0.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
     <changeSet author="liquibase-docs" id="202009231900-1">  
         <insert tableName="project">
-            <column name="entityId" value="00000000-0000-0000-0001-000000000001"/>
+            <column name="entity_id" value="00000000-0000-0000-0001-000000000001"/>
             <column name="name" value="Test project"/>
         </insert>
         <insert tableName="serviceman">
-            <column name="project_entityId" value="00000000-0000-0000-0001-000000000001"/>
-            <column name="entityId" value="00000000-0000-0000-0002-000000000001"/>
+            <column name="project_entity_id" value="00000000-0000-0000-0001-000000000001"/>
+            <column name="entity_id" value="00000000-0000-0000-0002-000000000001"/>
             <column name="email" value="user1@project1"/>
         </insert>  
         <insert tableName="serviceman">
-            <column name="project_entityId" value="00000000-0000-0000-0001-000000000001"/>
-            <column name="entityId" value="00000000-0000-0000-0002-000000000002"/>
+            <column name="project_entity_id" value="00000000-0000-0000-0001-000000000001"/>
+            <column name="entity_id" value="00000000-0000-0000-0002-000000000002"/>
             <column name="email" value="user2@project1"/>
         </insert>  
         <insert tableName="serviceman">
-            <column name="project_entityId" value="00000000-0000-0000-0001-000000000001"/>
-            <column name="entityId" value="00000000-0000-0000-0002-000000000003"/>  
+            <column name="project_entity_id" value="00000000-0000-0000-0001-000000000001"/>
+            <column name="entity_id" value="00000000-0000-0000-0002-000000000003"/>  
             <column name="email" value="user1@project"/>
         </insert>  
     </changeSet>
     <changeSet author="liquibase-docs" id="202009231900-2">  
         <insert tableName="project">
-            <column name="entityId" value="00000000-0000-0000-0001-000000000002"/>  
+            <column name="entity_id" value="00000000-0000-0000-0001-000000000002"/>  
             <column name="name" value="Test project"/>
         </insert>
         <insert tableName="serviceman">
-            <column name="project_entityId" value="00000000-0000-0000-0001-000000000002"/>
-            <column name="entityId" value="00000000-0000-0000-0002-000000000004"/>  
+            <column name="project_entity_id" value="00000000-0000-0000-0001-000000000002"/>
+            <column name="entity_id" value="00000000-0000-0000-0002-000000000004"/>  
             <column name="email" value="user1@project"/>
         </insert>  
         <insert tableName="serviceman">
-            <column name="project_entityId" value="00000000-0000-0000-0001-000000000002"/>
-            <column name="entityId" value="00000000-0000-0000-0002-000000000005"/>  
+            <column name="project_entity_id" value="00000000-0000-0000-0001-000000000002"/>
+            <column name="entity_id" value="00000000-0000-0000-0002-000000000005"/>  
             <column name="email" value="user2@project"/>
         </insert>  
         <insert tableName="serviceman">
-            <column name="project_entityId" value="00000000-0000-0000-0001-000000000002"/>
-            <column name="entityId" value="00000000-0000-0000-0002-000000000006"/>  
+            <column name="project_entity_id" value="00000000-0000-0000-0001-000000000002"/>
+            <column name="entity_id" value="00000000-0000-0000-0002-000000000006"/>  
             <column name="email" value="user1@project"/>
         </insert>  
     </changeSet>
