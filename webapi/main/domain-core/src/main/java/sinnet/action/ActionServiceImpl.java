@@ -68,6 +68,7 @@ public class ActionServiceImpl implements ActionService {
                             .map(it -> ServiceEntity.builder()
                                 .whom(Name.of(it.getString("customer_name")))
                                 .what(it.getString("description"))
+                                .when(it.getLocalDate("date"))
                                 .build()
                                 .withId(it.getUUID("entity_id")));
                         consumer.success(value);

@@ -8,8 +8,8 @@ import lombok.Value;
 
 /** Register details about provided service. */
 @Value
-@Builder
-public class ServiceEntity implements ValueObject<ServiceEntity> {
+@Builder(toBuilder = true)
+public class ServiceEntity implements EntityValue<ServiceEntity> {
 
     /** Serviceman who did the service. */
     @Builder.Default

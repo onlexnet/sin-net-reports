@@ -52,8 +52,16 @@ public class ActionServiceTests extends BaseDbTests {
         ).block();
 
         {
-            var actual = sut.find(now, now);
-            Assertions.assertThat(actual.block()).hasSize(3);
+            var actualItems = sut.find(now, now).block();
+            Assertions.assertThat(actualItems).hasSize(3);
+
+            var expected = ServiceEntity.builder()
+                .when(now)
+                .whom(Name.of("some Customer name"))
+                .build();
+            var actual = actualItems.head();
+            Assertions.assertThat(actual.getValue()).isEqualTo(expected);
+
         }
     }
 }
