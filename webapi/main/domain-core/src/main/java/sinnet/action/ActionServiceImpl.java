@@ -6,7 +6,6 @@ import java.util.UUID;
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.r2dbc.core.DatabaseClient;
 import org.springframework.stereotype.Service;
 
 import io.vavr.collection.Stream;
@@ -26,9 +25,6 @@ import sinnet.ServiceEntity;
 public class ActionServiceImpl implements ActionService {
 
     @Autowired
-    private DatabaseClient client;
-
-    @Autowired
     private PgPool pgClient;
 
     private PreparedQuery<RowSet<Row>> findQuery;
@@ -43,19 +39,19 @@ public class ActionServiceImpl implements ActionService {
 
     @Override
     public Mono<Void> save(UUID entityId, ServiceEntity entity) {
-
-        var entry = new ActionsDbModel();
-        entry.setEntityId(entityId);
-        entry.setDescription(entity.getWhat());
-        entry.setServicemanName(entity.getWho().getValue());
-        entry.setCustomerName(entity.getWhom().getValue());
-        entry.setDate(entity.getWhen());
-        entry.setDistance(entity.getHowFar().getValue());
-        entry.setDuration(entity.getHowLong());
-
-        return client
-            .insert().into(ActionsDbModel.class).using(entry)
-            .then();
+        var values = Tuple.of(entityId,
+            entity.getWhom().getValue(),
+            entity.getWhat(), entity.getHowFar().getValue(), entity.getHowLong(),
+            entity.getWho().getValue(), entity.getWhen());
+        return Mono.create(consumer -> {
+        pgClient.preparedQuery("INSERT INTO "
+                + "actions (entity_id, customer_name, description, distance, duration, serviceman_name, date) "
+                + "values ($1, $2, $3, $4, $5, $6, $7)")
+                .execute(values, ar -> {
+                    if (ar.succeeded()) consumer.success();
+                    else consumer.error(ar.cause());
+                });
+            });
     }
 
 

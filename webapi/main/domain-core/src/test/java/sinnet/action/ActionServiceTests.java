@@ -16,7 +16,6 @@ import lombok.SneakyThrows;
 import reactor.core.publisher.Mono;
 import sinnet.ActionService;
 import sinnet.AppTestContext;
-import sinnet.BaseDbTests;
 import sinnet.Distance;
 import sinnet.Name;
 import sinnet.ServiceEntity;
@@ -26,7 +25,7 @@ import sinnet.ServiceEntity;
 @TestPropertySource(value = {
     "/domain-core.properties"
 })
-public class ActionServiceTests extends BaseDbTests {
+public class ActionServiceTests {
 
     @Autowired
     private ActionService sut;

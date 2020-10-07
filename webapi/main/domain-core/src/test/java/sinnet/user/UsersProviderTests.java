@@ -10,7 +10,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import sinnet.AppTestContext;
-import sinnet.BaseDbTests;
+import sinnet.TestDbContainer;
 import sinnet.Email;
 import sinnet.UsersProvider;
 
@@ -20,7 +20,7 @@ import sinnet.UsersProvider;
     "/domain-core.properties"
 })
 @Testcontainers
-public final class UsersProviderTests extends BaseDbTests {
+public final class UsersProviderTests {
 
     @Autowired
     private UsersProvider sut;
