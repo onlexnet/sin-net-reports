@@ -27,13 +27,13 @@ public final class UsersProviderTests {
 
     @Test
     public void myTest() {
-        var actual = sut.search(Email.of("user1@project"))
+        var actual = sut.search(Email.of("user1@sinnetapp.onmicrosoft.com"))
             .block()
             .map(it -> it.getEmail().getValue());
 
         Assertions.assertThat(actual).containsExactlyInAnyOrder(
-            "user1@project",
-            "user1@project1",
-            "user2@project1");
+            "user1@sinnetapp.onmicrosoft.com",
+            "user2@sinnetapp.onmicrosoft.com",
+            "user3@sinnetapp.onmicrosoft.com");
     }
 }

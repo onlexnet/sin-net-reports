@@ -11,38 +11,17 @@
         <insert tableName="serviceman">
             <column name="project_entity_id" value="00000000-0000-0000-0001-000000000001"/>
             <column name="entity_id" value="00000000-0000-0000-0002-000000000001"/>
-            <column name="email" value="user1@project1"/>
+            <column name="email" value="user1@sinnetapp.onmicrosoft.com"/>
         </insert>  
         <insert tableName="serviceman">
             <column name="project_entity_id" value="00000000-0000-0000-0001-000000000001"/>
             <column name="entity_id" value="00000000-0000-0000-0002-000000000002"/>
-            <column name="email" value="user2@project1"/>
+            <column name="email" value="user2@sinnetapp.onmicrosoft.com"/>
         </insert>  
         <insert tableName="serviceman">
             <column name="project_entity_id" value="00000000-0000-0000-0001-000000000001"/>
             <column name="entity_id" value="00000000-0000-0000-0002-000000000003"/>  
-            <column name="email" value="user1@project"/>
-        </insert>  
-    </changeSet>
-    <changeSet author="liquibase-docs" id="202009231900-2">  
-        <insert tableName="project">
-            <column name="entity_id" value="00000000-0000-0000-0001-000000000002"/>  
-            <column name="name" value="Test project"/>
-        </insert>
-        <insert tableName="serviceman">
-            <column name="project_entity_id" value="00000000-0000-0000-0001-000000000002"/>
-            <column name="entity_id" value="00000000-0000-0000-0002-000000000004"/>  
-            <column name="email" value="user1@project"/>
-        </insert>  
-        <insert tableName="serviceman">
-            <column name="project_entity_id" value="00000000-0000-0000-0001-000000000002"/>
-            <column name="entity_id" value="00000000-0000-0000-0002-000000000005"/>  
-            <column name="email" value="user2@project"/>
-        </insert>  
-        <insert tableName="serviceman">
-            <column name="project_entity_id" value="00000000-0000-0000-0001-000000000002"/>
-            <column name="entity_id" value="00000000-0000-0000-0002-000000000006"/>  
-            <column name="email" value="user1@project"/>
+            <column name="email" value="user3@sinnetapp.onmicrosoft.com"/>
         </insert>  
     </changeSet>
 </databaseChangeLog>

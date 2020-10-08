@@ -10,11 +10,11 @@ import { graphQlClient } from "../api";
  */
 const MSAL_CONFIG: Configuration = {
     auth: {
-        clientId: "9027d226-b538-414e-82ea-abfe306461ad",
-        authority: "https://onlexnet.b2clogin.com/f5230e02-babc-4b9d-ab7f-e76af49d1e5d/B2C_1_sign-in-or-up",
+        clientId: "36305176-2249-4ce5-8d59-a91dd7363610", // sinnetapp-prod
+        authority: "https://sinnetapp.b2clogin.com/7c86200b-9308-4ebc-a462-fab0a67b91e6/B2C_1_sign-in-or-up",
         navigateToLoginRequestUrl: false,
         knownAuthorities: [
-            "onlexnet.b2clogin.com"
+            "sinnetapp.b2clogin.com"
         ]
     },
     cache: {
@@ -68,7 +68,7 @@ export class AuthModule {
         this.account = null;
 
         this.loginRequest = {
-            scopes: ["https://onlexnet.onmicrosoft.com/posesor/Actions.Read"]
+            scopes: ["https://sinnetapp.onmicrosoft.com/psa/Actions.Read"]
         };
 
         this.loginRedirectRequest = {
