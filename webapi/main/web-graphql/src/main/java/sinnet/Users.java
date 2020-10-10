@@ -15,13 +15,16 @@ public class Users implements GraphQLQueryResolver {
     @Autowired
     private UsersProvider usersProvider;
 
+    @Autowired
+    private Identity identity;
+
     public Users getUsers() {
         return this;
     }
 
     public Iterable<User> search() {
         return usersProvider
-            .search(Email.of("user1@project"))
+            .search(Email.of(identity.getEmail()))
             .block()
             .map(it -> new User(UUID.randomUUID(), it.getEmail().getValue()));
     }

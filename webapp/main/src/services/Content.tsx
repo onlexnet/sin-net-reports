@@ -8,6 +8,8 @@ import { KeyboardEventHandler, useCallback, useEffect, useState } from "react";
 import { LocalDate, TimePeriod } from "../store/viewcontext/TimePeriod";
 import { HorizontalSeparatorStack } from "../Components/HorizontalSeparatorStack";
 import { dates } from "../api/DtoMapper";
+import { useGetUsersQuery } from "../Components/.generated/components";
+import _ from "lodash";
 
 const classNames = mergeStyleSets({
   fileIconHeaderIcon: {
@@ -195,6 +197,7 @@ const ConnectedContent: React.FC<ContentProps & PropsFromRedux> = props => {
   const { items } = props;
   const stackTokens: IStackTokens = { childrenGap: 40 };
 
+
   const [currentPeriod, setCurrentPeriod] = useState<TimePeriod | null>(null);
   if (currentPeriod != props.period) {
     setCurrentPeriod(props.period);
@@ -302,6 +305,7 @@ const ItemEdit: React.FC<{ item: ServiceAppModel | null }> = props => {
 
   const { item } = props;
   // force to rerender if parent is changing
+  const { loading, error, data } = useGetUsersQuery();
 
 
   const defaultServicemanName = item?.servicemanName;
@@ -401,12 +405,13 @@ const ItemEdit: React.FC<{ item: ServiceAppModel | null }> = props => {
   );
   const stackTokens = { childrenGap: 8 }
 
-  const comboBoxBasicOptions: IComboBoxOption[] = [
-    { key: 'user1', text: 'user1' },
-    { key: 'user2', text: 'user2' },
-    { key: 'user3', text: 'user3' }
-  ];
-  
+  let comboBoxBasicOptions: IComboBoxOption[] = [];
+  if (data) {
+    comboBoxBasicOptions = _.chain(data.Users?.search)
+      .map(it => ({ key: it.email, text: it.email}))
+      .value();
+  }
+
   return (
     <>
       <FocusTrapZone disabled={disabledFocusTrap}>
