@@ -1,6 +1,5 @@
 package sinnet;
 
-import java.time.Duration;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
@@ -8,6 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import graphql.kickstart.tools.GraphQLResolver;
+import sinnet.models.ActionDuration;
+import sinnet.models.Distance;
+import sinnet.models.Name;
 
 /** Fixme. */
 @Component
@@ -28,12 +30,12 @@ public class ServicesOperationsAddNew implements GraphQLResolver<ServicesOperati
     public CompletableFuture<Boolean> addNew(final ServicesOperations ignored,
                           final ServiceEntry entry) {
 
-        var model = new ServiceEntity(
+        var model = new ServiceValue(
             Name.of(entry.getServicemanName()),
             entry.getWhenProvided(),
             Name.of(entry.getForWhatCustomer()),
             entry.getDescription(),
-            Duration.ofMinutes(entry.getDuration()),
+            ActionDuration.of(entry.getDuration()),
             Distance.of(entry.getDistance())
         );
 

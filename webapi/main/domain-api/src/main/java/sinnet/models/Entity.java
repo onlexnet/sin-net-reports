@@ -1,4 +1,4 @@
-package sinnet;
+package sinnet.models;
 
 import java.util.UUID;
 

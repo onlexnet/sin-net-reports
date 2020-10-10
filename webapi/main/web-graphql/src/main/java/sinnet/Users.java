@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import lombok.Value;
+import sinnet.models.Email;
 
 @Component
 public class Users implements GraphQLQueryResolver {

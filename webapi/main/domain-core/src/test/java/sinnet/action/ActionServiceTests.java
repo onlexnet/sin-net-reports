@@ -1,5 +1,7 @@
 package sinnet.action;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -12,13 +14,13 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 
-import lombok.SneakyThrows;
 import reactor.core.publisher.Mono;
 import sinnet.ActionService;
 import sinnet.AppTestContext;
-import sinnet.Distance;
-import sinnet.Name;
-import sinnet.ServiceEntity;
+import sinnet.ServiceValue;
+import sinnet.models.ActionDuration;
+import sinnet.models.Distance;
+import sinnet.models.Name;
 
 @SpringBootTest(webEnvironment = WebEnvironment.NONE)
 @ContextConfiguration(classes = AppTestContext.class)
@@ -31,7 +33,6 @@ public class ActionServiceTests {
     private ActionService sut;
 
     @Test
-    @SneakyThrows
     public void myTest() {
         var now = LocalDate.of(2001, 2, 3);
 
@@ -40,7 +41,7 @@ public class ActionServiceTests {
             Assumptions.assumeThat(actual.block()).isEmpty();
         }
 
-        var newEntity = ServiceEntity.builder()
+        var newEntity = ServiceValue.builder()
             .howFar(Distance.of(10))
             .when(now)
             .whom(Name.of("some Customer name"))
@@ -56,7 +57,7 @@ public class ActionServiceTests {
             var actualItems = sut.find(now, now).block();
             Assertions.assertThat(actualItems).hasSize(3);
 
-            var expected = ServiceEntity.builder()
+            var expected = ServiceValue.builder()
                 .howFar(Distance.of(10))
                 .when(now)
                 .whom(Name.of("some Customer name"))
@@ -65,5 +66,48 @@ public class ActionServiceTests {
             Assertions.assertThat(actual.getValue()).isEqualTo(expected);
 
         }
+    }
+
+    @Test
+    public void shouldSaveFullModel() {
+        var now = LocalDate.of(2001, 2, 3);
+
+        var newEntity = ServiceValue.builder()
+            .howFar(Distance.of(1))
+            .howLong(ActionDuration.of(2))
+            .what("some action")
+            .when(now)
+            .whom(Name.of("some Customer name"))
+            .build();
+
+        assertThat(sut.save(UUID.randomUUID(), newEntity).block()).isTrue();
+
+        var actual = sut.find(now, now).block().head().getValue();
+        var expected = ServiceValue.builder()
+            .howFar(Distance.of(1))
+            .howLong(ActionDuration.of(2))
+            .what("some action")
+            .when(now)
+            .whom(Name.of("some Customer name"))
+            .build();
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
+    public void shouldSaveMinModel() {
+        var now = LocalDate.of(2001, 2, 3);
+
+        var newEntity = ServiceValue.builder()
+            .when(now)
+            .build();
+
+        var entityId = UUID.randomUUID();
+        assertThat(sut.save(entityId, newEntity).block()).isTrue();
+
+        var actual = sut.find(entityId).block().getValue();
+        var expected = ServiceValue.builder()
+            .when(now)
+            .build();
+        assertThat(actual).isEqualTo(expected);
     }
 }

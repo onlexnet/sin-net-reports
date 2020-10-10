@@ -12,6 +12,7 @@ import io.vertx.sqlclient.Row;
 import io.vertx.sqlclient.RowSet;
 import io.vertx.sqlclient.Tuple;
 import reactor.core.publisher.Mono;
+import sinnet.models.Email;
 
 @Service
 public class UsersProviderImpl implements UsersProvider {

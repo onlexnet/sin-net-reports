@@ -5,10 +5,13 @@ import java.util.UUID;
 
 import io.vavr.collection.Stream;
 import reactor.core.publisher.Mono;
+import sinnet.models.Entity;
 
 public interface ActionService {
 
-    Mono<Void> save(UUID entityId, ServiceEntity entity);
+    Mono<Boolean> save(UUID entityId, ServiceValue entity);
 
-    Mono<Stream<Entity<ServiceEntity>>> find(LocalDate from, LocalDate to);
+    Mono<Stream<Entity<ServiceValue>>> find(LocalDate from, LocalDate to);
+
+    Mono<Entity<ServiceValue>> find(UUID entityId);
 }

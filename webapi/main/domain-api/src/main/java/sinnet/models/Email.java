@@ -1,4 +1,4 @@
-package sinnet;
+package sinnet.models;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

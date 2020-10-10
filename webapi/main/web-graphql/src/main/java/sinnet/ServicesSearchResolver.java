@@ -37,7 +37,7 @@ public class ServicesSearchResolver implements GraphQLResolver<Services> {
                 .whenProvided(it.getValue().getWhen())
                 .forWhatCustomer(it.getValue().getWhom().getValue())
                 .description(it.getValue().getWhat())
-                .duration((int) it.getValue().getHowLong().toMinutes())
+                .duration(it.getValue().getHowLong().getValue())
                 .distance(it.getValue().getHowFar().getValue())
                 .build())
             .collect(Collectors.toList());

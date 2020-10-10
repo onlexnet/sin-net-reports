@@ -1,10 +1,12 @@
-package sinnet;
+package sinnet.models;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 
 /** Represents human-readable name of a company or a thing. */
 @EqualsAndHashCode
+@ToString
 public final class Name {
 
     private static Name empty = new Name(null);
