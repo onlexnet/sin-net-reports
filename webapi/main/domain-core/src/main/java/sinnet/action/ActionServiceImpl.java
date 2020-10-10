@@ -3,16 +3,12 @@ package sinnet.action;
 import java.time.LocalDate;
 import java.util.UUID;
 
-import javax.annotation.PostConstruct;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import io.vavr.collection.Stream;
 import io.vertx.pgclient.PgPool;
-import io.vertx.sqlclient.PreparedQuery;
 import io.vertx.sqlclient.Row;
-import io.vertx.sqlclient.RowSet;
 import io.vertx.sqlclient.Tuple;
 import reactor.core.publisher.Mono;
 import sinnet.ActionService;
@@ -74,7 +70,7 @@ public class ActionServiceImpl implements ActionService {
         var findQuery = this.pgClient
                 .preparedQuery("SELECT entity_id, distance, duration, date, customer_name, description, serviceman_name "
                 + "FROM actions it "
-                + "WHERE it.entity_id >= $1");
+                + "WHERE it.entity_id = $1");
         return Mono.create(consumer -> {
                     findQuery.execute(Tuple.of(entityId), ar -> {
                     if (ar.succeeded()) {

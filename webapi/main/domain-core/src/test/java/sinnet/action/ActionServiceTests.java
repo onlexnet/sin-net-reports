@@ -17,6 +17,7 @@ import org.springframework.test.context.TestPropertySource;
 import reactor.core.publisher.Mono;
 import sinnet.ActionService;
 import sinnet.AppTestContext;
+import sinnet.Dates;
 import sinnet.ServiceValue;
 import sinnet.models.ActionDuration;
 import sinnet.models.Distance;
@@ -34,7 +35,7 @@ public class ActionServiceTests {
 
     @Test
     public void myTest() {
-        var now = LocalDate.of(2001, 2, 3);
+        var now = Dates.gen().head();
 
         {
             var actual = sut.find(now, now);
@@ -70,7 +71,7 @@ public class ActionServiceTests {
 
     @Test
     public void shouldSaveFullModel() {
-        var now = LocalDate.of(2001, 2, 3);
+        var now = Dates.gen().head();
 
         var newEntity = ServiceValue.builder()
             .howFar(Distance.of(1))
@@ -95,7 +96,7 @@ public class ActionServiceTests {
 
     @Test
     public void shouldSaveMinModel() {
-        var now = LocalDate.of(2001, 2, 3);
+        var now = Dates.gen().head();
 
         var newEntity = ServiceValue.builder()
             .when(now)
