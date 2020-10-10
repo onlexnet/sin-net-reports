@@ -27,8 +27,8 @@ export type PrincipalModel = {
 export type Query = {
   __typename?: 'Query';
   Services: Services;
+  Users?: Maybe<Users>;
   getPrincipal: PrincipalModel;
-  users?: Maybe<Users>;
 };
 
 export type ServiceEntry = {
@@ -95,7 +95,7 @@ export type User = {
 
 export type Users = {
   __typename?: 'Users';
-  search: User;
+  search: Array<User>;
 };
 
 export type UserContextQueryVariables = Exact<{ [key: string]: never; }>;

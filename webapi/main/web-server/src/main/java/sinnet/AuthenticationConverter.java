@@ -1,8 +1,12 @@
 package sinnet;
 
+import java.util.Optional;
+
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.oauth2.jwt.Jwt;
+
+import io.vavr.control.Try;
 
 /** Fixme. */
 public class AuthenticationConverter implements Converter<Jwt, AbstractAuthenticationToken> {
@@ -10,9 +14,20 @@ public class AuthenticationConverter implements Converter<Jwt, AbstractAuthentic
     /** {@inheritDoc} */
     @Override
     public AbstractAuthenticationToken convert(final Jwt source) {
+        // both claims below are not availabe by default in B2C.
+        // you have to configure user flows -> your sign in policy -> application claims
+        // and select 'User's Object ID' and 'Email Addresses' and 'User is new'
         var accountId = source.getClaimAsString("oid");
-        var email = source.getClaimAsStringList("emails").get(0);
-        return new JwtAuthenticationToken(accountId, email);
+        // claim 'newUser' is optional available only when iser is logging first time to the app
+        var newUser = Optional
+            .ofNullable(source.containsClaim("newUser"))
+            .map(ignored -> source.getClaimAsBoolean("newUser"))
+            .orElse(false);
+        var name = source.getClaimAsString("name");
+        return Try
+            .of(() -> source.getClaimAsStringList("emails").get(0))
+            .map(email -> new JwtAuthenticationToken(accountId, email, name, newUser))
+            .getOrElseThrow(() -> new IllegalArgumentException("JWT shoulw contain 'emails' claim, required by the application."));
     }
 
 }
@@ -26,8 +41,10 @@ final class JwtAuthenticationToken extends AbstractAuthenticationToken {
      * @param accountId fixme
      * @param email fixme
      */
-    JwtAuthenticationToken(final String accountId,
-                           final String email) {
+    JwtAuthenticationToken(String accountId,
+                           String email,
+                           String name,
+                           boolean newUser) {
         super(null);
         this.email = email;
         this.setAuthenticated(true);

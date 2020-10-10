@@ -7,10 +7,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 import sinnet.AppTestContext;
-import sinnet.TestDbContainer;
 import sinnet.Email;
 import sinnet.UsersProvider;
 
@@ -19,7 +17,6 @@ import sinnet.UsersProvider;
 @TestPropertySource(value = {
     "/domain-core.properties"
 })
-@Testcontainers
 public final class UsersProviderTests {
 
     @Autowired
@@ -27,13 +24,13 @@ public final class UsersProviderTests {
 
     @Test
     public void myTest() {
-        var actual = sut.search(Email.of("user1@sinnetapp.onmicrosoft.com"))
+        var actual = sut.search(Email.of("user1@project1"))
             .block()
             .map(it -> it.getEmail().getValue());
 
         Assertions.assertThat(actual).containsExactlyInAnyOrder(
-            "user1@sinnetapp.onmicrosoft.com",
-            "user2@sinnetapp.onmicrosoft.com",
-            "user3@sinnetapp.onmicrosoft.com");
+            "user1@project1",
+            "user2@project1",
+            "siudeks@gmail.com");
     }
 }

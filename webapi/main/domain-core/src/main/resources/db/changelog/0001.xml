@@ -50,7 +50,9 @@
             <column name="entity_id" type="UUID">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="servicemanPK"/>
             </column>
-            <column name="email" type="VARCHAR(50)"/>
+            <column name="email" type="VARCHAR(50)">
+                <constraints nullable="false" unique="true" primaryKeyName="servicemanPK"/>
+            </column>
             <column name="project_entity_id" type="UUID"/>
         </createTable>
     </changeSet>
