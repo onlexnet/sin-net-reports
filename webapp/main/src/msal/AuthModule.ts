@@ -68,7 +68,8 @@ export class AuthModule {
         this.account = null;
 
         this.loginRequest = {
-            scopes: ["https://sinnetapp.onmicrosoft.com/psa/Actions.Read"]
+            scopes: ["https://sinnetapp.onmicrosoft.com/psa/Actions.Read",
+                     "https://sinnetapp.onmicrosoft.com/psa/Actions.Write"]
         };
 
         this.loginRedirectRequest = {

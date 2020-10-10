@@ -2,6 +2,7 @@ package sinnet;
 
 import java.time.Duration;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -24,7 +25,7 @@ public class ServicesOperationsAddNew implements GraphQLResolver<ServicesOperati
      */
     // https://www.appsdeveloperblog.com/spring-security-preauthorize-annotation-example/
     // @PreAuthorize("hasAuthority('SCOPE_Actions.Write')")
-    public Boolean addNew(final ServicesOperations ignored,
+    public CompletableFuture<Boolean> addNew(final ServicesOperations ignored,
                           final ServiceEntry entry) {
 
         var model = new ServiceEntity(
@@ -36,9 +37,10 @@ public class ServicesOperationsAddNew implements GraphQLResolver<ServicesOperati
             Distance.of(entry.getDistance())
         );
 
-        actionService.save(UUID.randomUUID(), model);
-
-        return true;
+        return actionService
+            .save(UUID.randomUUID(), model)
+            .map(it -> Boolean.TRUE)
+            .toFuture();
     }
 
 }

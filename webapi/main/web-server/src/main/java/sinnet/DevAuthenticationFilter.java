@@ -1,6 +1,7 @@
 package sinnet;
 
 import java.io.IOException;
+import java.util.Collections;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -30,7 +31,7 @@ public class DevAuthenticationFilter extends AbstractAuthenticationProcessingFil
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
-        return new JwtAuthenticationToken(emailOfLoggedUser, emailOfLoggedUser, emailOfLoggedUser, false);
+        return new JwtAuthenticationToken(emailOfLoggedUser, emailOfLoggedUser, emailOfLoggedUser, false, Collections.emptyList());
     }
 
     @Override
