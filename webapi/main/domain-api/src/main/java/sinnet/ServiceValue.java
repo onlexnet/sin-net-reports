@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Value;
 import sinnet.models.ActionDuration;
 import sinnet.models.Distance;
+import sinnet.models.Email;
 import sinnet.models.EntityValue;
 import sinnet.models.Name;
 
@@ -16,7 +17,7 @@ public class ServiceValue implements EntityValue<ServiceValue> {
 
     /** Serviceman who did the service. */
     @Builder.Default
-    private Name who = Name.empty();
+    private Email who = Email.empty();
 
     /** Date when the service has been provided. */
     private LocalDate when;

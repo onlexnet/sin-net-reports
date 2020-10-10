@@ -15,7 +15,7 @@ public class ActionsDbModel {
     private UUID entityId;
 
     private String description;
-    private String servicemanName;
+    private String servicemanEmail;
 
     private String customerName;
     private LocalDate date;

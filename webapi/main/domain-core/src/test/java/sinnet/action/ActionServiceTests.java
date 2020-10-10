@@ -1,8 +1,8 @@
 package sinnet.action;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertThat;
 
-import java.time.LocalDate;
 import java.util.UUID;
 
 import org.assertj.core.api.Assertions;
@@ -21,6 +21,7 @@ import sinnet.Dates;
 import sinnet.ServiceValue;
 import sinnet.models.ActionDuration;
 import sinnet.models.Distance;
+import sinnet.models.Email;
 import sinnet.models.Name;
 
 @SpringBootTest(webEnvironment = WebEnvironment.NONE)
@@ -74,6 +75,7 @@ public class ActionServiceTests {
         var now = Dates.gen().head();
 
         var newEntity = ServiceValue.builder()
+            .who(Email.of("some person"))
             .howFar(Distance.of(1))
             .howLong(ActionDuration.of(2))
             .what("some action")
@@ -85,6 +87,7 @@ public class ActionServiceTests {
 
         var actual = sut.find(now, now).block().head().getValue();
         var expected = ServiceValue.builder()
+            .who(Email.of("some person"))
             .howFar(Distance.of(1))
             .howLong(ActionDuration.of(2))
             .what("some action")

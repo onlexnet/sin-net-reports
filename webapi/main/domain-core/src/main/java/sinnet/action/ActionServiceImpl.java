@@ -15,6 +15,7 @@ import sinnet.ActionService;
 import sinnet.ServiceValue;
 import sinnet.models.ActionDuration;
 import sinnet.models.Distance;
+import sinnet.models.Email;
 import sinnet.models.Entity;
 import sinnet.models.Name;
 
@@ -24,9 +25,12 @@ public class ActionServiceImpl implements ActionService {
     @Autowired
     private PgPool pgClient;
 
+    private static final String SOURCE = "SELECT entity_id, serviceman_email, distance, duration, date, customer_name, description, serviceman_name "
+                                       + "FROM actions it ";
     @Override
     public Mono<Boolean> save(UUID entityId, ServiceValue entity) {
         var values = Tuple.of(entityId,
+            entity.getWho().getValue(),
             entity.getWhom().getValue(),
             entity.getWhat(),
             entity.getHowFar().getValue(),
@@ -34,8 +38,8 @@ public class ActionServiceImpl implements ActionService {
             entity.getWho().getValue(), entity.getWhen());
         return Mono.create(consumer -> {
         pgClient.preparedQuery("INSERT INTO "
-                + "actions (entity_id, customer_name, description, distance, duration, serviceman_name, date) "
-                + "values ($1, $2, $3, $4, $5, $6, $7)")
+                + "actions (entity_id, serviceman_email, customer_name, description, distance, duration, serviceman_name, date) "
+                + "values ($1, $2, $3, $4, $5, $6, $7, $8)")
                 .execute(values, ar -> {
                     if (ar.succeeded()) consumer.success(Boolean.TRUE);
                     else consumer.error(ar.cause());
@@ -47,9 +51,7 @@ public class ActionServiceImpl implements ActionService {
     @Override
     public Mono<Stream<Entity<ServiceValue>>> find(LocalDate from, LocalDate to) {
         var findQuery = this.pgClient
-                .preparedQuery("SELECT entity_id, distance, duration, date, customer_name, description, serviceman_name "
-                + "FROM actions it "
-                + "WHERE it.date >= $1 AND it.date <= $2");
+                .preparedQuery(SOURCE + " WHERE it.date >= $1 AND it.date <= $2");
         return Mono.create(consumer -> {
                     findQuery.execute(Tuple.of(from, to), ar -> {
                     if (ar.succeeded()) {
@@ -68,9 +70,7 @@ public class ActionServiceImpl implements ActionService {
     @Override
     public Mono<Entity<ServiceValue>> find(UUID entityId) {
         var findQuery = this.pgClient
-                .preparedQuery("SELECT entity_id, distance, duration, date, customer_name, description, serviceman_name "
-                + "FROM actions it "
-                + "WHERE it.entity_id = $1");
+                .preparedQuery(SOURCE + " WHERE it.entity_id = $1");
         return Mono.create(consumer -> {
                     findQuery.execute(Tuple.of(entityId), ar -> {
                     if (ar.succeeded()) {
@@ -90,6 +90,7 @@ public class ActionServiceImpl implements ActionService {
 
     private static Entity<ServiceValue> map(Row row) {
         return ServiceValue.builder()
+        .who(Email.of(row.getString("serviceman_email")))
         .howFar(Distance.of(row.getInteger("distance")))
         .howLong(ActionDuration.of(row.getInteger("duration")))
         .whom(Name.of(row.getString("customer_name")))

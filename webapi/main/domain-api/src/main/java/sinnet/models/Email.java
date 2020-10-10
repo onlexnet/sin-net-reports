@@ -2,11 +2,13 @@ package sinnet.models;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 
 @EqualsAndHashCode
+@ToString
 public final class Email {
 
-    private static Email empty = new Email(null);
+    private static final Email EMPTY = new Email(null);
 
     @Getter
     private final String value;
@@ -20,6 +22,6 @@ public final class Email {
     }
 
     public static Email empty() {
-        return empty;
+        return EMPTY;
     }
 }

@@ -43,6 +43,7 @@ const selectPeriod = function* (command: SelectPeriodCommand) {
       });
     yield put(reloadServicesEnd(items));
   } catch (e) {
+    console.error(e);
     yield put({ type: "SOMETHING_T_DO_NOT_YET_DEFINED", message: e.message });
   }
 }

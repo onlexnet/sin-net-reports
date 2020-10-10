@@ -1,4 +1,4 @@
-import { ServiceAction, RELOAD_SERVICE_LIST, ADD_SERVICE_COMMAND as ADD_SERVICE_COMMAND, AddServiceCommand } from "./types"
+import { ServiceAction, RELOAD_SERVICE_LIST, ADD_SERVICE_COMMAND as ADD_SERVICE_COMMAND, AddServiceCommand, REFRESH_SERVICE_LIST_END } from "./types"
 import { ServiceAppModel } from "./ServiceModel"
 import { TimePeriod } from "../viewcontext/TimePeriod"
 
@@ -21,7 +21,7 @@ export const reloadServicesBegin = (): ServiceAction => {
 
 export const reloadServicesEnd = (items: ServiceAppModel[]): ServiceAction => {
     return {
-        type: "REFRESH_SERVICE_LIST_END",
+        type: REFRESH_SERVICE_LIST_END,
         payload: {
             items: items
         }

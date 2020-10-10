@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import graphql.kickstart.tools.GraphQLResolver;
 import sinnet.models.ActionDuration;
 import sinnet.models.Distance;
+import sinnet.models.Email;
 import sinnet.models.Name;
 
 /** Fixme. */
@@ -31,7 +32,7 @@ public class ServicesOperationsAddNew implements GraphQLResolver<ServicesOperati
                           final ServiceEntry entry) {
 
         var model = new ServiceValue(
-            Name.of(entry.getServicemanName()),
+            Email.of(entry.getServicemanName()),
             entry.getWhenProvided(),
             Name.of(entry.getForWhatCustomer()),
             entry.getDescription(),
