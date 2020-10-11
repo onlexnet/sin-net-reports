@@ -4,36 +4,20 @@ import { Dispatch } from 'redux';
 import { connect, ConnectedProps } from 'react-redux';
 import { RootState } from '../store/reducers';
 import { previousPeriodCommand, nextPeriodCommand } from '../store/viewcontext/actions';
-import { AddServiceCommand } from '../store/actions/types';
+import { useNewServiceActionMutation } from '../Components/.generated/components';
+import { asDtoDates } from '../api/Mapper';
 
 const overflowProps: IButtonProps = { ariaLabel: 'More commands' };
 
-const mapStateToProps = (state: RootState) => state.services;
+const mapStateToProps = (state: RootState) => state.viewContext;
 const mapDispatchToProps = (dispatch: Dispatch) => {
   return {
-    addNewService: () => {
-      var cmd: AddServiceCommand = {
-        type: 'ADD_SERVICE',
-        payload: {
-          description: "Nowa usługa " + Date.now(),
-          serviceMan: "Some person " + Date.now(),
-          customerName: "Customer name " + Date.now(),
-          when: { year: 2002, month: 3, day: Math.floor((Math.random() * 30) + 1) },
-          distance: Math.floor((Math.random() * 10) + 10),
-          duration: Math.floor((Math.random() * 50) + 10)
-        }
-      }
-      
-      dispatch(cmd);
-    },
     onPreviousMonthRequested: () => {
       dispatch(previousPeriodCommand())
     },
     onNextMonthRequested: () => {
       dispatch(nextPeriodCommand())
     }
-
-
   }
 }
 
@@ -43,18 +27,31 @@ type PropsFromRedux = ConnectedProps<typeof connector>
 interface ServiceCommandBarProps extends PropsFromRedux {
   onPreviousMonthRequested: () => void;
   onNextMonthRequested: () => void;
-  addNewService: () => void;
 }
 
 const ServiceCommandBarView: React.FC<ServiceCommandBarProps> = (props) => {
 
+  const [newServiceMutation, { data }] = useNewServiceActionMutation();
+  const newService = () => {
+    const { dateFrom } = asDtoDates(props.period);
+    newServiceMutation({
+      variables: {
+        when: dateFrom,
+        what: "Nowa usługa " + Date.now(),
+        who: "Some person " + Date.now(),
+        whom: "Customer name " + Date.now(),
+        distance: Math.floor((Math.random() * 10) + 10),
+        duration: Math.floor((Math.random() * 50) + 10)
+      }
+    })
+  }
   const _items: ICommandBarItemProps[] = [
     {
       key: 'newService',
       text: 'Nowa usługa',
       split: true,
       iconProps: { iconName: 'Add' },
-      onClick: () => props.addNewService()
+      onClick: () => newService()
     },
     {
       key: 'prevMonth',

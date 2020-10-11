@@ -5,6 +5,7 @@ import { ApolloClient } from "apollo-client";
 import { InMemoryCache } from "apollo-cache-inmemory";
 import { getSdk } from "./generated";
 import { GraphQLClient } from 'graphql-request';
+import { DefaultOptions } from "apollo-boost";
 
 // const wsLink = new WebSocketLink({
 //   uri: "wss://raport.sin.net.pl/subscriptions",
@@ -41,11 +42,22 @@ export const apolloClientFactory = (jwtToken: string) => {
       return forward(operation);
     });
   
+    const defaultOptions: DefaultOptions = {
+      watchQuery: {
+        fetchPolicy: 'no-cache',
+        errorPolicy: 'ignore',
+      },
+      query: {
+        fetchPolicy: 'no-cache',
+        errorPolicy: 'all',
+      },
+    }    
     var address = addressProvider().host;
     return new ApolloClient({
       cache: new InMemoryCache({}),
       link: middlewareAuthLink.concat(httpLink),
-      connectToDevTools: true
+      connectToDevTools: true,
+      defaultOptions
     });
   };
 

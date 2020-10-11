@@ -5,11 +5,12 @@ import { connect, ConnectedProps } from "react-redux";
 import { RootState } from "../store/reducers";
 import { ServiceAppModel } from "../store/actions/ServiceModel";
 import { KeyboardEventHandler, useCallback, useEffect, useState } from "react";
-import { LocalDate, TimePeriod } from "../store/viewcontext/TimePeriod";
+import { TimePeriod } from "../store/viewcontext/TimePeriod";
 import { HorizontalSeparatorStack } from "../Components/HorizontalSeparatorStack";
-import { dates } from "../api/DtoMapper";
-import { useGetUsersQuery } from "../Components/.generated/components";
+import { dates, toModel } from "../api/DtoMapper";
+import { useFetchServicesQuery, useGetUsersQuery } from "../Components/.generated/components";
 import _ from "lodash";
+import { asDtoDates } from "../api/Mapper";
 
 const classNames = mergeStyleSets({
   fileIconHeaderIcon: {
@@ -72,7 +73,7 @@ export interface ContentProps {
 }
 
 const mapStateToProps = (state: RootState) => {
-  return { ...state.services, ...state.viewContext };
+  return { ...state.viewContext };
 };
 
 const connector = connect(mapStateToProps);
@@ -194,8 +195,30 @@ const ConnectedContent: React.FC<ContentProps & PropsFromRedux> = props => {
   });
   const [selectedItem, setSelectedItem] = useState<ServiceAppModel | null>(null);
   const { columns, announcedMessage } = state;
-  const { items } = props;
+  
+  const periodDto = asDtoDates(props.period);
+  const { data, loading, error } = useFetchServicesQuery({
+    variables: {
+      from: periodDto.dateFrom,
+      to: periodDto.dateTo
+    }
+  });
+  var items = _.chain(data?.Services.search.items)
+    .map(it => {
+    const item: ServiceAppModel = {
+      entityId: it.entityId,
+      description: it.description ?? "-",
+      servicemanName: it.servicemanName ?? "-",
+      customerName: it.forWhatCustomer,
+      when: toModel(it.whenProvided),
+      distance: it.distance,
+      duration: it.duration
+    }
+    return item;
+  }).value();
+
   const stackTokens: IStackTokens = { childrenGap: 40 };
+
 
 
   const [currentPeriod, setCurrentPeriod] = useState<TimePeriod | null>(null);

@@ -39,5 +39,5 @@ type ViewContextActionType = typeof VIEWCONTEXT_PREV_PERIOD
                            | typeof VIEWCONTEXT_SELECT_PERIOD
                            | typeof VIEWCONTEXT_PERIOD_SELECTED;
 
-export type ViewContextAction = PeriodSelected
+export type ViewContextAction = PeriodSelected | PeriodPrev | PeriodNext;
 export type ViewContextCommand = PeriodPrev | PeriodNext | SelectPeriodCommand;

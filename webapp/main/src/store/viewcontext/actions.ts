@@ -1,9 +1,9 @@
-import { ViewContextAction, ViewContextCommand } from "./types"
+import { ViewContextAction, ViewContextCommand, VIEWCONTEXT_PREV_PERIOD } from "./types"
 import { TimePeriod } from "./TimePeriod"
 
 export const previousPeriodCommand = (): ViewContextCommand => {
     return {
-        type: "VIEWCONTEXT_PREV_PERIOD",
+        type: VIEWCONTEXT_PREV_PERIOD,
         payload: { }
     }
 }
