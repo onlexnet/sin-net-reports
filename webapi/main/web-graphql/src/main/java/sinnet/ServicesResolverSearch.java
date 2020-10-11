@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 
 /** Fixme. */
 @Component
-public class ServicesSearchResolver implements GraphQLResolver<Services> {
+public class ServicesResolverSearch implements GraphQLResolver<Services> {
 
     @Autowired
     private ActionService actionService;

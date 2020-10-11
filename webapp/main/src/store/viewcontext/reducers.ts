@@ -3,7 +3,8 @@ import { ViewContextState, ViewContextAction } from "./types";
 import { TimePeriod } from "./TimePeriod";
 
 const initialState: ViewContextState = {
-    period: new TimePeriod(new Date())
+    period: new TimePeriod(new Date()),
+    editedActionId: null
 }
 
 export const viewContextReducer = (state = initialState, action: ViewContextAction): ViewContextState => {

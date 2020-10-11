@@ -8,15 +8,6 @@ export const previousPeriodCommand = (): ViewContextCommand => {
     }
 }
 
-export const selectPeriodCommand = (requested: TimePeriod): ViewContextCommand => {
-    return {
-        type: "VIEWCONTEXT_SELECT_PERIOD",
-        payload: {
-            requested
-        }
-    }
-}
-
 export const nextPeriodCommand = (): ViewContextCommand => {
     return {
         type: "VIEWCONTEXT_NEXT_PERIOD",

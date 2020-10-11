@@ -1,5 +1,6 @@
 type Services {
     search(filter: ServicesFilter): ServicesSearchResult!
+    get(actionId: ID!): ServiceModel
 }
 
 input ServiceEntry {

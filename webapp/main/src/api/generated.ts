@@ -54,11 +54,17 @@ export type ServiceModel = {
 export type Services = {
   __typename?: 'Services';
   search: ServicesSearchResult;
+  get?: Maybe<ServiceModel>;
 };
 
 
 export type ServicesSearchArgs = {
   filter?: Maybe<ServicesFilter>;
+};
+
+
+export type ServicesGetArgs = {
+  actionId: Scalars['ID'];
 };
 
 export type ServicesFilter = {
@@ -143,6 +149,22 @@ export type FetchServicesQuery = (
   ) }
 );
 
+export type GetActionQueryVariables = Exact<{
+  actionId: Scalars['ID'];
+}>;
+
+
+export type GetActionQuery = (
+  { __typename?: 'Query' }
+  & { Services: (
+    { __typename?: 'Services' }
+    & { get?: Maybe<(
+      { __typename?: 'ServiceModel' }
+      & Pick<ServiceModel, 'entityId' | 'whenProvided' | 'forWhatCustomer' | 'servicemanName' | 'description' | 'duration' | 'distance'>
+    )> }
+  ) }
+);
+
 export type NewServiceActionMutationVariables = Exact<{
   when: Scalars['Date'];
   what: Scalars['String'];
@@ -195,6 +217,21 @@ export const FetchServicesDocument = gql`
   }
 }
     `;
+export const GetActionDocument = gql`
+    query GetAction($actionId: ID!) {
+  Services {
+    get(actionId: $actionId) {
+      entityId
+      whenProvided
+      forWhatCustomer
+      servicemanName
+      description
+      duration
+      distance
+    }
+  }
+}
+    `;
 export const NewServiceActionDocument = gql`
     mutation newServiceAction($when: Date!, $what: String!, $who: String!, $whom: String!, $duration: Int!, $distance: Int!) {
   Services {
@@ -217,6 +254,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     FetchServices(variables: FetchServicesQueryVariables): Promise<FetchServicesQuery> {
       return withWrapper(() => client.request<FetchServicesQuery>(print(FetchServicesDocument), variables));
+    },
+    GetAction(variables: GetActionQueryVariables): Promise<GetActionQuery> {
+      return withWrapper(() => client.request<GetActionQuery>(print(GetActionDocument), variables));
     },
     newServiceAction(variables: NewServiceActionMutationVariables): Promise<NewServiceActionMutation> {
       return withWrapper(() => client.request<NewServiceActionMutation>(print(NewServiceActionDocument), variables));

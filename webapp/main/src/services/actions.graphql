@@ -17,6 +17,20 @@ query FetchServices($from: Date!, $to: Date!) {
   }
 }
 
+query GetAction($actionId: ID!) {
+  Services {
+    get (actionId: $actionId) {
+      entityId,
+      whenProvided
+      forWhatCustomer
+      servicemanName
+      description
+      duration
+      distance
+    }
+  }
+}
+
 mutation newServiceAction($when: Date!, $what: String!, $who: String!, $whom: String!, $duration: Int!, $distance: Int!) {
   Services {
     addNew(entry: {
