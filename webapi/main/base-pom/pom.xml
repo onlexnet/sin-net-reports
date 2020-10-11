@@ -22,6 +22,15 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
+  <dependencies>
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>1.18.10</version>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
+
   <dependencyManagement>
     <dependencies>
       <dependency>
@@ -49,6 +58,13 @@
         <groupId>io.vavr</groupId>
         <artifactId>vavr</artifactId>
         <version>0.10.2</version>
+      </dependency>
+
+      <dependency>
+        <groupId>net.siudek</groupId>
+        <artifactId>web-security</artifactId>
+        <version>${my.version}</version>
+        <scope>compile</scope>
       </dependency>
 
       <dependency>

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import graphql.kickstart.tools.GraphQLQueryResolver;
+import io.vavr.collection.Stream;
 import lombok.Value;
 import sinnet.models.Email;
 
@@ -16,23 +17,29 @@ public class Users implements GraphQLQueryResolver {
     private UsersProvider usersProvider;
 
     @Autowired
-    private Identity identity;
+    private IdentityProvider identity;
 
     public Users getUsers() {
         return this;
     }
 
-    public Iterable<User> search() {
-        return usersProvider
-            .search(Email.of(identity.getEmail()))
-            .block()
-            .map(it -> new User(UUID.randomUUID(), it.getEmail().getValue()));
+    public Iterable<UserDTO> search() {
+        return identity
+            .getCurrent()
+            .map(user -> {
+                var email = Email.of(user.getEmail());
+                return usersProvider
+                    .search(email)
+                    .block()
+                    .map(it -> new UserDTO(UUID.randomUUID(), it.getEmail().getValue()));
+            })
+            .orElseGet(Stream::empty);
     }
 
 }
 
 @Value
-class User {
+class UserDTO {
     private UUID entityId;
     private String email;
 }

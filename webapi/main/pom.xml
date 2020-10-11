@@ -10,6 +10,7 @@
     <module>base-pom</module>
     <module>domain-api</module>
     <module>domain-core</module>
+    <module>web-security</module>
     <module>web-server</module>
     <module>web-graphql</module>
     <module>host</module>
@@ -33,16 +34,6 @@
     <!-- disable encoding warning http://maven.apache.org/general.html#encoding-warning -->
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
-
-  <dependencies>
-
-    <dependency>
-      <groupId>org.projectlombok</groupId>
-      <artifactId>lombok</artifactId>
-      <version>1.18.10</version>
-      <scope>provided</scope>
-    </dependency>
-  </dependencies>
 
   <build>
     <plugins>

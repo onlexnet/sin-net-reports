@@ -31,7 +31,7 @@ public class DevAuthenticationFilter extends AbstractAuthenticationProcessingFil
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
-        return new JwtAuthenticationToken(emailOfLoggedUser, emailOfLoggedUser, emailOfLoggedUser, false, Collections.emptyList());
+        return new AppAuthenticationToken(emailOfLoggedUser, emailOfLoggedUser, emailOfLoggedUser, false, Collections.emptyList());
     }
 
     @Override

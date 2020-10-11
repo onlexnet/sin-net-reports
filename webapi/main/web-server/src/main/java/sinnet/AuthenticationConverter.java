@@ -1,12 +1,10 @@
 package sinnet;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
 
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.oauth2.jwt.Jwt;
 
@@ -38,41 +36,8 @@ public class AuthenticationConverter implements Converter<Jwt, AbstractAuthentic
         var name = source.getClaimAsString("name");
         return Try
             .of(() -> source.getClaimAsStringList("emails").get(0))
-            .map(email -> new JwtAuthenticationToken(accountId, email, name, newUser, scopes))
+            .map(email -> new AppAuthenticationToken(accountId, email, name, newUser, scopes))
             .getOrElseThrow(() -> new IllegalArgumentException("JWT shoulw contain 'emails' claim, required by the application."));
     }
 
 }
-
-/** Fixme. */
-final class JwtAuthenticationToken extends AbstractAuthenticationToken {
-
-    private String email;
-    /**
-     * Fixme.
-     * @param accountId fixme
-     * @param email fixme
-     */
-    JwtAuthenticationToken(String accountId,
-                           String email,
-                           String name,
-                           boolean newUser,
-                           Collection<GrantedAuthority> authorities) {
-        super(authorities);
-        this.email = email;
-        this.setAuthenticated(true);
-    }
-
-    private static final long serialVersionUID = 3717651672219649325L;
-
-    @Override
-    public Object getCredentials() {
-        return null;
-    }
-
-    @Override
-    public Object getPrincipal() {
-        return email;
-    }
-}
-
