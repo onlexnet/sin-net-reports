@@ -12,7 +12,8 @@ public class IdentityProviderImpl implements IdentityProvider {
     public Optional<User> getCurrent() {
         var context = SecurityContextHolder.getContext();
         var auth = (AppAuthenticationToken) context.getAuthentication();
-        var result = new User("siudeks@gmail.com");
+        if (auth == null) return Optional.empty();
+        var result = new User(auth.getEmail());
         return Optional.of(result);
     }
 }

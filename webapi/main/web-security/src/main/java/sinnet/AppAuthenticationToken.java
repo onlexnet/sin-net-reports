@@ -5,10 +5,14 @@ import java.util.Collection;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 
-/** Fixme. */
-public final class AppAuthenticationToken extends AbstractAuthenticationToken {
+import lombok.Getter;
 
+/** Fixme. */
+final class AppAuthenticationToken extends AbstractAuthenticationToken {
+
+    @Getter
     private String email;
+
     /**
      * Fixme.
      * @param accountId fixme
