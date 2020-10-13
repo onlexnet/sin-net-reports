@@ -7,10 +7,11 @@ import { ServiceAppModel } from "../store/actions/ServiceModel";
 import { useState } from "react";
 import { TimePeriod } from "../store/viewcontext/TimePeriod";
 import { HorizontalSeparatorStack } from "../Components/HorizontalSeparatorStack";
-import { toModel } from "../api/DtoMapper";
+import { toActionModel, toModel } from "../api/DtoMapper";
 import { useFetchServicesQuery, useGetUsersQuery } from "../Components/.generated/components";
 import _ from "lodash";
 import { asDtoDates } from "../api/Mapper";
+import EditAction from "./EditAction";
 
 const classNames = mergeStyleSets({
   fileIconHeaderIcon: {
@@ -204,18 +205,7 @@ const ConnectedContent: React.FC<ContentProps & PropsFromRedux> = props => {
     }
   });
   var items = _.chain(data?.Services.search.items)
-    .map(it => {
-    const item: ServiceAppModel = {
-      entityId: it.entityId,
-      description: it.description ?? "-",
-      servicemanName: it.servicemanName ?? "-",
-      customerName: it.forWhatCustomer,
-      when: toModel(it.whenProvided),
-      distance: it.distance,
-      duration: it.duration
-    }
-    return item;
-  }).value();
+    .map(toActionModel).value();
 
   const stackTokens: IStackTokens = { childrenGap: 40 };
 
@@ -257,7 +247,7 @@ const ConnectedContent: React.FC<ContentProps & PropsFromRedux> = props => {
 
           <div className="ms-Grid-row">
             <div className="ms-Grid-col ms-sm12">
-              <ItemEdit item={selectedItem} />
+              <EditAction />
             </div>
           </div>
 
