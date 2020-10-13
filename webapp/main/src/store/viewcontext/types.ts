@@ -8,7 +8,8 @@ export interface ViewContextState {
 
 export const VIEWCONTEXT_PREV_PERIOD = "VIEWCONTEXT_PREV_PERIOD";
 export const VIEWCONTEXT_NEXT_PERIOD = "VIEWCONTEXT_NEXT_PERIOD";
-const VIEWCONTEXT_PERIOD_SELECTED = "VIEWCONTEXT_PERIOD_SELECTED"
+export const VIEWCONTEXT_PERIOD_SELECTED = "VIEWCONTEXT_PERIOD_SELECTED";
+export const VIEWCONTEXT_ACTION_EDIT = "VIEWCONTEXT_ACTION_EDIT";
 
 export interface PeriodPrev extends Action<typeof VIEWCONTEXT_PREV_PERIOD> {
     type: typeof VIEWCONTEXT_PREV_PERIOD,
@@ -27,9 +28,15 @@ export interface PeriodSelected extends Action<typeof VIEWCONTEXT_PERIOD_SELECTE
     }
 }
 
-type ViewContextActionType = typeof VIEWCONTEXT_PREV_PERIOD
-                           | typeof VIEWCONTEXT_NEXT_PERIOD
-                           | typeof VIEWCONTEXT_PERIOD_SELECTED;
+export interface ActionEditItem extends Action<typeof VIEWCONTEXT_ACTION_EDIT> {
+    type: typeof VIEWCONTEXT_ACTION_EDIT,
+    payload: {
+        actionEntityId: string
+    }
+}
 
-export type ViewContextAction = PeriodSelected | PeriodPrev | PeriodNext;
+export type ViewContextAction = PeriodSelected
+                              | PeriodPrev
+                              | PeriodNext
+                              | ActionEditItem;
 export type ViewContextCommand = PeriodPrev | PeriodNext;

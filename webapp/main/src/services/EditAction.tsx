@@ -196,10 +196,6 @@ const SomeEditAction: React.FC<ServiceAppModel> = props => {
           </div>
         </Stack>
       </FocusTrapZone>
-      <p>
-
-        {JSON.stringify(props)}
-      </p>
     </>
 
   );

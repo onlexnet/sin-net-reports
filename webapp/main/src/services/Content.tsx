@@ -7,11 +7,13 @@ import { ServiceAppModel } from "../store/actions/ServiceModel";
 import { useState } from "react";
 import { TimePeriod } from "../store/viewcontext/TimePeriod";
 import { HorizontalSeparatorStack } from "../Components/HorizontalSeparatorStack";
-import { toActionModel, toModel } from "../api/DtoMapper";
-import { useFetchServicesQuery, useGetUsersQuery } from "../Components/.generated/components";
+import { toActionModel } from "../api/DtoMapper";
+import { useFetchServicesQuery } from "../Components/.generated/components";
 import _ from "lodash";
 import { asDtoDates } from "../api/Mapper";
 import EditAction from "./EditAction";
+import { Dispatch } from "redux";
+import { ActionEditItem } from "../store/viewcontext/types";
 
 const classNames = mergeStyleSets({
   fileIconHeaderIcon: {
@@ -76,11 +78,23 @@ export interface ContentProps {
 const mapStateToProps = (state: RootState) => {
   return { ...state.viewContext };
 };
+const mapDispatchToProps = (dispatch: Dispatch) => {
+  return {
+    editItem: (actionEntityId: string) => {
+      var action: ActionEditItem = {
+        type: "VIEWCONTEXT_ACTION_EDIT",
+        payload: { actionEntityId }
+      }
+      dispatch(action);
+    }
+  }
+}
+const connector = connect(mapStateToProps, mapDispatchToProps);
 
-const connector = connect(mapStateToProps);
+
 type PropsFromRedux = ConnectedProps<typeof connector>
 
-const ConnectedContent: React.FC<ContentProps & PropsFromRedux> = props => {
+const ConnectedContent: React.FC<PropsFromRedux> = props => {
 
   const _onColumnClick = (column: IColumn, columns: TypedColumn[]): void => {
     const newColumns: IColumn[] = columns.slice();
@@ -194,7 +208,6 @@ const ConnectedContent: React.FC<ContentProps & PropsFromRedux> = props => {
     isModalSelection: false,
     announcedMessage: ""
   });
-  const [selectedItem, setSelectedItem] = useState<ServiceAppModel | null>(null);
   const { columns, announcedMessage } = state;
   
   const periodDto = asDtoDates(props.period);
@@ -214,7 +227,7 @@ const ConnectedContent: React.FC<ContentProps & PropsFromRedux> = props => {
   const [currentPeriod, setCurrentPeriod] = useState<TimePeriod | null>(null);
   if (currentPeriod != props.period) {
     setCurrentPeriod(props.period);
-    setSelectedItem(null)
+    // setSelectedItem(null)
   }
 
   return (
@@ -247,12 +260,6 @@ const ConnectedContent: React.FC<ContentProps & PropsFromRedux> = props => {
 
           <div className="ms-Grid-row">
             <div className="ms-Grid-col ms-sm12">
-              <EditAction />
-            </div>
-          </div>
-
-          <div className="ms-Grid-row">
-            <div className="ms-Grid-col ms-sm12">
               <DetailsList
                 items={items}
                 compact={true}
@@ -263,7 +270,7 @@ const ConnectedContent: React.FC<ContentProps & PropsFromRedux> = props => {
                 layoutMode={DetailsListLayoutMode.justified}
                 isHeaderVisible={true}
                 onActiveItemChanged={(item: ServiceAppModel) => {
-                  setSelectedItem(item);
+                  props.editItem(item.entityId);
                 }}
               />
             </div>

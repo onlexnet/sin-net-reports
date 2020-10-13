@@ -1,5 +1,5 @@
 import _ from "lodash";
-import { ViewContextState, ViewContextAction } from "./types";
+import { ViewContextState, ViewContextAction, VIEWCONTEXT_ACTION_EDIT } from "./types";
 import { TimePeriod } from "./TimePeriod";
 
 const initialState: ViewContextState = {
@@ -19,6 +19,9 @@ export const viewContextReducer = (state = initialState, action: ViewContextActi
             return clone;
         case 'VIEWCONTEXT_NEXT_PERIOD':
             clone.period = clone.period.next();
+            return clone;
+        case VIEWCONTEXT_ACTION_EDIT:
+            clone.editedActionId = action.payload.actionEntityId;
             return clone;
         default:
             return state;
