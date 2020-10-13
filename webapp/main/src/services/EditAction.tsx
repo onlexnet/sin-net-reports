@@ -3,7 +3,7 @@ import { ComboBox, DefaultButton, FocusTrapZone, IComboBox, IComboBoxOption, ISt
 import React, { KeyboardEventHandler, useCallback, useEffect, useState } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { dates, toActionModel } from "../api/DtoMapper";
-import { useGetActionLazyQuery } from "../Components/.generated/components";
+import { useGetActionLazyQuery, useGetUsersLazyQuery } from "../Components/.generated/components";
 import { ServiceAppModel } from "../store/actions/ServiceModel";
 import { RootState } from "../store/reducers";
 
@@ -118,12 +118,6 @@ const SomeEditAction: React.FC<ServiceAppModel> = props => {
     setDisabledFocusTrap(false);
   }, [props.entityId]);
 
-  if (!props) return (
-    <p>
-      Empty data
-    </p>
-  )
-
   const onKeyUp: KeyboardEventHandler<any> = (event) => {
     if (event.charCode !== 13) return;
     setDisabledFocusTrap(true);
@@ -136,12 +130,21 @@ const SomeEditAction: React.FC<ServiceAppModel> = props => {
   );
   const stackTokens = { childrenGap: 8 }
 
-  let comboBoxBasicOptions: IComboBoxOption[] = [];
-  // if (data) {
-  //   comboBoxBasicOptions = _.chain(data.Users?.search)
-  //     .map(it => ({ key: it.email, text: it.email }))
-  //     .value();
-  // }
+  const [users, setUsers] = useState<string[]>([]);
+  const [getUsers, { loading, data }] = useGetUsersLazyQuery();
+  if (_.size(users) == 0) {
+    if (loading) {
+    } else if (!data) {
+      getUsers()
+    } else if (data) {
+      const result = _.chain(data.Users?.search).map(it => it.email).value();
+      alert(JSON.stringify(result));
+      setUsers(result);
+    }
+  }
+  const comboBoxBasicOptions = _.chain(users)
+       .map(it => ({ key: it, text: it }))
+       .value();
 
   return (
     <>

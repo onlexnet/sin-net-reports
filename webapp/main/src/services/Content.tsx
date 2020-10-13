@@ -11,7 +11,6 @@ import { toActionModel } from "../api/DtoMapper";
 import { useFetchServicesQuery } from "../Components/.generated/components";
 import _ from "lodash";
 import { asDtoDates } from "../api/Mapper";
-import EditAction from "./EditAction";
 import { Dispatch } from "redux";
 import { ActionEditItem } from "../store/viewcontext/types";
 
