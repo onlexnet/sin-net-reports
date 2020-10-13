@@ -134,11 +134,11 @@ const SomeEditAction: React.FC<ServiceAppModel> = props => {
   const [getUsers, { loading, data }] = useGetUsersLazyQuery();
   if (_.size(users) == 0) {
     if (loading) {
+      //
     } else if (!data) {
       getUsers()
     } else if (data) {
       const result = _.chain(data.Users?.search).map(it => it.email).value();
-      alert(JSON.stringify(result));
       setUsers(result);
     }
   }
