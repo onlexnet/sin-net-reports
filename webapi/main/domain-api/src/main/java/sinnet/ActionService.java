@@ -11,6 +11,8 @@ public interface ActionService {
 
     Mono<Boolean> save(UUID entityId, ServiceValue entity);
 
+    Mono<Boolean> update(UUID entityId, ServiceValue entity);
+
     Mono<Stream<Entity<ServiceValue>>> find(LocalDate from, LocalDate to);
 
     Mono<Entity<ServiceValue>> find(UUID entityId);

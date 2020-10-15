@@ -98,6 +98,38 @@ public class ActionServiceTests {
     }
 
     @Test
+    public void shouldUpdateFullModel() {
+        var now = Dates.gen().head();
+
+        var newEntity = ServiceValue.builder()
+            .when(Dates.gen().head())
+            .build();
+        var updateEntity = ServiceValue.builder()
+            .who(Email.of("some person"))
+            .howFar(Distance.of(1))
+            .howLong(ActionDuration.of(2))
+            .what("some action")
+            .when(now)
+            .whom(Name.of("some Customer name"))
+            .build();
+
+        var entityId = UUID.randomUUID();
+        sut.save(entityId, newEntity).block();
+        assertThat(sut.update(entityId, updateEntity).block()).isTrue();
+
+        var actual = sut.find(now, now).block().head().getValue();
+        var expected = ServiceValue.builder()
+            .who(Email.of("some person"))
+            .howFar(Distance.of(1))
+            .howLong(ActionDuration.of(2))
+            .what("some action")
+            .when(now)
+            .whom(Name.of("some Customer name"))
+            .build();
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
     public void shouldSaveMinModel() {
         var now = Dates.gen().head();
 

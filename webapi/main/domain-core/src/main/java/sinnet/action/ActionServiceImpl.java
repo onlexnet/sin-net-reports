@@ -99,4 +99,25 @@ public class ActionServiceImpl implements ActionService {
         .build()
         .withId(row.getUUID("entity_id"));
     }
+
+    @Override
+    public Mono<Boolean> update(UUID entityId, ServiceValue entity) {
+        var values = Tuple.of(entityId,
+            entity.getWho().getValue(),
+            entity.getWhom().getValue(),
+            entity.getWhat(),
+            entity.getHowFar().getValue(),
+            entity.getHowLong().getValue(),
+            entity.getWho().getValue(), entity.getWhen());
+        return Mono.create(consumer -> {
+            pgClient.preparedQuery("UPDATE "
+                + "actions SET "
+                + "serviceman_email=$2, customer_name=$3, description=$4, distance=$5, duration=$6, serviceman_name=$7, date=$8 "
+                + "where entity_id=$1")
+                .execute(values, ar -> {
+                    if (ar.succeeded()) consumer.success(Boolean.TRUE);
+                    else consumer.error(ar.cause());
+                });
+        });
+    }
 }

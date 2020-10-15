@@ -75,11 +75,18 @@ export type ServicesFilter = {
 export type ServicesOperations = {
   __typename?: 'ServicesOperations';
   addNew: Scalars['Boolean'];
+  update: Scalars['Boolean'];
 };
 
 
 export type ServicesOperationsAddNewArgs = {
   entry?: Maybe<ServiceEntry>;
+};
+
+
+export type ServicesOperationsUpdateArgs = {
+  entityId: Scalars['ID'];
+  content?: Maybe<ServiceEntry>;
 };
 
 export type ServicesSearchResult = {
@@ -183,6 +190,25 @@ export type NewServiceActionMutation = (
   ) }
 );
 
+export type UpdateActionMutationVariables = Exact<{
+  entityId: Scalars['ID'];
+  when: Scalars['Date'];
+  what: Scalars['String'];
+  who: Scalars['String'];
+  whom: Scalars['String'];
+  duration: Scalars['Int'];
+  distance: Scalars['Int'];
+}>;
+
+
+export type UpdateActionMutation = (
+  { __typename?: 'Mutation' }
+  & { Services: (
+    { __typename?: 'ServicesOperations' }
+    & Pick<ServicesOperations, 'update'>
+  ) }
+);
+
 
 export const UserContextDocument = gql`
     query UserContext {
@@ -239,6 +265,13 @@ export const NewServiceActionDocument = gql`
   }
 }
     `;
+export const UpdateActionDocument = gql`
+    mutation updateAction($entityId: ID!, $when: Date!, $what: String!, $who: String!, $whom: String!, $duration: Int!, $distance: Int!) {
+  Services {
+    update(entityId: $entityId, content: {servicemanName: $who, whenProvided: $when, forWhatCustomer: $whom, description: $what, duration: $duration, distance: $distance})
+  }
+}
+    `;
 
 export type SdkFunctionWrapper = <T>(action: () => Promise<T>) => Promise<T>;
 
@@ -260,6 +293,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     newServiceAction(variables: NewServiceActionMutationVariables): Promise<NewServiceActionMutation> {
       return withWrapper(() => client.request<NewServiceActionMutation>(print(NewServiceActionDocument), variables));
+    },
+    updateAction(variables: UpdateActionMutationVariables): Promise<UpdateActionMutation> {
+      return withWrapper(() => client.request<UpdateActionMutation>(print(UpdateActionDocument), variables));
     }
   };
 }
