@@ -12,7 +12,7 @@ import { useFetchServicesQuery } from "../Components/.generated/components";
 import _ from "lodash";
 import { asDtoDates } from "../api/Mapper";
 import { Dispatch } from "redux";
-import { ActionEditItem } from "../store/viewcontext/types";
+import { ActionEditItem, VIEWCONTEXT_ACTION_EDIT_START } from "../store/viewcontext/types";
 
 const classNames = mergeStyleSets({
   fileIconHeaderIcon: {
@@ -81,7 +81,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
   return {
     editItem: (actionEntityId: string) => {
       var action: ActionEditItem = {
-        type: "VIEWCONTEXT_ACTION_EDIT",
+        type: VIEWCONTEXT_ACTION_EDIT_START,
         payload: { actionEntityId }
       }
       dispatch(action);
@@ -268,7 +268,7 @@ const ConnectedContent: React.FC<PropsFromRedux> = props => {
                 setKey="none"
                 layoutMode={DetailsListLayoutMode.justified}
                 isHeaderVisible={true}
-                onActiveItemChanged={(item: ServiceAppModel) => {
+                onItemInvoked={(item: ServiceAppModel) => {
                   props.editItem(item.entityId);
                 }}
               />

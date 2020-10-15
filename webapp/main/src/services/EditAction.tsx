@@ -2,16 +2,29 @@ import _ from "lodash";
 import { ComboBox, DefaultButton, FocusTrapZone, IComboBox, IComboBoxOption, IStackStyles, MaskedTextField, memoizeFunction, PrimaryButton, Stack, TextField } from "office-ui-fabric-react";
 import React, { KeyboardEventHandler, useCallback, useEffect, useState } from "react";
 import { connect, ConnectedProps } from "react-redux";
+import { Dispatch } from "redux";
 import { dates, toActionModel } from "../api/DtoMapper";
 import { useGetActionLazyQuery, useGetUsersLazyQuery } from "../Components/.generated/components";
 import { ServiceAppModel } from "../store/actions/ServiceModel";
 import { RootState } from "../store/reducers";
+import { ActionEditCancel, VIEWCONTEXT_ACTION_EDIT_CANCEL } from "../store/viewcontext/types";
 
 const mapStateToProps = (state: RootState) => {
   return { ...state.viewContext };
 };
+const mapDispatchToProps = (dispatch: Dispatch) => {
+  return {
+    cancelEdit: () => {
+      var action: ActionEditCancel = {
+        type: VIEWCONTEXT_ACTION_EDIT_CANCEL,
+        payload: { }
+      }
+      dispatch(action);
+    }
+  }
+}
+const connector = connect(mapStateToProps, mapDispatchToProps);
 
-const connector = connect(mapStateToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>
 
 const EditAction: React.FC<PropsFromRedux> = props => {
@@ -30,16 +43,17 @@ const EditAction: React.FC<PropsFromRedux> = props => {
     var dto = data.Services.get;
     if (dto) {
       var model = toActionModel(dto)
-      return <SomeEditAction {...model} />;
+      return <SomeEditAction item={model} cancelEdit={props.cancelEdit} />;
     }
   }
 
   return <NoneEditAction />
 }
 
-const SomeEditAction: React.FC<ServiceAppModel> = props => {
+const SomeEditAction: React.FC<{ item: ServiceAppModel, cancelEdit: () => void}> = props => {
 
-  const defaultServicemanName = props?.servicemanName;
+  const { item, cancelEdit } = props;
+  const defaultServicemanName = item?.servicemanName;
   const [servicemanName, setServicemanName] = useState(defaultServicemanName);
   useEffect(() => {
     setServicemanName(defaultServicemanName);
@@ -52,7 +66,7 @@ const SomeEditAction: React.FC<ServiceAppModel> = props => {
     [setServicemanName],
   );
 
-  const defaultDate = dates(props?.when).toRawValue;
+  const defaultDate = dates(item?.when).toRawValue;
   const [date, setDate] = useState<string>(defaultDate);
   useEffect(() => {
     setDate(defaultDate);
@@ -65,7 +79,7 @@ const SomeEditAction: React.FC<ServiceAppModel> = props => {
     [],
   );
 
-  const defaultCustomerName = props?.customerName;
+  const defaultCustomerName = item?.customerName;
   const [customerName, setCustomerName] = useState(defaultCustomerName);
   useEffect(() => {
     setCustomerName(defaultCustomerName);
@@ -77,7 +91,7 @@ const SomeEditAction: React.FC<ServiceAppModel> = props => {
     [],
   );
 
-  const propsDescription = props?.description;
+  const propsDescription = item?.description;
   const [description, setDescription] = useState(propsDescription);
   useEffect(() => {
     setDescription(propsDescription)
@@ -89,7 +103,7 @@ const SomeEditAction: React.FC<ServiceAppModel> = props => {
     [],
   );
 
-  const propsDuration = "" + props?.duration;
+  const propsDuration = "" + item?.duration;
   const [duration, setDuration] = useState(propsDuration);
   useEffect(() => {
     setDuration(propsDuration)
@@ -101,7 +115,7 @@ const SomeEditAction: React.FC<ServiceAppModel> = props => {
     [],
   );
 
-  const propsDistance = "" + props?.distance;
+  const propsDistance = "" + item?.distance;
   const [distance, setDistance] = useState(propsDistance);
   useEffect(() => {
     setDistance(propsDistance)
@@ -116,7 +130,7 @@ const SomeEditAction: React.FC<ServiceAppModel> = props => {
   const [disabledFocusTrap, setDisabledFocusTrap] = useState(false);
   useEffect(() => {
     setDisabledFocusTrap(false);
-  }, [props.entityId]);
+  }, [item.entityId]);
 
   const onKeyUp: KeyboardEventHandler<any> = (event) => {
     if (event.charCode !== 13) return;
@@ -193,7 +207,7 @@ const SomeEditAction: React.FC<ServiceAppModel> = props => {
             <div className="ms-Grid-col ms-sm12">
               <Stack horizontal tokens={stackTokens}>
                 <PrimaryButton onClick={() => setDisabledFocusTrap(true)} />
-                <DefaultButton onClick={() => setDisabledFocusTrap(true)} />
+                <DefaultButton onClick={() => cancelEdit()} />
               </Stack>
             </div>
           </div>

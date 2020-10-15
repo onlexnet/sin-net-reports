@@ -9,7 +9,7 @@ import { asDtoDates } from '../api/Mapper';
 
 const overflowProps: IButtonProps = { ariaLabel: 'More commands' };
 
-const mapStateToProps = (state: RootState) => state.viewContext;
+const mapStateToProps = (state: RootState) => ({ viewContext: state.viewContext, session: state.auth });
 const mapDispatchToProps = (dispatch: Dispatch) => {
   return {
     onPreviousMonthRequested: () => {
@@ -30,15 +30,15 @@ interface ServiceCommandBarProps extends PropsFromRedux {
 }
 
 const ServiceCommandBarView: React.FC<ServiceCommandBarProps> = (props) => {
-
+  const { viewContext, session } = props;
   const [newServiceMutation, { data }] = useNewServiceActionMutation();
   const newService = () => {
-    const { dateFrom } = asDtoDates(props.period);
+    const { dateFrom } = asDtoDates(viewContext.period);
     newServiceMutation({
       variables: {
         when: dateFrom,
         what: "Nowa usługa " + Date.now(),
-        who: "Some person " + Date.now(),
+        who: session.email,
         whom: "Customer name " + Date.now(),
         distance: Math.floor((Math.random() * 10) + 10),
         duration: Math.floor((Math.random() * 50) + 10)

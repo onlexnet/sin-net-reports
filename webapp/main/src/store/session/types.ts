@@ -7,7 +7,8 @@ export enum SignInFlow {
 }
 export interface SessionState {
     flow: SignInFlow,
-    idToken: string
+    idToken: string,
+    email: string
 }
 
 /** Authorization request sent to B2C */

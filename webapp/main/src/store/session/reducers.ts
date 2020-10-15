@@ -3,7 +3,8 @@ import _ from "lodash";
 
 const initialState: SessionState = {
     flow: SignInFlow.Unknown,
-    idToken: "undefined"
+    idToken: "undefined",
+    email: "invalid@email"
 }
 
 export const sessionReducer = (state = initialState, action: SessionAction): SessionState => {
@@ -17,6 +18,7 @@ export const sessionReducer = (state = initialState, action: SessionAction): Ses
             console.log('initiate session finished');
             clone.flow = SignInFlow.SessionEstablished
             clone.idToken = action.jwtToken;
+            clone.email = action.email;
             return clone;
         default:
             return state;
