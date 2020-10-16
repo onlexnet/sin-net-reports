@@ -1,6 +1,6 @@
+import { ServiceModel } from "../Components/.generated/components";
 import { ServiceAppModel } from "../store/actions/ServiceModel";
 import { LocalDate } from "../store/viewcontext/TimePeriod";
-import { ServiceModel } from "./generated";
 
 export const toModel = (dtoDate: string): LocalDate => {
     const yearAsString = dtoDate.substring(0, 4);
@@ -16,6 +16,7 @@ export const toModel = (dtoDate: string): LocalDate => {
 export const toActionModel = (dto: ServiceModel): ServiceAppModel => {
     const item: ServiceAppModel = {
         entityId: dto.entityId,
+        entityVersion: dto.entityVersion,
         description: dto.description ?? "-",
         servicemanName: dto.servicemanName ?? "-",
         customerName: dto.forWhatCustomer,

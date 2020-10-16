@@ -19,6 +19,7 @@ type ServicesSearchResult {
 
 type ServiceModel {
     entityId: ID!
+    entityVersion: Int!
     servicemanName: String!
     whenProvided: Date!
     forWhatCustomer: String!
@@ -39,5 +40,5 @@ extend type Mutation {
 type ServicesOperations {
     # Creates new, defaulted ServiceEntry as a part of given month.
     addNew(entry: ServiceEntry) : Boolean!
-    update(entityId: ID!, content: ServiceEntry): Boolean!
+    update(entityId: ID!, entityVersion: Int!, content: ServiceEntry): Boolean!
 }

@@ -21,6 +21,7 @@ public class ServicesResolverGet implements GraphQLResolver<Services> {
             .find(actionId)
             .map(it -> ServiceModel.builder()
                 .entityId(it.getEntityId())
+                .entityVersion(it.getVersion())
                 .servicemanName(it.getValue().getWho().getValue())
                 .whenProvided(it.getValue().getWhen())
                 .forWhatCustomer(it.getValue().getWhom().getValue())

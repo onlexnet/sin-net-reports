@@ -8,6 +8,9 @@
             <column name="entity_id" type="UUID">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="actions_PK"/>
             </column>
+            <column name="entity_version" type="INTEGER">
+                <constraints nullable="false" />
+            </column>
             <column name="serviceman_email" type="VARCHAR(50)"/>
             <column name="customer_name" type="VARCHAR(50)"/>
             <column name="description" type="VARCHAR(255)"/>

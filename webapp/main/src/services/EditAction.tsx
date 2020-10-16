@@ -4,7 +4,7 @@ import React, { KeyboardEventHandler, useCallback, useEffect, useState } from "r
 import { connect, ConnectedProps } from "react-redux";
 import { Dispatch } from "redux";
 import { dates, toActionModel } from "../api/DtoMapper";
-import { useGetActionLazyQuery, useGetUsersLazyQuery } from "../Components/.generated/components";
+import { useGetActionLazyQuery, useGetUsersLazyQuery, useUpdateActionMutation } from "../Components/.generated/components";
 import { ServiceAppModel } from "../store/actions/ServiceModel";
 import { RootState } from "../store/reducers";
 import { ActionEditCancel, VIEWCONTEXT_ACTION_EDIT_CANCEL } from "../store/viewcontext/types";
@@ -29,6 +29,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>
 
 const EditAction: React.FC<PropsFromRedux> = props => {
 
+  debugger;
   const [getAction, { loading, data }] = useGetActionLazyQuery({
     variables: {
       actionId: props.editedActionId ?? "undefined"
@@ -50,9 +51,28 @@ const EditAction: React.FC<PropsFromRedux> = props => {
   return <NoneEditAction />
 }
 
-const SomeEditAction: React.FC<{ item: ServiceAppModel, cancelEdit: () => void}> = props => {
+interface SomeEditActionProps {
+  item: ServiceAppModel,
+  cancelEdit: () => void,
+}
+
+const SomeEditAction: React.FC<SomeEditActionProps> = props => {
 
   const { item, cancelEdit } = props;
+
+  const propsEntityId =item?.entityId;
+  const [entityId, setEntityId] = useState(propsEntityId);
+  useEffect(() => {
+    setEntityId(propsEntityId);
+  }, [propsEntityId]);
+
+  const propsEntityVersion =item?.entityVersion;
+  const [entityVersion, setEntityVersion] = useState(propsEntityVersion);
+  useEffect(() => {
+    setEntityVersion(propsEntityVersion);
+  }, [propsEntityVersion]);
+
+
   const defaultServicemanName = item?.servicemanName;
   const [servicemanName, setServicemanName] = useState(defaultServicemanName);
   useEffect(() => {
@@ -160,6 +180,24 @@ const SomeEditAction: React.FC<{ item: ServiceAppModel, cancelEdit: () => void}>
        .map(it => ({ key: it, text: it }))
        .value();
 
+  const [ updateActionMutation, { loading: loading2, data: data2}] = useUpdateActionMutation();
+
+  const updateAction = () => {
+    debugger;
+    updateActionMutation({
+      variables: {
+        entityId,
+        entityVersion,
+        distance: Number(distance),
+        duration: 10,
+        what: "what",
+        when: date,
+        who: "who",
+        whom: "whom"
+      }
+    })
+  };
+
   return (
     <>
       <FocusTrapZone disabled={disabledFocusTrap}>
@@ -206,7 +244,11 @@ const SomeEditAction: React.FC<{ item: ServiceAppModel, cancelEdit: () => void}>
           <div className="ms-Grid-row">
             <div className="ms-Grid-col ms-sm12">
               <Stack horizontal tokens={stackTokens}>
-                <PrimaryButton onClick={() => setDisabledFocusTrap(true)} />
+                <PrimaryButton disabled={loading2}
+                               onClick={() => {
+                                  updateAction();
+                                  cancelEdit();
+                               }} />
                 <DefaultButton onClick={() => cancelEdit()} />
               </Stack>
             </div>

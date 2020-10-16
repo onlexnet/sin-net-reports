@@ -3,7 +3,6 @@ import { addressProvider } from "../addressProvider";
 import { ApolloLink } from "apollo-link";
 import { ApolloClient } from "apollo-client";
 import { InMemoryCache } from "apollo-cache-inmemory";
-import { getSdk } from "./generated";
 import { GraphQLClient } from 'graphql-request';
 import { DefaultOptions } from "apollo-boost";
 
@@ -63,4 +62,4 @@ export const apolloClientFactory = (jwtToken: string) => {
 
   export const graphQlClient = new GraphQLClient(graphqlUrl);
   export const apolloClient = apolloClientFactory("");
-  export const sdk = getSdk(graphQlClient);
+  //export const sdk = getSdk(graphQlClient);

@@ -21,6 +21,7 @@ query GetAction($actionId: ID!) {
   Services {
     get (actionId: $actionId) {
       entityId,
+      entityVersion,
       whenProvided
       forWhatCustomer
       servicemanName
@@ -44,10 +45,11 @@ mutation newServiceAction($when: Date!, $what: String!, $who: String!, $whom: St
   }
 }
 
-mutation updateAction($entityId: ID!, $when: Date!, $what: String!, $who: String!, $whom: String!, $duration: Int!, $distance: Int!) {
+mutation updateAction($entityId: ID!, $entityVersion: Int!, $when: Date!, $what: String!, $who: String!, $whom: String!, $duration: Int!, $distance: Int!) {
   Services {
     update(
       entityId: $entityId,
+      entityVersion: $entityVersion,
       content: {
         servicemanName: $who,
         whenProvided: $when,

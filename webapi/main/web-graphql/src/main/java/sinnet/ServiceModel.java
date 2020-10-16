@@ -9,6 +9,7 @@ import lombok.Builder;
 @Builder
 public class ServiceModel {
     private UUID entityId;
+    private int entityVersion;
     private String servicemanName;
     private LocalDate whenProvided;
     private String forWhatCustomer;

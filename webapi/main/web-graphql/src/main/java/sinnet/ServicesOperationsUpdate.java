@@ -29,6 +29,8 @@ public class ServicesOperationsUpdate implements GraphQLResolver<ServicesOperati
     // https://www.appsdeveloperblog.com/spring-security-preauthorize-annotation-example/
     // @PreAuthorize("hasAuthority('SCOPE_Actions.Write')")
     public CompletableFuture<Boolean> update(ServicesOperations ignored,
+                                             UUID entityId,
+                                             int entityVersion,
                                              ServiceEntry entry) {
 
         var model = new ServiceValue(
@@ -41,7 +43,7 @@ public class ServicesOperationsUpdate implements GraphQLResolver<ServicesOperati
         );
 
         return actionService
-            .update(UUID.randomUUID(), model)
+            .update(entityId, entityVersion, model)
             .map(it -> Boolean.TRUE)
             .toFuture();
     }

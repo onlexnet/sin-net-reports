@@ -115,7 +115,7 @@ public class ActionServiceTests {
 
         var entityId = UUID.randomUUID();
         sut.save(entityId, newEntity).block();
-        assertThat(sut.update(entityId, updateEntity).block()).isTrue();
+        assertThat(sut.update(entityId, 1, updateEntity).block()).isTrue();
 
         var actual = sut.find(now, now).block().head().getValue();
         var expected = ServiceValue.builder()
