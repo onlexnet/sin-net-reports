@@ -29,18 +29,21 @@ type PropsFromRedux = ConnectedProps<typeof connector>
 
 const EditAction: React.FC<PropsFromRedux> = props => {
 
-  debugger;
   const [getAction, { loading, data }] = useGetActionLazyQuery({
     variables: {
-      actionId: props.editedActionId ?? "undefined"
+      actionId: props.editedActionId ?? "undefined1"
     }
   });
 
   if (props.editedActionId && !loading && !data) {
-    getAction();
+    getAction({
+      variables: {
+        actionId: props.editedActionId
+      }
+    });
   }
 
-  if (data) {
+  if (props.editedActionId && data) {
     var dto = data.Services.get;
     if (dto) {
       var model = toActionModel(dto)

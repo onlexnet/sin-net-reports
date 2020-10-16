@@ -7,7 +7,7 @@ input ServiceEntry {
     servicemanName: String!
     whenProvided: Date!
     forWhatCustomer: String!
-    description: String!,
+    description: String!
     distance: Int!
     duration: Int!
 }

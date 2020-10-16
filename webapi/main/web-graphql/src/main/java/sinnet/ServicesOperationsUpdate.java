@@ -23,7 +23,7 @@ public class ServicesOperationsUpdate implements GraphQLResolver<ServicesOperati
      * FixMe.
      *
      * @param ignored ignored
-     * @param entry fixme.
+     * @param content fixme.
      * @return fixme
      */
     // https://www.appsdeveloperblog.com/spring-security-preauthorize-annotation-example/
@@ -31,15 +31,15 @@ public class ServicesOperationsUpdate implements GraphQLResolver<ServicesOperati
     public CompletableFuture<Boolean> update(ServicesOperations ignored,
                                              UUID entityId,
                                              int entityVersion,
-                                             ServiceEntry entry) {
+                                             ServiceEntry content) {
 
         var model = new ServiceValue(
-            Email.of(entry.getServicemanName()),
-            entry.getWhenProvided(),
-            Name.of(entry.getForWhatCustomer()),
-            entry.getDescription(),
-            ActionDuration.of(entry.getDuration()),
-            Distance.of(entry.getDistance())
+            Email.of(content.getServicemanName()),
+            content.getWhenProvided(),
+            Name.of(content.getForWhatCustomer()),
+            content.getDescription(),
+            ActionDuration.of(content.getDuration()),
+            Distance.of(content.getDistance())
         );
 
         return actionService
