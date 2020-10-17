@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
 public class DevAuthenticationFilter extends AbstractAuthenticationProcessingFilter
                                      implements AuthenticationController {
 
-    private String emailOfLoggedUser = "user1@project";
+    private String emailOfLoggedUser = "user1@project1";
 
     protected DevAuthenticationFilter() {
         super("/graphql");

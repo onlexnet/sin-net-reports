@@ -10,3 +10,7 @@ export interface ServiceAppModel {
   duration: number,
   distance: number
 }
+
+export namespace Dates {
+  
+}

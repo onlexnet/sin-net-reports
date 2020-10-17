@@ -37,13 +37,14 @@ export const dates = (it: LocalDate | null | undefined) => {
         }
     }
     return {
-        toRawValue: rawValue(it)
+        noSeparator: rawValue(it, ''),
+        slashed: rawValue(it, '/')
     };
 }
 
-const rawValue = (it: LocalDate) => {
-    return ('0000' + it.year).substr(-4) +
-        ('00' + it.month).substr(-2) +
+const rawValue = (it: LocalDate, separator: string) => {
+    return ('0000' + it.year).substr(-4) + separator +
+        ('00' + it.month).substr(-2) + separator + 
         ('00' + it.day).substr(-2);
 }
 

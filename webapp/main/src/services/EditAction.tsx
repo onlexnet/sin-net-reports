@@ -7,6 +7,7 @@ import { dates, toActionModel } from "../api/DtoMapper";
 import { useGetActionLazyQuery, useGetUsersLazyQuery, useUpdateActionMutation } from "../Components/.generated/components";
 import { ServiceAppModel } from "../store/actions/ServiceModel";
 import { RootState } from "../store/reducers";
+import { LocalDate } from "../store/viewcontext/TimePeriod";
 import { ActionEditCancel, VIEWCONTEXT_ACTION_EDIT_CANCEL } from "../store/viewcontext/types";
 
 const mapStateToProps = (state: RootState) => {
@@ -65,22 +66,22 @@ const SomeEditAction: React.FC<SomeEditActionProps> = props => {
 
   const propsEntityId =item?.entityId;
   const [entityId, setEntityId] = useState(propsEntityId);
-  useEffect(() => {
-    setEntityId(propsEntityId);
-  }, [propsEntityId]);
+  // useEffect(() => {
+  //   setEntityId(propsEntityId);
+  // }, [propsEntityId]);
 
   const propsEntityVersion =item?.entityVersion;
   const [entityVersion, setEntityVersion] = useState(propsEntityVersion);
-  useEffect(() => {
-    setEntityVersion(propsEntityVersion);
-  }, [propsEntityVersion]);
+  // useEffect(() => {
+  //   setEntityVersion(propsEntityVersion);
+  // }, [propsEntityVersion]);
 
 
   const defaultServicemanName = item?.servicemanName;
   const [servicemanName, setServicemanName] = useState(defaultServicemanName);
-  useEffect(() => {
-    setServicemanName(defaultServicemanName);
-  }, [defaultServicemanName]);
+  // useEffect(() => {
+  //   setServicemanName(defaultServicemanName);
+  // }, [defaultServicemanName]);
   const onChangeServicemanName = useCallback(
     (ev: React.FormEvent<IComboBox>, option?: IComboBoxOption) => {
       const a = option?.key as string;
@@ -89,11 +90,11 @@ const SomeEditAction: React.FC<SomeEditActionProps> = props => {
     [setServicemanName],
   );
 
-  const defaultDate = dates(item?.when).toRawValue;
-  const [date, setDate] = useState<string>(defaultDate);
-  useEffect(() => {
-    setDate(defaultDate);
-  }, [defaultDate]);
+  const defaultDate = dates(item?.when).noSeparator;
+  const [date, setDate] = useState(defaultDate);
+  // useEffect(() => {
+  //   setDate(defaultDate);
+  // }, [defaultDate]);
   const onChangeDate = useCallback(
     (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
       if (!newValue) return;
@@ -104,9 +105,9 @@ const SomeEditAction: React.FC<SomeEditActionProps> = props => {
 
   const defaultCustomerName = item?.customerName;
   const [customerName, setCustomerName] = useState(defaultCustomerName);
-  useEffect(() => {
-    setCustomerName(defaultCustomerName);
-  }, [defaultCustomerName]);
+  // useEffect(() => {
+  //   setCustomerName(defaultCustomerName);
+  // }, [defaultCustomerName]);
   const onChangeCustomerName = useCallback(
     (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
       setCustomerName(newValue || '');
@@ -116,44 +117,44 @@ const SomeEditAction: React.FC<SomeEditActionProps> = props => {
 
   const propsDescription = item?.description;
   const [description, setDescription] = useState(propsDescription);
-  useEffect(() => {
-    setDescription(propsDescription)
-  }, [propsDescription]);
+  // useEffect(() => {
+  //   setDescription(propsDescription)
+  // }, [propsDescription]);
   const onChangeDescription = useCallback(
     (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
-      setDescription(newValue || '');
+      //setDescription(newValue || '');
     },
     [],
   );
 
   const propsDuration = "" + item?.duration;
   const [duration, setDuration] = useState(propsDuration);
-  useEffect(() => {
-    setDuration(propsDuration)
-  }, [propsDuration]);
+  // useEffect(() => {
+  //   setDuration(propsDuration)
+  // }, [propsDuration]);
   const onChangeDuration = useCallback(
     (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
-      setDuration(newValue ?? "0");
+      //setDuration(newValue ?? "0");
     },
     [],
   );
 
   const propsDistance = "" + item?.distance;
   const [distance, setDistance] = useState(propsDistance);
-  useEffect(() => {
-    setDistance(propsDistance)
-  }, [propsDistance]);
+  // useEffect(() => {
+  //   setDistance(propsDistance)
+  // }, [propsDistance]);
   const onChangeDistance = useCallback(
     (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
-      setDistance(newValue ?? "0");
+      //setDistance(newValue ?? "0");
     },
     [],
   );
 
   const [disabledFocusTrap, setDisabledFocusTrap] = useState(false);
-  useEffect(() => {
-    setDisabledFocusTrap(false);
-  }, [item.entityId]);
+  // useEffect(() => {
+  //   setDisabledFocusTrap(false);
+  // }, [item.entityId]);
 
   const onKeyUp: KeyboardEventHandler<any> = (event) => {
     if (event.charCode !== 13) return;
@@ -176,6 +177,9 @@ const SomeEditAction: React.FC<SomeEditActionProps> = props => {
       getUsers()
     } else if (data) {
       const result = _.chain(data.Users?.search).map(it => it.email).value();
+      if (result.length == 0) {
+        throw "Server does return invalid list of users."
+      }
       setUsers(result);
     }
   }
@@ -186,7 +190,23 @@ const SomeEditAction: React.FC<SomeEditActionProps> = props => {
   const [ updateActionMutation, { loading: loading2, data: data2}] = useUpdateActionMutation();
 
   const updateAction = () => {
-    debugger;
+    let yearAsString;
+    let monthAsString;
+    let dayAsString;
+    if (/[0-9]{8}/.test(date)) {
+      yearAsString = date.substring(0, 4);
+      monthAsString = date.substring(4, 6);
+      dayAsString = date.substring(6, 8);
+    } else if (/[0-9]{4}\/[0-9]{2}\/[0-9]{2}/.test(date)) {
+      yearAsString = date.substring(0, 4);
+      monthAsString = date.substring(5, 7);
+      dayAsString = date.substring(8, 10);
+    }
+
+    const dateDto = ('0000' + yearAsString).substr(-4) +
+        '/' + ('00' + monthAsString).substr(-2) +
+        '/' + ('00' + dayAsString).substr(-2);
+
     updateActionMutation({
       variables: {
         entityId,
@@ -194,9 +214,9 @@ const SomeEditAction: React.FC<SomeEditActionProps> = props => {
         distance: Number(distance),
         duration: 10,
         what: "what",
-        when: date,
-        who: "who",
-        whom: "whom"
+        when: dateDto,
+        who: servicemanName,
+        whom: customerName
       }
     })
   };
