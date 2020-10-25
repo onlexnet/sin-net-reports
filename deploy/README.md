@@ -14,7 +14,7 @@
    Now, use this this command to create secret based on just created config.json file
    **sudo microk8s.kubectl create secret generic regcred --type=kubernetes.io/dockerconfigjson --from-file .dockerconfigjson=$HOME/.docker/config.json**
    Perfect! now our kubectl is ready to pull image from private repo [using provided secret](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/#registry-secret-existing-credentials)
-1. https://cert-manager.io/docs/installation/kubernetes/
+1. Now it time to add support for (let's encrypt)[https://cert-manager.io/docs/installation/kubernetes/]
 
 
 
@@ -22,6 +22,7 @@
 
 - **kubectl apply -f ingress.yaml** to define ingress routing
 - **kubectl apply -f webapi-svc.yaml -f webapi-dep.yaml** to load backend service
+- **kubectl apply -f lets-encrypt.yaml** to enable let's encrypt
 
 ## Q/A
 
