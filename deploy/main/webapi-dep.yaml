@@ -24,9 +24,8 @@ spec:
           imagePullPolicy: Always
           ports:
           - containerPort: 8080
-          # env:
-          # - name: SECRETS_MONGODB_POSESOR_PROD
-          #   valueFrom:
-          #     secretKeyRef:
-          #       name: posesor-mongodb
-          #       key: mongodb.posesor.prod
+          env:
+          - name: SPRING_PROFILES_ACTIVE
+            value: "prod"
+          - name: APP_DB_HOST
+            value: "db"
