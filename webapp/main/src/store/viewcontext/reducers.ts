@@ -1,10 +1,12 @@
 import _ from "lodash";
-import { ViewContextState, ViewContextAction, VIEWCONTEXT_ACTION_EDIT_START, VIEWCONTEXT_ACTION_EDIT_CANCEL } from "./types";
+import { ViewContextState, ViewContextAction, VIEWCONTEXT_ACTION_EDIT_START, VIEWCONTEXT_ACTION_EDIT_CANCEL, VIEWCONTEXT_ACTION_EDIT_UPDATED } from "./types";
 import { TimePeriod } from "./TimePeriod";
 
 const initialState: ViewContextState = {
     period: new TimePeriod(new Date()),
-    editedActionId: null
+    // UI has to adjust View to the fact of being (or not) edited an Action
+    editedActionId: null,
+    lastTouchedActionId: null
 }
 
 export const viewContextReducer = (state = initialState, action: ViewContextAction): ViewContextState => {
@@ -25,6 +27,9 @@ export const viewContextReducer = (state = initialState, action: ViewContextActi
             return clone;
         case VIEWCONTEXT_ACTION_EDIT_CANCEL:
             clone.editedActionId = null;
+            return clone;
+        case VIEWCONTEXT_ACTION_EDIT_UPDATED:
+            clone.lastTouchedActionId = action.payload.lastTouchedEntityId;
             return clone;
         default:
             return state;

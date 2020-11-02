@@ -1,6 +1,6 @@
 import { shallow, configure } from 'enzyme';
 import React from 'react';
-import { Content } from './Content';
+import { Content } from './ActionList';
 
 import Adapter from 'enzyme-adapter-react-16';
 

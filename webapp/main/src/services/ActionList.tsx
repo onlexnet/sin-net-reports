@@ -1,5 +1,5 @@
 import * as React from "react";
-import { DetailsList, DetailsListLayoutMode, SelectionMode, IColumn, mergeStyleSets, MaskedTextField, FocusTrapZone, PrimaryButton, DefaultButton, memoizeFunction, IStackStyles, ComboBox, SelectableOptionMenuItemType, IComboBoxOption, IComboBox } from "office-ui-fabric-react";
+import { DetailsList, DetailsListLayoutMode, SelectionMode, Selection, IColumn, mergeStyleSets, DefaultButton, setLanguage } from "office-ui-fabric-react";
 import { IStackTokens, Stack, TextField, Toggle, Announced } from "office-ui-fabric-react";
 import { connect, ConnectedProps } from "react-redux";
 import { RootState } from "../store/reducers";
@@ -113,17 +113,9 @@ const ConnectedContent: React.FC<PropsFromRedux> = props => {
     })
   };
 
-
   const initialColumns: TypedColumn[] = [
     {
-      key: "column4",
-      name: "Pracownik",
-      fieldName: "servicemanName",
-      minWidth: 70,
-      maxWidth: 90,
-      isResizable: true,
-      isCollapsible: true,
-      data: "string",
+      key: "column4", name: "Pracownik", fieldName: "servicemanName", minWidth: 70, maxWidth: 90, isResizable: true, isCollapsible: true, data: "string",
       onColumnClick: (ev, col) => _onColumnClick(col, state.columns),
       onRender: (item: IDocument) => {
         return <span>{item.servicemanName}</span>;
@@ -131,12 +123,7 @@ const ConnectedContent: React.FC<PropsFromRedux> = props => {
       isPadded: true
     },
     {
-      key: "column3",
-      name: "Data",
-      fieldName: "when",
-      minWidth: 70,
-      maxWidth: 90,
-      isResizable: true,
+      key: "column3", name: "Data", fieldName: "when", minWidth: 70, maxWidth: 90, isResizable: true,
       onColumnClick: (ev, col) => _onColumnClick(col, state.columns),
       data: "date",
       onRender: (item: IDocument) => {
@@ -146,15 +133,7 @@ const ConnectedContent: React.FC<PropsFromRedux> = props => {
       isPadded: true
     },
     {
-      key: "column2",
-      name: "Klient",
-      fieldName: "customerName",
-      minWidth: 210,
-      maxWidth: 350,
-      isRowHeader: true,
-      isResizable: true,
-      isSorted: true,
-      isSortedDescending: false,
+      key: "column2", name: "Klient", fieldName: "customerName", minWidth: 210, maxWidth: 350, isRowHeader: true, isResizable: true, isSorted: true, isSortedDescending: false,
       sortAscendingAriaLabel: "Sorted A to Z",
       sortDescendingAriaLabel: "Sorted Z to A",
       onColumnClick: (ev, col) => _onColumnClick(col, state.columns),
@@ -162,39 +141,19 @@ const ConnectedContent: React.FC<PropsFromRedux> = props => {
       isPadded: true
     },
     {
-      key: "column6",
-      name: "Usługa",
-      fieldName: "description",
-      minWidth: 300,
-      maxWidth: 300,
-      isResizable: true,
-      isCollapsible: true,
+      key: "column6", name: "Usługa", fieldName: "description", minWidth: 300, maxWidth: 300, isResizable: true, isCollapsible: true,
       data: "number",
       onColumnClick: (ev, col) => _onColumnClick(col, state.columns),
     },
     {
-      key: "column5",
-      name: "Czas",
-      fieldName: "duration",
-      minWidth: 70,
-      maxWidth: 90,
-      isResizable: true,
-      isCollapsible: true,
-      data: "number",
+      key: "column5", name: "Czas", fieldName: "duration", minWidth: 70, maxWidth: 90, isResizable: true, isCollapsible: true, data: "number",
       onColumnClick: (ev, col) => _onColumnClick(col, state.columns),
       onRender: (item: IDocument) => {
         return <span>{item.duration}</span>;
       }
     },
     {
-      key: "column7",
-      name: "Dojazd",
-      fieldName: "distance",
-      minWidth: 70,
-      maxWidth: 90,
-      isResizable: true,
-      isCollapsible: true,
-      data: "number",
+      key: "column7", name: "Dojazd", fieldName: "distance", minWidth: 70, maxWidth: 90, isResizable: true, isCollapsible: true, data: "number",
       onColumnClick: (ev, col) => _onColumnClick(col, state.columns),
       onRender: (item: IDocument) => {
         return <span>{item.distance}</span>;
@@ -208,16 +167,32 @@ const ConnectedContent: React.FC<PropsFromRedux> = props => {
     announcedMessage: ""
   });
   const { columns, announcedMessage } = state;
-  
+
+  const [lastTouchedActionId, setlastTouchedActionId] = useState(props.lastTouchedActionId);
+
+  const newDataIsComing = props.lastTouchedActionId != null && props.lastTouchedActionId != lastTouchedActionId;
+  const firstTimeLoading = props.lastTouchedActionId == null && lastTouchedActionId == null;
+  console.log(`props.lastTouchedActionId:${JSON.stringify(props.lastTouchedActionId)}`)
+  if (newDataIsComing) {
+    console.log('newDataIsComing');
+    setlastTouchedActionId(props.lastTouchedActionId);
+  }
+
   const periodDto = asDtoDates(props.period);
-  const { data, loading, error } = useFetchServicesQuery({
+  const { data, loading, error, refetch } = useFetchServicesQuery({
     variables: {
       from: periodDto.dateFrom,
       to: periodDto.dateTo
     }
   });
+  if (newDataIsComing) {
+    refetch();
+  }
+  console.log(`Zalewajka loading: ${loading}, error: ${error}`);
+  console.log(JSON.stringify(data));
   var items = _.chain(data?.Services.search.items)
-    .map(toActionModel).value();
+    .map(it => toActionModel(it))
+    .value();
 
   const stackTokens: IStackTokens = { childrenGap: 40 };
 
@@ -228,6 +203,27 @@ const ConnectedContent: React.FC<PropsFromRedux> = props => {
     setCurrentPeriod(props.period);
     // setSelectedItem(null)
   }
+
+  const getSelectionDetails = () => {
+    const selectionCount = selection.getSelectedCount();
+
+    switch (selectionCount) {
+      case 0:
+        return null;
+      case 1:
+        return selection.getSelection()[0] as ServiceAppModel;
+      default:
+        return null;
+    }
+  }
+
+  const [selectionDetails, setSelectionDetails] = useState<ServiceAppModel | null>(null);
+  const selection = new Selection({
+    onSelectionChanged: () => {
+      const selectedModel = getSelectionDetails();
+      setSelectionDetails(selectedModel);
+    },
+  });
 
   return (
     <>
@@ -250,6 +246,9 @@ const ConnectedContent: React.FC<PropsFromRedux> = props => {
                     />
                     <TextField label="Tylko dzień:" styles={controlStyles} />
                     <TextField label="Kontrahent:" styles={controlStyles} />
+                    <DefaultButton text="Edytuj ..." onClick={() => {
+                      props.editItem(selectionDetails?.entityId ?? "undefined [1]");
+                    }} />
                   </Stack>
                 </Stack>
               </div>
@@ -263,14 +262,11 @@ const ConnectedContent: React.FC<PropsFromRedux> = props => {
                 items={items}
                 compact={true}
                 columns={columns}
-                selectionMode={SelectionMode.none}
-                //getKey={this._getKey}
+                selectionMode={SelectionMode.single}
+                selection={selection}
                 setKey="none"
                 layoutMode={DetailsListLayoutMode.justified}
                 isHeaderVisible={true}
-                onItemInvoked={(item: ServiceAppModel) => {
-                  props.editItem(item.entityId);
-                }}
               />
             </div>
           </div>

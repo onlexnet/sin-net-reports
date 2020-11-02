@@ -1,16 +1,23 @@
 import { Action } from "redux";
+import { EntityId } from "../actions/ServiceModel";
 import { TimePeriod } from "./TimePeriod";
 
 export interface ViewContextState {
     period: TimePeriod,
     editedActionId: string | null
+    // UI has adjust view to the fact of updating / creating some new Action
+    lastTouchedActionId: EntityId | null
+
 }
 
 export const VIEWCONTEXT_PREV_PERIOD = "VIEWCONTEXT_PREV_PERIOD";
 export const VIEWCONTEXT_NEXT_PERIOD = "VIEWCONTEXT_NEXT_PERIOD";
 export const VIEWCONTEXT_PERIOD_SELECTED = "VIEWCONTEXT_PERIOD_SELECTED";
+
+// Request to navigate to a separated view to edit an Action.
 export const VIEWCONTEXT_ACTION_EDIT_START = "VIEWCONTEXT_ACTION_EDIT_START";
 export const VIEWCONTEXT_ACTION_EDIT_CANCEL = "VIEWCONTEXT_ACTION_EDIT_CANCEL";
+export const VIEWCONTEXT_ACTION_EDIT_UPDATED = "VIEWCONTEXT_ACTION_EDIT_UPDATED";
 
 export interface PeriodPrev extends Action<typeof VIEWCONTEXT_PREV_PERIOD> {
     type: typeof VIEWCONTEXT_PREV_PERIOD,
@@ -41,9 +48,17 @@ export interface ActionEditCancel extends Action<typeof VIEWCONTEXT_ACTION_EDIT_
     payload: { }
 }
 
+export interface ActionEditUpdated extends Action<typeof VIEWCONTEXT_ACTION_EDIT_UPDATED> {
+    type: typeof VIEWCONTEXT_ACTION_EDIT_UPDATED,
+    payload: {
+        lastTouchedEntityId: EntityId
+    }
+}
+
 export type ViewContextAction = PeriodSelected
                               | PeriodPrev
                               | PeriodNext
                               | ActionEditItem
-                              | ActionEditCancel;
+                              | ActionEditCancel
+                              | ActionEditUpdated;
 export type ViewContextCommand = PeriodPrev | PeriodNext;

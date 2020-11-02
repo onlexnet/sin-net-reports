@@ -1,8 +1,6 @@
 import { LocalDate } from "../viewcontext/TimePeriod";
 
-export interface ServiceAppModel {
-  entityId: string,
-  entityVersion: number,
+export interface ServiceAppModel extends EntityId {
   servicemanName: string,
   description: string,
   customerName: string,
@@ -11,6 +9,7 @@ export interface ServiceAppModel {
   distance: number
 }
 
-export namespace Dates {
-  
+export interface EntityId {
+  entityId: string,
+  entityVersion: number,
 }
