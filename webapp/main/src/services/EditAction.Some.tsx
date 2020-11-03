@@ -21,16 +21,17 @@ export const EditActionSome: React.FC<EditActionSomeProps> = props => {
 
   const propsEntityId = item?.entityId;
   const propsEntityVersion = item?.entityVersion;
+  const versionedProps = [propsEntityId, propsEntityVersion];
 
   const [entityId, setEntityId] = useState(propsEntityId);
   useEffect(() => {
     setEntityId(propsEntityId);
-  }, [propsEntityId, propsEntityVersion]);
+  }, versionedProps);
 
   const [entityVersion, setEntityVersion] = useState(propsEntityVersion);
   useEffect(() => {
     setEntityVersion(propsEntityVersion);
-  }, [propsEntityId, propsEntityVersion]);
+  }, versionedProps);
 
   console.log(`edit : ${propsEntityId}:${propsEntityVersion}`);
 
@@ -86,24 +87,24 @@ export const EditActionSome: React.FC<EditActionSomeProps> = props => {
 
   const propsDuration = "" + item?.duration;
   const [duration, setDuration] = useState(propsDuration);
-  // useEffect(() => {
-  //   setDuration(propsDuration)
-  // }, [propsDuration]);
+  useEffect(() => {
+    setDuration(propsDuration)
+  }, [propsDuration]);
   const onChangeDuration = useCallback(
     (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
-      //setDuration(newValue ?? "0");
+      setDuration(newValue ?? "0");
     },
-    [],
+    [propsEntityId, propsEntityVersion],
   );
 
   const propsDistance = "" + item?.distance;
   const [distance, setDistance] = useState(propsDistance);
-  // useEffect(() => {
-  //   setDistance(propsDistance)
-  // }, [propsDistance]);
+  useEffect(() => {
+    setDistance(propsDistance)
+  }, versionedProps);
   const onChangeDistance = useCallback(
     (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
-      //setDistance(newValue ?? "0");
+      setDistance(newValue ?? "0");
     },
     [],
   );
@@ -112,11 +113,6 @@ export const EditActionSome: React.FC<EditActionSomeProps> = props => {
   // useEffect(() => {
   //   setDisabledFocusTrap(false);
   // }, [item.entityId]);
-
-  const onKeyUp: KeyboardEventHandler<any> = (event) => {
-    if (event.charCode !== 13) return;
-    setDisabledFocusTrap(true);
-  }
 
   const getStackStyles = memoizeFunction(
     (useTrapZone: boolean): Partial<IStackStyles> => ({
@@ -176,7 +172,7 @@ export const EditActionSome: React.FC<EditActionSomeProps> = props => {
         entityId,
         entityVersion,
         distance: Number(distance),
-        duration: 10,
+        duration: Number(duration),
         what: description,
         when: dateDto,
         who: servicemanName,
@@ -191,13 +187,11 @@ export const EditActionSome: React.FC<EditActionSomeProps> = props => {
         <Stack tokens={stackTokens} styles={getStackStyles(!disabledFocusTrap)}>
           <div className="ms-Grid-row">
             <div className="ms-Grid-col ms-sm4">
-              <ComboBox label="Pracownik" selectedKey={servicemanName} options={comboBoxBasicOptions} autoComplete="on" onChange={onChangeServicemanName}
-                onKeyDown={onKeyUp}
+              <ComboBox label="Pracownik" selectedKey={servicemanName} options={comboBoxBasicOptions} autoComplete="on" onChange={onChangeServicemanName} 
               />
             </div>
             <div className="ms-Grid-col ms-sm2">
               <MaskedTextField label="Data" value={date} onChange={onChangeDate} mask="9999/99/99"
-                onKeyDown={onKeyUp}
               />
             </div>
           </div>
@@ -205,25 +199,20 @@ export const EditActionSome: React.FC<EditActionSomeProps> = props => {
           <div className="ms-Grid-row">
             <div className="ms-Grid-col ms-sm4">
               <TextField label="Klient" value={customerName} onChange={onChangeCustomerName}
-                onKeyDown={onKeyUp}
               />
             </div>
             <div className="ms-Grid-col ms-sm6">
               <TextField label="Usługa" value={description} onChange={onChangeDescription}
-                onKeyDown={onKeyUp}
               />
             </div>
           </div>
 
           <div className="ms-Grid-row">
             <div className="ms-Grid-col ms-sm4">
-              <TextField label="Czas" value={duration} onChange={onChangeDuration}
-                onKeyDown={onKeyUp}
-              />
+              <TextField label="Czas" value={duration} onChange={onChangeDuration} />
             </div>
             <div className="ms-Grid-col ms-sm2">
               <TextField label="Dojazd" value={distance} onChange={onChangeDistance}
-                onKeyDown={onKeyUp}
               />
             </div>
           </div>
