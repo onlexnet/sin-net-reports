@@ -4,10 +4,12 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 import lombok.Builder;
+import lombok.Getter;
 
 /** FixMe. */
 @Builder
-public class ServiceModel {
+@Getter
+public class ServiceModel implements Entity {
     private UUID entityId;
     private int entityVersion;
     private String servicemanName;

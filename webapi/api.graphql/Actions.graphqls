@@ -17,7 +17,7 @@ type ServicesSearchResult {
     totalDistance: Int!
 }
 
-type ServiceModel {
+type ServiceModel implements Entity {
     entityId: ID!
     entityVersion: Int!
     servicemanName: String!
@@ -41,4 +41,5 @@ type ServicesOperations {
     # Creates new, defaulted ServiceEntry as a part of given month.
     addNew(entry: ServiceEntry) : Boolean!
     update(entityId: ID!, entityVersion: Int!, content: ServiceEntry): Boolean!
+    newAction(whenProvided: Date!): Entity!
 }

@@ -1,0 +1,4 @@
+interface Entity {
+    entityId: ID!
+    entityVersion: Int!
+}
