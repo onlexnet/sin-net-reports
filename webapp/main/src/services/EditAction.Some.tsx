@@ -1,8 +1,8 @@
 import _ from "lodash";
 import { ComboBox, DefaultButton, FocusTrapZone, IComboBox, IComboBoxOption, IStackStyles, MaskedTextField, memoizeFunction, PrimaryButton, Stack, TextField } from "office-ui-fabric-react";
-import React, { KeyboardEventHandler, useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { dates } from "../api/DtoMapper";
-import { useGetUsersLazyQuery, useUpdateActionMutation } from "../Components/.generated/components";
+import { useGetUsersQuery, useUpdateActionMutation } from "../Components/.generated/components";
 import { EntityId, ServiceAppModel } from "../store/actions/ServiceModel";
 
 interface EditActionSomeProps {
@@ -121,21 +121,20 @@ export const EditActionSome: React.FC<EditActionSomeProps> = props => {
   );
   const stackTokens = { childrenGap: 8 }
 
-  const [users, setUsers] = useState<string[]>([]);
-  const [getUsers, { loading, data }] = useGetUsersLazyQuery();
-  if (_.size(users) == 0) {
-    if (loading) {
-      //
-    } else if (!data) {
-      getUsers()
-    } else if (data) {
-      const result = _.chain(data.Users?.search).map(it => it.email).value();
-      if (result.length == 0) {
-        throw "Server does return invalid list of users."
-      }
-      setUsers(result);
+  const { loading, data } = useGetUsersQuery();
+  var users: string[] = [];
+  if (loading) {
+    //
+  } else if (data) {
+    const result = _.chain(data.Users?.search).map(it => it.email).value();
+
+    if (result.length == 0) {
+      console.error("Server does return invalid list of users.");
     }
+
+    users = result;
   }
+
   const comboBoxBasicOptions = _.chain(users)
     .map(it => ({ key: it, text: it }))
     .value();
@@ -187,7 +186,7 @@ export const EditActionSome: React.FC<EditActionSomeProps> = props => {
         <Stack tokens={stackTokens} styles={getStackStyles(!disabledFocusTrap)}>
           <div className="ms-Grid-row">
             <div className="ms-Grid-col ms-sm4">
-              <ComboBox label="Pracownik" selectedKey={servicemanName} options={comboBoxBasicOptions} autoComplete="on" onChange={onChangeServicemanName} 
+              <ComboBox label="Pracownik" selectedKey={servicemanName} options={comboBoxBasicOptions} autoComplete="on" onChange={onChangeServicemanName}
               />
             </div>
             <div className="ms-Grid-col ms-sm2">
