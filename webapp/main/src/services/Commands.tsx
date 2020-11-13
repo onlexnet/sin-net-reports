@@ -6,6 +6,8 @@ import { RootState } from '../store/reducers';
 import { previousPeriodCommand, nextPeriodCommand } from '../store/viewcontext/actions';
 import { useNewServiceActionMutation } from '../Components/.generated/components';
 import { asDtoDates } from '../api/Mapper';
+import { EntityId } from '../store/actions/ServiceModel';
+import { ActionEditUpdated, VIEWCONTEXT_ACTION_EDIT_UPDATED } from '../store/viewcontext/types';
 
 const overflowProps: IButtonProps = { ariaLabel: 'More commands' };
 
@@ -17,6 +19,15 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
     },
     onNextMonthRequested: () => {
       dispatch(nextPeriodCommand())
+    },
+    actionUpdated: (item: EntityId) => {
+      var action: ActionEditUpdated = {
+        type: VIEWCONTEXT_ACTION_EDIT_UPDATED,
+        payload: {
+          lastTouchedEntityId: item
+        }
+      }
+      dispatch(action);
     }
   }
 }
@@ -36,13 +47,12 @@ const ServiceCommandBarView: React.FC<ServiceCommandBarProps> = (props) => {
     const { dateFrom } = asDtoDates(viewContext.period);
     newServiceMutation({
       variables: {
-        when: dateFrom,
-        what: "Nowa usługa " + Date.now(),
-        who: session.email,
-        whom: "Customer name " + Date.now(),
-        distance: Math.floor((Math.random() * 10) + 10),
-        duration: Math.floor((Math.random() * 50) + 10)
+        when: dateFrom
       }
+    }).then(r => {
+      var createdEntityId = r.data?.Services.newAction;
+      if (!createdEntityId) return;
+      props.actionUpdated(createdEntityId);
     })
   }
   const _items: ICommandBarItemProps[] = [

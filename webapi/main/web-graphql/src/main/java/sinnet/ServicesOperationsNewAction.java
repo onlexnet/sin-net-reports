@@ -24,26 +24,18 @@ public class ServicesOperationsNewAction implements GraphQLResolver<ServicesOper
     /**
      * FixMe.
      *
-     * @param ignored ignored
-     * @param when fixme
+     * @param ignored      ignored
+     * @param whenProvided fixme
      * @return fixme
      */
-    public CompletableFuture<Entity> newAction(ServicesOperations ignored,
-                                               LocalDate when) {
+    public CompletableFuture<MyEntity> newAction(ServicesOperations ignored, LocalDate whenProvided) {
 
-        var model = new ServiceValue(
-            Email.of("undefined@user"),
-            when,
-            Name.of("Jakiś klient"),
-            "Jakaś usługa",
-            ActionDuration.empty(),
-            Distance.empty()
-        );
+        var model = new ServiceValue(Email.of("undefined@user"), whenProvided, Name.of("Jakiś klient"), "Jakaś usługa",
+                ActionDuration.empty(), Distance.empty());
 
         var entityId = UUID.randomUUID();
-        return actionService
-            .save(entityId, model)
-            .map(it -> (Entity) new MyEntity(entityId, 1))
+        return actionService.save(entityId, model)
+            .map(it -> new MyEntity(entityId, 1))
             .toFuture();
     }
 }

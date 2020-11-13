@@ -1,8 +1,9 @@
 import _ from "lodash";
-import { ComboBox, DefaultButton, FocusTrapZone, IComboBox, IComboBoxOption, IStackStyles, MaskedTextField, memoizeFunction, PrimaryButton, Stack, TextField } from "office-ui-fabric-react";
+import { ComboBox, DateRangeType, DefaultButton, FocusTrapZone, IComboBox, IComboBoxOption, IStackStyles, MaskedTextField, memoizeFunction, PrimaryButton, Stack, TextField } from "office-ui-fabric-react";
 import React, { useCallback, useEffect, useState } from "react";
 import { dates } from "../api/DtoMapper";
 import { useGetUsersQuery, useUpdateActionMutation } from "../Components/.generated/components";
+import { AppDatePicker } from "../Components/AppDatePicker";
 import { EntityId, ServiceAppModel } from "../store/actions/ServiceModel";
 
 interface EditActionSomeProps {
@@ -190,8 +191,8 @@ export const EditActionSome: React.FC<EditActionSomeProps> = props => {
               />
             </div>
             <div className="ms-Grid-col ms-sm2">
-              <MaskedTextField label="Data" value={date} onChange={onChangeDate} mask="9999/99/99"
-              />
+              <AppDatePicker dateRangeType={DateRangeType.Day} autoNavigateOnSelection={true} showGoToToday={true}  />
+              {/* <MaskedTextField label="Data" value={date} onChange={onChangeDate} mask="9999/99/99" */}
             </div>
           </div>
 

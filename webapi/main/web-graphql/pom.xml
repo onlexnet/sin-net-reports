@@ -15,7 +15,7 @@
 
   <properties>
     <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/../${aggregate.report.dir}</sonar.coverage.jacoco.xmlReportPaths>
-    <graphql-java-kickstart.version>7.0.1</graphql-java-kickstart.version>
+    <graphql-java-kickstart.version>8.0.0</graphql-java-kickstart.version>
   </properties>
 
   <dependencies>
@@ -62,14 +62,14 @@
     <dependency>
       <groupId>com.graphql-java-kickstart</groupId>
       <artifactId>graphql-spring-boot-starter</artifactId>
-      <version>7.1.0</version>
+      <version>${graphql-java-kickstart.version}</version>
     </dependency>
 
     <!-- to embed Altair tool -->
     <dependency>
         <groupId>com.graphql-java-kickstart</groupId>
         <artifactId>altair-spring-boot-starter</artifactId>
-        <version>7.1.0</version>
+        <version>${graphql-java-kickstart.version}</version>
         <scope>runtime</scope>
     </dependency>
 
@@ -77,7 +77,7 @@
     <dependency>
         <groupId>com.graphql-java-kickstart</groupId>
         <artifactId>graphiql-spring-boot-starter</artifactId>
-        <version>8.0.0</version>
+        <version>${graphql-java-kickstart.version}</version>
         <scope>runtime</scope>
     </dependency>
 
@@ -85,7 +85,7 @@
     <dependency>
         <groupId>com.graphql-java-kickstart</groupId>
         <artifactId>voyager-spring-boot-starter</artifactId>
-        <version>7.1.0</version>
+        <version>${graphql-java-kickstart.version}</version>
         <scope>runtime</scope>
     </dependency>
 
@@ -93,7 +93,7 @@
     <dependency>
         <groupId>com.graphql-java-kickstart</groupId>
         <artifactId>graphql-spring-boot-starter-test</artifactId>
-        <version>7.1.0</version>
+        <version>${graphql-java-kickstart.version}</version>
         <scope>test</scope>
     </dependency>
 

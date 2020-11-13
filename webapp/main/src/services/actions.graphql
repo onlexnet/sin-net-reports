@@ -33,16 +33,12 @@ query GetAction($actionId: ID!) {
   }
 }
 
-mutation newServiceAction($when: Date!, $what: String!, $who: String!, $whom: String!, $duration: Int!, $distance: Int!) {
+mutation newServiceAction($when: Date!) {
   Services {
-    addNew(entry: {
-      servicemanName: $who,
-      whenProvided: $when,
-      forWhatCustomer: $whom,
-      description: $what,
-      duration: $duration,
-      distance: $distance
-    })
+    newAction(whenProvided: $when) {
+      entityId
+      entityVersion
+    }
   }
 }
 

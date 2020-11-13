@@ -41,13 +41,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>
  * Place to take decision what state visualisation should be displayed based on give action id.
  * @param props 
  */
-const EditAction: React.FC<PropsFromRedux> = props => {
-
-  // const [getAction, { loading, data }] = useGetActionQuery({
-  //   variables: {
-  //     actionId: props.editedActionId ?? "undefined1"
-  //   }
-  // });
+const EditActionInit: React.FC<PropsFromRedux> = props => {
 
   const isEditInProgress =  'editedActionId' in props;
   const { loading, data } = useGetActionQuery({
@@ -75,4 +69,4 @@ const EditAction: React.FC<PropsFromRedux> = props => {
   return <EditActionNone />
 }
 
-export default connector(EditAction);
+export default connector(EditActionInit);

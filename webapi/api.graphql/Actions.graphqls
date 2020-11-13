@@ -41,5 +41,10 @@ type ServicesOperations {
     # Creates new, defaulted ServiceEntry as a part of given month.
     addNew(entry: ServiceEntry) : Boolean!
     update(entityId: ID!, entityVersion: Int!, content: ServiceEntry): Boolean!
-    newAction(whenProvided: Date!): Entity!
+    newAction(whenProvided: Date!): MyEntity!
+}
+
+type MyEntity implements Entity {
+    entityId: ID!
+    entityVersion: Int!
 }
