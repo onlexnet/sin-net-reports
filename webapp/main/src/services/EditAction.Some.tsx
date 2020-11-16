@@ -1,6 +1,6 @@
 import _ from "lodash";
 import { ComboBox, DateRangeType, DefaultButton, FocusTrapZone, IComboBox, IComboBoxOption, IStackStyles, MaskedTextField, memoizeFunction, PrimaryButton, Stack, TextField } from "office-ui-fabric-react";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { dates } from "../api/DtoMapper";
 import { useGetUsersQuery, useUpdateActionMutation } from "../Components/.generated/components";
 import { AppDatePicker } from "../Components/AppDatePicker";
@@ -86,16 +86,35 @@ export const EditActionSome: React.FC<EditActionSomeProps> = props => {
     [],
   );
 
-  const propsDuration = "" + item?.duration;
-  const [duration, setDuration] = useState(propsDuration);
+
+
+  const [durationAsText, setDurationAsText] = useState("0:00");
+  const durationRef = useRef(0);
+  const [durationError, setDurationError] = useState("");
   useEffect(() => {
-    setDuration(propsDuration)
-  }, [propsDuration]);
+    const { duration } = props.item;
+    var hours = Math.floor(duration / 60);
+    var minutes = duration - hours * 60;
+    setDurationAsText(hours + ('00' + minutes).substr(-2));
+    durationRef.current = duration;
+  }, versionedProps);
   const onChangeDuration = useCallback(
     (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
-      setDuration(newValue ?? "0");
+      const newDurationAsText = newValue ?? "0:00";
+      const [hoursAsText, minutesAsText] = newDurationAsText.split(":")
+      const hours = Number(hoursAsText);
+      const minutes = Number(minutesAsText);
+      const newDuration = hours * 60 + minutes;
+
+      setDurationAsText(newDurationAsText);
+      if (isNaN(newDuration)) {
+        setDurationError(`Nieprawidłowy czas: ${newDurationAsText}`)
+      } else {
+        durationRef.current = newDuration;
+        setDurationError("");
+      }
     },
-    [propsEntityId, propsEntityVersion],
+    versionedProps,
   );
 
   const propsDistance = "" + item?.distance;
@@ -172,7 +191,7 @@ export const EditActionSome: React.FC<EditActionSomeProps> = props => {
         entityId,
         entityVersion,
         distance: Number(distance),
-        duration: Number(duration),
+        duration: durationRef.current,
         what: description,
         when: dateDto,
         who: servicemanName,
@@ -191,7 +210,7 @@ export const EditActionSome: React.FC<EditActionSomeProps> = props => {
               />
             </div>
             <div className="ms-Grid-col ms-sm2">
-              <AppDatePicker dateRangeType={DateRangeType.Day} autoNavigateOnSelection={true} showGoToToday={true}  />
+              <AppDatePicker dateRangeType={DateRangeType.Day} autoNavigateOnSelection={true} showGoToToday={true} />
               {/* <MaskedTextField label="Data" value={date} onChange={onChangeDate} mask="9999/99/99" */}
             </div>
           </div>
@@ -209,7 +228,7 @@ export const EditActionSome: React.FC<EditActionSomeProps> = props => {
 
           <div className="ms-Grid-row">
             <div className="ms-Grid-col ms-sm4">
-              <TextField label="Czas" value={duration} onChange={onChangeDuration} />
+              <MaskedTextField label="Czas" mask="9:99" value={durationAsText} errorMessage={durationError} onChange={onChangeDuration} />
             </div>
             <div className="ms-Grid-col ms-sm2">
               <TextField label="Dojazd" value={distance} onChange={onChangeDistance}
