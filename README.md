@@ -14,7 +14,7 @@ Project allows register customer services and produce summarized reports in form
 
 In scope:
 - [x] Integrate login with Azure B2C
-- [ ] Register time and distance of provided service through Web site
+- [x] Register time and distance of provided service through Web site
 - [ ] Define list of clients
 - [ ] Create PDF attachments per client for given period on demand
 

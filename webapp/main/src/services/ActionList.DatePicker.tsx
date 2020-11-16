@@ -2,8 +2,12 @@ import * as React from 'react';
 import { Calendar, DayOfWeek, DateRangeType } from 'office-ui-fabric-react/lib/Calendar';
 import { DefaultButton } from 'office-ui-fabric-react/lib/Button';
 import { addDays, getDateRangeArray } from '@fluentui/date-time-utilities';
+import { useEffect } from 'react';
+import { LocalDate } from '../store/viewcontext/TimePeriod';
 
-export interface ICalendarInlineExampleProps {
+export interface AppDatePickerProps {
+  onSelectDate(value: LocalDate): void;
+  current: LocalDate;
   isMonthPickerVisible?: boolean;
   dateRangeType: DateRangeType;
   autoNavigateOnSelection: boolean;
@@ -59,19 +63,23 @@ const buttonStyle: React.CSSProperties = {
 };
 let dateRangeString: string | null = null;
 
-export const AppDatePicker: React.FunctionComponent<ICalendarInlineExampleProps> = (
-  props: ICalendarInlineExampleProps,
-) => {
+export const AppDatePicker: React.FC<AppDatePickerProps> = props => {
   const [selectedDateRange, setSelectedDateRange] = React.useState<Date[]>();
-  const [selectedDate, setSelectedDate] = React.useState<Date>();
 
+  const [selectedDate, setSelectedDate] = React.useState<LocalDate>();
+  useEffect(() => {
+    setSelectedDate(props.current);
+  }, [props.current]);
+  
   const onSelectDate = (date: Date, dateRangeArray?: Date[]): void => {
-    setSelectedDate(date);
+    const asLocalDate = LocalDate.of(date);
+    setSelectedDate(asLocalDate);
     setSelectedDateRange(dateRangeArray);
+    props.onSelectDate(asLocalDate);
   };
 
   const goPrevious = () => {
-    const goPreviousSelectedDate = selectedDate || new Date();
+    const goPreviousSelectedDate = LocalDate.toDate(selectedDate) || new Date();
     const dateRangeArray = getDateRangeArray(goPreviousSelectedDate, props.dateRangeType, DayOfWeek.Sunday);
     let subtractFrom = dateRangeArray[0];
     let daysToSubtract = dateRangeArray.length;
@@ -86,7 +94,7 @@ export const AppDatePicker: React.FunctionComponent<ICalendarInlineExampleProps>
   };
 
   const goNext = () => {
-    const goNextSelectedDate = selectedDate || new Date();
+    const goNextSelectedDate = LocalDate.toDate(selectedDate) ?? new Date();
     const dateRangeArray = getDateRangeArray(goNextSelectedDate, props.dateRangeType, DayOfWeek.Sunday);
     const newSelectedDate = addDays(dateRangeArray.pop()!, 1);
 
@@ -126,7 +134,7 @@ export const AppDatePicker: React.FunctionComponent<ICalendarInlineExampleProps>
         dateRangeType={props.dateRangeType}
         autoNavigateOnSelection={props.autoNavigateOnSelection}
         showGoToToday={props.showGoToToday}
-        value={selectedDate!}
+        value={LocalDate.toDate(selectedDate)!}
         firstDayOfWeek={props.firstDayOfWeek ? props.firstDayOfWeek : DayOfWeek.Sunday}
         strings={dayPickerStrings}
         highlightCurrentMonth={props.highlightCurrentMonth}

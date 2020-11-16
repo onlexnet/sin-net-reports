@@ -149,10 +149,7 @@ const ConnectedContent: React.FC<PropsFromRedux> = props => {
     {
       key: "column5", name: "Czas", fieldName: "duration", minWidth: 70, maxWidth: 90, isResizable: true, isCollapsible: true, data: "number",
       onColumnClick: (ev, col) => _onColumnClick(col, state.columns),
-      onRender: (item: IDocument) => {
-        //return <span>{item.duration}</span>;
-        return <Duration duration={item.duration} />
-      }
+      onRender: (item: IDocument) => <Duration duration={item.duration} />
     },
     {
       key: "column7", name: "Dojazd", fieldName: "distance", minWidth: 70, maxWidth: 90, isResizable: true, isCollapsible: true, data: "number",

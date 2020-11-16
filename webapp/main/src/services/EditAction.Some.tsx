@@ -3,8 +3,10 @@ import { ComboBox, DateRangeType, DefaultButton, FocusTrapZone, IComboBox, IComb
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { dates } from "../api/DtoMapper";
 import { useGetUsersQuery, useUpdateActionMutation } from "../Components/.generated/components";
-import { AppDatePicker } from "../Components/AppDatePicker";
+import { AppDatePicker } from "./ActionList.DatePicker";
 import { EntityId, ServiceAppModel } from "../store/actions/ServiceModel";
+import { LocalDate, TimePeriod } from "../store/viewcontext/TimePeriod";
+import { asDtoDate } from "../api/Mapper";
 
 interface EditActionSomeProps {
   item: ServiceAppModel,
@@ -49,17 +51,16 @@ export const EditActionSome: React.FC<EditActionSomeProps> = props => {
     [setServicemanName],
   );
 
-  const defaultDate = dates(item?.when).noSeparator;
-  const [date, setDate] = useState(defaultDate);
-  // useEffect(() => {
-  //   setDate(defaultDate);
-  // }, [defaultDate]);
+  const initialValue = item?.when;
+  const [actionDate, setActionDate] = useState(initialValue);
+  useEffect(() => {
+    setActionDate(initialValue);
+  }, versionedProps);
   const onChangeDate = useCallback(
-    (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
-      if (!newValue) return;
-      setDate(newValue);
+    (newValue: LocalDate) => {
+      setActionDate(newValue);
     },
-    [],
+    versionedProps,
   );
 
   const defaultCustomerName = item?.customerName;
@@ -169,23 +170,7 @@ export const EditActionSome: React.FC<EditActionSomeProps> = props => {
   }
 
   const updateAction = () => {
-    let yearAsString;
-    let monthAsString;
-    let dayAsString;
-    if (/[0-9]{8}/.test(date)) {
-      yearAsString = date.substring(0, 4);
-      monthAsString = date.substring(4, 6);
-      dayAsString = date.substring(6, 8);
-    } else if (/[0-9]{4}\/[0-9]{2}\/[0-9]{2}/.test(date)) {
-      yearAsString = date.substring(0, 4);
-      monthAsString = date.substring(5, 7);
-      dayAsString = date.substring(8, 10);
-    }
-
-    const dateDto = ('0000' + yearAsString).substr(-4) +
-      '/' + ('00' + monthAsString).substr(-2) +
-      '/' + ('00' + dayAsString).substr(-2);
-
+    const dtoDate = dates(actionDate).slashed;
     updateActionMutation({
       variables: {
         entityId,
@@ -193,7 +178,7 @@ export const EditActionSome: React.FC<EditActionSomeProps> = props => {
         distance: Number(distance),
         duration: durationRef.current,
         what: description,
-        when: dateDto,
+        when: dtoDate,
         who: servicemanName,
         whom: customerName
       }
@@ -210,8 +195,10 @@ export const EditActionSome: React.FC<EditActionSomeProps> = props => {
               />
             </div>
             <div className="ms-Grid-col ms-sm2">
-              <AppDatePicker dateRangeType={DateRangeType.Day} autoNavigateOnSelection={true} showGoToToday={true} />
-              {/* <MaskedTextField label="Data" value={date} onChange={onChangeDate} mask="9999/99/99" */}
+              <AppDatePicker
+                onSelectDate={value => onChangeDate(value)}
+                current={actionDate}
+                dateRangeType={DateRangeType.Day} autoNavigateOnSelection={true} showGoToToday={true} />
             </div>
           </div>
 

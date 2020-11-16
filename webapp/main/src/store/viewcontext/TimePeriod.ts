@@ -45,7 +45,7 @@ export class TimePeriod {
     }
 
     prev(): TimePeriod {
-        const nextDate =  this.asDate(this.dateFrom, -1);
+        const nextDate = this.asDate(this.dateFrom, -1);
         return new TimePeriod(nextDate);
     }
 
@@ -66,4 +66,19 @@ export interface LocalDate {
     month: number;
     /** Day of month 1-31 */
     day: number;
+}
+
+export class LocalDate {
+    public static of(date: Date): LocalDate {
+        return {
+            year: date.getFullYear(),
+            month: date.getMonth() + 1,
+            day: date.getDate()
+        }
+    }
+
+    public static toDate(value: LocalDate | undefined): Date | null {
+        if (!value) return null;
+        return new Date(value.year, value.month - 1, value.day);
+    }
 }
