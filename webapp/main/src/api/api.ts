@@ -47,7 +47,7 @@ export const apolloClientFactory = (jwtToken: string) => {
         errorPolicy: 'ignore',
       },
       query: {
-        fetchPolicy: 'no-cache',
+        fetchPolicy: 'network-only',
         errorPolicy: 'all',
       },
     }    

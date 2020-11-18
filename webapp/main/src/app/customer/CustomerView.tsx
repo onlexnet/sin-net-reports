@@ -7,6 +7,8 @@ import { Text } from 'office-ui-fabric-react/lib/Text';
 import { Button, IComboBoxOption, SelectableOptionMenuItemType, ComboBox, IComboBoxProps, ITextFieldStyles, TextField, Checkbox } from "office-ui-fabric-react";
 import { useConstCallback } from '@uifabric/react-hooks';
 import { useBoolean } from '@uifabric/react-hooks';
+import _ from "lodash";
+import { useGetUsers } from "../../api/useGetUsers";
 
 
 const stackStyles: Partial<IStackStyles> = { root: { width: 650 } };
@@ -42,22 +44,6 @@ const verticalStyle = mergeStyles({
     height: '200px',
 });
 
-const comboBoxBasicOptions: IComboBoxOption[] = [
-    { key: 'Header1', text: 'First heading', itemType: SelectableOptionMenuItemType.Header },
-    { key: 'A', text: 'Option A' },
-    { key: 'B', text: 'Option B' },
-    { key: 'C', text: 'Option C' },
-    { key: 'D', text: 'Option D' },
-    { key: 'divider', text: '-', itemType: SelectableOptionMenuItemType.Divider },
-    { key: 'Header2', text: 'Second heading', itemType: SelectableOptionMenuItemType.Header },
-    { key: 'E', text: 'Option E' },
-    { key: 'F', text: 'Option F', disabled: true },
-    { key: 'G', text: 'Option G' },
-    { key: 'H', text: 'Option H' },
-    { key: 'I', text: 'Option I' },
-    { key: 'J', text: 'Option J' },
-];
-
 const obsluga: IComboBoxOption[] = [
     { key: 'Header1', text: 'First heading', itemType: SelectableOptionMenuItemType.Header },
     { key: 'A', text: 'Obsługiwany' },
@@ -76,6 +62,13 @@ const rozliczenia: IComboBoxOption[] = [
 const narrowTextFieldStyles: Partial<ITextFieldStyles> = { fieldGroup: { width: 100 } };
 
 export const CustomerView: React.FC<{}> = () => {
+
+    const users = useGetUsers();
+    const comboBoxBasicOptions: IComboBoxOption[] = []
+    users.forEach(user => {
+        var userItem = { key: user, text: user };
+        comboBoxBasicOptions.push(userItem);
+    })
 
     const [selectedKey, setSelectedKey] = React.useState<string | undefined>('');
     const onChange: IComboBoxProps['onChange'] = (event, option) => setSelectedKey(option!.key as string);
