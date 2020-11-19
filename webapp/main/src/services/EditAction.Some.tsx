@@ -7,6 +7,7 @@ import { AppDatePicker } from "./ActionList.DatePicker";
 import { EntityId, ServiceAppModel } from "../store/actions/ServiceModel";
 import { LocalDate, TimePeriod } from "../store/viewcontext/TimePeriod";
 import { asDtoDate } from "../api/Mapper";
+import { useGetUsers } from "../api/useGetUsers";
 
 interface EditActionSomeProps {
   item: ServiceAppModel,
@@ -142,20 +143,8 @@ export const EditActionSome: React.FC<EditActionSomeProps> = props => {
   );
   const stackTokens = { childrenGap: 8 }
 
-  const { loading, data } = useGetUsersQuery();
-  var users: string[] = [];
-  if (loading) {
-    //
-  } else if (data) {
-    const result = _.chain(data.Users?.search).map(it => it.email).value();
-
-    if (result.length == 0) {
-      console.error("Server does return invalid list of users.");
-    }
-
-    users = result;
-  }
-
+  const users = useGetUsers();
+  
   const comboBoxBasicOptions = _.chain(users)
     .map(it => ({ key: it, text: it }))
     .value();
