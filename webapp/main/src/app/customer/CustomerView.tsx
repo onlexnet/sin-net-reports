@@ -3,7 +3,6 @@ import React from "react"
 import { Separator } from 'office-ui-fabric-react/lib/Separator';
 import { mergeStyles } from 'office-ui-fabric-react/lib/Styling';
 import { Stack, IStackTokens, IStackStyles, IStackProps } from 'office-ui-fabric-react/lib/Stack';
-import { Text } from 'office-ui-fabric-react/lib/Text';
 import { Button, IComboBoxOption, SelectableOptionMenuItemType, ComboBox, IComboBoxProps, ITextFieldStyles, TextField, Checkbox } from "office-ui-fabric-react";
 import { useConstCallback } from '@uifabric/react-hooks';
 import { useBoolean } from '@uifabric/react-hooks';
@@ -61,6 +60,28 @@ const rozliczenia: IComboBoxOption[] = [
 
 const narrowTextFieldStyles: Partial<ITextFieldStyles> = { fieldGroup: { width: 100 } };
 
+type CustomerViewModel = {
+    UmowaZNFZ: boolean;
+    MaFilie: boolean;
+    Lekarz: boolean;
+    Polozna: boolean;
+    PielegniarkaSrodowiskowa: boolean;
+    MedycynaSzkolna: boolean;
+    TransportSanitarny: boolean;
+    NocnaPomocLekarska: boolean;
+    AmbulatoryjnaOpiekaSpecjalistyczna: boolean;
+    Rehabilitacja: boolean;
+    Stomatologia: boolean;
+    Psychiatria: boolean;
+    Szpitalnictwo: boolean;
+    ProgramyProfilaktyczne: boolean;
+    ZaopatrzenieOrtopedyczne: boolean;
+    OpiekaDlugoterminowa: boolean;
+    NfzNotes: string | undefined;
+    Komercja: boolean;
+    KomercjaNotatki: string | undefined;
+}
+
 export const CustomerView: React.FC<{}> = () => {
 
     const users = useGetUsers();
@@ -82,15 +103,49 @@ export const CustomerView: React.FC<{}> = () => {
         },
     );
 
+    const [model, setModel] = React.useState<CustomerViewModel>({
+        UmowaZNFZ: false,
+        MaFilie: false,
+        Lekarz: false,
+        Polozna: false,
+        PielegniarkaSrodowiskowa: false,
+        MedycynaSzkolna: false,
+        TransportSanitarny: false,
+        NocnaPomocLekarska: false,
+        AmbulatoryjnaOpiekaSpecjalistyczna: false,
+        Rehabilitacja: false,
+        Stomatologia: false,
+        Psychiatria: false,
+        Szpitalnictwo: false,
+        ProgramyProfilaktyczne: false,
+        ZaopatrzenieOrtopedyczne: false,
+        OpiekaDlugoterminowa: false,
+        NfzNotes: undefined,
+        Komercja: false,
+        KomercjaNotatki: undefined,
+    });
+
     const [isChecked1, setIsChecked1] = React.useState(true);
     const onChange1 = React.useCallback((ev?: React.FormEvent<HTMLElement>, checked?: boolean): void => {
         setIsChecked1(!!checked);
     }, []);
 
-    const [isCheckedUmowaZNFZ, setIsCheckedUmowaZNFZ] = React.useState(true);
-    const onChangeIsCheckedUmowaZNFZ = React.useCallback((ev?: React.FormEvent<HTMLElement>, checked?: boolean): void => {
-        setIsCheckedUmowaZNFZ(!!checked);
-    }, []);
+    const onChangeBoolean = (changer: (m: CustomerViewModel, current: boolean) => void) => {
+        return (ev?: React.FormEvent<HTMLElement>, checked?: boolean): void => {
+            const cloned = _.clone(model);
+            changer(cloned, checked ?? false);
+            setModel(cloned);
+        };
+    }
+
+    const onChangeText = (changer: (m: CustomerViewModel, current: string | undefined) => void) => {
+        return (ev?: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newText?: string): void => {
+            const newMultiline = newText?.length ?? 0 > 50;
+            if (newMultiline !== multiline2) {
+                toggleMultiline2();
+            }
+        };
+    }
 
     const [multiline2, { toggle: toggleMultiline2 }] = useBoolean(false);
     const onChange2 = (ev?: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newText?: string): void => {
@@ -173,8 +228,12 @@ export const CustomerView: React.FC<{}> = () => {
                     <div className="ms-Grid-col ms-smPush1">
                         <Stack tokens={stackTokens}>
                             <Stack horizontal tokens={stackTokens}>
-                                <Checkbox label="Umowa z NFZ" checked={isCheckedUmowaZNFZ} onChange={onChangeIsCheckedUmowaZNFZ} />
-                                <Checkbox label="Posiada filię" checked={isChecked1} onChange={onChange1} />
+                                <Checkbox label="Umowa z NFZ"
+                                    checked={model.UmowaZNFZ}
+                                    onChange={onChangeBoolean((m, v) => m.UmowaZNFZ = v)} />
+                                <Checkbox label="Posiada filię"
+                                    checked={model.MaFilie}
+                                    onChange={onChangeBoolean((m, v) => m.MaFilie = v)} />
                             </Stack>
 
                         </Stack>
@@ -182,66 +241,94 @@ export const CustomerView: React.FC<{}> = () => {
                 </div>
                 <div className="ms-Grid-row">
                     <div className="ms-Grid-col ms-sm5 ms-smPush1">
-                        <Checkbox label="L Lekarz" checked={isChecked1} onChange={onChange1} />
+                        <Checkbox label="L Lekarz" checked={model.Lekarz} onChange={onChangeBoolean((m, v) => m.Lekarz = v)} />
                     </div>
                     <div className="ms-Grid-col ms-sm5">
-                        <Checkbox label="PS Pielęgniarka Środowiskowa" checked={isChecked1} onChange={onChange1} />
+                        <Checkbox label="PS Pielęgniarka Środowiskowa"
+                            checked={model.PielegniarkaSrodowiskowa}
+                            onChange={onChangeBoolean((m, v) => m.PielegniarkaSrodowiskowa = v)} />
                     </div>
                 </div>
                 <div className="ms-Grid-row">
                     <div className="ms-Grid-col ms-sm5 ms-smPush1">
-                        <Checkbox label="O Położna" checked={isChecked1} onChange={onChange1} />
+                        <Checkbox label="O Położna"
+                            checked={model.Polozna}
+                            onChange={onChangeBoolean((m, v) => m.Polozna = v)} />
                     </div>
                     <div className="ms-Grid-col ms-sm5">
-                        <Checkbox label="MPSZ Medycyna Szkolna" checked={isChecked1} onChange={onChange1} />
+                        <Checkbox label="MPSZ Medycyna Szkolna"
+                            checked={model.MedycynaSzkolna}
+                            onChange={onChangeBoolean((m, v) => m.MedycynaSzkolna = v)} />
                     </div>
                 </div>
                 <div className="ms-Grid-row">
                     <div className="ms-Grid-col ms-sm5 ms-smPush1">
-                        <Checkbox label="Transport Sanitarny" checked={isChecked1} onChange={onChange1} />
+                        <Checkbox label="Transport Sanitarny"
+                            checked={model.TransportSanitarny}
+                            onChange={onChangeBoolean((m, v) => m.TransportSanitarny = v)} />
                     </div>
                     <div className="ms-Grid-col ms-sm5">
-                        <Checkbox label="NPL Nocna pomoc lekarska" checked={isChecked1} onChange={onChange1} />
+                        <Checkbox label="NPL Nocna pomoc lekarska"
+                            checked={model.NocnaPomocLekarska}
+                            onChange={onChangeBoolean((m, v) => m.NocnaPomocLekarska = v)} />
                     </div>
                 </div>
                 <div className="ms-Grid-row">
                     <div className="ms-Grid-col ms-sm5 ms-smPush1">
-                        <Checkbox label="AOS Ambulatoryjna opieka specjalistyczna" checked={isChecked1} onChange={onChange1} />
+                        <Checkbox label="AOS Ambulatoryjna opieka specjalistyczna"
+                            checked={model.AmbulatoryjnaOpiekaSpecjalistyczna}
+                            onChange={onChangeBoolean((m, v) => m.AmbulatoryjnaOpiekaSpecjalistyczna = v)} />
                     </div>
                     <div className="ms-Grid-col ms-sm5">
-                        <Checkbox label="REH Rehabilitacja" checked={isChecked1} onChange={onChange1} />
+                        <Checkbox label="REH Rehabilitacja"
+                            checked={model.Rehabilitacja}
+                            onChange={onChangeBoolean((m, v) => m.Rehabilitacja = v)} />
                     </div>
                 </div>
                 <div className="ms-Grid-row">
                     <div className="ms-Grid-col ms-sm5 ms-smPush1">
-                        <Checkbox label="STM Stomatologia" checked={isChecked1} onChange={onChange1} />
+                        <Checkbox label="STM Stomatologia"
+                            checked={model.Stomatologia}
+                            onChange={onChangeBoolean((m, v) => m.Stomatologia = v)} />
                     </div>
                     <div className="ms-Grid-col ms-sm5">
-                        <Checkbox label="PSY Psychiatria" checked={isChecked1} onChange={onChange1} />
+                        <Checkbox label="PSY Psychiatria"
+                            checked={model.Psychiatria}
+                            onChange={onChangeBoolean((m, v) => m.Psychiatria = v)} />
                     </div>
                 </div>
                 <div className="ms-Grid-row">
                     <div className="ms-Grid-col ms-sm5 ms-smPush1">
-                        <Checkbox label="SZP Szpitalnictwo" checked={isChecked1} onChange={onChange1} />
+                        <Checkbox label="SZP Szpitalnictwo"
+                            checked={model.Szpitalnictwo}
+                            onChange={onChangeBoolean((m, v) => m.Szpitalnictwo = v)} />
                     </div>
                     <div className="ms-Grid-col ms-sm5">
-                        <Checkbox label="PROF Programy profilaktyczne" checked={isChecked1} onChange={onChange1} />
+                        <Checkbox label="PROF Programy profilaktyczne"
+                            checked={model.ProgramyProfilaktyczne}
+                            onChange={onChangeBoolean((m, v) => m.ProgramyProfilaktyczne = v)} />
                     </div>
                 </div>
                 <div className="ms-Grid-row">
                     <div className="ms-Grid-col ms-sm5 ms-smPush1">
-                        <Checkbox label="ZOP Zaopatrzenie ortopedyczne i pomocniczne" checked={isChecked1} onChange={onChange1} />
+                        <Checkbox label="ZOP Zaopatrzenie ortopedyczne i pomocniczne"
+                            checked={model.ZaopatrzenieOrtopedyczne}
+                            onChange={onChangeBoolean((m, v) => m.ZaopatrzenieOrtopedyczne = v)} />
                     </div>
                     <div className="ms-Grid-col ms-sm5">
-                        <Checkbox label="OPD Opieka długoterminowa" checked={isChecked1} onChange={onChange1} />
+                        <Checkbox label="OPD Opieka długoterminowa"
+                            checked={model.OpiekaDlugoterminowa}
+                            onChange={onChangeBoolean((m, v) => m.OpiekaDlugoterminowa = v)} />
                     </div>
                 </div>
                 <div className="ms-Grid-row">
                     <div className="ms-Grid-col ms-sm6 ms-smPush1">
                         <TextField
                             multiline={true}
+                            value={model.NfzNotes}
+                            placeholder="Notatki NFZ"
                             // eslint-disable-next-line react/jsx-no-bind
-                            onChange={onChange2}
+                            onChange={onChangeText((m, v) => m.NfzNotes = v)}
                         />
                     </div>
                 </div>
@@ -250,7 +337,9 @@ export const CustomerView: React.FC<{}> = () => {
                 <Separator alignContent="start">Komercja</Separator>
                 <div className="ms-Grid-row">
                     <div className="ms-Grid-col ms-sm5 ms-smPush1">
-                        <Checkbox label="Komercja" checked={isChecked1} onChange={onChange1} />
+                        <Checkbox label="Komercja"
+                            checked={model.Komercja}
+                            onChange={onChangeBoolean((m, v) => m.Komercja = v)} />
                     </div>
                 </div>
                 <div className="ms-Grid-row">
@@ -258,8 +347,8 @@ export const CustomerView: React.FC<{}> = () => {
                         <TextField
                             multiline={true}
                             placeholder="Dane opisowe"
-                            // eslint-disable-next-line react/jsx-no-bind
-                            onChange={onChange2}
+                            value={model.KomercjaNotatki}
+                            onChange={onChangeText((m, v) => m.NfzNotes)}
                         />
                     </div>
                 </div>
