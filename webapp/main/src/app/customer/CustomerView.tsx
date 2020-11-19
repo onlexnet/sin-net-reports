@@ -87,6 +87,11 @@ export const CustomerView: React.FC<{}> = () => {
         setIsChecked1(!!checked);
     }, []);
 
+    const [isCheckedUmowaZNFZ, setIsCheckedUmowaZNFZ] = React.useState(true);
+    const onChangeIsCheckedUmowaZNFZ = React.useCallback((ev?: React.FormEvent<HTMLElement>, checked?: boolean): void => {
+        setIsCheckedUmowaZNFZ(!!checked);
+    }, []);
+
     const [multiline2, { toggle: toggleMultiline2 }] = useBoolean(false);
     const onChange2 = (ev?: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newText?: string): void => {
         const newMultiline = newText?.length ?? 0 > 50;
@@ -168,7 +173,7 @@ export const CustomerView: React.FC<{}> = () => {
                     <div className="ms-Grid-col ms-smPush1">
                         <Stack tokens={stackTokens}>
                             <Stack horizontal tokens={stackTokens}>
-                                <Checkbox label="Umowa z NFZ" checked={isChecked1} onChange={onChange1} />
+                                <Checkbox label="Umowa z NFZ" checked={isCheckedUmowaZNFZ} onChange={onChangeIsCheckedUmowaZNFZ} />
                                 <Checkbox label="Posiada filię" checked={isChecked1} onChange={onChange1} />
                             </Stack>
 
