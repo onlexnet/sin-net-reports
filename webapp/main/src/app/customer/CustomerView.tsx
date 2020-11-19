@@ -118,9 +118,6 @@ export const CustomerView: React.FC<{}> = () => {
                     <div className="ms-Grid-col ms-smPush1 ms-sm4 ">
                         <ComboBox
                             label="Obsługa"
-                            defaultSelectedKey="B"
-                            errorMessage="Oh no! This ComboBox has an error!"
-
                             options={rozliczenia}
                         />
                     </div>
@@ -129,9 +126,6 @@ export const CustomerView: React.FC<{}> = () => {
                     <div className="ms-Grid-col ms-smPush1 ms-sm4 ">
                         <ComboBox
                             label="Rozliczenie"
-                            defaultSelectedKey="B"
-                            errorMessage="Oh no! This ComboBox has an error!"
-
                             options={obsluga}
                         />
                     </div>
