@@ -32,6 +32,7 @@ public class WebSecurityConfig {
                     .authorizeRequests(conf -> {
                             conf
                                 .antMatchers("/graphql/**").hasAuthority("Actions.Read")
+                                .antMatchers("/api/to-delete").permitAll()
                                 // .antMatchers("/graphql/**").hasAuthority("SCOPE_Actions.Read")
                                 .antMatchers("/actuator/**").permitAll(); })
                     .oauth2ResourceServer()
