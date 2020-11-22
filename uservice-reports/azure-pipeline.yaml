@@ -65,10 +65,10 @@ jobs:
           mavenPomFile: uservice-reports/main/pom.xml
           goals: package
           options: |
-            -Dquarkus.container-image.build=true
-            -Dquarkus.container-image.group=sinnet.azurecr.io
-            -Dquarkus.container-image.name=uservice-reports
-            -Dquarkus.container-image.tag=latest
+            -Dquarkus.container-image.build=true |
+            -Dquarkus.container-image.group=sinnet.azurecr.io |
+            -Dquarkus.container-image.name=uservice-reports |
+            -Dquarkus.container-image.tag=latest |
 
       - task: Docker@2
         displayName: Push webapi image to docker ACR
