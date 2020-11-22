@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/to-delete")
 public class ToDeleteController {
-    
+
     @GetMapping
     public String get() {
         return "OK2BG";
