@@ -64,8 +64,11 @@ jobs:
         inputs:
           mavenPomFile: uservice-reports/main/pom.xml
           goals: package
-          mavenOptions: -Dquarkus.package.type=uber-jar -Dquarkus.container-image.build=true -Dquarkus.container-image.group=sinnet.azurecr.io -Dquarkus.container-image.name=uservice-reports -Dquarkus.container-image.tag=latest
-
+          mavenOptions: |
+            -Dquarkus.container-image.build=true
+            -Dquarkus.container-image.group=sinnet.azurecr.io
+            -Dquarkus.container-image.name=uservice-reports
+            -Dquarkus.container-image.tag=latest
 
       - task: Docker@2
         displayName: Push webapi image to docker ACR
@@ -74,6 +77,7 @@ jobs:
           containerRegistry: $(dockerRegistryServiceConnection)
           repository: uservice-reports
           tags: |
-            $(Build.SourceBranchName)-$(Build.BuildNumber)
             latest
+            $(Build.SourceBranchName)-$(Build.BuildNumber)
+            
 
