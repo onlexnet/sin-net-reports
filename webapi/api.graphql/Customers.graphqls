@@ -1,0 +1,25 @@
+extend type Mutation {
+    Customers: CustomersOperations!
+}
+
+type CustomersOperations {
+    list: [CustomerModel!]!
+    get(actionId: ID!): CustomerModel
+    addNew(entry: CustomerEntry): MyEntity!
+}
+
+input CustomerEntry {
+    customerName: String!
+    customerCityName: String!
+    customerAddress: String!
+}
+type CustomerModel {
+    customerName: String!
+    customerCityName: String!
+    customerAddress: String!
+}
+
+type CustomerEntity {
+    id: Entity!
+    data: CustomerModel!
+}

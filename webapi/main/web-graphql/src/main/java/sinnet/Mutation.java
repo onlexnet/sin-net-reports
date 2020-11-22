@@ -6,12 +6,16 @@ import org.springframework.stereotype.Component;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import lombok.Getter;
 
-/** fixme. */
+/** Entry point of all top-leve resolvers. */
 @Component
 public class Mutation implements GraphQLMutationResolver {
 
     @Autowired
     @Getter
     private ServicesOperations services;
+
+    @Autowired
+    @Getter
+    private CustomersOperations customers;
 
 }

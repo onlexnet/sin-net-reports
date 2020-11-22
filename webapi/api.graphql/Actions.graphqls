@@ -43,8 +43,3 @@ type ServicesOperations {
     update(entityId: ID!, entityVersion: Int!, content: ServiceEntry): Boolean!
     newAction(whenProvided: Date!): MyEntity!
 }
-
-type MyEntity implements Entity {
-    entityId: ID!
-    entityVersion: Int!
-}

@@ -2,3 +2,8 @@ interface Entity {
     entityId: ID!
     entityVersion: Int!
 }
+
+type MyEntity implements Entity {
+    entityId: ID!
+    entityVersion: Int!
+}
