@@ -1,0 +1,81 @@
+resources:
+  - repo: self
+
+variables:
+  # connection, defined manually.
+  # The connection used in pipeline allows to access to ACR sinnet.azurecr.io
+  dockerRegistryServiceConnection: "sinnet-acr"
+  # image name (without tags) used to build final image
+  imageName: "uservice-reports"
+  # name of the registry where the image is hosted on.
+  # in Docker world, it is also part of image name (prefix)
+  containerRegistry: "sinnetapps.azurecr.io"
+
+trigger:
+  batch: true
+  branches:
+    include:
+      - master
+  paths:
+    include:
+      # We have to include all folders where source files are located
+      - /uservice-reports/
+
+jobs:
+  - job: CICD
+    displayName: Reports uservice CI/CD build
+    pool:
+      vmImage: ubuntu-latest
+
+    variables:
+      # We have enabled the build pipelines for Pull Request vs master.
+      # There are some differences between a normal build and the build triggered by a PR though:
+      # The build triggered from a PR do not push the docker images to any docker registry.
+      buildImageOnMaster: $[ eq(variables['build.sourceBranch'], 'refs/heads/master') ]
+    
+    steps:
+      - task: Maven@3
+        env:
+          # pom.xml uses SONAR_TOKEN env variable to communicate with sonarcloud.
+          # The crrent CI/CD pipeline has secret named SONAR_TOKEN with proper value.
+          # Problem: Azure pipeline secrets can't be used directly as environment varianbles
+          # https://github.com/Microsoft/azure-pipelines-agent/issues/145
+          # As the result, we have to put CICD secret to build variable
+          SONAR_TOKEN: $(SONAR_TOKEN)
+
+        # https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/build/maven
+        displayName: Verify quality with SonarQube and Checkstyle
+        inputs:
+          mavenPomFile: 'uservice-reports/main/pom.xml'
+          goals: 'verify'
+          javaHomeOption: 'JDKVersion'
+          jdkVersionOption: '1.11'
+          jdkArchitectureOption: 'x64'
+          # publishJUnitResults: false # default: true
+          # options:
+          sonarQubeRunAnalysis: true
+          sqMavenPluginVersionChoice: 'latest' # Required when sonarQubeRunAnalysis == True# Options: latest, pom
+          checkStyleRunAnalysis: true # We use checkstyle in coding, so let's use it with Maven as well
+
+      - task: Maven@3
+        displayName: Build docker image
+        inputs:
+          mavenPomFile: uservice-reports/main/pom.xml
+          goals: package
+          mavenOptions: |
+            -Dquarkus.package.type=uber-jar
+            -Dquarkus.container-image.group=sinnet.azurecr.io
+            -Dquarkus.container-image.name=uservice-reports
+            -Dquarkus.container-image.tag=latest
+
+
+      - task: Docker@2
+        displayName: Push webapi image to docker ACR
+        inputs:
+          command: push
+          containerRegistry: $(dockerRegistryServiceConnection)
+          repository: uservice-reports
+          tags: |
+            $(Build.SourceBranchName)-$(Build.BuildNumber)
+            latest
+
