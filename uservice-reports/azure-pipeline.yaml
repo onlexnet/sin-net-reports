@@ -53,6 +53,8 @@ jobs:
           jdkArchitectureOption: 'x64'
           # publishJUnitResults: false # default: true
           # options:
+          #  - disable log entries (a lot of entries) related to artifacts downloaded by maven
+          options: -B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
           sonarQubeRunAnalysis: true
           sqMavenPluginVersionChoice: 'latest' # Required when sonarQubeRunAnalysis == True# Options: latest, pom
           checkStyleRunAnalysis: true # We use checkstyle in coding, so let's use it with Maven as well
