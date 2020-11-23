@@ -11,6 +11,7 @@ import sinnet.models.ActionDuration;
 import sinnet.models.Distance;
 import sinnet.models.Email;
 import sinnet.models.Name;
+import sinnet.models.ServiceValue;
 
 /** Fixme. */
 @Component
@@ -33,14 +34,14 @@ public class ServicesOperationsUpdate implements GraphQLResolver<ServicesOperati
                                              int entityVersion,
                                              ServiceEntry content) {
 
-        var model = new ServiceValue(
-            Email.of(content.getServicemanName()),
-            content.getWhenProvided(),
-            Name.of(content.getForWhatCustomer()),
-            content.getDescription(),
-            ActionDuration.of(content.getDuration()),
-            Distance.of(content.getDistance())
-        );
+        var model = ServiceValue.builder()
+            .who(Email.of(content.getServicemanName()))
+            .when(content.getWhenProvided())
+            .whom(Name.of(content.getForWhatCustomer()))
+            .what(content.getDescription())
+            .howLong(ActionDuration.of(content.getDuration()))
+            .howFar(Distance.of(content.getDistance()))
+            .build();
 
         return actionService
             .update(entityId, entityVersion, model)

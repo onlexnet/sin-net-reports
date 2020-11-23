@@ -1,14 +1,9 @@
-package sinnet;
+package sinnet.models;
 
 import java.time.LocalDate;
 
 import lombok.Builder;
 import lombok.Value;
-import sinnet.models.ActionDuration;
-import sinnet.models.Distance;
-import sinnet.models.Email;
-import sinnet.models.EntityValue;
-import sinnet.models.Name;
 
 /** Register details about provided service. */
 @Value

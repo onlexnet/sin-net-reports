@@ -12,7 +12,7 @@ import io.vertx.sqlclient.Row;
 import io.vertx.sqlclient.Tuple;
 import reactor.core.publisher.Mono;
 import sinnet.ActionService;
-import sinnet.ServiceValue;
+import sinnet.models.ServiceValue;
 import sinnet.models.ActionDuration;
 import sinnet.models.Distance;
 import sinnet.models.Email;

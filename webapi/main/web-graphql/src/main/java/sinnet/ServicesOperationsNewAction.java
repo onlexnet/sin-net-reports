@@ -9,10 +9,9 @@ import org.springframework.stereotype.Component;
 
 import graphql.kickstart.tools.GraphQLResolver;
 import lombok.Value;
-import sinnet.models.ActionDuration;
-import sinnet.models.Distance;
 import sinnet.models.Email;
 import sinnet.models.Name;
+import sinnet.models.ServiceValue;
 
 /** Fixme. */
 @Component
@@ -30,8 +29,12 @@ public class ServicesOperationsNewAction implements GraphQLResolver<ServicesOper
      */
     public CompletableFuture<MyEntity> newAction(ServicesOperations ignored, LocalDate whenProvided) {
 
-        var model = new ServiceValue(Email.of("undefined@user"), whenProvided, Name.of("Jakiś klient"), "Jakaś usługa",
-                ActionDuration.empty(), Distance.empty());
+        var model = ServiceValue.builder()
+            .who(Email.of("undefined@user"))
+            .when(whenProvided)
+            .whom(Name.of("Jakiś klient"))
+            .what("Jakaś usługa")
+            .build();
 
         var entityId = UUID.randomUUID();
         return actionService.save(entityId, model)

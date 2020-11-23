@@ -4,14 +4,11 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.util.UUID;
 
-import org.springframework.data.annotation.Id;
-
 import lombok.Data;
 
 @Data
 public class ActionsDbModel {
 
-    @Id
     private UUID entityId;
 
     private String description;
