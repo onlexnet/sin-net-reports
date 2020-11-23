@@ -1,19 +1,23 @@
 package sinnet.customer;
 
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import io.vertx.core.AbstractVerticle;
+import io.vertx.core.Future;
 import io.vertx.core.Promise;
 import io.vertx.pgclient.PgPool;
+import io.vertx.sqlclient.Tuple;
 import lombok.extern.slf4j.Slf4j;
 import sinnet.TopLevelVerticle;
 import sinnet.commands.RegisterNewCustomer;
+import sinnet.models.CustomerValue;
 
 @Component
 @Slf4j
-public class CustomerDbService extends AbstractVerticle
-                               implements TopLevelVerticle {
+public class CustomerDbService extends AbstractVerticle implements TopLevelVerticle {
 
     private final PgPool pgClient;
 
@@ -26,29 +30,30 @@ public class CustomerDbService extends AbstractVerticle
     public void start(Promise<Void> startPromise) throws Exception {
         var address = RegisterNewCustomer.ADDRESS;
         vertx.eventBus().consumer(address, message -> {
-            message.reply(message);
+            var entityId = UUID.randomUUID();
+            this.save(entityId, 1, CustomerValue.builder().build())
+                .onComplete(it -> {
+                    message.reply(message);
+                });
         });
 
         super.start(startPromise);
     }
+
+    public Future<Boolean> save(UUID entityId, int version, CustomerValue entity) {
+        var promise = Promise.<Boolean>promise();
+        var values = Tuple.of(entityId,
+            version,
+            entity.getCustomerName().getValue());
+        pgClient.preparedQuery("INSERT INTO"
+                + " customers (entity_id, entity_version, customer_name)"
+                + " values ($1, $2, $3)")
+                .execute(values, ar -> {
+                    if (ar.succeeded()) promise.complete(Boolean.TRUE);
+                    else promise.complete(Boolean.FALSE);
+                });
+        return promise.future();
+    }
 }
 
-//     public Mono<Boolean> save(UUID entityId, CustomerValue entity) {
-//         var values = Tuple.of(entityId,
-//             entity.getWho().getValue(),
-//             entity.getWhom().getValue(),
-//             entity.getWhat(),
-//             entity.getHowFar().getValue(),
-//             entity.getHowLong().getValue(),
-//             entity.getWho().getValue(), entity.getWhen());
-//         return Mono.create(consumer -> {
-//         pgClient.preparedQuery("INSERT INTO "
-//                 + "actions (entity_id, entity_version, serviceman_email, customer_name, description, distance, duration, serviceman_name, date) "
-//                 + "values ($1, 1, $2, $3, $4, $5, $6, $7, $8)")
-//                 .execute(values, ar -> {
-//                     if (ar.succeeded()) consumer.success(Boolean.TRUE);
-//                     else consumer.error(ar.cause());
-//                 });
-//             });
-//     }
 // }

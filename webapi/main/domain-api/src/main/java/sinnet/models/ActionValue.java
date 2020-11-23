@@ -8,7 +8,7 @@ import lombok.Value;
 /** Register details about provided service. */
 @Value
 @Builder(toBuilder = true)
-public class ServiceValue implements EntityValue<ServiceValue> {
+public class ActionValue implements EntityValue<ActionValue> {
 
     /** Serviceman who did the service. */
     @Builder.Default

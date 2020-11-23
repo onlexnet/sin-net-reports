@@ -12,7 +12,7 @@ import io.vertx.sqlclient.Row;
 import io.vertx.sqlclient.Tuple;
 import reactor.core.publisher.Mono;
 import sinnet.ActionService;
-import sinnet.models.ServiceValue;
+import sinnet.models.ActionValue;
 import sinnet.models.ActionDuration;
 import sinnet.models.Distance;
 import sinnet.models.Email;
@@ -29,7 +29,7 @@ public class ActionServiceImpl implements ActionService {
                                        + "serviceman_email, distance, duration, date, customer_name, description, serviceman_name "
                                        + "FROM actions it ";
     @Override
-    public Mono<Boolean> save(UUID entityId, ServiceValue entity) {
+    public Mono<Boolean> save(UUID entityId, ActionValue entity) {
         var values = Tuple.of(entityId,
             entity.getWho().getValue(),
             entity.getWhom().getValue(),
@@ -50,7 +50,7 @@ public class ActionServiceImpl implements ActionService {
 
 
     @Override
-    public Mono<Stream<Entity<ServiceValue>>> find(LocalDate from, LocalDate to) {
+    public Mono<Stream<Entity<ActionValue>>> find(LocalDate from, LocalDate to) {
         var findQuery = this.pgClient
                 .preparedQuery(SOURCE + " WHERE it.date >= $1 AND it.date <= $2");
         return Mono.create(consumer -> {
@@ -69,7 +69,7 @@ public class ActionServiceImpl implements ActionService {
     }
 
     @Override
-    public Mono<Entity<ServiceValue>> find(UUID entityId) {
+    public Mono<Entity<ActionValue>> find(UUID entityId) {
         var findQuery = this.pgClient
                 .preparedQuery(SOURCE + " WHERE it.entity_id = $1");
         return Mono.create(consumer -> {
@@ -89,8 +89,8 @@ public class ActionServiceImpl implements ActionService {
             });
     }
 
-    private static Entity<ServiceValue> map(Row row) {
-        return ServiceValue.builder()
+    private static Entity<ActionValue> map(Row row) {
+        return ActionValue.builder()
         .who(Email.of(row.getString("serviceman_email")))
         .howFar(Distance.of(row.getInteger("distance")))
         .howLong(ActionDuration.of(row.getInteger("duration")))
@@ -102,7 +102,7 @@ public class ActionServiceImpl implements ActionService {
     }
 
     @Override
-    public Mono<Boolean> update(UUID entityId, int entityVersion, ServiceValue entity) {
+    public Mono<Boolean> update(UUID entityId, int entityVersion, ActionValue entity) {
         var values = Tuple.of(entityId,
             entityVersion,
             entity.getWho().getValue(),

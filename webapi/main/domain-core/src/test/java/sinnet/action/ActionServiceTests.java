@@ -17,7 +17,7 @@ import reactor.core.publisher.Mono;
 import sinnet.ActionService;
 import sinnet.AppTestContext;
 import sinnet.Dates;
-import sinnet.models.ServiceValue;
+import sinnet.models.ActionValue;
 import sinnet.models.ActionDuration;
 import sinnet.models.Distance;
 import sinnet.models.Email;
@@ -42,7 +42,7 @@ public class ActionServiceTests {
             Assumptions.assumeThat(actual.block()).isEmpty();
         }
 
-        var newEntity = ServiceValue.builder()
+        var newEntity = ActionValue.builder()
             .howFar(Distance.of(10))
             .when(now)
             .whom(Name.of("some Customer name"))
@@ -58,7 +58,7 @@ public class ActionServiceTests {
             var actualItems = sut.find(now, now).block();
             Assertions.assertThat(actualItems).hasSize(3);
 
-            var expected = ServiceValue.builder()
+            var expected = ActionValue.builder()
                 .howFar(Distance.of(10))
                 .when(now)
                 .whom(Name.of("some Customer name"))
@@ -73,7 +73,7 @@ public class ActionServiceTests {
     public void shouldSaveFullModel() {
         var now = Dates.gen().head();
 
-        var newEntity = ServiceValue.builder()
+        var newEntity = ActionValue.builder()
             .who(Email.of("some person"))
             .howFar(Distance.of(1))
             .howLong(ActionDuration.of(2))
@@ -85,7 +85,7 @@ public class ActionServiceTests {
         assertThat(sut.save(UUID.randomUUID(), newEntity).block()).isTrue();
 
         var actual = sut.find(now, now).block().head().getValue();
-        var expected = ServiceValue.builder()
+        var expected = ActionValue.builder()
             .who(Email.of("some person"))
             .howFar(Distance.of(1))
             .howLong(ActionDuration.of(2))
@@ -100,10 +100,10 @@ public class ActionServiceTests {
     public void shouldUpdateFullModel() {
         var now = Dates.gen().head();
 
-        var newEntity = ServiceValue.builder()
+        var newEntity = ActionValue.builder()
             .when(Dates.gen().head())
             .build();
-        var updateEntity = ServiceValue.builder()
+        var updateEntity = ActionValue.builder()
             .who(Email.of("some person"))
             .howFar(Distance.of(1))
             .howLong(ActionDuration.of(2))
@@ -117,7 +117,7 @@ public class ActionServiceTests {
         assertThat(sut.update(entityId, 1, updateEntity).block()).isTrue();
 
         var actual = sut.find(now, now).block().head().getValue();
-        var expected = ServiceValue.builder()
+        var expected = ActionValue.builder()
             .who(Email.of("some person"))
             .howFar(Distance.of(1))
             .howLong(ActionDuration.of(2))
@@ -132,7 +132,7 @@ public class ActionServiceTests {
     public void shouldSaveMinModel() {
         var now = Dates.gen().head();
 
-        var newEntity = ServiceValue.builder()
+        var newEntity = ActionValue.builder()
             .when(now)
             .build();
 
@@ -140,7 +140,7 @@ public class ActionServiceTests {
         assertThat(sut.save(entityId, newEntity).block()).isTrue();
 
         var actual = sut.find(entityId).block().getValue();
-        var expected = ServiceValue.builder()
+        var expected = ActionValue.builder()
             .when(now)
             .build();
         assertThat(actual).isEqualTo(expected);

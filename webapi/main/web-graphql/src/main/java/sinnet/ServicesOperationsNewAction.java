@@ -11,7 +11,7 @@ import graphql.kickstart.tools.GraphQLResolver;
 import lombok.Value;
 import sinnet.models.Email;
 import sinnet.models.Name;
-import sinnet.models.ServiceValue;
+import sinnet.models.ActionValue;
 
 /** Fixme. */
 @Component
@@ -29,7 +29,7 @@ public class ServicesOperationsNewAction implements GraphQLResolver<ServicesOper
      */
     public CompletableFuture<MyEntity> newAction(ServicesOperations ignored, LocalDate whenProvided) {
 
-        var model = ServiceValue.builder()
+        var model = ActionValue.builder()
             .who(Email.of("undefined@user"))
             .when(whenProvided)
             .whom(Name.of("Jakiś klient"))

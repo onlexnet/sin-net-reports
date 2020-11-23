@@ -30,7 +30,7 @@ public class CustomerDbServiceTests {
     private Vertx vertx;
 
     @Test
-    void someTest() {
+    void someTest() throws InterruptedException {
         var testContext = new VertxTestContext();
 
         var sut = new CustomerDbService(pgPool);
@@ -45,8 +45,12 @@ public class CustomerDbServiceTests {
             vertx.eventBus()
                 .request(RegisterNewCustomer.ADDRESS,
                          cmd,
-                         testContext.succeeding(reply -> { })
+                         testContext.succeeding(reply -> {
+                            System.out.println("x");
+                         })
                 );
         }));
+
+        Thread.sleep(100_000);
     }
 }

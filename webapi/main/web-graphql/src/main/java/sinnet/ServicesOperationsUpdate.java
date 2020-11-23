@@ -11,7 +11,7 @@ import sinnet.models.ActionDuration;
 import sinnet.models.Distance;
 import sinnet.models.Email;
 import sinnet.models.Name;
-import sinnet.models.ServiceValue;
+import sinnet.models.ActionValue;
 
 /** Fixme. */
 @Component
@@ -34,7 +34,7 @@ public class ServicesOperationsUpdate implements GraphQLResolver<ServicesOperati
                                              int entityVersion,
                                              ServiceEntry content) {
 
-        var model = ServiceValue.builder()
+        var model = ActionValue.builder()
             .who(Email.of(content.getServicemanName()))
             .when(content.getWhenProvided())
             .whom(Name.of(content.getForWhatCustomer()))
