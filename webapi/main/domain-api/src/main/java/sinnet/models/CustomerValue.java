@@ -8,6 +8,7 @@ import lombok.Value;
 public class CustomerValue implements EntityValue<CustomerValue> {
     @Builder.Default
     private Name customerName = Name.empty();
+    @Builder.Default
     private Name customerCityName = Name.empty();
     private String customerAddress;
 }

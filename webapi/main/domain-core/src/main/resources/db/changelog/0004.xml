@@ -14,6 +14,8 @@
             <column name="customer_name" type="VARCHAR(50)">
                 <constraints nullable="false"/>
             </column>
+            <column name="customer_city_name" type="VARCHAR(50)"/>
+            <column name="customer_address" type="VARCHAR(50)"/>
         </createTable>
         <addUniqueConstraint
             columnNames="entity_id, entity_version"
