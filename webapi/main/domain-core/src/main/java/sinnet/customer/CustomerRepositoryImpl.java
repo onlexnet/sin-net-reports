@@ -3,41 +3,20 @@ package sinnet.customer;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
 import io.vertx.core.Promise;
 import io.vertx.pgclient.PgPool;
 import io.vertx.sqlclient.Tuple;
-import lombok.extern.slf4j.Slf4j;
-import sinnet.TopLevelVerticle;
-import sinnet.commands.RegisterNewCustomer;
 import sinnet.models.CustomerValue;
 
-@Component
-@Slf4j
-public class CustomerDbService extends AbstractVerticle implements TopLevelVerticle {
+public class CustomerRepositoryImpl implements CustomerRepository {
 
     private final PgPool pgClient;
 
     @Autowired
-    public CustomerDbService(PgPool pgClient) {
-        this.pgClient = pgClient;
-    }
-
-    @Override
-    public void start(Promise<Void> startPromise) throws Exception {
-        var address = RegisterNewCustomer.ADDRESS;
-        vertx.eventBus().consumer(address, message -> {
-            var entityId = UUID.randomUUID();
-            this.save(entityId, 1, CustomerValue.builder().build())
-                .onComplete(it -> {
-                    message.reply(message);
-                });
-        });
-
-        super.start(startPromise);
+    public CustomerRepositoryImpl(PgPool pgclient) {
+        this.pgClient = pgclient;
     }
 
     public Future<Boolean> save(UUID entityId, int version, CustomerValue entity) {
@@ -55,5 +34,3 @@ public class CustomerDbService extends AbstractVerticle implements TopLevelVerti
         return promise.future();
     }
 }
-
-// }

@@ -98,6 +98,7 @@
             </goals>
             <configuration>
               <sources>
+                <!-- Quarkus generates grpc files intarget directory so we need to include them to sources -->
                 <source>target/generated-sources/grpc</source>
               </sources>
             </configuration>
