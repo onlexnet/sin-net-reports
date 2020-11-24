@@ -1,7 +1,5 @@
 package sinnet.customer;
 
-import java.util.UUID;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -10,6 +8,7 @@ import io.vertx.core.Promise;
 import sinnet.TopLevelVerticle;
 import sinnet.commands.RegisterNewCustomer;
 import sinnet.models.CustomerValue;
+import sinnet.models.EntityId;
 
 @Component
 public class CustomerService extends AbstractVerticle implements TopLevelVerticle {
@@ -25,8 +24,8 @@ public class CustomerService extends AbstractVerticle implements TopLevelVerticl
     public void start(Promise<Void> startPromise) throws Exception {
         var address = RegisterNewCustomer.ADDRESS;
         vertx.eventBus().consumer(address, message -> {
-            var entityId = UUID.randomUUID();
-            repository.save(entityId, 1, CustomerValue.builder().build())
+            var eid = EntityId.some();
+            repository.save(eid, CustomerValue.builder().build())
                 .onComplete(it -> {
                     message.reply(message);
                 });

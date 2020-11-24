@@ -1,0 +1,24 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.0.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
+    <changeSet author="liquibase-docs" id="20201124-1">  
+        <createTable tableName="customers">
+            <column name="entity_id" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="customers_PK"/>
+            </column>
+            <column name="entity_version" type="INTEGER">
+                <constraints nullable="false" />
+            </column>
+            <column name="customer_name" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addUniqueConstraint
+            columnNames="entity_id, entity_version"
+            constraintName="customers_unique_id"
+            tableName="customers"
+            validate="true"/>     
+    </changeSet>
+</databaseChangeLog>

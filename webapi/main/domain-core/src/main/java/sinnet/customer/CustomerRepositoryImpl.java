@@ -1,7 +1,5 @@
 package sinnet.customer;
 
-import java.util.UUID;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -10,6 +8,7 @@ import io.vertx.core.Promise;
 import io.vertx.pgclient.PgPool;
 import io.vertx.sqlclient.Tuple;
 import sinnet.models.CustomerValue;
+import sinnet.models.EntityId;
 
 
 @Component
@@ -22,10 +21,10 @@ public class CustomerRepositoryImpl implements CustomerRepository {
         this.pgClient = pgclient;
     }
 
-    public Future<Boolean> save(UUID entityId, int version, CustomerValue entity) {
+    public Future<Boolean> save(EntityId id, CustomerValue entity) {
         var promise = Promise.<Boolean>promise();
-        var values = Tuple.of(entityId,
-            version,
+        var values = Tuple.of(id.getId(),
+            id.getVersion(),
             entity.getCustomerName().getValue());
         pgClient.preparedQuery("INSERT INTO"
                 + " customers (entity_id, entity_version, customer_name)"

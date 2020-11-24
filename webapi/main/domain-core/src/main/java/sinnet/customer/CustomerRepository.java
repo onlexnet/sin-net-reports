@@ -1,10 +1,9 @@
 package sinnet.customer;
 
-import java.util.UUID;
-
 import io.vertx.core.Future;
 import sinnet.models.CustomerValue;
+import sinnet.models.EntityId;
 
 interface CustomerRepository {
-    Future<Boolean> save(UUID entityId, int version, CustomerValue entity);
+    Future<Boolean> save(EntityId id, CustomerValue entity);
 }

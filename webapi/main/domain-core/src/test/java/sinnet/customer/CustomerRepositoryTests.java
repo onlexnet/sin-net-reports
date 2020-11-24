@@ -13,6 +13,8 @@ import org.springframework.test.context.TestPropertySource;
 
 import sinnet.AppTestContext;
 import sinnet.models.CustomerValue;
+import sinnet.models.EntityId;
+import sinnet.models.Name;
 
 @SpringBootTest(webEnvironment = WebEnvironment.NONE)
 @ContextConfiguration(classes = AppTestContext.class)
@@ -28,8 +30,11 @@ public class CustomerRepositoryTests {
     void someTest() {
         var exitGuard = new CompletableFuture<Boolean>();
 
+        var minModel = CustomerValue.builder()
+                                    .customerName(Name.of("some not-empty name"))
+                                    .build();
         var result = repository
-            .save(UUID.randomUUID(), 1, CustomerValue.builder().build());
+            .save(EntityId.some(), minModel);
         result
             .onSuccess(it -> exitGuard.complete(it))
             .onFailure(ex -> exitGuard.completeExceptionally(ex));
