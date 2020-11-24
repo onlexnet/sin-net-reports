@@ -12,5 +12,6 @@ public class CustomerServiceTests {
 
     @Test
     void someTest(Vertx vertx, VertxTestContext testContext) {
+        testContext.completeNow();
     }
 }
