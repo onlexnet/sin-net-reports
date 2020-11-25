@@ -5,10 +5,12 @@ import org.springframework.stereotype.Component;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Promise;
+import io.vertx.core.json.JsonObject;
 import sinnet.TopLevelVerticle;
 import sinnet.commands.RegisterNewCustomer;
 import sinnet.models.CustomerValue;
 import sinnet.models.EntityId;
+import sinnet.models.Name;
 
 @Component
 public class CustomerService extends AbstractVerticle implements TopLevelVerticle {
@@ -24,10 +26,17 @@ public class CustomerService extends AbstractVerticle implements TopLevelVerticl
     public void start(Promise<Void> startPromise) throws Exception {
         var address = RegisterNewCustomer.ADDRESS;
         vertx.eventBus().consumer(address, message -> {
+            var msg = JsonObject.mapFrom(message.body()).mapTo(RegisterNewCustomer.class);
             var eid = EntityId.some();
-            repository.save(eid, CustomerValue.builder().build())
+            var value = CustomerValue.builder()
+                .customerName(Name.of(msg.getCustomerCityName()))
+                .customerCityName(Name.of(msg.getCustomerCityName()))
+                .customerAddress(msg.getCustomerCityName())
+                .build();
+            repository.save(eid, value)
                 .onComplete(it -> {
-                    message.reply(message);
+                    var result = sinnet.bus.EntityId.of(eid).json();
+                    message.reply(result);
                 });
         });
 

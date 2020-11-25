@@ -1,16 +1,20 @@
 package sinnet.commands;
 
-import java.util.UUID;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import sinnet.bus.JsonMessage;
 
-import lombok.Value;
-import sinnet.models.Name;
-
-@Value
-public class RegisterNewCustomer implements VertxMessage {
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class RegisterNewCustomer implements JsonMessage {
     /** Address used to send the command to it's consumer. */
     public static final String ADDRESS = "cmd.RegisterNewCustomer";
-    private UUID entityId;
-    private Name customerName;
-    private Name customerCityName;
+
+    private String customerName;
+    private String customerCityName;
     private String customerAddress;
 }

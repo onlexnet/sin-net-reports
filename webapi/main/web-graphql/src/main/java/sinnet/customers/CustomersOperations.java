@@ -16,7 +16,9 @@ import lombok.Data;
 import lombok.Value;
 import sinnet.Entity;
 import sinnet.SomeEntity;
-import sinnet.query.FindCustomer;
+import sinnet.commands.RegisterNewCustomer;
+import sinnet.bus.EntityId;
+import sinnet.bus.query.FindCustomer;
 
 public class CustomersOperations {
 }
@@ -66,8 +68,30 @@ class CustomersOperationsResolverGet
 class CustomersOperationsResolverAddNew
       implements GraphQLResolver<CustomersOperations> {
 
-    SomeEntity addNew(CustomersOperations gcontext, CustomerEntry entry) {
-        return null;
+    @Autowired
+    private EventBus eventBus;
+
+    CompletableFuture<SomeEntity> addNew(CustomersOperations gcontext, CustomerEntry entry) {
+        var result = new CompletableFuture<SomeEntity>();
+        var cmd = RegisterNewCustomer.builder()
+            .customerName(entry.getCustomerName())
+            .customerCityName(entry.getCustomerCityName())
+            .customerAddress(entry.getCustomerAddress())
+            .build();
+        eventBus
+            .request(RegisterNewCustomer.ADDRESS, cmd.json())
+            .onComplete(it -> {
+                if (it.succeeded()) {
+                    Optional.of(it.result().body())
+                        .map(JsonObject::mapFrom)
+                        .map(m -> m.mapTo(EntityId.class))
+                        .map(m -> new SomeEntity(m.getId(), m.getVersion()))
+                        .ifPresent(result::complete);
+                } else {
+                    result.failedFuture(it.cause());
+                }
+            });
+        return result;
     }
 }
 
