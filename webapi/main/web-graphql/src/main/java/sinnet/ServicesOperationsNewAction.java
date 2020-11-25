@@ -8,10 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import graphql.kickstart.tools.GraphQLResolver;
-import lombok.Value;
+import sinnet.models.ActionValue;
 import sinnet.models.Email;
 import sinnet.models.Name;
-import sinnet.models.ActionValue;
 
 /** Fixme. */
 @Component
@@ -27,7 +26,7 @@ public class ServicesOperationsNewAction implements GraphQLResolver<ServicesOper
      * @param whenProvided fixme
      * @return fixme
      */
-    public CompletableFuture<MyEntity> newAction(ServicesOperations ignored, LocalDate whenProvided) {
+    public CompletableFuture<SomeEntity> newAction(ServicesOperations ignored, LocalDate whenProvided) {
 
         var model = ActionValue.builder()
             .who(Email.of("undefined@user"))
@@ -38,13 +37,8 @@ public class ServicesOperationsNewAction implements GraphQLResolver<ServicesOper
 
         var entityId = UUID.randomUUID();
         return actionService.save(entityId, model)
-            .map(it -> new MyEntity(entityId, 1))
+            .map(it -> new SomeEntity(entityId, 1))
             .toFuture();
     }
 }
 
-@Value
-class MyEntity implements Entity {
-    private UUID entityId;
-    private int entityVersion;
-}

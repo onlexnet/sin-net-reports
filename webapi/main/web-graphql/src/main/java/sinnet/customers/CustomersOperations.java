@@ -1,4 +1,4 @@
-package sinnet;
+package sinnet.customers;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -14,9 +14,10 @@ import io.vertx.core.json.JsonObject;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Value;
+import sinnet.Entity;
+import sinnet.SomeEntity;
 import sinnet.query.FindCustomer;
 
-@Component
 public class CustomersOperations {
 }
 
@@ -65,7 +66,7 @@ class CustomersOperationsResolverGet
 class CustomersOperationsResolverAddNew
       implements GraphQLResolver<CustomersOperations> {
 
-    MyEntity addNew(CustomersOperations gcontext, CustomerEntry entry) {
+    SomeEntity addNew(CustomersOperations gcontext, CustomerEntry entry) {
         return null;
     }
 }

@@ -52,8 +52,6 @@ jobs:
           jdkVersionOption: '1.11'
           jdkArchitectureOption: 'x64'
           # publishJUnitResults: false # default: true
-          # options:
-          #  - disable log entries (a lot of entries) related to artifacts downloaded by maven
           options: >
             -B
             --no-transfer-progress
