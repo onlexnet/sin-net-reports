@@ -6,7 +6,7 @@ import lombok.Value;
 import sinnet.models.Name;
 
 @Value
-public class RegisterNewCustomer implements VertxCommand {
+public class RegisterNewCustomer implements VertxMessage {
     /** Address used to send the command to it's consumer. */
     public static final String ADDRESS = "cmd.RegisterNewCustomer";
     private UUID entityId;

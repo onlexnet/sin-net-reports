@@ -2,13 +2,19 @@ package sinnet;
 
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import graphql.kickstart.tools.GraphQLResolver;
 import io.vavr.collection.List;
+import io.vertx.core.eventbus.EventBus;
+import io.vertx.core.json.JsonObject;
+import lombok.Builder;
 import lombok.Data;
 import lombok.Value;
+import sinnet.query.FindCustomer;
 
 @Component
 public class CustomersOperations {
@@ -27,8 +33,31 @@ class CustomersOperationsResolverList
 class CustomersOperationsResolverGet
       implements GraphQLResolver<CustomersOperations> {
 
-    Optional<CustomerModel> get(CustomersOperations gcontext, UUID entityId) {
-        return Optional.empty();
+    @Autowired
+    private EventBus eventBus;
+
+    CompletableFuture<Optional<CustomerModel>> get(CustomersOperations gcontext, UUID entityId) {
+        var result = new CompletableFuture<Optional<CustomerModel>>();
+        var query = new FindCustomer.Ask(entityId).json();
+        eventBus
+            .request(FindCustomer.Ask.ADDRESS, query)
+            .onComplete(it -> {
+                if (it.succeeded()) {
+                    var response = JsonObject.mapFrom(it.result().body()).mapTo(FindCustomer.Reply.class).getMaybeEntity();
+                    var gqlModel = Optional.ofNullable(response)
+                        .map(m -> m.getValue())
+                        .map(m -> CustomerModel
+                            .builder()
+                            .customerName(m.getCustomerName().getValue())
+                            .customerCityName(m.getCustomerCityName().getValue())
+                            .customerAddress(m.getCustomerAddress())
+                            .build());
+                    result.complete(gqlModel);
+                } else {
+                    result.failedFuture(it.cause());
+                }
+            });
+        return result;
     }
 }
 
@@ -49,6 +78,7 @@ class CustomerEntry {
 }
 
 @Value
+@Builder
 class CustomerModel {
     private String customerName;
     private String customerCityName;
