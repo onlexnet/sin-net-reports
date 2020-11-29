@@ -35,7 +35,7 @@ public class CustomerRepositoryTests {
                                  .customerName(Name.of("some not-empty name"))
                                  .build();
         var result = repository
-            .save(EntityId.some(), model);
+            .save(EntityId.anyNew(), model);
         result
             .onSuccess(it -> exitGuard.complete(it))
             .onFailure(ex -> exitGuard.completeExceptionally(ex));
@@ -52,7 +52,7 @@ public class CustomerRepositoryTests {
                                  .customerCityName(Name.of("some city"))
                                  .customerAddress("Some address")
                                  .build();
-        var someId = EntityId.some();
+        var someId = EntityId.anyNew();
         repository
             .save(someId, model)
             .onSuccess(it -> exitGuard1.complete(it))

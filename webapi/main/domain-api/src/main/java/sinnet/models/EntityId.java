@@ -19,7 +19,7 @@ public final class EntityId {
         this.version = version;
     }
 
-    public static EntityId some() {
+    public static EntityId anyNew() {
         return new EntityId(UUID.randomUUID(), 1);
     }
 }

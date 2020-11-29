@@ -1,4 +1,4 @@
-package sinnet.commands;
+package sinnet.bus.commands;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

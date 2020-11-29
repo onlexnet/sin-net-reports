@@ -16,7 +16,7 @@ import lombok.Data;
 import lombok.Value;
 import sinnet.Entity;
 import sinnet.SomeEntity;
-import sinnet.commands.RegisterNewCustomer;
+import sinnet.bus.commands.RegisterNewCustomer;
 import sinnet.bus.EntityId;
 import sinnet.bus.query.FindCustomer;
 
@@ -46,18 +46,15 @@ class CustomersOperationsResolverGet
             .request(FindCustomer.Ask.ADDRESS, query)
             .onComplete(it -> {
                 if (it.succeeded()) {
-                    var response = JsonObject.mapFrom(it.result().body()).mapTo(FindCustomer.Reply.class).getMaybeEntity();
-                    var gqlModel = Optional.ofNullable(response)
-                        .map(m -> m.getValue())
-                        .map(m -> CustomerModel
-                            .builder()
-                            .customerName(m.getCustomerName().getValue())
-                            .customerCityName(m.getCustomerCityName().getValue())
-                            .customerAddress(m.getCustomerAddress())
-                            .build());
-                    result.complete(gqlModel);
+                    var reply = JsonObject.mapFrom(it.result().body()).mapTo(FindCustomer.Reply.class);
+                    var gqlModel = CustomerModel.builder()
+                        .customerName(reply.getValue().getCustomerName().getValue())
+                        .customerCityName(reply.getValue().getCustomerCityName().getValue())
+                        .customerAddress(reply.getValue().getCustomerAddress())
+                        .build();
+                    result.complete(Optional.of(gqlModel));
                 } else {
-                    result.failedFuture(it.cause());
+                    result.completeExceptionally(it.cause());
                 }
             });
         return result;

@@ -7,7 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import sinnet.bus.JsonMessage;
 import sinnet.models.CustomerValue;
-import sinnet.models.Entity;
 
 public interface FindCustomer {
     @Data
@@ -21,7 +20,11 @@ public interface FindCustomer {
     }
 
     @Data
-    class Reply {
-        private Entity<CustomerValue> maybeEntity;
+    @AllArgsConstructor
+    @NoArgsConstructor
+    class Reply implements JsonMessage {
+        private UUID entityId;
+        private int entityVersion;
+        private CustomerValue value;
     }
 }

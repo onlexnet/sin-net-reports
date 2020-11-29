@@ -4,7 +4,7 @@ extend type Mutation {
 
 type CustomersOperations {
     list: [CustomerModel!]!
-    get(actionId: ID!): CustomerModel
+    get(entityId: ID!): CustomerModel
     addNew(entry: CustomerEntry): MyEntity!
 }
 
