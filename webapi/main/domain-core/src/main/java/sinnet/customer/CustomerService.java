@@ -41,9 +41,9 @@ public class CustomerService extends AbstractVerticle
         var msg = JsonObject.mapFrom(message.body()).mapTo(RegisterNewCustomer.class);
         var eid = EntityId.anyNew();
         var value = CustomerValue.builder()
-            .customerName(Name.of(msg.getCustomerCityName()))
+            .customerName(Name.of(msg.getCustomerName()))
             .customerCityName(Name.of(msg.getCustomerCityName()))
-            .customerAddress(msg.getCustomerCityName())
+            .customerAddress(msg.getCustomerAddress())
             .build();
         repository.save(eid, value)
             .onComplete(it -> {
