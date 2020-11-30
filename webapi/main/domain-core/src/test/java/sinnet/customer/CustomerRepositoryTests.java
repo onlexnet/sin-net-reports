@@ -1,7 +1,5 @@
 package sinnet.customer;
 
-import java.util.Optional;
-import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 import org.assertj.core.api.Assertions;

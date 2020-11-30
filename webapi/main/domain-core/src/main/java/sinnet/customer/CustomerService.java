@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import sinnet.TopLevelVerticle;
 import sinnet.bus.commands.RegisterNewCustomer;
 import sinnet.bus.query.FindCustomer;
+import sinnet.bus.query.FindCustomers;
 import sinnet.models.CustomerValue;
 import sinnet.models.EntityId;
 import sinnet.models.Name;
@@ -34,6 +35,7 @@ public class CustomerService extends AbstractVerticle
         // TODO handle when registration of consumers is ready
         vertx.eventBus().consumer(RegisterNewCustomer.ADDRESS, this::registerNewCustomer);
         vertx.eventBus().consumer(FindCustomer.Ask.ADDRESS, this::findCustomer);
+        vertx.eventBus().consumer(FindCustomers.Ask.ADDRESS, this::findCustomers);
         super.start(startPromise);
     }
 
@@ -73,5 +75,30 @@ public class CustomerService extends AbstractVerticle
                         }
                     });
             });
+    }
+
+    private void findCustomers(Message<JsonObject> message) {
+        // Optional.of(message.body())
+        //     .map(JsonObject::mapFrom)
+        //     .map(it -> it.mapTo(FindCustomers.Ask.class))
+        //     .map(it -> it.getEntityId())
+        //     .ifPresent(it -> {
+        //         repository.get(it)
+        //             .onComplete(ar -> {
+        //                 if (ar.succeeded()) {
+        //                     var entity = ar.result();
+        //                     var reply = new FindCustomer.Reply(
+        //                         entity.getEntityId(),
+        //                         entity.getVersion(),
+        //                         entity.getValue())
+        //                     .json();
+        //                     message.reply(reply);
+        //                 } else {
+        //                     log.error("findCustomer error", ar.cause());
+        //                 }
+        //             });
+        //     });
+        var result = new FindCustomers.Reply();
+        message.reply(result.json());
     }
 }
