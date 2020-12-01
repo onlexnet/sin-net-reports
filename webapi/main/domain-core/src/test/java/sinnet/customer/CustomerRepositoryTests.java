@@ -1,5 +1,9 @@
 package sinnet.customer;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertThat;
+
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 import org.assertj.core.api.Assertions;
@@ -10,7 +14,10 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 
+import io.vavr.collection.List;
+import io.vertx.core.CompositeFuture;
 import sinnet.AppTestContext;
+import sinnet.Sync;
 import sinnet.models.CustomerValue;
 import sinnet.models.EntityId;
 import sinnet.models.Name;
@@ -27,18 +34,16 @@ public class CustomerRepositoryTests {
 
     @Test
     void saveMinModel() {
-        var exitGuard = new CompletableFuture<Boolean>();
+        var result = Sync
+            .wait(() -> {
+                var model = CustomerValue.builder()
+                    .customerName(Name.of("some not-empty name"))
+                    .build();
+                return repository
+                       .save(EntityId.anyNew(), model); })
+            .get();
 
-        var model = CustomerValue.builder()
-                                 .customerName(Name.of("some not-empty name"))
-                                 .build();
-        var result = repository
-            .save(EntityId.anyNew(), model);
-        result
-            .onSuccess(it -> exitGuard.complete(it))
-            .onFailure(ex -> exitGuard.completeExceptionally(ex));
-
-        Assertions.assertThat(exitGuard.join()).isEqualTo(Boolean.TRUE);
+        Assertions.assertThat(result).isEqualTo(Boolean.TRUE);
     }
 
     @Test
@@ -64,5 +69,29 @@ public class CustomerRepositoryTests {
             .onSuccess(it -> exitGuard2.complete(model))
             .onFailure(ex -> exitGuard2.completeExceptionally(ex));
         Assertions.assertThat(exitGuard2.join()).isEqualTo(model);
+    }
+
+    private static CustomerValue newModel() {
+        return CustomerValue.builder()
+                                 .customerName(Name.of("Non-epty name" + UUID.randomUUID()))
+                                 .build();
+    }
+
+    @Test
+    public void list() {
+        var id1 = EntityId.anyNew();
+        var id2 = EntityId.anyNew();
+        var list = Sync
+            .wait(() -> {
+                var someModel = newModel();
+                return CompositeFuture
+                    .all(repository.save(id1, someModel),
+                        repository.save(id2, someModel))
+                    .map(it -> true); })
+            .and(it -> repository.list())
+            .get();
+
+        var actual = List.ofAll(list).map(it -> it.getEntityId());
+        assertThat(actual).contains(id1.getId(), id2.getId());
     }
 }

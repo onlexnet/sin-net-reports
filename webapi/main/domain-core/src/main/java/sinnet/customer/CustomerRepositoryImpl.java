@@ -5,6 +5,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import io.vavr.collection.List;
 import io.vertx.core.Future;
 import io.vertx.core.Promise;
 import io.vertx.pgclient.PgPool;
@@ -41,22 +42,40 @@ public class CustomerRepositoryImpl implements CustomerRepository {
         return promise.future();
     }
 
+    private final Exception noDataException = new Exception("No data");
+    private Future<Entity<CustomerValue>> extractResult(Iterable<Entity<CustomerValue>> candidates) {
+        var iter = candidates.iterator();
+        if (!iter.hasNext()) return Future.failedFuture(noDataException);
+        var item = iter.next();
+        return Future.succeededFuture(item);
+    }
+
     @Override
     public Future<Entity<CustomerValue>> get(EntityId id) {
         var whereClause = "entity_id=$1 AND entity_version=$2";
         var values = Tuple.of(id.getId(), id.getVersion());
-        return get(whereClause, values);
+        return get(whereClause, values)
+            .map(this::extractResult)
+            .flatMap(it -> it);
     }
 
     @Override
     public Future<Entity<CustomerValue>> get(UUID id) {
         var whereClause = "entity_id=$1";
         var values = Tuple.of(id);
-        return get(whereClause, values);
+        return get(whereClause, values)
+            .map(this::extractResult)
+            .flatMap(it -> it);
     }
 
-    private Future<Entity<CustomerValue>> get(String whereClause, Tuple values) {
-        var promise = Promise.<Entity<CustomerValue>>promise();
+    @Override
+    public Future<Iterable<Entity<CustomerValue>>> list() {
+        return get("1=1", Tuple.tuple())
+            .map(it -> it);
+    }
+
+    private Future<List<Entity<CustomerValue>>> get(String whereClause, Tuple values) {
+        var promise = Promise.<List<Entity<CustomerValue>>>promise();
         pgClient
             .preparedQuery("SELECT"
                          + " entity_id, entity_version, customer_name, customer_city_name, customer_address"
@@ -64,21 +83,20 @@ public class CustomerRepositoryImpl implements CustomerRepository {
                          + " WHERE " + whereClause)
             .execute(values, ar -> {
                 if (ar.succeeded()) {
-                    var iter = ar.result().iterator();
-                    if (!iter.hasNext()) {
-                        promise.complete(null);
-                        return;
+                    var result = List.<Entity<CustomerValue>>empty();
+                    var iter = ar.result();
+                    for (var row: iter) {
+                        var entityId = row.getUUID("entity_id");
+                        var entityVersion = row.getInteger("entity_version");
+                        var item = CustomerValue.builder()
+                            .customerName(Name.of(row.getString("customer_name")))
+                            .customerCityName(Name.of(row.getString("customer_city_name")))
+                            .customerAddress(row.getString("customer_address"))
+                            .build()
+                            .withId(entityId, entityVersion);
+                        result = result.append(item);
                     }
-                    var row = iter.next();
-                    var entityId = row.getUUID("entity_id");
-                    var entityVersion = row.getInteger("entity_version");
-                    var item = CustomerValue.builder()
-                        .customerName(Name.of(row.getString("customer_name")))
-                        .customerCityName(Name.of(row.getString("customer_city_name")))
-                        .customerAddress(row.getString("customer_address"))
-                        .build()
-                        .withId(entityId, entityVersion);
-                    promise.complete(item);
+                    promise.complete(result);
                 } else {
                     log.error("CustomerRepositoryImpl.get", ar.cause());
                     promise.complete(null);
@@ -86,4 +104,6 @@ public class CustomerRepositoryImpl implements CustomerRepository {
             });
         return promise.future();
     }
+
+
 }

@@ -13,4 +13,6 @@ interface CustomerRepository {
 
     /* Returns success with found Entity, otherwise failed future. */
     Future<Entity<CustomerValue>> get(UUID id);
+
+    Future<Iterable<Entity<CustomerValue>>> list();
 }
