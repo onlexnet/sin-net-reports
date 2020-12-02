@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { HashRouter as Router, Route } from "react-router-dom";
 import { Main } from "../services";
-import { Customers } from "../Customers";
+import { Customers } from "./customers/Customers";
 import { Reports } from "../reports/Reports";
 import { Home } from "../Home";
 
