@@ -48,27 +48,21 @@ public class CustomerRepositoryTests {
 
     @Test
     void saveFullModel() {
-        var exitGuard1 = new CompletableFuture<Boolean>();
-
-        var model = CustomerValue.builder()
-                                 .customerName(Name.of("some not-empty name"))
-                                 .customerCityName(Name.of("some city"))
-                                 .customerAddress("Some address")
-                                 .build();
         var someId = EntityId.anyNew();
-        repository
-            .save(someId, model)
-            .onSuccess(it -> exitGuard1.complete(it))
-            .onFailure(ex -> exitGuard1.completeExceptionally(ex));
+        var model = CustomerValue.builder()
+            .customerName(Name.of("some not-empty name"))
+            .customerCityName(Name.of("some city"))
+            .customerAddress("Some address")
+            .build();
 
-        Assertions.assertThat(exitGuard1.join()).isEqualTo(Boolean.TRUE);
-
-        var exitGuard2 = new CompletableFuture<CustomerValue>();
-        repository
-            .get(someId)
-            .onSuccess(it -> exitGuard2.complete(model))
-            .onFailure(ex -> exitGuard2.completeExceptionally(ex));
-        Assertions.assertThat(exitGuard2.join()).isEqualTo(model);
+        Sync
+            .wait(() -> {
+                return repository
+                    .save(someId, model); })
+            .check(it -> {
+                Assertions.assertThat(it).isEqualTo(Boolean.TRUE); })
+            .and(it -> repository.get(someId))
+            .check(it -> Assertions.assertThat(it.getValue()).isEqualTo(model));
     }
 
     private static CustomerValue newModel() {
