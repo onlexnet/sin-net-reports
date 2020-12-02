@@ -3,6 +3,7 @@ package sinnet.bus.query;
 import java.util.UUID;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import sinnet.bus.JsonMessage;
@@ -28,6 +29,7 @@ public interface FindCustomers {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
+    @Builder
     class CustomerData {
         private UUID entityId;
         private int entityVersion;

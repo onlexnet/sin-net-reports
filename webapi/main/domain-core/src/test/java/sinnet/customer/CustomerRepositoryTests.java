@@ -59,10 +59,10 @@ public class CustomerRepositoryTests {
             .wait(() -> {
                 return repository
                     .save(someId, model); })
-            .check(it -> {
+            .checkpoint(it -> {
                 Assertions.assertThat(it).isEqualTo(Boolean.TRUE); })
             .and(it -> repository.get(someId))
-            .check(it -> Assertions.assertThat(it.getValue()).isEqualTo(model));
+            .checkpoint(it -> Assertions.assertThat(it.getValue()).isEqualTo(model));
     }
 
     private static CustomerValue newModel() {

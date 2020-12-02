@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import io.vavr.collection.Stream;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
 import io.vertx.core.Promise;
@@ -17,8 +18,9 @@ import sinnet.bus.commands.RegisterNewCustomer;
 import sinnet.bus.query.FindCustomer;
 import sinnet.bus.query.FindCustomers;
 import sinnet.bus.query.FindCustomers.Ask;
-import sinnet.bus.query.FindCustomers.Reply;
+import sinnet.bus.query.FindCustomers.CustomerData;
 import sinnet.models.CustomerValue;
+import sinnet.models.Entity;
 import sinnet.models.EntityId;
 import sinnet.models.Name;
 
@@ -69,42 +71,24 @@ public class CustomerService extends AbstractVerticle implements TopLevelVerticl
                 });
     }
 
-    private Future<FindCustomers.Reply> findCustomers(FindCustomers.Ask ask) {
-        return null;
-        // Optional.of(message.body())
-        // .map(JsonObject::mapFrom)
-        // .map(it -> it.mapTo(FindCustomers.Ask.class))
-        // .map(it -> it.getEntityId())
-        // .ifPresent(it -> {
-        // repository.get(it)
-        // .onComplete(ar -> {
-        // if (ar.succeeded()) {
-        // var entity = ar.result();
-        // var reply = new FindCustomer.Reply(
-        // entity.getEntityId(),
-        // entity.getVersion(),
-        // entity.getValue())
-        // .json();
-        // message.reply(reply);
-        // } else {
-        // log.error("findCustomer error", ar.cause());
-        // }
-        // });
-        // });
-    }
-
     class FindCustomersHandler extends VertxHandlerTemplate<FindCustomers.Ask, FindCustomers.Reply> {
         FindCustomersHandler() {
             super(FindCustomers.Ask.class);
         }
 
         @Override
-        protected Future<Reply> onRequest(Ask request) {
-            var r = Promise.<Reply>promise();
-
-            var result = new FindCustomers.Reply();
-            r.complete(result);
-            return r.future();
+        protected Future<FindCustomers.Reply> onRequest(Ask request) {
+            return repository.list()
+                .map(it -> Stream.ofAll(it).map(CustomerService::map).toJavaArray(CustomerData[]::new))
+                .map(it -> new FindCustomers.Reply(it));
         }
+    }
+
+    private static CustomerData map(Entity<CustomerValue> item) {
+        return CustomerData.builder()
+            .entityId(item.getEntityId())
+            .entityVersion(item.getVersion())
+            .value(item.getValue())
+            .build();
     }
 }

@@ -1,6 +1,5 @@
 package sinnet;
 
-import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,15 +21,15 @@ public abstract class AskTemplate<ASK extends JsonMessage, REPLY extends JsonMes
         this.replyClass = replyClass;
     }
 
-    protected final CompletableFuture<Optional<REPLY>> ask(ASK ask) {
-        var result = new CompletableFuture<Optional<REPLY>>();
+    protected final CompletableFuture<REPLY> ask(ASK ask) {
+        var result = new CompletableFuture<REPLY>();
         var query = ask.json();
         eventBus
             .request(address, query)
             .onComplete(it -> {
                 if (it.succeeded()) {
                     var reply = JsonObject.mapFrom(it.result().body()).mapTo(replyClass);
-                    result.completeAsync(() -> Optional.of(reply));
+                    result.completeAsync(() -> reply);
                 } else {
                     result.completeExceptionally(it.cause());
                 }

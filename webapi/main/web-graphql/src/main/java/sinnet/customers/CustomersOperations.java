@@ -1,7 +1,5 @@
 package sinnet.customers;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -10,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import graphql.kickstart.tools.GraphQLResolver;
+import io.vavr.collection.List;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.json.JsonObject;
 import lombok.Builder;
@@ -18,8 +17,8 @@ import lombok.Value;
 import sinnet.AskTemplate;
 import sinnet.Entity;
 import sinnet.SomeEntity;
-import sinnet.bus.commands.RegisterNewCustomer;
 import sinnet.bus.EntityId;
+import sinnet.bus.commands.RegisterNewCustomer;
 import sinnet.bus.query.FindCustomer;
 import sinnet.bus.query.FindCustomers;
 
@@ -36,10 +35,14 @@ class CustomersOperationsResolverList extends AskTemplate<FindCustomers.Ask, Fin
 
     CompletableFuture<List<CustomerModel>> list(CustomersOperations gcontext) {
         var ask = new FindCustomers.Ask();
-        var r =  super.ask(ask).thenApply(it -> {
-            return Collections.<CustomerModel>emptyList();
-        });
-        return r;
+        return super.ask(ask)
+            .thenApply(it -> List.of(it.getData())
+                .map(o -> CustomerModel.builder()
+                                        .customerName(o.getValue().getCustomerCityName().getValue())
+                                        .customerCityName(o.getValue().getCustomerCityName().getValue())
+                                        .customerAddress(o.getValue().getCustomerAddress())
+                                        .build()
+                ));
     }
 }
 

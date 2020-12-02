@@ -34,7 +34,7 @@ public class Sync {
             return new AsyncStep<>(exitGuard);
         }
 
-        public AsyncStep<T> check(Consumer<T> assertCheck) {
+        public AsyncStep<T> checkpoint(Consumer<T> assertCheck) {
             var lastStepValue = chainStep.join();
             assertCheck.accept(lastStepValue);
             return new AsyncStep<>(chainStep);
