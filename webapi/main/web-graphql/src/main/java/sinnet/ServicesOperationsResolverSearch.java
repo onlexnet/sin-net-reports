@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 
 /** Fixme. */
 @Component
-public class ServicesResolverSearch implements GraphQLResolver<Services> {
+public class ServicesOperationsResolverSearch implements GraphQLResolver<ServicesOperations> {
 
     @Autowired
     private ActionRepository repository;
@@ -26,7 +26,7 @@ public class ServicesResolverSearch implements GraphQLResolver<Services> {
      * @param filter fixme.
      * @return fixme
      */
-    public CompletionStage<ServicesSearchResult> search(Services ignored,
+    public CompletionStage<ServicesSearchResult> search(ServicesOperations ignored,
                                                         ServicesFilter filter) {
         return repository
             .find(filter.getFrom(), filter.getTo())

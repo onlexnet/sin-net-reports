@@ -10,12 +10,12 @@ import graphql.kickstart.tools.GraphQLResolver;
 
 /** Fixme. */
 @Component
-public class ServicesResolverGet implements GraphQLResolver<Services> {
+public class ServicesOperationsResolverGet implements GraphQLResolver<ServicesOperations> {
 
     @Autowired
     private ActionRepository actionService;
 
-    public CompletionStage<ServiceModel> get(Services gcontext,
+    public CompletionStage<ServiceModel> get(ServicesOperations gcontext,
                                              UUID actionId) {
         var projectId = gcontext.getProjectId();
         return actionService
