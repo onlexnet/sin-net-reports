@@ -16,7 +16,7 @@ import sinnet.models.Name;
 
 /** Fixme. */
 @Component
-public class ServicesOperationsUpdate implements GraphQLResolver<ServicesOperations> {
+public class ActionsOperationsUpdate implements GraphQLResolver<ActionsOperations> {
 
     @Autowired
     private ActionRepository actionService;
@@ -30,7 +30,7 @@ public class ServicesOperationsUpdate implements GraphQLResolver<ServicesOperati
      */
     // https://www.appsdeveloperblog.com/spring-security-preauthorize-annotation-example/
     // @PreAuthorize("hasAuthority('SCOPE_Actions.Write')")
-    public CompletionStage<Boolean> update(ServicesOperations gcontext,
+    public CompletionStage<Boolean> update(ActionsOperations gcontext,
                                            UUID entityId,
                                            int entityVersion,
                                            ServiceEntry content) {

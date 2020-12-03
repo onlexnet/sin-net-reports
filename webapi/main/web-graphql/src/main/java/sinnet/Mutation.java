@@ -10,8 +10,8 @@ import sinnet.projects.ProjectToken;
 @Component
 public class Mutation implements GraphQLMutationResolver {
 
-    public ServicesOperations getServices(ProjectToken token) {
-        return new ServicesOperations(token.getProjectId());
+    public ActionsOperations getActions(ProjectToken token) {
+        return new ActionsOperations(token.getProjectId());
     }
 
     public CustomersOperations getCustomers(ProjectToken token) {

@@ -9,7 +9,6 @@ type PrincipalModel {
 # The Root Query for the application
 type Query {
     getPrincipal: PrincipalModel!
-    Services: Services!
 }
 
 type Mutation

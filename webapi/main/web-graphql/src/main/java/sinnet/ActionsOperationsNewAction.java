@@ -13,7 +13,7 @@ import sinnet.models.Name;
 
 /** Fixme. */
 @Component
-public class ServicesOperationsNewAction implements GraphQLResolver<ServicesOperations> {
+public class ActionsOperationsNewAction implements GraphQLResolver<ActionsOperations> {
 
     @Autowired
     private ActionRepository actionService;
@@ -25,7 +25,7 @@ public class ServicesOperationsNewAction implements GraphQLResolver<ServicesOper
      * @param whenProvided fixme
      * @return fixme
      */
-    public CompletionStage<SomeEntity> newAction(ServicesOperations gcontext, LocalDate whenProvided) {
+    public CompletionStage<SomeEntity> newAction(ActionsOperations gcontext, LocalDate whenProvided) {
 
         var model = ActionValue.builder()
             .who(Email.of("undefined@user"))

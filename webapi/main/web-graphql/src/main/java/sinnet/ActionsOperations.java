@@ -5,6 +5,6 @@ import java.util.UUID;
 import lombok.Value;
 
 @Value
-public class ServicesOperations {
+public class ActionsOperations {
     private UUID projectId;
 }
