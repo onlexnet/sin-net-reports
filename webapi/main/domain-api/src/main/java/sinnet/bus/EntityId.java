@@ -10,10 +10,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EntityId implements JsonMessage {
+    private UUID projectId;
     private UUID id;
     private int version;
 
     public static EntityId of(sinnet.models.EntityId other) {
-        return new EntityId(other.getId(), other.getVersion());
+        return new EntityId(other.getProjectId(),  other.getId(), other.getVersion());
     }
 }

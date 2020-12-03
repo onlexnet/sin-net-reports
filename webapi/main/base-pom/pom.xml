@@ -26,8 +26,10 @@
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
-      <version>1.18.10</version>
-      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>net.sf.oval</groupId>
+      <artifactId>oval</artifactId>
     </dependency>
   </dependencies>
 
@@ -58,6 +60,12 @@
         <groupId>io.vavr</groupId>
         <artifactId>vavr</artifactId>
         <version>0.10.2</version>
+      </dependency>
+
+      <dependency>
+        <groupId>net.sf.oval</groupId>
+        <artifactId>oval</artifactId>
+        <version>1.90</version>
       </dependency>
 
       <dependency>

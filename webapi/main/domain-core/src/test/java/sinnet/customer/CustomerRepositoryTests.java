@@ -1,10 +1,8 @@
 package sinnet.customer;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertThat;
 
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -34,13 +32,14 @@ public class CustomerRepositoryTests {
 
     @Test
     void saveMinModel() {
+        var projectId = UUID.randomUUID();
         var result = Sync
-            .wait(() -> {
+            .when(() -> {
                 var model = CustomerValue.builder()
                     .customerName(Name.of("some not-empty name"))
                     .build();
                 return repository
-                       .save(EntityId.anyNew(), model); })
+                       .save(EntityId.anyNew(projectId), model); })
             .get();
 
         Assertions.assertThat(result).isEqualTo(Boolean.TRUE);
@@ -48,7 +47,8 @@ public class CustomerRepositoryTests {
 
     @Test
     void saveFullModel() {
-        var someId = EntityId.anyNew();
+        var projectId = UUID.randomUUID();
+        var someId = EntityId.anyNew(projectId);
         var model = CustomerValue.builder()
             .customerName(Name.of("some not-empty name"))
             .customerCityName(Name.of("some city"))
@@ -56,7 +56,7 @@ public class CustomerRepositoryTests {
             .build();
 
         Sync
-            .wait(() -> {
+            .when(() -> {
                 return repository
                     .save(someId, model); })
             .checkpoint(it -> {
@@ -65,7 +65,7 @@ public class CustomerRepositoryTests {
             .checkpoint(it -> Assertions.assertThat(it.getValue()).isEqualTo(model));
     }
 
-    private static CustomerValue newModel() {
+    private static CustomerValue newModel(UUID projectId) {
         return CustomerValue.builder()
                                  .customerName(Name.of("Non-epty name" + UUID.randomUUID()))
                                  .build();
@@ -73,11 +73,12 @@ public class CustomerRepositoryTests {
 
     @Test
     public void list() {
-        var id1 = EntityId.anyNew();
-        var id2 = EntityId.anyNew();
+        var projectId = UUID.randomUUID();
+        var id1 = EntityId.anyNew(projectId);
+        var id2 = EntityId.anyNew(projectId);
         var list = Sync
-            .wait(() -> {
-                var someModel = newModel();
+            .when(() -> {
+                var someModel = newModel(projectId);
                 return CompositeFuture
                     .all(repository.save(id1, someModel),
                         repository.save(id2, someModel))

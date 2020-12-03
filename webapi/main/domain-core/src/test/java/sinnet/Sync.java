@@ -11,7 +11,7 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class Sync {
 
-    public static <T> AsyncStep<T> wait(Supplier<Future<T>> action) {
+    public static <T> AsyncStep<T> when(Supplier<Future<T>> action) {
         var exitGuard = new CompletableFuture<T>();
         action.get()
             .onSuccess(it -> exitGuard.complete(it))

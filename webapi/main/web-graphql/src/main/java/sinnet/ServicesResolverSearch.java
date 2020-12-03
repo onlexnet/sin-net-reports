@@ -2,7 +2,7 @@ package sinnet;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.concurrent.CompletionStage;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 public class ServicesResolverSearch implements GraphQLResolver<Services> {
 
     @Autowired
-    private ActionService actionService;
+    private ActionRepository repository;
 
     /**
      * FixMe.
@@ -26,22 +26,25 @@ public class ServicesResolverSearch implements GraphQLResolver<Services> {
      * @param filter fixme.
      * @return fixme
      */
-    public ServicesSearchResult search(final Services ignored,
-                                       final ServicesFilter filter) {
-        var items = actionService
+    public CompletionStage<ServicesSearchResult> search(Services ignored,
+                                                        ServicesFilter filter) {
+        return repository
             .find(filter.getFrom(), filter.getTo())
-            .block()
-            .map(it -> ServiceModel.builder()
-                .entityId(it.getEntityId())
-                .servicemanName(it.getValue().getWho().getValue())
-                .whenProvided(it.getValue().getWhen())
-                .forWhatCustomer(it.getValue().getWhom().getValue())
-                .description(it.getValue().getWhat())
-                .duration(it.getValue().getHowLong().getValue())
-                .distance(it.getValue().getHowFar().getValue())
-                .build())
-            .collect(Collectors.toList());
-        return new ServicesSearchResult(items, 2);
+            .map(it -> {
+                var items = it
+                    .map(item -> ServiceModel.builder()
+                                  .entityId(item.getEntityId())
+                                  .servicemanName(item.getValue().getWho().getValue())
+                                  .whenProvided(item.getValue().getWhen())
+                                  .forWhatCustomer(item.getValue().getWhom().getValue())
+                                  .description(item.getValue().getWhat())
+                                  .duration(item.getValue().getHowLong().getValue())
+                                  .distance(item.getValue().getHowFar().getValue())
+                                  .build())
+                    .toJavaList();
+                return new ServicesSearchResult(items, 2);
+            })
+            .toCompletionStage();
     }
 
 }

@@ -46,9 +46,12 @@ public class CustomerService extends AbstractVerticle implements TopLevelVerticl
 
     private void registerNewCustomer(Message<JsonObject> message) {
         var msg = JsonObject.mapFrom(message.body()).mapTo(RegisterNewCustomer.class);
-        var eid = EntityId.anyNew();
-        var value = CustomerValue.builder().customerName(Name.of(msg.getCustomerName()))
-                .customerCityName(Name.of(msg.getCustomerCityName())).customerAddress(msg.getCustomerAddress()).build();
+        var eid = EntityId.anyNew(msg.getProjectId());
+        var value = CustomerValue.builder()
+                                 .customerName(Name.of(msg.getCustomerName()))
+                                 .customerCityName(Name.of(msg.getCustomerCityName()))
+                                 .customerAddress(msg.getCustomerAddress())
+                                 .build();
         repository.save(eid, value).onComplete(it -> {
             var result = sinnet.bus.EntityId.of(eid).json();
             message.reply(result);

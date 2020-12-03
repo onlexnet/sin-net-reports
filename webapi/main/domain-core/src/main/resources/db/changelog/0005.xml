@@ -1,0 +1,27 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.0.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
+    <changeSet author="siudeks" id="20201203-1">
+
+        <dropUniqueConstraint tableName="customers"
+                              constraintName="customers_unique_id" />
+        <addColumn tableName="customers">
+            <column name="project_id"
+                    afterColumn="entity_id"
+                    type="UUID">
+            <constraints nullable="false" />
+            </column>
+        </addColumn>
+        <addUniqueConstraint columnNames="project_id, entity_id, entity_version"
+                             constraintName="customers_unique_id"
+                             tableName="customers"
+                             validate="true" />
+
+
+        <addForeignKeyConstraint  baseColumnNames="project_id"
+                                  baseTableName="customers"
+                                  constraintName="FK_customers_projects"
+                                  onDelete="RESTRICT"
+                                  referencedColumnNames="entity_id"
+                                  referencedTableName="customer"
+                                  validate="true"/>
+    </changeSet>
+</databaseChangeLog>

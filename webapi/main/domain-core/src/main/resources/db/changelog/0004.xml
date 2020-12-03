@@ -3,7 +3,7 @@
                    xmlns:pro="http://www.liquibase.org/xml/ns/pro"
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.0.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
-    <changeSet author="liquibase-docs" id="20201124-1">  
+    <changeSet author="siudeks" id="20201124-1">  
         <createTable tableName="customers">
             <column name="entity_id" type="UUID">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="customers_PK"/>

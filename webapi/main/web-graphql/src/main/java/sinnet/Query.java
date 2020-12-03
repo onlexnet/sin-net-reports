@@ -5,6 +5,7 @@ import java.util.Random;
 import org.springframework.stereotype.Component;
 
 import graphql.kickstart.tools.GraphQLQueryResolver;
+import sinnet.projects.ProjectToken;
 
 /** FixMe. */
 @Component
@@ -14,8 +15,8 @@ public class Query implements GraphQLQueryResolver {
      * Returns context of Services to allow provide more operations.
      * @return the context
      */
-    public Services getServices() {
-        return new Services();
+    public Services getServices(ProjectToken token) {
+        return new Services(token.getProjectId());
     }
 
 }

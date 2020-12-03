@@ -1,0 +1,8 @@
+extend type Query {
+    projects: [ProjectToken!]!
+}
+
+type ProjectToken {
+    projectId: ID!
+    checkCode: ID!
+}

@@ -1,3 +1,7 @@
+extend type Mutation {
+    Services(token: ProjectToken): ServicesOperations!
+}
+
 type Services {
     search(filter: ServicesFilter): ServicesSearchResult!
     get(actionId: ID!): ServiceModel
@@ -31,10 +35,6 @@ type ServiceModel implements Entity {
 input ServicesFilter {
     from: Date
     to: Date
-}
-
-extend type Mutation {
-    Services: ServicesOperations!
 }
 
 type ServicesOperations {

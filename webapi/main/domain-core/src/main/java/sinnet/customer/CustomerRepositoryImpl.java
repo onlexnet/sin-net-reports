@@ -33,11 +33,11 @@ public class CustomerRepositoryImpl implements CustomerRepository {
                 entity.getCustomerCityName().getValue(), entity.getCustomerAddress());
         pgClient
             .preparedQuery("INSERT INTO"
-                         + " customers (entity_id, entity_version, customer_name, customer_city_name, customer_address)"
-                         + " values ($1, $2, $3, $4, $5)")
+                         + " customers (project_id, entity_id, entity_version, customer_name, customer_city_name, customer_address)"
+                         + " values ($1, $2, $3, $4, $5, $6)")
             .execute(values, ar -> {
                     if (ar.succeeded()) promise.complete(Boolean.TRUE);
-                    else promise.complete(Boolean.FALSE);
+                    else promise.fail(ar.cause());
                 });
         return promise.future();
     }
@@ -86,6 +86,7 @@ public class CustomerRepositoryImpl implements CustomerRepository {
                     var result = List.<Entity<CustomerValue>>empty();
                     var iter = ar.result();
                     for (var row: iter) {
+                        var projectId = row.getUUID("project_id");
                         var entityId = row.getUUID("entity_id");
                         var entityVersion = row.getInteger("entity_version");
                         var item = CustomerValue.builder()
@@ -93,7 +94,7 @@ public class CustomerRepositoryImpl implements CustomerRepository {
                             .customerCityName(Name.of(row.getString("customer_city_name")))
                             .customerAddress(row.getString("customer_address"))
                             .build()
-                            .withId(entityId, entityVersion);
+                            .withId(projectId, entityId, entityVersion);
                         result = result.append(item);
                     }
                     promise.complete(result);

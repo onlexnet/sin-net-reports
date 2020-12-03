@@ -1,7 +1,7 @@
 package sinnet;
 
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionStage;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -13,12 +13,13 @@ import graphql.kickstart.tools.GraphQLResolver;
 public class ServicesResolverGet implements GraphQLResolver<Services> {
 
     @Autowired
-    private ActionService actionService;
+    private ActionRepository actionService;
 
-    public CompletableFuture<ServiceModel> get(Services ignored,
-                                               UUID actionId) {
+    public CompletionStage<ServiceModel> get(Services gcontext,
+                                             UUID actionId) {
+        var projectId = gcontext.getProjectId();
         return actionService
-            .find(actionId)
+            .find(projectId, actionId)
             .map(it -> ServiceModel.builder()
                 .entityId(it.getEntityId())
                 .entityVersion(it.getVersion())
@@ -29,7 +30,7 @@ public class ServicesResolverGet implements GraphQLResolver<Services> {
                 .duration(it.getValue().getHowLong().getValue())
                 .distance(it.getValue().getHowFar().getValue())
                 .build())
-            .toFuture();
+            .toCompletionStage();
     }
 
 }

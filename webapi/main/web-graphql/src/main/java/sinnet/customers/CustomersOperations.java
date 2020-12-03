@@ -22,7 +22,9 @@ import sinnet.bus.commands.RegisterNewCustomer;
 import sinnet.bus.query.FindCustomer;
 import sinnet.bus.query.FindCustomers;
 
+@Value
 public class CustomersOperations {
+    private UUID projectId;
 }
 
 @Component
@@ -76,33 +78,24 @@ class CustomersOperationsResolverGet
 }
 
 @Component
-class CustomersOperationsResolverAddNew
-      implements GraphQLResolver<CustomersOperations> {
+class CustomersOperationsResolverAddNew extends AskTemplate<RegisterNewCustomer, EntityId>
+                                        implements GraphQLResolver<CustomersOperations> {
 
-    @Autowired
-    private EventBus eventBus;
+    protected CustomersOperationsResolverAddNew() {
+        super(RegisterNewCustomer.ADDRESS, EntityId.class);
+    }
+
+    // @Autowired
+    // private EventBus eventBus;
 
     CompletableFuture<SomeEntity> addNew(CustomersOperations gcontext, CustomerEntry entry) {
-        var result = new CompletableFuture<SomeEntity>();
         var cmd = RegisterNewCustomer.builder()
+            .projectId(gcontext.getProjectId())
             .customerName(entry.getCustomerName())
             .customerCityName(entry.getCustomerCityName())
             .customerAddress(entry.getCustomerAddress())
             .build();
-        eventBus
-            .request(RegisterNewCustomer.ADDRESS, cmd.json())
-            .onComplete(it -> {
-                if (it.succeeded()) {
-                    Optional.of(it.result().body())
-                        .map(JsonObject::mapFrom)
-                        .map(m -> m.mapTo(EntityId.class))
-                        .map(m -> new SomeEntity(m.getId(), m.getVersion()))
-                        .ifPresent(result::complete);
-                } else {
-                    result.completeExceptionally(it.cause());
-                }
-            });
-        return result;
+        return super.ask(cmd).thenApply(m -> new SomeEntity(m.getProjectId(), m.getId(), m.getVersion()));
     }
 }
 

@@ -3,8 +3,11 @@
     <changeSet author="siudeks (generated)" id="1601237109370-1">
         <createSequence incrementBy="1" sequenceName="hibernate_sequence" startValue="1"/>
     </changeSet>
-    <changeSet author="siudeks (generated)" id="1601237109370-2">
+    <changeSet author="siudeks" id="1601237109370-2">
         <createTable tableName="actions">
+            <column name="project_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
             <column name="entity_id" type="UUID">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="actions_PK"/>
             </column>
@@ -22,7 +25,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="siudeks (generated)" id="1601237109370-3">
+    <changeSet author="siudeks" id="1601237109370-3">
         <createTable tableName="customer_db_model">
             <column name="entity_id" type="UUID">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="customer_db_modelPK"/>
@@ -32,7 +35,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="siudeks (generated)" id="1601237109370-4">
+    <changeSet author="siudeks" id="1601237109370-4">
         <createTable tableName="proj_daily_report">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="proj_daily_reportPK"/>

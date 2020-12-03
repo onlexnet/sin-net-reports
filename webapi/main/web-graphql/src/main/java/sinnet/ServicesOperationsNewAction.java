@@ -1,8 +1,7 @@
 package sinnet;
 
 import java.time.LocalDate;
-import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionStage;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -17,16 +16,16 @@ import sinnet.models.Name;
 public class ServicesOperationsNewAction implements GraphQLResolver<ServicesOperations> {
 
     @Autowired
-    private ActionService actionService;
+    private ActionRepository actionService;
 
     /**
      * FixMe.
      *
-     * @param ignored      ignored
+     * @param gcontext      ignored
      * @param whenProvided fixme
      * @return fixme
      */
-    public CompletableFuture<SomeEntity> newAction(ServicesOperations ignored, LocalDate whenProvided) {
+    public CompletionStage<SomeEntity> newAction(ServicesOperations gcontext, LocalDate whenProvided) {
 
         var model = ActionValue.builder()
             .who(Email.of("undefined@user"))
@@ -35,10 +34,10 @@ public class ServicesOperationsNewAction implements GraphQLResolver<ServicesOper
             .what("Jakaś usługa")
             .build();
 
-        var entityId = UUID.randomUUID();
+        var entityId = sinnet.models.EntityId.anyNew(gcontext.getProjectId());
         return actionService.save(entityId, model)
-            .map(it -> new SomeEntity(entityId, 1))
-            .toFuture();
+            .map(it -> new SomeEntity(entityId.getProjectId(), entityId.getId(), 1))
+            .toCompletionStage();
     }
 }
 
