@@ -45,9 +45,9 @@
         </createTable>
     </changeSet>
     <changeSet author="siudeks (generated)" id="1601237109370-5">
-        <createTable tableName="project">
+        <createTable tableName="projects">
             <column name="entity_id" type="UUID">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="projectPK"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_projects"/>
             </column>
             <column name="name" type="VARCHAR(50)"/>
         </createTable>
@@ -63,7 +63,14 @@
             <column name="project_entity_id" type="UUID"/>
         </createTable>
     </changeSet>
-    <changeSet author="siudeks (generated)" id="1601237109370-7">
-        <addForeignKeyConstraint baseColumnNames="project_entity_id" baseTableName="serviceman" constraintName="FKk0li9750mvero7hv6q9v1u8yl" deferrable="false" initiallyDeferred="false" referencedColumnNames="entity_id" referencedTableName="project" validate="true"/>
+    <changeSet author="siudeks" id="1601237109370-7">
+        <addForeignKeyConstraint baseColumnNames="project_entity_id"
+                                 baseTableName="serviceman"
+                                 constraintName="FKk0li9750mvero7hv6q9v1u8yl"
+                                 deferrable="false"
+                                 initiallyDeferred="false"
+                                 referencedColumnNames="entity_id"
+                                 referencedTableName="projects"
+                                 validate="true"/>
     </changeSet>
 </databaseChangeLog>

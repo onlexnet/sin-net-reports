@@ -21,7 +21,7 @@
                                   constraintName="FK_customers_projects"
                                   onDelete="RESTRICT"
                                   referencedColumnNames="entity_id"
-                                  referencedTableName="customer"
+                                  referencedTableName="projects"
                                   validate="true"/>
     </changeSet>
 </databaseChangeLog>

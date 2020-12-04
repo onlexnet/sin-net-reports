@@ -1,12 +1,14 @@
 package sinnet.projects;
 
-import java.util.concurrent.CompletableFuture;
+import org.springframework.stereotype.Component;
 
 import graphql.kickstart.tools.GraphQLQueryResolver;
 
+@Component
 public class ProjectsQuery implements GraphQLQueryResolver {
 
-    public CompletableFuture<ProjectToken[]> projects() {
-        return null;
+    public ProjectContext[] getAvailableProjects() {
+        return new ProjectContext[0];
     }
 }
+
