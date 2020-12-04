@@ -2,6 +2,13 @@ extend type Mutation {
     Actions(token: ProjectToken!): ActionsOperations!
 }
 
+type ActionsOperations {
+    update(entityId: ID!, entityVersion: Int!, content: ServiceEntry): Boolean!
+    newAction(whenProvided: Date!): MyEntity!
+    search(filter: ServicesFilter): ServicesSearchResult!
+    get(actionId: ID!): ServiceModel
+}
+
 input ServiceEntry {
     servicemanName: String!
     whenProvided: Date!
@@ -32,9 +39,3 @@ input ServicesFilter {
     to: Date
 }
 
-type ActionsOperations {
-    update(entityId: ID!, entityVersion: Int!, content: ServiceEntry): Boolean!
-    newAction(whenProvided: Date!): MyEntity!
-    search(filter: ServicesFilter): ServicesSearchResult!
-    get(actionId: ID!): ServiceModel
-}

@@ -1,5 +1,5 @@
-query FetchServices($from: Date!, $to: Date!) {
-  Services {
+mutation FetchServices($projectToken: ProjectToken!, $from: Date!, $to: Date!) {
+  Actions(token: $projectToken) {
     search (filter: {
       from: $from
       to: $to
@@ -18,8 +18,8 @@ query FetchServices($from: Date!, $to: Date!) {
   }
 }
 
-query GetAction($actionId: ID!) {
-  Services {
+mutation GetAction($projectToken: ProjectToken!, $actionId: ID!) {
+  Actions(token: $projectToken) {
     get (actionId: $actionId) {
       entityId,
       entityVersion,
@@ -33,8 +33,8 @@ query GetAction($actionId: ID!) {
   }
 }
 
-mutation newServiceAction($when: Date!) {
-  Services {
+mutation newServiceAction($projectToken: ProjectToken!, $when: Date!) {
+  Actions(token: $projectToken) {
     newAction(whenProvided: $when) {
       entityId
       entityVersion
@@ -42,8 +42,8 @@ mutation newServiceAction($when: Date!) {
   }
 }
 
-mutation updateAction($entityId: ID!, $entityVersion: Int!, $when: Date!, $what: String!, $who: String!, $whom: String!, $duration: Int!, $distance: Int!) {
-  Services {
+mutation updateAction($projectToken: ProjectToken!, $entityId: ID!, $entityVersion: Int!, $when: Date!, $what: String!, $who: String!, $whom: String!, $duration: Int!, $distance: Int!) {
+  Actions(token: $projectToken) {
     update(
       entityId: $entityId,
       entityVersion: $entityVersion,
