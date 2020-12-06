@@ -1,12 +1,4 @@
 extend type Query {
-    availableProjects: [ProjectContext!]!
+    availableProjects: [ID!]!
 }
 
-input ProjectToken {
-    projectId: ID!
-    checkCode: ID!
-}
-
-type ProjectContext {
-    projectId: ID!
-}

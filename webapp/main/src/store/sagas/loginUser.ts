@@ -21,13 +21,12 @@ export function* loginRequestSaga() {
 /**
  * Saga invoked when user is logged in to the application.
  * <p>
- * it is a central place to invoke some side-effects of logging loke set context of work,
+ * it is a central place to invoke some side-effects of logging to set context of work,
  * initialize UI and load initial data.
 */
 const reloadContext = function* () {
   try {
     const state = yield select((it: RootState) => it.viewContext);
-    //yield put(reloadServicesBegin());
   } catch (e) {
     yield put({ type: "USER_FETCH_FAILED", message: e.message });
   }

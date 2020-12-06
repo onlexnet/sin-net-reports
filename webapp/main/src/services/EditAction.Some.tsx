@@ -23,9 +23,15 @@ export const EditActionSome: React.FC<EditActionSomeProps> = props => {
 
   const { item, cancelEdit, actionUpdated } = props;
 
+  const propsProjectId = item?.projectId;
   const propsEntityId = item?.entityId;
   const propsEntityVersion = item?.entityVersion;
-  const versionedProps = [propsEntityId, propsEntityVersion];
+  const versionedProps = [propsEntityId, propsEntityVersion, propsProjectId];
+
+  const [projectId, setProjectId] = useState(propsProjectId);
+  useEffect(() => {
+    setEntityId(propsProjectId);
+  }, versionedProps);
 
   const [entityId, setEntityId] = useState(propsEntityId);
   useEffect(() => {
@@ -152,6 +158,7 @@ export const EditActionSome: React.FC<EditActionSomeProps> = props => {
   const [updateActionMutation, { loading: updateActionInProgress, data: data2 }] = useUpdateActionMutation();
   if (data2) {
     actionUpdated({
+      projectId: propsProjectId,
       entityId: propsEntityId,
       entityVersion: propsEntityVersion
     });
@@ -162,6 +169,7 @@ export const EditActionSome: React.FC<EditActionSomeProps> = props => {
     const dtoDate = dates(actionDate).slashed;
     updateActionMutation({
       variables: {
+        projectId,
         entityId,
         entityVersion,
         distance: Number(distance),

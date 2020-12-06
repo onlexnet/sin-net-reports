@@ -15,6 +15,7 @@ export const toModel = (dtoDate: string): LocalDate => {
 
 export const toActionModel = (dto: ServiceModel): ServiceAppModel => {
     const item: ServiceAppModel = {
+        projectId: dto.projectId,
         entityId: dto.entityId,
         entityVersion: dto.entityVersion,
         description: dto.description ?? "-",

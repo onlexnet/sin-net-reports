@@ -1,5 +1,5 @@
 extend type Mutation {
-    Customers(token: ProjectToken): CustomersOperations!
+    Customers(projectId: ID!): CustomersOperations!
 }
 
 type CustomersOperations {

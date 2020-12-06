@@ -10,6 +10,7 @@ export interface ServiceAppModel extends EntityId {
 }
 
 export interface EntityId {
+  projectId: string,
   entityId: string,
   entityVersion: number,
 }

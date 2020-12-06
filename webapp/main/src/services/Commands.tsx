@@ -11,7 +11,17 @@ import { ActionEditUpdated, VIEWCONTEXT_ACTION_EDIT_UPDATED } from '../store/vie
 
 const overflowProps: IButtonProps = { ariaLabel: 'More commands' };
 
-const mapStateToProps = (state: RootState) => ({ viewContext: state.viewContext, session: state.auth });
+const mapStateToProps = (state: RootState) => {
+  if (state.appState.type == "APPCONTEXT_EMPTY") {
+    throw 'Invalid state';
+  }
+  
+  return {
+    viewContext: state.viewContext,
+    session: state.auth,
+    selectedProjectId: state.appState.projectId
+  };
+};
 const mapDispatchToProps = (dispatch: Dispatch) => {
   return {
     onPreviousMonthRequested: () => {
@@ -47,10 +57,11 @@ const ServiceCommandBarView: React.FC<ServiceCommandBarProps> = (props) => {
     const { dateFrom } = asDtoDates(viewContext.period);
     newServiceMutation({
       variables: {
+        projectId: props.selectedProjectId,
         when: dateFrom
       }
     }).then(r => {
-      var createdEntityId = r.data?.Services.newAction;
+      var createdEntityId = r.data?.Actions.newAction;
       if (!createdEntityId) return;
       props.actionUpdated(createdEntityId);
     })

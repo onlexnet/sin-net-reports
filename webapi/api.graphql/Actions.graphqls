@@ -1,12 +1,18 @@
 extend type Mutation {
-    Actions(token: ProjectToken!): ActionsOperations!
+    Actions(projectId: ID!): ActionsMutation!
+}
+extend type Query {
+    Actions(projectId: ID!): ActionsQuery!
 }
 
-type ActionsOperations {
+type ActionsMutation {
     update(entityId: ID!, entityVersion: Int!, content: ServiceEntry): Boolean!
     newAction(whenProvided: Date!): MyEntity!
-    search(filter: ServicesFilter): ServicesSearchResult!
+}
+
+type ActionsQuery {
     get(actionId: ID!): ServiceModel
+    search(filter: ServicesFilter): ServicesSearchResult!
 }
 
 input ServiceEntry {
@@ -24,6 +30,7 @@ type ServicesSearchResult {
 }
 
 type ServiceModel implements Entity {
+    projectId: ID!
     entityId: ID!
     entityVersion: Int!
     servicemanName: String!

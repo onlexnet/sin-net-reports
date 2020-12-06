@@ -76,7 +76,10 @@ export interface ContentProps {
 }
 
 const mapStateToProps = (state: RootState) => {
-  return { ...state.viewContext };
+  if (state.appState.type == "APPCONTEXT_EMPTY") {
+    throw 'Invalid state';
+  }
+  return { ...state.viewContext, selectedProjectId: state.appState.projectId };
 };
 const mapDispatchToProps = (dispatch: Dispatch) => {
   return {
@@ -180,6 +183,7 @@ const ConnectedContent: React.FC<PropsFromRedux> = props => {
   const periodDto = asDtoDates(props.period);
   const { data, loading, error, refetch } = useFetchServicesQuery({
     variables: {
+      projectId: props.selectedProjectId,
       from: periodDto.dateFrom,
       to: periodDto.dateTo
     }
@@ -187,9 +191,8 @@ const ConnectedContent: React.FC<PropsFromRedux> = props => {
   if (newDataIsComing) {
     refetch();
   }
-  console.log(`Zalewajka loading: ${loading}, error: ${error}`);
-  console.log(JSON.stringify(data));
-  var items = _.chain(data?.Services.search.items)
+
+  var items = _.chain(data?.Actions.search.items)
     .map(it => toActionModel(it))
     .value();
 

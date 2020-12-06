@@ -11,7 +11,10 @@ import { EditActionNone } from "./EditAction.None";
 import { EntityId } from "../store/actions/ServiceModel";
 
 const mapStateToProps = (state: RootState) => {
-  return { ...state.viewContext };
+  if (state.appState.type == "APPCONTEXT_EMPTY") {
+    throw 'Invalid state';
+  }
+  return { ...state.viewContext, selectedProjectId: state.appState.projectId };
 };
 const mapDispatchToProps = (dispatch: Dispatch) => {
   return {
@@ -47,6 +50,7 @@ const EditActionInit: React.FC<PropsFromRedux> = props => {
   const { loading, data } = useGetActionQuery({
     skip: !isEditInProgress,
     variables: {
+      projectId: props.selectedProjectId,
       actionId: props.editedActionId ?? "00000000-0000-0000-0000-000000000000"
     }
   });
@@ -59,7 +63,7 @@ const EditActionInit: React.FC<PropsFromRedux> = props => {
 
 
   if (propsEditedActionId && data) {
-    var dto = data.Services.get;
+    var dto = data.Actions.get;
     if (dto) {
       var model = toActionModel(dto)
       return <EditActionSome item={model} cancelEdit={props.cancelEdit} actionUpdated={props.actionUpdated} />;

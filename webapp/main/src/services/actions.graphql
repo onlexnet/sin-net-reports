@@ -1,10 +1,11 @@
-mutation FetchServices($projectToken: ProjectToken!, $from: Date!, $to: Date!) {
-  Actions(token: $projectToken) {
+query FetchServices($projectId: ID!, $from: Date!, $to: Date!) {
+  Actions(projectId: $projectId) {
     search (filter: {
       from: $from
       to: $to
     }) {
       items {
+        projectId,
         entityId,
         entityVersion,
         whenProvided
@@ -18,9 +19,10 @@ mutation FetchServices($projectToken: ProjectToken!, $from: Date!, $to: Date!) {
   }
 }
 
-mutation GetAction($projectToken: ProjectToken!, $actionId: ID!) {
-  Actions(token: $projectToken) {
+query GetAction($projectId: ID!, $actionId: ID!) {
+  Actions(projectId: $projectId) {
     get (actionId: $actionId) {
+      projectId,
       entityId,
       entityVersion,
       whenProvided
@@ -33,17 +35,18 @@ mutation GetAction($projectToken: ProjectToken!, $actionId: ID!) {
   }
 }
 
-mutation newServiceAction($projectToken: ProjectToken!, $when: Date!) {
-  Actions(token: $projectToken) {
+mutation newServiceAction($projectId: ID!, $when: Date!) {
+  Actions(projectId: $projectId) {
     newAction(whenProvided: $when) {
+      projectId,
       entityId
       entityVersion
     }
   }
 }
 
-mutation updateAction($projectToken: ProjectToken!, $entityId: ID!, $entityVersion: Int!, $when: Date!, $what: String!, $who: String!, $whom: String!, $duration: Int!, $distance: Int!) {
-  Actions(token: $projectToken) {
+mutation updateAction($projectId: ID!, $entityId: ID!, $entityVersion: Int!, $when: Date!, $what: String!, $who: String!, $whom: String!, $duration: Int!, $distance: Int!) {
+  Actions(projectId: $projectId) {
     update(
       entityId: $entityId,
       entityVersion: $entityVersion,

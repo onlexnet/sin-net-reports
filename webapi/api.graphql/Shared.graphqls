@@ -1,9 +1,11 @@
 interface Entity {
+    projectId: ID!
     entityId: ID!
     entityVersion: Int!
 }
 
 type MyEntity implements Entity {
+    projectId: ID!
     entityId: ID!
     entityVersion: Int!
 }
