@@ -7,7 +7,7 @@ extend type Mutation {
 }
 
 type CustomersQuery {
-    list: [CustomerModel!]!
+    list: [CustomerEntity!]!
     get(entityId: ID!): CustomerModel
 }
 

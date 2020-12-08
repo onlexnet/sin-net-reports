@@ -12,9 +12,8 @@ public class CustomerEntity {
 }
 
 @Component
-class CustomerModelResolverPayload
-    implements GraphQLResolver<CustomerEntity> {
-    CustomerEntry getData(CustomerEntity gcontext) {
+class CustomerModelResolverPayload implements GraphQLResolver<CustomerEntity> {
+    CustomerModel getData(CustomerEntity gcontext) {
         return null;
     }
 }
