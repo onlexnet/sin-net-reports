@@ -19,7 +19,7 @@ import sinnet.Sync;
 import sinnet.models.CustomerValue;
 import sinnet.models.EntityId;
 import sinnet.models.Name;
-import sinnet.project.ProjectRepository;
+import sinnet.read.ProjectRepository;
 
 @SpringBootTest(webEnvironment = WebEnvironment.NONE)
 @ContextConfiguration(classes = AppTestContext.class)
