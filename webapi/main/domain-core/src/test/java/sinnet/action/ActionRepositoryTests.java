@@ -23,6 +23,7 @@ import sinnet.models.Distance;
 import sinnet.models.Email;
 import sinnet.models.EntityId;
 import sinnet.models.Name;
+import sinnet.project.ProjectRepository;
 
 @SpringBootTest(webEnvironment = WebEnvironment.NONE)
 @ContextConfiguration(classes = AppTestContext.class)
@@ -34,12 +35,18 @@ public class ActionRepositoryTests {
     @Autowired
     private ActionRepository sut;
 
+    @Autowired
+    private ProjectRepository projectRepository;
+
     @Test
     public void myTest() {
-        var now = Dates.gen().head();
         var projectId = UUID.randomUUID();
+        Sync.when(() -> projectRepository.save(projectId));
 
-        Sync.when(() -> sut.find(now, now))
+        var now = Dates.gen().head();
+        Sync.when(() -> sut.find(projectId, now, now));
+
+        Sync.when(() -> sut.find(projectId, now, now))
             .checkpoint(actual -> Assumptions.assumeThat(actual).isEmpty());
 
         var newEntity = ActionValue.builder()
@@ -51,7 +58,7 @@ public class ActionRepositoryTests {
         Sync.when(() -> sut.save(EntityId.anyNew(projectId), newEntity))
             .and(it -> sut.save(EntityId.anyNew(projectId), newEntity))
             .and(it -> sut.save(EntityId.anyNew(projectId), newEntity))
-            .and(it -> sut.find(now, now))
+            .and(it -> sut.find(projectId, now, now))
             .checkpoint(actualItems -> {
                 Assertions.assertThat(actualItems).hasSize(3);
                 var expected = ActionValue.builder()
@@ -66,9 +73,10 @@ public class ActionRepositoryTests {
 
     @Test
     public void shouldSaveFullModel() {
-        var now = Dates.gen().head();
         var projectId = UUID.randomUUID();
+        Sync.when(() -> projectRepository.save(projectId));
 
+        var now = Dates.gen().head();
         var newEntity = ActionValue.builder()
             .who(Email.of("some person"))
             .howFar(Distance.of(1))
@@ -81,7 +89,7 @@ public class ActionRepositoryTests {
         Sync
             .when(() -> sut.save(EntityId.anyNew(projectId), newEntity))
             .checkpoint(actual -> assertThat(actual).isTrue())
-            .and(it -> sut.find(now, now))
+            .and(it -> sut.find(projectId, now, now))
             .checkpoint(actual -> {
                 var expected = ActionValue.builder()
                     .who(Email.of("some person"))
@@ -99,6 +107,7 @@ public class ActionRepositoryTests {
     public void shouldUpdateFullModel() {
         var now = Dates.gen().head();
         var projectId = UUID.randomUUID();
+        Sync.when(() -> projectRepository.save(projectId));
 
         var newEntity = ActionValue.builder()
             .when(Dates.gen().head())
@@ -116,16 +125,17 @@ public class ActionRepositoryTests {
         Sync
             .when(() -> sut.save(entityId, newEntity))
             .checkpoint(it -> assertThat(it).isTrue())
-            .and(it -> sut.find(now, now))
+            .and(it -> sut.update(entityId, updateEntity))
+            .and(it -> sut.find(projectId, now, now))
             .checkpoint(actual -> {
                 var expected = ActionValue.builder()
-                .who(Email.of("some person"))
-                .howFar(Distance.of(1))
-                .howLong(ActionDuration.of(2))
-                .what("some action")
-                .when(now)
-                .whom(Name.of("some Customer name"))
-                .build();
+                    .who(Email.of("some person"))
+                    .howFar(Distance.of(1))
+                    .howLong(ActionDuration.of(2))
+                    .what("some action")
+                    .when(now)
+                    .whom(Name.of("some Customer name"))
+                    .build();
                 assertThat(actual.head().getValue()).isEqualTo(expected);
             });
     }
@@ -134,6 +144,7 @@ public class ActionRepositoryTests {
     public void shouldSaveMinModel() {
         var now = Dates.gen().head();
         var projectId = UUID.randomUUID();
+        Sync.when(() -> projectRepository.save(projectId));
 
         var newEntity = ActionValue.builder()
             .when(now)

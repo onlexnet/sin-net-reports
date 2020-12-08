@@ -29,8 +29,12 @@ public class CustomerRepositoryImpl implements CustomerRepository {
 
     public Future<Boolean> save(EntityId id, CustomerValue entity) {
         var promise = Promise.<Boolean>promise();
-        var values = Tuple.of(id.getId(), id.getVersion(), entity.getCustomerName().getValue(),
-                entity.getCustomerCityName().getValue(), entity.getCustomerAddress());
+        var values = Tuple.of(id.getProjectId(),
+                              id.getId(),
+                              id.getVersion(),
+                              entity.getCustomerName().getValue(),
+                              entity.getCustomerCityName().getValue(),
+                              entity.getCustomerAddress());
         pgClient
             .preparedQuery("INSERT INTO"
                          + " customers (project_id, entity_id, entity_version, customer_name, customer_city_name, customer_address)"
@@ -52,16 +56,16 @@ public class CustomerRepositoryImpl implements CustomerRepository {
 
     @Override
     public Future<Entity<CustomerValue>> get(EntityId id) {
-        var whereClause = "entity_id=$1 AND entity_version=$2";
-        var values = Tuple.of(id.getId(), id.getVersion());
+        var whereClause = "project_id=$1 AND entity_id=$2 AND entity_version=$3";
+        var values = Tuple.of(id.getProjectId(), id.getId(), id.getVersion());
         return get(whereClause, values)
             .map(this::extractResult)
             .flatMap(it -> it);
     }
 
     @Override
-    public Future<Entity<CustomerValue>> get(UUID id) {
-        var whereClause = "entity_id=$1";
+    public Future<Entity<CustomerValue>> get(UUID projectId, UUID id) {
+        var whereClause = "project_id=$1 AND entity_id=$2";
         var values = Tuple.of(id);
         return get(whereClause, values)
             .map(this::extractResult)
@@ -78,7 +82,7 @@ public class CustomerRepositoryImpl implements CustomerRepository {
         var promise = Promise.<List<Entity<CustomerValue>>>promise();
         pgClient
             .preparedQuery("SELECT"
-                         + " entity_id, entity_version, customer_name, customer_city_name, customer_address"
+                         + " project_id, entity_id, entity_version, customer_name, customer_city_name, customer_address"
                          + " FROM customers c"
                          + " WHERE " + whereClause)
             .execute(values, ar -> {

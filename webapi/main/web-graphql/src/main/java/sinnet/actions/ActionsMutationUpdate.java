@@ -1,4 +1,4 @@
-package sinnet;
+package sinnet.actions;
 
 import java.util.UUID;
 import java.util.concurrent.CompletionStage;
@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import graphql.kickstart.tools.GraphQLResolver;
+import sinnet.ActionRepository;
 import sinnet.models.ActionDuration;
 import sinnet.models.ActionValue;
 import sinnet.models.Distance;
@@ -16,7 +17,7 @@ import sinnet.models.Name;
 
 /** Fixme. */
 @Component
-public class ActionsOperationsUpdate implements GraphQLResolver<ActionsOperations> {
+public class ActionsMutationUpdate implements GraphQLResolver<ActionsMutation> {
 
     @Autowired
     private ActionRepository actionService;
@@ -30,7 +31,7 @@ public class ActionsOperationsUpdate implements GraphQLResolver<ActionsOperation
      */
     // https://www.appsdeveloperblog.com/spring-security-preauthorize-annotation-example/
     // @PreAuthorize("hasAuthority('SCOPE_Actions.Write')")
-    public CompletionStage<Boolean> update(ActionsOperations gcontext,
+    public CompletionStage<Boolean> update(ActionsMutation gcontext,
                                            UUID entityId,
                                            int entityVersion,
                                            ServiceEntry content) {

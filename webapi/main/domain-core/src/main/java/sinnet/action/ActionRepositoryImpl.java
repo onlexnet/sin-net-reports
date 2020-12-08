@@ -23,7 +23,7 @@ public class ActionRepositoryImpl implements ActionRepository {
     @Autowired
     private PgPool pgClient;
 
-    private static final String SOURCE = "SELECT entity_id, entity_version, "
+    private static final String SOURCE = "SELECT project_id, entity_id, entity_version, "
                                        + "serviceman_email, distance, duration, date, customer_name, description, serviceman_name "
                                        + "FROM actions it ";
     @Override
@@ -51,11 +51,11 @@ public class ActionRepositoryImpl implements ActionRepository {
 
 
     @Override
-    public Future<Array<Entity<ActionValue>>> find(LocalDate from, LocalDate to) {
+    public Future<Array<Entity<ActionValue>>> find(UUID projectId, LocalDate from, LocalDate to) {
         var promise = Promise.<Array<Entity<ActionValue>>>promise();
         var findQuery = this.pgClient
-                .preparedQuery(SOURCE + " WHERE it.date >= $1 AND it.date <= $2");
-        findQuery.execute(Tuple.of(from, to), ar -> {
+                .preparedQuery(SOURCE + " WHERE project_id=$1 AND it.date >= $2 AND it.date <= $3");
+        findQuery.execute(Tuple.of(projectId, from, to), ar -> {
             if (ar.succeeded()) {
                 var rows = ar.result();
                 var value = Array
@@ -73,7 +73,7 @@ public class ActionRepositoryImpl implements ActionRepository {
     public Future<Entity<ActionValue>> find(UUID projectId, UUID entityId) {
         var promise = Promise.<Entity<ActionValue>>promise();
         var findQuery = this.pgClient
-            .preparedQuery(SOURCE + " WHERE it.project_id=$1 AND it.entity_id=$1");
+            .preparedQuery(SOURCE + " WHERE it.project_id=$1 AND it.entity_id=$2");
                 findQuery.execute(Tuple.of(projectId, entityId), ar -> {
                     if (ar.succeeded()) {
                         var rows = ar.result();
@@ -91,8 +91,8 @@ public class ActionRepositoryImpl implements ActionRepository {
     }
 
     @Override
-    public Future<Boolean> update(EntityId id, ActionValue entity) {
-        var promise = Promise.<Boolean>promise();
+    public Future<EntityId> update(EntityId id, ActionValue entity) {
+        var promise = Promise.<EntityId>promise();
         var values = Tuple.of(id.getProjectId(),
             id.getId(),
             id.getVersion(),
@@ -101,14 +101,17 @@ public class ActionRepositoryImpl implements ActionRepository {
             entity.getWhat(),
             entity.getHowFar().getValue(),
             entity.getHowLong().getValue(),
-            entity.getWho().getValue(), entity.getWhen());
+            entity.getWho().getValue(),
+            entity.getWhen());
         pgClient.preparedQuery("UPDATE "
                 + "actions SET "
-                + "entity_version=$2+1, serviceman_email=$3, customer_name=$4, description=$5, distance=$6, duration=$7, serviceman_name=$8, date=$9 "
-                + "where entity_id=$1 AND entity_version=$2")
+                + "entity_version=$3+1, serviceman_email=$4, customer_name=$5, description=$6, distance=$7, duration=$8, serviceman_name=$9, date=$10 "
+                + "where project_id=$1 AND entity_id=$2 AND entity_version=$3")
                 .execute(values, ar -> {
-                    if (ar.succeeded()) promise.complete(Boolean.TRUE);
-                    else promise.fail(ar.cause());
+                    if (ar.succeeded()) {
+                        var result = EntityId.of(id.getProjectId(), id.getId(), id.getVersion());
+                        promise.complete(result);
+                    } else promise.fail(ar.cause());
                 });
         return promise.future();
     }

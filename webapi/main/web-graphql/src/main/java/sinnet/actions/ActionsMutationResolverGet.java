@@ -1,4 +1,4 @@
-package sinnet;
+package sinnet.actions;
 
 import java.util.UUID;
 import java.util.concurrent.CompletionStage;
@@ -7,15 +7,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import graphql.kickstart.tools.GraphQLResolver;
+import sinnet.ActionRepository;
 
 /** Fixme. */
 @Component
-public class ActionsOperationsResolverGet implements GraphQLResolver<ActionsOperations> {
+public class ActionsMutationResolverGet implements GraphQLResolver<ActionsMutation> {
 
     @Autowired
     private ActionRepository actionService;
 
-    public CompletionStage<ServiceModel> get(ActionsOperations gcontext,
+    public CompletionStage<ServiceModel> get(ActionsQuery gcontext,
                                              UUID actionId) {
         var projectId = gcontext.getProjectId();
         return actionService

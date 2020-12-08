@@ -1,4 +1,4 @@
-package sinnet;
+package sinnet.actions;
 
 import java.time.LocalDate;
 import java.util.concurrent.CompletionStage;
@@ -7,13 +7,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import graphql.kickstart.tools.GraphQLResolver;
+import sinnet.ActionRepository;
+import sinnet.SomeEntity;
 import sinnet.models.ActionValue;
 import sinnet.models.Email;
 import sinnet.models.Name;
 
 /** Fixme. */
 @Component
-public class ActionsOperationsNewAction implements GraphQLResolver<ActionsOperations> {
+public class ActionsMutationNewAction implements GraphQLResolver<ActionsMutation> {
 
     @Autowired
     private ActionRepository actionService;
@@ -25,7 +27,7 @@ public class ActionsOperationsNewAction implements GraphQLResolver<ActionsOperat
      * @param whenProvided fixme
      * @return fixme
      */
-    public CompletionStage<SomeEntity> newAction(ActionsOperations gcontext, LocalDate whenProvided) {
+    public CompletionStage<SomeEntity> newAction(ActionsMutation gcontext, LocalDate whenProvided) {
 
         var model = ActionValue.builder()
             .who(Email.of("undefined@user"))

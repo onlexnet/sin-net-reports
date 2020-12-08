@@ -31,6 +31,7 @@ public interface FindCustomers {
     @NoArgsConstructor
     @Builder
     class CustomerData {
+        private UUID projectId;
         private UUID entityId;
         private int entityVersion;
         private CustomerValue value;

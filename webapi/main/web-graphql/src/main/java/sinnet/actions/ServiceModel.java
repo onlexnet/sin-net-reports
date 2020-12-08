@@ -1,15 +1,17 @@
-package sinnet;
+package sinnet.actions;
 
 import java.time.LocalDate;
 import java.util.UUID;
 
 import lombok.Builder;
 import lombok.Getter;
+import sinnet.Entity;
 
 /** FixMe. */
 @Builder
 @Getter
 public class ServiceModel implements Entity {
+    private UUID projectId;
     private UUID entityId;
     private int entityVersion;
     private String servicemanName;

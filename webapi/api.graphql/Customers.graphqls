@@ -1,10 +1,17 @@
-extend type Mutation {
-    Customers(projectId: ID!): CustomersOperations!
+extend type Query {
+    Customers(projectId: ID!): CustomersQuery!
 }
 
-type CustomersOperations {
+extend type Mutation {
+    Customers(projectId: ID!): CustomersMutation!
+}
+
+type CustomersQuery {
     list: [CustomerModel!]!
     get(entityId: ID!): CustomerModel
+}
+
+type CustomersMutation {
     addNew(entry: CustomerEntry): MyEntity!
 }
 
@@ -13,13 +20,13 @@ input CustomerEntry {
     customerCityName: String!
     customerAddress: String!
 }
-type CustomerModel {
-    customerName: String!
-    customerCityName: String!
-    customerAddress: String!
-}
 
 type CustomerEntity {
     id: Entity!
     data: CustomerModel!
+}
+type CustomerModel {
+    customerName: String!
+    customerCityName: String!
+    customerAddress: String!
 }

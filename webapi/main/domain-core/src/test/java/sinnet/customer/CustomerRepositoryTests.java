@@ -19,6 +19,7 @@ import sinnet.Sync;
 import sinnet.models.CustomerValue;
 import sinnet.models.EntityId;
 import sinnet.models.Name;
+import sinnet.project.ProjectRepository;
 
 @SpringBootTest(webEnvironment = WebEnvironment.NONE)
 @ContextConfiguration(classes = AppTestContext.class)
@@ -28,13 +29,17 @@ import sinnet.models.Name;
 public class CustomerRepositoryTests {
 
     @Autowired
+    private ProjectRepository projectRepository;
+    @Autowired
     private CustomerRepository repository;
 
     @Test
     void saveMinModel() {
-        var projectId = UUID.randomUUID();
         var result = Sync
             .when(() -> {
+                var projectId = UUID.randomUUID();
+                return projectRepository.save(projectId).map(it -> projectId); })
+            .and((projectId) -> {
                 var model = CustomerValue.builder()
                     .customerName(Name.of("some not-empty name"))
                     .build();
@@ -47,6 +52,7 @@ public class CustomerRepositoryTests {
 
     @Test
     void saveFullModel() {
+
         var projectId = UUID.randomUUID();
         var someId = EntityId.anyNew(projectId);
         var model = CustomerValue.builder()
@@ -56,9 +62,8 @@ public class CustomerRepositoryTests {
             .build();
 
         Sync
-            .when(() -> {
-                return repository
-                    .save(someId, model); })
+            .when(() -> projectRepository.save(projectId))
+            .and(ignored -> repository.save(someId, model))
             .checkpoint(it -> {
                 Assertions.assertThat(it).isEqualTo(Boolean.TRUE); })
             .and(it -> repository.get(someId))
@@ -77,7 +82,8 @@ public class CustomerRepositoryTests {
         var id1 = EntityId.anyNew(projectId);
         var id2 = EntityId.anyNew(projectId);
         var list = Sync
-            .when(() -> {
+            .when(() -> projectRepository.save(projectId))
+            .and(ignored -> {
                 var someModel = newModel(projectId);
                 return CompositeFuture
                     .all(repository.save(id1, someModel),

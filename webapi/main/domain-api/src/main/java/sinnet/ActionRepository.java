@@ -13,9 +13,9 @@ public interface ActionRepository {
 
     Future<Boolean> save(EntityId entityId, ActionValue entity);
 
-    Future<Boolean> update(EntityId id, ActionValue entity);
+    Future<EntityId> update(EntityId id, ActionValue entity);
 
-    Future<Array<Entity<ActionValue>>> find(LocalDate from, LocalDate to);
+    Future<Array<Entity<ActionValue>>> find(UUID projectId, LocalDate from, LocalDate to);
 
     Future<Entity<ActionValue>> find(UUID projectId, UUID entityId);
 }

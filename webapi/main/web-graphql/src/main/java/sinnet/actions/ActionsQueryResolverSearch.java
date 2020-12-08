@@ -1,4 +1,4 @@
-package sinnet;
+package sinnet.actions;
 
 import java.util.Collections;
 import java.util.List;
@@ -11,10 +11,11 @@ import graphql.kickstart.tools.GraphQLResolver;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import sinnet.ActionRepository;
 
 /** Fixme. */
 @Component
-public class ActionsOperationsResolverSearch implements GraphQLResolver<ActionsOperations> {
+public class ActionsQueryResolverSearch implements GraphQLResolver<ActionsMutation> {
 
     @Autowired
     private ActionRepository repository;
@@ -22,14 +23,14 @@ public class ActionsOperationsResolverSearch implements GraphQLResolver<ActionsO
     /**
      * FixMe.
      *
-     * @param ignored ignored
+     * @param gcontext ignored
      * @param filter fixme.
      * @return fixme
      */
-    public CompletionStage<ServicesSearchResult> search(ActionsOperations ignored,
+    public CompletionStage<ServicesSearchResult> search(ActionsQuery gcontext,
                                                         ServicesFilter filter) {
         return repository
-            .find(filter.getFrom(), filter.getTo())
+            .find(gcontext.getProjectId(), filter.getFrom(), filter.getTo())
             .map(it -> {
                 var items = it
                     .map(item -> ServiceModel.builder()

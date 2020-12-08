@@ -60,8 +60,8 @@ public class CustomerService extends AbstractVerticle implements TopLevelVerticl
 
     private void findCustomer(Message<JsonObject> message) {
         Optional.of(message.body()).map(JsonObject::mapFrom).map(it -> it.mapTo(FindCustomer.Ask.class))
-                .map(it -> it.getEntityId()).ifPresent(it -> {
-                    repository.get(it).onComplete(ar -> {
+                .ifPresent(it -> {
+                    repository.get(it.getProjectId(), it.getEntityId()).onComplete(ar -> {
                         if (ar.succeeded()) {
                             var entity = ar.result();
                             var reply = new FindCustomer.Reply(entity.getEntityId(), entity.getVersion(),

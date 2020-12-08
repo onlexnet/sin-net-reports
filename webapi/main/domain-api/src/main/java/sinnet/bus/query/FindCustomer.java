@@ -16,6 +16,7 @@ public interface FindCustomer {
         /** Address used to send the query to it's handler. */
         public static final String ADDRESS = "query.FindCustomer";
 
+        private UUID projectId;
         private UUID entityId;
     }
 

@@ -1,4 +1,4 @@
-package sinnet;
+package sinnet.actions;
 
 import java.time.LocalDate;
 
