@@ -10,16 +10,23 @@ import { NavBasicExample } from "../../NavBar";
 import { Reports } from "../../reports/Reports";
 import { routing } from "../../Routing";
 import { Main } from "../../services";
+import { AppContextAction } from "../../store/appcontext/types";
 import { RootState } from "../../store/reducers";
-import { SessionState } from "../../store/session/types";
 import { CustomerView } from "../customer/CustomerView";
 import { Customers } from "../customers/Customers";
 
-const mapStateToProps = (state: RootState): SessionState => {
-    return state.auth;
+const mapStateToProps = (state: RootState) => {
+    return { auth: state.auth, appState: state.appState };
 }
 const mapDispatchToProps = (dispatch: Dispatch) => {
     return {
+        setProject: (projectId: string) => {
+            const action: AppContextAction = {
+                type: 'APPCONTEXT_READY',
+                projectId
+            }
+            dispatch(action);
+        }
     }
 }
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -45,7 +52,12 @@ const LocalView: React.FC<Props> = (props) => {
         return (<p>Too many available projects. Please contact with your app provider.</p>);
     }
 
-    const project = availableProjects[0];
+    if (props.appState.empty) {
+        const projectId = availableProjects[0];
+        props.setProject(projectId);
+        return (<p>Set application context ....</p>);
+    }
+
     return (
         <Router>
             <div className="ms-Grid" dir="ltr">

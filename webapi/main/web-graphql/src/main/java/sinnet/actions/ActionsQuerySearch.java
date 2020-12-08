@@ -34,6 +34,7 @@ public class ActionsQuerySearch implements GraphQLResolver<ActionsQuery> {
             .map(it -> {
                 var items = it
                     .map(item -> ServiceModel.builder()
+                                  .projectId(item.getProjectId())
                                   .entityId(item.getEntityId())
                                   .servicemanName(item.getValue().getWho().getValue())
                                   .whenProvided(item.getValue().getWhen())
