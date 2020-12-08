@@ -11,7 +11,7 @@ import { EditActionNone } from "./EditAction.None";
 import { EntityId } from "../store/actions/ServiceModel";
 
 const mapStateToProps = (state: RootState) => {
-  if (state.appState.type == "APPCONTEXT_EMPTY") {
+  if (state.appState.empty) {
     throw 'Invalid state';
   }
   return { ...state.viewContext, selectedProjectId: state.appState.projectId };

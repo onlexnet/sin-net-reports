@@ -76,7 +76,7 @@ export interface ContentProps {
 }
 
 const mapStateToProps = (state: RootState) => {
-  if (state.appState.type == "APPCONTEXT_EMPTY") {
+  if (state.appState.empty) {
     throw 'Invalid state';
   }
   return { ...state.viewContext, selectedProjectId: state.appState.projectId };

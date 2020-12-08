@@ -1,5 +1,9 @@
-export type AppContext = AppContextReady | AppContextEmpty
+export type AppContextAction = AppContextReady | AppContextEmpty
 
+export interface AppState {
+    empty: boolean
+    projectId: string        
+}
 interface AppContextEmpty {
     type: 'APPCONTEXT_EMPTY'
 }

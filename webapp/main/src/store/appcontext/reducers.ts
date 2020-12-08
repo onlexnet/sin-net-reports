@@ -1,10 +1,14 @@
 import _ from "lodash";
-import { AppContext } from "./types";
+import { AppContextAction, AppState } from "./types";
 
-const initialState: AppContext = {
-    type: "APPCONTEXT_EMPTY"
+const initialState: AppState = {
+    empty: true,
+    projectId: 'invalid UUID [1]'
 }
 
-export const appContextReducer = (state = initialState, action: AppContext): AppContext => {
-    return action;
+export const appContextReducer = (state = initialState, action: AppContextAction): AppState => {
+    if (action.type == "APPCONTEXT_READY") {
+        return { empty: false, projectId: action.projectId };
+    }
+    return state;
 }

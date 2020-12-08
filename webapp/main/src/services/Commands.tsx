@@ -12,7 +12,7 @@ import { ActionEditUpdated, VIEWCONTEXT_ACTION_EDIT_UPDATED } from '../store/vie
 const overflowProps: IButtonProps = { ariaLabel: 'More commands' };
 
 const mapStateToProps = (state: RootState) => {
-  if (state.appState.type == "APPCONTEXT_EMPTY") {
+  if (state.appState.empty) {
     throw 'Invalid state';
   }
   
