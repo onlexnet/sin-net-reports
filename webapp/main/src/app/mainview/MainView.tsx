@@ -41,6 +41,11 @@ const LocalView: React.FC<Props> = (props) => {
         return (<p>No available projects. Please contact with your app provider.</p>);
     }
 
+    if (availableProjects.length > 1 ) {
+        return (<p>Too many available projects. Please contact with your app provider.</p>);
+    }
+
+    const project = availableProjects[0];
     return (
         <Router>
             <div className="ms-Grid" dir="ltr">
