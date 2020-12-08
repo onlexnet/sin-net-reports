@@ -15,7 +15,7 @@ import sinnet.ActionRepository;
 
 /** Fixme. */
 @Component
-public class ActionsQueryResolverSearch implements GraphQLResolver<ActionsMutation> {
+public class ActionsQuerySearch implements GraphQLResolver<ActionsQuery> {
 
     @Autowired
     private ActionRepository repository;
