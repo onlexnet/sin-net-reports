@@ -36,8 +36,9 @@ const LocalView: React.FC<Props> = (props) => {
         return (<p>Loading projects ...</p>);
     }
 
-    if (_.isEmpty(data)) {
-        return (<p>No available projects. PLease contact with your app provider.</p>);
+    const { availableProjects } = data;
+    if (availableProjects.length == 0 ) {
+        return (<p>No available projects. Please contact with your app provider.</p>);
     }
 
     return (
