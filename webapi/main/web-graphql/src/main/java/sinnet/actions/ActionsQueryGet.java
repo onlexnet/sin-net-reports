@@ -22,6 +22,7 @@ public class ActionsQueryGet implements GraphQLResolver<ActionsQuery> {
         return actionService
             .find(projectId, actionId)
             .map(it -> ServiceModel.builder()
+                .projectId(gcontext.getProjectId())
                 .entityId(it.getEntityId())
                 .entityVersion(it.getVersion())
                 .servicemanName(it.getValue().getWho().getValue())

@@ -39,6 +39,10 @@ const LocalView: React.FC<Props> = (props) => {
 
     const { data, loading, error } = useAvailableProjectsQuery();
 
+    if (error) {
+    return (<p>Error: {JSON.stringify(error)}</p>);
+    }
+
     if (!data) {
         return (<p>Loading projects ...</p>);
     }
