@@ -1,13 +1,15 @@
-import React from "react"
+import React, { MouseEventHandler } from "react"
 
 import { Separator } from 'office-ui-fabric-react/lib/Separator';
 import { mergeStyles } from 'office-ui-fabric-react/lib/Styling';
 import { Stack, IStackTokens, IStackStyles, IStackProps } from 'office-ui-fabric-react/lib/Stack';
-import { Button, IComboBoxOption, SelectableOptionMenuItemType, ComboBox, IComboBoxProps, ITextFieldStyles, TextField, Checkbox } from "office-ui-fabric-react";
+import { Button, IComboBoxOption, ComboBox, IComboBoxProps, ITextFieldStyles, TextField, Checkbox, PrimaryButton } from "office-ui-fabric-react";
 import { useConstCallback } from '@uifabric/react-hooks';
 import { useBoolean } from '@uifabric/react-hooks';
 import _ from "lodash";
 import { useGetUsers } from "../../api/useGetUsers";
+import { useAddNewCustomerMutation } from "../../Components/.generated/components";
+import { EntityId } from "../../store/actions/ServiceModel";
 
 
 const stackStyles: Partial<IStackStyles> = { root: { width: 650 } };
@@ -27,31 +29,17 @@ const HorizontalSeparatorStack = (props: { children: JSX.Element[] }) => (
     </>
 );
 
-const VerticalSeparatorStack = (props: { children: JSX.Element[] }) => (
-    <Stack horizontal horizontalAlign="space-evenly">
-        {React.Children.map(props.children, child => {
-            return (
-                <Stack horizontalAlign="center" tokens={stackTokens}>
-                    {child}
-                </Stack>
-            );
-        })}
-    </Stack>
-);
-
 const verticalStyle = mergeStyles({
     height: '200px',
 });
 
 const obsluga: IComboBoxOption[] = [
-    { key: 'Header1', text: 'First heading', itemType: SelectableOptionMenuItemType.Header },
     { key: 'A', text: 'Obsługiwany' },
     { key: 'B', text: 'Nie obsługiwany' },
     { key: 'C', text: 'Obsługa czasowo zawieszona' },
 ];
 
 const rozliczenia: IComboBoxOption[] = [
-    { key: 'Header1', text: 'First heading', itemType: SelectableOptionMenuItemType.Header },
     { key: 'A', text: 'Ryczałt' },
     { key: 'B', text: 'Godziny' },
 ];
@@ -61,6 +49,9 @@ const rozliczenia: IComboBoxOption[] = [
 const narrowTextFieldStyles: Partial<ITextFieldStyles> = { fieldGroup: { width: 100 } };
 
 type CustomerViewModel = {
+    Nazwa: string | undefined; 
+    Miejscowosc: string | undefined;
+    Adres: string | undefined;
     UmowaZNFZ: boolean;
     MaFilie: boolean;
     Lekarz: boolean;
@@ -82,8 +73,11 @@ type CustomerViewModel = {
     KomercjaNotatki: string | undefined;
 }
 
-export const CustomerView: React.FC<{}> = () => {
+interface CustomerViewProps {
+    id: EntityId
+}
 
+export const CustomerView: React.FC<CustomerViewProps> = props => {
     const users = useGetUsers();
     const comboBoxBasicOptions: IComboBoxOption[] = []
     users.forEach(user => {
@@ -104,6 +98,9 @@ export const CustomerView: React.FC<{}> = () => {
     );
 
     const [model, setModel] = React.useState<CustomerViewModel>({
+        Nazwa: undefined,
+        Miejscowosc: undefined,
+        Adres: undefined,
         UmowaZNFZ: false,
         MaFilie: false,
         Lekarz: false,
@@ -125,11 +122,6 @@ export const CustomerView: React.FC<{}> = () => {
         KomercjaNotatki: undefined,
     });
 
-    const [isChecked1, setIsChecked1] = React.useState(true);
-    const onChange1 = React.useCallback((ev?: React.FormEvent<HTMLElement>, checked?: boolean): void => {
-        setIsChecked1(!!checked);
-    }, []);
-
     const onChangeBoolean = (changer: (m: CustomerViewModel, current: boolean) => void) => {
         return (ev?: React.FormEvent<HTMLElement>, checked?: boolean): void => {
             const cloned = _.clone(model);
@@ -140,10 +132,9 @@ export const CustomerView: React.FC<{}> = () => {
 
     const onChangeText = (changer: (m: CustomerViewModel, current: string | undefined) => void) => {
         return (ev?: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newText?: string): void => {
-            const newMultiline = newText?.length ?? 0 > 50;
-            if (newMultiline !== multiline2) {
-                toggleMultiline2();
-            }
+            const cloned = _.clone(model);
+            changer(cloned, newText);
+            setModel(cloned);
         };
     }
 
@@ -155,11 +146,29 @@ export const CustomerView: React.FC<{}> = () => {
         }
     };
 
+    const [addNewCustomerMutation, { data, loading, error }] = useAddNewCustomerMutation();
+
+    const save: MouseEventHandler<PrimaryButton> = (event): void => {
+        debugger;
+        addNewCustomerMutation({
+            variables: {
+                projectId: props.id.projectId,
+                entry: {
+                    customerName: model.Nazwa ?? "Nazwa klienta",
+                    customerCityName: model.Miejscowosc,
+                    customerAddress: model.Adres
+                }
+            },
+        });
+    }
+
     return (
 
 
         <HorizontalSeparatorStack>
             <>
+                <Separator alignContent="start">Akcje</Separator>
+                <PrimaryButton text="Zapisz i wyjdź" onClick={save} />
                 <Separator alignContent="start">Dane ogólne: </Separator>
 
                 <div className="ms-Grid-row">
@@ -205,17 +214,26 @@ export const CustomerView: React.FC<{}> = () => {
 
                 <div className="ms-Grid-row">
                     <div className="ms-Grid-col ms-sm3 ms-smPush1">
-                        <TextField label="Nazwa" />
+                        <TextField label="Nazwa"
+                            value={model.Nazwa}
+                            placeholder="Nazwa klienta"
+                            onChange={onChangeText((m, v) => m.Nazwa = v)} />
                     </div>
                 </div>
                 <div className="ms-Grid-row">
                     <div className="ms-Grid-col ms-sm3 ms-smPush1">
-                        <TextField label="Miejscowość" />
+                        <TextField label="Miejscowość"
+                            value={model.Miejscowosc}
+                            placeholder="Miejscowość klienta"
+                            onChange={onChangeText((m, v) => m.Miejscowosc = v)} />
                     </div>
                 </div>
                 <div className="ms-Grid-row">
                     <div className="ms-Grid-col ms-sm3 ms-smPush1">
-                        <TextField label="Adres" />
+                        <TextField label="Adres"
+                            value={model.Adres}
+                            placeholder="Adres klienta"
+                            onChange={onChangeText((m, v) => m.Adres = v)} />
                     </div>
                 </div>
 
@@ -327,7 +345,6 @@ export const CustomerView: React.FC<{}> = () => {
                             multiline={true}
                             value={model.NfzNotes}
                             placeholder="Notatki NFZ"
-                            // eslint-disable-next-line react/jsx-no-bind
                             onChange={onChangeText((m, v) => m.NfzNotes = v)}
                         />
                     </div>

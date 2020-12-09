@@ -1,0 +1,9 @@
+mutation AddNewCustomer($projectId: ID!, $entry: CustomerEntry!) {
+  Customers(projectId: $projectId ) {
+    addNew(entry: $entry) {
+      projectId
+      entityId
+      entityVersion
+    }
+  }
+}

@@ -5,11 +5,11 @@ import { View as UnauthenticatedView } from "./AppUnauthenticated";
 import { View as InProgressView } from "./AppInProgress";
 import { Dispatch } from "redux";
 import { connect, ConnectedProps } from "react-redux";
-import { SessionState, SignInFlow } from "../store/session/types";
+import { SignInFlow } from "../store/session/types";
 import { initiateSession } from "../store/session/actions";
 import { RootState } from "../store/reducers";
 
-const mapStateToProps = (state: RootState): SessionState => {
+const mapStateToProps = (state: RootState) => {
   return state.auth;
 }
 const mapDispatchToProps = (dispatch: Dispatch) => {

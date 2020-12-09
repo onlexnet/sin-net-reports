@@ -17,8 +17,8 @@ type CustomersMutation {
 
 input CustomerEntry {
     customerName: String!
-    customerCityName: String!
-    customerAddress: String!
+    customerCityName: String
+    customerAddress: String
 }
 
 type CustomerEntity {
@@ -27,6 +27,6 @@ type CustomerEntity {
 }
 type CustomerModel {
     customerName: String!
-    customerCityName: String!
-    customerAddress: String!
+    customerCityName: String
+    customerAddress: String
 }

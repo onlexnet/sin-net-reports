@@ -89,6 +89,7 @@ public class CustomerService extends AbstractVerticle implements TopLevelVerticl
 
     private static CustomerData map(Entity<CustomerValue> item) {
         return CustomerData.builder()
+            .projectId(item.getProjectId())
             .entityId(item.getEntityId())
             .entityVersion(item.getVersion())
             .value(item.getValue())
