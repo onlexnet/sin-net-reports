@@ -75,6 +75,7 @@ type CustomerViewModel = {
 
 interface CustomerViewProps {
     id: EntityId
+    itemSaved: () => void
 }
 
 export const CustomerView: React.FC<CustomerViewProps> = props => {
@@ -148,8 +149,11 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
 
     const [addNewCustomerMutation, { data, loading, error }] = useAddNewCustomerMutation();
 
-    const save: MouseEventHandler<PrimaryButton> = (event): void => {
-        debugger;
+    if (data) {
+        props.itemSaved();
+    }
+
+    const saveEndExit: MouseEventHandler<PrimaryButton> = (event): void => {
         addNewCustomerMutation({
             variables: {
                 projectId: props.id.projectId,
@@ -168,7 +172,7 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
         <HorizontalSeparatorStack>
             <>
                 <Separator alignContent="start">Akcje</Separator>
-                <PrimaryButton text="Zapisz i wyjdź" onClick={save} />
+                <PrimaryButton text="Zapisz i wyjdź" onClick={saveEndExit} />
                 <Separator alignContent="start">Dane ogólne: </Separator>
 
                 <div className="ms-Grid-row">

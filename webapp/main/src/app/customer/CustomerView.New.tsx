@@ -5,6 +5,7 @@ import { RootState } from "../../store/reducers";
 import { Dispatch } from "redux";
 import { connect, ConnectedProps } from "react-redux";
 import { CustomerView } from "./CustomerView";
+import { RouteComponentProps } from "react-router-dom";
 
 
 const mapStateToProps = (state: RootState) => {
@@ -21,7 +22,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
 const connector = connect(mapStateToProps, mapDispatchToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
   
-interface CustomerViewNewProps extends PropsFromRedux {
+interface CustomerViewNewProps extends PropsFromRedux, RouteComponentProps  {
 }
 
   
@@ -31,7 +32,8 @@ export const CustomerViewNewLocal: React.FC<CustomerViewNewProps> = props => {
         entityId: uuid(),
         entityVersion: 1
     }
-    return <CustomerView id={id}/>;
+    const itemSaved = () => props.history.goBack();
+    return <CustomerView id={id} itemSaved={itemSaved}/>;
 }
 
 export const CustomerViewNew = connect(mapStateToProps, mapDispatchToProps)(CustomerViewNewLocal);

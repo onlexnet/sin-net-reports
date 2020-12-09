@@ -27,10 +27,7 @@ export const Customers: React.FC<CustomersProps> = (props) => {
     ];
 
 
-    const comboBoxMultiStyle = { maxWidth: 300, display: 'block', marginTop: '10px' };
-
     const comboBoxRef = React.useRef<IComboBox>(null);
-    const onOpenClick = React.useCallback(() => comboBoxRef.current?.focus(true), []);
 
 
     return (
@@ -49,19 +46,6 @@ export const Customers: React.FC<CustomersProps> = (props) => {
                 <div className="ms-Grid-row">
                     <div className="ms-Grid-col ms-sm12">
                         <TextField placeholder="Filtrowanie: wprowadź filtr wyszukiwania ..." />
-                    </div>
-                </div>
-                <div className="ms-Grid-row">
-                    <div className="ms-Grid-col ms-sm3" />
-                    <div className="ms-Grid-col ms-sm3">
-                        <ComboBox
-                            componentRef={comboBoxRef}
-                            defaultSelectedKey="C"
-                            label="Basic ComboBox"
-                            allowFreeform
-                            autoComplete="on"
-                            options={comboBoxBasicOptions}
-                        />
                     </div>
                 </div>
 
