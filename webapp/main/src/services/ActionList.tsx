@@ -99,28 +99,9 @@ type PropsFromRedux = ConnectedProps<typeof connector>
 
 const ConnectedContent: React.FC<PropsFromRedux> = props => {
 
-  const _onColumnClick = (column: IColumn, columns: TypedColumn[]): void => {
-    const newColumns: IColumn[] = columns.slice();
-    const currColumn: IColumn = newColumns.filter(currCol => column.key === currCol.key)[0];
-    newColumns.forEach((newCol: IColumn) => {
-      if (newCol === currColumn) {
-        currColumn.isSortedDescending = !currColumn.isSortedDescending;
-        currColumn.isSorted = true;
-        setState({
-          ...state,
-          announcedMessage: `${currColumn.name} is sorted ${currColumn.isSortedDescending ? "descending" : "ascending"}`
-        });
-      } else {
-        newCol.isSorted = false;
-        newCol.isSortedDescending = true;
-      }
-    })
-  };
-
   const initialColumns: TypedColumn[] = [
     {
       key: "column4", name: "Pracownik", fieldName: "servicemanName", minWidth: 70, maxWidth: 90, isResizable: true, isCollapsible: true, data: "string",
-      onColumnClick: (ev, col) => _onColumnClick(col, state.columns),
       onRender: (item: IDocument) => {
         return <span>{item.servicemanName}</span>;
       },
@@ -128,7 +109,6 @@ const ConnectedContent: React.FC<PropsFromRedux> = props => {
     },
     {
       key: "column3", name: "Data", fieldName: "when", minWidth: 70, maxWidth: 90, isResizable: true,
-      onColumnClick: (ev, col) => _onColumnClick(col, state.columns),
       data: "date",
       onRender: (item: IDocument) => {
         const { year, month, day } = item.when;
@@ -137,26 +117,20 @@ const ConnectedContent: React.FC<PropsFromRedux> = props => {
       isPadded: true
     },
     {
-      key: "column2", name: "Klient", fieldName: "customerName", minWidth: 210, maxWidth: 350, isRowHeader: true, isResizable: true, isSorted: true, isSortedDescending: false,
-      sortAscendingAriaLabel: "Sorted A to Z",
-      sortDescendingAriaLabel: "Sorted Z to A",
-      onColumnClick: (ev, col) => _onColumnClick(col, state.columns),
+      key: "column2", name: "Klient", fieldName: "customerName", minWidth: 210, maxWidth: 350, isRowHeader: true, isResizable: true,
       data: "string",
       isPadded: true
     },
     {
       key: "column6", name: "Usługa", fieldName: "description", minWidth: 300, maxWidth: 300, isResizable: true, isCollapsible: true,
       data: "number",
-      onColumnClick: (ev, col) => _onColumnClick(col, state.columns),
     },
     {
       key: "column5", name: "Czas", fieldName: "duration", minWidth: 70, maxWidth: 90, isResizable: true, isCollapsible: true, data: "number",
-      onColumnClick: (ev, col) => _onColumnClick(col, state.columns),
       onRender: (item: IDocument) => <Duration duration={item.duration} />
     },
     {
       key: "column7", name: "Dojazd", fieldName: "distance", minWidth: 70, maxWidth: 90, isResizable: true, isCollapsible: true, data: "number",
-      onColumnClick: (ev, col) => _onColumnClick(col, state.columns),
       onRender: (item: IDocument) => {
         return <span>{item.distance}</span>;
       }
@@ -192,8 +166,10 @@ const ConnectedContent: React.FC<PropsFromRedux> = props => {
     refetch();
   }
 
-  var items = _.chain(data?.Actions.search.items)
+  var itemsOrderBy: (keyof IDocument)[] = ['servicemanName', 'when', 'entityId'];
+  var items: ServiceAppModel[] = _.chain(data?.Actions.search.items)
     .map(it => toActionModel(it))
+    .orderBy(itemsOrderBy)
     .value();
 
   const stackTokens: IStackTokens = { childrenGap: 40 };
