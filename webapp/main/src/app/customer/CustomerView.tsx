@@ -3,7 +3,7 @@ import React, { MouseEventHandler } from "react"
 import { Separator } from 'office-ui-fabric-react/lib/Separator';
 import { mergeStyles } from 'office-ui-fabric-react/lib/Styling';
 import { Stack, IStackTokens, IStackStyles, IStackProps } from 'office-ui-fabric-react/lib/Stack';
-import { Button, IComboBoxOption, ComboBox, IComboBoxProps, ITextFieldStyles, TextField, Checkbox, PrimaryButton } from "office-ui-fabric-react";
+import { Button, IComboBoxOption, ComboBox, IComboBoxProps, ITextFieldStyles, TextField, Checkbox, PrimaryButton, IComboBox } from "office-ui-fabric-react";
 import { useConstCallback } from '@uifabric/react-hooks';
 import { useBoolean } from '@uifabric/react-hooks';
 import _ from "lodash";
@@ -49,6 +49,10 @@ const rozliczenia: IComboBoxOption[] = [
 const narrowTextFieldStyles: Partial<ITextFieldStyles> = { fieldGroup: { width: 100 } };
 
 type CustomerViewModel = {
+    Operator: string | undefined;
+    Obsluga: string | undefined;
+    Rozliczenie: string | undefined;
+    Dystans: number;
     Nazwa: string | undefined; 
     Miejscowosc: string | undefined;
     Adres: string | undefined;
@@ -86,9 +90,6 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
         comboBoxBasicOptions.push(userItem);
     })
 
-    const [selectedKey, setSelectedKey] = React.useState<string | undefined>('');
-    const onChange: IComboBoxProps['onChange'] = (event, option) => setSelectedKey(option!.key as string);
-
     const [secondTextFieldValue, setSecondTextFieldValue] = React.useState('');
     const onChangeSecondTextFieldValue = useConstCallback(
         (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
@@ -99,6 +100,10 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
     );
 
     const [model, setModel] = React.useState<CustomerViewModel>({
+        Operator: undefined,
+        Obsluga: undefined,
+        Rozliczenie: undefined,
+        Dystans: 0,
         Nazwa: undefined,
         Miejscowosc: undefined,
         Adres: undefined,
@@ -138,6 +143,15 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
             setModel(cloned);
         };
     }
+
+    const onChangeCombo = (changer: (m: CustomerViewModel, optionKey?: string) => void) => {
+        return (event: React.FormEvent<IComboBox>, option?: IComboBoxOption, index?: number, value?: string): void => {
+          const cloned = _.clone(model);
+          changer(cloned, option!.key as string);
+          setModel(cloned);
+        }
+    }
+
 
     const [multiline2, { toggle: toggleMultiline2 }] = useBoolean(false);
     const onChange2 = (ev?: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newText?: string): void => {
@@ -179,10 +193,7 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
                     <div className="ms-Grid-col ms-smPush1 ms-sm4 ">
                         <ComboBox
                             label="Operator"
-                            defaultSelectedKey="B"
-                            onChange={onChange}
-                            selectedKey={selectedKey}
-                            errorMessage={selectedKey === 'B' ? 'B is not an allowed option' : undefined}
+                            onChange={onChangeCombo((m, v) => m.Operator = v)}
                             options={comboBoxBasicOptions}
                         />
                     </div>

@@ -10,6 +10,9 @@ import io.vertx.core.Future;
 import io.vertx.core.Promise;
 import io.vertx.pgclient.PgPool;
 import io.vertx.sqlclient.Tuple;
+import io.vertx.sqlclient.templates.SqlTemplate;
+import lombok.Builder;
+import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 import sinnet.models.CustomerValue;
 import sinnet.models.Entity;
@@ -27,22 +30,46 @@ public class CustomerRepositoryImpl implements CustomerRepository {
         this.pgClient = pgclient;
     }
 
-    public Future<Boolean> save(EntityId id, CustomerValue entity) {
-        var promise = Promise.<Boolean>promise();
-        var values = Tuple.of(id.getProjectId(),
-                              id.getId(),
-                              id.getVersion(),
-                              entity.getCustomerName().getValue(),
-                              entity.getCustomerCityName().getValue(),
-                              entity.getCustomerAddress());
-        pgClient
-            .preparedQuery("INSERT INTO"
-                         + " customers (project_id, entity_id, entity_version, customer_name, customer_city_name, customer_address)"
-                         + " values ($1, $2, $3, $4, $5, $6)")
-            .execute(values, ar -> {
-                    if (ar.succeeded()) promise.complete(Boolean.TRUE);
+    @Value
+    @Builder
+    static class SaveEntry {
+        private UUID projectId;
+        private UUID entityId;
+        private int entityVersion;
+        private String customerName;
+        private String customerCityName;
+        private String customerAddress;
+    }
+
+    public Future<EntityId> save(EntityId id, CustomerValue entity) {
+        var promise = Promise.<EntityId>promise();
+        var entry = SaveEntry.builder()
+            .projectId(id.getProjectId())
+            .entityId(id.getId())
+            .entityVersion(id.getVersion())
+            .customerName(entity.getCustomerName().getValue())
+            .customerCityName(entity.getCustomerCityName().getValue())
+            .customerAddress(entity.getCustomerAddress())
+            .build();
+        var insertTemplate = "INSERT INTO "
+            + "customers (project_id, entity_id, entity_version, customer_name, customer_city_name, customer_address) "
+            + "VALUES (#{projectId}, #{entityId}, #{entityVersion}+1, #{customerName}, #{customerCityName}, #{customerAddress})";
+        var deleteTemplate = "DELETE FROM customers WHERE project_id=#{project_id} AND entity_id=#{entity_id} AND entity_version=#{entity_version}";
+        pgClient.withTransaction(client -> SqlTemplate
+                .forUpdate(pgClient, insertTemplate)
+                .mapFrom(SaveEntry.class)
+                .execute(entry)
+                .flatMap(res -> SqlTemplate
+                    .forUpdate(client, deleteTemplate)
+                    .mapFrom(SaveEntry.class)
+                    .execute(entry)
+                    .map(Boolean.TRUE))
+                .onComplete(ar -> {
+                    var result = EntityId.of(id.getProjectId(), id.getId(), id.getVersion() + 1);
+                    if (ar.succeeded()) promise.complete(result);
                     else promise.fail(ar.cause());
-                });
+                })
+        );
         return promise.future();
     }
 
@@ -109,6 +136,4 @@ public class CustomerRepositoryImpl implements CustomerRepository {
             });
         return promise.future();
     }
-
-
 }

@@ -8,7 +8,9 @@ import sinnet.models.Entity;
 import sinnet.models.EntityId;
 
 interface CustomerRepository {
-    Future<Boolean> save(EntityId id, CustomerValue entity);
+
+    Future<EntityId> save(EntityId id, CustomerValue entity);
+
     Future<Entity<CustomerValue>> get(EntityId id);
 
     /* Returns success with found Entity, otherwise failed future. */

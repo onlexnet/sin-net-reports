@@ -35,19 +35,20 @@ public class CustomerRepositoryTests {
 
     @Test
     void saveMinModel() {
-        var result = Sync
-            .when(() -> {
-                var projectId = UUID.randomUUID();
-                return projectRepository.save(projectId).map(it -> projectId); })
-            .and((projectId) -> {
+        var projectId = UUID.randomUUID();
+        var givenEntityId = EntityId.anyNew(projectId);
+        var actual = Sync
+            .when(() -> projectRepository.save(projectId))
+            .and(ignored -> {
                 var model = CustomerValue.builder()
                     .customerName(Name.of("some not-empty name"))
                     .build();
                 return repository
-                       .save(EntityId.anyNew(projectId), model); })
+                       .save(givenEntityId, model); })
             .get();
 
-        Assertions.assertThat(result).isEqualTo(Boolean.TRUE);
+        var expected = EntityId.of(projectId, givenEntityId.getId(), 2);
+        Assertions.assertThat(actual).isEqualTo(expected);
     }
 
     @Test
@@ -94,5 +95,9 @@ public class CustomerRepositoryTests {
 
         var actual = List.ofAll(list).map(it -> it.getEntityId());
         assertThat(actual).contains(id1.getId(), id2.getId());
+    }
+
+    public void shouldNotDeleteLastVersionIfNewSaveFailed() {
+        assertThat(true).isFalse();
     }
 }

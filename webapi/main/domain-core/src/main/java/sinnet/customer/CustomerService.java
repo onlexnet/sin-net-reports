@@ -14,7 +14,7 @@ import io.vertx.core.json.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 import sinnet.TopLevelVerticle;
 import sinnet.VertxHandlerTemplate;
-import sinnet.bus.commands.RegisterNewCustomer;
+import sinnet.bus.commands.UpdateCustomerInfo;
 import sinnet.bus.query.FindCustomer;
 import sinnet.bus.query.FindCustomers;
 import sinnet.bus.query.FindCustomers.Ask;
@@ -38,24 +38,30 @@ public class CustomerService extends AbstractVerticle implements TopLevelVerticl
     @Override
     public void start(Promise<Void> startPromise) throws Exception {
         // TODO handle when registration of consumers is ready
-        vertx.eventBus().consumer(RegisterNewCustomer.ADDRESS, this::registerNewCustomer);
+        vertx.eventBus().consumer(UpdateCustomerInfo.ADDRESS, new RegisterNewCustomerHandler());
         vertx.eventBus().consumer(FindCustomer.Ask.ADDRESS, this::findCustomer);
         vertx.eventBus().consumer(FindCustomers.Ask.ADDRESS, new FindCustomersHandler());
         super.start(startPromise);
     }
 
-    private void registerNewCustomer(Message<JsonObject> message) {
-        var msg = JsonObject.mapFrom(message.body()).mapTo(RegisterNewCustomer.class);
-        var eid = EntityId.anyNew(msg.getProjectId());
-        var value = CustomerValue.builder()
-                                 .customerName(Name.of(msg.getCustomerName()))
-                                 .customerCityName(Name.of(msg.getCustomerCityName()))
-                                 .customerAddress(msg.getCustomerAddress())
-                                 .build();
-        repository.save(eid, value).onComplete(it -> {
-            var result = sinnet.bus.EntityId.of(eid).json();
-            message.reply(result);
-        });
+    final class RegisterNewCustomerHandler extends VertxHandlerTemplate<UpdateCustomerInfo, sinnet.bus.EntityId> {
+
+        RegisterNewCustomerHandler() {
+            super(UpdateCustomerInfo.class);
+        }
+
+        @Override
+        protected Future<sinnet.bus.EntityId> onRequest(UpdateCustomerInfo msg) {
+            var eid = EntityId.of(msg.getId().getProjectId(), msg.getId().getId(), msg.getId().getVersion());
+            var value = CustomerValue.builder()
+                                     .customerName(Name.of(msg.getCustomerName()))
+                                     .customerCityName(Name.of(msg.getCustomerCityName()))
+                                     .customerAddress(msg.getCustomerAddress())
+                                     .build();
+            return repository
+                .save(eid, value)
+                .map(it -> new sinnet.bus.EntityId(it.getProjectId(), it.getId(), it.getVersion()));
+        }
     }
 
     private void findCustomer(Message<JsonObject> message) {
@@ -74,7 +80,7 @@ public class CustomerService extends AbstractVerticle implements TopLevelVerticl
                 });
     }
 
-    class FindCustomersHandler extends VertxHandlerTemplate<FindCustomers.Ask, FindCustomers.Reply> {
+    final class FindCustomersHandler extends VertxHandlerTemplate<FindCustomers.Ask, FindCustomers.Reply> {
         FindCustomersHandler() {
             super(FindCustomers.Ask.class);
         }

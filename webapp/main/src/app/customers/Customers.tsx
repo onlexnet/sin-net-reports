@@ -1,6 +1,6 @@
 import React from "react";
 import { IComboBoxOption, SelectableOptionMenuItemType, IComboBox, TextField, PrimaryButton, Separator, DetailsList, IColumn } from "office-ui-fabric-react";
-import { RouteComponentProps } from "react-router-dom";
+import { Link, RouteComponentProps, useRouteMatch } from "react-router-dom";
 import { routing } from "../../Routing";
 import { HorizontalSeparatorStack } from "../../Components/HorizontalSeparatorStack";
 import { useListCustomers, UseListCustomersItem } from "../../api/useListCustomers";
@@ -52,9 +52,9 @@ const CustomersLocal: React.FC<CustomersProps> = (props) => {
     const items = useListCustomers(props.appState.projectId);
     const columns: TypedColumn[] = [
         {
-            key: "column1", name: "Pracownik", fieldName: "name", minWidth: 70, maxWidth: 90, isResizable: true, isCollapsible: true, data: "string",
+            key: "column1", name: "Klient", fieldName: "name", minWidth: 70, maxWidth: 90, isResizable: true, isCollapsible: true, data: "string",
             onRender: (item: UseListCustomersItem) => {
-                return <span>{item.name}</span>;
+                return <Link to={`/customers/${item.name}`}>{item.name}</Link>;
             },
             isPadded: true
         }

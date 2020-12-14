@@ -12,6 +12,7 @@ import { routing } from "../../Routing";
 import { Main } from "../../services";
 import { AppContextAction } from "../../store/appcontext/types";
 import { RootState } from "../../store/reducers";
+import { CustomerViewEdit } from "../customer/CustomerView.Edit";
 import { CustomerViewNew } from "../customer/CustomerView.New";
 import { Customers } from "../customers/Customers";
 
@@ -74,6 +75,7 @@ const LocalView: React.FC<Props> = (props) => {
                         <Route path={routing.customers} component={Customers} />
                         <Route path={routing.reports} component={Reports} />
                         <Route path={routing.newCustomer} component={CustomerViewNew} />
+                        <Route path={routing.editCustomer} component={CustomerViewEdit} />
                         <Route path={routing.debug} render={(localProps) => <Debug {...props} />} />
                         <Route path="/" exact component={Home} />
                     </div>
