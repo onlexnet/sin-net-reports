@@ -16,7 +16,7 @@ public interface FindCustomers {
         /** Address used to send the query to it's handler. */
         public static final String ADDRESS = "query.FindCustomers";
 
-        private boolean ignored;
+        private UUID projectId;
     }
 
     @Data

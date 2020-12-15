@@ -100,8 +100,8 @@ public class CustomerRepositoryImpl implements CustomerRepository {
     }
 
     @Override
-    public Future<Iterable<Entity<CustomerValue>>> list() {
-        return get("1=1", Tuple.tuple())
+    public Future<Iterable<Entity<CustomerValue>>> list(UUID projectId) {
+        return get("project_id=$1", Tuple.of(projectId))
             .map(it -> it);
     }
 

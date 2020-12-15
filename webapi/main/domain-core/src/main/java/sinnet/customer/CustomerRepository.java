@@ -9,12 +9,17 @@ import sinnet.models.EntityId;
 
 interface CustomerRepository {
 
-    Future<EntityId> save(EntityId id, CustomerValue entity);
+    /**
+     * Saves a new version of Entity identified by given eid.
+     * <p>
+     * @return new EID for just stored entity.
+     */
+    Future<EntityId> save(EntityId eid, CustomerValue value);
 
     Future<Entity<CustomerValue>> get(EntityId id);
 
     /* Returns success with found Entity, otherwise failed future. */
     Future<Entity<CustomerValue>> get(UUID projectId, UUID id);
 
-    Future<Iterable<Entity<CustomerValue>>> list();
+    Future<Iterable<Entity<CustomerValue>>> list(UUID projectId);
 }

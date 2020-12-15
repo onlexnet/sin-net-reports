@@ -1,17 +1,19 @@
 package sinnet;
 
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import io.vavr.control.Try;
 import io.vertx.core.Future;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class Sync {
 
-    public static <T> AsyncStep<T> when(Supplier<Future<T>> action) {
+    public static <T> AsyncStep<T> of(Supplier<Future<T>> action) {
         var exitGuard = new CompletableFuture<T>();
         action.get()
             .onSuccess(it -> exitGuard.complete(it))
@@ -43,5 +45,10 @@ public class Sync {
         public T get() {
             return chainStep.join();
         }
+
+        public Try<T> tryGet() {
+            return Try.of(this::get);
+        }
+
     }
 }

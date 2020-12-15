@@ -41,12 +41,12 @@ public class ActionRepositoryTests {
     @Test
     public void myTest() {
         var projectId = UUID.randomUUID();
-        Sync.when(() -> projectRepository.save(projectId));
+        Sync.of(() -> projectRepository.save(projectId));
 
         var now = Dates.gen().head();
-        Sync.when(() -> sut.find(projectId, now, now));
+        Sync.of(() -> sut.find(projectId, now, now));
 
-        Sync.when(() -> sut.find(projectId, now, now))
+        Sync.of(() -> sut.find(projectId, now, now))
             .checkpoint(actual -> Assumptions.assumeThat(actual).isEmpty());
 
         var newEntity = ActionValue.builder()
@@ -55,7 +55,7 @@ public class ActionRepositoryTests {
             .whom(Name.of("some Customer name"))
             .build();
 
-        Sync.when(() -> sut.save(EntityId.anyNew(projectId), newEntity))
+        Sync.of(() -> sut.save(EntityId.anyNew(projectId), newEntity))
             .and(it -> sut.save(EntityId.anyNew(projectId), newEntity))
             .and(it -> sut.save(EntityId.anyNew(projectId), newEntity))
             .and(it -> sut.find(projectId, now, now))
@@ -74,7 +74,7 @@ public class ActionRepositoryTests {
     @Test
     public void shouldSaveFullModel() {
         var projectId = UUID.randomUUID();
-        Sync.when(() -> projectRepository.save(projectId));
+        Sync.of(() -> projectRepository.save(projectId));
 
         var now = Dates.gen().head();
         var newEntity = ActionValue.builder()
@@ -87,7 +87,7 @@ public class ActionRepositoryTests {
             .build();
 
         Sync
-            .when(() -> sut.save(EntityId.anyNew(projectId), newEntity))
+            .of(() -> sut.save(EntityId.anyNew(projectId), newEntity))
             .checkpoint(actual -> assertThat(actual).isTrue())
             .and(it -> sut.find(projectId, now, now))
             .checkpoint(actual -> {
@@ -107,7 +107,7 @@ public class ActionRepositoryTests {
     public void shouldUpdateFullModel() {
         var now = Dates.gen().head();
         var projectId = UUID.randomUUID();
-        Sync.when(() -> projectRepository.save(projectId));
+        Sync.of(() -> projectRepository.save(projectId));
 
         var newEntity = ActionValue.builder()
             .when(Dates.gen().head())
@@ -123,7 +123,7 @@ public class ActionRepositoryTests {
 
         var entityId = EntityId.anyNew(projectId);
         Sync
-            .when(() -> sut.save(entityId, newEntity))
+            .of(() -> sut.save(entityId, newEntity))
             .checkpoint(it -> assertThat(it).isTrue())
             .and(it -> sut.update(entityId, updateEntity))
             .and(it -> sut.find(projectId, now, now))
@@ -144,7 +144,7 @@ public class ActionRepositoryTests {
     public void shouldSaveMinModel() {
         var now = Dates.gen().head();
         var projectId = UUID.randomUUID();
-        Sync.when(() -> projectRepository.save(projectId));
+        Sync.of(() -> projectRepository.save(projectId));
 
         var newEntity = ActionValue.builder()
             .when(now)
@@ -152,7 +152,7 @@ public class ActionRepositoryTests {
 
         var entityId = EntityId.anyNew(projectId);
         Sync
-            .when(() -> sut.save(entityId, newEntity))
+            .of(() -> sut.save(entityId, newEntity))
             .checkpoint(it -> assertThat(it).isTrue())
             .and(it -> sut.find(projectId, entityId.getId()))
             .checkpoint(actual -> {

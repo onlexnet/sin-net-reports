@@ -87,7 +87,8 @@ public class CustomerService extends AbstractVerticle implements TopLevelVerticl
 
         @Override
         protected Future<FindCustomers.Reply> onRequest(Ask request) {
-            return repository.list()
+            var projectId = request.getProjectId();
+            return repository.list(projectId)
                 .map(it -> Stream.ofAll(it).map(CustomerService::map).toJavaArray(CustomerData[]::new))
                 .map(it -> new FindCustomers.Reply(it));
         }

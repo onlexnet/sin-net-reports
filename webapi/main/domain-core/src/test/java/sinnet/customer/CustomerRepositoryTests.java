@@ -14,6 +14,7 @@ import org.springframework.test.context.TestPropertySource;
 
 import io.vavr.collection.List;
 import io.vertx.core.CompositeFuture;
+import lombok.experimental.UtilityClass;
 import sinnet.AppTestContext;
 import sinnet.Sync;
 import sinnet.models.CustomerValue;
@@ -38,11 +39,9 @@ public class CustomerRepositoryTests {
         var projectId = UUID.randomUUID();
         var givenEntityId = EntityId.anyNew(projectId);
         var actual = Sync
-            .when(() -> projectRepository.save(projectId))
+            .of(() -> projectRepository.save(projectId))
             .and(ignored -> {
-                var model = CustomerValue.builder()
-                    .customerName(Name.of("some not-empty name"))
-                    .build();
+                var model = Given.minValidModel();
                 return repository
                        .save(givenEntityId, model); })
             .get();
@@ -53,28 +52,15 @@ public class CustomerRepositoryTests {
 
     @Test
     void saveFullModel() {
-
         var projectId = UUID.randomUUID();
+        Sync.of(() -> projectRepository.save(projectId));
+
         var someId = EntityId.anyNew(projectId);
-        var model = CustomerValue.builder()
-            .customerName(Name.of("some not-empty name"))
-            .customerCityName(Name.of("some city"))
-            .customerAddress("Some address")
-            .build();
+        var model = Given.fullModel();
 
-        Sync
-            .when(() -> projectRepository.save(projectId))
-            .and(ignored -> repository.save(someId, model))
-            .checkpoint(it -> {
-                Assertions.assertThat(it).isEqualTo(Boolean.TRUE); })
-            .and(it -> repository.get(someId))
-            .checkpoint(it -> Assertions.assertThat(it.getValue()).isEqualTo(model));
-    }
-
-    private static CustomerValue newModel(UUID projectId) {
-        return CustomerValue.builder()
-                                 .customerName(Name.of("Non-epty name" + UUID.randomUUID()))
-                                 .build();
+        Sync.of(() -> repository.save(someId, model))
+            .and(it -> repository.get(it))
+            .checkpoint(it -> assertThat(it.getValue()).isEqualTo(model));
     }
 
     @Test
@@ -83,21 +69,75 @@ public class CustomerRepositoryTests {
         var id1 = EntityId.anyNew(projectId);
         var id2 = EntityId.anyNew(projectId);
         var list = Sync
-            .when(() -> projectRepository.save(projectId))
+            .of(() -> projectRepository.save(projectId))
             .and(ignored -> {
-                var someModel = newModel(projectId);
+                var someModel = Given.minValidModel();
                 return CompositeFuture
                     .all(repository.save(id1, someModel),
                         repository.save(id2, someModel))
                     .map(it -> true); })
-            .and(it -> repository.list())
+            .and(it -> repository.list(projectId))
             .get();
 
         var actual = List.ofAll(list).map(it -> it.getEntityId());
         assertThat(actual).contains(id1.getId(), id2.getId());
     }
 
+    @Test
     public void shouldNotDeleteLastVersionIfNewSaveFailed() {
-        assertThat(true).isFalse();
+        var projectId = UUID.randomUUID();
+        Sync.of(() -> projectRepository.save(projectId));
+
+        var validModel = Given.minValidModel();
+        var eid = EntityId.anyNew(projectId);
+        var newEid = Sync.of(() -> repository.save(eid, validModel)).get();
+
+        var invalidModel = Given.invalidModel();
+        Assertions
+            .catchThrowable(() -> Sync.of(() -> repository.save(newEid, invalidModel)).get());
+
+        var list = Sync.of(() -> repository.list(projectId)).get();
+        Assertions
+            .assertThat(list).containsOnly(validModel.withId(newEid));
+
+    }
+
+    @Test
+    public void shouldNotSaveWhenVersionIsNotNext() {
+        var projectId = UUID.randomUUID();
+        Sync.of(() -> projectRepository.save(projectId));
+
+        var validModel = Given.minValidModel();
+        var eid = EntityId.anyNew(projectId);
+        var nextId = Sync.of(() -> repository.save(eid, validModel)).get();
+
+        var invalidEid = EntityId.of(nextId.getProjectId(), nextId.getId(), nextId.getVersion() + 1);
+        Sync.of(() -> repository.save(invalidEid, validModel)).tryGet();
+
+        Sync
+            .of(() -> repository.list(projectId))
+            .checkpoint(it -> Assertions.assertThat(it).containsOnly(validModel.withId(nextId)));
+    }
+}
+
+@UtilityClass
+class Given {
+    static CustomerValue minValidModel() {
+        return CustomerValue.builder()
+        .customerName(Name.of("some not-empty name"))
+        .build();
+    }
+
+    static CustomerValue invalidModel() {
+        return CustomerValue.builder()
+        .build();
+    }
+
+    static CustomerValue fullModel() {
+        return CustomerValue.builder()
+        .customerName(Name.of("some not-empty name"))
+        .customerCityName(Name.of("some city"))
+        .customerAddress("Some address")
+        .build();
     }
 }

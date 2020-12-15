@@ -6,7 +6,7 @@
     <changeSet author="siudeks" id="20201124-1">  
         <createTable tableName="customers">
             <column name="entity_id" type="UUID">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="customers_PK"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="customers_PK" deferrable="true" initiallyDeferred="true"/>
             </column>
             <column name="entity_version" type="INTEGER">
                 <constraints nullable="false" />
