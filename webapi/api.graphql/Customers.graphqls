@@ -12,8 +12,8 @@ type CustomersQuery {
 }
 
 type CustomersMutation {
-    reserve: MyEntity
-    save(id: Entity, entry: CustomerEntry): MyEntity!
+    reserve: SomeEntity!
+    save(id: MyEntity, entry: CustomerEntry): SomeEntity!
 }
 
 input CustomerEntry {

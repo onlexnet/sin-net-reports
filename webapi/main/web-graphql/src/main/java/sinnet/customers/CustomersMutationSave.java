@@ -2,6 +2,8 @@ package sinnet.customers;
 
 import java.util.concurrent.CompletableFuture;
 
+import com.google.common.base.Objects;
+
 import org.springframework.stereotype.Component;
 
 import graphql.GraphQLException;
@@ -19,13 +21,14 @@ public class CustomersMutationSave extends AskTemplate<UpdateCustomerInfo, Entit
         super(UpdateCustomerInfo.ADDRESS, EntityId.class);
     }
 
-    CompletableFuture<SomeEntity> save(CustomersMutation gcontext, EntityId id, CustomerEntry entry) {
-        if (id.getProjectId() != gcontext.getProjectId()) {
+    CompletableFuture<SomeEntity> save(CustomersMutation gcontext, SomeEntity id, CustomerEntry entry) {
+        if (!Objects.equal(id.getProjectId(), gcontext.getProjectId())) {
             throw new GraphQLException("Invalid project id");
         }
 
+        var eid = new EntityId(id.getProjectId(), id.getEntityId(), id.getEntityVersion());
         var cmd = UpdateCustomerInfo.builder()
-            .id(id)
+            .id(eid)
             .customerName(entry.getCustomerName())
             .customerCityName(entry.getCustomerCityName())
             .customerAddress(entry.getCustomerAddress())

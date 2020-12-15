@@ -19,7 +19,7 @@ class CustomersQueryList extends AskTemplate<FindCustomers.Ask, FindCustomers.Re
     }
 
     CompletableFuture<List<CustomerEntity>> list(CustomersQuery gcontext) {
-        var ask = new FindCustomers.Ask();
+        var ask = new FindCustomers.Ask(gcontext.getProjectId());
         return super.ask(ask)
             .thenApply(it -> List.of(it.getData())
                                  .map(o -> {

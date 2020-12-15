@@ -1,6 +1,16 @@
-mutation AddNewCustomer($projectId: ID!, $entry: CustomerEntry!) {
-  Customers(projectId: $projectId ) {
-    addNew(entry: $entry) {
+mutation ReserveCustomer($projectId: ID!) {
+  Customers(projectId: $projectId) {
+    reserve {
+      projectId
+      entityId
+      entityVersion
+		}
+  }
+}
+
+mutation SaveCustomer($projectId: ID!, $id: MyEntity!, $entry: CustomerEntry!) {
+  Customers(projectId: $projectId) {
+    save(id: $id, entry: $entry) {
       projectId
       entityId
       entityVersion

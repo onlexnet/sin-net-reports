@@ -4,7 +4,13 @@ interface Entity {
     entityVersion: Int!
 }
 
-type MyEntity implements Entity {
+type SomeEntity implements Entity {
+    projectId: ID!
+    entityId: ID!
+    entityVersion: Int!
+}
+
+input MyEntity {
     projectId: ID!
     entityId: ID!
     entityVersion: Int!

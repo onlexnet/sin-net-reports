@@ -12,6 +12,8 @@ import sinnet.models.CustomerValue;
 public interface FindCustomers {
 
     @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
     class Ask implements JsonMessage {
         /** Address used to send the query to it's handler. */
         public static final String ADDRESS = "query.FindCustomers";
