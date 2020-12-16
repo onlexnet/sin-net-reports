@@ -8,7 +8,7 @@ import { useConstCallback } from '@uifabric/react-hooks';
 import { useBoolean } from '@uifabric/react-hooks';
 import _ from "lodash";
 import { useGetUsers } from "../../api/useGetUsers";
-import { useReserveCustomerMutation, useSaveCustomerMutation } from "../../Components/.generated/components";
+import { useSaveCustomerMutation } from "../../Components/.generated/components";
 import { EntityId } from "../../store/actions/ServiceModel";
 
 
@@ -168,11 +168,14 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
         }
     };
 
-    const [reserveCustomerMutation, { data: dataReservation}] = useReserveCustomerMutation();
-    const [saveCustomerMutation, { data, called }] = useSaveCustomerMutation();
+    const [saveCustomerMutation, { data }] = useSaveCustomerMutation();
 
-    if (dataReservation?.Customers.reserve && !called) {
-        const { projectId, entityId, entityVersion } =  dataReservation?.Customers.reserve;
+    if (data) {
+        props.itemSaved();
+    }
+
+    const saveEndExit: MouseEventHandler<PrimaryButton> = (event): void => {
+        const { projectId, entityId, entityVersion } = props.id;
         saveCustomerMutation({
             variables: {
                 projectId: props.id.projectId,
@@ -183,18 +186,6 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
                     customerAddress: model.Adres
                 }
             },
-        });
-    }
-
-    if (data) {
-        props.itemSaved();
-    }
-
-    const saveEndExit: MouseEventHandler<PrimaryButton> = (event): void => {
-        reserveCustomerMutation({
-            variables: {
-                projectId: props.id.projectId
-            }
         });
     }
 

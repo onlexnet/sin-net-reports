@@ -84,6 +84,21 @@ public class CustomerRepositoryTests {
     }
 
     @Test
+    public void shouldSaveUpdated() {
+        var projectId = UUID.randomUUID();
+        Sync.of(() -> projectRepository.save(projectId));
+
+        var validModel = Given.minValidModel();
+        var eid = EntityId.anyNew(projectId);
+        var nextId = Sync.of(() -> repository.save(eid, validModel)).get();
+        Sync.of(() -> repository.save(nextId, validModel)).get();
+
+        Sync
+            .of(() -> repository.list(projectId))
+            .checkpoint(it -> Assertions.assertThat(it).containsOnly(validModel.withId(nextId)));
+    }
+
+    @Test
     public void shouldNotDeleteLastVersionIfNewSaveFailed() {
         var projectId = UUID.randomUUID();
         Sync.of(() -> projectRepository.save(projectId));
