@@ -54,7 +54,7 @@ const CustomersLocal: React.FC<CustomersProps> = (props) => {
         {
             key: "column1", name: "Klient", fieldName: "name", minWidth: 70, maxWidth: 90, isResizable: true, isCollapsible: true, data: "string",
             onRender: (item: UseListCustomersItem) => {
-                return <Link to={`/customers/${item.name}`}>{item.name}</Link>;
+                return <Link to={`/customers/${item.customerId.projectId}/${item.customerId.entityId}/${item.customerId.entityVersion}`}>{item.name}</Link>;
             },
             isPadded: true
         }

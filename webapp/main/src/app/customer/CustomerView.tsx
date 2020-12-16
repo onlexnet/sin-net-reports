@@ -3,7 +3,7 @@ import React, { MouseEventHandler } from "react"
 import { Separator } from 'office-ui-fabric-react/lib/Separator';
 import { mergeStyles } from 'office-ui-fabric-react/lib/Styling';
 import { Stack, IStackTokens, IStackStyles, IStackProps } from 'office-ui-fabric-react/lib/Stack';
-import { Button, IComboBoxOption, ComboBox, IComboBoxProps, ITextFieldStyles, TextField, Checkbox, PrimaryButton, IComboBox } from "office-ui-fabric-react";
+import { Button, IComboBoxOption, ComboBox, ITextFieldStyles, TextField, Checkbox, PrimaryButton, IComboBox } from "office-ui-fabric-react";
 import { useConstCallback } from '@uifabric/react-hooks';
 import { useBoolean } from '@uifabric/react-hooks';
 import _ from "lodash";
@@ -48,6 +48,12 @@ const rozliczenia: IComboBoxOption[] = [
 
 const narrowTextFieldStyles: Partial<ITextFieldStyles> = { fieldGroup: { width: 100 } };
 
+export interface CustomerViewEntry {
+    KlientNazwa: string,
+    KlientMiejscowosc?: string,
+    KlientAdres?: string
+}
+
 type CustomerViewModel = {
     Operator: string | undefined;
     Obsluga: string | undefined;
@@ -79,6 +85,7 @@ type CustomerViewModel = {
 
 interface CustomerViewProps {
     id: EntityId
+    entry: CustomerViewEntry
     itemSaved: () => void
 }
 
@@ -104,9 +111,9 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
         Obsluga: undefined,
         Rozliczenie: undefined,
         Dystans: 0,
-        Nazwa: undefined,
-        Miejscowosc: undefined,
-        Adres: undefined,
+        Nazwa: props.entry.KlientNazwa,
+        Miejscowosc: props.entry.KlientMiejscowosc,
+        Adres: props.entry.KlientAdres,
         UmowaZNFZ: false,
         MaFilie: false,
         Lekarz: false,
@@ -161,8 +168,8 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
         }
     };
 
-    const [reserveCustomerMutation, { data: dataReservation, loading: loadingReservation, error: errorReservation}] = useReserveCustomerMutation();
-    const [saveCustomerMutation, { data, loading, error, called }] = useSaveCustomerMutation();
+    const [reserveCustomerMutation, { data: dataReservation}] = useReserveCustomerMutation();
+    const [saveCustomerMutation, { data, called }] = useSaveCustomerMutation();
 
     if (dataReservation?.Customers.reserve && !called) {
         const { projectId, entityId, entityVersion } =  dataReservation?.Customers.reserve;

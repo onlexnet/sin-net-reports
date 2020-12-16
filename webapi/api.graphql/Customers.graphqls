@@ -8,7 +8,7 @@ extend type Mutation {
 
 type CustomersQuery {
     list: [CustomerEntity!]!
-    get(entityId: ID!): CustomerModel
+    get(entityId: MyEntity!): CustomerEntity
 }
 
 type CustomersMutation {

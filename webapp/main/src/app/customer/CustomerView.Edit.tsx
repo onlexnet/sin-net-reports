@@ -1,11 +1,10 @@
 import React from "react"
-import { v4 as uuid } from 'uuid';
 import { EntityId } from "../../store/actions/ServiceModel";
 import { RootState } from "../../store/reducers";
 import { Dispatch } from "redux";
 import { connect, ConnectedProps } from "react-redux";
 import { CustomerView } from "./CustomerView";
-import { RouteComponentProps, useParams } from "react-router-dom";
+import { useGetCustomerQuery } from "../../Components/.generated/components";
 
 
 const mapStateToProps = (state: RootState) => {
@@ -22,19 +21,39 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
 const connector = connect(mapStateToProps, mapDispatchToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
   
-interface CustomerViewEditProps extends PropsFromRedux, RouteComponentProps<{ projectId: string, entityId: string, entityVersion: string}> {
+interface CustomerViewEditProps extends PropsFromRedux {
+    id: EntityId,
+    itemSaved: () => void
 }
 
   
 export const CustomerViewEditLocal: React.FC<CustomerViewEditProps> = props => {
-//    return <CustomerView id={id} itemSaved={itemSaved}/>;
-    debugger;
-    const id: EntityId = {
-        projectId: props.match.params.projectId,
-        entityId: props.match.params.entityId,
-        entityVersion: Number(props.match.params.entityVersion)
-    };
-    return <p>Hello</p>
+    const { data, error } = useGetCustomerQuery({
+        variables: {
+            projectId: props.appState.projectId,
+            id: props.id
+        }
+    })
+    
+    if(error) {
+        return <div>Error: {JSON.stringify(error)}</div>;
+    }
+
+    if (data) {
+        const id = data.Customers.get?.id
+        const input = data.Customers.get;
+        if (!id) {
+            return <div>No data</div>;
+        }
+        const entry = {
+            KlientNazwa: input?.data.customerName ?? 'Nowy klient',
+            KlientMiejscowosc: input?.data.customerCityName ?? undefined,
+            KlientAdres: input?.data.customerAddress ?? undefined
+        }
+        return <CustomerView id={id} entry={entry} itemSaved={props.itemSaved}/>;
+    }
+
+    return <div>Loading customer details...</div>
 }
 
 export const CustomerViewEdit = connect(mapStateToProps, mapDispatchToProps)(CustomerViewEditLocal);

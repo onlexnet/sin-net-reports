@@ -1,11 +1,10 @@
 import React from "react"
-import { v4 as uuid } from 'uuid';
 import { EntityId } from "../../store/actions/ServiceModel";
 import { RootState } from "../../store/reducers";
 import { Dispatch } from "redux";
 import { connect, ConnectedProps } from "react-redux";
-import { CustomerView } from "./CustomerView";
 import { RouteComponentProps } from "react-router-dom";
+import { CustomerViewEdit } from "./CustomerView.Edit";
 
 
 const mapStateToProps = (state: RootState) => {
@@ -22,18 +21,19 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
 const connector = connect(mapStateToProps, mapDispatchToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
   
-interface CustomerViewNewProps extends PropsFromRedux, RouteComponentProps  {
+interface CustomerViewEditProps extends PropsFromRedux, RouteComponentProps<{ projectId: string, entityId: string, entityVersion: string}> {
 }
 
   
-export const CustomerViewNewLocal: React.FC<CustomerViewNewProps> = props => {
+export const CustomerViewRoutedEditLocal: React.FC<CustomerViewEditProps> = props => {
     const id: EntityId = {
-        projectId: props.appState.projectId,
-        entityId: uuid(),
-        entityVersion: 1
-    }
+        projectId: props.match.params.projectId,
+        entityId: props.match.params.entityId,
+        entityVersion: Number(props.match.params.entityVersion)
+    };
+
     const itemSaved = () => props.history.goBack();
-    return <CustomerView id={id} itemSaved={itemSaved}/>;
+    return <CustomerViewEdit id={id} itemSaved={itemSaved}/>;
 }
 
-export const CustomerViewNew = connect(mapStateToProps, mapDispatchToProps)(CustomerViewNewLocal);
+export const CustomerViewRoutedEdit = connect(mapStateToProps, mapDispatchToProps)(CustomerViewRoutedEditLocal);

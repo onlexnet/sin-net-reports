@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import graphql.GraphQLException;
 import graphql.kickstart.tools.GraphQLResolver;
 import sinnet.AskTemplate;
+import sinnet.MyEntity;
 import sinnet.SomeEntity;
 import sinnet.bus.EntityId;
 import sinnet.bus.commands.UpdateCustomerInfo;
@@ -21,7 +22,7 @@ public class CustomersMutationSave extends AskTemplate<UpdateCustomerInfo, Entit
         super(UpdateCustomerInfo.ADDRESS, EntityId.class);
     }
 
-    CompletableFuture<SomeEntity> save(CustomersMutation gcontext, SomeEntity id, CustomerEntry entry) {
+    CompletableFuture<SomeEntity> save(CustomersMutation gcontext, MyEntity id, CustomerEntry entry) {
         if (!Objects.equal(id.getProjectId(), gcontext.getProjectId())) {
             throw new GraphQLException("Invalid project id");
         }

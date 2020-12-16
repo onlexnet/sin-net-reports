@@ -93,7 +93,7 @@ public class CustomerRepositoryImpl implements CustomerRepository {
     @Override
     public Future<Entity<CustomerValue>> get(UUID projectId, UUID id) {
         var whereClause = "project_id=$1 AND entity_id=$2";
-        var values = Tuple.of(id);
+        var values = Tuple.of(projectId, id);
         return get(whereClause, values)
             .map(this::extractResult)
             .flatMap(it -> it);

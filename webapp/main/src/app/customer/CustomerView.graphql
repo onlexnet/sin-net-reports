@@ -17,3 +17,20 @@ mutation SaveCustomer($projectId: ID!, $id: MyEntity!, $entry: CustomerEntry!) {
     }
   }
 }
+
+query GetCustomer($projectId: ID!, $id: MyEntity!) {
+  Customers(projectId:$projectId) {
+    get(entityId: $id) {
+      id {
+        projectId
+        entityId
+        entityVersion
+      }
+      data {
+        customerName
+        customerCityName
+        customerAddress
+      }
+    }
+  }
+}
