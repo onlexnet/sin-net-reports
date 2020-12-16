@@ -27,6 +27,6 @@ public final class EntityId {
     }
 
     public static EntityId anyNew(UUID projectId) {
-        return new EntityId(projectId, UUID.randomUUID(), 1);
+        return new EntityId(projectId, UUID.randomUUID(), 0);
     }
 }

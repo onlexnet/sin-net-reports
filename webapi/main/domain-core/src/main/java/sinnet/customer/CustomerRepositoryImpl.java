@@ -56,7 +56,7 @@ public class CustomerRepositoryImpl implements CustomerRepository {
             + "VALUES (#{projectId}, #{entityId}, #{entityVersion}+1, #{customerName}, #{customerCityName}, #{customerAddress})";
         var deleteTemplate = "DELETE FROM customers WHERE project_id=#{project_id} AND entity_id=#{entity_id} AND entity_version=#{entity_version}";
         pgClient.withTransaction(client -> SqlTemplate
-                .forUpdate(pgClient, insertTemplate)
+                .forUpdate(client, insertTemplate)
                 .mapFrom(SaveEntry.class)
                 .execute(entry)
                 .flatMap(res -> SqlTemplate
