@@ -38,16 +38,28 @@ public class CustomerRepositoryImpl implements CustomerRepository {
         private UUID projectId;
         private UUID entityId;
         private int entityVersion;
+        private String operatorEmail;
+        private String billingModel;
+        private String supportStatus;
+        private Integer distance;
         private String customerName;
         private String customerCityName;
         private String customerAddress;
     }
 
     private String insertTemplate = String.format("INSERT INTO "
-        + "customers (project_id, entity_id, entity_version, customer_name, customer_city_name, customer_address) "
-        + "VALUES (#{%s}, #{%s}, #{%s}+1, #{%s}, #{%s}, #{%s})",
+        + "customers ("
+        + "project_id, entity_id, entity_version,"
+        + "customer_name, customer_city_name, customer_address,"
+        + "operator_email, billing_model, support_status, distance"
+        + ") "
+        + "VALUES (#{%s}, #{%s}, #{%s}+1,"
+        + "#{%s}, #{%s}, #{%s},"
+        + "#{%s}, #{%s}, #{%s}, #{%s})",
         SaveEntry.Fields.projectId, SaveEntry.Fields.entityId, SaveEntry.Fields.entityVersion,
-        SaveEntry.Fields.customerName, SaveEntry.Fields.customerCityName, SaveEntry.Fields.customerAddress);
+        SaveEntry.Fields.customerName, SaveEntry.Fields.customerCityName, SaveEntry.Fields.customerAddress,
+        SaveEntry.Fields.operatorEmail, SaveEntry.Fields.billingModel, SaveEntry.Fields.supportStatus, SaveEntry.Fields.distance
+        );
     private String deleteTemplate = String.format("DELETE FROM "
         + "customers WHERE project_id=#{%s} AND entity_id=#{%s} AND entity_version=#{%s}",
         SaveEntry.Fields.projectId, SaveEntry.Fields.entityId, SaveEntry.Fields.entityVersion);
@@ -57,6 +69,10 @@ public class CustomerRepositoryImpl implements CustomerRepository {
             .projectId(id.getProjectId())
             .entityId(id.getId())
             .entityVersion(id.getVersion())
+            .operatorEmail(entity.getOperatorEmail())
+            .billingModel(entity.getBillingModel())
+            .supportStatus(entity.getSupportStatus())
+            .distance(entity.getDistance())
             .customerName(entity.getCustomerName().getValue())
             .customerCityName(entity.getCustomerCityName().getValue())
             .customerAddress(entity.getCustomerAddress())

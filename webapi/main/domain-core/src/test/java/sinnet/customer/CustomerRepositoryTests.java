@@ -150,6 +150,9 @@ class Given {
 
     static CustomerValue fullModel() {
         return CustomerValue.builder()
+        .operatorEmail("operatorEmail")
+        .billingModel("billingModel")
+        .supportStatus("supportStatus")
         .customerName(Name.of("some not-empty name"))
         .customerCityName(Name.of("some city"))
         .customerAddress("Some address")

@@ -200,6 +200,7 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
                     <div className="ms-Grid-col ms-smPush1 ms-sm4 ">
                         <ComboBox
                             label="Operator"
+                            selectedKey={model.Operator}
                             onChange={onChangeCombo((m, v) => m.Operator = v)}
                             options={comboBoxBasicOptions}
                         />
@@ -209,6 +210,8 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
                     <div className="ms-Grid-col ms-smPush1 ms-sm4 ">
                         <ComboBox
                             label="Obsługa"
+                            selectedKey={model.Obsluga}
+                            onChange={onChangeCombo((m, v) => m.Obsluga = v)}
                             options={rozliczenia}
                         />
                     </div>

@@ -46,9 +46,7 @@ export const CustomerViewEditLocal: React.FC<CustomerViewEditProps> = props => {
             return <div>No data</div>;
         }
         const entry = {
-            KlientNazwa: input?.data.customerName ?? 'Nowy klient',
-            KlientMiejscowosc: input?.data.customerCityName ?? undefined,
-            KlientAdres: input?.data.customerAddress ?? undefined
+            KlientNazwa: input?.data.customerName ?? 'Nowy klient'
         }
         return <CustomerView id={id} entry={entry} itemSaved={props.itemSaved}/>;
     }

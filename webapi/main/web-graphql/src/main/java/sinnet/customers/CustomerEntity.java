@@ -19,6 +19,10 @@ class CustomerModelResolverPayload implements GraphQLResolver<CustomerEntity> {
         if (gcontext.getOptionalValue() != null) {
             var it = gcontext.getOptionalValue();
             return new CustomerModel(
+                it.getCustomerAddress(),
+                it.getBillingModel(),
+                it.getSupportStatus(),
+                it.getDistance(),
                 it.getCustomerName().getValue(),
                 it.getCustomerCityName().getValue(),
                 it.getCustomerAddress()
