@@ -46,7 +46,7 @@ public class CustomerRepositoryTests {
                        .save(givenEntityId, model); })
             .get();
 
-        var expected = EntityId.of(projectId, givenEntityId.getId(), 2);
+        var expected = EntityId.of(projectId, givenEntityId.getId(), givenEntityId.getVersion() + 1);
         Assertions.assertThat(actual).isEqualTo(expected);
     }
 

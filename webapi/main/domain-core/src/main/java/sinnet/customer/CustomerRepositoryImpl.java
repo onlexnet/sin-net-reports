@@ -13,6 +13,7 @@ import io.vertx.sqlclient.Tuple;
 import io.vertx.sqlclient.templates.SqlTemplate;
 import lombok.Builder;
 import lombok.Value;
+import lombok.experimental.FieldNameConstants;
 import lombok.extern.slf4j.Slf4j;
 import sinnet.models.CustomerValue;
 import sinnet.models.Entity;
@@ -32,6 +33,7 @@ public class CustomerRepositoryImpl implements CustomerRepository {
 
     @Value
     @Builder
+    @FieldNameConstants
     static class SaveEntry {
         private UUID projectId;
         private UUID entityId;
@@ -41,8 +43,16 @@ public class CustomerRepositoryImpl implements CustomerRepository {
         private String customerAddress;
     }
 
+    private String insertTemplate = String.format("INSERT INTO "
+        + "customers (project_id, entity_id, entity_version, customer_name, customer_city_name, customer_address) "
+        + "VALUES (#{%s}, #{%s}, #{%s}+1, #{%s}, #{%s}, #{%s})",
+        SaveEntry.Fields.projectId, SaveEntry.Fields.entityId, SaveEntry.Fields.entityVersion,
+        SaveEntry.Fields.customerName, SaveEntry.Fields.customerCityName, SaveEntry.Fields.customerAddress);
+    private String deleteTemplate = String.format("DELETE FROM "
+        + "customers WHERE project_id=#{%s} AND entity_id=#{%s} AND entity_version=#{%s}",
+        SaveEntry.Fields.projectId, SaveEntry.Fields.entityId, SaveEntry.Fields.entityVersion);
+
     public Future<EntityId> save(EntityId id, CustomerValue entity) {
-        var promise = Promise.<EntityId>promise();
         var entry = SaveEntry.builder()
             .projectId(id.getProjectId())
             .entityId(id.getId())
@@ -51,11 +61,7 @@ public class CustomerRepositoryImpl implements CustomerRepository {
             .customerCityName(entity.getCustomerCityName().getValue())
             .customerAddress(entity.getCustomerAddress())
             .build();
-        var insertTemplate = "INSERT INTO "
-            + "customers (project_id, entity_id, entity_version, customer_name, customer_city_name, customer_address) "
-            + "VALUES (#{projectId}, #{entityId}, #{entityVersion}+1, #{customerName}, #{customerCityName}, #{customerAddress})";
-        var deleteTemplate = "DELETE FROM customers WHERE project_id=#{project_id} AND entity_id=#{entity_id} AND entity_version=#{entity_version}";
-        pgClient.withTransaction(client -> SqlTemplate
+        return pgClient.withTransaction(client -> SqlTemplate
                 .forUpdate(client, insertTemplate)
                 .mapFrom(SaveEntry.class)
                 .execute(entry)
@@ -63,14 +69,8 @@ public class CustomerRepositoryImpl implements CustomerRepository {
                     .forUpdate(client, deleteTemplate)
                     .mapFrom(SaveEntry.class)
                     .execute(entry)
-                    .map(Boolean.TRUE))
-                .onComplete(ar -> {
-                    var result = EntityId.of(id.getProjectId(), id.getId(), id.getVersion() + 1);
-                    if (ar.succeeded()) promise.complete(result);
-                    else promise.fail(ar.cause());
-                })
+                    .map(EntityId.of(id.getProjectId(), id.getId(), id.getVersion() + 1)))
         );
-        return promise.future();
     }
 
     private final Exception noDataException = new Exception("No data");

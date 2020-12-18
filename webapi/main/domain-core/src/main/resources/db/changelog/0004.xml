@@ -6,7 +6,7 @@
     <changeSet author="siudeks" id="20201124-1">  
         <createTable tableName="customers">
             <column name="entity_id" type="UUID">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="customers_PK" deferrable="true" initiallyDeferred="true"/>
+                <constraints nullable="false"/>
             </column>
             <column name="entity_version" type="INTEGER">
                 <constraints nullable="false" />
@@ -17,6 +17,7 @@
             <column name="customer_city_name" type="VARCHAR(50)"/>
             <column name="customer_address" type="VARCHAR(50)"/>
         </createTable>
+        <sql>ALTER TABLE customers ADD CONSTRAINT customers_PK PRIMARY KEY (entity_id) DEFERRABLE INITIALLY DEFERRED</sql>
         <addUniqueConstraint
             columnNames="entity_id, entity_version"
             constraintName="customers_unique_id"
