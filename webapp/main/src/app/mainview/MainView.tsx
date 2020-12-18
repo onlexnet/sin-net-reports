@@ -75,7 +75,7 @@ const LocalView: React.FC<Props> = (props) => {
                         <Route path={routing.reports} component={Reports} />
                         <Route path={routing.editCustomer} component={CustomerViewRoutedEdit} />
                         <Route path={routing.newCustomer} component={CustomerViewNew} />
-                        <Route path={routing.customers} component={Customers} />
+                        <Route path={routing.customers} component={Customers} exact={true} />
                         <Route path={routing.debug} render={(localProps) => <Debug {...props} />} />
                         <Route path="/" exact component={Home} />
                     </div>

@@ -190,8 +190,6 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
     }
 
     return (
-
-
         <HorizontalSeparatorStack>
             <>
                 <Separator alignContent="start">Akcje</Separator>

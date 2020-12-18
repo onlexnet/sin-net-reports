@@ -147,7 +147,6 @@ const ConnectedContent: React.FC<PropsFromRedux> = props => {
   const [lastTouchedActionId, setlastTouchedActionId] = useState(props.lastTouchedActionId);
 
   const newDataIsComing = props.lastTouchedActionId != null && props.lastTouchedActionId != lastTouchedActionId;
-  console.log(`props.lastTouchedActionId:${JSON.stringify(props.lastTouchedActionId)}`)
   if (newDataIsComing) {
     console.log('newDataIsComing');
     setlastTouchedActionId(props.lastTouchedActionId);
