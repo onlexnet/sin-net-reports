@@ -54,6 +54,10 @@ public class CustomerService extends AbstractVerticle implements TopLevelVerticl
         protected Future<sinnet.bus.EntityId> onRequest(UpdateCustomerInfo msg) {
             var eid = EntityId.of(msg.getId().getProjectId(), msg.getId().getId(), msg.getId().getVersion());
             var value = CustomerValue.builder()
+                                     .operatorEmail(msg.getEmailOfOperator())
+                                     .supportStatus(msg.getModelOfSupport())
+                                     .billingModel(msg.getModelOfBilling())
+                                     .distance(msg.getDistance())
                                      .customerName(Name.of(msg.getCustomerName()))
                                      .customerCityName(Name.of(msg.getCustomerCityName()))
                                      .customerAddress(msg.getCustomerAddress())

@@ -27,6 +27,10 @@ query GetCustomer($projectId: ID!, $id: MyEntity!) {
         entityVersion
       }
       data {
+        operatorEmail
+        billingModel
+        supportStatus
+        distance
         customerName
         customerCityName
         customerAddress

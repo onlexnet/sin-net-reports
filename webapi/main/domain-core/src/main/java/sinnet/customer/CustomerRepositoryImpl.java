@@ -124,10 +124,12 @@ public class CustomerRepositoryImpl implements CustomerRepository {
     private Future<List<Entity<CustomerValue>>> get(String whereClause, Tuple values) {
         var promise = Promise.<List<Entity<CustomerValue>>>promise();
         pgClient
-            .preparedQuery("SELECT"
-                         + " project_id, entity_id, entity_version, customer_name, customer_city_name, customer_address"
-                         + " FROM customers c"
-                         + " WHERE " + whereClause)
+            .preparedQuery("SELECT "
+                         + "project_id, entity_id, entity_version, "
+                         + "customer_name, customer_city_name, customer_address, "
+                         + "operator_email, billing_model, support_status, distance "
+                         + "FROM customers c "
+                         + "WHERE " + whereClause)
             .execute(values, ar -> {
                 if (ar.succeeded()) {
                     var result = List.<Entity<CustomerValue>>empty();
@@ -140,6 +142,10 @@ public class CustomerRepositoryImpl implements CustomerRepository {
                             .customerName(Name.of(row.getString("customer_name")))
                             .customerCityName(Name.of(row.getString("customer_city_name")))
                             .customerAddress(row.getString("customer_address"))
+                            .operatorEmail(row.getString("operator_email"))
+                            .billingModel(row.getString("billing_model"))
+                            .supportStatus(row.getString("support_status"))
+                            .distance(row.getInteger("distance"))
                             .build()
                             .withId(projectId, entityId, entityVersion);
                         result = result.append(item);

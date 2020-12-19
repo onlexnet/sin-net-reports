@@ -1,6 +1,6 @@
 import React from "react";
-import { IComboBoxOption, SelectableOptionMenuItemType, IComboBox, TextField, PrimaryButton, Separator, DetailsList, IColumn } from "office-ui-fabric-react";
-import { Link, RouteComponentProps, useRouteMatch } from "react-router-dom";
+import { TextField, PrimaryButton, Separator, DetailsList, IColumn } from "office-ui-fabric-react";
+import { Link, RouteComponentProps } from "react-router-dom";
 import { routing } from "../../Routing";
 import { HorizontalSeparatorStack } from "../../Components/HorizontalSeparatorStack";
 import { useListCustomers, UseListCustomersItem } from "../../api/useListCustomers";

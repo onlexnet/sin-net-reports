@@ -8,7 +8,7 @@ import lombok.Value;
 class CustomerEntry {
     private String operatorEmail;
     private String billingModel;
-    private String serviceStatus;
+    private String supportStatus;
     private Integer distance;
     private String customerName;
     private String customerCityName;
@@ -20,7 +20,7 @@ class CustomerEntry {
 class CustomerModel {
     private String operatorEmail;
     private String billingModel;
-    private String serviceStatus;
+    private String supportStatus;
     private Integer distance;
     private String customerName;
     private String customerCityName;

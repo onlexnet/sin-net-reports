@@ -1,10 +1,8 @@
 import React, { MouseEventHandler } from "react"
 
 import { Separator } from 'office-ui-fabric-react/lib/Separator';
-import { mergeStyles } from 'office-ui-fabric-react/lib/Styling';
 import { Stack, IStackTokens, IStackStyles, IStackProps } from 'office-ui-fabric-react/lib/Stack';
 import { Button, IComboBoxOption, ComboBox, ITextFieldStyles, TextField, Checkbox, PrimaryButton, IComboBox } from "office-ui-fabric-react";
-import { useConstCallback } from '@uifabric/react-hooks';
 import { useBoolean } from '@uifabric/react-hooks';
 import _ from "lodash";
 import { useGetUsers } from "../../api/useGetUsers";
@@ -14,12 +12,6 @@ import { EntityId } from "../../store/actions/ServiceModel";
 
 const stackStyles: Partial<IStackStyles> = { root: { width: 650 } };
 const stackTokens: IStackTokens = { childrenGap: 12 };
-const columnProps: Partial<IStackProps> = {
-    tokens: { childrenGap: 15 },
-    styles: { root: { width: 300 } },
-};
-
-
 
 const HorizontalSeparatorStack = (props: { children: JSX.Element[] }) => (
     <>
@@ -29,26 +21,13 @@ const HorizontalSeparatorStack = (props: { children: JSX.Element[] }) => (
     </>
 );
 
-const verticalStyle = mergeStyles({
-    height: '200px',
-});
-
-const obsluga: IComboBoxOption[] = [
-    { key: 'A', text: 'Obsługiwany' },
-    { key: 'B', text: 'Nie obsługiwany' },
-    { key: 'C', text: 'Obsługa czasowo zawieszona' },
-];
-
-const rozliczenia: IComboBoxOption[] = [
-    { key: 'A', text: 'Ryczałt' },
-    { key: 'B', text: 'Godziny' },
-];
-
-
-
 const narrowTextFieldStyles: Partial<ITextFieldStyles> = { fieldGroup: { width: 100 } };
 
 export interface CustomerViewEntry {
+    EmailOfOperator?: string,
+    ModelOfSupport?: string
+    ModelOfBilling?: string,
+    Distance?: number,
     KlientNazwa: string,
     KlientMiejscowosc?: string,
     KlientAdres?: string
@@ -58,7 +37,7 @@ type CustomerViewModel = {
     Operator: string | undefined;
     Obsluga: string | undefined;
     Rozliczenie: string | undefined;
-    Dystans: number;
+    Dystans: string | undefined;
     Nazwa: string | undefined; 
     Miejscowosc: string | undefined;
     Adres: string | undefined;
@@ -90,6 +69,18 @@ interface CustomerViewProps {
 }
 
 export const CustomerView: React.FC<CustomerViewProps> = props => {
+
+    const obsluga: IComboBoxOption[] = [
+        { key: 'Obsługiwany', text: 'Obsługiwany' },
+        { key: 'Nie obsługiwany', text: 'Nie obsługiwany' },
+        { key: 'Obsługa czasowo zawieszona', text: 'Obsługa czasowo zawieszona' },
+    ];
+    
+    const rozliczenia: IComboBoxOption[] = [
+        { key: 'Ryczałt', text: 'Ryczałt' },
+        { key: 'Godziny', text: 'Godziny' },
+    ];
+
     const users = useGetUsers();
     const comboBoxBasicOptions: IComboBoxOption[] = []
     users.forEach(user => {
@@ -97,20 +88,11 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
         comboBoxBasicOptions.push(userItem);
     })
 
-    const [secondTextFieldValue, setSecondTextFieldValue] = React.useState('');
-    const onChangeSecondTextFieldValue = useConstCallback(
-        (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
-            if (!newValue || newValue.length <= 5) {
-                setSecondTextFieldValue(newValue || '');
-            }
-        },
-    );
-
     const [model, setModel] = React.useState<CustomerViewModel>({
-        Operator: undefined,
-        Obsluga: undefined,
-        Rozliczenie: undefined,
-        Dystans: 0,
+        Operator: props.entry.EmailOfOperator,
+        Obsluga: props.entry.ModelOfSupport,
+        Rozliczenie: props.entry.ModelOfBilling,
+        Dystans: props.entry.Distance?.toString(),
         Nazwa: props.entry.KlientNazwa,
         Miejscowosc: props.entry.KlientMiejscowosc,
         Adres: props.entry.KlientAdres,
@@ -181,6 +163,10 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
                 projectId: props.id.projectId,
                 id: { projectId, entityId, entityVersion },
                 entry: {
+                    operatorEmail: model.Operator,
+                    billingModel: model.Rozliczenie,
+                    supportStatus: model.Obsluga,
+                    distance: Number(model.Dystans),
                     customerName: model.Nazwa ?? "Nazwa klienta",
                     customerCityName: model.Miejscowosc,
                     customerAddress: model.Adres
@@ -200,36 +186,38 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
                     <div className="ms-Grid-col ms-smPush1 ms-sm4 ">
                         <ComboBox
                             label="Operator"
-                            selectedKey={model.Operator}
-                            onChange={onChangeCombo((m, v) => m.Operator = v)}
                             options={comboBoxBasicOptions}
-                        />
+                            defaultSelectedKey={model.Operator}
+                            selectedKey={model.Operator}
+                            onChange={onChangeCombo((m, v) => m.Operator = v)} />
                     </div>
                 </div>
                 <div className="ms-Grid-row">
                     <div className="ms-Grid-col ms-smPush1 ms-sm4 ">
                         <ComboBox
                             label="Obsługa"
+                            options={obsluga}
+                            defaultSelectedKey={model.Obsluga}
                             selectedKey={model.Obsluga}
-                            onChange={onChangeCombo((m, v) => m.Obsluga = v)}
-                            options={rozliczenia}
-                        />
+                            onChange={onChangeCombo((m, v) => m.Obsluga = v)} />
                     </div>
                 </div>
                 <div className="ms-Grid-row">
                     <div className="ms-Grid-col ms-smPush1 ms-sm4 ">
                         <ComboBox
                             label="Rozliczenie"
-                            options={obsluga}
-                        />
+                            options={rozliczenia}
+                            defaultSelectedKey={model.Rozliczenie}
+                            selectedKey={model.Rozliczenie}
+                            onChange={onChangeCombo((m, v) => m.Rozliczenie = v)} />
                     </div>
                 </div>
                 <div className="ms-Grid-row">
                     <div className="ms-Grid-col ms-smPush1 ms-sm2">
                         <TextField
                             label="Dystans"
-                            value={secondTextFieldValue}
-                            onChange={onChangeSecondTextFieldValue}
+                            value={model.Dystans}
+                            onChange={onChangeText((m, v) => m.Dystans = v)}
                             styles={narrowTextFieldStyles}
                         />
                     </div>

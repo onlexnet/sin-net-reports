@@ -3,7 +3,7 @@ import { EntityId } from "../../store/actions/ServiceModel";
 import { RootState } from "../../store/reducers";
 import { Dispatch } from "redux";
 import { connect, ConnectedProps } from "react-redux";
-import { CustomerView } from "./CustomerView";
+import { CustomerView, CustomerViewEntry } from "./CustomerView";
 import { useGetCustomerQuery } from "../../Components/.generated/components";
 
 
@@ -45,8 +45,14 @@ export const CustomerViewEditLocal: React.FC<CustomerViewEditProps> = props => {
         if (!id) {
             return <div>No data</div>;
         }
-        const entry = {
-            KlientNazwa: input?.data.customerName ?? 'Nowy klient'
+        const entry: CustomerViewEntry = {
+            EmailOfOperator: input?.data.operatorEmail ?? undefined,
+            ModelOfBilling: input?.data.billingModel ?? undefined,
+            ModelOfSupport: input?.data.supportStatus ?? undefined,
+            Distance: input?.data.distance ?? undefined,
+            KlientNazwa: input?.data.customerName ?? 'Nowy klient',
+            KlientMiejscowosc: input?.data.customerCityName ?? undefined,
+            KlientAdres: input?.data.customerAddress ?? undefined
         }
         return <CustomerView id={id} entry={entry} itemSaved={props.itemSaved}/>;
     }

@@ -19,7 +19,7 @@ type CustomersMutation {
 input CustomerEntry {
     operatorEmail: String
     billingModel: String
-    serviceStatus: String
+    supportStatus: String
     distance: Int
     customerName: String!
     customerCityName: String
@@ -33,7 +33,7 @@ type CustomerEntity {
 type CustomerModel {
     operatorEmail: String
     billingModel: String
-    serviceStatus: String
+    supportStatus: String
     distance: Int
     customerName: String!
     customerCityName: String

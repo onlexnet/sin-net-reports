@@ -30,6 +30,10 @@ public class CustomersMutationSave extends AskTemplate<UpdateCustomerInfo, Entit
         var eid = new EntityId(id.getProjectId(), id.getEntityId(), id.getEntityVersion());
         var cmd = UpdateCustomerInfo.builder()
             .id(eid)
+            .emailOfOperator(entry.getOperatorEmail())
+            .modelOfSupport(entry.getSupportStatus())
+            .modelOfBilling(entry.getBillingModel())
+            .distance(entry.getDistance())
             .customerName(entry.getCustomerName())
             .customerCityName(entry.getCustomerCityName())
             .customerAddress(entry.getCustomerAddress())
