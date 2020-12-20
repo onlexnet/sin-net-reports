@@ -13,6 +13,8 @@ import sinnet.MyEntity;
 import sinnet.SomeEntity;
 import sinnet.bus.EntityId;
 import sinnet.bus.commands.UpdateCustomerInfo;
+import sinnet.models.CustomerValue;
+import sinnet.models.Name;
 
 @Component
 public class CustomersMutationSave extends AskTemplate<UpdateCustomerInfo, EntityId>
@@ -28,14 +30,13 @@ public class CustomersMutationSave extends AskTemplate<UpdateCustomerInfo, Entit
         }
 
         var eid = new EntityId(id.getProjectId(), id.getEntityId(), id.getEntityVersion());
-        var cmd = UpdateCustomerInfo.builder()
-            .id(eid)
-            .emailOfOperator(entry.getOperatorEmail())
-            .modelOfSupport(entry.getSupportStatus())
-            .modelOfBilling(entry.getBillingModel())
+        var value = CustomerValue.builder()
+            .operatorEmail(entry.getOperatorEmail())
+            .supportStatus(entry.getSupportStatus())
+            .billingModel(entry.getBillingModel())
             .distance(entry.getDistance())
-            .customerName(entry.getCustomerName())
-            .customerCityName(entry.getCustomerCityName())
+            .customerName(Name.of(entry.getCustomerName()))
+            .customerCityName(Name.of(entry.getCustomerCityName()))
             .customerAddress(entry.getCustomerAddress())
             .nfzUmowa(entry.isNfzUmowa())
             .nfzMaFilie(entry.isNfzMaFilie())
@@ -54,6 +55,11 @@ public class CustomersMutationSave extends AskTemplate<UpdateCustomerInfo, Entit
             .nfzZaopatrzenieOrtopedyczne(entry.isNfzZaopatrzenieOrtopedyczne())
             .nfzOpiekaDlugoterminowa(entry.isNfzOpiekaDlugoterminowa())
             .nfzNotatki(entry.getNfzNotatki())
+            .build();
+
+        var cmd = UpdateCustomerInfo.builder()
+            .id(eid)
+            .value(value)
             .build();
         return super.ask(cmd).thenApply(m -> new SomeEntity(m.getProjectId(), m.getId(), m.getVersion()));
     }

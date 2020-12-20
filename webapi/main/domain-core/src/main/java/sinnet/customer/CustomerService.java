@@ -22,7 +22,6 @@ import sinnet.bus.query.FindCustomers.CustomerData;
 import sinnet.models.CustomerValue;
 import sinnet.models.Entity;
 import sinnet.models.EntityId;
-import sinnet.models.Name;
 
 @Component
 @Slf4j
@@ -53,15 +52,7 @@ public class CustomerService extends AbstractVerticle implements TopLevelVerticl
         @Override
         protected Future<sinnet.bus.EntityId> onRequest(UpdateCustomerInfo msg) {
             var eid = EntityId.of(msg.getId().getProjectId(), msg.getId().getId(), msg.getId().getVersion());
-            var value = CustomerValue.builder()
-                                     .operatorEmail(msg.getEmailOfOperator())
-                                     .supportStatus(msg.getModelOfSupport())
-                                     .billingModel(msg.getModelOfBilling())
-                                     .distance(msg.getDistance())
-                                     .customerName(Name.of(msg.getCustomerName()))
-                                     .customerCityName(Name.of(msg.getCustomerCityName()))
-                                     .customerAddress(msg.getCustomerAddress())
-                                     .build();
+            var value = msg.getValue();
             return repository
                 .save(eid, value)
                 .map(it -> new sinnet.bus.EntityId(it.getProjectId(), it.getId(), it.getVersion()));
