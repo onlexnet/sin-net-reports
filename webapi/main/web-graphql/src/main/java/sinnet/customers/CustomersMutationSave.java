@@ -55,6 +55,8 @@ public class CustomersMutationSave extends AskTemplate<UpdateCustomerInfo, Entit
             .nfzZaopatrzenieOrtopedyczne(entry.isNfzZaopatrzenieOrtopedyczne())
             .nfzOpiekaDlugoterminowa(entry.isNfzOpiekaDlugoterminowa())
             .nfzNotatki(entry.getNfzNotatki())
+            .komercjaJest(entry.isKomercjaJest())
+            .komercjaNotatki(entry.getKomercjaNotatki())
             .build();
 
         var cmd = UpdateCustomerInfo.builder()

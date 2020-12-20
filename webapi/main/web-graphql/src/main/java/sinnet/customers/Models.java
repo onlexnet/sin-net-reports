@@ -30,6 +30,8 @@ class CustomerEntry {
     private boolean nfzZaopatrzenieOrtopedyczne;
     private boolean nfzOpiekaDlugoterminowa;
     private String nfzNotatki;
+    private boolean komercjaJest;
+    private String komercjaNotatki;
 }
 
 @Value
@@ -59,4 +61,6 @@ class CustomerModel {
     private boolean nfzZaopatrzenieOrtopedyczne;
     private boolean nfzOpiekaDlugoterminowa;
     private String nfzNotatki;
+    private boolean komercjaJest;
+    private String komercjaNotatki;
 }

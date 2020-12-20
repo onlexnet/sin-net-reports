@@ -62,6 +62,8 @@ public class CustomerRepositoryImpl implements CustomerRepository {
         private boolean nfzZaopatrzenieOrtopedyczne;
         private boolean nfzOpiekaDlugoterminowa;
         private String nfzNotatki;
+        private boolean komercjaJest;
+        private String komercjaNotatki;
     }
 
     private String insertTemplate = String.format("INSERT INTO "
@@ -73,16 +75,19 @@ public class CustomerRepositoryImpl implements CustomerRepository {
         + "nfz_pielegniarka_srodowiskowa, nfz_medycyna_szkolna, nfz_transport_sanitarny, nfz_nocna_pomoc_lekarska, "
         + "nfz_ambulatoryjna_opieka_specjalistyczna, nfz_rehabilitacja, nfz_stomatologia, nfz_psychiatria, "
         + "nfz_szpitalnictwo, nfz_programy_profilaktyczne, nfz_zaopatrzenie_ortopedyczne, nfz_opieka_dlugoterminowa, "
-        + "nfz_notatki"
+        + "nfz_notatki,"
+        + "komercja_jest, komercja_notatki"
         + ") "
-        + "VALUES (#{%s}, #{%s}, #{%s}+1,"
-        + "#{%s}, #{%s}, #{%s},"
-        + "#{%s}, #{%s}, #{%s}, #{%s},"
-        + "#{%s}, #{%s}, #{%s}, #{%s},"
-        + "#{%s}, #{%s}, #{%s}, #{%s},"
-        + "#{%s}, #{%s}, #{%s}, #{%s},"
-        + "#{%s}, #{%s}, #{%s}, #{%s},"
-        + "#{%s}"
+        + "VALUES ("
+        + "#{%s}, #{%s}, #{%s}+1"
+        + ",#{%s}, #{%s}, #{%s}"
+        + ",#{%s}, #{%s}, #{%s}, #{%s}"
+        + ",#{%s}, #{%s}, #{%s}, #{%s}"
+        + ",#{%s}, #{%s}, #{%s}, #{%s}"
+        + ",#{%s}, #{%s}, #{%s}, #{%s}"
+        + ",#{%s}, #{%s}, #{%s}, #{%s}"
+        + ",#{%s}"
+        + ",#{%s}, #{%s}"
         + ")",
         SaveEntry.Fields.projectId, SaveEntry.Fields.entityId, SaveEntry.Fields.entityVersion,
         SaveEntry.Fields.customerName, SaveEntry.Fields.customerCityName, SaveEntry.Fields.customerAddress,
@@ -94,7 +99,8 @@ public class CustomerRepositoryImpl implements CustomerRepository {
             SaveEntry.Fields.nfzPsychiatria,
         SaveEntry.Fields.nfzSzpitalnictwo, SaveEntry.Fields.nfzProgramyProfilaktyczne, SaveEntry.Fields.nfzZaopatrzenieOrtopedyczne,
             SaveEntry.Fields.nfzOpiekaDlugoterminowa,
-        SaveEntry.Fields.nfzNotatki
+        SaveEntry.Fields.nfzNotatki,
+        SaveEntry.Fields.komercjaJest, SaveEntry.Fields.komercjaNotatki
         );
     private String deleteTemplate = String.format("DELETE FROM "
         + "customers WHERE project_id=#{%s} AND entity_id=#{%s} AND entity_version=#{%s}",
@@ -129,6 +135,8 @@ public class CustomerRepositoryImpl implements CustomerRepository {
             .nfzZaopatrzenieOrtopedyczne(entity.isNfzZaopatrzenieOrtopedyczne())
             .nfzOpiekaDlugoterminowa(entity.isNfzOpiekaDlugoterminowa())
             .nfzNotatki(entity.getNfzNotatki())
+            .komercjaJest(entity.isKomercjaJest())
+            .komercjaNotatki(entity.getKomercjaNotatki())
             .build();
         return pgClient.withTransaction(client -> SqlTemplate
                 .forUpdate(client, insertTemplate)
@@ -185,7 +193,8 @@ public class CustomerRepositoryImpl implements CustomerRepository {
                          + "nfz_pielegniarka_srodowiskowa, nfz_medycyna_szkolna, nfz_transport_sanitarny, nfz_nocna_pomoc_lekarska, "
                          + "nfz_ambulatoryjna_opieka_specjalistyczna, nfz_rehabilitacja, nfz_stomatologia, nfz_psychiatria, "
                          + "nfz_szpitalnictwo, nfz_programy_profilaktyczne, nfz_zaopatrzenie_ortopedyczne, nfz_opieka_dlugoterminowa, "
-                         + "nfz_notatki "
+                         + "nfz_notatki, "
+                         + "komercja_jest, komercja_notatki "
                          + "FROM customers c "
                          + "WHERE " + whereClause)
             .execute(values, ar -> {
@@ -221,6 +230,8 @@ public class CustomerRepositoryImpl implements CustomerRepository {
                             .nfzZaopatrzenieOrtopedyczne(row.getBoolean("nfz_zaopatrzenie_ortopedyczne"))
                             .nfzOpiekaDlugoterminowa(row.getBoolean("nfz_opieka_dlugoterminowa"))
                             .nfzNotatki(row.getString("nfz_notatki"))
+                            .komercjaJest(row.getBoolean("komercja_jest"))
+                            .komercjaNotatki(row.getString("komercja_notatki"))
                             .build()
                             .withId(projectId, entityId, entityVersion);
                         result = result.append(item);

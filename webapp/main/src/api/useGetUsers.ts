@@ -8,7 +8,7 @@ export const useGetUsers: () => string[] = () => {
 
   if (data) {
     const result = _.chain(data?.Users?.search).map(it => it.email).value();
-    if (result.length != 0 && users.length == 0) {
+    if (result.length !== 0 && users.length === 0) {
       setUsers(result);
     } 
   }

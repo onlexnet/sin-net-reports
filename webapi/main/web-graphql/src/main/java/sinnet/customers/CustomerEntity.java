@@ -42,7 +42,9 @@ class CustomerModelResolverPayload implements GraphQLResolver<CustomerEntity> {
                 it.isNfzProgramyProfilaktyczne(),
                 it.isNfzZaopatrzenieOrtopedyczne(),
                 it.isNfzOpiekaDlugoterminowa(),
-                it.getNfzNotatki());
+                it.getNfzNotatki(),
+                it.isKomercjaJest(),
+                it.getKomercjaNotatki());
         }
         // TODO resolve if no data provided
         return null;

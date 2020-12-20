@@ -41,6 +41,8 @@ input CustomerEntry {
     nfzZaopatrzenieOrtopedyczne: Boolean
     nfzOpiekaDlugoterminowa: Boolean
     nfzNotatki: String
+    komercjaJest: Boolean
+    komercjaNotatki: String
 }
 
 type CustomerEntity {
@@ -72,4 +74,6 @@ type CustomerModel {
     nfzZaopatrzenieOrtopedyczne: Boolean
     nfzOpiekaDlugoterminowa: Boolean
     nfzNotatki: String
+    komercjaJest: Boolean
+    komercjaNotatki: String
 }

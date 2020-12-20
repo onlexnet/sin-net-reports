@@ -51,6 +51,8 @@ query GetCustomer($projectId: ID!, $id: MyEntity!) {
         nfzZaopatrzenieOrtopedyczne
         nfzOpiekaDlugoterminowa
         nfzNotatki
+        komercjaJest
+        komercjaNotatki
       }
     }
   }

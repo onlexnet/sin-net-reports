@@ -69,7 +69,9 @@ export const CustomerViewEditLocal: React.FC<CustomerViewEditProps> = props => {
             nfzProgramyProfilaktyczne: input?.data.nfzProgramyProfilaktyczne ?? undefined,
             nfzZaopatrzenieOrtopedyczne: input?.data.nfzZaopatrzenieOrtopedyczne ?? undefined,
             nfzOpiekaDlugoterminowa: input?.data.nfzOpiekaDlugoterminowa ?? undefined,
-            nfzNotatki: input?.data.nfzNotatki ?? undefined
+            nfzNotatki: input?.data.nfzNotatki ?? undefined,
+            komercjaJest: input?.data.komercjaJest ?? undefined,
+            komercjaNotatki: input?.data.komercjaNotatki ?? undefined
         }
         return <CustomerView id={id} entry={entry} itemSaved={props.itemSaved}/>;
     }

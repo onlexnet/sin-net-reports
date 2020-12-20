@@ -47,7 +47,9 @@ export interface CustomerViewEntry {
     nfzProgramyProfilaktyczne?: boolean,
     nfzZaopatrzenieOrtopedyczne?: boolean,
     nfzOpiekaDlugoterminowa?: boolean,
-    nfzNotatki?: string
+    nfzNotatki?: string,
+    komercjaJest?: boolean,
+    komercjaNotatki?: string
 }
 
 type CustomerViewModel = {
@@ -130,8 +132,8 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
         ZaopatrzenieOrtopedyczne: props.entry.nfzZaopatrzenieOrtopedyczne ?? false,
         OpiekaDlugoterminowa: props.entry.nfzOpiekaDlugoterminowa ?? false,
         NfzNotatki: props.entry.nfzNotatki,
-        Komercja: false,
-        KomercjaNotatki: undefined,
+        Komercja: props.entry.komercjaJest ?? false,
+        KomercjaNotatki: props.entry.komercjaNotatki
     });
 
     const onChangeBoolean = (changer: (m: CustomerViewModel, current: boolean) => void) => {
@@ -147,6 +149,16 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
             const cloned = _.clone(model);
             changer(cloned, newText);
             setModel(cloned);
+        };
+    }
+
+    const onChangeMemo = (changer: (m: CustomerViewModel, current: string | undefined) => void) => {
+        return (ev?: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newText?: string): void => {
+            if (newText && newText?.length <= 2000) {
+                const cloned = _.clone(model);
+                changer(cloned, newText);
+                setModel(cloned);
+            }
         };
     }
 
@@ -199,7 +211,9 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
             nfzProgramyProfilaktyczne: model.ProgramyProfilaktyczne,
             nfzZaopatrzenieOrtopedyczne: model.ZaopatrzenieOrtopedyczne,
             nfzOpiekaDlugoterminowa: model.OpiekaDlugoterminowa,
-            nfzNotatki: model.NfzNotatki
+            nfzNotatki: model.NfzNotatki,
+            komercjaJest: model.Komercja,
+            komercjaNotatki: model.KomercjaNotatki
         }
         saveCustomerMutation({
             variables: {
@@ -393,7 +407,7 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
                             multiline={true}
                             value={model.NfzNotatki}
                             placeholder="Notatki NFZ"
-                            onChange={onChangeText((m, v) => m.NfzNotatki = v)}
+                            onChange={onChangeMemo((m, v) => m.NfzNotatki = v)}
                         />
                     </div>
                 </div>
@@ -413,7 +427,7 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
                             multiline={true}
                             placeholder="Dane opisowe"
                             value={model.KomercjaNotatki}
-                            onChange={onChangeText((m, v) => m.NfzNotatki)}
+                            onChange={onChangeMemo((m, v) => m.KomercjaNotatki = v)}
                         />
                     </div>
                 </div>

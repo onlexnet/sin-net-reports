@@ -2,11 +2,10 @@ import _ from "lodash";
 import { ComboBox, DateRangeType, DefaultButton, FocusTrapZone, IComboBox, IComboBoxOption, IStackStyles, MaskedTextField, memoizeFunction, PrimaryButton, Stack, TextField } from "office-ui-fabric-react";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { dates } from "../api/DtoMapper";
-import { useGetUsersQuery, useUpdateActionMutation } from "../Components/.generated/components";
+import { useUpdateActionMutation } from "../Components/.generated/components";
 import { AppDatePicker } from "./ActionList.DatePicker";
 import { EntityId, ServiceAppModel } from "../store/actions/ServiceModel";
-import { LocalDate, TimePeriod } from "../store/viewcontext/TimePeriod";
-import { asDtoDate } from "../api/Mapper";
+import { LocalDate } from "../store/viewcontext/TimePeriod";
 import { useGetUsers } from "../api/useGetUsers";
 
 interface EditActionSomeProps {

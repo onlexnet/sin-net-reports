@@ -173,6 +173,8 @@ class Given {
         .nfzZaopatrzenieOrtopedyczne(true)
         .nfzOpiekaDlugoterminowa(true)
         .nfzNotatki("some notes")
+        .komercjaJest(true)
+        .komercjaNotatki("komercja notatki some notes")
         .build();
     }
 }

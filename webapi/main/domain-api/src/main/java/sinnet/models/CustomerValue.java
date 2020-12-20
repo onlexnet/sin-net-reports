@@ -9,8 +9,8 @@ import lombok.Value;
 
 @AllArgsConstructor
 @Value
-@JsonDeserialize(builder = CustomerValue.Builder.class)
-@Builder(builderClassName = "Builder", toBuilder = true)
+@JsonDeserialize(builder = CustomerValue.MyBuilder.class)
+@Builder(builderClassName = "MyBuilder", toBuilder = true)
 public final class CustomerValue implements EntityValue<CustomerValue> {
     private String operatorEmail;
     private String billingModel;
@@ -38,8 +38,10 @@ public final class CustomerValue implements EntityValue<CustomerValue> {
     private boolean nfzZaopatrzenieOrtopedyczne;
     private boolean nfzOpiekaDlugoterminowa;
     private String nfzNotatki;
+    private boolean komercjaJest;
+    private String komercjaNotatki;
 
     @JsonPOJOBuilder(withPrefix = "")
-    public static class Builder {
+    public static class MyBuilder {
     }
 }
