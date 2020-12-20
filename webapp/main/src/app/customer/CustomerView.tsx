@@ -2,7 +2,7 @@ import React, { MouseEventHandler } from "react"
 
 import { Separator } from 'office-ui-fabric-react/lib/Separator';
 import { Stack, IStackTokens, IStackStyles } from 'office-ui-fabric-react/lib/Stack';
-import { Button, IComboBoxOption, ITextFieldStyles, TextField, Checkbox, PrimaryButton, IComboBox, ComboBox } from "office-ui-fabric-react";
+import { Button, IComboBoxOption, ITextFieldStyles, TextField, Checkbox, PrimaryButton, IComboBox, ComboBox, Spinner, SpinnerSize } from "office-ui-fabric-react";
 import { useBoolean } from '@uifabric/react-hooks';
 import _ from "lodash";
 import { useGetUsers } from "../../api/useGetUsers";
@@ -179,13 +179,17 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
         }
     };
 
-    const [saveCustomerMutation, { data }] = useSaveCustomerMutation();
+    const [saveCustomerMutation, { data: saveResult, loading: saveInProgress }] = useSaveCustomerMutation();
 
-    if (data) {
+
+    if (saveResult) {
         props.itemSaved();
     }
 
+    const [ saveDisabled, setSaveDisabled ] = React.useState(false);
+
     const saveEndExit: MouseEventHandler<PrimaryButton> = (event): void => {
+        setSaveDisabled(true);
         const { projectId, entityId, entityVersion } = props.id;
         const entry: CustomerEntry = {
             operatorEmail: model.Operator,
@@ -224,11 +228,15 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
         });
     }
 
+    if (saveInProgress) {
+        return <Spinner size={SpinnerSize.large} /> 
+    }
+
     return (
         <HorizontalSeparatorStack>
             <>
                 <Separator alignContent="start">Akcje</Separator>
-                <PrimaryButton text="Zapisz i wyjdź" onClick={saveEndExit} />
+                <PrimaryButton text="Zapisz i wyjdź" disabled={saveDisabled} onClick={saveEndExit} />
                 <Separator alignContent="start">Dane ogólne: </Separator>
 
                 <div className="ms-Grid-row">
