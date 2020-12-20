@@ -24,6 +24,23 @@ input CustomerEntry {
     customerName: String!
     customerCityName: String
     customerAddress: String
+    nfzUmowa: Boolean
+    nfzMaFilie: Boolean
+    nfzLekarz: Boolean
+    nfzPolozna: Boolean
+    nfzPielegniarkaSrodowiskowa: Boolean
+    nfzMedycynaSzkolna: Boolean
+    nfzTransportSanitarny: Boolean
+    nfzNocnaPomocLekarska: Boolean
+    nfzAmbulatoryjnaOpiekaSpecjalistyczna: Boolean
+    nfzRehabilitacja: Boolean
+    nfzStomatologia: Boolean
+    nfzPsychiatria: Boolean
+    nfzSzpitalnictwo: Boolean
+    nfzProgramyProfilaktyczne: Boolean
+    nfzZaopatrzenieOrtopedyczne: Boolean
+    nfzOpiekaDlugoterminowa: Boolean
+    nfzNotatki: String
 }
 
 type CustomerEntity {
@@ -38,4 +55,21 @@ type CustomerModel {
     customerName: String!
     customerCityName: String
     customerAddress: String
+    nfzUmowa: Boolean
+    nfzMaFilie: Boolean
+    nfzLekarz: Boolean
+    nfzPolozna: Boolean
+    nfzPielegniarkaSrodowiskowa: Boolean
+    nfzMedycynaSzkolna: Boolean
+    nfzTransportSanitarny: Boolean
+    nfzNocnaPomocLekarska: Boolean
+    nfzAmbulatoryjnaOpiekaSpecjalistyczna: Boolean
+    nfzRehabilitacja: Boolean
+    nfzStomatologia: Boolean
+    nfzPsychiatria: Boolean
+    nfzSzpitalnictwo: Boolean
+    nfzProgramyProfilaktyczne: Boolean
+    nfzZaopatrzenieOrtopedyczne: Boolean
+    nfzOpiekaDlugoterminowa: Boolean
+    nfzNotatki: String
 }

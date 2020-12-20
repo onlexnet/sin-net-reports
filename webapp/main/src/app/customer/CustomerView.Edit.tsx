@@ -52,7 +52,24 @@ export const CustomerViewEditLocal: React.FC<CustomerViewEditProps> = props => {
             Distance: input?.data.distance ?? undefined,
             KlientNazwa: input?.data.customerName ?? 'Nowy klient',
             KlientMiejscowosc: input?.data.customerCityName ?? undefined,
-            KlientAdres: input?.data.customerAddress ?? undefined
+            KlientAdres: input?.data.customerAddress ?? undefined,
+            nfzUmowa: input?.data.nfzUmowa ?? undefined,
+            nfzMaFilie: input?.data.nfzMaFilie ?? undefined,
+            nfzLekarz: input?.data.nfzLekarz ?? undefined,
+            nfzPolozna: input?.data.nfzPolozna ?? undefined,
+            nfzPielegniarkaSrodowiskowa: input?.data.nfzPielegniarkaSrodowiskowa ?? undefined,
+            nfzMedycynaSzkolna: input?.data.nfzMedycynaSzkolna ?? undefined,
+            nfzTransportSanitarny: input?.data.nfzTransportSanitarny ?? undefined,
+            nfzNocnaPomocLekarska: input?.data.nfzNocnaPomocLekarska ?? undefined,
+            nfzAmbulatoryjnaOpiekaSpecjalistyczna: input?.data.nfzAmbulatoryjnaOpiekaSpecjalistyczna ?? undefined,
+            nfzRehabilitacja: input?.data.nfzRehabilitacja ?? undefined,
+            nfzStomatologia: input?.data.nfzStomatologia ?? undefined,
+            nfzPsychiatria: input?.data.nfzPsychiatria ?? undefined,
+            nfzSzpitalnictwo: input?.data.nfzSzpitalnictwo ?? undefined,
+            nfzProgramyProfilaktyczne: input?.data.nfzProgramyProfilaktyczne ?? undefined,
+            nfzZaopatrzenieOrtopedyczne: input?.data.nfzZaopatrzenieOrtopedyczne ?? undefined,
+            nfzOpiekaDlugoterminowa: input?.data.nfzOpiekaDlugoterminowa ?? undefined,
+            nfzNotatki: input?.data.nfzNotatki ?? undefined
         }
         return <CustomerView id={id} entry={entry} itemSaved={props.itemSaved}/>;
     }

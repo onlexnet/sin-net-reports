@@ -2,26 +2,38 @@ package sinnet.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Value;
 
-@Value
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
+@Data
 @Builder
-public class CustomerValue implements EntityValue<CustomerValue> {
-    @Builder.Default
-    private String operatorEmail = null;
-    @Builder.Default
-    private String billingModel = null;
-    @Builder.Default
-    private String supportStatus = null;
-    @Builder.Default
-    private Integer distance = null;
+public final class CustomerValue implements EntityValue<CustomerValue> {
+    private String operatorEmail;
+    private String billingModel;
+    private String supportStatus;
+    private Integer distance;
     @Builder.Default
     private Name customerName = Name.empty();
     @Builder.Default
     private Name customerCityName = Name.empty();
-    @Builder.Default
-    private String customerAddress = null;
+    private String customerAddress;
+    private boolean nfzUmowa;
+    private boolean nfzMaFilie;
+    private boolean nfzLekarz;
+    private boolean nfzPolozna;
+    private boolean nfzPielegniarkaSrodowiskowa;
+    private boolean nfzMedycynaSzkolna;
+    private boolean nfzTransportSanitarny;
+    private boolean nfzNocnaPomocLekarska;
+    private boolean nfzAmbulatoryjnaOpiekaSpecjalistyczna;
+    private boolean nfzRehabilitacja;
+    private boolean nfzStomatologia;
+    private boolean nfzPsychiatria;
+    private boolean nfzSzpitalnictwo;
+    private boolean nfzProgramyProfilaktyczne;
+    private boolean nfzZaopatrzenieOrtopedyczne;
+    private boolean nfzOpiekaDlugoterminowa;
+    private String nfzNotatki;
 }

@@ -34,6 +34,23 @@ query GetCustomer($projectId: ID!, $id: MyEntity!) {
         customerName
         customerCityName
         customerAddress
+        nfzUmowa
+        nfzMaFilie
+        nfzLekarz
+        nfzPolozna
+        nfzPielegniarkaSrodowiskowa
+        nfzMedycynaSzkolna
+        nfzTransportSanitarny
+        nfzNocnaPomocLekarska
+        nfzAmbulatoryjnaOpiekaSpecjalistyczna
+        nfzRehabilitacja
+        nfzStomatologia
+        nfzPsychiatria
+        nfzSzpitalnictwo
+        nfzProgramyProfilaktyczne
+        nfzZaopatrzenieOrtopedyczne
+        nfzOpiekaDlugoterminowa
+        nfzNotatki
       }
     }
   }

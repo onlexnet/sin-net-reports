@@ -1,12 +1,12 @@
 import React, { MouseEventHandler } from "react"
 
 import { Separator } from 'office-ui-fabric-react/lib/Separator';
-import { Stack, IStackTokens, IStackStyles, IStackProps } from 'office-ui-fabric-react/lib/Stack';
-import { Button, IComboBoxOption, ComboBox, ITextFieldStyles, TextField, Checkbox, PrimaryButton, IComboBox } from "office-ui-fabric-react";
+import { Stack, IStackTokens, IStackStyles } from 'office-ui-fabric-react/lib/Stack';
+import { Button, IComboBoxOption, ITextFieldStyles, TextField, Checkbox, PrimaryButton, IComboBox, ComboBox } from "office-ui-fabric-react";
 import { useBoolean } from '@uifabric/react-hooks';
 import _ from "lodash";
 import { useGetUsers } from "../../api/useGetUsers";
-import { useSaveCustomerMutation } from "../../Components/.generated/components";
+import { CustomerEntry, useSaveCustomerMutation } from "../../Components/.generated/components";
 import { EntityId } from "../../store/actions/ServiceModel";
 
 
@@ -31,6 +31,23 @@ export interface CustomerViewEntry {
     KlientNazwa: string,
     KlientMiejscowosc?: string,
     KlientAdres?: string
+    nfzUmowa?: boolean,
+    nfzMaFilie?: boolean,
+    nfzLekarz?: boolean,
+    nfzPolozna?: boolean,
+    nfzPielegniarkaSrodowiskowa?: boolean,
+    nfzMedycynaSzkolna?: boolean,
+    nfzTransportSanitarny?: boolean,
+    nfzNocnaPomocLekarska?: boolean,
+    nfzAmbulatoryjnaOpiekaSpecjalistyczna?: boolean,
+    nfzRehabilitacja?: boolean,
+    nfzStomatologia?: boolean,
+    nfzPsychiatria?: boolean,
+    nfzSzpitalnictwo?: boolean,
+    nfzProgramyProfilaktyczne?: boolean,
+    nfzZaopatrzenieOrtopedyczne?: boolean,
+    nfzOpiekaDlugoterminowa?: boolean,
+    nfzNotatki?: string
 }
 
 type CustomerViewModel = {
@@ -57,7 +74,7 @@ type CustomerViewModel = {
     ProgramyProfilaktyczne: boolean;
     ZaopatrzenieOrtopedyczne: boolean;
     OpiekaDlugoterminowa: boolean;
-    NfzNotes: string | undefined;
+    NfzNotatki: string | undefined;
     Komercja: boolean;
     KomercjaNotatki: string | undefined;
 }
@@ -96,23 +113,23 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
         Nazwa: props.entry.KlientNazwa,
         Miejscowosc: props.entry.KlientMiejscowosc,
         Adres: props.entry.KlientAdres,
-        UmowaZNFZ: false,
-        MaFilie: false,
-        Lekarz: false,
-        Polozna: false,
-        PielegniarkaSrodowiskowa: false,
-        MedycynaSzkolna: false,
-        TransportSanitarny: false,
-        NocnaPomocLekarska: false,
-        AmbulatoryjnaOpiekaSpecjalistyczna: false,
-        Rehabilitacja: false,
-        Stomatologia: false,
-        Psychiatria: false,
-        Szpitalnictwo: false,
-        ProgramyProfilaktyczne: false,
-        ZaopatrzenieOrtopedyczne: false,
-        OpiekaDlugoterminowa: false,
-        NfzNotes: undefined,
+        UmowaZNFZ: props.entry.nfzUmowa ?? false,
+        MaFilie: props.entry.nfzMaFilie ?? false,
+        Lekarz: props.entry.nfzLekarz ?? false,
+        Polozna: props.entry.nfzPolozna ?? false,
+        PielegniarkaSrodowiskowa: props.entry.nfzPielegniarkaSrodowiskowa ?? false,
+        MedycynaSzkolna: props.entry.nfzMedycynaSzkolna ?? false,
+        TransportSanitarny: props.entry.nfzTransportSanitarny ?? false,
+        NocnaPomocLekarska: props.entry.nfzNocnaPomocLekarska ?? false,
+        AmbulatoryjnaOpiekaSpecjalistyczna: props.entry.nfzAmbulatoryjnaOpiekaSpecjalistyczna ?? false,
+        Rehabilitacja: props.entry.nfzRehabilitacja ?? false,
+        Stomatologia: props.entry.nfzStomatologia ?? false,
+        Psychiatria: props.entry.nfzPsychiatria ?? false,
+        Szpitalnictwo: props.entry.nfzSzpitalnictwo ?? false,
+        ProgramyProfilaktyczne: props.entry.nfzProgramyProfilaktyczne ?? false,
+        ZaopatrzenieOrtopedyczne: props.entry.nfzZaopatrzenieOrtopedyczne ?? false,
+        OpiekaDlugoterminowa: props.entry.nfzOpiekaDlugoterminowa ?? false,
+        NfzNotatki: props.entry.nfzNotatki,
         Komercja: false,
         KomercjaNotatki: undefined,
     });
@@ -158,19 +175,37 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
 
     const saveEndExit: MouseEventHandler<PrimaryButton> = (event): void => {
         const { projectId, entityId, entityVersion } = props.id;
+        const entry: CustomerEntry = {
+            operatorEmail: model.Operator,
+            billingModel: model.Rozliczenie,
+            supportStatus: model.Obsluga,
+            distance: Number(model.Dystans),
+            customerName: model.Nazwa ?? "Nazwa klienta",
+            customerCityName: model.Miejscowosc,
+            customerAddress: model.Adres,
+            nfzUmowa: model.UmowaZNFZ,
+            nfzMaFilie: model.MaFilie,
+            nfzLekarz: model.Lekarz,
+            nfzPolozna: model.Polozna,
+            nfzPielegniarkaSrodowiskowa: model.PielegniarkaSrodowiskowa,
+            nfzMedycynaSzkolna: model.MedycynaSzkolna,
+            nfzTransportSanitarny: model.TransportSanitarny,
+            nfzNocnaPomocLekarska: model.NocnaPomocLekarska,
+            nfzAmbulatoryjnaOpiekaSpecjalistyczna: model.AmbulatoryjnaOpiekaSpecjalistyczna,
+            nfzRehabilitacja: model.Rehabilitacja,
+            nfzStomatologia: model.Stomatologia,
+            nfzPsychiatria: model.Psychiatria,
+            nfzSzpitalnictwo: model.Szpitalnictwo,
+            nfzProgramyProfilaktyczne: model.ProgramyProfilaktyczne,
+            nfzZaopatrzenieOrtopedyczne: model.ZaopatrzenieOrtopedyczne,
+            nfzOpiekaDlugoterminowa: model.OpiekaDlugoterminowa,
+            nfzNotatki: model.NfzNotatki
+        }
         saveCustomerMutation({
             variables: {
                 projectId: props.id.projectId,
                 id: { projectId, entityId, entityVersion },
-                entry: {
-                    operatorEmail: model.Operator,
-                    billingModel: model.Rozliczenie,
-                    supportStatus: model.Obsluga,
-                    distance: Number(model.Dystans),
-                    customerName: model.Nazwa ?? "Nazwa klienta",
-                    customerCityName: model.Miejscowosc,
-                    customerAddress: model.Adres
-                }
+                entry
             },
         });
     }
@@ -356,9 +391,9 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
                     <div className="ms-Grid-col ms-sm6 ms-smPush1">
                         <TextField
                             multiline={true}
-                            value={model.NfzNotes}
+                            value={model.NfzNotatki}
                             placeholder="Notatki NFZ"
-                            onChange={onChangeText((m, v) => m.NfzNotes = v)}
+                            onChange={onChangeText((m, v) => m.NfzNotatki = v)}
                         />
                     </div>
                 </div>
@@ -378,7 +413,7 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
                             multiline={true}
                             placeholder="Dane opisowe"
                             value={model.KomercjaNotatki}
-                            onChange={onChangeText((m, v) => m.NfzNotes)}
+                            onChange={onChangeText((m, v) => m.NfzNotatki)}
                         />
                     </div>
                 </div>

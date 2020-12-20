@@ -156,6 +156,23 @@ class Given {
         .customerName(Name.of("some not-empty name"))
         .customerCityName(Name.of("some city"))
         .customerAddress("Some address")
+        .nfzUmowa(true)
+        .nfzMaFilie(true)
+        .nfzLekarz(true)
+        .nfzPolozna(true)
+        .nfzPielegniarkaSrodowiskowa(true)
+        .nfzMedycynaSzkolna(true)
+        .nfzTransportSanitarny(true)
+        .nfzNocnaPomocLekarska(true)
+        .nfzAmbulatoryjnaOpiekaSpecjalistyczna(true)
+        .nfzRehabilitacja(true)
+        .nfzStomatologia(true)
+        .nfzPsychiatria(true)
+        .nfzSzpitalnictwo(true)
+        .nfzProgramyProfilaktyczne(true)
+        .nfzZaopatrzenieOrtopedyczne(true)
+        .nfzOpiekaDlugoterminowa(true)
+        .nfzNotatki("some notes")
         .build();
     }
 }

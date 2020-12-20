@@ -25,8 +25,24 @@ class CustomerModelResolverPayload implements GraphQLResolver<CustomerEntity> {
                 it.getDistance(),
                 it.getCustomerName().getValue(),
                 it.getCustomerCityName().getValue(),
-                it.getCustomerAddress()
-            );
+                it.getCustomerAddress(),
+                it.isNfzUmowa(),
+                it.isNfzMaFilie(),
+                it.isNfzLekarz(),
+                it.isNfzPolozna(),
+                it.isNfzPielegniarkaSrodowiskowa(),
+                it.isNfzMedycynaSzkolna(),
+                it.isNfzTransportSanitarny(),
+                it.isNfzNocnaPomocLekarska(),
+                it.isNfzAmbulatoryjnaOpiekaSpecjalistyczna(),
+                it.isNfzRehabilitacja(),
+                it.isNfzStomatologia(),
+                it.isNfzPsychiatria(),
+                it.isNfzSzpitalnictwo(),
+                it.isNfzProgramyProfilaktyczne(),
+                it.isNfzZaopatrzenieOrtopedyczne(),
+                it.isNfzOpiekaDlugoterminowa(),
+                it.getNfzNotatki());
         }
         // TODO resolve if no data provided
         return null;

@@ -37,6 +37,23 @@ public class CustomersMutationSave extends AskTemplate<UpdateCustomerInfo, Entit
             .customerName(entry.getCustomerName())
             .customerCityName(entry.getCustomerCityName())
             .customerAddress(entry.getCustomerAddress())
+            .nfzUmowa(entry.isNfzUmowa())
+            .nfzMaFilie(entry.isNfzMaFilie())
+            .nfzLekarz(entry.isNfzLekarz())
+            .nfzPolozna(entry.isNfzPolozna())
+            .nfzPielegniarkaSrodowiskowa(entry.isNfzPielegniarkaSrodowiskowa())
+            .nfzMedycynaSzkolna(entry.isNfzMedycynaSzkolna())
+            .nfzTransportSanitarny(entry.isNfzTransportSanitarny())
+            .nfzNocnaPomocLekarska(entry.isNfzNocnaPomocLekarska())
+            .nfzAmbulatoryjnaOpiekaSpecjalistyczna(entry.isNfzAmbulatoryjnaOpiekaSpecjalistyczna())
+            .nfzRehabilitacja(entry.isNfzRehabilitacja())
+            .nfzStomatologia(entry.isNfzStomatologia())
+            .nfzPsychiatria(entry.isNfzPsychiatria())
+            .nfzSzpitalnictwo(entry.isNfzSzpitalnictwo())
+            .nfzProgramyProfilaktyczne(entry.isNfzProgramyProfilaktyczne())
+            .nfzZaopatrzenieOrtopedyczne(entry.isNfzZaopatrzenieOrtopedyczne())
+            .nfzOpiekaDlugoterminowa(entry.isNfzOpiekaDlugoterminowa())
+            .nfzNotatki(entry.getNfzNotatki())
             .build();
         return super.ask(cmd).thenApply(m -> new SomeEntity(m.getProjectId(), m.getId(), m.getVersion()));
     }

@@ -45,20 +45,56 @@ public class CustomerRepositoryImpl implements CustomerRepository {
         private String customerName;
         private String customerCityName;
         private String customerAddress;
+        private boolean nfzUmowa;
+        private boolean nfzMaFilie;
+        private boolean nfzLekarz;
+        private boolean nfzPolozna;
+        private boolean nfzPielegniarkaSrodowiskowa;
+        private boolean nfzMedycynaSzkolna;
+        private boolean nfzTransportSanitarny;
+        private boolean nfzNocnaPomocLekarska;
+        private boolean nfzAmbulatoryjnaOpiekaSpecjalistyczna;
+        private boolean nfzRehabilitacja;
+        private boolean nfzStomatologia;
+        private boolean nfzPsychiatria;
+        private boolean nfzSzpitalnictwo;
+        private boolean nfzProgramyProfilaktyczne;
+        private boolean nfzZaopatrzenieOrtopedyczne;
+        private boolean nfzOpiekaDlugoterminowa;
+        private String nfzNotatki;
     }
 
     private String insertTemplate = String.format("INSERT INTO "
         + "customers ("
         + "project_id, entity_id, entity_version,"
         + "customer_name, customer_city_name, customer_address,"
-        + "operator_email, billing_model, support_status, distance"
+        + "operator_email, billing_model, support_status, distance,"
+        + "nfz_umowa, nfz_ma_filie, nfz_lekarz, nfz_polozna, "
+        + "nfz_pielegniarka_srodowiskowa, nfz_medycyna_szkolna, nfz_transport_sanitarny, nfz_nocna_pomoc_lekarska, "
+        + "nfz_ambulatoryjna_opieka_specjalistyczna, nfz_rehabilitacja, nfz_stomatologia, nfz_psychiatria, "
+        + "nfz_szpitalnictwo, nfz_programy_profilaktyczne, nfz_zaopatrzenie_ortopedyczne, nfz_opieka_dlugoterminowa, "
+        + "nfz_notatki"
         + ") "
         + "VALUES (#{%s}, #{%s}, #{%s}+1,"
         + "#{%s}, #{%s}, #{%s},"
-        + "#{%s}, #{%s}, #{%s}, #{%s})",
+        + "#{%s}, #{%s}, #{%s}, #{%s},"
+        + "#{%s}, #{%s}, #{%s}, #{%s},"
+        + "#{%s}, #{%s}, #{%s}, #{%s},"
+        + "#{%s}, #{%s}, #{%s}, #{%s},"
+        + "#{%s}, #{%s}, #{%s}, #{%s},"
+        + "#{%s}"
+        + ")",
         SaveEntry.Fields.projectId, SaveEntry.Fields.entityId, SaveEntry.Fields.entityVersion,
         SaveEntry.Fields.customerName, SaveEntry.Fields.customerCityName, SaveEntry.Fields.customerAddress,
-        SaveEntry.Fields.operatorEmail, SaveEntry.Fields.billingModel, SaveEntry.Fields.supportStatus, SaveEntry.Fields.distance
+        SaveEntry.Fields.operatorEmail, SaveEntry.Fields.billingModel, SaveEntry.Fields.supportStatus, SaveEntry.Fields.distance,
+        SaveEntry.Fields.nfzUmowa, SaveEntry.Fields.nfzMaFilie, SaveEntry.Fields.nfzLekarz, SaveEntry.Fields.nfzPolozna,
+        SaveEntry.Fields.nfzPielegniarkaSrodowiskowa, SaveEntry.Fields.nfzMedycynaSzkolna, SaveEntry.Fields.nfzTransportSanitarny,
+            SaveEntry.Fields.nfzNocnaPomocLekarska,
+        SaveEntry.Fields.nfzAmbulatoryjnaOpiekaSpecjalistyczna, SaveEntry.Fields.nfzRehabilitacja, SaveEntry.Fields.nfzStomatologia,
+            SaveEntry.Fields.nfzPsychiatria,
+        SaveEntry.Fields.nfzSzpitalnictwo, SaveEntry.Fields.nfzProgramyProfilaktyczne, SaveEntry.Fields.nfzZaopatrzenieOrtopedyczne,
+            SaveEntry.Fields.nfzOpiekaDlugoterminowa,
+        SaveEntry.Fields.nfzNotatki
         );
     private String deleteTemplate = String.format("DELETE FROM "
         + "customers WHERE project_id=#{%s} AND entity_id=#{%s} AND entity_version=#{%s}",
@@ -76,6 +112,23 @@ public class CustomerRepositoryImpl implements CustomerRepository {
             .customerName(entity.getCustomerName().getValue())
             .customerCityName(entity.getCustomerCityName().getValue())
             .customerAddress(entity.getCustomerAddress())
+            .nfzUmowa(entity.isNfzUmowa())
+            .nfzMaFilie(entity.isNfzMaFilie())
+            .nfzLekarz(entity.isNfzLekarz())
+            .nfzPolozna(entity.isNfzPolozna())
+            .nfzPielegniarkaSrodowiskowa(entity.isNfzPielegniarkaSrodowiskowa())
+            .nfzMedycynaSzkolna(entity.isNfzMedycynaSzkolna())
+            .nfzTransportSanitarny(entity.isNfzTransportSanitarny())
+            .nfzNocnaPomocLekarska(entity.isNfzNocnaPomocLekarska())
+            .nfzAmbulatoryjnaOpiekaSpecjalistyczna(entity.isNfzAmbulatoryjnaOpiekaSpecjalistyczna())
+            .nfzRehabilitacja(entity.isNfzRehabilitacja())
+            .nfzStomatologia(entity.isNfzStomatologia())
+            .nfzPsychiatria(entity.isNfzPsychiatria())
+            .nfzSzpitalnictwo(entity.isNfzSzpitalnictwo())
+            .nfzProgramyProfilaktyczne(entity.isNfzProgramyProfilaktyczne())
+            .nfzZaopatrzenieOrtopedyczne(entity.isNfzZaopatrzenieOrtopedyczne())
+            .nfzOpiekaDlugoterminowa(entity.isNfzOpiekaDlugoterminowa())
+            .nfzNotatki(entity.getNfzNotatki())
             .build();
         return pgClient.withTransaction(client -> SqlTemplate
                 .forUpdate(client, insertTemplate)
@@ -127,7 +180,12 @@ public class CustomerRepositoryImpl implements CustomerRepository {
             .preparedQuery("SELECT "
                          + "project_id, entity_id, entity_version, "
                          + "customer_name, customer_city_name, customer_address, "
-                         + "operator_email, billing_model, support_status, distance "
+                         + "operator_email, billing_model, support_status, distance, "
+                         + "nfz_umowa, nfz_ma_filie, nfz_lekarz, nfz_polozna, "
+                         + "nfz_pielegniarka_srodowiskowa, nfz_medycyna_szkolna, nfz_transport_sanitarny, nfz_nocna_pomoc_lekarska, "
+                         + "nfz_ambulatoryjna_opieka_specjalistyczna, nfz_rehabilitacja, nfz_stomatologia, nfz_psychiatria, "
+                         + "nfz_szpitalnictwo, nfz_programy_profilaktyczne, nfz_zaopatrzenie_ortopedyczne, nfz_opieka_dlugoterminowa, "
+                         + "nfz_notatki "
                          + "FROM customers c "
                          + "WHERE " + whereClause)
             .execute(values, ar -> {
@@ -146,6 +204,23 @@ public class CustomerRepositoryImpl implements CustomerRepository {
                             .billingModel(row.getString("billing_model"))
                             .supportStatus(row.getString("support_status"))
                             .distance(row.getInteger("distance"))
+                            .nfzUmowa(row.getBoolean("nfz_umowa"))
+                            .nfzMaFilie(row.getBoolean("nfz_ma_filie"))
+                            .nfzLekarz(row.getBoolean("nfz_lekarz"))
+                            .nfzPolozna(row.getBoolean("nfz_polozna"))
+                            .nfzPielegniarkaSrodowiskowa(row.getBoolean("nfz_pielegniarka_srodowiskowa"))
+                            .nfzMedycynaSzkolna(row.getBoolean("nfz_medycyna_szkolna"))
+                            .nfzTransportSanitarny(row.getBoolean("nfz_transport_sanitarny"))
+                            .nfzNocnaPomocLekarska(row.getBoolean("nfz_nocna_pomoc_lekarska"))
+                            .nfzAmbulatoryjnaOpiekaSpecjalistyczna(row.getBoolean("nfz_ambulatoryjna_opieka_specjalistyczna"))
+                            .nfzRehabilitacja(row.getBoolean("nfz_rehabilitacja"))
+                            .nfzStomatologia(row.getBoolean("nfz_stomatologia"))
+                            .nfzPsychiatria(row.getBoolean("nfz_psychiatria"))
+                            .nfzSzpitalnictwo(row.getBoolean("nfz_szpitalnictwo"))
+                            .nfzProgramyProfilaktyczne(row.getBoolean("nfz_programy_profilaktyczne"))
+                            .nfzZaopatrzenieOrtopedyczne(row.getBoolean("nfz_zaopatrzenie_ortopedyczne"))
+                            .nfzOpiekaDlugoterminowa(row.getBoolean("nfz_opieka_dlugoterminowa"))
+                            .nfzNotatki(row.getString("nfz_notatki"))
                             .build()
                             .withId(projectId, entityId, entityVersion);
                         result = result.append(item);
