@@ -2,7 +2,7 @@ import React, { MouseEventHandler } from "react"
 
 import { Separator } from 'office-ui-fabric-react/lib/Separator';
 import { Stack, IStackTokens, IStackStyles } from 'office-ui-fabric-react/lib/Stack';
-import { Button, IComboBoxOption, ITextFieldStyles, TextField, Checkbox, PrimaryButton, IComboBox, ComboBox, Spinner, SpinnerSize } from "office-ui-fabric-react";
+import { IComboBoxOption, ITextFieldStyles, TextField, Checkbox, PrimaryButton, IComboBox, ComboBox, Spinner, SpinnerSize, DefaultButton } from "office-ui-fabric-react";
 import { useBoolean } from '@uifabric/react-hooks';
 import _ from "lodash";
 import { useGetUsers } from "../../api/useGetUsers";
@@ -57,7 +57,7 @@ type CustomerViewModel = {
     Obsluga: string | undefined;
     Rozliczenie: string | undefined;
     Dystans: string | undefined;
-    Nazwa: string | undefined; 
+    Nazwa: string | undefined;
     Miejscowosc: string | undefined;
     Adres: string | undefined;
     UmowaZNFZ: boolean;
@@ -79,6 +79,15 @@ type CustomerViewModel = {
     NfzNotatki: string | undefined;
     Komercja: boolean;
     KomercjaNotatki: string | undefined;
+    contacts: ContactDetails[]
+}
+
+interface ContactDetails {
+    type: 'NEW',
+    firstName?: string,
+    lastName?: string
+    phoneNo?: string,
+    email?: string
 }
 
 interface CustomerViewProps {
@@ -94,7 +103,7 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
         { key: 'Nie obsługiwany', text: 'Nie obsługiwany' },
         { key: 'Obsługa czasowo zawieszona', text: 'Obsługa czasowo zawieszona' },
     ];
-    
+
     const rozliczenia: IComboBoxOption[] = [
         { key: 'Ryczałt', text: 'Ryczałt' },
         { key: 'Godziny', text: 'Godziny' },
@@ -133,8 +142,18 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
         OpiekaDlugoterminowa: props.entry.nfzOpiekaDlugoterminowa ?? false,
         NfzNotatki: props.entry.nfzNotatki,
         Komercja: props.entry.komercjaJest ?? false,
-        KomercjaNotatki: props.entry.komercjaNotatki
+        KomercjaNotatki: props.entry.komercjaNotatki,
+        contacts: []
     });
+
+    const addContact = () => {
+        const newContact: ContactDetails = {
+            type: "NEW"
+        };
+        const cloned = _.clone(model);
+        cloned.contacts.push(newContact);
+        setModel(cloned);
+    }
 
     const onChangeBoolean = (changer: (m: CustomerViewModel, current: boolean) => void) => {
         return (ev?: React.FormEvent<HTMLElement>, checked?: boolean): void => {
@@ -164,9 +183,9 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
 
     const onChangeCombo = (changer: (m: CustomerViewModel, optionKey?: string) => void) => {
         return (event: React.FormEvent<IComboBox>, option?: IComboBoxOption, index?: number, value?: string): void => {
-          const cloned = _.clone(model);
-          changer(cloned, option!.key as string);
-          setModel(cloned);
+            const cloned = _.clone(model);
+            changer(cloned, option!.key as string);
+            setModel(cloned);
         }
     }
 
@@ -186,7 +205,7 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
         props.itemSaved();
     }
 
-    const [ saveDisabled, setSaveDisabled ] = React.useState(false);
+    const [saveDisabled, setSaveDisabled] = React.useState(false);
 
     const saveEndExit: MouseEventHandler<PrimaryButton> = (event): void => {
         setSaveDisabled(true);
@@ -229,7 +248,7 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
     }
 
     if (saveInProgress) {
-        return <Spinner size={SpinnerSize.large} /> 
+        return <Spinner size={SpinnerSize.large} />
     }
 
     return (
@@ -457,18 +476,12 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
             </>
             <>
                 <Separator alignContent="start">Dane kontaktowe</Separator>
-                <div className="ms-Grid-row">
-                    <div className="ms-Grid-col ms-smPush1">
 
-                        <Stack tokens={stackTokens}>
-                            <Stack horizontal tokens={stackTokens}>
-                                <TextField placeholder="Imię" />
-                                <TextField placeholder="Nazwisko" />
-                                <TextField placeholder="Nr telefonu" />
-                                <TextField placeholder="email" />
-                                <Button text="Usuń" />
-                            </Stack>
-                        </Stack>
+                {model.contacts.map(item => <NewContactItem />)}
+
+                <div className="ms-Grid-row">
+                    <div className="ms-Grid-col ms-smPush1 ms-sm3">
+                        <DefaultButton onClick={addContact}>Dodaj nowy kontakt</DefaultButton>
                     </div>
                 </div>
             </>
@@ -502,7 +515,7 @@ const UserPasswordItem: React.FC<UserPasswordItemProps> = props => {
                     <Stack horizontal tokens={stackTokens}>
                         <TextField placeholder="Użytkownik" />
                         <TextField placeholder="Hasło" />
-                        <Button text="Usuń" />
+                        <DefaultButton text="Usuń" />
                     </Stack>
                 </Stack>
             </div>
@@ -525,10 +538,26 @@ const UserPasswordItemExt: React.FC<UserPasswordItemPropsExt> = props => {
                         <TextField placeholder="Nr klienta" />
                         <TextField placeholder="Użytkownik" />
                         <TextField placeholder="Hasło" />
-                        <Button text="Usuń" />
+                        <DefaultButton text="Usuń" />
                     </Stack>
                 </Stack>
             </div>
         </div>
     );
+}
+
+const NewContactItem: React.FC<{}> = props => {
+    return (<div className="ms-Grid-row">
+        <div className="ms-Grid-col ms-smPush1">
+            <Stack tokens={stackTokens}>
+                <Stack horizontal tokens={stackTokens}>
+                    <TextField placeholder="Imię" />
+                    <TextField placeholder="Nazwisko" />
+                    <TextField placeholder="Nr telefonu" />
+                    <TextField placeholder="email" />
+                    <DefaultButton text="Usuń" />
+                </Stack>
+            </Stack>
+        </div>
+    </div>);
 }
