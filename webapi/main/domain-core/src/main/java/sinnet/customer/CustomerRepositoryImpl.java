@@ -179,10 +179,13 @@ public class CustomerRepositoryImpl implements CustomerRepository {
                     .forUpdate(client, insertTemplate)
                     .mapFrom(SaveEntry.class)
                     .execute(entry))
-                .flatMap(res -> SqlTemplate
-                    .forUpdate(client, insertAuthTemplate)
-                    .mapFrom(SaveAuthEntry.class)
-                    .executeBatch(authBatch))
+                .map(res -> {
+                    if (authBatch.isEmpty()) return Boolean.TRUE;
+                    SqlTemplate
+                        .forUpdate(client, insertAuthTemplate)
+                        .mapFrom(SaveAuthEntry.class)
+                        .executeBatch(authBatch);
+                    return Boolean.TRUE; })
                 .map(ignored -> EntityId.of(id.getProjectId(), id.getId(), id.getVersion() + 1)));
     }
 
