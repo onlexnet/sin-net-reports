@@ -119,7 +119,7 @@ public class CustomerRepositoryImpl implements CustomerRepository {
         private String password;
     }
     private String insertAuthTemplate = String.format(
-        "INSERT INTO authorization "
+        "INSERT INTO \"authorization\" "
         + "("
         + "customer_id, location, username, password"
         + ") "
