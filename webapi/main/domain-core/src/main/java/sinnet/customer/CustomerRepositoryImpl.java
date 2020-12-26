@@ -1,16 +1,19 @@
 package sinnet.customer;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import io.vavr.Tuple2;
 import io.vavr.collection.List;
+import io.vavr.collection.Stream;
 import io.vertx.core.Future;
-import io.vertx.core.Promise;
 import io.vertx.pgclient.PgPool;
+import io.vertx.sqlclient.Row;
 import io.vertx.sqlclient.Tuple;
 import io.vertx.sqlclient.templates.SqlTemplate;
 import lombok.Builder;
@@ -222,65 +225,97 @@ public class CustomerRepositoryImpl implements CustomerRepository {
     }
 
     private Future<List<Entity<CustomerValue>>> get(String whereClause, Tuple values) {
-        var promise = Promise.<List<Entity<CustomerValue>>>promise();
-        pgClient
-            .preparedQuery("SELECT "
-                         + "project_id, entity_id, entity_version, "
-                         + "customer_name, customer_city_name, customer_address, "
-                         + "operator_email, billing_model, support_status, distance, "
-                         + "nfz_umowa, nfz_ma_filie, nfz_lekarz, nfz_polozna, "
-                         + "nfz_pielegniarka_srodowiskowa, nfz_medycyna_szkolna, nfz_transport_sanitarny, nfz_nocna_pomoc_lekarska, "
-                         + "nfz_ambulatoryjna_opieka_specjalistyczna, nfz_rehabilitacja, nfz_stomatologia, nfz_psychiatria, "
-                         + "nfz_szpitalnictwo, nfz_programy_profilaktyczne, nfz_zaopatrzenie_ortopedyczne, nfz_opieka_dlugoterminowa, "
-                         + "nfz_notatki, "
-                         + "komercja_jest, komercja_notatki "
-                         + "FROM customers c "
-                         + "WHERE " + whereClause)
-            .execute(values, ar -> {
-                if (ar.succeeded()) {
-                    var result = List.<Entity<CustomerValue>>empty();
-                    var iter = ar.result();
-                    for (var row: iter) {
-                        var projectId = row.getUUID("project_id");
-                        var entityId = row.getUUID("entity_id");
-                        var entityVersion = row.getInteger("entity_version");
-                        var item = CustomerValue.builder()
-                            .customerName(Name.of(row.getString("customer_name")))
-                            .customerCityName(Name.of(row.getString("customer_city_name")))
-                            .customerAddress(row.getString("customer_address"))
-                            .operatorEmail(row.getString("operator_email"))
-                            .billingModel(row.getString("billing_model"))
-                            .supportStatus(row.getString("support_status"))
-                            .distance(row.getInteger("distance"))
-                            .nfzUmowa(row.getBoolean("nfz_umowa"))
-                            .nfzMaFilie(row.getBoolean("nfz_ma_filie"))
-                            .nfzLekarz(row.getBoolean("nfz_lekarz"))
-                            .nfzPolozna(row.getBoolean("nfz_polozna"))
-                            .nfzPielegniarkaSrodowiskowa(row.getBoolean("nfz_pielegniarka_srodowiskowa"))
-                            .nfzMedycynaSzkolna(row.getBoolean("nfz_medycyna_szkolna"))
-                            .nfzTransportSanitarny(row.getBoolean("nfz_transport_sanitarny"))
-                            .nfzNocnaPomocLekarska(row.getBoolean("nfz_nocna_pomoc_lekarska"))
-                            .nfzAmbulatoryjnaOpiekaSpecjalistyczna(row.getBoolean("nfz_ambulatoryjna_opieka_specjalistyczna"))
-                            .nfzRehabilitacja(row.getBoolean("nfz_rehabilitacja"))
-                            .nfzStomatologia(row.getBoolean("nfz_stomatologia"))
-                            .nfzPsychiatria(row.getBoolean("nfz_psychiatria"))
-                            .nfzSzpitalnictwo(row.getBoolean("nfz_szpitalnictwo"))
-                            .nfzProgramyProfilaktyczne(row.getBoolean("nfz_programy_profilaktyczne"))
-                            .nfzZaopatrzenieOrtopedyczne(row.getBoolean("nfz_zaopatrzenie_ortopedyczne"))
-                            .nfzOpiekaDlugoterminowa(row.getBoolean("nfz_opieka_dlugoterminowa"))
-                            .nfzNotatki(row.getString("nfz_notatki"))
-                            .komercjaJest(row.getBoolean("komercja_jest"))
-                            .komercjaNotatki(row.getString("komercja_notatki"))
-                            .build()
-                            .withId(projectId, entityId, entityVersion);
-                        result = result.append(item);
-                    }
-                    promise.complete(result);
-                } else {
-                    log.error("CustomerRepositoryImpl.get", ar.cause());
-                    promise.complete(null);
-                }
-            });
-        return promise.future();
+        return pgClient.withTransaction(client ->
+            client.preparedQuery("SELECT "
+                + "project_id, entity_id, entity_version, "
+                + "customer_name, customer_city_name, customer_address, "
+                + "operator_email, billing_model, support_status, distance, "
+                + "nfz_umowa, nfz_ma_filie, nfz_lekarz, nfz_polozna, "
+                + "nfz_pielegniarka_srodowiskowa, nfz_medycyna_szkolna, nfz_transport_sanitarny, nfz_nocna_pomoc_lekarska, "
+                + "nfz_ambulatoryjna_opieka_specjalistyczna, nfz_rehabilitacja, nfz_stomatologia, nfz_psychiatria, "
+                + "nfz_szpitalnictwo, nfz_programy_profilaktyczne, nfz_zaopatrzenie_ortopedyczne, nfz_opieka_dlugoterminowa, "
+                + "nfz_notatki, "
+                + "komercja_jest, komercja_notatki "
+                + "FROM customers c "
+                + "WHERE " + whereClause)
+                .execute(values)
+                .flatMap(ar -> {
+                    var customers = Stream.ofAll(ar)
+                        .map(row -> toCustomerEntity(row));
+                    var ids = customers
+                        .map(it -> it.getEntityId())
+                        .map(it -> Collections.singletonMap("cid", (Object) it))
+                        .toJavaList();
+                    return SqlTemplate
+                        .forQuery(client, "SELECT location, username, password WHERE customer_id=#{cid}")
+                        .executeBatch(ids)
+                        .map(rows -> Stream
+                            .ofAll(rows)
+                            .map(row -> toCustomerAuthorization(row)))
+                        .map(it -> finalMapping(customers, it));
+                })
+        );
+    }
+
+    static List<Entity<CustomerValue>> finalMapping(Stream<Entity<CustomerValue>> customers,
+                                                    Stream<Tuple2<UUID, CustomerAuthorization>> authorizations) {
+        var groupedAuths = authorizations.groupBy(it -> it._1);
+        return customers.map(it -> {
+            var customerId = it.getEntityId();
+            var auths = groupedAuths.get(customerId).get()
+                .map(v -> v._2)
+                .toJavaArray(CustomerAuthorization[]::new);
+            var value = it.getValue()
+                .toBuilder()
+                .authorisations(auths)
+                .build();
+            return value.withId(it.getProjectId(), it.getEntityId(), it.getVersion());
+        }).toList();
+    }
+
+
+    static Tuple2<UUID, CustomerAuthorization> toCustomerAuthorization(Row row) {
+        var key = row.getUUID("customer_id");
+        var result = CustomerAuthorization.builder()
+            .location(row.getString("location"))
+            .username(row.getString("username"))
+            .password(row.getString("password"))
+            .build();
+        return new Tuple2<>(key, result);
+    }
+
+    static Entity<CustomerValue> toCustomerEntity(Row row) {
+        var value = CustomerValue.builder()
+        .customerName(Name.of(row.getString("customer_name")))
+        .customerCityName(Name.of(row.getString("customer_city_name")))
+        .customerAddress(row.getString("customer_address"))
+        .operatorEmail(row.getString("operator_email"))
+        .billingModel(row.getString("billing_model"))
+        .supportStatus(row.getString("support_status"))
+        .distance(row.getInteger("distance"))
+        .nfzUmowa(row.getBoolean("nfz_umowa"))
+        .nfzMaFilie(row.getBoolean("nfz_ma_filie"))
+        .nfzLekarz(row.getBoolean("nfz_lekarz"))
+        .nfzPolozna(row.getBoolean("nfz_polozna"))
+        .nfzPielegniarkaSrodowiskowa(row.getBoolean("nfz_pielegniarka_srodowiskowa"))
+        .nfzMedycynaSzkolna(row.getBoolean("nfz_medycyna_szkolna"))
+        .nfzTransportSanitarny(row.getBoolean("nfz_transport_sanitarny"))
+        .nfzNocnaPomocLekarska(row.getBoolean("nfz_nocna_pomoc_lekarska"))
+        .nfzAmbulatoryjnaOpiekaSpecjalistyczna(row.getBoolean("nfz_ambulatoryjna_opieka_specjalistyczna"))
+        .nfzRehabilitacja(row.getBoolean("nfz_rehabilitacja"))
+        .nfzStomatologia(row.getBoolean("nfz_stomatologia"))
+        .nfzPsychiatria(row.getBoolean("nfz_psychiatria"))
+        .nfzSzpitalnictwo(row.getBoolean("nfz_szpitalnictwo"))
+        .nfzProgramyProfilaktyczne(row.getBoolean("nfz_programy_profilaktyczne"))
+        .nfzZaopatrzenieOrtopedyczne(row.getBoolean("nfz_zaopatrzenie_ortopedyczne"))
+        .nfzOpiekaDlugoterminowa(row.getBoolean("nfz_opieka_dlugoterminowa"))
+        .nfzNotatki(row.getString("nfz_notatki"))
+        .komercjaJest(row.getBoolean("komercja_jest"))
+        .komercjaNotatki(row.getString("komercja_notatki"))
+        .build();
+        var projectId = row.getUUID("project_id");
+        var entityId = row.getUUID("entity_id");
+        var entityVersion = row.getInteger("entity_version");
+        return value.withId(projectId, entityId, entityVersion);
     }
 }

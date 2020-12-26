@@ -40,6 +40,7 @@ public final class CustomerValue implements EntityValue<CustomerValue> {
     private String nfzNotatki;
     private boolean komercjaJest;
     private String komercjaNotatki;
+    private CustomerAuthorization[] authorisations;
 
     @JsonPOJOBuilder(withPrefix = "")
     public static class MyBuilder {
