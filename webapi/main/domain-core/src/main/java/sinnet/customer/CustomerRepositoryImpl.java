@@ -247,7 +247,7 @@ public class CustomerRepositoryImpl implements CustomerRepository {
                         .map(it -> Collections.singletonMap("cid", (Object) it))
                         .toJavaList();
                     return SqlTemplate
-                        .forQuery(client, "SELECT location, username, password WHERE customer_id=#{cid}")
+                        .forQuery(client, "SELECT location, username, password FROM \"authorization\" WHERE customer_id=#{cid}")
                         .executeBatch(ids)
                         .map(rows -> Stream
                             .ofAll(rows)
