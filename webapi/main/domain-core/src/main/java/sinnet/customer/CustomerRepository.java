@@ -3,6 +3,7 @@ package sinnet.customer;
 import java.util.UUID;
 
 import io.vertx.core.Future;
+import sinnet.models.CustomerAuthorisation;
 import sinnet.models.CustomerValue;
 import sinnet.models.Entity;
 import sinnet.models.EntityId;
@@ -14,7 +15,7 @@ interface CustomerRepository {
      * <p>
      * @return new EID for just stored entity.
      */
-    Future<EntityId> save(EntityId eid, CustomerValue value);
+    Future<EntityId> save(EntityId eid, CustomerValue value, CustomerAuthorisation[] auth);
 
     Future<Entity<CustomerValue>> get(EntityId id);
 

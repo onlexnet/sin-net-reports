@@ -8,9 +8,7 @@ import _ from "lodash";
 import { useGetUsers } from "../../api/useGetUsers";
 import { CustomerEntry, useSaveCustomerMutation } from "../../Components/.generated/components";
 import { EntityId } from "../../store/actions/ServiceModel";
-import { NewAuthorisation } from "./View.NewAuthorisation";
-import { UserPasswordItem } from "./View.UserPasswordItem";
-import { UserPasswordItemExt } from "./View.UserPasswordItemEx";
+import { NewAuthorisation } from "../customer/View.NewAuthorisation";
 
 
 const stackStyles: Partial<IStackStyles> = { root: { width: 650 } };
@@ -82,11 +80,7 @@ type CustomerViewModel = {
     NfzNotatki: string | undefined;
     Komercja: boolean;
     KomercjaNotatki: string | undefined;
-    Kontakty: ContactDetails[],
-    Autoryzacje: AuthorisationModel[],
-    AutoryzacjeEx: AuthorisationExModel[]
-
-
+    contacts: ContactDetails[]
 }
 
 interface ContactDetails {
@@ -95,14 +89,6 @@ interface ContactDetails {
     lastName?: string
     phoneNo?: string,
     email?: string
-}
-
-interface AuthorisationModel {
-    name: string
-}
-
-interface AuthorisationExModel {
-    name: string
 }
 
 interface CustomerViewProps {
@@ -158,9 +144,7 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
         NfzNotatki: props.entry.nfzNotatki,
         Komercja: props.entry.komercjaJest ?? false,
         KomercjaNotatki: props.entry.komercjaNotatki,
-        Kontakty: [],
-        Autoryzacje: [],
-        AutoryzacjeEx: []
+        contacts: []
     });
 
     const addContact = () => {
@@ -168,7 +152,7 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
             type: "NEW"
         };
         const cloned = _.clone(model);
-        cloned.Kontakty.push(newContact);
+        cloned.contacts.push(newContact);
         setModel(cloned);
     }
 
@@ -478,32 +462,21 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
             </>
             <>
                 <Separator alignContent="start">Autoryzacje</Separator>
-
-                {model.AutoryzacjeEx.map(item => <UserPasswordItemExt sectionName={item.name} />)}
-                {model.Autoryzacje.map(item => <UserPasswordItem sectionName={item.name} />)}
-
-                <NewAuthorisation
-                    newAuthorisationExRequested={name => {
-                        const clone = _.clone(model);
-                        const newItem: AuthorisationExModel = {
-                            name
-                        };
-                        clone.AutoryzacjeEx.push(newItem);
-                        setModel(clone);
-                    }}
-                    newAuthorisationRequested={name => {
-                        const clone = _.clone(model);
-                        const newItem: AuthorisationModel = {
-                            name
-                        };
-                        clone.Autoryzacje.push(newItem);
-                        setModel(clone);
-                    }} />
+                <UserPasswordItem sectionName="Portal personelu" />
+                <UserPasswordItemExt sectionName="Portal świadczeniodawcy" />
+                <UserPasswordItem sectionName="MUS" />
+                <UserPasswordItemExt sectionName="SIMP" />
+                <UserPasswordItem sectionName="SZOI" />
+                <UserPasswordItem sectionName="EWUŚ" />
+                <UserPasswordItem sectionName="ePUB" />
+                <UserPasswordItem sectionName="GUS" />
+                <UserPasswordItem sectionName="DILO" />
+                <NewAuthorisation newAuthorisationExRequested={name => {}} newAuthorisationRequested={name => {}} />
             </>
             <>
                 <Separator alignContent="start">Dane kontaktowe</Separator>
 
-                {model.Kontakty.map(item => <NewContactItem />)}
+                {model.contacts.map(item => <NewContactItem />)}
 
                 <div className="ms-Grid-row">
                     <div className="ms-Grid-col ms-smPush1 ms-sm4">
@@ -525,6 +498,50 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
                 </div>
             </>
         </HorizontalSeparatorStack>
+    );
+}
+
+interface UserPasswordItemProps {
+    sectionName: string
+}
+
+const UserPasswordItem: React.FC<UserPasswordItemProps> = props => {
+    return (
+        <div className="ms-Grid-row">
+            <div className="ms-Grid-col ms-smPush1">
+                <Separator alignContent="start">{props.sectionName}</Separator>
+                <Stack tokens={stackTokens}>
+                    <Stack horizontal tokens={stackTokens}>
+                        <TextField placeholder="Użytkownik" />
+                        <TextField placeholder="Hasło" />
+                        <DefaultButton text="Usuń" />
+                    </Stack>
+                </Stack>
+            </div>
+        </div>
+    );
+}
+
+interface UserPasswordItemPropsExt {
+    sectionName: string
+}
+
+const UserPasswordItemExt: React.FC<UserPasswordItemPropsExt> = props => {
+    return (
+        <div className="ms-Grid-row">
+            <div className="ms-Grid-col ms-smPush1">
+                <Separator alignContent="start">{props.sectionName}</Separator>
+                <Stack tokens={stackTokens}>
+                    <Stack horizontal tokens={stackTokens}>
+                        <TextField placeholder="Oddział NFZ" />
+                        <TextField placeholder="Nr klienta" />
+                        <TextField placeholder="Użytkownik" />
+                        <TextField placeholder="Hasło" />
+                        <DefaultButton text="Usuń" />
+                    </Stack>
+                </Stack>
+            </div>
+        </div>
     );
 }
 

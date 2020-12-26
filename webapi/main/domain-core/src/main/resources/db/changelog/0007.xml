@@ -1,0 +1,30 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.0.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
+    <changeSet author="siudeks" id="20201225-1">
+        <createTable tableName="authorization">
+            <column name="customer_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>         
+            <column name="location" type="varchar(50)"/>
+            <column name="username" type="varchar(50)"/>
+            <column name="password" type="varchar(50)"/>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="authorization"
+                                 baseColumnNames="customer_id"
+                                 constraintName="authorization_FK1"
+                                 referencedTableName="customers"
+                                 referencedColumnNames="entity_id" />
+        <createTable tableName="authorization_ex">
+            <column name="customer_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>         
+            <column name="location" type="varchar(50)"/>
+            <column name="username" type="varchar(50)"/>
+            <column name="password" type="varchar(50)"/>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="authorization_ex"
+                                 baseColumnNames="customer_id"
+                                 constraintName="authorization_ex_FK1"
+                                 referencedTableName="customers"
+                                 referencedColumnNames="entity_id" />
+    </changeSet>
+</databaseChangeLog>

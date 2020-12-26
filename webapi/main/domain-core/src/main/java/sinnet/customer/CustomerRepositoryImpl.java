@@ -1,6 +1,8 @@
 package sinnet.customer;
 
+import java.util.Arrays;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -15,6 +17,7 @@ import lombok.Builder;
 import lombok.Value;
 import lombok.experimental.FieldNameConstants;
 import lombok.extern.slf4j.Slf4j;
+import sinnet.models.CustomerAuthorisation;
 import sinnet.models.CustomerValue;
 import sinnet.models.Entity;
 import sinnet.models.EntityId;
@@ -66,6 +69,10 @@ public class CustomerRepositoryImpl implements CustomerRepository {
         private String komercjaNotatki;
     }
 
+    private String deleteTemplate = String.format("DELETE FROM "
+        + "customers WHERE project_id=#{%s} AND entity_id=#{%s} AND entity_version=#{%s}",
+        SaveEntry.Fields.projectId, SaveEntry.Fields.entityId, SaveEntry.Fields.entityVersion);
+
     private String insertTemplate = String.format("INSERT INTO "
         + "customers ("
         + "project_id, entity_id, entity_version,"
@@ -100,13 +107,30 @@ public class CustomerRepositoryImpl implements CustomerRepository {
         SaveEntry.Fields.nfzSzpitalnictwo, SaveEntry.Fields.nfzProgramyProfilaktyczne, SaveEntry.Fields.nfzZaopatrzenieOrtopedyczne,
             SaveEntry.Fields.nfzOpiekaDlugoterminowa,
         SaveEntry.Fields.nfzNotatki,
-        SaveEntry.Fields.komercjaJest, SaveEntry.Fields.komercjaNotatki
-        );
-    private String deleteTemplate = String.format("DELETE FROM "
-        + "customers WHERE project_id=#{%s} AND entity_id=#{%s} AND entity_version=#{%s}",
-        SaveEntry.Fields.projectId, SaveEntry.Fields.entityId, SaveEntry.Fields.entityVersion);
+        SaveEntry.Fields.komercjaJest, SaveEntry.Fields.komercjaNotatki);
 
-    public Future<EntityId> save(EntityId id, CustomerValue entity) {
+    @Value
+    @Builder
+    @FieldNameConstants
+    static class SaveAuthEntry {
+        private UUID customerId;
+        private String location;
+        private String username;
+        private String password;
+    }
+    private String insertAuthTemplate = String.format("INSERT INTO "
+        + "authorisation ("
+        + "customer_id, location, username, password)"
+        + ") "
+        + "VALUES ("
+        + "#{%s}, #{%s}, #{%s}, #{%s}"
+        + ")",
+        SaveAuthEntry.Fields.customerId,
+        SaveAuthEntry.Fields.location,
+        SaveAuthEntry.Fields.username,
+        SaveAuthEntry.Fields.password);
+
+    public Future<EntityId> save(EntityId id, CustomerValue entity, CustomerAuthorisation[] auth) {
         var entry = SaveEntry.builder()
             .projectId(id.getProjectId())
             .entityId(id.getId())
@@ -138,16 +162,27 @@ public class CustomerRepositoryImpl implements CustomerRepository {
             .komercjaJest(entity.isKomercjaJest())
             .komercjaNotatki(entity.getKomercjaNotatki())
             .build();
+        var authBatch = Arrays.stream(auth)
+            .map(it -> SaveAuthEntry.builder()
+                                   .customerId(id.getId())
+                                   .location(it.getLocation())
+                                   .username(it.getUsername())
+                                   .password(it.getPassword())
+                                   .build())
+            .collect(Collectors.toList());
         return pgClient.withTransaction(client -> SqlTemplate
-                .forUpdate(client, insertTemplate)
+                .forUpdate(client, deleteTemplate)
                 .mapFrom(SaveEntry.class)
                 .execute(entry)
                 .flatMap(res -> SqlTemplate
-                    .forUpdate(client, deleteTemplate)
+                    .forUpdate(client, insertTemplate)
                     .mapFrom(SaveEntry.class)
-                    .execute(entry)
-                    .map(EntityId.of(id.getProjectId(), id.getId(), id.getVersion() + 1)))
-        );
+                    .execute(entry))
+                .flatMap(res -> SqlTemplate
+                    .forUpdate(client, insertAuthTemplate)
+                    .mapFrom(SaveAuthEntry.class)
+                    .executeBatch(authBatch))
+                .map(ignored -> EntityId.of(id.getProjectId(), id.getId(), id.getVersion() + 1)));
     }
 
     private final Exception noDataException = new Exception("No data");

@@ -17,6 +17,7 @@ import io.vertx.core.CompositeFuture;
 import lombok.experimental.UtilityClass;
 import sinnet.AppTestContext;
 import sinnet.Sync;
+import sinnet.models.CustomerAuthorisation;
 import sinnet.models.CustomerValue;
 import sinnet.models.EntityId;
 import sinnet.models.Name;
@@ -43,7 +44,7 @@ public class CustomerRepositoryTests {
             .and(ignored -> {
                 var model = Given.minValidModel();
                 return repository
-                       .save(givenEntityId, model); })
+                       .save(givenEntityId, model, Given.emptyAuth()); })
             .get();
 
         var expected = EntityId.of(projectId, givenEntityId.getId(), givenEntityId.getVersion() + 1);
@@ -58,7 +59,7 @@ public class CustomerRepositoryTests {
         var someId = EntityId.anyNew(projectId);
         var model = Given.fullModel();
 
-        Sync.of(() -> repository.save(someId, model))
+        Sync.of(() -> repository.save(someId, model, Given.emptyAuth()))
             .and(it -> repository.get(it))
             .checkpoint(it -> assertThat(it.getValue()).isEqualTo(model));
     }
@@ -73,8 +74,8 @@ public class CustomerRepositoryTests {
             .and(ignored -> {
                 var someModel = Given.minValidModel();
                 return CompositeFuture
-                    .all(repository.save(id1, someModel),
-                        repository.save(id2, someModel))
+                    .all(repository.save(id1, someModel, Given.emptyAuth()),
+                        repository.save(id2, someModel, Given.emptyAuth()))
                     .map(it -> true); })
             .and(it -> repository.list(projectId))
             .get();
@@ -90,8 +91,8 @@ public class CustomerRepositoryTests {
 
         var validModel = Given.minValidModel();
         var eid = EntityId.anyNew(projectId);
-        var eidV1 = Sync.of(() -> repository.save(eid, validModel)).get();
-        var eidV2 = Sync.of(() -> repository.save(eidV1, validModel)).get();
+        var eidV1 = Sync.of(() -> repository.save(eid, validModel, Given.emptyAuth())).get();
+        var eidV2 = Sync.of(() -> repository.save(eidV1, validModel, Given.emptyAuth())).get();
 
         Sync
             .of(() -> repository.list(projectId))
@@ -105,11 +106,11 @@ public class CustomerRepositoryTests {
 
         var validModel = Given.minValidModel();
         var eid = EntityId.anyNew(projectId);
-        var newEid = Sync.of(() -> repository.save(eid, validModel)).get();
+        var newEid = Sync.of(() -> repository.save(eid, validModel, Given.emptyAuth())).get();
 
         var invalidModel = Given.invalidModel();
         Assertions
-            .catchThrowable(() -> Sync.of(() -> repository.save(newEid, invalidModel)).get());
+            .catchThrowable(() -> Sync.of(() -> repository.save(newEid, invalidModel, Given.emptyAuth())).get());
 
         var list = Sync.of(() -> repository.list(projectId)).get();
         Assertions
@@ -124,10 +125,10 @@ public class CustomerRepositoryTests {
 
         var validModel = Given.minValidModel();
         var eid = EntityId.anyNew(projectId);
-        var nextId = Sync.of(() -> repository.save(eid, validModel)).get();
+        var nextId = Sync.of(() -> repository.save(eid, validModel, Given.emptyAuth())).get();
 
         var invalidEid = EntityId.of(nextId.getProjectId(), nextId.getId(), nextId.getVersion() + 1);
-        Sync.of(() -> repository.save(invalidEid, validModel)).tryGet();
+        Sync.of(() -> repository.save(invalidEid, validModel, Given.emptyAuth())).tryGet();
 
         Sync
             .of(() -> repository.list(projectId))
@@ -141,6 +142,10 @@ class Given {
         return CustomerValue.builder()
         .customerName(Name.of("some not-empty name"))
         .build();
+    }
+
+    static CustomerAuthorisation[] emptyAuth() {
+        return new CustomerAuthorisation[0];
     }
 
     static CustomerValue invalidModel() {
