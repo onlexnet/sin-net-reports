@@ -17,7 +17,7 @@ import lombok.Builder;
 import lombok.Value;
 import lombok.experimental.FieldNameConstants;
 import lombok.extern.slf4j.Slf4j;
-import sinnet.models.CustomerAuthorisation;
+import sinnet.models.CustomerAuthorization;
 import sinnet.models.CustomerValue;
 import sinnet.models.Entity;
 import sinnet.models.EntityId;
@@ -118,9 +118,10 @@ public class CustomerRepositoryImpl implements CustomerRepository {
         private String username;
         private String password;
     }
-    private String insertAuthTemplate = String.format("INSERT INTO "
-        + "authorisation ("
-        + "customer_id, location, username, password)"
+    private String insertAuthTemplate = String.format(
+        "INSERT INTO authorization "
+        + "("
+        + "customer_id, location, username, password"
         + ") "
         + "VALUES ("
         + "#{%s}, #{%s}, #{%s}, #{%s}"
@@ -130,7 +131,7 @@ public class CustomerRepositoryImpl implements CustomerRepository {
         SaveAuthEntry.Fields.username,
         SaveAuthEntry.Fields.password);
 
-    public Future<EntityId> save(EntityId id, CustomerValue entity, CustomerAuthorisation[] auth) {
+    public Future<EntityId> save(EntityId id, CustomerValue entity, CustomerAuthorization[] auth) {
         var entry = SaveEntry.builder()
             .projectId(id.getProjectId())
             .entityId(id.getId())

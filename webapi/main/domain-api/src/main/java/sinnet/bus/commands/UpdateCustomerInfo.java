@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import sinnet.bus.EntityId;
 import sinnet.bus.JsonMessage;
-import sinnet.models.CustomerAuthorisation;
+import sinnet.models.CustomerAuthorization;
 import sinnet.models.CustomerValue;
 
 @Data
@@ -19,5 +19,5 @@ public class UpdateCustomerInfo implements JsonMessage {
 
     private EntityId id;
     private CustomerValue value;
-    private CustomerAuthorisation[] authorisations;
+    private CustomerAuthorization[] authorizations;
 }

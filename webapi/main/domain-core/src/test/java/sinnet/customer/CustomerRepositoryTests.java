@@ -17,7 +17,7 @@ import io.vertx.core.CompositeFuture;
 import lombok.experimental.UtilityClass;
 import sinnet.AppTestContext;
 import sinnet.Sync;
-import sinnet.models.CustomerAuthorisation;
+import sinnet.models.CustomerAuthorization;
 import sinnet.models.CustomerValue;
 import sinnet.models.EntityId;
 import sinnet.models.Name;
@@ -144,8 +144,8 @@ class Given {
         .build();
     }
 
-    static CustomerAuthorisation[] emptyAuth() {
-        return new CustomerAuthorisation[0];
+    static CustomerAuthorization[] emptyAuth() {
+        return new CustomerAuthorization[0];
     }
 
     static CustomerValue invalidModel() {

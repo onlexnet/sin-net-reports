@@ -50,8 +50,8 @@ public class CustomerService extends AbstractVerticle implements TopLevelVerticl
         protected Future<sinnet.bus.EntityId> onRequest(UpdateCustomerInfo msg) {
             var eid = EntityId.of(msg.getId().getProjectId(), msg.getId().getId(), msg.getId().getVersion());
             var value = msg.getValue();
-            var authorisations = msg.getAuthorisations();
-            return repository.save(eid, value, authorisations)
+            var authorizations = msg.getAuthorizations();
+            return repository.save(eid, value, authorizations)
                     .map(it -> new sinnet.bus.EntityId(it.getProjectId(), it.getId(), it.getVersion()));
         }
     }
