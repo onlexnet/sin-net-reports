@@ -74,7 +74,7 @@ public class CustomerRepositoryTests {
         var model = Given.minValidModel();
         var auths = Given.multipleAuthorisations();
 
-        Sync.of(() -> repository.save(someId, model, Given.multipleAuthorisations()))
+        Sync.of(() -> repository.save(someId, model, auths))
             .and(it -> repository.get(it))
             .checkpoint(it -> assertThat(it.getValue().getAuthorisations()).containsOnly(auths));
     }
