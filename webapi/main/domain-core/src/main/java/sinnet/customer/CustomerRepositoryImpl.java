@@ -262,12 +262,13 @@ public class CustomerRepositoryImpl implements CustomerRepository {
         var groupedAuths = authorizations.groupBy(it -> it._1);
         return customers.map(it -> {
             var customerId = it.getEntityId();
-            var auths = groupedAuths.get(customerId).get()
+            var customerAuths = groupedAuths.get(customerId)
+                .getOrElse(Stream.empty())
                 .map(v -> v._2)
                 .toJavaArray(CustomerAuthorization[]::new);
             var value = it.getValue()
                 .toBuilder()
-                .authorisations(auths)
+                .authorisations(customerAuths)
                 .build();
             return value.withId(it.getProjectId(), it.getEntityId(), it.getVersion());
         }).toList();
