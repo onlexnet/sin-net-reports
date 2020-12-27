@@ -51,7 +51,7 @@ public class CustomerService extends AbstractVerticle implements TopLevelVerticl
             var eid = EntityId.of(msg.getId().getProjectId(), msg.getId().getId(), msg.getId().getVersion());
             var value = msg.getValue();
             var authorizations = msg.getAuthorizations();
-            return repository.save(eid, value, authorizations)
+            return repository.write(eid, value, authorizations)
                     .map(it -> new sinnet.bus.EntityId(it.getProjectId(), it.getId(), it.getVersion()));
         }
     }

@@ -46,7 +46,7 @@ public class CustomerRepositoryTests {
             .and(ignored -> {
                 var model = Given.minValidModel();
                 return repository
-                       .save(givenEntityId, model, Given.emptyAuth()); })
+                       .write(givenEntityId, model, Given.emptyAuth()); })
             .get();
 
         var expected = EntityId.of(projectId, givenEntityId.getId(), givenEntityId.getVersion() + 1);
@@ -61,7 +61,7 @@ public class CustomerRepositoryTests {
         var someId = EntityId.anyNew(projectId);
         var model = Given.fullModel();
 
-        Sync.of(() -> repository.save(someId, model, Given.emptyAuth()))
+        Sync.of(() -> repository.write(someId, model, Given.emptyAuth()))
             .and(it -> repository.get(it))
             .checkpoint(it -> assertThat(it.getValue()).isEqualTo(model));
     }
@@ -76,8 +76,8 @@ public class CustomerRepositoryTests {
             .and(ignored -> {
                 var someModel = Given.minValidModel();
                 return CompositeFuture
-                    .all(repository.save(id1, someModel, Given.emptyAuth()),
-                        repository.save(id2, someModel, Given.emptyAuth()))
+                    .all(repository.write(id1, someModel, Given.emptyAuth()),
+                        repository.write(id2, someModel, Given.emptyAuth()))
                     .map(it -> true); })
             .and(it -> repository.list(projectId))
             .get();
@@ -93,8 +93,8 @@ public class CustomerRepositoryTests {
 
         var validModel = Given.minValidModel();
         var eid = EntityId.anyNew(projectId);
-        var eidV1 = Sync.of(() -> repository.save(eid, validModel, Given.emptyAuth())).get();
-        var eidV2 = Sync.of(() -> repository.save(eidV1, validModel, Given.emptyAuth())).get();
+        var eidV1 = Sync.of(() -> repository.write(eid, validModel, Given.emptyAuth())).get();
+        var eidV2 = Sync.of(() -> repository.write(eidV1, validModel, Given.emptyAuth())).get();
 
         Sync
             .of(() -> repository.list(projectId))
@@ -108,11 +108,11 @@ public class CustomerRepositoryTests {
 
         var validModel = Given.minValidModel();
         var eid = EntityId.anyNew(projectId);
-        var newEid = Sync.of(() -> repository.save(eid, validModel, Given.emptyAuth())).get();
+        var newEid = Sync.of(() -> repository.write(eid, validModel, Given.emptyAuth())).get();
 
         var invalidModel = Given.invalidModel();
         Assertions
-            .catchThrowable(() -> Sync.of(() -> repository.save(newEid, invalidModel, Given.emptyAuth())).get());
+            .catchThrowable(() -> Sync.of(() -> repository.write(newEid, invalidModel, Given.emptyAuth())).get());
 
         var list = Sync.of(() -> repository.list(projectId)).get();
         Assertions
@@ -127,10 +127,10 @@ public class CustomerRepositoryTests {
 
         var validModel = Given.minValidModel();
         var eid = EntityId.anyNew(projectId);
-        var nextId = Sync.of(() -> repository.save(eid, validModel, Given.emptyAuth())).get();
+        var nextId = Sync.of(() -> repository.write(eid, validModel, Given.emptyAuth())).get();
 
         var invalidEid = EntityId.of(nextId.getProjectId(), nextId.getId(), nextId.getVersion() + 1);
-        Sync.of(() -> repository.save(invalidEid, validModel, Given.emptyAuth())).tryGet();
+        Sync.of(() -> repository.write(invalidEid, validModel, Given.emptyAuth())).tryGet();
 
         Sync
             .of(() -> repository.list(projectId))
@@ -141,7 +141,7 @@ public class CustomerRepositoryTests {
     public class ShouldSupportAuthorities {
 
         @Test
-        void saving() {
+        void write() {
             var projectId = UUID.randomUUID();
             Sync.of(() -> projectRepository.save(projectId));
 
@@ -149,9 +149,25 @@ public class CustomerRepositoryTests {
             var model = Given.minValidModel();
             var auths = Given.multipleAuthorisations();
 
-            Sync.of(() -> repository.save(someId, model, auths))
+            Sync.of(() -> repository.write(someId, model, auths))
                 .and(it -> repository.get(it))
                 .checkpoint(it -> assertThat(it.getValue().getAuthorisations()).containsOnly(auths));
+        }
+
+        @Test
+        void delete() {
+            var projectId = UUID.randomUUID();
+            Sync.of(() -> projectRepository.save(projectId));
+
+            var someId = EntityId.anyNew(projectId);
+            var model = Given.minValidModel();
+            var auths = Given.multipleAuthorisations();
+            var emptyAuths = Given.emptyAuth();
+
+            Sync.of(() -> repository.write(someId, model, auths))
+                .and(newId -> repository.write(newId, model, emptyAuths))
+                .and(it -> repository.get(it))
+                .checkpoint(it -> assertThat(it.getValue().getAuthorisations()).isEmpty());
         }
     }
 }

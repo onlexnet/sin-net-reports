@@ -134,7 +134,7 @@ public class CustomerRepositoryImpl implements CustomerRepository {
         SaveAuthEntry.Fields.username,
         SaveAuthEntry.Fields.password);
 
-    public Future<EntityId> save(EntityId id, CustomerValue entity, CustomerAuthorization[] auth) {
+    public Future<EntityId> write(EntityId id, CustomerValue entity, CustomerAuthorization[] auth) {
         var entry = SaveEntry.builder()
             .projectId(id.getProjectId())
             .entityId(id.getId())
@@ -219,9 +219,10 @@ public class CustomerRepositoryImpl implements CustomerRepository {
     }
 
     @Override
-    public Future<Iterable<Entity<CustomerValue>>> list(UUID projectId) {
+    public Future<List<Entity<CustomerValue>>> list(UUID projectId) {
         return get("project_id=$1", Tuple.of(projectId))
             .map(it -> it);
+
     }
 
     private Future<List<Entity<CustomerValue>>> get(String whereClause, Tuple values) {
