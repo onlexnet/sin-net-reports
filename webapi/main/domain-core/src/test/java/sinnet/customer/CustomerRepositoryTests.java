@@ -6,6 +6,7 @@ import java.util.UUID;
 import java.util.function.Supplier;
 
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -63,20 +64,6 @@ public class CustomerRepositoryTests {
         Sync.of(() -> repository.save(someId, model, Given.emptyAuth()))
             .and(it -> repository.get(it))
             .checkpoint(it -> assertThat(it.getValue()).isEqualTo(model));
-    }
-
-    @Test
-    void shouldSaveAuthorities() {
-        var projectId = UUID.randomUUID();
-        Sync.of(() -> projectRepository.save(projectId));
-
-        var someId = EntityId.anyNew(projectId);
-        var model = Given.minValidModel();
-        var auths = Given.multipleAuthorisations();
-
-        Sync.of(() -> repository.save(someId, model, auths))
-            .and(it -> repository.get(it))
-            .checkpoint(it -> assertThat(it.getValue().getAuthorisations()).containsOnly(auths));
     }
 
     @Test
@@ -148,6 +135,24 @@ public class CustomerRepositoryTests {
         Sync
             .of(() -> repository.list(projectId))
             .checkpoint(it -> Assertions.assertThat(it).containsOnly(validModel.withId(nextId)));
+    }
+
+    @Nested
+    public class ShouldSupportAuthorities {
+
+        @Test
+        void saving() {
+            var projectId = UUID.randomUUID();
+            Sync.of(() -> projectRepository.save(projectId));
+
+            var someId = EntityId.anyNew(projectId);
+            var model = Given.minValidModel();
+            var auths = Given.multipleAuthorisations();
+
+            Sync.of(() -> repository.save(someId, model, auths))
+                .and(it -> repository.get(it))
+                .checkpoint(it -> assertThat(it.getValue().getAuthorisations()).containsOnly(auths));
+        }
     }
 }
 
