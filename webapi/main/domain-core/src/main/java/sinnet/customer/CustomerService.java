@@ -1,13 +1,15 @@
 package sinnet.customer;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import io.vavr.collection.List;
-import io.vavr.collection.Stream;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
 import io.vertx.core.Promise;
@@ -104,17 +106,58 @@ public class CustomerService extends AbstractVerticle implements TopLevelVerticl
             .build();
     }
 
+    /**
+     * Combines set of requested authorizations with existing authorizations so that
+     * defines new authorizations, updated authorizations and remove non used authorizations.
+     */
     public static  CustomerAuthorization[] merge(Email requestor, LocalDate when, ChangeCustomer.Authorization[] requested, CustomerAuthorization[] actual) {
-        var requestedByLocation = Stream.ofAll(Arrays.stream(requested)).groupBy(it -> it.getLocation());
-        return requestedByLocation.values()
-            .flatMap(it -> it)
-            .map(it -> new CustomerAuthorization(
-                                   it.getLocation(),
-                                   it.getUsername(),
-                                   it.getPassword(),
-                                   requestor,
-                                   when
-                               ))
-            .toJavaArray(CustomerAuthorization[]::new);
+
+        // 1) Extract items are identical (location / username / password) so that can be marked as 'unchanged'
+        // 2) The rest is considered as 'updated' or 'new'
+        var result = new LinkedList<CustomerAuthorization>();
+        var existing = new ArrayList<>(Arrays.asList(actual));
+        var candidates = new ArrayList<>(Arrays.asList(requested));
+        while (!candidates.isEmpty()) {
+            var candidate = candidates.get(0);
+            candidates.remove(0);
+
+            // is untauched?
+            var exactMatch = existing.stream()
+                .filter(it -> Objects.equals(it.getLocation(), candidate.getLocation())
+                           && Objects.equals(it.getUsername(), candidate.getUsername())
+                           && Objects.equals(it.getPassword(), candidate.getPassword()))
+                .findFirst();
+            if (exactMatch.isPresent()) {
+                var foundMatch = exactMatch.get();
+                existing.remove(foundMatch);
+                result.add(foundMatch);
+                continue;
+            }
+
+            // is updated?
+            var similarMatch = existing.stream()
+                .filter(it -> Objects.equals(it.getLocation(), candidate.getLocation())
+                           && Objects.equals(it.getUsername(), candidate.getUsername()))
+                .findFirst();
+            if (similarMatch.isPresent()) {
+                var foundSimilar = similarMatch.get();
+                existing.remove(foundSimilar);
+                result.add(new CustomerAuthorization(candidate.getLocation(),
+                               candidate.getUsername(),
+                               candidate.getPassword(),
+                               requestor,
+                               when));
+                continue;
+            }
+
+            // so, finally, is new
+            result.add(new CustomerAuthorization(candidate.getLocation(),
+                candidate.getUsername(),
+                candidate.getPassword(),
+                requestor,
+                when));
+        }
+
+        return result.toArray(CustomerAuthorization[]::new);
     }
 }

@@ -1,7 +1,5 @@
 package sinnet.customer;
 
-import java.time.LocalDate;
-
 import org.apache.commons.lang3.ArrayUtils;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
@@ -53,12 +51,48 @@ public class CustomerServiceTests {
 
         @Test
         public void removeExistingAuthorisations() {
-            Assertions.assertThat(false).isEqualTo(true);
+            var requestedEmpty = new ChangeCustomer.Authorization[0];
+            var requestor = Email.of("someone@somewhere");
+            var when = Dates.gen().head();
+            var someExistinhAuths = ArrayUtils.toArray(new CustomerAuthorization("a", "b", "c", requestor, when));
+            var actual = CustomerService.merge(requestor, when, requestedEmpty, someExistinhAuths);
+            Assertions.assertThat(actual).isEmpty();
         }
 
         @Test
-        public void updateChangedAuthorisations() {
-            Assertions.assertThat(false).isEqualTo(true);
+        public void updateChangedAuthorisationsCase1() {
+            var newRequestor = Email.of("new@requestor");
+            var newDate = Dates.gen().head();
+            var requested1 = new ChangeCustomer.Authorization("location", "username1", "password1");
+
+            var oldRequestor = Email.of("old@requestor");
+            var oldDate = Dates.gen().head();
+            var existing1 = new CustomerAuthorization("location", "username1", "c", oldRequestor, oldDate);
+
+            var actual = CustomerService.merge(newRequestor, newDate,
+                                               ArrayUtils.toArray(requested1),
+                                               ArrayUtils.toArray(existing1));
+            Assertions
+                .assertThat(actual)
+                .containsExactly(new CustomerAuthorization("location", "username1", "password1", newRequestor, newDate));
+        }
+
+        @Test
+        public void updateChangedAuthorisationsCase2() {
+            var newRequestor = Email.of("new@requestor");
+            var newDate = Dates.gen().head();
+            var requested1 = new ChangeCustomer.Authorization("location", "username1", "password1");
+
+            var oldRequestor = Email.of("old@requestor");
+            var oldDate = Dates.gen().head();
+            var existing1 = new CustomerAuthorization("location", "username1", "password1", oldRequestor, oldDate);
+
+            var actual = CustomerService.merge(newRequestor, newDate,
+                                               ArrayUtils.toArray(requested1),
+                                               ArrayUtils.toArray(existing1));
+            Assertions
+                .assertThat(actual)
+                .containsExactly(new CustomerAuthorization("location", "username1", "password1", oldRequestor, oldDate));
         }
     }
 
