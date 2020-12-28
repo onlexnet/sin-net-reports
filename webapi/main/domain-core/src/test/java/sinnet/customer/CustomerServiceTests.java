@@ -46,7 +46,8 @@ public class CustomerServiceTests {
             var when = Dates.gen().head();
             var empty = new CustomerAuthorization[0];
             var actual = CustomerService.merge(requestor, when, ArrayUtils.toArray(requested), empty);
-            Assertions.assertThat(true).isFalse();
+            var expected = ArrayUtils.toArray(new CustomerAuthorization("location1", "username1", "password1", requestor, when));
+            Assertions.assertThat(actual).isEqualTo(expected);
         }
     }
 
