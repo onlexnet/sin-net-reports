@@ -1,10 +1,12 @@
 package sinnet.customer;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import io.vavr.collection.List;
 import io.vavr.collection.Stream;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
@@ -87,7 +89,7 @@ public class CustomerService extends AbstractVerticle implements TopLevelVerticl
         protected Future<FindCustomers.Reply> onRequest(Ask request) {
             var projectId = request.getProjectId();
             return repository.list(projectId)
-                .map(it -> Stream.ofAll(it).map(CustomerService::map).toJavaArray(CustomerData[]::new))
+                .map(it -> List.ofAll(it).map(CustomerService::map).toJavaArray(CustomerData[]::new))
                 .map(it -> new FindCustomers.Reply(it));
         }
     }
@@ -103,6 +105,16 @@ public class CustomerService extends AbstractVerticle implements TopLevelVerticl
     }
 
     public static  CustomerAuthorization[] merge(Email requestor, LocalDate when, ChangeCustomer.Authorization[] requested, CustomerAuthorization[] actual) {
-        return null;
+        var requestedByLocation = Stream.ofAll(Arrays.stream(requested)).groupBy(it -> it.getLocation());
+        return requestedByLocation.values()
+            .flatMap(it -> it)
+            .map(it -> new CustomerAuthorization(
+                                   it.getLocation(),
+                                   it.getUsername(),
+                                   it.getPassword(),
+                                   requestor,
+                                   when
+                               ))
+            .toJavaArray(CustomerAuthorization[]::new);
     }
 }

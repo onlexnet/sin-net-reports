@@ -39,6 +39,7 @@ public class CustomerServiceTests {
 
     @Nested
     public class MergeAuthorisationShould {
+
         @Test
         public void replaceEmptyAuthorisations() {
             var requested = new ChangeCustomer.Authorization("location1", "username1", "password1");
@@ -48,6 +49,16 @@ public class CustomerServiceTests {
             var actual = CustomerService.merge(requestor, when, ArrayUtils.toArray(requested), empty);
             var expected = ArrayUtils.toArray(new CustomerAuthorization("location1", "username1", "password1", requestor, when));
             Assertions.assertThat(actual).isEqualTo(expected);
+        }
+
+        @Test
+        public void removeExistingAuthorisations() {
+            Assertions.assertThat(false).isEqualTo(true);
+        }
+
+        @Test
+        public void updateChangedAuthorisations() {
+            Assertions.assertThat(false).isEqualTo(true);
         }
     }
 
