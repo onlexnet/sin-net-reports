@@ -82,7 +82,7 @@ public class CustomerRepositoryTests {
             .and(it -> repository.list(projectId))
             .get();
 
-        var actual = List.ofAll(list).map(it -> it.getEntityId());
+        var actual = List.ofAll(list).map(it -> it.getId().getId());
         assertThat(actual).contains(id1.getId(), id2.getId());
     }
 
@@ -96,9 +96,12 @@ public class CustomerRepositoryTests {
         var eidV1 = Sync.of(() -> repository.write(eid, validModel, Given.emptyAuth())).get();
         var eidV2 = Sync.of(() -> repository.write(eidV1, validModel, Given.emptyAuth())).get();
 
+        var expected = new CustomerRepository.CustomerModel(eidV2, validModel, Given.emptyAuth());
         Sync
             .of(() -> repository.list(projectId))
-            .checkpoint(it -> Assertions.assertThat(it).containsOnly(validModel.withId(eidV2)));
+            .checkpoint(it -> Assertions
+                                .assertThat(it)
+                                .containsOnly(expected));
     }
 
     @Test
@@ -114,9 +117,10 @@ public class CustomerRepositoryTests {
         Assertions
             .catchThrowable(() -> Sync.of(() -> repository.write(newEid, invalidModel, Given.emptyAuth())).get());
 
+        var expected = new CustomerRepository.CustomerModel(newEid, validModel, Given.emptyAuth());
         var list = Sync.of(() -> repository.list(projectId)).get();
         Assertions
-            .assertThat(list).containsOnly(validModel.withId(newEid));
+            .assertThat(list).containsOnly(expected);
 
     }
 
@@ -132,9 +136,10 @@ public class CustomerRepositoryTests {
         var invalidEid = EntityId.of(nextId.getProjectId(), nextId.getId(), nextId.getVersion() + 1);
         Sync.of(() -> repository.write(invalidEid, validModel, Given.emptyAuth())).tryGet();
 
+        var expected = new CustomerRepository.CustomerModel(nextId, validModel, Given.emptyAuth());
         Sync
             .of(() -> repository.list(projectId))
-            .checkpoint(it -> Assertions.assertThat(it).containsOnly(validModel.withId(nextId)));
+            .checkpoint(it -> Assertions.assertThat(it).containsOnly(expected));
     }
 
     @Nested
@@ -151,7 +156,7 @@ public class CustomerRepositoryTests {
 
             Sync.of(() -> repository.write(someId, model, auths))
                 .and(it -> repository.get(it))
-                .checkpoint(it -> assertThat(it.getValue().getAuthorisations()).containsOnly(auths));
+                .checkpoint(it -> assertThat(it.getAuthorisations()).containsOnly(auths));
         }
 
         @Test
@@ -167,7 +172,7 @@ public class CustomerRepositoryTests {
             Sync.of(() -> repository.write(someId, model, auths))
                 .and(newId -> repository.write(newId, model, emptyAuths))
                 .and(it -> repository.get(it))
-                .checkpoint(it -> assertThat(it.getValue().getAuthorisations()).isEmpty());
+                .checkpoint(it -> assertThat(it.getAuthorisations()).isEmpty());
         }
     }
 }

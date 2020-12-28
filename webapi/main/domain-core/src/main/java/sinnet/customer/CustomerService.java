@@ -1,5 +1,7 @@
 package sinnet.customer;
 
+import java.time.LocalDate;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -7,21 +9,20 @@ import io.vavr.collection.Stream;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
 import io.vertx.core.Promise;
-import lombok.extern.slf4j.Slf4j;
 import sinnet.TopLevelVerticle;
 import sinnet.VertxHandlerTemplate;
-import sinnet.bus.commands.UpdateCustomerInfo;
+import sinnet.bus.commands.ChangeCustomer;
 import sinnet.bus.query.FindCustomer;
 import sinnet.bus.query.FindCustomer.Reply;
 import sinnet.bus.query.FindCustomers;
 import sinnet.bus.query.FindCustomers.Ask;
 import sinnet.bus.query.FindCustomers.CustomerData;
-import sinnet.models.CustomerValue;
-import sinnet.models.Entity;
+import sinnet.customer.CustomerRepository.CustomerModel;
+import sinnet.models.CustomerAuthorization;
+import sinnet.models.Email;
 import sinnet.models.EntityId;
 
 @Component
-@Slf4j
 public class CustomerService extends AbstractVerticle implements TopLevelVerticle {
 
     private final CustomerRepository repository;
@@ -34,25 +35,34 @@ public class CustomerService extends AbstractVerticle implements TopLevelVerticl
     @Override
     public void start(Promise<Void> startPromise) throws Exception {
         // TODO handle when registration of consumers is ready
-        vertx.eventBus().consumer(UpdateCustomerInfo.ADDRESS, new RegisterNewCustomerHandler());
+        vertx.eventBus().consumer(ChangeCustomer.Command.ADDRESS, new SaveCustomerHandler());
         vertx.eventBus().consumer(FindCustomer.Ask.ADDRESS, new FindCustomerHandler());
         vertx.eventBus().consumer(FindCustomers.Ask.ADDRESS, new FindCustomersHandler());
         super.start(startPromise);
     }
 
-    final class RegisterNewCustomerHandler extends VertxHandlerTemplate<UpdateCustomerInfo, sinnet.bus.EntityId> {
+    final class SaveCustomerHandler extends VertxHandlerTemplate<ChangeCustomer.Command, sinnet.bus.EntityId> {
 
-        RegisterNewCustomerHandler() {
-            super(UpdateCustomerInfo.class);
+        SaveCustomerHandler() {
+            super(ChangeCustomer.Command.class);
         }
 
         @Override
-        protected Future<sinnet.bus.EntityId> onRequest(UpdateCustomerInfo msg) {
+        protected Future<sinnet.bus.EntityId> onRequest(ChangeCustomer.Command msg) {
             var eid = EntityId.of(msg.getId().getProjectId(), msg.getId().getId(), msg.getId().getVersion());
-            var value = msg.getValue();
-            var authorizations = msg.getAuthorizations();
-            return repository.write(eid, value, authorizations)
-                    .map(it -> new sinnet.bus.EntityId(it.getProjectId(), it.getId(), it.getVersion()));
+            var requestor = msg.getRequestor();
+            var newValue = msg.getValue();
+            var requestedAuthorisations = msg.getAuthorizations();
+            return repository
+                .get(eid)
+                .flatMap(it -> {
+                    var actualAuthorisations = it.getAuthorisations();
+                    var newAuthorisations = CustomerService.merge(requestor,
+                                                                  LocalDate.now(),
+                                                                  requestedAuthorisations, actualAuthorisations);
+                    return repository.write(eid, newValue, newAuthorisations)
+                        .map(v -> new sinnet.bus.EntityId(v.getProjectId(), v.getId(), v.getVersion()));
+                });
         }
     }
 
@@ -62,9 +72,9 @@ public class CustomerService extends AbstractVerticle implements TopLevelVerticl
         }
 
         @Override
-        protected Future<Reply> onRequest(sinnet.bus.query.FindCustomer.Ask request) {
+        protected Future<Reply> onRequest(FindCustomer.Ask request) {
             return repository.get(request.getProjectId(), request.getEntityId())
-                .map(it -> new FindCustomer.Reply(it.getEntityId(), it.getVersion(), it.getValue()));
+                .map(it -> new FindCustomer.Reply(it.getId().getId(), it.getId().getVersion(), it.getValue()));
         }
     }
 
@@ -82,12 +92,17 @@ public class CustomerService extends AbstractVerticle implements TopLevelVerticl
         }
     }
 
-    private static CustomerData map(Entity<CustomerValue> item) {
+    private static CustomerData map(CustomerModel item) {
         return CustomerData.builder()
-            .projectId(item.getProjectId())
-            .entityId(item.getEntityId())
-            .entityVersion(item.getVersion())
+            .projectId(item.getId().getProjectId())
+            .entityId(item.getId().getId())
+            .entityVersion(item.getId().getVersion())
             .value(item.getValue())
+            .authorisations(item.getAuthorisations())
             .build();
+    }
+
+    public static  CustomerAuthorization[] merge(Email requestor, LocalDate when, ChangeCustomer.Authorization[] requested, CustomerAuthorization[] actual) {
+        return null;
     }
 }

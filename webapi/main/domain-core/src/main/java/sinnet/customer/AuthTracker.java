@@ -1,4 +1,6 @@
-package sinnet.models;
+package sinnet.customer;
+
+import java.time.LocalDate;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
@@ -9,14 +11,11 @@ import lombok.Value;
 
 @AllArgsConstructor
 @Value
-@JsonDeserialize(builder = CustomerAuthorization.MyBuilder.class)
+@JsonDeserialize(builder = AuthTracker.MyBuilder.class)
 @Builder(builderClassName = "MyBuilder", toBuilder = true)
-public final class CustomerAuthorization {
-    private String location;
-    private String username;
-    private String password;
-    private Email changedWho = Email.empty();
-    private String changedWhen;
+public class AuthTracker {
+    private String who;
+    private LocalDate when;
 
     @JsonPOJOBuilder(withPrefix = "")
     public static class MyBuilder {

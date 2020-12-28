@@ -7,6 +7,8 @@
             <column name="location" type="varchar(50)"/>
             <column name="username" type="varchar(50)"/>
             <column name="password" type="varchar(50)"/>
+            <column name="changed_who" type="varchar(50)"></column>
+            <column name="changed_when" type="timestamp"></column>
         </createTable>
         <addForeignKeyConstraint baseTableName="authorization"
                                  baseColumnNames="customer_id"
@@ -21,6 +23,8 @@
             <column name="location" type="varchar(50)"/>
             <column name="username" type="varchar(50)"/>
             <column name="password" type="varchar(50)"/>
+            <column name="changed_who" type="varchar(50)"></column>
+            <column name="changed_when" type="timestamp"></column>
         </createTable>
         <addForeignKeyConstraint baseTableName="authorization_ex"
                                  baseColumnNames="customer_id"

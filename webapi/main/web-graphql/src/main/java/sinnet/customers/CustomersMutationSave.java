@@ -4,24 +4,30 @@ import java.util.concurrent.CompletableFuture;
 
 import com.google.common.base.Objects;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import graphql.GraphQLException;
 import graphql.kickstart.tools.GraphQLResolver;
 import sinnet.AskTemplate;
+import sinnet.IdentityProvider;
 import sinnet.MyEntity;
 import sinnet.SomeEntity;
 import sinnet.bus.EntityId;
-import sinnet.bus.commands.UpdateCustomerInfo;
+import sinnet.bus.commands.ChangeCustomer;
 import sinnet.models.CustomerValue;
+import sinnet.models.Email;
 import sinnet.models.Name;
 
 @Component
-public class CustomersMutationSave extends AskTemplate<UpdateCustomerInfo, EntityId>
+public class CustomersMutationSave extends AskTemplate<ChangeCustomer.Command, EntityId>
                                    implements GraphQLResolver<CustomersMutation> {
 
-    protected CustomersMutationSave() {
-        super(UpdateCustomerInfo.ADDRESS, EntityId.class);
+    @Autowired
+    private IdentityProvider identityProvider;
+
+    public CustomersMutationSave() {
+        super(ChangeCustomer.Command.ADDRESS, EntityId.class);
     }
 
     CompletableFuture<SomeEntity> save(CustomersMutation gcontext, MyEntity id, CustomerEntry entry) {
@@ -59,9 +65,15 @@ public class CustomersMutationSave extends AskTemplate<UpdateCustomerInfo, Entit
             .komercjaNotatki(entry.getKomercjaNotatki())
             .build();
 
-        var cmd = UpdateCustomerInfo.builder()
+        var maybeRequestor = identityProvider.getCurrent();
+        if (!maybeRequestor.isPresent()) throw new GraphQLException("Access denied");
+
+        var emailOfRequestor = maybeRequestor.get().getEmail();
+        var cmd = ChangeCustomer.Command.builder()
+            .requestor(Email.of(emailOfRequestor))
             .id(eid)
             .value(value)
+            .authorizations(new ChangeCustomer.Authorization[0])
             .build();
         return super.ask(cmd).thenApply(m -> new SomeEntity(m.getProjectId(), m.getId(), m.getVersion()));
     }

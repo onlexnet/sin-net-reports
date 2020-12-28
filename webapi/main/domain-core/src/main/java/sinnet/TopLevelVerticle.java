@@ -16,6 +16,7 @@ import io.vertx.core.CompositeFuture;
 import io.vertx.core.Verticle;
 import io.vertx.core.Vertx;
 
+/** Marker for verticles designed to be register by the host application. */
 public interface TopLevelVerticle extends Verticle {
 }
 

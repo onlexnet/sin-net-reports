@@ -193,7 +193,7 @@ public class CustomerRepositoryImpl implements CustomerRepository {
     }
 
     private final Exception noDataException = new Exception("No data");
-    private Future<Entity<CustomerValue>> extractResult(Iterable<Entity<CustomerValue>> candidates) {
+    private Future<CustomerModel> extractResult(Iterable<CustomerModel> candidates) {
         var iter = candidates.iterator();
         if (!iter.hasNext()) return Future.failedFuture(noDataException);
         var item = iter.next();
@@ -201,7 +201,7 @@ public class CustomerRepositoryImpl implements CustomerRepository {
     }
 
     @Override
-    public Future<Entity<CustomerValue>> get(EntityId id) {
+    public Future<CustomerModel> get(EntityId id) {
         var whereClause = "project_id=$1 AND entity_id=$2 AND entity_version=$3";
         var values = Tuple.of(id.getProjectId(), id.getId(), id.getVersion());
         return get(whereClause, values)
@@ -210,7 +210,7 @@ public class CustomerRepositoryImpl implements CustomerRepository {
     }
 
     @Override
-    public Future<Entity<CustomerValue>> get(UUID projectId, UUID id) {
+    public Future<CustomerModel> get(UUID projectId, UUID id) {
         var whereClause = "project_id=$1 AND entity_id=$2";
         var values = Tuple.of(projectId, id);
         return get(whereClause, values)
@@ -219,13 +219,13 @@ public class CustomerRepositoryImpl implements CustomerRepository {
     }
 
     @Override
-    public Future<List<Entity<CustomerValue>>> list(UUID projectId) {
+    public Future<List<CustomerModel>> list(UUID projectId) {
         return get("project_id=$1", Tuple.of(projectId))
             .map(it -> it);
 
     }
 
-    private Future<List<Entity<CustomerValue>>> get(String whereClause, Tuple values) {
+    private Future<List<CustomerModel>> get(String whereClause, Tuple values) {
         return pgClient.withTransaction(client ->
             client.preparedQuery("SELECT "
                 + "project_id, entity_id, entity_version, "
@@ -258,20 +258,21 @@ public class CustomerRepositoryImpl implements CustomerRepository {
         );
     }
 
-    static List<Entity<CustomerValue>> finalMapping(Stream<Entity<CustomerValue>> customers,
-                                                    Stream<Tuple2<UUID, CustomerAuthorization>> authorizations) {
+    static List<CustomerModel> finalMapping(Stream<Entity<CustomerValue>> customers,
+                                            Stream<Tuple2<UUID, CustomerAuthorization>> authorizations) {
         var groupedAuths = authorizations.groupBy(it -> it._1);
         return customers.map(it -> {
             var customerId = it.getEntityId();
+            var value = it.getValue();
             var customerAuths = groupedAuths.get(customerId)
                 .getOrElse(Stream.empty())
                 .map(v -> v._2)
                 .toJavaArray(CustomerAuthorization[]::new);
-            var value = it.getValue()
-                .toBuilder()
-                .authorisations(customerAuths)
-                .build();
-            return value.withId(it.getProjectId(), it.getEntityId(), it.getVersion());
+            return new CustomerModel(
+                EntityId.of(it.getProjectId(), it.getEntityId(), it.getVersion()),
+                value,
+                customerAuths
+            );
         }).toList();
     }
 
