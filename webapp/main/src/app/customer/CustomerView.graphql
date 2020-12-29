@@ -8,9 +8,9 @@ mutation ReserveCustomer($projectId: ID!) {
   }
 }
 
-mutation SaveCustomer($projectId: ID!, $id: MyEntity!, $entry: CustomerEntry!) {
+mutation SaveCustomer($projectId: ID!, $id: MyEntity!, $entry: CustomerEntry!, $auths: [CustomerAuthorizationInput!]!) {
   Customers(projectId: $projectId) {
-    save(id: $id, entry: $entry) {
+    save(id: $id, entry: $entry, authorizations: $auths) {
       projectId
       entityId
       entityVersion

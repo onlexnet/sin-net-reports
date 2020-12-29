@@ -51,7 +51,6 @@ export const apolloClientFactory = (jwtToken: string) => {
         errorPolicy: 'all',
       },
     }    
-    var address = addressProvider().host;
     return new ApolloClient({
       cache: new InMemoryCache({}),
       link: middlewareAuthLink.concat(httpLink),

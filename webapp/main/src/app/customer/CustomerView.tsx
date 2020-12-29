@@ -6,7 +6,7 @@ import { IComboBoxOption, ITextFieldStyles, TextField, Checkbox, PrimaryButton, 
 import { useBoolean } from '@uifabric/react-hooks';
 import _ from "lodash";
 import { useGetUsers } from "../../api/useGetUsers";
-import { CustomerEntry, useSaveCustomerMutation } from "../../Components/.generated/components";
+import { CustomerAuthorizationInput, CustomerEntry, useSaveCustomerMutation } from "../../Components/.generated/components";
 import { EntityId } from "../../store/actions/ServiceModel";
 import { NewAuthorisation } from "./View.NewAuthorisation";
 import { UserPasswordItem } from "./View.UserPasswordItem";
@@ -98,7 +98,9 @@ interface ContactDetails {
 }
 
 interface AuthorisationModel {
-    name: string
+    location: string
+    username?: string
+    password?: string
 }
 
 interface AuthorisationExModel {
@@ -255,11 +257,22 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
             komercjaJest: model.Komercja,
             komercjaNotatki: model.KomercjaNotatki
         }
+        const auths = _.chain(model.Autoryzacje)
+            .map(it => {
+                const auth: CustomerAuthorizationInput = {
+                    location: it.location ?? '---',
+                    username: it.username,
+                    password: it.password
+                };
+                return auth;
+            })
+            .value()
         saveCustomerMutation({
             variables: {
                 projectId: props.id.projectId,
                 id: { projectId, entityId, entityVersion },
-                entry
+                entry,
+                auths
             },
         });
     }
@@ -480,7 +493,7 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
                 <Separator alignContent="start">Autoryzacje</Separator>
 
                 {model.AutoryzacjeEx.map(item => <UserPasswordItemExt sectionName={item.name} />)}
-                {model.Autoryzacje.map(item => <UserPasswordItem sectionName={item.name} />)}
+                {model.Autoryzacje.map(item => <UserPasswordItem sectionName={item.location} />)}
 
                 <NewAuthorisation
                     newAuthorisationExRequested={name => {
@@ -494,7 +507,7 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
                     newAuthorisationRequested={name => {
                         const clone = _.clone(model);
                         const newItem: AuthorisationModel = {
-                            name
+                            location: name
                         };
                         clone.Autoryzacje.push(newItem);
                         setModel(clone);

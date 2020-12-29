@@ -5,12 +5,14 @@ import org.springframework.stereotype.Component;
 import graphql.kickstart.tools.GraphQLResolver;
 import lombok.Value;
 import sinnet.Entity;
+import sinnet.models.CustomerAuthorization;
 import sinnet.models.CustomerValue;
 
 @Value
 public class CustomerEntity {
     private Entity id;
     private CustomerValue optionalValue;
+    private CustomerAuthorization[] authorizations;
 }
 
 @Component

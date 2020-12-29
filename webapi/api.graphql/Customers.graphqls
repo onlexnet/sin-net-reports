@@ -13,7 +13,9 @@ type CustomersQuery {
 
 type CustomersMutation {
     reserve: SomeEntity!
-    save(id: MyEntity, entry: CustomerEntry): SomeEntity!
+    save(id: MyEntity!
+         entry: CustomerEntry!
+         authorizations: [CustomerAuthorizationInput!]!): SomeEntity!
 }
 
 input CustomerEntry {
@@ -48,6 +50,7 @@ input CustomerEntry {
 type CustomerEntity {
     id: Entity!
     data: CustomerModel!
+    authorizations: [CustomerAuthorization!]!
 }
 type CustomerModel {
     operatorEmail: String
@@ -76,4 +79,17 @@ type CustomerModel {
     nfzNotatki: String
     komercjaJest: Boolean
     komercjaNotatki: String
+}
+type CustomerAuthorization {
+    location: String!
+    username: String
+    password: String
+    changedWhen: String!
+    changedWho: String!
+}
+
+input CustomerAuthorizationInput {
+    location: String!
+    username: String
+    password: String
 }
