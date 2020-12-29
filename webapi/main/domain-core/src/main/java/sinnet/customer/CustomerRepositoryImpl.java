@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import io.vavr.Tuple2;
 import io.vavr.collection.List;
 import io.vavr.collection.Stream;
+import io.vavr.control.Option;
 import io.vertx.core.Future;
 import io.vertx.pgclient.PgPool;
 import io.vertx.sqlclient.Row;
@@ -27,7 +28,6 @@ import sinnet.models.EntityId;
 import sinnet.models.Name;
 
 @Component
-@Slf4j
 public class CustomerRepositoryImpl implements CustomerRepository {
 
     private final PgPool pgClient;
@@ -192,16 +192,16 @@ public class CustomerRepositoryImpl implements CustomerRepository {
                 .map(ignored -> EntityId.of(id.getProjectId(), id.getId(), id.getVersion() + 1)));
     }
 
-    private final Exception noDataException = new Exception("No data");
-    private Future<CustomerModel> extractResult(Iterable<CustomerModel> candidates) {
+    private Future<Option<CustomerModel>> extractResult(Iterable<CustomerModel> candidates) {
         var iter = candidates.iterator();
-        if (!iter.hasNext()) return Future.failedFuture(noDataException);
-        var item = iter.next();
-        return Future.succeededFuture(item);
+        var result = iter.hasNext()
+                   ? Option.of(iter.next())
+                   : Option.<CustomerModel>none();
+        return Future.succeededFuture(result);
     }
 
     @Override
-    public Future<CustomerModel> get(EntityId id) {
+    public Future<Option<CustomerModel>> get(EntityId id) {
         var whereClause = "project_id=$1 AND entity_id=$2 AND entity_version=$3";
         var values = Tuple.of(id.getProjectId(), id.getId(), id.getVersion());
         return get(whereClause, values)
@@ -210,7 +210,7 @@ public class CustomerRepositoryImpl implements CustomerRepository {
     }
 
     @Override
-    public Future<CustomerModel> get(UUID projectId, UUID id) {
+    public Future<Option<CustomerModel>> get(UUID projectId, UUID id) {
         var whereClause = "project_id=$1 AND entity_id=$2";
         var values = Tuple.of(projectId, id);
         return get(whereClause, values)

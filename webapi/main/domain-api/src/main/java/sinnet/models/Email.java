@@ -1,21 +1,21 @@
 package sinnet.models;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 
-@EqualsAndHashCode
-@ToString
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Value;
+
+@AllArgsConstructor
+@Value
+@JsonDeserialize(builder = Email.MyBuilder.class)
+@Builder(builderClassName = "MyBuilder", toBuilder = true)
 public final class Email {
 
     private static final Email EMPTY = new Email(null);
 
-    @Getter
-    private final String value;
-
-    private Email(String value) {
-        this.value = value;
-    }
+    private String value;
 
     public static Email of(String value) {
         return new Email(value);
@@ -23,5 +23,9 @@ public final class Email {
 
     public static Email empty() {
         return EMPTY;
+    }
+
+    @JsonPOJOBuilder(withPrefix = "")
+    public static class MyBuilder {
     }
 }

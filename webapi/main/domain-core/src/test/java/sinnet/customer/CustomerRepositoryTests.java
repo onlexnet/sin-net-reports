@@ -63,7 +63,7 @@ public class CustomerRepositoryTests {
 
         Sync.of(() -> repository.write(someId, model, Given.emptyAuth()))
             .and(it -> repository.get(it))
-            .checkpoint(it -> assertThat(it.getValue()).isEqualTo(model));
+            .checkpoint(it -> assertThat(it.get().getValue()).isEqualTo(model));
     }
 
     @Test
@@ -156,7 +156,7 @@ public class CustomerRepositoryTests {
 
             Sync.of(() -> repository.write(someId, model, auths))
                 .and(it -> repository.get(it))
-                .checkpoint(it -> assertThat(it.getAuthorisations()).containsOnly(auths));
+                .checkpoint(it -> assertThat(it.get().getAuthorisations()).containsOnly(auths));
         }
 
         @Test
@@ -172,7 +172,7 @@ public class CustomerRepositoryTests {
             Sync.of(() -> repository.write(someId, model, auths))
                 .and(newId -> repository.write(newId, model, emptyAuths))
                 .and(it -> repository.get(it))
-                .checkpoint(it -> assertThat(it.getAuthorisations()).isEmpty());
+                .checkpoint(it -> assertThat(it.get().getAuthorisations()).isEmpty());
         }
     }
 }

@@ -28,7 +28,8 @@ public abstract class AskTemplate<ASK extends JsonMessage, REPLY extends JsonMes
             .request(address, query)
             .onComplete(it -> {
                 if (it.succeeded()) {
-                    var reply = JsonObject.mapFrom(it.result().body()).mapTo(replyClass);
+                    var body = it.result().body();
+                    var reply = JsonObject.mapFrom(body).mapTo(replyClass);
                     result.completeAsync(() -> reply);
                 } else {
                     result.completeExceptionally(it.cause());

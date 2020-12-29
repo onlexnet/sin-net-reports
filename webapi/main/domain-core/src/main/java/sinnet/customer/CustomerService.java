@@ -59,16 +59,22 @@ public class CustomerService extends AbstractVerticle implements TopLevelVerticl
             var requestedAuthorisations = msg.getAuthorizations();
             return repository
                 .get(eid)
-                .flatMap(it -> {
-                    var actualAuthorisations = it.getAuthorisations();
-                    var newAuthorisations = CustomerService.merge(requestor,
-                                                                  LocalDate.now(),
-                                                                  requestedAuthorisations, actualAuthorisations);
-                    return repository.write(eid, newValue, newAuthorisations)
-                        .map(v -> new sinnet.bus.EntityId(v.getProjectId(), v.getId(), v.getVersion()));
-                });
+                .flatMap(it -> it
+                    .map(v -> {
+                        var actualAuthorisations = v.getAuthorisations();
+                        var newAuthorisations = CustomerService.merge(requestor,
+                                                                      LocalDate.now(),
+                                                                      requestedAuthorisations, actualAuthorisations);
+                        return repository
+                            .write(eid, newValue, newAuthorisations)
+                            .map(v1 -> new sinnet.bus.EntityId(v1.getProjectId(), v1.getId(), v1.getVersion()));
+                    })
+                    .getOrElse(Future.failedFuture(noDataException))
+                );
         }
     }
+
+    private final Exception noDataException = new Exception("No data");
 
     final class FindCustomerHandler extends VertxHandlerTemplate<FindCustomer.Ask, FindCustomer.Reply> {
         FindCustomerHandler() {
@@ -78,7 +84,9 @@ public class CustomerService extends AbstractVerticle implements TopLevelVerticl
         @Override
         protected Future<Reply> onRequest(FindCustomer.Ask request) {
             return repository.get(request.getProjectId(), request.getEntityId())
-                .map(it -> new FindCustomer.Reply(it.getId().getId(), it.getId().getVersion(), it.getValue()));
+                .flatMap(it -> it.map(v -> new FindCustomer.Reply(v.getId().getId(), v.getId().getVersion(), v.getValue()))
+                                 .map(v -> Future.succeededFuture(v))
+                                 .getOrElse(Future.failedFuture(noDataException)));
         }
     }
 

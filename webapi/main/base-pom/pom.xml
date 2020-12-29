@@ -269,13 +269,6 @@
           <version>3.1.0</version>
           <configuration>
             <configLocation>../.checkstyle/checkstyle-configuration.xml</configLocation> 
-            <!-- 
-              There are also two pre-build styles delivered with plugin, where the first one is default
-              and does not need to be declared implicitly.
-              
-              <configLocation>sun_checks.xml</configLocation> 
-              <configLocation>google_checks.xml</configLocation> 
-              -->
             <encoding>UTF-8</encoding>
             <consoleOutput>true</consoleOutput>
             <failsOnError>true</failsOnError>
