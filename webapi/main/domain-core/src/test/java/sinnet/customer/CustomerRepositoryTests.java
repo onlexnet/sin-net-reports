@@ -38,6 +38,16 @@ public class CustomerRepositoryTests {
     private CustomerRepository repository;
 
     @Test
+    void shouldSupportEmptyList() {
+        var projectId = UUID.randomUUID();
+        Sync.of(() -> projectRepository.save(projectId)).get();
+
+        var actual = Sync.of(() -> repository.list(projectId)).get();
+        Assertions.assertThat(actual).isEmpty();
+    }
+
+
+    @Test
     void saveMinModel() {
         var projectId = UUID.randomUUID();
         var givenEntityId = EntityId.anyNew(projectId);

@@ -20,7 +20,6 @@ import io.vertx.sqlclient.templates.SqlTemplate;
 import lombok.Builder;
 import lombok.Value;
 import lombok.experimental.FieldNameConstants;
-import lombok.extern.slf4j.Slf4j;
 import sinnet.models.CustomerAuthorization;
 import sinnet.models.CustomerValue;
 import sinnet.models.Entity;
@@ -247,6 +246,7 @@ public class CustomerRepositoryImpl implements CustomerRepository {
                         .map(it -> it.getEntityId())
                         .map(it -> Collections.singletonMap("cid", (Object) it))
                         .toJavaList();
+                    if (ids.isEmpty()) return Future.succeededFuture(List.empty());
                     return SqlTemplate
                         .forQuery(client, "SELECT customer_id, location, username, password FROM \"authorization\" WHERE customer_id=#{cid}")
                         .executeBatch(ids)

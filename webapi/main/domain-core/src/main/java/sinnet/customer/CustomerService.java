@@ -59,22 +59,19 @@ public class CustomerService extends AbstractVerticle implements TopLevelVerticl
             var requestedAuthorisations = msg.getAuthorizations();
             return repository
                 .get(eid)
-                .flatMap(it -> it
-                    .map(v -> {
-                        var actualAuthorisations = v.getAuthorisations();
-                        var newAuthorisations = CustomerService.merge(requestor,
-                                                                      LocalDate.now(),
-                                                                      requestedAuthorisations, actualAuthorisations);
-                        return repository
-                            .write(eid, newValue, newAuthorisations)
-                            .map(v1 -> new sinnet.bus.EntityId(v1.getProjectId(), v1.getId(), v1.getVersion()));
-                    })
-                    .getOrElse(Future.failedFuture(noDataException))
-                );
+                .flatMap(it -> {
+                    var actualAuthorisations = it
+                        .map(v -> v.getAuthorisations())
+                        .getOrElse(new CustomerAuthorization[0]);
+                    var newAuthorisations = CustomerService.merge(requestor,
+                                                                  LocalDate.now(),
+                                                                  requestedAuthorisations, actualAuthorisations);
+                    return repository
+                        .write(eid, newValue, newAuthorisations)
+                        .map(v1 -> new sinnet.bus.EntityId(v1.getProjectId(), v1.getId(), v1.getVersion()));
+                });
         }
     }
-
-    private final Exception noDataException = new Exception("No data");
 
     final class FindCustomerHandler extends VertxHandlerTemplate<FindCustomer.Ask, FindCustomer.Reply> {
         FindCustomerHandler() {
@@ -86,7 +83,7 @@ public class CustomerService extends AbstractVerticle implements TopLevelVerticl
             return repository.get(request.getProjectId(), request.getEntityId())
                 .flatMap(it -> it.map(v -> new FindCustomer.Reply(v.getId().getId(), v.getId().getVersion(), v.getValue()))
                                  .map(v -> Future.succeededFuture(v))
-                                 .getOrElse(Future.failedFuture(noDataException)));
+                                 .getOrElse(Future.failedFuture(new Exception("No data"))));
         }
     }
 
