@@ -1,5 +1,7 @@
 package sinnet.customers;
 
+import java.util.Arrays;
+
 import org.springframework.stereotype.Component;
 
 import graphql.kickstart.tools.GraphQLResolver;
@@ -12,7 +14,7 @@ import sinnet.models.CustomerValue;
 public class CustomerEntity {
     private Entity id;
     private CustomerValue optionalValue;
-    private CustomerAuthorization[] authorizations;
+    private CustomerAuthorization[] optionalAuthorizations;
 }
 
 @Component
@@ -51,5 +53,20 @@ class CustomerModelResolverPayload implements GraphQLResolver<CustomerEntity> {
         // TODO resolve if no data provided
         return null;
     }
+
+    sinnet.customers.CustomerAuthorization[] getAuthorizations(CustomerEntity gcontext) {
+        if (gcontext.getOptionalAuthorizations() != null) {
+            return Arrays.stream(gcontext.getOptionalAuthorizations())
+                .map(it -> new sinnet.customers.CustomerAuthorization(it.getLocation(),
+                    it.getUsername(),
+                    it.getPassword(),
+                    it.getChangedWho().getValue(),
+                    it.getChangedWhen().toString()))
+                .toArray(sinnet.customers.CustomerAuthorization[]::new);
+        }
+        // TODO resolve if no data provided
+        return null;
+    }
+
 }
 

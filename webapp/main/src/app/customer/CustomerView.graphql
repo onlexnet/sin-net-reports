@@ -54,6 +54,14 @@ query GetCustomer($projectId: ID!, $id: MyEntity!) {
         komercjaJest
         komercjaNotatki
       }
+      authorizations {
+        location
+        username
+        password
+        changedWhen
+        changedWho
+      }
+
     }
   }
 }

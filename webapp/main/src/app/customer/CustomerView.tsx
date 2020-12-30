@@ -52,7 +52,8 @@ export interface CustomerViewEntry {
     nfzOpiekaDlugoterminowa?: boolean,
     nfzNotatki?: string,
     komercjaJest?: boolean,
-    komercjaNotatki?: string
+    komercjaNotatki?: string,
+    autoryzacje: AuthorisationModel[]
 }
 
 type CustomerViewModel = {
@@ -97,10 +98,12 @@ interface ContactDetails {
     email?: string
 }
 
-interface AuthorisationModel {
+export interface AuthorisationModel {
     location: string
     username?: string
     password?: string
+    who?: string
+    when?: string
 }
 
 interface AuthorisationExModel {

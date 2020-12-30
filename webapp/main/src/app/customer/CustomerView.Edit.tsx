@@ -3,8 +3,9 @@ import { EntityId } from "../../store/actions/ServiceModel";
 import { RootState } from "../../store/reducers";
 import { Dispatch } from "redux";
 import { connect, ConnectedProps } from "react-redux";
-import { CustomerView, CustomerViewEntry } from "./CustomerView";
+import { AuthorisationModel, CustomerView, CustomerViewEntry } from "./CustomerView";
 import { useGetCustomerQuery } from "../../Components/.generated/components";
+import _ from "lodash";
 
 
 const mapStateToProps = (state: RootState) => {
@@ -45,6 +46,18 @@ export const CustomerViewEditLocal: React.FC<CustomerViewEditProps> = props => {
         if (!id) {
             return <div>No data</div>;
         }
+        const autoryzacje = _.chain(input?.authorizations)
+            .map(it => {
+                const ret: AuthorisationModel = {
+                    location: it.location,
+                    username: it.username ?? undefined,
+                    password: it.password ?? undefined,
+                    who: it.changedWho,
+                    when: it.changedWhen
+                };
+                return ret;
+            })
+            .value();
         const entry: CustomerViewEntry = {
             EmailOfOperator: input?.data.operatorEmail ?? undefined,
             ModelOfBilling: input?.data.billingModel ?? undefined,
@@ -71,7 +84,8 @@ export const CustomerViewEditLocal: React.FC<CustomerViewEditProps> = props => {
             nfzOpiekaDlugoterminowa: input?.data.nfzOpiekaDlugoterminowa ?? undefined,
             nfzNotatki: input?.data.nfzNotatki ?? undefined,
             komercjaJest: input?.data.komercjaJest ?? undefined,
-            komercjaNotatki: input?.data.komercjaNotatki ?? undefined
+            komercjaNotatki: input?.data.komercjaNotatki ?? undefined,
+            autoryzacje
         }
         return <CustomerView id={id} entry={entry} itemSaved={props.itemSaved}/>;
     }

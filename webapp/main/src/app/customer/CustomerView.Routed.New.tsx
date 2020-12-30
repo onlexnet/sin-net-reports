@@ -4,7 +4,7 @@ import { EntityId } from "../../store/actions/ServiceModel";
 import { RootState } from "../../store/reducers";
 import { Dispatch } from "redux";
 import { connect, ConnectedProps } from "react-redux";
-import { CustomerView } from "./CustomerView";
+import { CustomerView, CustomerViewEntry } from "./CustomerView";
 import { RouteComponentProps } from "react-router-dom";
 import { useReserveCustomerMutation } from "../../Components/.generated/components";
 
@@ -40,8 +40,9 @@ export const CustomerViewNewLocal: React.FC<CustomerViewNewProps> = props => {
 
     if (data) {
         const id: EntityId = data.Customers.reserve;
-        const entry = {
-            KlientNazwa: 'Nowy klient'
+        const entry: CustomerViewEntry = {
+            KlientNazwa: 'Nowy klient',
+            autoryzacje: []
         }
         const itemSaved = () => props.history.goBack();
         return <CustomerView id={id} entry={entry} itemSaved={itemSaved}/>;
