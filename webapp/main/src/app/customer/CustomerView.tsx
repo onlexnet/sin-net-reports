@@ -164,7 +164,7 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
         Komercja: props.entry.komercjaJest ?? false,
         KomercjaNotatki: props.entry.komercjaNotatki,
         Kontakty: [],
-        Autoryzacje: [],
+        Autoryzacje: props.entry.autoryzacje,
         AutoryzacjeEx: []
     });
 

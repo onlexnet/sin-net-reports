@@ -5,6 +5,7 @@ import java.util.Arrays;
 import org.springframework.stereotype.Component;
 
 import graphql.kickstart.tools.GraphQLResolver;
+import io.vavr.control.Option;
 import lombok.Value;
 import sinnet.Entity;
 import sinnet.models.CustomerAuthorization;
@@ -57,11 +58,12 @@ class CustomerModelResolverPayload implements GraphQLResolver<CustomerEntity> {
     sinnet.customers.CustomerAuthorization[] getAuthorizations(CustomerEntity gcontext) {
         if (gcontext.getOptionalAuthorizations() != null) {
             return Arrays.stream(gcontext.getOptionalAuthorizations())
-                .map(it -> new sinnet.customers.CustomerAuthorization(it.getLocation(),
+                .map(it -> new sinnet.customers.CustomerAuthorization(
+                    Option.of(it.getLocation()).getOrElse("?"),
                     it.getUsername(),
                     it.getPassword(),
-                    it.getChangedWho().getValue(),
-                    it.getChangedWhen().toString()))
+                    Option.of(it.getChangedWho().getValue()).getOrElse("?"),
+                    Option.of(it.getChangedWhen()).map(v -> v.toString()).getOrElse("?")))
                 .toArray(sinnet.customers.CustomerAuthorization[]::new);
         }
         // TODO resolve if no data provided
