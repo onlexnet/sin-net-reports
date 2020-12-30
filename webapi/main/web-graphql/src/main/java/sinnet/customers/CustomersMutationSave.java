@@ -30,7 +30,7 @@ public class CustomersMutationSave extends AskTemplate<ChangeCustomer.Command, E
         super(ChangeCustomer.Command.ADDRESS, EntityId.class);
     }
 
-    CompletableFuture<SomeEntity> save(CustomersMutation gcontext, MyEntity id, CustomerEntry entry) {
+    CompletableFuture<SomeEntity> save(CustomersMutation gcontext, MyEntity id, CustomerInput entry, CustomerAuthorization[] authorizations) {
         if (!Objects.equal(id.getProjectId(), gcontext.getProjectId())) {
             throw new GraphQLException("Invalid project id");
         }

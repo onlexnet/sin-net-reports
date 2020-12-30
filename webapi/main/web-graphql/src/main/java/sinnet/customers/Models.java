@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.Value;
 
 @Data
-class CustomerEntry {
+class CustomerInput {
     private String operatorEmail;
     private String billingModel;
     private String supportStatus;
@@ -63,4 +63,12 @@ class CustomerModel {
     private String nfzNotatki;
     private boolean komercjaJest;
     private String komercjaNotatki;
+}
+@Value
+class CustomerAuthorization {
+    private String location;
+    private String username;
+    private String password;
+    private String changedWhen;
+    private String changedWho;
 }

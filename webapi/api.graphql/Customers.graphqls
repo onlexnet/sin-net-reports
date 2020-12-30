@@ -14,11 +14,11 @@ type CustomersQuery {
 type CustomersMutation {
     reserve: SomeEntity!
     save(id: MyEntity!
-         entry: CustomerEntry!
+         entry: CustomerInput!
          authorizations: [CustomerAuthorizationInput!]!): SomeEntity!
 }
 
-input CustomerEntry {
+input CustomerInput {
     operatorEmail: String
     billingModel: String
     supportStatus: String
@@ -45,6 +45,11 @@ input CustomerEntry {
     nfzNotatki: String
     komercjaJest: Boolean
     komercjaNotatki: String
+}
+input CustomerAuthorizationInput {
+    location: String!
+    username: String
+    password: String
 }
 
 type CustomerEntity {
@@ -88,8 +93,3 @@ type CustomerAuthorization {
     changedWho: String!
 }
 
-input CustomerAuthorizationInput {
-    location: String!
-    username: String
-    password: String
-}
