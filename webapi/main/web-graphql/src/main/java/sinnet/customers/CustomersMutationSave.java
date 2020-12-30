@@ -1,5 +1,6 @@
 package sinnet.customers;
 
+import java.util.Arrays;
 import java.util.concurrent.CompletableFuture;
 
 import com.google.common.base.Objects;
@@ -64,6 +65,14 @@ public class CustomersMutationSave extends AskTemplate<ChangeCustomer.Command, E
             .komercjaJest(entry.isKomercjaJest())
             .komercjaNotatki(entry.getKomercjaNotatki())
             .build();
+        var auths = Arrays
+            .stream(authorizations)
+            .map(it -> ChangeCustomer.Authorization.builder()
+                .location(it.getLocation())
+                .username(it.getUsername())
+                .password(it.getPassword())
+                .build())
+            .toArray(ChangeCustomer.Authorization[]::new);
 
         var maybeRequestor = identityProvider.getCurrent();
         if (!maybeRequestor.isPresent()) throw new GraphQLException("Access denied");
@@ -73,7 +82,7 @@ public class CustomersMutationSave extends AskTemplate<ChangeCustomer.Command, E
             .requestor(Email.of(emailOfRequestor))
             .id(eid)
             .value(value)
-            .authorizations(new ChangeCustomer.Authorization[0])
+            .authorizations(auths)
             .build();
         return super.ask(cmd).thenApply(m -> new SomeEntity(m.getProjectId(), m.getId(), m.getVersion()));
     }

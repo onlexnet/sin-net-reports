@@ -6,7 +6,7 @@ import { IComboBoxOption, ITextFieldStyles, TextField, Checkbox, PrimaryButton, 
 import { useBoolean } from '@uifabric/react-hooks';
 import _ from "lodash";
 import { useGetUsers } from "../../api/useGetUsers";
-import { CustomerAuthorizationInput, CustomerEntry, useSaveCustomerMutation } from "../../Components/.generated/components";
+import { CustomerAuthorizationInput, CustomerInput, useSaveCustomerMutation } from "../../Components/.generated/components";
 import { EntityId } from "../../store/actions/ServiceModel";
 import { NewAuthorisation } from "./View.NewAuthorisation";
 import { UserPasswordItem } from "./View.UserPasswordItem";
@@ -229,7 +229,7 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
     const saveEndExit: MouseEventHandler<PrimaryButton> = (event): void => {
         setSaveDisabled(true);
         const { projectId, entityId, entityVersion } = props.id;
-        const entry: CustomerEntry = {
+        const entry: CustomerInput = {
             operatorEmail: model.Operator,
             billingModel: model.Rozliczenie,
             supportStatus: model.Obsluga,
