@@ -81,7 +81,7 @@ public class CustomerService extends AbstractVerticle implements TopLevelVerticl
         @Override
         protected Future<Reply> onRequest(FindCustomer.Ask request) {
             return repository.get(request.getProjectId(), request.getEntityId())
-                .flatMap(it -> it.map(v -> new FindCustomer.Reply(v.getId().getId(), v.getId().getVersion(), v.getValue()))
+                .flatMap(it -> it.map(v -> new FindCustomer.Reply(v.getId().getId(), v.getId().getVersion(), v.getValue(), v.getAuthorisations()))
                                  .map(v -> Future.succeededFuture(v))
                                  .getOrElse(Future.failedFuture(new Exception("No data"))));
         }
