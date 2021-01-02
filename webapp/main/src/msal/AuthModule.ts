@@ -1,7 +1,6 @@
 import { PublicClientApplication, SilentRequest, AuthenticationResult, Configuration, LogLevel, AccountInfo, InteractionRequiredAuthError, EndSessionRequest, RedirectRequest, PopupRequest } from "@azure/msal-browser";
 import { store } from "../store/store";
-import { initiateSession } from "../store/session/actions";
-import { SignInFlow, InitiateSessionFinishedAction, INITIATE_SESSION_FINISHED } from "../store/session/types";
+import { InitiateSessionFinishedAction, INITIATE_SESSION_FINISHED } from "../store/session/types";
 import { graphQlClient } from "../api";
 
 /**

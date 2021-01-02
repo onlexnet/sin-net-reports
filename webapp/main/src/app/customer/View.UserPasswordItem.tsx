@@ -4,7 +4,7 @@ import React from "react";
 const stackTokens: IStackTokens = { childrenGap: 12 };
 
 interface UserPasswordModel {
-    localKey: number,
+    localKey: string,
     location: string
     username?: string,
     password?: string
@@ -12,7 +12,8 @@ interface UserPasswordModel {
 
 interface UserPasswordItemProps {
     model: UserPasswordModel,
-    onChange: (newValue: UserPasswordModel) => void
+    onChange: (newValue: UserPasswordModel) => void,
+    onRemove: (localKey: string) => void
 }
 
 export const UserPasswordItem: React.FC<UserPasswordItemProps> = props => {
@@ -38,7 +39,7 @@ export const UserPasswordItem: React.FC<UserPasswordItemProps> = props => {
                     <Stack horizontal tokens={stackTokens}>
                         <TextField placeholder="Użytkownik" value={username} onChange={handler((m, v) => m.username = v)} />
                         <TextField placeholder="Hasło" value={password} onChange={handler((m, v) => m.password = v)} />
-                        <DefaultButton text="Usuń" />
+                        <DefaultButton text="Usuń" onClick={() => props.onRemove( props.model.localKey)} />
                     </Stack>
                 </Stack>
             </div>

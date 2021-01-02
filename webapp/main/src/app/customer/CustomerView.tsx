@@ -11,6 +11,7 @@ import { EntityId } from "../../store/actions/ServiceModel";
 import { NewAuthorisation } from "./View.NewAuthorisation";
 import { UserPasswordItem } from "./View.UserPasswordItem";
 import { UserPasswordItemExt } from "./View.UserPasswordItemEx";
+import { v1 as uuid } from 'uuid';
 
 
 const stackStyles: Partial<IStackStyles> = { root: { width: 650 } };
@@ -97,7 +98,7 @@ interface ContactDetails {
 }
 
 export interface AuthorisationModel {
-    localKey: number,
+    localKey: string,
     location: string
     username?: string
     password?: string
@@ -501,7 +502,14 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
                         model={item}
                         onChange={v => {
                             const clone = _.clone(model);
-                            clone.Autoryzacje[v.localKey] = v;
+                            const index = _.findIndex(clone.Autoryzacje, it => it.localKey == v.localKey);
+                            clone.Autoryzacje[index] = v;
+                            setModel(clone);
+                        }}
+                        onRemove={localKey => {
+                            const clone = _.clone(model);
+                            const index = _.findIndex(clone.Autoryzacje, it => it.localKey == localKey);
+                            clone.Autoryzacje.splice(index, 1);
                             setModel(clone);
                         }}
                     />)}
@@ -517,7 +525,7 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
                     }}
                     newAuthorisationRequested={name => {
                         const clone = _.clone(model);
-                        const localKey = clone.Autoryzacje.length;
+                        const localKey = uuid();
                         const newItem: AuthorisationModel = {
                             localKey,
                             location: name

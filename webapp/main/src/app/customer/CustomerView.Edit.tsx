@@ -6,7 +6,7 @@ import { connect, ConnectedProps } from "react-redux";
 import { AuthorisationModel, CustomerView, CustomerViewEntry } from "./CustomerView";
 import { useGetCustomerQuery } from "../../Components/.generated/components";
 import _ from "lodash";
-
+import { v1 as uuid } from 'uuid';
 
 const mapStateToProps = (state: RootState) => {
     if (state.appState.empty) {
@@ -47,11 +47,10 @@ export const CustomerViewEditLocal: React.FC<CustomerViewEditProps> = props => {
             return <div>No data</div>;
         }
 
-        let autoryzacjeIndex = 0;
         const autoryzacje = _.chain(input?.authorizations)
             .map(it => {
                 const ret: AuthorisationModel = {
-                    localKey: autoryzacjeIndex++,
+                    localKey: uuid(),
                     location: it.location,
                     username: it.username ?? undefined,
                     password: it.password ?? undefined,
