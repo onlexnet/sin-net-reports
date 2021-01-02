@@ -86,8 +86,6 @@ type CustomerViewModel = {
     Kontakty: ContactDetails[],
     Autoryzacje: AuthorisationModel[],
     AutoryzacjeEx: AuthorisationExModel[]
-
-
 }
 
 interface ContactDetails {
@@ -99,6 +97,7 @@ interface ContactDetails {
 }
 
 export interface AuthorisationModel {
+    localKey: number,
     location: string
     username?: string
     password?: string
@@ -496,7 +495,16 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
                 <Separator alignContent="start">Autoryzacje</Separator>
 
                 {model.AutoryzacjeEx.map(item => <UserPasswordItemExt sectionName={item.name} />)}
-                {model.Autoryzacje.map(item => <UserPasswordItem sectionName={item.location} />)}
+
+                {model.Autoryzacje
+                    .map(item => <UserPasswordItem 
+                        model={item}
+                        onChange={v => {
+                            const clone = _.clone(model);
+                            clone.Autoryzacje[v.localKey] = v;
+                            setModel(clone);
+                        }}
+                    />)}
 
                 <NewAuthorisation
                     newAuthorisationExRequested={name => {
@@ -509,7 +517,9 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
                     }}
                     newAuthorisationRequested={name => {
                         const clone = _.clone(model);
+                        const localKey = clone.Autoryzacje.length;
                         const newItem: AuthorisationModel = {
+                            localKey,
                             location: name
                         };
                         clone.Autoryzacje.push(newItem);

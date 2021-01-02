@@ -46,9 +46,12 @@ export const CustomerViewEditLocal: React.FC<CustomerViewEditProps> = props => {
         if (!id) {
             return <div>No data</div>;
         }
+
+        let autoryzacjeIndex = 0;
         const autoryzacje = _.chain(input?.authorizations)
             .map(it => {
                 const ret: AuthorisationModel = {
+                    localKey: autoryzacjeIndex++,
                     location: it.location,
                     username: it.username ?? undefined,
                     password: it.password ?? undefined,
