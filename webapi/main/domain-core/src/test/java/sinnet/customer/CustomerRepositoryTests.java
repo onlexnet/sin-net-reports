@@ -58,7 +58,7 @@ public class CustomerRepositoryTests {
             .and(ignored -> {
                 var model = Given.minValidModel();
                 return repository
-                       .write(givenEntityId, model, Given.emptyAuth(), Given.emptySecretsEx(), Given.emptyContacts()); })
+                       .write(givenEntityId, model, Given.emptySecrets(), Given.emptySecretsEx(), Given.emptyContacts()); })
             .get();
 
         var expected = EntityId.of(projectId, givenEntityId.getId(), givenEntityId.getVersion() + 1);
@@ -73,7 +73,7 @@ public class CustomerRepositoryTests {
         var someId = EntityId.anyNew(projectId);
         var model = Given.fullModel();
 
-        Sync.of(() -> repository.write(someId, model, Given.emptyAuth(), Given.emptySecretsEx(), Given.emptyContacts()))
+        Sync.of(() -> repository.write(someId, model, Given.emptySecrets(), Given.emptySecretsEx(), Given.emptyContacts()))
             .and(it -> repository.get(it))
             .checkpoint(it -> assertThat(it.get().getValue()).isEqualTo(model));
     }
@@ -88,8 +88,8 @@ public class CustomerRepositoryTests {
             .and(ignored -> {
                 var someModel = Given.minValidModel();
                 return CompositeFuture
-                    .all(repository.write(id1, someModel, Given.emptyAuth(), Given.emptySecretsEx(), Given.emptyContacts()),
-                        repository.write(id2, someModel, Given.emptyAuth(), Given.emptySecretsEx(), Given.emptyContacts()))
+                    .all(repository.write(id1, someModel, Given.emptySecrets(), Given.emptySecretsEx(), Given.emptyContacts()),
+                        repository.write(id2, someModel, Given.emptySecrets(), Given.emptySecretsEx(), Given.emptyContacts()))
                     .map(it -> true); })
             .and(it -> repository.list(projectId))
             .get();
@@ -105,10 +105,10 @@ public class CustomerRepositoryTests {
 
         var validModel = Given.minValidModel();
         var eid = EntityId.anyNew(projectId);
-        var eidV1 = Sync.of(() -> repository.write(eid, validModel, Given.emptyAuth(), Given.emptySecretsEx(), Given.emptyContacts())).get();
-        var eidV2 = Sync.of(() -> repository.write(eidV1, validModel, Given.emptyAuth(), Given.emptySecretsEx(), Given.emptyContacts())).get();
+        var eidV1 = Sync.of(() -> repository.write(eid, validModel, Given.emptySecrets(), Given.emptySecretsEx(), Given.emptyContacts())).get();
+        var eidV2 = Sync.of(() -> repository.write(eidV1, validModel, Given.emptySecrets(), Given.emptySecretsEx(), Given.emptyContacts())).get();
 
-        var expected = new CustomerRepository.CustomerModel(eidV2, validModel, Given.emptyAuth(), Given.emptySecretsEx(), Given.emptyContacts());
+        var expected = new CustomerRepository.CustomerModel(eidV2, validModel, Given.emptySecrets(), Given.emptySecretsEx(), Given.emptyContacts());
         Sync
             .of(() -> repository.list(projectId))
             .checkpoint(it -> Assertions
@@ -123,13 +123,13 @@ public class CustomerRepositoryTests {
 
         var validModel = Given.minValidModel();
         var eid = EntityId.anyNew(projectId);
-        var newEid = Sync.of(() -> repository.write(eid, validModel, Given.emptyAuth(), Given.emptySecretsEx(), Given.emptyContacts())).get();
+        var newEid = Sync.of(() -> repository.write(eid, validModel, Given.emptySecrets(), Given.emptySecretsEx(), Given.emptyContacts())).get();
 
         var invalidModel = Given.invalidModel();
         Assertions
-            .catchThrowable(() -> Sync.of(() -> repository.write(newEid, invalidModel, Given.emptyAuth(), Given.emptySecretsEx(), Given.emptyContacts())).get());
+            .catchThrowable(() -> Sync.of(() -> repository.write(newEid, invalidModel, Given.emptySecrets(), Given.emptySecretsEx(), Given.emptyContacts())).get());
 
-        var expected = new CustomerRepository.CustomerModel(newEid, validModel, Given.emptyAuth(), Given.emptySecretsEx(), Given.emptyContacts());
+        var expected = new CustomerRepository.CustomerModel(newEid, validModel, Given.emptySecrets(), Given.emptySecretsEx(), Given.emptyContacts());
         var list = Sync.of(() -> repository.list(projectId)).get();
         Assertions
             .assertThat(list).containsOnly(expected);
@@ -143,12 +143,12 @@ public class CustomerRepositoryTests {
 
         var validModel = Given.minValidModel();
         var eid = EntityId.anyNew(projectId);
-        var nextId = Sync.of(() -> repository.write(eid, validModel, Given.emptyAuth(), Given.emptySecretsEx(), Given.emptyContacts())).get();
+        var nextId = Sync.of(() -> repository.write(eid, validModel, Given.emptySecrets(), Given.emptySecretsEx(), Given.emptyContacts())).get();
 
         var invalidEid = EntityId.of(nextId.getProjectId(), nextId.getId(), nextId.getVersion() + 1);
-        Sync.of(() -> repository.write(invalidEid, validModel, Given.emptyAuth(), Given.emptySecretsEx(), Given.emptyContacts())).tryGet();
+        Sync.of(() -> repository.write(invalidEid, validModel, Given.emptySecrets(), Given.emptySecretsEx(), Given.emptyContacts())).tryGet();
 
-        var expected = new CustomerRepository.CustomerModel(nextId, validModel, Given.emptyAuth(), Given.emptySecretsEx(), Given.emptyContacts());
+        var expected = new CustomerRepository.CustomerModel(nextId, validModel, Given.emptySecrets(), Given.emptySecretsEx(), Given.emptyContacts());
         Sync
             .of(() -> repository.list(projectId))
             .checkpoint(it -> Assertions.assertThat(it).containsOnly(expected));
@@ -181,7 +181,7 @@ public class CustomerRepositoryTests {
             var someId = EntityId.anyNew(projectId);
             var model = Given.minValidModel();
             var auths = Given.multipleSecrets();
-            var emptyAuths = Given.emptyAuth();
+            var emptyAuths = Given.emptySecrets();
             var secretsEx = Given.emptySecretsEx();
             var contacts = Given.emptyContacts();
 
@@ -201,7 +201,7 @@ class Given {
         .build();
     }
 
-    static CustomerSecret[] emptyAuth() {
+    static CustomerSecret[] emptySecrets() {
         return new CustomerSecret[0];
     }
 
