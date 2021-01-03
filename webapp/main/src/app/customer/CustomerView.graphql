@@ -10,11 +10,11 @@ mutation ReserveCustomer($projectId: ID!) {
 
 mutation SaveCustomer($projectId: ID!, $id: MyEntity!
                                        $entry: CustomerInput!
-                                       $auths: [CustomerAuthorizationInput!]!
-                                       $authsExt: [CustomerAuthorizationInput!]!
-                                       $contacts: [CustomerContact!]!) {
+                                       $secrets: [CustomerSecretInput!]!
+                                       $secretsEx: [CustomerSecretExInput!]!
+                                       $contacts: [CustomerContactInput!]!) {
   Customers(projectId: $projectId) {
-    save(id: $id, entry: $entry, auths: $auths, authsEx: $authsEx, contacts: $contacts) {
+    save(id: $id, entry: $entry, secrets: $secrets, secretsEx: $secretsEx, contacts: $contacts) {
       projectId
       entityId
       entityVersion
@@ -58,12 +58,27 @@ query GetCustomer($projectId: ID!, $id: MyEntity!) {
         komercjaJest
         komercjaNotatki
       }
-      authorizations {
+      secrets {
         location
         username
         password
         changedWhen
         changedWho
+      }
+      secretsEx {
+        location
+        username
+        password
+        entityName
+        entityCode
+        changedWhen
+        changedWho
+      }
+      contacts {
+        name
+        surname
+        phoneNo
+        email
       }
 
     }

@@ -60,6 +60,21 @@ export const CustomerViewEditLocal: React.FC<CustomerViewEditProps> = props => {
                 return ret;
             })
             .value();
+
+        const autoryzacjeEx = _.chain(input?.authorizations)
+        .map(it => {
+            const ret: AuthorisationModel = {
+                localKey: uuid(),
+                location: it.location,
+                username: it.username ?? undefined,
+                password: it.password ?? undefined,
+                who: it.changedWho,
+                when: it.changedWhen
+            };
+            return ret;
+        })
+        .value();
+
         const entry: CustomerViewEntry = {
             EmailOfOperator: input?.data.operatorEmail ?? undefined,
             ModelOfBilling: input?.data.billingModel ?? undefined,

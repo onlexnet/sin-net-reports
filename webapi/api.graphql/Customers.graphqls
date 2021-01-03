@@ -15,7 +15,9 @@ type CustomersMutation {
     reserve: SomeEntity!
     save(id: MyEntity!
          entry: CustomerInput!
-         authorizations: [CustomerAuthorizationInput!]!): SomeEntity!
+         secrets: [CustomerSecretInput!]!
+         secretsEx: [CustomerSecretExInput!]!
+         contacts: [CustomerContactInput!]!): SomeEntity!
 }
 
 input CustomerInput {
@@ -46,16 +48,31 @@ input CustomerInput {
     komercjaJest: Boolean
     komercjaNotatki: String
 }
-input CustomerAuthorizationInput {
+input CustomerSecretInput {
     location: String!
     username: String
     password: String
+}
+input CustomerSecretExInput {
+    location: String!
+    username: String
+    password: String
+    entityName: String
+    entityCode: String
+}
+input CustomerContactInput {
+    name: String
+    username: String
+    phoneNo: String
+    email: String
 }
 
 type CustomerEntity {
     id: Entity!
     data: CustomerModel!
-    authorizations: [CustomerAuthorization!]!
+    secrets: [CustomerSecret!]!
+    secretsEx: [CustomerSecretEx!]!
+    contacts: [CustomerContact!]!
 }
 type CustomerModel {
     operatorEmail: String
@@ -85,11 +102,27 @@ type CustomerModel {
     komercjaJest: Boolean
     komercjaNotatki: String
 }
-type CustomerAuthorization {
+type CustomerSecret {
     location: String!
     username: String
     password: String
     changedWhen: String!
     changedWho: String!
 }
+type CustomerSecretEx {
+    location: String!
+    username: String
+    password: String
+    entityName: String
+    entityCode: String
+    changedWhen: String!
+    changedWho: String!
+}
+type CustomerContact {
+    name: String
+    surname: String
+    phoneNo: String
+    email: String
+}
+
 
