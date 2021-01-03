@@ -1,6 +1,6 @@
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.0.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
     <changeSet author="siudeks" id="20201225-1">
-        <createTable tableName="authorization">
+        <createTable tableName="secret">
             <column name="customer_id" type="UUID">
                 <constraints nullable="false"/>
             </column>         
@@ -10,25 +10,27 @@
             <column name="changed_who" type="varchar(50)"></column>
             <column name="changed_when" type="timestamp"></column>
         </createTable>
-        <addForeignKeyConstraint baseTableName="authorization"
+        <addForeignKeyConstraint baseTableName="secret"
                                  baseColumnNames="customer_id"
-                                 constraintName="authorization_FK1"
+                                 constraintName="secret_FK1"
                                  referencedTableName="customers"
                                  referencedColumnNames="entity_id"
                                  onDelete="CASCADE" />
-        <createTable tableName="authorization_ex">
+        <createTable tableName="secret_ex">
             <column name="customer_id" type="UUID">
                 <constraints nullable="false"/>
             </column>         
             <column name="location" type="varchar(50)"/>
+            <column name="entity_name" type="varchar(50)"/>
+            <column name="entity_code" type="varchar(50)"/>
             <column name="username" type="varchar(50)"/>
             <column name="password" type="varchar(50)"/>
             <column name="changed_who" type="varchar(50)"></column>
             <column name="changed_when" type="timestamp"></column>
         </createTable>
-        <addForeignKeyConstraint baseTableName="authorization_ex"
+        <addForeignKeyConstraint baseTableName="secret_ex"
                                  baseColumnNames="customer_id"
-                                 constraintName="authorization_ex_FK1"
+                                 constraintName="secret_ex_FK1"
                                  referencedTableName="customers"
                                  referencedColumnNames="entity_id"
                                  onDelete="CASCADE" />

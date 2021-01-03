@@ -13,7 +13,9 @@ import io.vertx.junit5.VertxTestContext;
 import lombok.Value;
 import sinnet.Dates;
 import sinnet.bus.commands.ChangeCustomer;
-import sinnet.models.CustomerAuthorization;
+import sinnet.models.CustomerSecret;
+import sinnet.models.CustomerSecretEx;
+import sinnet.models.CustomerContact;
 import sinnet.models.Email;
 
 @ExtendWith(VertxExtension.class)
@@ -36,63 +38,63 @@ public class CustomerServiceTests {
     }
 
     @Nested
-    public class MergeAuthorisationShould {
+    public class MergeSecretShould {
 
         @Test
-        public void replaceEmptyAuthorisations() {
-            var requested = new ChangeCustomer.Authorization("location1", "username1", "password1");
+        public void replaceEmptySecrets() {
+            var requested = new ChangeCustomer.Secret("location1", "username1", "password1");
             var requestor = Email.of("someone@somewhere");
             var when = Dates.gen().head();
-            var empty = new CustomerAuthorization[0];
+            var empty = new CustomerSecret[0];
             var actual = CustomerService.merge(requestor, when, ArrayUtils.toArray(requested), empty);
-            var expected = ArrayUtils.toArray(new CustomerAuthorization("location1", "username1", "password1", requestor, when));
+            var expected = ArrayUtils.toArray(new CustomerSecret("location1", "username1", "password1", requestor, when));
             Assertions.assertThat(actual).isEqualTo(expected);
         }
 
         @Test
-        public void removeExistingAuthorisations() {
-            var requestedEmpty = new ChangeCustomer.Authorization[0];
+        public void removeExistingSecrets() {
+            var requestedEmpty = new ChangeCustomer.Secret[0];
             var requestor = Email.of("someone@somewhere");
             var when = Dates.gen().head();
-            var someExistinhAuths = ArrayUtils.toArray(new CustomerAuthorization("a", "b", "c", requestor, when));
+            var someExistinhAuths = ArrayUtils.toArray(new CustomerSecret("a", "b", "c", requestor, when));
             var actual = CustomerService.merge(requestor, when, requestedEmpty, someExistinhAuths);
             Assertions.assertThat(actual).isEmpty();
         }
 
         @Test
-        public void updateChangedAuthorisationsCase1() {
+        public void updateChangedSecretsCase1() {
             var newRequestor = Email.of("new@requestor");
             var newDate = Dates.gen().head();
-            var requested1 = new ChangeCustomer.Authorization("location", "username1", "password1");
+            var requested1 = new ChangeCustomer.Secret("location", "username1", "password1");
 
             var oldRequestor = Email.of("old@requestor");
             var oldDate = Dates.gen().head();
-            var existing1 = new CustomerAuthorization("location", "username1", "c", oldRequestor, oldDate);
+            var existing1 = new CustomerSecret("location", "username1", "c", oldRequestor, oldDate);
 
             var actual = CustomerService.merge(newRequestor, newDate,
                                                ArrayUtils.toArray(requested1),
                                                ArrayUtils.toArray(existing1));
             Assertions
                 .assertThat(actual)
-                .containsExactly(new CustomerAuthorization("location", "username1", "password1", newRequestor, newDate));
+                .containsExactly(new CustomerSecret("location", "username1", "password1", newRequestor, newDate));
         }
 
         @Test
-        public void updateChangedAuthorisationsCase2() {
+        public void updateChangedSecretCase2() {
             var newRequestor = Email.of("new@requestor");
             var newDate = Dates.gen().head();
-            var requested1 = new ChangeCustomer.Authorization("location", "username1", "password1");
+            var requested1 = new ChangeCustomer.Secret("location", "username1", "password1");
 
             var oldRequestor = Email.of("old@requestor");
             var oldDate = Dates.gen().head();
-            var existing1 = new CustomerAuthorization("location", "username1", "password1", oldRequestor, oldDate);
+            var existing1 = new CustomerSecret("location", "username1", "password1", oldRequestor, oldDate);
 
             var actual = CustomerService.merge(newRequestor, newDate,
                                                ArrayUtils.toArray(requested1),
                                                ArrayUtils.toArray(existing1));
             Assertions
                 .assertThat(actual)
-                .containsExactly(new CustomerAuthorization("location", "username1", "password1", oldRequestor, oldDate));
+                .containsExactly(new CustomerSecret("location", "username1", "password1", oldRequestor, oldDate));
         }
     }
 

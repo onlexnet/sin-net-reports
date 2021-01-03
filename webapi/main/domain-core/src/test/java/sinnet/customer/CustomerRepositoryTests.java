@@ -19,7 +19,9 @@ import io.vertx.core.CompositeFuture;
 import lombok.experimental.UtilityClass;
 import sinnet.AppTestContext;
 import sinnet.Sync;
-import sinnet.models.CustomerAuthorization;
+import sinnet.models.CustomerSecret;
+import sinnet.models.CustomerSecretEx;
+import sinnet.models.CustomerContact;
 import sinnet.models.CustomerValue;
 import sinnet.models.EntityId;
 import sinnet.models.Name;
@@ -56,7 +58,7 @@ public class CustomerRepositoryTests {
             .and(ignored -> {
                 var model = Given.minValidModel();
                 return repository
-                       .write(givenEntityId, model, Given.emptyAuth()); })
+                       .write(givenEntityId, model, Given.emptyAuth(), Given.emptySecretsEx(), Given.emptyContacts()); })
             .get();
 
         var expected = EntityId.of(projectId, givenEntityId.getId(), givenEntityId.getVersion() + 1);
@@ -71,7 +73,7 @@ public class CustomerRepositoryTests {
         var someId = EntityId.anyNew(projectId);
         var model = Given.fullModel();
 
-        Sync.of(() -> repository.write(someId, model, Given.emptyAuth()))
+        Sync.of(() -> repository.write(someId, model, Given.emptyAuth(), Given.emptySecretsEx(), Given.emptyContacts()))
             .and(it -> repository.get(it))
             .checkpoint(it -> assertThat(it.get().getValue()).isEqualTo(model));
     }
@@ -86,8 +88,8 @@ public class CustomerRepositoryTests {
             .and(ignored -> {
                 var someModel = Given.minValidModel();
                 return CompositeFuture
-                    .all(repository.write(id1, someModel, Given.emptyAuth()),
-                        repository.write(id2, someModel, Given.emptyAuth()))
+                    .all(repository.write(id1, someModel, Given.emptyAuth(), Given.emptySecretsEx(), Given.emptyContacts()),
+                        repository.write(id2, someModel, Given.emptyAuth(), Given.emptySecretsEx(), Given.emptyContacts()))
                     .map(it -> true); })
             .and(it -> repository.list(projectId))
             .get();
@@ -103,10 +105,10 @@ public class CustomerRepositoryTests {
 
         var validModel = Given.minValidModel();
         var eid = EntityId.anyNew(projectId);
-        var eidV1 = Sync.of(() -> repository.write(eid, validModel, Given.emptyAuth())).get();
-        var eidV2 = Sync.of(() -> repository.write(eidV1, validModel, Given.emptyAuth())).get();
+        var eidV1 = Sync.of(() -> repository.write(eid, validModel, Given.emptyAuth(), Given.emptySecretsEx(), Given.emptyContacts())).get();
+        var eidV2 = Sync.of(() -> repository.write(eidV1, validModel, Given.emptyAuth(), Given.emptySecretsEx(), Given.emptyContacts())).get();
 
-        var expected = new CustomerRepository.CustomerModel(eidV2, validModel, Given.emptyAuth());
+        var expected = new CustomerRepository.CustomerModel(eidV2, validModel, Given.emptyAuth(), Given.emptySecretsEx(), Given.emptyContacts());
         Sync
             .of(() -> repository.list(projectId))
             .checkpoint(it -> Assertions
@@ -121,13 +123,13 @@ public class CustomerRepositoryTests {
 
         var validModel = Given.minValidModel();
         var eid = EntityId.anyNew(projectId);
-        var newEid = Sync.of(() -> repository.write(eid, validModel, Given.emptyAuth())).get();
+        var newEid = Sync.of(() -> repository.write(eid, validModel, Given.emptyAuth(), Given.emptySecretsEx(), Given.emptyContacts())).get();
 
         var invalidModel = Given.invalidModel();
         Assertions
-            .catchThrowable(() -> Sync.of(() -> repository.write(newEid, invalidModel, Given.emptyAuth())).get());
+            .catchThrowable(() -> Sync.of(() -> repository.write(newEid, invalidModel, Given.emptyAuth(), Given.emptySecretsEx(), Given.emptyContacts())).get());
 
-        var expected = new CustomerRepository.CustomerModel(newEid, validModel, Given.emptyAuth());
+        var expected = new CustomerRepository.CustomerModel(newEid, validModel, Given.emptyAuth(), Given.emptySecretsEx(), Given.emptyContacts());
         var list = Sync.of(() -> repository.list(projectId)).get();
         Assertions
             .assertThat(list).containsOnly(expected);
@@ -141,19 +143,19 @@ public class CustomerRepositoryTests {
 
         var validModel = Given.minValidModel();
         var eid = EntityId.anyNew(projectId);
-        var nextId = Sync.of(() -> repository.write(eid, validModel, Given.emptyAuth())).get();
+        var nextId = Sync.of(() -> repository.write(eid, validModel, Given.emptyAuth(), Given.emptySecretsEx(), Given.emptyContacts())).get();
 
         var invalidEid = EntityId.of(nextId.getProjectId(), nextId.getId(), nextId.getVersion() + 1);
-        Sync.of(() -> repository.write(invalidEid, validModel, Given.emptyAuth())).tryGet();
+        Sync.of(() -> repository.write(invalidEid, validModel, Given.emptyAuth(), Given.emptySecretsEx(), Given.emptyContacts())).tryGet();
 
-        var expected = new CustomerRepository.CustomerModel(nextId, validModel, Given.emptyAuth());
+        var expected = new CustomerRepository.CustomerModel(nextId, validModel, Given.emptyAuth(), Given.emptySecretsEx(), Given.emptyContacts());
         Sync
             .of(() -> repository.list(projectId))
             .checkpoint(it -> Assertions.assertThat(it).containsOnly(expected));
     }
 
     @Nested
-    public class ShouldSupportAuthorities {
+    public class ShouldSupportSecrets {
 
         @Test
         void write() {
@@ -162,11 +164,13 @@ public class CustomerRepositoryTests {
 
             var someId = EntityId.anyNew(projectId);
             var model = Given.minValidModel();
-            var auths = Given.multipleAuthorisations();
+            var auths = Given.multipleSecrets();
+            var secretsEx = Given.emptySecretsEx();
+            var contacts = Given.emptyContacts();
 
-            Sync.of(() -> repository.write(someId, model, auths))
+            Sync.of(() -> repository.write(someId, model, auths, secretsEx, contacts))
                 .and(it -> repository.get(it))
-                .checkpoint(it -> assertThat(it.get().getAuthorisations()).containsOnly(auths));
+                .checkpoint(it -> assertThat(it.get().getSecrets()).containsOnly(auths));
         }
 
         @Test
@@ -176,13 +180,15 @@ public class CustomerRepositoryTests {
 
             var someId = EntityId.anyNew(projectId);
             var model = Given.minValidModel();
-            var auths = Given.multipleAuthorisations();
+            var auths = Given.multipleSecrets();
             var emptyAuths = Given.emptyAuth();
+            var secretsEx = Given.emptySecretsEx();
+            var contacts = Given.emptyContacts();
 
-            Sync.of(() -> repository.write(someId, model, auths))
-                .and(newId -> repository.write(newId, model, emptyAuths))
+            Sync.of(() -> repository.write(someId, model, auths, secretsEx, contacts))
+                .and(newId -> repository.write(newId, model, emptyAuths, secretsEx, contacts))
                 .and(it -> repository.get(it))
-                .checkpoint(it -> assertThat(it.get().getAuthorisations()).isEmpty());
+                .checkpoint(it -> assertThat(it.get().getSecrets()).isEmpty());
         }
     }
 }
@@ -195,18 +201,28 @@ class Given {
         .build();
     }
 
-    static CustomerAuthorization[] emptyAuth() {
-        return new CustomerAuthorization[0];
+    static CustomerSecret[] emptyAuth() {
+        return new CustomerSecret[0];
     }
 
-    static CustomerAuthorization[] multipleAuthorisations() {
-        var auth = (Supplier<CustomerAuthorization>) () -> CustomerAuthorization.builder()
+    static CustomerSecretEx[] emptySecretsEx() {
+        return new CustomerSecretEx[0];
+    }
+
+    static CustomerContact[] emptyContacts() {
+        return new CustomerContact[0];
+    }
+
+
+
+    static CustomerSecret[] multipleSecrets() {
+        var auth = (Supplier<CustomerSecret>) () -> CustomerSecret.builder()
             .location("My location " + UUID.randomUUID())
             .username("My username " + UUID.randomUUID())
             .password("My password " + UUID.randomUUID())
             .build();
 
-        return new CustomerAuthorization[] {auth.get(), auth.get()};
+        return new CustomerSecret[] {auth.get(), auth.get()};
     }
 
     static CustomerValue invalidModel() {

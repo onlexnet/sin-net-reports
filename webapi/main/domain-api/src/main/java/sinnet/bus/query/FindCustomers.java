@@ -7,7 +7,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import sinnet.bus.JsonMessage;
-import sinnet.models.CustomerAuthorization;
+import sinnet.models.CustomerSecret;
+import sinnet.models.CustomerSecretEx;
+import sinnet.models.CustomerContact;
 import sinnet.models.CustomerValue;
 
 public interface FindCustomers {
@@ -38,6 +40,8 @@ public interface FindCustomers {
         private UUID entityId;
         private int entityVersion;
         private CustomerValue value;
-        private CustomerAuthorization[] authorisations;
+        private CustomerSecret[] secrets;
+        private CustomerSecretEx[] secretsEx;
+        private CustomerContact[] contacts;
     }
 }

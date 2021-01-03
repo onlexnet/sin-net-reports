@@ -16,6 +16,7 @@ import sinnet.MyEntity;
 import sinnet.SomeEntity;
 import sinnet.bus.EntityId;
 import sinnet.bus.commands.ChangeCustomer;
+import sinnet.models.CustomerContact;
 import sinnet.models.CustomerValue;
 import sinnet.models.Email;
 import sinnet.models.Name;
@@ -31,7 +32,13 @@ public class CustomersMutationSave extends AskTemplate<ChangeCustomer.Command, E
         super(ChangeCustomer.Command.ADDRESS, EntityId.class);
     }
 
-    CompletableFuture<SomeEntity> save(CustomersMutation gcontext, MyEntity id, CustomerInput entry, CustomerAuthorization[] authorizations) {
+    CompletableFuture<SomeEntity> save(CustomersMutation gcontext, MyEntity id, CustomerInput entry,
+                                                                                CustomerSecret[] secrets,
+                                                                                CustomerSecretEx[] secretsEx,
+                                                                                CustomerContact[] contacts) {
+        var maybeRequestor = identityProvider.getCurrent();
+        if (!maybeRequestor.isPresent()) throw new GraphQLException("Access denied");
+
         if (!Objects.equal(id.getProjectId(), gcontext.getProjectId())) {
             throw new GraphQLException("Invalid project id");
         }
@@ -65,24 +72,42 @@ public class CustomersMutationSave extends AskTemplate<ChangeCustomer.Command, E
             .komercjaJest(entry.isKomercjaJest())
             .komercjaNotatki(entry.getKomercjaNotatki())
             .build();
-        var auths = Arrays
-            .stream(authorizations)
-            .map(it -> ChangeCustomer.Authorization.builder()
+        var mSecrets = Arrays
+            .stream(secrets)
+            .map(it -> ChangeCustomer.Secret.builder()
                 .location(it.getLocation())
                 .username(it.getUsername())
                 .password(it.getPassword())
                 .build())
-            .toArray(ChangeCustomer.Authorization[]::new);
-
-        var maybeRequestor = identityProvider.getCurrent();
-        if (!maybeRequestor.isPresent()) throw new GraphQLException("Access denied");
+            .toArray(ChangeCustomer.Secret[]::new);
+        var mSecretsEx = Arrays
+            .stream(secretsEx)
+            .map(it -> ChangeCustomer.SecretEx.builder()
+                .location(it.getLocation())
+                .username(it.getUsername())
+                .password(it.getPassword())
+                .entityName(it.getEntityName())
+                .entityCode(it.getEntityCode())
+                .build())
+            .toArray(ChangeCustomer.SecretEx[]::new);
+        var mContacts = Arrays
+            .stream(contacts)
+            .map(it -> ChangeCustomer.Contact.builder()
+                .name(it.getName())
+                .surname(it.getSurname())
+                .phoneNo(it.getPhoneNo())
+                .email(it.getEmail())
+                .build())
+            .toArray(ChangeCustomer.Contact[]::new);
 
         var emailOfRequestor = maybeRequestor.get().getEmail();
         var cmd = ChangeCustomer.Command.builder()
             .requestor(Email.of(emailOfRequestor))
             .id(eid)
             .value(value)
-            .authorizations(auths)
+            .secrets(mSecrets)
+            .secretsEx(mSecretsEx)
+            .contacts(mContacts)
             .build();
         return super.ask(cmd).thenApply(m -> new SomeEntity(m.getProjectId(), m.getId(), m.getVersion()));
     }

@@ -25,8 +25,10 @@ class CustomersQueryList extends AskTemplate<FindCustomers.Ask, FindCustomers.Re
                                  .map(o -> {
                                      var id = new SomeEntity(o.getProjectId(), o.getEntityId(), o.getEntityVersion());
                                      var value = o.getValue();
-                                     var auths = o.getAuthorisations();
-                                     return new CustomerEntity(id, value, auths);
+                                     var secrets = o.getSecrets();
+                                     var secretsEx = o.getSecretsEx();
+                                     var contacts = o.getContacts();
+                                     return new CustomerEntity(id, value, secrets, secretsEx, contacts);
                                  }));
     }
 }

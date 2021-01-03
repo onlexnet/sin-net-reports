@@ -6,7 +6,9 @@ import io.vavr.collection.List;
 import io.vavr.control.Option;
 import io.vertx.core.Future;
 import lombok.Value;
-import sinnet.models.CustomerAuthorization;
+import sinnet.models.CustomerSecret;
+import sinnet.models.CustomerSecretEx;
+import sinnet.models.CustomerContact;
 import sinnet.models.CustomerValue;
 import sinnet.models.EntityId;
 
@@ -17,7 +19,11 @@ interface CustomerRepository {
      * <p>
      * @return new EID for just stored entity.
      */
-    Future<EntityId> write(EntityId eid, CustomerValue value, CustomerAuthorization[] auth);
+    Future<EntityId> write(EntityId eid,
+                           CustomerValue value,
+                           CustomerSecret[] secrets,
+                           CustomerSecretEx[] secretsEx,
+                           CustomerContact[] contacts);
 
     /**
      * Returns a model pointed by given {@code id} or empty value if the model does not exists.
@@ -37,6 +43,8 @@ interface CustomerRepository {
     class CustomerModel {
         private EntityId id;
         private CustomerValue value;
-        private CustomerAuthorization[] authorisations;
+        private CustomerSecret[] secrets;
+        private CustomerSecretEx[] secretsEx;
+        private CustomerContact[] contacts;
     }
 }

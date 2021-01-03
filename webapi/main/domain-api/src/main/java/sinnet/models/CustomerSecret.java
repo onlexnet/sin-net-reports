@@ -11,9 +11,9 @@ import lombok.Value;
 
 @AllArgsConstructor
 @Value
-@JsonDeserialize(builder = CustomerAuthorization.MyBuilder.class)
+@JsonDeserialize(builder = CustomerSecret.MyBuilder.class)
 @Builder(builderClassName = "MyBuilder", toBuilder = true)
-public final class CustomerAuthorization {
+public final class CustomerSecret {
     private String location;
     private String username;
     private String password;

@@ -65,10 +65,27 @@ class CustomerModel {
     private String komercjaNotatki;
 }
 @Value
-class CustomerAuthorization {
+class CustomerSecret {
     private String location;
     private String username;
     private String password;
     private String changedWhen;
     private String changedWho;
+}
+@Value
+class CustomerSecretEx {
+    private String location;
+    private String username;
+    private String password;
+    private String entityName;
+    private String entityCode;
+    private String changedWhen;
+    private String changedWho;
+}
+@Value
+class CustomerContact {
+    private String name;
+    private String surname;
+    private String phoneNo;
+    private String email;
 }

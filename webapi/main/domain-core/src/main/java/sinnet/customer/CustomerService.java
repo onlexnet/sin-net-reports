@@ -22,7 +22,9 @@ import sinnet.bus.query.FindCustomers;
 import sinnet.bus.query.FindCustomers.Ask;
 import sinnet.bus.query.FindCustomers.CustomerData;
 import sinnet.customer.CustomerRepository.CustomerModel;
-import sinnet.models.CustomerAuthorization;
+import sinnet.models.CustomerSecret;
+import sinnet.models.CustomerSecretEx;
+import sinnet.models.CustomerContact;
 import sinnet.models.Email;
 import sinnet.models.EntityId;
 
@@ -56,18 +58,28 @@ public class CustomerService extends AbstractVerticle implements TopLevelVerticl
             var eid = EntityId.of(msg.getId().getProjectId(), msg.getId().getId(), msg.getId().getVersion());
             var requestor = msg.getRequestor();
             var newValue = msg.getValue();
-            var requestedAuthorisations = msg.getAuthorizations();
+            var requestedSecrets = msg.getSecrets();
+            var requestedSecretsEx = msg.getSecretsEx();
             return repository
                 .get(eid)
                 .flatMap(it -> {
-                    var actualAuthorisations = it
-                        .map(v -> v.getAuthorisations())
-                        .getOrElse(new CustomerAuthorization[0]);
-                    var newAuthorisations = CustomerService.merge(requestor,
-                                                                  LocalDate.now(),
-                                                                  requestedAuthorisations, actualAuthorisations);
+                    var actualSecrets = it
+                        .map(v -> v.getSecrets())
+                        .getOrElse(new CustomerSecret[0]);
+                    var newSecrets = CustomerService.merge(requestor,
+                                                           LocalDate.now(),
+                                                           requestedSecrets, actualSecrets);
+                    var actualSecretsEx = it
+                        .map(v -> v.getSecretsEx())
+                        .getOrElse(new CustomerSecretEx[0]);
+                    var newSecretsEx = CustomerService.merge(requestor,
+                                                             LocalDate.now(),
+                                                             requestedSecretsEx, actualSecretsEx);
+                    var contacts = it
+                        .map(v -> v.getContacts())
+                        .getOrElse(new CustomerContact[0]);
                     return repository
-                        .write(eid, newValue, newAuthorisations)
+                        .write(eid, newValue, newSecrets, newSecretsEx, contacts)
                         .map(v1 -> new sinnet.bus.EntityId(v1.getProjectId(), v1.getId(), v1.getVersion()));
                 });
         }
@@ -81,7 +93,11 @@ public class CustomerService extends AbstractVerticle implements TopLevelVerticl
         @Override
         protected Future<Reply> onRequest(FindCustomer.Ask request) {
             return repository.get(request.getProjectId(), request.getEntityId())
-                .flatMap(it -> it.map(v -> new FindCustomer.Reply(v.getId().getId(), v.getId().getVersion(), v.getValue(), v.getAuthorisations()))
+                .flatMap(it -> it.map(v -> new FindCustomer.Reply(v.getId().getId(), v.getId().getVersion(),
+                                                                  v.getValue(),
+                                                                  v.getSecrets(),
+                                                                  v.getSecretsEx(),
+                                                                  v.getContacts()))
                                  .map(v -> Future.succeededFuture(v))
                                  .getOrElse(Future.failedFuture(new Exception("No data"))));
         }
@@ -107,19 +123,21 @@ public class CustomerService extends AbstractVerticle implements TopLevelVerticl
             .entityId(item.getId().getId())
             .entityVersion(item.getId().getVersion())
             .value(item.getValue())
-            .authorisations(item.getAuthorisations())
+            .secrets(item.getSecrets())
+            .secretsEx(item.getSecretsEx())
+            .contacts(item.getContacts())
             .build();
     }
 
     /**
-     * Combines set of requested authorizations with existing authorizations so that
-     * defines new authorizations, updated authorizations and remove non used authorizations.
+     * Combines set of requested secrets with existing secrets so that
+     * defines new secrets, updated secrets and remove non used secrets.
      */
-    public static  CustomerAuthorization[] merge(Email requestor, LocalDate when, ChangeCustomer.Authorization[] requested, CustomerAuthorization[] actual) {
+    public static  CustomerSecret[] merge(Email requestor, LocalDate when, ChangeCustomer.Secret[] requested, CustomerSecret[] actual) {
 
         // 1) Extract items are identical (location / username / password) so that can be marked as 'unchanged'
         // 2) The rest is considered as 'updated' or 'new'
-        var result = new LinkedList<CustomerAuthorization>();
+        var result = new LinkedList<CustomerSecret>();
         var existing = new ArrayList<>(Arrays.asList(actual));
         var candidates = new ArrayList<>(Arrays.asList(requested));
         while (!candidates.isEmpty()) {
@@ -147,7 +165,7 @@ public class CustomerService extends AbstractVerticle implements TopLevelVerticl
             if (similarMatch.isPresent()) {
                 var foundSimilar = similarMatch.get();
                 existing.remove(foundSimilar);
-                result.add(new CustomerAuthorization(candidate.getLocation(),
+                result.add(new CustomerSecret(candidate.getLocation(),
                                candidate.getUsername(),
                                candidate.getPassword(),
                                requestor,
@@ -156,13 +174,73 @@ public class CustomerService extends AbstractVerticle implements TopLevelVerticl
             }
 
             // so, finally, is new
-            result.add(new CustomerAuthorization(candidate.getLocation(),
+            result.add(new CustomerSecret(candidate.getLocation(),
                 candidate.getUsername(),
                 candidate.getPassword(),
                 requestor,
                 when));
         }
 
-        return result.toArray(CustomerAuthorization[]::new);
+        return result.toArray(CustomerSecret[]::new);
     }
+
+    public static  CustomerSecretEx[] merge(Email requestor, LocalDate when, ChangeCustomer.SecretEx[] requested, CustomerSecretEx[] actual) {
+
+        // 1) Extract items are identical (location / username / password) so that can be marked as 'unchanged'
+        // 2) The rest is considered as 'updated' or 'new'
+        var result = new LinkedList<CustomerSecretEx>();
+        var existing = new ArrayList<>(Arrays.asList(actual));
+        var candidates = new ArrayList<>(Arrays.asList(requested));
+        while (!candidates.isEmpty()) {
+            var candidate = candidates.get(0);
+            candidates.remove(0);
+
+            // is untauched?
+            var exactMatch = existing.stream()
+                .filter(it -> Objects.equals(it.getLocation(), candidate.getLocation())
+                           && Objects.equals(it.getEntityName(), candidate.getEntityName())
+                           && Objects.equals(it.getEntityCode(), candidate.getEntityCode())
+                           && Objects.equals(it.getUsername(), candidate.getUsername())
+                           && Objects.equals(it.getPassword(), candidate.getPassword()))
+                .findFirst();
+            if (exactMatch.isPresent()) {
+                var foundMatch = exactMatch.get();
+                existing.remove(foundMatch);
+                result.add(foundMatch);
+                continue;
+            }
+
+            // is updated?
+            var similarMatch = existing.stream()
+                .filter(it -> Objects.equals(it.getLocation(), candidate.getLocation())
+                           && Objects.equals(it.getEntityName(), candidate.getEntityName())
+                           && Objects.equals(it.getEntityCode(), candidate.getEntityCode())
+                           && Objects.equals(it.getUsername(), candidate.getUsername()))
+                .findFirst();
+            if (similarMatch.isPresent()) {
+                var foundSimilar = similarMatch.get();
+                existing.remove(foundSimilar);
+                result.add(new CustomerSecretEx(candidate.getLocation(),
+                               candidate.getUsername(),
+                               candidate.getPassword(),
+                               candidate.getEntityName(),
+                               candidate.getEntityCode(),
+                               requestor,
+                               when));
+                continue;
+            }
+
+            // so, finally, is new
+            result.add(new CustomerSecretEx(candidate.getLocation(),
+                candidate.getUsername(),
+                candidate.getPassword(),
+                candidate.getEntityName(),
+                candidate.getEntityCode(),
+                requestor,
+                when));
+        }
+
+        return result.toArray(CustomerSecretEx[]::new);
+    }
+
 }

@@ -8,14 +8,18 @@ import graphql.kickstart.tools.GraphQLResolver;
 import io.vavr.control.Option;
 import lombok.Value;
 import sinnet.Entity;
-import sinnet.models.CustomerAuthorization;
+import sinnet.models.CustomerSecret;
+import sinnet.models.CustomerSecretEx;
+import sinnet.models.CustomerContact;
 import sinnet.models.CustomerValue;
 
 @Value
 public class CustomerEntity {
     private Entity id;
     private CustomerValue optionalValue;
-    private CustomerAuthorization[] optionalAuthorizations;
+    private CustomerSecret[] optionalSecrets;
+    private CustomerSecretEx[] optionalSecretsEx;
+    private CustomerContact[] optionalContacts;
 }
 
 @Component
@@ -55,20 +59,50 @@ class CustomerModelResolverPayload implements GraphQLResolver<CustomerEntity> {
         return null;
     }
 
-    sinnet.customers.CustomerAuthorization[] getAuthorizations(CustomerEntity gcontext) {
-        if (gcontext.getOptionalAuthorizations() != null) {
-            return Arrays.stream(gcontext.getOptionalAuthorizations())
-                .map(it -> new sinnet.customers.CustomerAuthorization(
+    sinnet.customers.CustomerSecret[] getSecrets(CustomerEntity gcontext) {
+        if (gcontext.getOptionalSecrets() != null) {
+            return Arrays.stream(gcontext.getOptionalSecrets())
+                .map(it -> new sinnet.customers.CustomerSecret(
                     Option.of(it.getLocation()).getOrElse("?"),
                     it.getUsername(),
                     it.getPassword(),
                     Option.of(it.getChangedWho().getValue()).getOrElse("?"),
                     Option.of(it.getChangedWhen()).map(v -> v.toString()).getOrElse("?")))
-                .toArray(sinnet.customers.CustomerAuthorization[]::new);
+                .toArray(sinnet.customers.CustomerSecret[]::new);
         }
         // TODO resolve if no data provided
         return null;
     }
 
+    sinnet.customers.CustomerSecretEx[] getSecretsEx(CustomerEntity gcontext) {
+        if (gcontext.getOptionalSecretsEx() != null) {
+            return Arrays.stream(gcontext.getOptionalSecretsEx())
+                .map(it -> new sinnet.customers.CustomerSecretEx(
+                    Option.of(it.getLocation()).getOrElse("?"),
+                    it.getUsername(),
+                    it.getPassword(),
+                    it.getEntityName(),
+                    it.getEntityCode(),
+                    Option.of(it.getChangedWho().getValue()).getOrElse("?"),
+                    Option.of(it.getChangedWhen()).map(v -> v.toString()).getOrElse("?")))
+                .toArray(sinnet.customers.CustomerSecretEx[]::new);
+        }
+        // TODO resolve if no data provided
+        return null;
+    }
+
+    sinnet.customers.CustomerContact[] getContacts(CustomerEntity gcontext) {
+        if (gcontext.getOptionalContacts() != null) {
+            return Arrays.stream(gcontext.getOptionalContacts())
+                .map(it -> new sinnet.customers.CustomerContact(
+                    it.getName(),
+                    it.getSurname(),
+                    it.getPhoneNo(),
+                    it.getEmail()))
+                .toArray(sinnet.customers.CustomerContact[]::new);
+        }
+        // TODO resolve if no data provided
+        return null;
+    }
 }
 

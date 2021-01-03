@@ -10,8 +10,8 @@ import org.springframework.stereotype.Component;
 
 import io.vavr.Tuple2;
 import io.vavr.collection.List;
-import io.vavr.collection.Stream;
 import io.vavr.control.Option;
+import io.vertx.core.CompositeFuture;
 import io.vertx.core.Future;
 import io.vertx.pgclient.PgPool;
 import io.vertx.sqlclient.Row;
@@ -20,7 +20,9 @@ import io.vertx.sqlclient.templates.SqlTemplate;
 import lombok.Builder;
 import lombok.Value;
 import lombok.experimental.FieldNameConstants;
-import sinnet.models.CustomerAuthorization;
+import sinnet.models.CustomerContact;
+import sinnet.models.CustomerSecret;
+import sinnet.models.CustomerSecretEx;
 import sinnet.models.CustomerValue;
 import sinnet.models.Entity;
 import sinnet.models.EntityId;
@@ -114,26 +116,81 @@ public class CustomerRepositoryImpl implements CustomerRepository {
     @Value
     @Builder
     @FieldNameConstants
-    static class SaveAuthEntry {
+    static class SaveSecretEntry {
         private UUID customerId;
         private String location;
         private String username;
         private String password;
     }
-    private String insertAuthTemplate = String.format(
-        "INSERT INTO \"authorization\" "
+    private String insertSecretTemplate = String.format(
+        "INSERT INTO \"secret\" "
         + "("
         + "customer_id, location, username, password"
         + ") "
         + "VALUES ("
         + "#{%s}, #{%s}, #{%s}, #{%s}"
         + ")",
-        SaveAuthEntry.Fields.customerId,
-        SaveAuthEntry.Fields.location,
-        SaveAuthEntry.Fields.username,
-        SaveAuthEntry.Fields.password);
+        SaveSecretEntry.Fields.customerId,
+        SaveSecretEntry.Fields.location,
+        SaveSecretEntry.Fields.username,
+        SaveSecretEntry.Fields.password);
 
-    public Future<EntityId> write(EntityId id, CustomerValue entity, CustomerAuthorization[] auth) {
+    @Value
+    @Builder
+    @FieldNameConstants
+    static class SaveSecretExEntry {
+        private UUID customerId;
+        private String location;
+        private String username;
+        private String password;
+        private String entityName;
+        private String entityCode;
+    }
+    private String insertSecretExTemplate = String.format(
+        "INSERT INTO secret_ex "
+        + "("
+        + "customer_id, location, username, password, entity_name, entity_code"
+        + ") "
+        + "VALUES ("
+        + "#{%s}, #{%s}, #{%s}, #{%s}, #{%s}, #{%s}"
+        + ")",
+        SaveSecretExEntry.Fields.customerId,
+        SaveSecretExEntry.Fields.location,
+        SaveSecretExEntry.Fields.username,
+        SaveSecretExEntry.Fields.password,
+        SaveSecretExEntry.Fields.entityName,
+        SaveSecretExEntry.Fields.entityCode);
+
+    @Value
+    @Builder
+    @FieldNameConstants
+    static class SaveContactEntry {
+        private UUID customerId;
+        private String name;
+        private String surname;
+        private String phoneNo;
+        private String email;
+    }
+    private String insertContactTemplate = String.format(
+        "INSERT INTO contact "
+        + "("
+        + "customer_id, name, surname, phoneNo, email"
+        + ") "
+        + "VALUES ("
+        + "#{%s}, #{%s}, #{%s}, #{%s}, #{%s}"
+        + ")",
+        SaveSecretExEntry.Fields.customerId,
+        SaveSecretExEntry.Fields.location,
+        SaveSecretExEntry.Fields.username,
+        SaveSecretExEntry.Fields.password,
+        SaveSecretExEntry.Fields.entityName,
+        SaveSecretExEntry.Fields.entityCode);
+
+    @Override
+    public Future<EntityId> write(EntityId id, CustomerValue entity,
+                                               CustomerSecret[] secrets,
+                                               CustomerSecretEx[] secretsEx,
+                                               CustomerContact[] contacts) {
         var entry = SaveEntry.builder()
             .projectId(id.getProjectId())
             .entityId(id.getId())
@@ -165,13 +222,32 @@ public class CustomerRepositoryImpl implements CustomerRepository {
             .komercjaJest(entity.isKomercjaJest())
             .komercjaNotatki(entity.getKomercjaNotatki())
             .build();
-        var authBatch = Arrays.stream(auth)
-            .map(it -> SaveAuthEntry.builder()
+        var secretBatch = Arrays.stream(secrets)
+            .map(it -> SaveSecretEntry.builder()
                                    .customerId(id.getId())
                                    .location(it.getLocation())
                                    .username(it.getUsername())
                                    .password(it.getPassword())
                                    .build())
+            .collect(Collectors.toList());
+        var secretExBatch = Arrays.stream(secretsEx)
+            .map(it -> SaveSecretExEntry.builder()
+                                   .customerId(id.getId())
+                                   .location(it.getLocation())
+                                   .username(it.getUsername())
+                                   .password(it.getPassword())
+                                   .entityName(it.getEntityName())
+                                   .entityCode(it.getEntityCode())
+                                   .build())
+            .collect(Collectors.toList());
+        var contactBatch = Arrays.stream(contacts)
+            .map(it -> SaveContactEntry
+                .builder()
+                .name(it.getName())
+                .surname(it.getSurname())
+                .phoneNo(it.getPhoneNo())
+                .email(it.getEmail())
+                .build())
             .collect(Collectors.toList());
         return pgClient.withTransaction(client -> SqlTemplate
                 .forUpdate(client, deleteTemplate)
@@ -181,13 +257,30 @@ public class CustomerRepositoryImpl implements CustomerRepository {
                     .forUpdate(client, insertTemplate)
                     .mapFrom(SaveEntry.class)
                     .execute(entry))
-                .map(res -> {
-                    if (authBatch.isEmpty()) return Boolean.TRUE;
-                    SqlTemplate
-                        .forUpdate(client, insertAuthTemplate)
-                        .mapFrom(SaveAuthEntry.class)
-                        .executeBatch(authBatch);
-                    return Boolean.TRUE; })
+                .flatMap(res -> {
+                    if (secretBatch.isEmpty()) return Future.succeededFuture(Boolean.TRUE);
+                    return SqlTemplate
+                        .forUpdate(client, insertSecretTemplate)
+                        .mapFrom(SaveSecretEntry.class)
+                        .executeBatch(secretBatch)
+                        .map(ignored -> Boolean.TRUE);
+                })
+                .flatMap(res -> {
+                    if (secretExBatch.isEmpty()) return Future.succeededFuture(Boolean.TRUE);
+                    return SqlTemplate
+                        .forUpdate(client, insertSecretExTemplate)
+                        .mapFrom(SaveSecretExEntry.class)
+                        .executeBatch(secretExBatch)
+                        .map(ignored -> Boolean.TRUE);
+                })
+                .flatMap(res -> {
+                    if (contactBatch.isEmpty()) return Future.succeededFuture(Boolean.TRUE);
+                    return SqlTemplate
+                        .forUpdate(client, insertContactTemplate)
+                        .mapFrom(SaveContactEntry.class)
+                        .executeBatch(contactBatch)
+                        .map(ignored -> Boolean.TRUE);
+                })
                 .map(ignored -> EntityId.of(id.getProjectId(), id.getId(), id.getVersion() + 1)));
     }
 
@@ -224,6 +317,7 @@ public class CustomerRepositoryImpl implements CustomerRepository {
 
     }
 
+    /** Reusable method to map database to domain model. */
     private Future<List<CustomerModel>> get(String whereClause, Tuple values) {
         return pgClient.withTransaction(client ->
             client.preparedQuery("SELECT "
@@ -240,49 +334,108 @@ public class CustomerRepositoryImpl implements CustomerRepository {
                 + "WHERE " + whereClause)
                 .execute(values)
                 .flatMap(ar -> {
-                    var customers = Stream.ofAll(ar)
+                    var customers = List.ofAll(ar)
                         .map(row -> toCustomerEntity(row));
                     var ids = customers
                         .map(it -> it.getEntityId())
                         .map(it -> Collections.singletonMap("cid", (Object) it))
                         .toJavaList();
                     if (ids.isEmpty()) return Future.succeededFuture(List.empty());
-                    return SqlTemplate
-                        .forQuery(client, "SELECT customer_id, location, username, password FROM \"authorization\" WHERE customer_id=#{cid}")
+
+                    var secrets = SqlTemplate
+                        .forQuery(client, "SELECT customer_id, location, username, password FROM \"secret\" WHERE customer_id=#{cid}")
                         .executeBatch(ids)
-                        .map(rows -> Stream
+                        .map(rows -> List
                             .ofAll(rows)
-                            .map(row -> toCustomerAuthorization(row)))
-                        .map(it -> finalMapping(customers, it));
+                            .map(row -> toCustomerSecret(row)));
+                    var secretsEx = SqlTemplate
+                        .forQuery(client, "SELECT customer_id, location, username, password, entity_name, entity_code "
+                                          + "FROM secret_ex WHERE customer_id=#{cid}")
+                        .executeBatch(ids)
+                        .map(rows -> List
+                            .ofAll(rows)
+                            .map(row -> toCustomerSecretEx(row)));
+                    var contacts = SqlTemplate
+                        .forQuery(client, "SELECT name, surname, phone_no, email "
+                                          + "FROM contact WHERE customer_id=#{cid}")
+                        .executeBatch(ids)
+                        .map(rows -> List
+                            .ofAll(rows)
+                            .map(row -> toCustomerSecretEx(row)));
+
+                    return CompositeFuture
+                        .all(secrets, secretsEx, contacts)
+                        .map(v -> {
+                            List<Tuple2<UUID, CustomerSecret>> v1 = v.resultAt(0);
+                            List<Tuple2<UUID, CustomerSecretEx>> v2 = v.resultAt(1);
+                            List<Tuple2<UUID, CustomerContact>> v3 = v.resultAt(2);
+                            return finalMapping(customers, v1, v2, v3);
+                        });
                 })
         );
     }
 
-    static List<CustomerModel> finalMapping(Stream<Entity<CustomerValue>> customers,
-                                            Stream<Tuple2<UUID, CustomerAuthorization>> authorizations) {
-        var groupedAuths = authorizations.groupBy(it -> it._1);
+    static List<CustomerModel> finalMapping(List<Entity<CustomerValue>> customers,
+                                            List<Tuple2<UUID, CustomerSecret>> secrets,
+                                            List<Tuple2<UUID, CustomerSecretEx>> secretsEx,
+                                            List<Tuple2<UUID, CustomerContact>> contacts) {
+        var groupedSecrets = secrets.groupBy(it -> it._1);
+        var groupedSecretsEx = secretsEx.groupBy(it -> it._1);
+        var groupedContacts = contacts.groupBy(it -> it._1);
         return customers.map(it -> {
             var customerId = it.getEntityId();
             var value = it.getValue();
-            var customerAuths = groupedAuths.get(customerId)
-                .getOrElse(Stream.empty())
+            var customerSecrets = groupedSecrets.get(customerId)
+                .getOrElse(List.empty())
                 .map(v -> v._2)
-                .toJavaArray(CustomerAuthorization[]::new);
+                .toJavaArray(CustomerSecret[]::new);
+            var customerSecretsEx = groupedSecretsEx.get(customerId)
+                .getOrElse(List.empty())
+                .map(v -> v._2)
+                .toJavaArray(CustomerSecretEx[]::new);
+            var customerContacts = groupedContacts.get(customerId)
+                .getOrElse(List.empty())
+                .map(v -> v._2())
+                .toJavaArray(CustomerContact[]::new);
             return new CustomerModel(
                 EntityId.of(it.getProjectId(), it.getEntityId(), it.getVersion()),
                 value,
-                customerAuths
-            );
+                customerSecrets,
+                customerSecretsEx,
+                customerContacts);
         }).toList();
     }
 
 
-    static Tuple2<UUID, CustomerAuthorization> toCustomerAuthorization(Row row) {
+    static Tuple2<UUID, CustomerSecret> toCustomerSecret(Row row) {
         var key = row.getUUID("customer_id");
-        var result = CustomerAuthorization.builder()
+        var result = CustomerSecret.builder()
             .location(row.getString("location"))
             .username(row.getString("username"))
             .password(row.getString("password"))
+            .build();
+        return new Tuple2<>(key, result);
+    }
+
+    static Tuple2<UUID, CustomerSecretEx> toCustomerSecretEx(Row row) {
+        var key = row.getUUID("customer_id");
+        var result = CustomerSecretEx.builder()
+            .location(row.getString("location"))
+            .username(row.getString("username"))
+            .password(row.getString("password"))
+            .entityName(row.getString("entityName"))
+            .entityCode(row.getString("entityCode"))
+            .build();
+        return new Tuple2<>(key, result);
+    }
+
+    static Tuple2<UUID, CustomerContact> toCustomerContact(Row row) {
+        var key = row.getUUID("customer_id");
+        var result = CustomerContact.builder()
+            .name(row.getString("name"))
+            .surname(row.getString("surname"))
+            .phoneNo(row.getString("phone_no"))
+            .email(row.getString("email"))
             .build();
         return new Tuple2<>(key, result);
     }

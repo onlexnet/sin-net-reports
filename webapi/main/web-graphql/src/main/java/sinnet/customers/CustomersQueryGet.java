@@ -26,8 +26,10 @@ public class CustomersQueryGet extends AskTemplate<FindCustomer.Ask, FindCustome
             .thenApply(it -> {
                 var gqlId = new SomeEntity(gcontext.getProjectId(), it.getEntityId(), it.getEntityVersion());
                 var gqlValue = it.getValue();
-                var gqlAuths = it.getAuthorizations();
-                var result = new CustomerEntity(gqlId, gqlValue, gqlAuths);
+                var gqlSecrets = it.getSecrets();
+                var gqlSecretsEx = it.getSecretsEx();
+                var gqlContacts = it.getContacts();
+                var result = new CustomerEntity(gqlId, gqlValue, gqlSecrets, gqlSecretsEx, gqlContacts);
                 return Optional.of(result);
             });
     }
