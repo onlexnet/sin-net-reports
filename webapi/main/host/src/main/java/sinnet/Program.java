@@ -1,5 +1,7 @@
 package sinnet;
 
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -15,6 +17,11 @@ public final class Program {
      * @param args fixme
      */
     public static void main(final String[] args) {
+
+        // https://vertx.io/docs/vertx-sql-client-templates/java/#_java_datetime_api_mapping
+        var mapper = io.vertx.core.json.jackson.DatabindCodec.mapper();
+        mapper.registerModule(new JavaTimeModule());
+
         SpringApplication.run(Application.class, args);
     }
 }

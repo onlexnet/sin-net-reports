@@ -3,7 +3,7 @@ import { EntityId } from "../../store/actions/ServiceModel";
 import { RootState } from "../../store/reducers";
 import { Dispatch } from "redux";
 import { connect, ConnectedProps } from "react-redux";
-import { AuthorisationModel, CustomerView, CustomerViewEntry } from "./CustomerView";
+import { ContactDetails, CustomerView, CustomerViewEntry, SecretExModel, SecretModel } from "./CustomerView";
 import { useGetCustomerQuery } from "../../Components/.generated/components";
 import _ from "lodash";
 import { v1 as uuid } from 'uuid';
@@ -46,10 +46,13 @@ export const CustomerViewEditLocal: React.FC<CustomerViewEditProps> = props => {
         if (!id) {
             return <div>No data</div>;
         }
+        if (!input) {
+            return <div>No valid data</div>;
+        }
 
-        const autoryzacje = _.chain(input?.authorizations)
+        const autoryzacje = _.chain(input.secrets)
             .map(it => {
-                const ret: AuthorisationModel = {
+                const ret: SecretModel = {
                     localKey: uuid(),
                     location: it.location,
                     username: it.username ?? undefined,
@@ -61,16 +64,30 @@ export const CustomerViewEditLocal: React.FC<CustomerViewEditProps> = props => {
             })
             .value();
 
-        const autoryzacjeEx = _.chain(input?.authorizations)
+        const autoryzacjeEx = _.chain(input.secretsEx)
         .map(it => {
-            const ret: AuthorisationModel = {
+            const ret: SecretExModel = {
                 localKey: uuid(),
                 location: it.location,
                 username: it.username ?? undefined,
                 password: it.password ?? undefined,
+                entityName: it.entityName ?? undefined,
+                entityCode: it.entityCode ?? undefined,
                 who: it.changedWho,
                 when: it.changedWhen
             };
+            return ret;
+        })
+        .value();
+
+        const kontakty = _.chain(input.contacts)
+        .map(it => {
+            const ret: ContactDetails = {
+                firstName: it.name ?? undefined,
+                lastName: it.surname ?? undefined,
+                phoneNo: it.phoneNo ?? undefined,
+                email: it.email ?? undefined
+            }
             return ret;
         })
         .value();
@@ -102,7 +119,9 @@ export const CustomerViewEditLocal: React.FC<CustomerViewEditProps> = props => {
             nfzNotatki: input?.data.nfzNotatki ?? undefined,
             komercjaJest: input?.data.komercjaJest ?? undefined,
             komercjaNotatki: input?.data.komercjaNotatki ?? undefined,
-            autoryzacje
+            autoryzacje,
+            autoryzacjeEx,
+            kontakty
         }
         return <CustomerView id={id} entry={entry} itemSaved={props.itemSaved}/>;
     }

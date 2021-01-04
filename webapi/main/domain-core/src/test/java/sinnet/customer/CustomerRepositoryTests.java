@@ -2,8 +2,11 @@ package sinnet.customer;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.time.LocalDate;
 import java.util.UUID;
 import java.util.function.Supplier;
+
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
@@ -23,6 +26,7 @@ import sinnet.models.CustomerSecret;
 import sinnet.models.CustomerSecretEx;
 import sinnet.models.CustomerContact;
 import sinnet.models.CustomerValue;
+import sinnet.models.Email;
 import sinnet.models.EntityId;
 import sinnet.models.Name;
 import sinnet.read.ProjectRepository;
@@ -164,13 +168,13 @@ public class CustomerRepositoryTests {
 
             var someId = EntityId.anyNew(projectId);
             var model = Given.minValidModel();
-            var auths = Given.multipleSecrets();
+            var secrets = Given.multipleSecrets();
             var secretsEx = Given.emptySecretsEx();
             var contacts = Given.emptyContacts();
 
-            Sync.of(() -> repository.write(someId, model, auths, secretsEx, contacts))
+            Sync.of(() -> repository.write(someId, model, secrets, secretsEx, contacts))
                 .and(it -> repository.get(it))
-                .checkpoint(it -> assertThat(it.get().getSecrets()).containsOnly(auths));
+                .checkpoint(it -> assertThat(it.get().getSecrets()).containsOnly(secrets));
         }
 
         @Test
@@ -220,8 +224,9 @@ class Given {
             .location("My location " + UUID.randomUUID())
             .username("My username " + UUID.randomUUID())
             .password("My password " + UUID.randomUUID())
+            .changedWhen(LocalDate.now())
+            .changedWho(Email.of(UUID.randomUUID().toString()))
             .build();
-
         return new CustomerSecret[] {auth.get(), auth.get()};
     }
 

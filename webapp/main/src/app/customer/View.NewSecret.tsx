@@ -6,7 +6,7 @@ import _ from "lodash";
 
 import { v4 as uuid } from 'uuid';
 
-type AUTHORISATION_TYPE = 'PORTAL_SWIADCZENIODAWCY'
+type SECRET_TYPE = 'PORTAL_SWIADCZENIODAWCY'
     | 'SIMP'
     | 'PORTAL_PERSONELU'
     | 'MUS'
@@ -25,7 +25,7 @@ interface NewAuthorisationProps {
 const onChangeHandler = (props: NewAuthorisationProps) => {
     return (event: React.FormEvent<IComboBox>, option?: IComboBoxOption, index?: number, value?: string): void => {
         if (!option) return;
-        const model = toHint(option.key as AUTHORISATION_TYPE);
+        const model = toHint(option.key as SECRET_TYPE);
         if (!model.extended) {
             props.newAuthorisationRequested(model.text);
         } else {
@@ -34,13 +34,13 @@ const onChangeHandler = (props: NewAuthorisationProps) => {
     }
 }
 
-interface AuthorisationHint {
-    key: AUTHORISATION_TYPE
+interface SecretHint {
+    key: SECRET_TYPE
     text: string,
     extended: boolean
 }
 
-const toHint = (key: AUTHORISATION_TYPE): AuthorisationHint => {
+const toHint = (key: SECRET_TYPE): SecretHint => {
     switch (key) {
         case "PORTAL_SWIADCZENIODAWCY":
             return { key, text: 'Portal świadczeniodawcy', extended: true }
@@ -63,7 +63,7 @@ const toHint = (key: AUTHORISATION_TYPE): AuthorisationHint => {
     }
 }
 
-const options: AUTHORISATION_TYPE[] = [
+const options: SECRET_TYPE[] = [
     "PORTAL_SWIADCZENIODAWCY",
     'SIMP',
     "PORTAL_PERSONELU",
@@ -75,10 +75,7 @@ const options: AUTHORISATION_TYPE[] = [
     'DILO']
 
 
-interface IAuthorizartionComboBoxOption extends IComboBoxOption {
-    key: AUTHORISATION_TYPE
-}
-export const NewAuthorisation: React.FC<NewAuthorisationProps> = props => {
+export const NewSecret: React.FC<NewAuthorisationProps> = props => {
     const authorisationType = _.chain(options)
         .map(it => toHint(it))
         .map(it => ({ key: it.key, text: it.text }))

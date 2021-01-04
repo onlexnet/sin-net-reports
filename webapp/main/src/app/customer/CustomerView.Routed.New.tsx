@@ -1,5 +1,4 @@
 import React from "react"
-import { v4 as uuid } from 'uuid';
 import { EntityId } from "../../store/actions/ServiceModel";
 import { RootState } from "../../store/reducers";
 import { Dispatch } from "redux";
@@ -42,7 +41,9 @@ export const CustomerViewNewLocal: React.FC<CustomerViewNewProps> = props => {
         const id: EntityId = data.Customers.reserve;
         const entry: CustomerViewEntry = {
             KlientNazwa: 'Nowy klient',
-            autoryzacje: []
+            autoryzacje: [],
+            autoryzacjeEx: [],
+            kontakty: []
         }
         const itemSaved = () => props.history.goBack();
         return <CustomerView id={id} entry={entry} itemSaved={itemSaved}/>;

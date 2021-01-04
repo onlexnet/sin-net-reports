@@ -7,8 +7,8 @@
             <column name="location" type="varchar(50)"/>
             <column name="username" type="varchar(50)"/>
             <column name="password" type="varchar(50)"/>
-            <column name="changed_who" type="varchar(50)"></column>
-            <column name="changed_when" type="timestamp"></column>
+            <column name="changed_who" type="varchar(50)"/>
+            <column name="changed_when" type="date"/>
         </createTable>
         <addForeignKeyConstraint baseTableName="secret"
                                  baseColumnNames="customer_id"
@@ -25,8 +25,8 @@
             <column name="entity_code" type="varchar(50)"/>
             <column name="username" type="varchar(50)"/>
             <column name="password" type="varchar(50)"/>
-            <column name="changed_who" type="varchar(50)"></column>
-            <column name="changed_when" type="timestamp"></column>
+            <column name="changed_who" type="varchar(50)"/>
+            <column name="changed_when" type="date"/>
         </createTable>
         <addForeignKeyConstraint baseTableName="secret_ex"
                                  baseColumnNames="customer_id"

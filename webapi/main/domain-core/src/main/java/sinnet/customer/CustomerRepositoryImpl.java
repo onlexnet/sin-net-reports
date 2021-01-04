@@ -1,5 +1,6 @@
 package sinnet.customer;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.UUID;
@@ -13,10 +14,12 @@ import io.vavr.collection.List;
 import io.vavr.control.Option;
 import io.vertx.core.CompositeFuture;
 import io.vertx.core.Future;
+import io.vertx.core.json.JsonObject;
 import io.vertx.pgclient.PgPool;
 import io.vertx.sqlclient.Row;
 import io.vertx.sqlclient.Tuple;
 import io.vertx.sqlclient.templates.SqlTemplate;
+import io.vertx.sqlclient.templates.TupleMapper;
 import lombok.Builder;
 import lombok.Value;
 import lombok.experimental.FieldNameConstants;
@@ -24,6 +27,7 @@ import sinnet.models.CustomerContact;
 import sinnet.models.CustomerSecret;
 import sinnet.models.CustomerSecretEx;
 import sinnet.models.CustomerValue;
+import sinnet.models.Email;
 import sinnet.models.Entity;
 import sinnet.models.EntityId;
 import sinnet.models.Name;
@@ -121,19 +125,23 @@ public class CustomerRepositoryImpl implements CustomerRepository {
         private String location;
         private String username;
         private String password;
+        private String changedWho;
+        private LocalDate changedWhen;
     }
     private String insertSecretTemplate = String.format(
-        "INSERT INTO \"secret\" "
+        "INSERT INTO secret "
         + "("
-        + "customer_id, location, username, password"
+        + "customer_id, location, username, password, changed_who, changed_when"
         + ") "
         + "VALUES ("
-        + "#{%s}, #{%s}, #{%s}, #{%s}"
+        + "#{%s}, #{%s}, #{%s}, #{%s}, #{%s}, #{%s}"
         + ")",
         SaveSecretEntry.Fields.customerId,
         SaveSecretEntry.Fields.location,
         SaveSecretEntry.Fields.username,
-        SaveSecretEntry.Fields.password);
+        SaveSecretEntry.Fields.password,
+        SaveSecretEntry.Fields.changedWho,
+        SaveSecretEntry.Fields.changedWhen);
 
     @Value
     @Builder
@@ -145,21 +153,25 @@ public class CustomerRepositoryImpl implements CustomerRepository {
         private String password;
         private String entityName;
         private String entityCode;
-    }
+        private String changedWho;
+        private LocalDate changedWhen;
+}
     private String insertSecretExTemplate = String.format(
         "INSERT INTO secret_ex "
         + "("
-        + "customer_id, location, username, password, entity_name, entity_code"
+        + "customer_id, location, username, password, entity_name, entity_code, changed_who, changed_when"
         + ") "
         + "VALUES ("
-        + "#{%s}, #{%s}, #{%s}, #{%s}, #{%s}, #{%s}"
+        + "#{%s}, #{%s}, #{%s}, #{%s}, #{%s}, #{%s}, #{%s}, #{%s}"
         + ")",
         SaveSecretExEntry.Fields.customerId,
         SaveSecretExEntry.Fields.location,
         SaveSecretExEntry.Fields.username,
         SaveSecretExEntry.Fields.password,
         SaveSecretExEntry.Fields.entityName,
-        SaveSecretExEntry.Fields.entityCode);
+        SaveSecretExEntry.Fields.entityCode,
+        SaveSecretEntry.Fields.changedWho,
+        SaveSecretEntry.Fields.changedWhen);
 
     @Value
     @Builder
@@ -223,22 +235,24 @@ public class CustomerRepositoryImpl implements CustomerRepository {
             .komercjaNotatki(entity.getKomercjaNotatki())
             .build();
         var secretBatch = Arrays.stream(secrets)
-            .map(it -> SaveSecretEntry.builder()
-                                   .customerId(id.getId())
-                                   .location(it.getLocation())
-                                   .username(it.getUsername())
-                                   .password(it.getPassword())
-                                   .build())
+            .map(it -> new JsonObject()
+                .put(SaveSecretEntry.Fields.customerId, id.getId())
+                .put(SaveSecretEntry.Fields.location, it.getLocation())
+                .put(SaveSecretEntry.Fields.username, it.getUsername())
+                .put(SaveSecretEntry.Fields.password, it.getPassword())
+                .put(SaveSecretEntry.Fields.changedWho, it.getChangedWho().getValue())
+                .put(SaveSecretEntry.Fields.changedWhen, it.getChangedWhen()))
             .collect(Collectors.toList());
         var secretExBatch = Arrays.stream(secretsEx)
-            .map(it -> SaveSecretExEntry.builder()
-                                   .customerId(id.getId())
-                                   .location(it.getLocation())
-                                   .username(it.getUsername())
-                                   .password(it.getPassword())
-                                   .entityName(it.getEntityName())
-                                   .entityCode(it.getEntityCode())
-                                   .build())
+            .map(it -> new JsonObject()
+                .put(SaveSecretExEntry.Fields.customerId, id.getId())
+                .put(SaveSecretExEntry.Fields.location, it.getLocation())
+                .put(SaveSecretExEntry.Fields.username, it.getUsername())
+                .put(SaveSecretExEntry.Fields.password, it.getPassword())
+                .put(SaveSecretExEntry.Fields.entityName, it.getEntityName())
+                .put(SaveSecretExEntry.Fields.entityCode, it.getEntityCode())
+                .put(SaveSecretExEntry.Fields.changedWho, it.getChangedWho().getValue())
+                .put(SaveSecretExEntry.Fields.changedWhen, it.getChangedWhen()))
             .collect(Collectors.toList());
         var contactBatch = Arrays.stream(contacts)
             .map(it -> SaveContactEntry
@@ -261,7 +275,7 @@ public class CustomerRepositoryImpl implements CustomerRepository {
                     if (secretBatch.isEmpty()) return Future.succeededFuture(Boolean.TRUE);
                     return SqlTemplate
                         .forUpdate(client, insertSecretTemplate)
-                        .mapFrom(SaveSecretEntry.class)
+                        .mapFrom(TupleMapper.jsonObject())
                         .executeBatch(secretBatch)
                         .map(ignored -> Boolean.TRUE);
                 })
@@ -269,7 +283,7 @@ public class CustomerRepositoryImpl implements CustomerRepository {
                     if (secretExBatch.isEmpty()) return Future.succeededFuture(Boolean.TRUE);
                     return SqlTemplate
                         .forUpdate(client, insertSecretExTemplate)
-                        .mapFrom(SaveSecretExEntry.class)
+                        .mapFrom(TupleMapper.jsonObject())
                         .executeBatch(secretExBatch)
                         .map(ignored -> Boolean.TRUE);
                 })
@@ -343,13 +357,14 @@ public class CustomerRepositoryImpl implements CustomerRepository {
                     if (ids.isEmpty()) return Future.succeededFuture(List.empty());
 
                     var secrets = SqlTemplate
-                        .forQuery(client, "SELECT customer_id, location, username, password FROM \"secret\" WHERE customer_id=#{cid}")
+                        .forQuery(client, "SELECT customer_id, location, username, password, changed_who, changed_when "
+                                          + "FROM secret WHERE customer_id=#{cid}")
                         .executeBatch(ids)
                         .map(rows -> List
                             .ofAll(rows)
                             .map(row -> toCustomerSecret(row)));
                     var secretsEx = SqlTemplate
-                        .forQuery(client, "SELECT customer_id, location, username, password, entity_name, entity_code "
+                        .forQuery(client, "SELECT customer_id, location, username, password, entity_name, entity_code, changed_who, changed_when "
                                           + "FROM secret_ex WHERE customer_id=#{cid}")
                         .executeBatch(ids)
                         .map(rows -> List
@@ -413,6 +428,8 @@ public class CustomerRepositoryImpl implements CustomerRepository {
             .location(row.getString("location"))
             .username(row.getString("username"))
             .password(row.getString("password"))
+            .changedWho(Email.of(row.getString("changed_who")))
+            .changedWhen(row.getLocalDate("changed_when"))
             .build();
         return new Tuple2<>(key, result);
     }
@@ -423,8 +440,10 @@ public class CustomerRepositoryImpl implements CustomerRepository {
             .location(row.getString("location"))
             .username(row.getString("username"))
             .password(row.getString("password"))
-            .entityName(row.getString("entityName"))
-            .entityCode(row.getString("entityCode"))
+            .entityName(row.getString("entity_name"))
+            .entityCode(row.getString("entity_code"))
+            .changedWho(Email.of(row.getString("changed_who")))
+            .changedWhen(row.getLocalDate("changed_when"))
             .build();
         return new Tuple2<>(key, result);
     }

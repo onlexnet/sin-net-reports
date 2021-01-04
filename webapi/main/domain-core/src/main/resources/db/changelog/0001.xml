@@ -25,16 +25,6 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="siudeks" id="1601237109370-3">
-        <createTable tableName="customer_db_model">
-            <column name="entity_id" type="UUID">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="customer_db_modelPK"/>
-            </column>
-            <column name="name" type="VARCHAR(200)">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-    </changeSet>
     <changeSet author="siudeks" id="1601237109370-4">
         <createTable tableName="proj_daily_report">
             <column autoIncrement="true" name="id" type="BIGINT">

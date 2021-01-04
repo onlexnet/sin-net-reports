@@ -6,9 +6,9 @@ import { IComboBoxOption, ITextFieldStyles, TextField, Checkbox, PrimaryButton, 
 import { useBoolean } from '@uifabric/react-hooks';
 import _ from "lodash";
 import { useGetUsers } from "../../api/useGetUsers";
-import { CustomerAuthorizationInput, CustomerInput, useSaveCustomerMutation } from "../../Components/.generated/components";
+import { CustomerContactInput, CustomerInput, CustomerSecretExInput, CustomerSecretInput, useSaveCustomerMutation } from "../../Components/.generated/components";
 import { EntityId } from "../../store/actions/ServiceModel";
-import { NewAuthorisation } from "./View.NewAuthorisation";
+import { NewSecret } from "./View.NewSecret";
 import { UserPasswordItem } from "./View.UserPasswordItem";
 import { UserPasswordItemExt } from "./View.UserPasswordItemEx";
 import { v1 as uuid } from 'uuid';
@@ -54,7 +54,9 @@ export interface CustomerViewEntry {
     nfzNotatki?: string,
     komercjaJest?: boolean,
     komercjaNotatki?: string,
-    autoryzacje: AuthorisationModel[]
+    autoryzacje: SecretModel[],
+    autoryzacjeEx: SecretExModel[],
+    kontakty: ContactDetails[]
 }
 
 type CustomerViewModel = {
@@ -85,19 +87,18 @@ type CustomerViewModel = {
     Komercja: boolean;
     KomercjaNotatki: string | undefined;
     Kontakty: ContactDetails[],
-    Autoryzacje: AuthorisationModel[],
-    AutoryzacjeEx: AuthorisationExModel[]
+    Autoryzacje: SecretModel[],
+    AutoryzacjeEx: SecretExModel[]
 }
 
-interface ContactDetails {
-    type: 'NEW',
+export interface ContactDetails {
     firstName?: string,
     lastName?: string
     phoneNo?: string,
     email?: string
 }
 
-export interface AuthorisationModel {
+export interface SecretModel {
     localKey: string,
     location: string
     username?: string
@@ -106,8 +107,15 @@ export interface AuthorisationModel {
     when?: string
 }
 
-interface AuthorisationExModel {
-    name: string
+export interface SecretExModel {
+    localKey: string
+    location: string
+    username?: string
+    password?: string
+    entityName?: string
+    entityCode?: string
+    who?: string
+    when?: string
 }
 
 interface CustomerViewProps {
@@ -163,14 +171,13 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
         NfzNotatki: props.entry.nfzNotatki,
         Komercja: props.entry.komercjaJest ?? false,
         KomercjaNotatki: props.entry.komercjaNotatki,
-        Kontakty: [],
+        Kontakty: props.entry.kontakty,
         Autoryzacje: props.entry.autoryzacje,
-        AutoryzacjeEx: []
+        AutoryzacjeEx: props.entry.autoryzacjeEx
     });
 
     const addContact = () => {
         const newContact: ContactDetails = {
-            type: "NEW"
         };
         const cloned = _.clone(model);
         cloned.Kontakty.push(newContact);
@@ -260,14 +267,37 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
             komercjaJest: model.Komercja,
             komercjaNotatki: model.KomercjaNotatki
         }
-        const auths = _.chain(model.Autoryzacje)
+        const secrets = _.chain(model.Autoryzacje)
             .map(it => {
-                const auth: CustomerAuthorizationInput = {
+                const ret: CustomerSecretInput = {
                     location: it.location ?? '---',
                     username: it.username,
                     password: it.password
                 };
-                return auth;
+                return ret;
+            })
+            .value()
+        const secretsEx = _.chain(model.AutoryzacjeEx)
+            .map(it => {
+                const ret: CustomerSecretExInput = {
+                    location: it.location ?? '---',
+                    username: it.username,
+                    password: it.password,
+                    entityName: it.entityName,
+                    entityCode: it.entityCode
+                };
+                return ret;
+            })
+            .value()
+        const contacts = _.chain(model.Kontakty)
+            .map(it => {
+                const ret: CustomerContactInput = {
+                    name: it.firstName,
+                    username: it.lastName,
+                    phoneNo: it.phoneNo,
+                    email: it.email
+                };
+                return ret;
             })
             .value()
         saveCustomerMutation({
@@ -275,7 +305,9 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
                 projectId: props.id.projectId,
                 id: { projectId, entityId, entityVersion },
                 entry,
-                auths
+                secrets,
+                secretsEx,
+                contacts
             },
         });
     }
@@ -495,7 +527,22 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
             <>
                 <Separator alignContent="start">Autoryzacje</Separator>
 
-                {model.AutoryzacjeEx.map(item => <UserPasswordItemExt sectionName={item.name} />)}
+                {model.AutoryzacjeEx
+                    .map(item => <UserPasswordItemExt
+                            model={item}
+                            onChange={v => {
+                                const clone = _.clone(model);
+                                const index = _.findIndex(clone.AutoryzacjeEx, it => it.localKey == v.localKey);
+                                clone.AutoryzacjeEx[index] = v;
+                                setModel(clone);
+                            }}
+                            onRemove={localKey => {
+                                const clone = _.clone(model);
+                                const index = _.findIndex(clone.AutoryzacjeEx, it => it.localKey == localKey);
+                                clone.AutoryzacjeEx.splice(index, 1);
+                                setModel(clone);
+                            }}
+                        />)}                    
 
                 {model.Autoryzacje
                     .map(item => <UserPasswordItem 
@@ -514,11 +561,13 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
                         }}
                     />)}
 
-                <NewAuthorisation
+                <NewSecret
                     newAuthorisationExRequested={name => {
                         const clone = _.clone(model);
-                        const newItem: AuthorisationExModel = {
-                            name
+                        const localKey = uuid();
+                        const newItem: SecretExModel = {
+                            localKey,
+                            location: name
                         };
                         clone.AutoryzacjeEx.push(newItem);
                         setModel(clone);
@@ -526,7 +575,7 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
                     newAuthorisationRequested={name => {
                         const clone = _.clone(model);
                         const localKey = uuid();
-                        const newItem: AuthorisationModel = {
+                        const newItem: SecretModel = {
                             localKey,
                             location: name
                         };
