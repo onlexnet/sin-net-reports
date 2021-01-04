@@ -6,8 +6,6 @@ import java.time.LocalDate;
 import java.util.UUID;
 import java.util.function.Supplier;
 
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
