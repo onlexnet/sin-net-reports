@@ -75,6 +75,7 @@ public class CustomerRepositoryImpl implements CustomerRepository {
         private String nfzNotatki;
         private boolean komercjaJest;
         private String komercjaNotatki;
+        private String daneTechniczne;
     }
 
     private String deleteTemplate = String.format("DELETE FROM "
@@ -91,7 +92,7 @@ public class CustomerRepositoryImpl implements CustomerRepository {
         + "nfz_ambulatoryjna_opieka_specjalistyczna, nfz_rehabilitacja, nfz_stomatologia, nfz_psychiatria, "
         + "nfz_szpitalnictwo, nfz_programy_profilaktyczne, nfz_zaopatrzenie_ortopedyczne, nfz_opieka_dlugoterminowa, "
         + "nfz_notatki,"
-        + "komercja_jest, komercja_notatki"
+        + "komercja_jest, komercja_notatki, dane_techniczne"
         + ") "
         + "VALUES ("
         + "#{%s}, #{%s}, #{%s}+1"
@@ -102,7 +103,7 @@ public class CustomerRepositoryImpl implements CustomerRepository {
         + ",#{%s}, #{%s}, #{%s}, #{%s}"
         + ",#{%s}, #{%s}, #{%s}, #{%s}"
         + ",#{%s}"
-        + ",#{%s}, #{%s}"
+        + ",#{%s}, #{%s}, #{%s}"
         + ")",
         SaveEntry.Fields.projectId, SaveEntry.Fields.entityId, SaveEntry.Fields.entityVersion,
         SaveEntry.Fields.customerName, SaveEntry.Fields.customerCityName, SaveEntry.Fields.customerAddress,
@@ -115,7 +116,7 @@ public class CustomerRepositoryImpl implements CustomerRepository {
         SaveEntry.Fields.nfzSzpitalnictwo, SaveEntry.Fields.nfzProgramyProfilaktyczne, SaveEntry.Fields.nfzZaopatrzenieOrtopedyczne,
             SaveEntry.Fields.nfzOpiekaDlugoterminowa,
         SaveEntry.Fields.nfzNotatki,
-        SaveEntry.Fields.komercjaJest, SaveEntry.Fields.komercjaNotatki);
+        SaveEntry.Fields.komercjaJest, SaveEntry.Fields.komercjaNotatki, SaveEntry.Fields.daneTechniczne);
 
     @Value
     @Builder
@@ -178,25 +179,24 @@ public class CustomerRepositoryImpl implements CustomerRepository {
     @FieldNameConstants
     static class SaveContactEntry {
         private UUID customerId;
-        private String name;
-        private String surname;
+        private String firstName;
+        private String lastName;
         private String phoneNo;
         private String email;
     }
     private String insertContactTemplate = String.format(
         "INSERT INTO contact "
         + "("
-        + "customer_id, name, surname, phoneNo, email"
+        + "customer_id, first_name, last_name, phone_no, email"
         + ") "
         + "VALUES ("
         + "#{%s}, #{%s}, #{%s}, #{%s}, #{%s}"
         + ")",
-        SaveSecretExEntry.Fields.customerId,
-        SaveSecretExEntry.Fields.location,
-        SaveSecretExEntry.Fields.username,
-        SaveSecretExEntry.Fields.password,
-        SaveSecretExEntry.Fields.entityName,
-        SaveSecretExEntry.Fields.entityCode);
+        SaveContactEntry.Fields.customerId,
+        SaveContactEntry.Fields.firstName,
+        SaveContactEntry.Fields.lastName,
+        SaveContactEntry.Fields.phoneNo,
+        SaveContactEntry.Fields.email);
 
     @Override
     public Future<EntityId> write(EntityId id, CustomerValue entity,
@@ -233,6 +233,7 @@ public class CustomerRepositoryImpl implements CustomerRepository {
             .nfzNotatki(entity.getNfzNotatki())
             .komercjaJest(entity.isKomercjaJest())
             .komercjaNotatki(entity.getKomercjaNotatki())
+            .daneTechniczne(entity.getDaneTechniczne())
             .build();
         var secretBatch = Arrays.stream(secrets)
             .map(it -> new JsonObject()
@@ -257,8 +258,9 @@ public class CustomerRepositoryImpl implements CustomerRepository {
         var contactBatch = Arrays.stream(contacts)
             .map(it -> SaveContactEntry
                 .builder()
-                .name(it.getName())
-                .surname(it.getSurname())
+                .customerId(id.getId())
+                .firstName(it.getFirstName())
+                .lastName(it.getLastName())
                 .phoneNo(it.getPhoneNo())
                 .email(it.getEmail())
                 .build())
@@ -343,7 +345,7 @@ public class CustomerRepositoryImpl implements CustomerRepository {
                 + "nfz_ambulatoryjna_opieka_specjalistyczna, nfz_rehabilitacja, nfz_stomatologia, nfz_psychiatria, "
                 + "nfz_szpitalnictwo, nfz_programy_profilaktyczne, nfz_zaopatrzenie_ortopedyczne, nfz_opieka_dlugoterminowa, "
                 + "nfz_notatki, "
-                + "komercja_jest, komercja_notatki "
+                + "komercja_jest, komercja_notatki, dane_techniczne "
                 + "FROM customers c "
                 + "WHERE " + whereClause)
                 .execute(values)
@@ -371,12 +373,12 @@ public class CustomerRepositoryImpl implements CustomerRepository {
                             .ofAll(rows)
                             .map(row -> toCustomerSecretEx(row)));
                     var contacts = SqlTemplate
-                        .forQuery(client, "SELECT name, surname, phone_no, email "
+                        .forQuery(client, "SELECT customer_id, first_name, last_name, phone_no, email "
                                           + "FROM contact WHERE customer_id=#{cid}")
                         .executeBatch(ids)
                         .map(rows -> List
                             .ofAll(rows)
-                            .map(row -> toCustomerSecretEx(row)));
+                            .map(row -> toCustomerContact(row)));
 
                     return CompositeFuture
                         .all(secrets, secretsEx, contacts)
@@ -451,8 +453,8 @@ public class CustomerRepositoryImpl implements CustomerRepository {
     static Tuple2<UUID, CustomerContact> toCustomerContact(Row row) {
         var key = row.getUUID("customer_id");
         var result = CustomerContact.builder()
-            .name(row.getString("name"))
-            .surname(row.getString("surname"))
+            .firstName(row.getString("first_name"))
+            .lastName(row.getString("last_name"))
             .phoneNo(row.getString("phone_no"))
             .email(row.getString("email"))
             .build();
@@ -487,6 +489,7 @@ public class CustomerRepositoryImpl implements CustomerRepository {
         .nfzNotatki(row.getString("nfz_notatki"))
         .komercjaJest(row.getBoolean("komercja_jest"))
         .komercjaNotatki(row.getString("komercja_notatki"))
+        .daneTechniczne(row.getString("dane_techniczne"))
         .build();
         var projectId = row.getUUID("project_id");
         var entityId = row.getUUID("entity_id");

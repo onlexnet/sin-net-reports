@@ -2,7 +2,8 @@
     <changeSet author="siudeks" id="20201219-1">
         <addColumn tableName="customers">
             <column name="komercja_jest" type="boolean"/>
-            <column name="komercja_notatki" type="varchar(2000)"/>
+            <column name="komercja_notatki" type="varchar(10000)"/>
+            <column name="dane_techniczne" type="varchar(10000)"/>
         </addColumn>
     </changeSet>
 </databaseChangeLog>

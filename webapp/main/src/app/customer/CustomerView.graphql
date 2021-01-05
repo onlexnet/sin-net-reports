@@ -57,6 +57,7 @@ query GetCustomer($projectId: ID!, $id: MyEntity!) {
         nfzNotatki
         komercjaJest
         komercjaNotatki
+        daneTechniczne
       }
       secrets {
         location
@@ -75,8 +76,8 @@ query GetCustomer($projectId: ID!, $id: MyEntity!) {
         changedWho
       }
       contacts {
-        name
-        surname
+        firstName
+        lastName
         phoneNo
         email
       }

@@ -21,7 +21,7 @@
             <column name="nfz_programy_profilaktyczne" type="boolean"/>
             <column name="nfz_zaopatrzenie_ortopedyczne" type="boolean"/>
             <column name="nfz_opieka_dlugoterminowa" type="boolean"/>
-            <column name="nfz_notatki" type="varchar(2000)"></column>
+            <column name="nfz_notatki" type="varchar(10000)"></column>
         </addColumn>
     </changeSet>
 </databaseChangeLog>

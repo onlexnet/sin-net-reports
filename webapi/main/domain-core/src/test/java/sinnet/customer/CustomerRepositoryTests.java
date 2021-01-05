@@ -260,6 +260,7 @@ class Given {
         .nfzNotatki("some notes")
         .komercjaJest(true)
         .komercjaNotatki("komercja notatki some notes")
+        .daneTechniczne("dane techniczne some notes")
         .build();
     }
 }

@@ -22,9 +22,9 @@ import sinnet.bus.query.FindCustomers;
 import sinnet.bus.query.FindCustomers.Ask;
 import sinnet.bus.query.FindCustomers.CustomerData;
 import sinnet.customer.CustomerRepository.CustomerModel;
+import sinnet.models.CustomerContact;
 import sinnet.models.CustomerSecret;
 import sinnet.models.CustomerSecretEx;
-import sinnet.models.CustomerContact;
 import sinnet.models.Email;
 import sinnet.models.EntityId;
 
@@ -60,6 +60,7 @@ public class CustomerService extends AbstractVerticle implements TopLevelVerticl
             var newValue = msg.getValue();
             var requestedSecrets = msg.getSecrets();
             var requestedSecretsEx = msg.getSecretsEx();
+            var requestedContacts = msg.getContacts();
             return repository
                 .get(eid)
                 .flatMap(it -> {
@@ -75,11 +76,18 @@ public class CustomerService extends AbstractVerticle implements TopLevelVerticl
                     var newSecretsEx = CustomerService.merge(requestor,
                                                              LocalDate.now(),
                                                              requestedSecretsEx, actualSecretsEx);
-                    var contacts = it
-                        .map(v -> v.getContacts())
-                        .getOrElse(new CustomerContact[0]);
+                    var newContacts = Arrays.stream(requestedContacts)
+                        .map(v -> CustomerContact
+                            .builder()
+                            .firstName(v.getFirstName())
+                            .lastName(v.getLastName())
+                            .phoneNo(v.getPhoneNo())
+                            .email(v.getEmail())
+                            .build())
+                        .toArray(CustomerContact[]::new);
+
                     return repository
-                        .write(eid, newValue, newSecrets, newSecretsEx, contacts)
+                        .write(eid, newValue, newSecrets, newSecretsEx, newContacts)
                         .map(v1 -> new sinnet.bus.EntityId(v1.getProjectId(), v1.getId(), v1.getVersion()));
                 });
         }

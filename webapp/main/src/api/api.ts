@@ -1,10 +1,6 @@
-import { createHttpLink } from "apollo-link-http";
 import { addressProvider } from "../addressProvider";
-import { ApolloLink } from "apollo-link";
-import { ApolloClient } from "apollo-client";
-import { InMemoryCache } from "apollo-cache-inmemory";
 import { GraphQLClient } from 'graphql-request';
-import { DefaultOptions } from "apollo-boost";
+import { ApolloClient, ApolloLink, createHttpLink, DefaultOptions, InMemoryCache } from "@apollo/client";
 
 // const wsLink = new WebSocketLink({
 //   uri: "wss://raport.sin.net.pl/subscriptions",

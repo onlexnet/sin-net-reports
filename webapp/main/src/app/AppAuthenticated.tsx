@@ -1,13 +1,8 @@
 import React, { useEffect } from "react";
-import { Main } from "../services";
-import { Customers } from "./customers/Customers";
-import { Reports } from "../reports/Reports";
-import { Home } from "../Home";
 
 import { ApolloProvider } from "@apollo/react-hooks";
 import { apolloClientFactory } from "../api";
 import { RootState } from "../store/reducers";
-import { SessionState } from "../store/session/types";
 import { Dispatch } from "redux";
 import { connect, ConnectedProps } from "react-redux";
 import { MainView } from "./mainview/MainView";

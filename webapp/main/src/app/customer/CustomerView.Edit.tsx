@@ -83,8 +83,9 @@ export const CustomerViewEditLocal: React.FC<CustomerViewEditProps> = props => {
         const kontakty = _.chain(input.contacts)
         .map(it => {
             const ret: ContactDetails = {
-                firstName: it.name ?? undefined,
-                lastName: it.surname ?? undefined,
+                localKey: uuid(),
+                firstName: it.firstName ?? undefined,
+                lastName: it.lastName ?? undefined,
                 phoneNo: it.phoneNo ?? undefined,
                 email: it.email ?? undefined
             }
@@ -119,6 +120,7 @@ export const CustomerViewEditLocal: React.FC<CustomerViewEditProps> = props => {
             nfzNotatki: input?.data.nfzNotatki ?? undefined,
             komercjaJest: input?.data.komercjaJest ?? undefined,
             komercjaNotatki: input?.data.komercjaNotatki ?? undefined,
+            daneTechniczne: input?.data.daneTechniczne ?? undefined,
             autoryzacje,
             autoryzacjeEx,
             kontakty

@@ -71,6 +71,7 @@ public class CustomersMutationSave extends AskTemplate<ChangeCustomer.Command, E
             .nfzNotatki(entry.getNfzNotatki())
             .komercjaJest(entry.isKomercjaJest())
             .komercjaNotatki(entry.getKomercjaNotatki())
+            .daneTechniczne(entry.getDaneTechniczne())
             .build();
         var mSecrets = Arrays
             .stream(secrets)
@@ -93,8 +94,8 @@ public class CustomersMutationSave extends AskTemplate<ChangeCustomer.Command, E
         var mContacts = Arrays
             .stream(contacts)
             .map(it -> ChangeCustomer.Contact.builder()
-                .name(it.getName())
-                .surname(it.getSurname())
+                .firstName(it.getFirstName())
+                .lastName(it.getLastName())
                 .phoneNo(it.getPhoneNo())
                 .email(it.getEmail())
                 .build())

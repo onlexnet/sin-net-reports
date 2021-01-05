@@ -4,8 +4,8 @@
             <column name="customer_id" type="UUID">
                 <constraints nullable="false"/>
             </column>         
-            <column name="name" type="varchar(50)"/>
-            <column name="surname" type="varchar(50)"/>
+            <column name="first_name" type="varchar(50)"/>
+            <column name="last_name" type="varchar(50)"/>
             <column name="phone_no" type="varchar(50)"/>
             <column name="email" type="varchar(50)"></column>
         </createTable>

@@ -12,8 +12,8 @@ import lombok.Value;
 @JsonDeserialize(builder = CustomerContact.MyBuilder.class)
 @Builder(builderClassName = "MyBuilder", toBuilder = true)
 public final class CustomerContact {
-    private String name;
-    private String surname;
+    private String firstName;
+    private String lastName;
     private String phoneNo;
     private String email;
 

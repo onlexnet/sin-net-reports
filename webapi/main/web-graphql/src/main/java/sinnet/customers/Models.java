@@ -32,6 +32,7 @@ class CustomerInput {
     private String nfzNotatki;
     private boolean komercjaJest;
     private String komercjaNotatki;
+    private String daneTechniczne;
 }
 
 @Value
@@ -63,6 +64,7 @@ class CustomerModel {
     private String nfzNotatki;
     private boolean komercjaJest;
     private String komercjaNotatki;
+    private String daneTechniczne;
 }
 @Value
 class CustomerSecret {
@@ -84,8 +86,8 @@ class CustomerSecretEx {
 }
 @Value
 class CustomerContact {
-    private String name;
-    private String surname;
+    private String firstName;
+    private String lastName;
     private String phoneNo;
     private String email;
 }

@@ -47,6 +47,7 @@ input CustomerInput {
     nfzNotatki: String
     komercjaJest: Boolean
     komercjaNotatki: String
+    daneTechniczne: String
 }
 input CustomerSecretInput {
     location: String!
@@ -61,8 +62,8 @@ input CustomerSecretExInput {
     entityCode: String
 }
 input CustomerContactInput {
-    name: String
-    username: String
+    firstName: String
+    lastName: String
     phoneNo: String
     email: String
 }
@@ -101,6 +102,7 @@ type CustomerModel {
     nfzNotatki: String
     komercjaJest: Boolean
     komercjaNotatki: String
+    daneTechniczne: String
 }
 type CustomerSecret {
     location: String!
@@ -119,8 +121,8 @@ type CustomerSecretEx {
     changedWho: String!
 }
 type CustomerContact {
-    name: String
-    surname: String
+    firstName: String
+    lastName: String
     phoneNo: String
     email: String
 }

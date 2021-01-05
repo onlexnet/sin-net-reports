@@ -70,8 +70,8 @@ public interface ChangeCustomer {
     @JsonDeserialize(builder = ChangeCustomer.Contact.MyBuilder.class)
     @Builder(builderClassName = "MyBuilder", toBuilder = true)
     final class Contact {
-        private String name;
-        private String surname;
+        private String firstName;
+        private String lastName;
         private String phoneNo;
         private String email;
 

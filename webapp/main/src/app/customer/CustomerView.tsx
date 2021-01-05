@@ -12,6 +12,7 @@ import { NewSecret } from "./View.NewSecret";
 import { UserPasswordItem } from "./View.UserPasswordItem";
 import { UserPasswordItemExt } from "./View.UserPasswordItemEx";
 import { v1 as uuid } from 'uuid';
+import { NewContactItem } from "./NewContactItem";
 
 
 const stackStyles: Partial<IStackStyles> = { root: { width: 650 } };
@@ -54,6 +55,7 @@ export interface CustomerViewEntry {
     nfzNotatki?: string,
     komercjaJest?: boolean,
     komercjaNotatki?: string,
+    daneTechniczne?: string,
     autoryzacje: SecretModel[],
     autoryzacjeEx: SecretExModel[],
     kontakty: ContactDetails[]
@@ -86,12 +88,14 @@ type CustomerViewModel = {
     NfzNotatki: string | undefined;
     Komercja: boolean;
     KomercjaNotatki: string | undefined;
+    DaneTechniczne: string | undefined;
     Kontakty: ContactDetails[],
     Autoryzacje: SecretModel[],
     AutoryzacjeEx: SecretExModel[]
 }
 
 export interface ContactDetails {
+    localKey: string,
     firstName?: string,
     lastName?: string
     phoneNo?: string,
@@ -171,13 +175,16 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
         NfzNotatki: props.entry.nfzNotatki,
         Komercja: props.entry.komercjaJest ?? false,
         KomercjaNotatki: props.entry.komercjaNotatki,
+        DaneTechniczne: props.entry.daneTechniczne,
         Kontakty: props.entry.kontakty,
         Autoryzacje: props.entry.autoryzacje,
         AutoryzacjeEx: props.entry.autoryzacjeEx
     });
 
     const addContact = () => {
+        const localKey = uuid();
         const newContact: ContactDetails = {
+            localKey
         };
         const cloned = _.clone(model);
         cloned.Kontakty.push(newContact);
@@ -265,7 +272,8 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
             nfzOpiekaDlugoterminowa: model.OpiekaDlugoterminowa,
             nfzNotatki: model.NfzNotatki,
             komercjaJest: model.Komercja,
-            komercjaNotatki: model.KomercjaNotatki
+            komercjaNotatki: model.KomercjaNotatki,
+            daneTechniczne: model.DaneTechniczne
         }
         const secrets = _.chain(model.Autoryzacje)
             .map(it => {
@@ -292,8 +300,8 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
         const contacts = _.chain(model.Kontakty)
             .map(it => {
                 const ret: CustomerContactInput = {
-                    name: it.firstName,
-                    username: it.lastName,
+                    firstName: it.firstName,
+                    lastName: it.lastName,
                     phoneNo: it.phoneNo,
                     email: it.email
                 };
@@ -586,7 +594,22 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
             <>
                 <Separator alignContent="start">Dane kontaktowe</Separator>
 
-                {model.Kontakty.map(item => <NewContactItem />)}
+                {model.Kontakty
+                    .map(item => <NewContactItem
+                        model={item}
+                        onChange={v => {
+                            const clone = _.clone(model);
+                            const index = _.findIndex(clone.Kontakty, it => it.localKey == v.localKey);
+                            clone.Kontakty[index] = v;
+                            setModel(clone);
+                        }}
+                        onRemove={localKey => {
+                            const clone = _.clone(model);
+                            const index = _.findIndex(clone.Kontakty, it => it.localKey == localKey);
+                            clone.Kontakty.splice(index, 1);
+                            setModel(clone);
+                        }}
+                    />)}
 
                 <div className="ms-Grid-row">
                     <div className="ms-Grid-col ms-smPush1 ms-sm4">
@@ -601,28 +624,11 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
                         <TextField
                             multiline={true}
                             placeholder="Adresy IP serwerów, inne"
-                            // eslint-disable-next-line react/jsx-no-bind
-                            onChange={onChange2}
-                        />
+                            value={model.DaneTechniczne}
+                            onChange={onChangeMemo((m, v) => m.DaneTechniczne = v)}                        />
                     </div>
                 </div>
             </>
         </HorizontalSeparatorStack>
     );
-}
-
-const NewContactItem: React.FC<{}> = props => {
-    return (<div className="ms-Grid-row">
-        <div className="ms-Grid-col ms-smPush1">
-            <Stack tokens={stackTokens}>
-                <Stack horizontal tokens={stackTokens}>
-                    <TextField placeholder="Imię" />
-                    <TextField placeholder="Nazwisko" />
-                    <TextField placeholder="Nr telefonu" />
-                    <TextField placeholder="email" />
-                    <DefaultButton text="Usuń" />
-                </Stack>
-            </Stack>
-        </div>
-    </div>);
 }

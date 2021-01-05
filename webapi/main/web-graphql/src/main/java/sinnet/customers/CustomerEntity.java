@@ -53,7 +53,8 @@ class CustomerModelResolverPayload implements GraphQLResolver<CustomerEntity> {
                 it.isNfzOpiekaDlugoterminowa(),
                 it.getNfzNotatki(),
                 it.isKomercjaJest(),
-                it.getKomercjaNotatki());
+                it.getKomercjaNotatki(),
+                it.getDaneTechniczne());
         }
         // TODO resolve if no data provided
         return null;
@@ -95,8 +96,8 @@ class CustomerModelResolverPayload implements GraphQLResolver<CustomerEntity> {
         if (gcontext.getOptionalContacts() != null) {
             return Arrays.stream(gcontext.getOptionalContacts())
                 .map(it -> new sinnet.customers.CustomerContact(
-                    it.getName(),
-                    it.getSurname(),
+                    it.getFirstName(),
+                    it.getLastName(),
                     it.getPhoneNo(),
                     it.getEmail()))
                 .toArray(sinnet.customers.CustomerContact[]::new);

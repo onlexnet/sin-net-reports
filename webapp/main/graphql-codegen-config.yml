@@ -10,8 +10,3 @@ generates:
       withHooks: true
       withComponent: false
       withHOC: false
-  # src/api/generated.ts:
-  #   plugins:
-  #     - typescript
-  #     - typescript-operations
-  #     - typescript-graphql-request
