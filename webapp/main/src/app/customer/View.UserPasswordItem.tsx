@@ -12,6 +12,8 @@ interface UserPasswordModel {
 
 interface UserPasswordItemProps {
     model: UserPasswordModel,
+    changedBy: string,
+    changedWhen: string,
     onChange: (newValue: UserPasswordModel) => void,
     onRemove: (localKey: string) => void
 }
@@ -40,6 +42,10 @@ export const UserPasswordItem: React.FC<UserPasswordItemProps> = props => {
                         <TextField placeholder="Użytkownik" value={username} onChange={handler((m, v) => m.username = v)} />
                         <TextField placeholder="Hasło" value={password} onChange={handler((m, v) => m.password = v)} />
                         <DefaultButton text="Usuń" onClick={() => props.onRemove(props.model.localKey)} />
+                    </Stack>
+                    <Stack horizontal tokens={stackTokens}>
+                        <TextField value={props.changedBy} disabled />
+                        <TextField value={props.changedWhen} disabled/>
                     </Stack>
                 </Stack>
             </div>

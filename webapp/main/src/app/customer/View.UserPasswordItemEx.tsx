@@ -14,6 +14,8 @@ interface UserPasswordExtModel {
 
 interface UserPasswordExtItemProps {
     model: UserPasswordExtModel,
+    changedBy: string,
+    changedWhen: string,
     onChange: (newValue: UserPasswordExtModel) => void,
     onRemove: (localKey: string) => void
 }
@@ -48,6 +50,10 @@ export const UserPasswordItemExt: React.FC<UserPasswordExtItemProps> = props => 
                         <TextField placeholder="Użytkownik" value={username} onChange={handler((m, v) => m.username = v)} />
                         <TextField placeholder="Hasło" value={password} onChange={handler((m, v) => m.password = v)} />
                         <DefaultButton text="Usuń" onClick={() => props.onRemove(props.model.localKey)}  />
+                    </Stack>
+                    <Stack horizontal tokens={stackTokens}>
+                        <TextField value={props.changedBy} disabled defaultValue="-" />
+                        <TextField value={props.changedWhen} disabled defaultValue="-"/>
                     </Stack>
                 </Stack>
             </div>

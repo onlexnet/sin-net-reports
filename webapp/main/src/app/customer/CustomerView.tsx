@@ -538,6 +538,8 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
                 {model.AutoryzacjeEx
                     .map(item => <UserPasswordItemExt
                             model={item}
+                            changedBy={item.who ?? "-"}
+                            changedWhen={item.when ?? "-"}
                             onChange={v => {
                                 const clone = _.clone(model);
                                 const index = _.findIndex(clone.AutoryzacjeEx, it => it.localKey == v.localKey);
@@ -555,6 +557,8 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
                 {model.Autoryzacje
                     .map(item => <UserPasswordItem 
                         model={item}
+                        changedBy={item.who ?? "-"}
+                        changedWhen={item.when ?? "-"}
                         onChange={v => {
                             const clone = _.clone(model);
                             const index = _.findIndex(clone.Autoryzacje, it => it.localKey == v.localKey);
