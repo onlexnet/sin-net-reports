@@ -3,7 +3,7 @@
 Build status Frontend
 [![Build Status](https://dev.azure.com/siudeks/sinnetreports/_apis/build/status/sin-net-reports%20webapp?branchName=master)](https://dev.azure.com/siudeks/sinnetreports/_build/latest?definitionId=2&branchName=master)
 Build status Backend
-[![Build Status](https://dev.azure.com/onlex/sinnet/_apis/build/status/webapi?branchName=master)](https://dev.azure.com/onlex/sinnet/_build/latest?definitionId=1&branchName=master) 
+[![Build Status](https://dev.azure.com/siudeks/sinnetreports/_apis/build/status/sin-net-reports%20webapi?branchName=master)](https://dev.azure.com/siudeks/sinnetreports/_build/latest?definitionId=1&branchName=master) 
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=net.siudek%3Asinnet-group&metric=coverage)](https://sonarcloud.io/dashboard?id=net.siudek%3Asinnet-group)
 
 Small project created for [Sin.Net](http://www.sin.net.pl/)
