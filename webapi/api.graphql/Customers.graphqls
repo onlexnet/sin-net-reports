@@ -18,6 +18,7 @@ type CustomersMutation {
          secrets: [CustomerSecretInput!]!
          secretsEx: [CustomerSecretExInput!]!
          contacts: [CustomerContactInput!]!): SomeEntity!
+    remove(id: MyEntity!): Boolean
 }
 
 input CustomerInput {

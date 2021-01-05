@@ -6,7 +6,7 @@ import { IComboBoxOption, ITextFieldStyles, TextField, Checkbox, PrimaryButton, 
 import { useBoolean } from '@uifabric/react-hooks';
 import _ from "lodash";
 import { useGetUsers } from "../../api/useGetUsers";
-import { CustomerContactInput, CustomerInput, CustomerSecretExInput, CustomerSecretInput, useSaveCustomerMutation } from "../../Components/.generated/components";
+import { CustomerContactInput, CustomerInput, CustomerSecretExInput, CustomerSecretInput, useRemoveCustomerMutation, useSaveCustomerMutation } from "../../Components/.generated/components";
 import { EntityId } from "../../store/actions/ServiceModel";
 import { NewSecret } from "./View.NewSecret";
 import { UserPasswordItem } from "./View.UserPasswordItem";
@@ -126,6 +126,7 @@ interface CustomerViewProps {
     id: EntityId
     entry: CustomerViewEntry
     itemSaved: () => void
+    itemRemoved: () => void;
 }
 
 export const CustomerView: React.FC<CustomerViewProps> = props => {
@@ -235,16 +236,31 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
     };
 
     const [saveCustomerMutation, { data: saveResult, loading: saveInProgress }] = useSaveCustomerMutation();
-
+    const [removeCustomerMutation, { data: removeResult, loading: removeInProgress }] = useRemoveCustomerMutation();
 
     if (saveResult) {
         props.itemSaved();
     }
 
-    const [saveDisabled, setSaveDisabled] = React.useState(false);
+    if (removeResult) {
+        props.itemRemoved();
+    }
+
+    const [actionsDisabled, setActionsDisabled] = React.useState(false);
+
+    const removeEndExit: MouseEventHandler<PrimaryButton> = (event): void => {
+        setActionsDisabled(true);
+        const { projectId, entityId, entityVersion } = props.id;
+        removeCustomerMutation({
+            variables: {
+                projectId: props.id.projectId,
+                id: { projectId, entityId, entityVersion },
+            }
+        });
+    }
 
     const saveEndExit: MouseEventHandler<PrimaryButton> = (event): void => {
-        setSaveDisabled(true);
+        setActionsDisabled(true);
         const { projectId, entityId, entityVersion } = props.id;
         const entry: CustomerInput = {
             operatorEmail: model.Operator,
@@ -324,11 +340,23 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
         return <Spinner size={SpinnerSize.large} />
     }
 
+    const btnStyles = {
+        rootHovered: {
+            backgroundColor: "#d83b01"
+        }
+    };
+
     return (
         <HorizontalSeparatorStack>
             <>
                 <Separator alignContent="start">Akcje</Separator>
-                <PrimaryButton text="Zapisz i wyjdź" disabled={saveDisabled} onClick={saveEndExit} />
+
+                <div className="ms-Grid-row">
+                    <div className="ms-Grid-col ms-smPush1 ms-sm4">
+                        <PrimaryButton text="Zapisz i wyjdź" disabled={actionsDisabled} onClick={saveEndExit} />
+                        <DefaultButton text="Usuń klienta i wyjdź" disabled={actionsDisabled} styles={btnStyles} onClick={removeEndExit} />
+                    </div>
+                </div>
                 <Separator alignContent="start">Dane ogólne: </Separator>
 
                 <div className="ms-Grid-row">
@@ -537,25 +565,25 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
 
                 {model.AutoryzacjeEx
                     .map(item => <UserPasswordItemExt
-                            model={item}
-                            changedBy={item.who ?? "-"}
-                            changedWhen={item.when ?? "-"}
-                            onChange={v => {
-                                const clone = _.clone(model);
-                                const index = _.findIndex(clone.AutoryzacjeEx, it => it.localKey == v.localKey);
-                                clone.AutoryzacjeEx[index] = v;
-                                setModel(clone);
-                            }}
-                            onRemove={localKey => {
-                                const clone = _.clone(model);
-                                const index = _.findIndex(clone.AutoryzacjeEx, it => it.localKey == localKey);
-                                clone.AutoryzacjeEx.splice(index, 1);
-                                setModel(clone);
-                            }}
-                        />)}                    
+                        model={item}
+                        changedBy={item.who ?? "-"}
+                        changedWhen={item.when ?? "-"}
+                        onChange={v => {
+                            const clone = _.clone(model);
+                            const index = _.findIndex(clone.AutoryzacjeEx, it => it.localKey == v.localKey);
+                            clone.AutoryzacjeEx[index] = v;
+                            setModel(clone);
+                        }}
+                        onRemove={localKey => {
+                            const clone = _.clone(model);
+                            const index = _.findIndex(clone.AutoryzacjeEx, it => it.localKey == localKey);
+                            clone.AutoryzacjeEx.splice(index, 1);
+                            setModel(clone);
+                        }}
+                    />)}
 
                 {model.Autoryzacje
-                    .map(item => <UserPasswordItem 
+                    .map(item => <UserPasswordItem
                         model={item}
                         changedBy={item.who ?? "-"}
                         changedWhen={item.when ?? "-"}
@@ -629,7 +657,7 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
                             multiline={true}
                             placeholder="Adresy IP serwerów, inne"
                             value={model.DaneTechniczne}
-                            onChange={onChangeMemo((m, v) => m.DaneTechniczne = v)}                        />
+                            onChange={onChangeMemo((m, v) => m.DaneTechniczne = v)} />
                     </div>
                 </div>
             </>

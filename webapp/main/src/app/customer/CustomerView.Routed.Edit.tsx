@@ -33,7 +33,9 @@ export const CustomerViewRoutedEditLocal: React.FC<CustomerViewEditProps> = prop
     };
 
     const itemSaved = () => props.history.goBack();
-    return <CustomerViewEdit id={id} itemSaved={itemSaved}/>;
+    const itemRemoved = () => props.history.goBack();
+    return <CustomerViewEdit id={id} itemSaved={itemSaved}
+                                     itemRemoved={itemRemoved} />;
 }
 
 export const CustomerViewRoutedEdit = connect(mapStateToProps, mapDispatchToProps)(CustomerViewRoutedEditLocal);

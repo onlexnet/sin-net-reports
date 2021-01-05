@@ -308,6 +308,26 @@ public class CustomerRepositoryImpl implements CustomerRepository {
         return Future.succeededFuture(result);
     }
 
+
+    @Override
+    public Future<Boolean> remove(EntityId id) {
+        var params = new JsonObject()
+            .put("project_id", id.getProjectId())
+            .put("entity_id", id.getId())
+            .put("entity_version", id.getVersion());
+        return SqlTemplate
+            .forQuery(pgClient, "DELETE "
+                + "FROM customers "
+                + "WHERE project_id=#{project_id} "
+                + "AND entity_id=#{entity_id} "
+                + "AND entity_version=#{entity_version}")
+            .mapFrom(TupleMapper.jsonObject())
+            .execute(params)
+            .map(v -> {
+                return Boolean.TRUE;
+            });
+    }
+
     @Override
     public Future<Option<CustomerModel>> get(EntityId id) {
         var whereClause = "project_id=$1 AND entity_id=$2 AND entity_version=$3";

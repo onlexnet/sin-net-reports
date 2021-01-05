@@ -25,6 +25,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 interface CustomerViewEditProps extends PropsFromRedux {
     id: EntityId,
     itemSaved: () => void
+    itemRemoved: () => void
 }
 
   
@@ -125,7 +126,9 @@ export const CustomerViewEditLocal: React.FC<CustomerViewEditProps> = props => {
             autoryzacjeEx,
             kontakty
         }
-        return <CustomerView id={id} entry={entry} itemSaved={props.itemSaved}/>;
+        return <CustomerView id={id} entry={entry} 
+                             itemSaved={props.itemSaved}
+                             itemRemoved={props.itemRemoved}/>;
     }
 
     return <div>Loading customer details...</div>

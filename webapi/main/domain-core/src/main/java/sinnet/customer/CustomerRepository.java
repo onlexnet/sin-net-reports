@@ -39,6 +39,8 @@ interface CustomerRepository {
 
     Future<List<CustomerModel>> list(UUID projectId);
 
+    Future<Boolean> remove(EntityId id);
+
     @Value
     class CustomerModel {
         private EntityId id;

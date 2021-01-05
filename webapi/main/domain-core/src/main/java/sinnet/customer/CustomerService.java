@@ -16,6 +16,7 @@ import io.vertx.core.Promise;
 import sinnet.TopLevelVerticle;
 import sinnet.VertxHandlerTemplate;
 import sinnet.bus.commands.ChangeCustomer;
+import sinnet.bus.commands.RemoveCustomer;
 import sinnet.bus.query.FindCustomer;
 import sinnet.bus.query.FindCustomer.Reply;
 import sinnet.bus.query.FindCustomers;
@@ -44,6 +45,7 @@ public class CustomerService extends AbstractVerticle implements TopLevelVerticl
         vertx.eventBus().consumer(ChangeCustomer.Command.ADDRESS, new SaveCustomerHandler());
         vertx.eventBus().consumer(FindCustomer.Ask.ADDRESS, new FindCustomerHandler());
         vertx.eventBus().consumer(FindCustomers.Ask.ADDRESS, new FindCustomersHandler());
+        vertx.eventBus().consumer(RemoveCustomer.Command.ADDRESS, new RemoveCustomerHandler());
         super.start(startPromise);
     }
 
@@ -122,6 +124,22 @@ public class CustomerService extends AbstractVerticle implements TopLevelVerticl
             return repository.list(projectId)
                 .map(it -> List.ofAll(it).map(CustomerService::map).toJavaArray(CustomerData[]::new))
                 .map(it -> new FindCustomers.Reply(it));
+        }
+    }
+
+    final class RemoveCustomerHandler extends VertxHandlerTemplate<RemoveCustomer.Command, RemoveCustomer.Result>
+                                      implements RemoveCustomer {
+        RemoveCustomerHandler() {
+            super(RemoveCustomer.Command.class);
+        }
+
+        @Override
+        protected Future<Result> onRequest(Command cmd) {
+            var busId = cmd.getId();
+            var entityId = EntityId.of(busId.getProjectId(), busId.getId(), busId.getVersion());
+            return repository
+                .remove(entityId)
+                .map(it -> new Result(it));
         }
     }
 

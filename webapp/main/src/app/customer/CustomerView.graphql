@@ -22,6 +22,12 @@ mutation SaveCustomer($projectId: ID!, $id: MyEntity!
   }
 }
 
+mutation RemoveCustomer($projectId: ID!, $id: MyEntity!) {
+  Customers(projectId: $projectId) {
+    remove(id: $id)
+  }
+}
+
 query GetCustomer($projectId: ID!, $id: MyEntity!) {
   Customers(projectId:$projectId) {
     get(entityId: $id) {

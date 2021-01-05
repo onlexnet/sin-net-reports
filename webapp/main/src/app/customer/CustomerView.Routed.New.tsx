@@ -46,7 +46,8 @@ export const CustomerViewNewLocal: React.FC<CustomerViewNewProps> = props => {
             kontakty: []
         }
         const itemSaved = () => props.history.goBack();
-        return <CustomerView id={id} entry={entry} itemSaved={itemSaved}/>;
+        const itemRemoved = () => props.history.goBack();
+        return <CustomerView id={id} entry={entry} itemSaved={itemSaved} itemRemoved={itemRemoved} />;
     }
 
     return null;

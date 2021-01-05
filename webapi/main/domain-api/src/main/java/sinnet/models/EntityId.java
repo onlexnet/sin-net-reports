@@ -2,25 +2,19 @@ package sinnet.models;
 
 import java.util.UUID;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 
-@EqualsAndHashCode
-@ToString
+import lombok.Builder;
+import lombok.Value;
+
+@Value
+@JsonDeserialize(builder = EntityId.MyBuilder.class)
+@Builder(builderClassName = "MyBuilder", toBuilder = true)
 public final class EntityId {
-    @Getter
-    private final UUID projectId;
-    @Getter
-    private final UUID id;
-    @Getter
-    private final int version;
-
-    private EntityId(UUID projectId, UUID id, int version) {
-        this.projectId = projectId;
-        this.id = id;
-        this.version = version;
-    }
+    private UUID projectId;
+    private UUID id;
+    private int version;
 
     public static EntityId of(UUID projectId, UUID id, int version) {
         return new EntityId(projectId, id, version);
@@ -28,5 +22,9 @@ public final class EntityId {
 
     public static EntityId anyNew(UUID projectId) {
         return new EntityId(projectId, UUID.randomUUID(), 0);
+    }
+
+    @JsonPOJOBuilder(withPrefix = "")
+    public static class MyBuilder {
     }
 }
