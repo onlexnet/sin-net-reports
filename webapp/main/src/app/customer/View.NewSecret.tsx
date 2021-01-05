@@ -4,8 +4,6 @@ import { IComboBoxOption, ComboBox, IComboBox } from "office-ui-fabric-react";
 import _ from "lodash";
 
 
-import { v4 as uuid } from 'uuid';
-
 type SECRET_TYPE = 'PORTAL_SWIADCZENIODAWCY'
     | 'SIMP'
     | 'PORTAL_PERSONELU'

@@ -39,7 +39,7 @@ export const UserPasswordItem: React.FC<UserPasswordItemProps> = props => {
                     <Stack horizontal tokens={stackTokens}>
                         <TextField placeholder="Użytkownik" value={username} onChange={handler((m, v) => m.username = v)} />
                         <TextField placeholder="Hasło" value={password} onChange={handler((m, v) => m.password = v)} />
-                        <DefaultButton text="Usuń" onClick={() => props.onRemove( props.model.localKey)} />
+                        <DefaultButton text="Usuń" onClick={() => props.onRemove(props.model.localKey)} />
                     </Stack>
                 </Stack>
             </div>

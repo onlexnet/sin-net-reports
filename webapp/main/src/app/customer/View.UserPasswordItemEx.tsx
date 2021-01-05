@@ -47,7 +47,7 @@ export const UserPasswordItemExt: React.FC<UserPasswordExtItemProps> = props => 
                         <TextField placeholder="Nr klienta" value={entityCode} onChange={handler((m, v) => m.entityCode = v)} />
                         <TextField placeholder="Użytkownik" value={username} onChange={handler((m, v) => m.username = v)} />
                         <TextField placeholder="Hasło" value={password} onChange={handler((m, v) => m.password = v)} />
-                        <DefaultButton text="Usuń" />
+                        <DefaultButton text="Usuń" onClick={() => props.onRemove(props.model.localKey)}  />
                     </Stack>
                 </Stack>
             </div>
