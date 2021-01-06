@@ -1,5 +1,6 @@
 package sinnet.customers;
 
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 
 import org.springframework.stereotype.Component;
@@ -60,6 +61,8 @@ class CustomerModelResolverPayload implements GraphQLResolver<CustomerEntity> {
         return null;
     }
 
+    private static DateTimeFormatter timestampFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+
     sinnet.customers.CustomerSecret[] getSecrets(CustomerEntity gcontext) {
         if (gcontext.getOptionalSecrets() != null) {
             return Arrays.stream(gcontext.getOptionalSecrets())
@@ -68,7 +71,7 @@ class CustomerModelResolverPayload implements GraphQLResolver<CustomerEntity> {
                     it.getUsername(),
                     it.getPassword(),
                     Option.of(it.getChangedWho().getValue()).getOrElse("?"),
-                    Option.of(it.getChangedWhen()).map(v -> v.toString()).getOrElse("?")))
+                    Option.of(it.getChangedWhen()).map(v -> timestampFormatter.format(v)).getOrElse("?")))
                 .toArray(sinnet.customers.CustomerSecret[]::new);
         }
         // TODO resolve if no data provided
@@ -85,7 +88,7 @@ class CustomerModelResolverPayload implements GraphQLResolver<CustomerEntity> {
                     it.getEntityName(),
                     it.getEntityCode(),
                     Option.of(it.getChangedWho().getValue()).getOrElse("?"),
-                    Option.of(it.getChangedWhen()).map(v -> v.toString()).getOrElse("?")))
+                    Option.of(it.getChangedWhen()).map(v -> timestampFormatter.format(v)).getOrElse("?")))
                 .toArray(sinnet.customers.CustomerSecretEx[]::new);
         }
         // TODO resolve if no data provided

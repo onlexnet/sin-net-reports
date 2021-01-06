@@ -1,6 +1,6 @@
 package sinnet.customer;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
@@ -15,7 +15,7 @@ import lombok.Value;
 @Builder(builderClassName = "MyBuilder", toBuilder = true)
 public class AuthTracker {
     private String who;
-    private LocalDate when;
+    private LocalDateTime when;
 
     @JsonPOJOBuilder(withPrefix = "")
     public static class MyBuilder {

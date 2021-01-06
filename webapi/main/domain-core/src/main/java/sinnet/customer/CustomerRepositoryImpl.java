@@ -1,6 +1,6 @@
 package sinnet.customer;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.UUID;
@@ -127,7 +127,7 @@ public class CustomerRepositoryImpl implements CustomerRepository {
         private String username;
         private String password;
         private String changedWho;
-        private LocalDate changedWhen;
+        private LocalDateTime changedWhen;
     }
     private String insertSecretTemplate = String.format(
         "INSERT INTO secret "
@@ -155,7 +155,7 @@ public class CustomerRepositoryImpl implements CustomerRepository {
         private String entityName;
         private String entityCode;
         private String changedWho;
-        private LocalDate changedWhen;
+        private LocalDateTime changedWhen;
 }
     private String insertSecretExTemplate = String.format(
         "INSERT INTO secret_ex "
@@ -451,7 +451,7 @@ public class CustomerRepositoryImpl implements CustomerRepository {
             .username(row.getString("username"))
             .password(row.getString("password"))
             .changedWho(Email.of(row.getString("changed_who")))
-            .changedWhen(row.getLocalDate("changed_when"))
+            .changedWhen(row.getLocalDateTime("changed_when"))
             .build();
         return new Tuple2<>(key, result);
     }
@@ -465,7 +465,7 @@ public class CustomerRepositoryImpl implements CustomerRepository {
             .entityName(row.getString("entity_name"))
             .entityCode(row.getString("entity_code"))
             .changedWho(Email.of(row.getString("changed_who")))
-            .changedWhen(row.getLocalDate("changed_when"))
+            .changedWhen(row.getLocalDateTime("changed_when"))
             .build();
         return new Tuple2<>(key, result);
     }

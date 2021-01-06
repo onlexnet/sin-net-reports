@@ -1,5 +1,7 @@
 package sinnet.customer;
 
+import java.time.LocalDateTime;
+
 import org.apache.commons.lang3.ArrayUtils;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
@@ -44,7 +46,7 @@ public class CustomerServiceTests {
         public void replaceEmptySecrets() {
             var requested = new ChangeCustomer.Secret("location1", "username1", "password1");
             var requestor = Email.of("someone@somewhere");
-            var when = Dates.gen().head();
+            var when = LocalDateTime.now();
             var empty = new CustomerSecret[0];
             var actual = CustomerService.merge(requestor, when, ArrayUtils.toArray(requested), empty);
             var expected = ArrayUtils.toArray(new CustomerSecret("location1", "username1", "password1", requestor, when));
@@ -55,7 +57,7 @@ public class CustomerServiceTests {
         public void removeExistingSecrets() {
             var requestedEmpty = new ChangeCustomer.Secret[0];
             var requestor = Email.of("someone@somewhere");
-            var when = Dates.gen().head();
+            var when = LocalDateTime.now();
             var someExistinhAuths = ArrayUtils.toArray(new CustomerSecret("a", "b", "c", requestor, when));
             var actual = CustomerService.merge(requestor, when, requestedEmpty, someExistinhAuths);
             Assertions.assertThat(actual).isEmpty();
@@ -64,11 +66,11 @@ public class CustomerServiceTests {
         @Test
         public void updateChangedSecretsCase1() {
             var newRequestor = Email.of("new@requestor");
-            var newDate = Dates.gen().head();
+            var newDate = LocalDateTime.now();
             var requested1 = new ChangeCustomer.Secret("location", "username1", "password1");
 
             var oldRequestor = Email.of("old@requestor");
-            var oldDate = Dates.gen().head();
+            var oldDate = LocalDateTime.now();
             var existing1 = new CustomerSecret("location", "username1", "c", oldRequestor, oldDate);
 
             var actual = CustomerService.merge(newRequestor, newDate,
@@ -82,11 +84,11 @@ public class CustomerServiceTests {
         @Test
         public void updateChangedSecretCase2() {
             var newRequestor = Email.of("new@requestor");
-            var newDate = Dates.gen().head();
+            var newDate = LocalDateTime.now();
             var requested1 = new ChangeCustomer.Secret("location", "username1", "password1");
 
             var oldRequestor = Email.of("old@requestor");
-            var oldDate = Dates.gen().head();
+            var oldDate = LocalDateTime.now();
             var existing1 = new CustomerSecret("location", "username1", "password1", oldRequestor, oldDate);
 
             var actual = CustomerService.merge(newRequestor, newDate,

@@ -3,6 +3,7 @@ package sinnet.customer;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 import java.util.function.Supplier;
 
@@ -222,7 +223,7 @@ class Given {
             .location("My location " + UUID.randomUUID())
             .username("My username " + UUID.randomUUID())
             .password("My password " + UUID.randomUUID())
-            .changedWhen(LocalDate.now())
+            .changedWhen(LocalDateTime.now())
             .changedWho(Email.of(UUID.randomUUID().toString()))
             .build();
         return new CustomerSecret[] {auth.get(), auth.get()};

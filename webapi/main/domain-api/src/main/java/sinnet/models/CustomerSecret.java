@@ -1,6 +1,6 @@
 package sinnet.models;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
@@ -19,7 +19,7 @@ public final class CustomerSecret {
     private String password;
     @Builder.Default
     private Email changedWho = Email.empty();
-    private LocalDate changedWhen;
+    private LocalDateTime changedWhen;
 
     @JsonPOJOBuilder(withPrefix = "")
     public static class MyBuilder {

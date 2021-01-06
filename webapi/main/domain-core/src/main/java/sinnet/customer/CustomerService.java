@@ -1,6 +1,6 @@
 package sinnet.customer;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -70,13 +70,13 @@ public class CustomerService extends AbstractVerticle implements TopLevelVerticl
                         .map(v -> v.getSecrets())
                         .getOrElse(new CustomerSecret[0]);
                     var newSecrets = CustomerService.merge(requestor,
-                                                           LocalDate.now(),
+                                                           LocalDateTime.now(),
                                                            requestedSecrets, actualSecrets);
                     var actualSecretsEx = it
                         .map(v -> v.getSecretsEx())
                         .getOrElse(new CustomerSecretEx[0]);
                     var newSecretsEx = CustomerService.merge(requestor,
-                                                             LocalDate.now(),
+                                                             LocalDateTime.now(),
                                                              requestedSecretsEx, actualSecretsEx);
                     var newContacts = Arrays.stream(requestedContacts)
                         .map(v -> CustomerContact
@@ -159,7 +159,7 @@ public class CustomerService extends AbstractVerticle implements TopLevelVerticl
      * Combines set of requested secrets with existing secrets so that
      * defines new secrets, updated secrets and remove non used secrets.
      */
-    public static  CustomerSecret[] merge(Email requestor, LocalDate when, ChangeCustomer.Secret[] requested, CustomerSecret[] actual) {
+    public static  CustomerSecret[] merge(Email requestor, LocalDateTime when, ChangeCustomer.Secret[] requested, CustomerSecret[] actual) {
 
         // 1) Extract items are identical (location / username / password) so that can be marked as 'unchanged'
         // 2) The rest is considered as 'updated' or 'new'
@@ -210,7 +210,7 @@ public class CustomerService extends AbstractVerticle implements TopLevelVerticl
         return result.toArray(CustomerSecret[]::new);
     }
 
-    public static  CustomerSecretEx[] merge(Email requestor, LocalDate when, ChangeCustomer.SecretEx[] requested, CustomerSecretEx[] actual) {
+    public static  CustomerSecretEx[] merge(Email requestor, LocalDateTime when, ChangeCustomer.SecretEx[] requested, CustomerSecretEx[] actual) {
 
         // 1) Extract items are identical (location / username / password) so that can be marked as 'unchanged'
         // 2) The rest is considered as 'updated' or 'new'
