@@ -14,11 +14,11 @@ import sinnet.AskTemplate;
 import sinnet.IdentityProvider;
 import sinnet.MyEntity;
 import sinnet.SomeEntity;
-import sinnet.bus.EntityId;
 import sinnet.bus.commands.ChangeCustomer;
 import sinnet.models.CustomerContact;
 import sinnet.models.CustomerValue;
 import sinnet.models.Email;
+import sinnet.models.EntityId;
 import sinnet.models.Name;
 
 @Component
@@ -43,7 +43,7 @@ public class CustomersMutationSave extends AskTemplate<ChangeCustomer.Command, E
             throw new GraphQLException("Invalid project id");
         }
 
-        var eid = new EntityId(id.getProjectId(), id.getEntityId(), id.getEntityVersion());
+        var eid = EntityId.of(id.getProjectId(), id.getEntityId(), id.getEntityVersion());
         var value = CustomerValue.builder()
             .operatorEmail(entry.getOperatorEmail())
             .supportStatus(entry.getSupportStatus())

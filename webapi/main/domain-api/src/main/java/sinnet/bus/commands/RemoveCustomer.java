@@ -6,8 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Value;
-import sinnet.bus.EntityId;
-import sinnet.bus.JsonMessage;
+import sinnet.models.EntityId;
 
 
 public interface RemoveCustomer {
@@ -16,7 +15,7 @@ public interface RemoveCustomer {
     @Value
     @JsonDeserialize(builder = RemoveCustomer.Command.MyBuilder.class)
     @Builder(builderClassName = "MyBuilder", toBuilder = true)
-    final class Command implements JsonMessage {
+    final class Command {
 
         /** Address used to send the command to it's consumer. */
         public static final String ADDRESS = "cmd.RemoveCustomer";
@@ -32,7 +31,7 @@ public interface RemoveCustomer {
     @Value
     @JsonDeserialize(builder = RemoveCustomer.Result.MyBuilder.class)
     @Builder(builderClassName = "MyBuilder", toBuilder = true)
-    class Result implements JsonMessage {
+    class Result {
         private Boolean value;
 
         @JsonPOJOBuilder(withPrefix = "")

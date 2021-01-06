@@ -6,9 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.json.JsonObject;
-import sinnet.bus.JsonMessage;
 
-public abstract class AskTemplate<ASK extends JsonMessage, REPLY extends JsonMessage> {
+public abstract class AskTemplate<ASK, REPLY> {
 
     @Autowired
     private EventBus eventBus;
@@ -23,7 +22,7 @@ public abstract class AskTemplate<ASK extends JsonMessage, REPLY extends JsonMes
 
     protected final CompletableFuture<REPLY> ask(ASK ask) {
         var result = new CompletableFuture<REPLY>();
-        var query = ask.json();
+        var query = JsonObject.mapFrom(ask);
         eventBus
             .request(address, query)
             .onComplete(it -> {
