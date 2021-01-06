@@ -1,5 +1,5 @@
 import * as React from "react";
-import { DetailsList, DetailsListLayoutMode, SelectionMode, Selection, IColumn, mergeStyleSets, DefaultButton, setLanguage } from "office-ui-fabric-react";
+import { DetailsList, DetailsListLayoutMode, SelectionMode, Selection, IColumn, mergeStyleSets, DefaultButton } from "office-ui-fabric-react";
 import { IStackTokens, Stack, TextField, Toggle, Announced } from "office-ui-fabric-react";
 import { connect, ConnectedProps } from "react-redux";
 import { RootState } from "../store/reducers";
@@ -14,6 +14,7 @@ import { asDtoDates } from "../api/Mapper";
 import { Dispatch } from "redux";
 import { ActionEditItem, VIEWCONTEXT_ACTION_EDIT_START } from "../store/viewcontext/types";
 import { Duration } from "./ActionList.Duration";
+import { Link } from "react-router-dom";
 
 const classNames = mergeStyleSets({
   fileIconHeaderIcon: {
@@ -103,7 +104,7 @@ const ConnectedContent: React.FC<PropsFromRedux> = props => {
     {
       key: "column4", name: "Pracownik", fieldName: "servicemanName", minWidth: 70, maxWidth: 90, isResizable: true, isCollapsible: true, data: "string",
       onRender: (item: IDocument) => {
-        return <span>{item.servicemanName}</span>;
+        return <Link to={`/actions/${item.projectId}/${item.entityId}/${item.entityVersion}`}>{item.servicemanName}</Link>;
       },
       isPadded: true
     },
@@ -189,26 +190,7 @@ const ConnectedContent: React.FC<PropsFromRedux> = props => {
     // setSelectedItem(null)
   }
 
-  const getSelectionDetails = () => {
-    const selectionCount = selection.getSelectedCount();
-
-    switch (selectionCount) {
-      case 0:
-        return null;
-      case 1:
-        return selection.getSelection()[0] as ServiceAppModel;
-      default:
-        return null;
-    }
-  }
-
   const [selectionDetails, setSelectionDetails] = useState<ServiceAppModel | null>(null);
-  const selection = new Selection({
-    onSelectionChanged: () => {
-      const selectedModel = getSelectionDetails();
-      setSelectionDetails(selectedModel);
-    },
-  });
 
   return (
     <>
@@ -232,9 +214,6 @@ const ConnectedContent: React.FC<PropsFromRedux> = props => {
                     />
                     <TextField label="Tylko dzień:" styles={controlStyles} />
                     <TextField label="Kontrahent:" styles={controlStyles} />
-                    <DefaultButton text="Edytuj ..." onClick={() => {
-                      props.editItem(selectionDetails?.entityId ?? "undefined [1]");
-                    }} />
                   </Stack>
                 </Stack>
               </div>
@@ -248,8 +227,7 @@ const ConnectedContent: React.FC<PropsFromRedux> = props => {
                 items={items}
                 compact={true}
                 columns={columns}
-                selectionMode={SelectionMode.single}
-                selection={selection}
+                selectionMode={SelectionMode.none}
                 setKey="none"
                 layoutMode={DetailsListLayoutMode.justified}
                 isHeaderVisible={true}

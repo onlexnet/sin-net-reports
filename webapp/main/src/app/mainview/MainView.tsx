@@ -12,6 +12,7 @@ import { routing } from "../../Routing";
 import { Main } from "../../services";
 import { AppContextAction } from "../../store/appcontext/types";
 import { RootState } from "../../store/reducers";
+import { ActionViewRoutedEdit } from "../actions/ActionView.Routed.Edit";
 import { CustomerViewRoutedEdit } from "../customer/CustomerView.Routed.Edit";
 import { CustomerViewNew } from "../customer/CustomerView.Routed.New";
 import { Customers } from "../customers/Customers";
@@ -71,7 +72,8 @@ const LocalView: React.FC<Props> = (props) => {
                         <Route path="/" component={NavBasicExample} />
                     </div>
                     <div className="ms-Grid-col ms-sm6 ms-md8 ms-lg10">
-                        <Route path={routing.services} component={Main} />
+                        <Route path={routing.editAction} component={ActionViewRoutedEdit} />
+                        <Route path={routing.services} component={Main} exact={true} />
                         <Route path={routing.reports} component={Reports} />
                         <Route path={routing.editCustomer} component={CustomerViewRoutedEdit} />
                         <Route path={routing.newCustomer} component={CustomerViewNew} />

@@ -5,7 +5,6 @@ import { RootState } from "../store/reducers";
 import { connect, ConnectedProps } from "react-redux";
 import { Dispatch } from "redux";
 import { ViewContextState } from "../store/viewcontext/types";
-import EditActionInit from "./EditAction";
 
 const mapStateToProps = (state: RootState): ViewContextState => {
   return state.viewContext;
@@ -26,7 +25,6 @@ const MainView: React.FC<MainProps> = (props) => {
       <ServiceCommandBar />
 
       { props.period.toString() }
-      <EditActionInit />
       <Content />
     </>
   );
