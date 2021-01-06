@@ -49,14 +49,14 @@ public class CustomerService extends AbstractVerticle implements TopLevelVerticl
         super.start(startPromise);
     }
 
-    final class SaveCustomerHandler extends VertxHandlerTemplate<ChangeCustomer.Command, sinnet.bus.EntityId> {
+    final class SaveCustomerHandler extends VertxHandlerTemplate<ChangeCustomer.Command, EntityId> {
 
         SaveCustomerHandler() {
             super(ChangeCustomer.Command.class);
         }
 
         @Override
-        protected Future<sinnet.bus.EntityId> onRequest(ChangeCustomer.Command msg) {
+        protected Future<EntityId> onRequest(ChangeCustomer.Command msg) {
             var eid = EntityId.of(msg.getId().getProjectId(), msg.getId().getId(), msg.getId().getVersion());
             var requestor = msg.getRequestor();
             var newValue = msg.getValue();
@@ -90,7 +90,7 @@ public class CustomerService extends AbstractVerticle implements TopLevelVerticl
 
                     return repository
                         .write(eid, newValue, newSecrets, newSecretsEx, newContacts)
-                        .map(v1 -> new sinnet.bus.EntityId(v1.getProjectId(), v1.getId(), v1.getVersion()));
+                        .map(v1 -> EntityId.of(v1.getProjectId(), v1.getId(), v1.getVersion()));
                 });
         }
     }

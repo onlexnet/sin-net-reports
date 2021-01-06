@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import sinnet.bus.JsonMessage;
 import sinnet.models.CustomerSecret;
 import sinnet.models.CustomerSecretEx;
 import sinnet.models.CustomerContact;
@@ -17,7 +16,7 @@ public interface FindCustomers {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    class Ask implements JsonMessage {
+    class Ask {
         /** Address used to send the query to it's handler. */
         public static final String ADDRESS = "query.FindCustomers";
 
@@ -27,7 +26,7 @@ public interface FindCustomers {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    class Reply implements JsonMessage {
+    class Reply {
         private CustomerData[] data;
     }
 

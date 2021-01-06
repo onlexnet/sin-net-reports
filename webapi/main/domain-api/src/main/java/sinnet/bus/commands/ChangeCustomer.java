@@ -6,10 +6,9 @@ import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Value;
-import sinnet.bus.EntityId;
-import sinnet.bus.JsonMessage;
 import sinnet.models.CustomerValue;
 import sinnet.models.Email;
+import sinnet.models.EntityId;
 
 
 public interface ChangeCustomer {
@@ -18,7 +17,7 @@ public interface ChangeCustomer {
     @Value
     @JsonDeserialize(builder = ChangeCustomer.Command.MyBuilder.class)
     @Builder(builderClassName = "MyBuilder", toBuilder = true)
-    final class Command implements JsonMessage {
+    final class Command {
 
         /** Address used to send the command to it's consumer. */
         public static final String ADDRESS = "cmd.RegisterNewCustomer";

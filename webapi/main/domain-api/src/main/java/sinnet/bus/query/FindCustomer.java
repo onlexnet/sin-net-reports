@@ -5,7 +5,6 @@ import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import sinnet.bus.JsonMessage;
 import sinnet.models.CustomerSecret;
 import sinnet.models.CustomerSecretEx;
 import sinnet.models.CustomerContact;
@@ -15,7 +14,7 @@ public interface FindCustomer {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    class Ask implements JsonMessage {
+    class Ask {
         /** Address used to send the query to it's handler. */
         public static final String ADDRESS = "query.FindCustomer";
 
@@ -26,7 +25,7 @@ public interface FindCustomer {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    class Reply implements JsonMessage {
+    class Reply {
         private UUID entityId;
         private int entityVersion;
         private CustomerValue value;

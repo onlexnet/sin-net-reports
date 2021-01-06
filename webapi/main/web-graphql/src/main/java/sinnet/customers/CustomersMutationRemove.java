@@ -12,6 +12,7 @@ import sinnet.AskTemplate;
 import sinnet.IdentityProvider;
 import sinnet.MyEntity;
 import sinnet.bus.commands.RemoveCustomer;
+import sinnet.models.EntityId;
 
 @Component
 public class CustomersMutationRemove extends AskTemplate<RemoveCustomer.Command, RemoveCustomer.Result>
@@ -32,7 +33,7 @@ public class CustomersMutationRemove extends AskTemplate<RemoveCustomer.Command,
             throw new GraphQLException("Invalid project id");
         }
 
-        var entityId = new sinnet.bus.EntityId(id.getProjectId(), id.getEntityId(), id.getEntityVersion());
+        var entityId = EntityId.of(id.getProjectId(), id.getEntityId(), id.getEntityVersion());
         var cmd = Command.builder().id(entityId).build();
         return super.ask(cmd).thenApply(it -> it.getValue());
     }
