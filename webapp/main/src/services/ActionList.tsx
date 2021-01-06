@@ -79,7 +79,7 @@ const mapStateToProps = (state: RootState) => {
   if (state.appState.empty) {
     throw 'Invalid state';
   }
-  return { ...state.viewContext, selectedProjectId: state.appState.projectId };
+  return { ...state.viewContext, selectedProjectId: state.appState.projectId, currentEmail: state.auth.email };
 };
 const mapDispatchToProps = (dispatch: Dispatch) => {
   return {
@@ -164,9 +164,18 @@ const ConnectedContent: React.FC<PropsFromRedux> = props => {
     refetch();
   }
 
+  const [ onlyMyData, setOnlyMyData ] = useState(false);
+
+  const filterByOnlyMyData = (item: ServiceAppModel): boolean => {
+    if (!onlyMyData) return true;
+    if (item.servicemanName === props.currentEmail) return true;
+    return false;
+  }
+
   var itemsOrderBy: (keyof IDocument)[] = ['servicemanName', 'when', 'entityId'];
   var items: ServiceAppModel[] = _.chain(data?.Actions.search.items)
     .map(it => toActionModel(it))
+    .filter(it => filterByOnlyMyData(it))
     .orderBy(itemsOrderBy)
     .value();
 
@@ -215,7 +224,8 @@ const ConnectedContent: React.FC<PropsFromRedux> = props => {
                   <Stack horizontal tokens={stackTokens}>
                     <Toggle
                       label="Tylko moje dane"
-                      checked={false}
+                      checked={onlyMyData}
+                      onChange={(e, v) => setOnlyMyData(v ?? false)}
                       onText="Compact"
                       offText="Normal"
                       styles={controlStyles}

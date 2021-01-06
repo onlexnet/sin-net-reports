@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import graphql.kickstart.tools.GraphQLResolver;
 import sinnet.ActionRepository;
+import sinnet.IdentityProvider;
 import sinnet.SomeEntity;
 import sinnet.models.ActionValue;
 import sinnet.models.Email;
@@ -20,6 +21,9 @@ public class ActionsMutationNewAction implements GraphQLResolver<ActionsMutation
     @Autowired
     private ActionRepository actionService;
 
+    @Autowired
+    private IdentityProvider identityProvider;
+
     /**
      * FixMe.
      *
@@ -28,9 +32,9 @@ public class ActionsMutationNewAction implements GraphQLResolver<ActionsMutation
      * @return fixme
      */
     public CompletionStage<SomeEntity> newAction(ActionsMutation gcontext, LocalDate whenProvided) {
-
+        var emailOfCurrentUser = identityProvider.getCurrent().get().getEmail();
         var model = ActionValue.builder()
-            .who(Email.of("undefined@user"))
+            .who(Email.of(emailOfCurrentUser))
             .when(whenProvided)
             .whom(Name.of("Jakiś klient"))
             .what("Jakaś usługa")
