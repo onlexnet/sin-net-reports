@@ -1,4 +1,3 @@
-import _ from "lodash";
 import { AppContextAction, AppState } from "./types";
 
 const initialState: AppState = {
