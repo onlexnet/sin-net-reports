@@ -20,7 +20,7 @@ export const useListCustomers: (projectId: string) => UseListCustomersItem[] = (
     const result = _.chain(data?.Customers.list)
       .map(it => ({ customerId: it.id, name: it.data.customerName }))
       .value();
-    if (result.length != 0 && state.length == 0) {
+    if (result.length !== 0 && state.length === 0) {
       setState(result);
     }
   }

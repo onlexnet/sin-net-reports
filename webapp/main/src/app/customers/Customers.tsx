@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { TextField, PrimaryButton, Separator, DetailsList, IColumn } from "office-ui-fabric-react";
 import { Link, RouteComponentProps } from "react-router-dom";
 import { routing } from "../../Routing";
@@ -7,6 +7,7 @@ import { useListCustomers, UseListCustomersItem } from "../../api/useListCustome
 import { RootState } from "../../store/reducers";
 import { Dispatch } from "redux";
 import { connect, ConnectedProps } from "react-redux";
+import _ from "lodash";
 
 
 const mapStateToProps = (state: RootState) => {
@@ -34,6 +35,8 @@ const CustomersLocal: React.FC<CustomersProps> = (props) => {
     }
 
     const items = useListCustomers(props.appState.projectId);
+    const [searchPhrase, setSearchPhrase] = useState<string | undefined>('');
+
     const columns: TypedColumn[] = [
         {
             key: "column1", name: "Klient", fieldName: "name", minWidth: 70, maxWidth: 90, isResizable: true, isCollapsible: true, data: "string",
@@ -43,6 +46,27 @@ const CustomersLocal: React.FC<CustomersProps> = (props) => {
             isPadded: true
         }
     ];
+
+    const similarity = (actual: string, template?: string): number => {
+        if (!actual) return 0;
+        if (!template) return 1;
+        const lowerActual = actual.toLowerCase();
+        const lowerTemplate = template.toLowerCase().trim();
+        if (lowerTemplate == '') return 1;
+        if (lowerActual === lowerTemplate) return 100;
+        if (lowerActual.startsWith(lowerTemplate)) return 80;
+        if (lowerActual.includes(' '+lowerTemplate)) return 60;
+        if (lowerActual.includes(lowerTemplate)) return 40;
+        return 0;
+    }
+
+    const sortedItems = _.chain(items)
+        .map(it => ({ ... it, sortPriority: similarity(it.name, searchPhrase) }))
+        .filter(it => it.sortPriority > 0)
+        .orderBy(it => it.name)
+        .orderBy(it => -it.sortPriority)
+        .value();
+
     return (
         <div className="ms-Grid">
             <HorizontalSeparatorStack >
@@ -53,23 +77,17 @@ const CustomersLocal: React.FC<CustomersProps> = (props) => {
                 </div>
                 <div className="ms-Grid-row">
                     <div className="ms-Grid-col ms-sm12">
-                        <TextField placeholder="Softowanie: wprowadź fragment nazwy klienta ..." />
-                    </div>
-                </div>
-                <div className="ms-Grid-row">
-                    <div className="ms-Grid-col ms-sm12">
-                        <TextField placeholder="Filtrowanie: wprowadź filtr wyszukiwania ..." />
+                        <TextField placeholder="Wprowadź fragment nazwy klienta ..."value={searchPhrase} onChange={(e, v) => setSearchPhrase(v)} />
                     </div>
                 </div>
 
                 <div className="ms-Grid-row">
-
 
                     <Separator alignContent="start"></Separator>
 
                     <div className="ms-Grid-col ms-sm12">
                         <DetailsList
-                            items={items}
+                            items={sortedItems}
                             compact={true}
                             columns={columns}
                             setKey="none"

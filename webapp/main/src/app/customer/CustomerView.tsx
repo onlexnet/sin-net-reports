@@ -3,7 +3,6 @@ import React, { MouseEventHandler } from "react"
 import { Separator } from 'office-ui-fabric-react/lib/Separator';
 import { Stack, IStackTokens, IStackStyles } from 'office-ui-fabric-react/lib/Stack';
 import { IComboBoxOption, ITextFieldStyles, TextField, Checkbox, PrimaryButton, IComboBox, ComboBox, Spinner, SpinnerSize, DefaultButton } from "office-ui-fabric-react";
-import { useBoolean } from '@uifabric/react-hooks';
 import _ from "lodash";
 import { useGetUsers } from "../../api/useGetUsers";
 import { CustomerContactInput, CustomerInput, CustomerSecretExInput, CustomerSecretInput, useRemoveCustomerMutation, useSaveCustomerMutation } from "../../Components/.generated/components";
@@ -225,15 +224,6 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
             setModel(cloned);
         }
     }
-
-
-    const [multiline2, { toggle: toggleMultiline2 }] = useBoolean(false);
-    const onChange2 = (ev?: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newText?: string): void => {
-        const newMultiline = newText?.length ?? 0 > 50;
-        if (newMultiline !== multiline2) {
-            toggleMultiline2();
-        }
-    };
 
     const [saveCustomerMutation, { data: saveResult, loading: saveInProgress }] = useSaveCustomerMutation();
     const [removeCustomerMutation, { data: removeResult, loading: removeInProgress }] = useRemoveCustomerMutation();
