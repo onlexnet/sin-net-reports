@@ -28,10 +28,6 @@
       <artifactId>lombok</artifactId>
     </dependency>
     <dependency>
-      <groupId>net.sf.oval</groupId>
-      <artifactId>oval</artifactId>
-    </dependency>
-    <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
     </dependency>
@@ -66,12 +62,12 @@
         <version>0.10.2</version>
       </dependency>
 
-      <dependency>
-        <groupId>net.sf.oval</groupId>
-        <artifactId>oval</artifactId>
-        <version>1.90</version>
-      </dependency>
-
+   		<dependency>
+      		<groupId>com.typesafe.akka</groupId>
+      		<artifactId>akka-actor-typed_2.13</artifactId>
+      		<version>2.6.10</version>
+    	</dependency>
+      
       <dependency>
         <groupId>net.siudek</groupId>
         <artifactId>web-security</artifactId>

@@ -1,12 +1,10 @@
 package sinnet.action;
 
-import java.time.LocalDate;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import io.vavr.collection.Array;
 import io.vavr.collection.Stream;
 import io.vertx.core.Future;
 import io.vertx.core.Promise;
@@ -24,7 +22,7 @@ public class ActionRepositoryImpl implements ActionRepository {
     private PgPool pgClient;
 
     private static final String SOURCE = "SELECT project_id, entity_id, entity_version, "
-                                       + "serviceman_email, distance, duration, date, customer_name, description, serviceman_name "
+                                       + "serviceman_email, distance, duration, date, customer_id, description, serviceman_name "
                                        + "FROM actions it ";
     @Override
     public Future<Boolean> save(EntityId entityId, ActionValue entity) {
@@ -33,14 +31,14 @@ public class ActionRepositoryImpl implements ActionRepository {
             entityId.getId(),
             entityId.getVersion(),
             entity.getWho().getValue(),
-            entity.getWhom().getValue(),
+            entity.getWhom(),
             entity.getWhat(),
             entity.getHowFar().getValue(),
             entity.getHowLong().getValue(),
             entity.getWho().getValue(),
             entity.getWhen());
         pgClient.preparedQuery("INSERT INTO "
-                + "actions (project_id, entity_id, entity_version, serviceman_email, customer_name, description, distance, duration, serviceman_name, date) "
+                + "actions (project_id, entity_id, entity_version, serviceman_email, customer_id, description, distance, duration, serviceman_name, date) "
                 + "values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)")
                 .execute(values, ar -> {
                     if (ar.succeeded()) promise.complete(Boolean.TRUE);
@@ -49,25 +47,6 @@ public class ActionRepositoryImpl implements ActionRepository {
         return promise.future();
     }
 
-
-    @Override
-    public Future<Array<Entity<ActionValue>>> find(UUID projectId, LocalDate from, LocalDate to) {
-        var promise = Promise.<Array<Entity<ActionValue>>>promise();
-        var findQuery = this.pgClient
-                .preparedQuery(SOURCE + " WHERE project_id=$1 AND it.date >= $2 AND it.date <= $3");
-        findQuery.execute(Tuple.of(projectId, from, to), ar -> {
-            if (ar.succeeded()) {
-                var rows = ar.result();
-                var value = Array
-                    .ofAll(rows)
-                    .map(Mapper::map);
-                promise.complete(value);
-            } else {
-                promise.fail(ar.cause());
-            }
-        });
-        return promise.future();
-    }
 
     @Override
     public Future<Entity<ActionValue>> find(UUID projectId, UUID entityId) {
@@ -97,7 +76,7 @@ public class ActionRepositoryImpl implements ActionRepository {
             id.getId(),
             id.getVersion(),
             entity.getWho().getValue(),
-            entity.getWhom().getValue(),
+            entity.getWhom(),
             entity.getWhat(),
             entity.getHowFar().getValue(),
             entity.getHowLong().getValue(),
@@ -105,7 +84,7 @@ public class ActionRepositoryImpl implements ActionRepository {
             entity.getWhen());
         pgClient.preparedQuery("UPDATE "
                 + "actions SET "
-                + "entity_version=$3+1, serviceman_email=$4, customer_name=$5, description=$6, distance=$7, duration=$8, serviceman_name=$9, date=$10 "
+                + "entity_version=$3+1, serviceman_email=$4, customer_id=$5, description=$6, distance=$7, duration=$8, serviceman_name=$9, date=$10 "
                 + "where project_id=$1 AND entity_id=$2 AND entity_version=$3")
                 .execute(values, ar -> {
                     if (ar.succeeded()) {

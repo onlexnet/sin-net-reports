@@ -14,7 +14,7 @@
             <column name="entity_version" type="INTEGER">
                 <constraints nullable="false" />
             </column>
-            <column name="customer_name" type="VARCHAR(50)">
+            <column name="customer_name" type="VARCHAR(200)">
                 <constraints nullable="false"/>
             </column>
             <column name="customer_city_name" type="VARCHAR(50)"/>

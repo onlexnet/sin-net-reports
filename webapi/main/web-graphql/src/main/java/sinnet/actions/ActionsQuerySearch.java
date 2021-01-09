@@ -11,14 +11,15 @@ import graphql.kickstart.tools.GraphQLResolver;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import sinnet.ActionRepository;
+import sinnet.read.ActionProjection;
 
 /** Fixme. */
 @Component
-public class ActionsQuerySearch implements GraphQLResolver<ActionsQuery> {
+public class ActionsQuerySearch implements GraphQLResolver<ActionsQuery>,
+                                           ActionProjection  {
 
     @Autowired
-    private ActionRepository repository;
+    private ActionProjection.Provider projection;
 
     /**
      * FixMe.
@@ -29,20 +30,20 @@ public class ActionsQuerySearch implements GraphQLResolver<ActionsQuery> {
      */
     public CompletionStage<ServicesSearchResult> search(ActionsQuery gcontext,
                                                         ServicesFilter filter) {
-        return repository
+        return projection
             .find(gcontext.getProjectId(), filter.getFrom(), filter.getTo())
             .map(it -> {
                 var items = it
                     .map(item -> ServiceModel.builder()
-                                  .projectId(item.getProjectId())
-                                  .entityId(item.getEntityId())
-                                  .servicemanName(item.getValue().getWho().getValue())
-                                  .whenProvided(item.getValue().getWhen())
-                                  .forWhatCustomer(item.getValue().getWhom().getValue())
-                                  .description(item.getValue().getWhat())
-                                  .duration(item.getValue().getHowLong().getValue())
-                                  .distance(item.getValue().getHowFar().getValue())
-                                  .build())
+                        .projectId(item.getEid().getProjectId())
+                        .entityId(item.getEid().getId())
+                        .servicemanName(item.getValue().getWho().getValue())
+                        .whenProvided(item.getValue().getWhen())
+                        .forWhatCustomer(item.getCustomerName())
+                        .description(item.getValue().getWhat())
+                        .duration(item.getValue().getHowLong().getValue())
+                        .distance(item.getValue().getHowFar().getValue())
+                        .build())
                     .toJavaList();
                 return new ServicesSearchResult(items, 2);
             })

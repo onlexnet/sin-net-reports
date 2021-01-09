@@ -22,12 +22,12 @@ import sinnet.bus.query.FindCustomer.Reply;
 import sinnet.bus.query.FindCustomers;
 import sinnet.bus.query.FindCustomers.Ask;
 import sinnet.bus.query.FindCustomers.CustomerData;
-import sinnet.customer.CustomerRepository.CustomerModel;
 import sinnet.models.CustomerContact;
 import sinnet.models.CustomerSecret;
 import sinnet.models.CustomerSecretEx;
 import sinnet.models.Email;
 import sinnet.models.EntityId;
+import sinnet.read.CustomerProjection.CustomerModel;
 
 @Component
 public class CustomerService extends AbstractVerticle implements TopLevelVerticle {

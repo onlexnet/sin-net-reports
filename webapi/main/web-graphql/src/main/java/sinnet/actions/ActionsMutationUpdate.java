@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import graphql.kickstart.tools.GraphQLResolver;
+import io.vertx.core.Future;
 import sinnet.ActionRepository;
 import sinnet.models.ActionDuration;
 import sinnet.models.ActionValue;
@@ -14,6 +15,7 @@ import sinnet.models.Distance;
 import sinnet.models.Email;
 import sinnet.models.EntityId;
 import sinnet.models.Name;
+import sinnet.read.CustomerProjection;
 
 /** Fixme. */
 @Component
@@ -21,6 +23,9 @@ public class ActionsMutationUpdate implements GraphQLResolver<ActionsMutation> {
 
     @Autowired
     private ActionRepository actionService;
+
+    @Autowired
+    private CustomerProjection customerReader;
 
     /**
      * FixMe.
@@ -35,20 +40,26 @@ public class ActionsMutationUpdate implements GraphQLResolver<ActionsMutation> {
                                            UUID entityId,
                                            int entityVersion,
                                            ServiceEntry content) {
-
-        var model = ActionValue.builder()
-            .who(Email.of(content.getServicemanName()))
-            .when(content.getWhenProvided())
-            .whom(Name.of(content.getForWhatCustomer()))
-            .what(content.getDescription())
-            .howLong(ActionDuration.of(content.getDuration()))
-            .howFar(Distance.of(content.getDistance()))
-            .build();
-
-        var id = EntityId.of(gcontext.getProjectId(), entityId, entityVersion);
-        return actionService
-            .update(id, model)
-            .map(it -> Boolean.TRUE)
+        var projectId = gcontext.getProjectId();
+        var customerName = Name.of(content.getForWhatCustomer());
+        return customerReader
+            .get(projectId, customerName)
+            .flatMap(it -> it
+                .map(v -> {
+                    var model = ActionValue.builder()
+                        .who(Email.of(content.getServicemanName()))
+                        .when(content.getWhenProvided())
+                        .whom(v.getId().getId())
+                        .what(content.getDescription())
+                        .howLong(ActionDuration.of(content.getDuration()))
+                        .howFar(Distance.of(content.getDistance()))
+                        .build();
+                    var id = EntityId.of(projectId, entityId, entityVersion);
+                    return actionService
+                        .update(id, model)
+                        .map(o -> Boolean.TRUE);
+                })
+                .getOrElse(Future.failedFuture("No data")))
             .toCompletionStage();
     }
 

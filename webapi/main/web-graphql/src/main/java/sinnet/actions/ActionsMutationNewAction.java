@@ -12,7 +12,6 @@ import sinnet.IdentityProvider;
 import sinnet.SomeEntity;
 import sinnet.models.ActionValue;
 import sinnet.models.Email;
-import sinnet.models.Name;
 
 /** Fixme. */
 @Component
@@ -36,7 +35,6 @@ public class ActionsMutationNewAction implements GraphQLResolver<ActionsMutation
         var model = ActionValue.builder()
             .who(Email.of(emailOfCurrentUser))
             .when(whenProvided)
-            .whom(Name.of("Jakiś klient"))
             .what("Jakaś usługa")
             .build();
 

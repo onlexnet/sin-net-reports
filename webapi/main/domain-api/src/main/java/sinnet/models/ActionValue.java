@@ -1,13 +1,18 @@
 package sinnet.models;
 
 import java.time.LocalDate;
+import java.util.UUID;
+
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 
 import lombok.Builder;
 import lombok.Value;
 
 /** Register details about provided service. */
 @Value
-@Builder(toBuilder = true)
+@JsonDeserialize(builder = ActionValue.MyBuilder.class)
+@Builder(builderClassName = "MyBuilder", toBuilder = true)
 public class ActionValue implements EntityValue<ActionValue> {
 
     /** Serviceman who did the service. */
@@ -17,9 +22,8 @@ public class ActionValue implements EntityValue<ActionValue> {
     /** Date when the service has been provided. */
     private LocalDate when;
 
-    /** Name of the Customer whom the service has been provided. */
-    @Builder.Default
-    private Name whom = Name.empty();
+    /** Id of the Customer whom the service has been provided. */
+    private UUID whom;
 
     /** Descriptive info what actually has been provided as the service. */
     private String what;
@@ -31,4 +35,9 @@ public class ActionValue implements EntityValue<ActionValue> {
     /** How far is distance to the place where service has been provided. */
     @Builder.Default
     private Distance howFar = Distance.empty();
+
+    @JsonPOJOBuilder(withPrefix = "")
+    public static class MyBuilder {
+    }
+
 }

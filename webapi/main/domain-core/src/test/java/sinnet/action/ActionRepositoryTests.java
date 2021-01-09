@@ -16,13 +16,15 @@ import org.springframework.test.context.TestPropertySource;
 import sinnet.ActionRepository;
 import sinnet.AppTestContext;
 import sinnet.Dates;
+import sinnet.Given;
 import sinnet.Sync;
+import sinnet.customer.CustomerRepository;
 import sinnet.models.ActionDuration;
 import sinnet.models.ActionValue;
 import sinnet.models.Distance;
 import sinnet.models.Email;
 import sinnet.models.EntityId;
-import sinnet.models.Name;
+import sinnet.read.ActionProjection;
 import sinnet.read.ProjectRepository;
 
 @SpringBootTest(webEnvironment = WebEnvironment.NONE)
@@ -36,35 +38,42 @@ public class ActionRepositoryTests {
     private ActionRepository sut;
 
     @Autowired
+    private ActionProjection.Provider projection;
+
+    @Autowired
+    private CustomerRepository customerRepository;
+
+    @Autowired
     private ProjectRepository projectRepository;
 
     @Test
     public void myTest() {
         var projectId = UUID.randomUUID();
-        Sync.of(() -> projectRepository.save(projectId));
+        Sync.of(() -> projectRepository.save(projectId)).get();
+        var customerId = Given.customer(projectId, customerRepository);
 
         var now = Dates.gen().head();
-        Sync.of(() -> sut.find(projectId, now, now));
+        Sync.of(() -> projection.find(projectId, now, now));
 
-        Sync.of(() -> sut.find(projectId, now, now))
+        Sync.of(() -> projection.find(projectId, now, now))
             .checkpoint(actual -> Assumptions.assumeThat(actual).isEmpty());
 
         var newEntity = ActionValue.builder()
             .howFar(Distance.of(10))
             .when(now)
-            .whom(Name.of("some Customer name"))
+            .whom(customerId.getId())
             .build();
 
         Sync.of(() -> sut.save(EntityId.anyNew(projectId), newEntity))
             .and(it -> sut.save(EntityId.anyNew(projectId), newEntity))
             .and(it -> sut.save(EntityId.anyNew(projectId), newEntity))
-            .and(it -> sut.find(projectId, now, now))
+            .and(it -> projection.find(projectId, now, now))
             .checkpoint(actualItems -> {
                 Assertions.assertThat(actualItems).hasSize(3);
                 var expected = ActionValue.builder()
                     .howFar(Distance.of(10))
                     .when(now)
-                    .whom(Name.of("some Customer name"))
+                    .whom(customerId.getId())
                     .build();
                 var actual = actualItems.head();
                 Assertions.assertThat(actual.getValue()).isEqualTo(expected);
@@ -74,7 +83,8 @@ public class ActionRepositoryTests {
     @Test
     public void shouldSaveFullModel() {
         var projectId = UUID.randomUUID();
-        Sync.of(() -> projectRepository.save(projectId));
+        Sync.of(() -> projectRepository.save(projectId)).get();
+        var customerId = Given.customer(projectId, customerRepository);
 
         var now = Dates.gen().head();
         var newEntity = ActionValue.builder()
@@ -83,13 +93,13 @@ public class ActionRepositoryTests {
             .howLong(ActionDuration.of(2))
             .what("some action")
             .when(now)
-            .whom(Name.of("some Customer name"))
+            .whom(customerId.getId())
             .build();
 
         Sync
             .of(() -> sut.save(EntityId.anyNew(projectId), newEntity))
             .checkpoint(actual -> assertThat(actual).isTrue())
-            .and(it -> sut.find(projectId, now, now))
+            .and(it -> projection.find(projectId, now, now))
             .checkpoint(actual -> {
                 var expected = ActionValue.builder()
                     .who(Email.of("some person"))
@@ -97,7 +107,7 @@ public class ActionRepositoryTests {
                     .howLong(ActionDuration.of(2))
                     .what("some action")
                     .when(now)
-                    .whom(Name.of("some Customer name"))
+                    .whom(customerId.getId())
                     .build();
                 assertThat(actual.head().getValue()).isEqualTo(expected);
             });
@@ -107,7 +117,8 @@ public class ActionRepositoryTests {
     public void shouldUpdateFullModel() {
         var now = Dates.gen().head();
         var projectId = UUID.randomUUID();
-        Sync.of(() -> projectRepository.save(projectId));
+        Sync.of(() -> projectRepository.save(projectId)).get();
+        var customerId = Given.customer(projectId, customerRepository);
 
         var newEntity = ActionValue.builder()
             .when(Dates.gen().head())
@@ -118,7 +129,7 @@ public class ActionRepositoryTests {
             .howLong(ActionDuration.of(2))
             .what("some action")
             .when(now)
-            .whom(Name.of("some Customer name"))
+            .whom(customerId.getId())
             .build();
 
         var entityId = EntityId.anyNew(projectId);
@@ -126,7 +137,7 @@ public class ActionRepositoryTests {
             .of(() -> sut.save(entityId, newEntity))
             .checkpoint(it -> assertThat(it).isTrue())
             .and(it -> sut.update(entityId, updateEntity))
-            .and(it -> sut.find(projectId, now, now))
+            .and(it -> projection.find(projectId, now, now))
             .checkpoint(actual -> {
                 var expected = ActionValue.builder()
                     .who(Email.of("some person"))
@@ -134,7 +145,7 @@ public class ActionRepositoryTests {
                     .howLong(ActionDuration.of(2))
                     .what("some action")
                     .when(now)
-                    .whom(Name.of("some Customer name"))
+                    .whom(customerId.getId())
                     .build();
                 assertThat(actual.head().getValue()).isEqualTo(expected);
             });
