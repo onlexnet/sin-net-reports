@@ -8,7 +8,9 @@
                                  constraintName="actions_FK1"
                                  referencedTableName="customers"
                                  referencedColumnNames="entity_id"
-                                 onDelete="CASCADE" />
+                                 deferrable="true"
+                                 initiallyDeferred="true"
+                                 onDelete="NO ACTION" />
         <dropColumn tableName="actions">  
             <column  name="customer_name"/>  
         </dropColumn>

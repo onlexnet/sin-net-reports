@@ -3,13 +3,14 @@ import { RootState } from "../../store/reducers";
 import { Dispatch } from "redux";
 import { connect, ConnectedProps } from "react-redux";
 import _ from "lodash";
-import { ComboBox, DateRangeType, DefaultButton, IComboBox, IComboBoxOption, IStackStyles, MaskedTextField, memoizeFunction, PrimaryButton, Stack, TextField } from "office-ui-fabric-react";
+import { ComboBox, DateRangeType, DefaultButton, IComboBox, IComboBoxOption, IStackStyles, MaskedTextField, memoizeFunction, PrimaryButton, SearchBox, Stack, TextField } from "office-ui-fabric-react";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { AppDatePicker } from "../../services/ActionList.DatePicker";
 import { LocalDate } from "../../store/viewcontext/TimePeriod";
 import { useGetUsers } from "../../api/useGetUsers";
-import { useUpdateActionMutation } from "../../Components/.generated/components";
+import { useListCustomersQuery, useUpdateActionMutation } from "../../Components/.generated/components";
 import { dates } from "../../api/DtoMapper";
+import { argumentsObjectFromField } from "@apollo/client/utilities";
 
 const mapStateToProps = (state: RootState) => {
     if (state.appState.empty) {
@@ -60,9 +61,6 @@ const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
 
     const defaultServicemanName = item?.servicemanName;
     const [servicemanName, setServicemanName] = useState(defaultServicemanName);
-    // useEffect(() => {
-    //   setServicemanName(defaultServicemanName);
-    // }, [defaultServicemanName]);
     const onChangeServicemanName = useCallback(
         (ev: React.FormEvent<IComboBox>, option?: IComboBoxOption) => {
             const a = option?.key as string;
@@ -89,10 +87,11 @@ const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
     //   setCustomerName(defaultCustomerName);
     // }, [defaultCustomerName]);
     const onChangeCustomerName = useCallback(
-        (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
-            setCustomerName(newValue || '');
+        (ev: React.FormEvent<IComboBox>, option?: IComboBoxOption) => {
+            const a = option?.key as string;
+            setCustomerName(a);
         },
-        [],
+        [setCustomerName],
     );
 
     const propsDescription = item?.description;
@@ -150,11 +149,6 @@ const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
         [],
     );
 
-    const getStackStyles = memoizeFunction(
-        (useTrapZone: boolean): Partial<IStackStyles> => ({
-            root: { border: `2px solid ${useTrapZone ? '#ababab' : 'transparent'}`, padding: 10 }
-        })
-    );
     const stackTokens = { childrenGap: 8 }
 
     const users = useGetUsers();
@@ -190,6 +184,17 @@ const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
         })
     };
 
+    const { data } = useListCustomersQuery({
+        variables: {
+            projectId
+          }
+    })
+
+    const customerOptions = _.chain(data?.Customers.list)
+        .map(it => ({ key: it.data.customerName, text: it.data.customerName }))
+        .value();
+
+
     return (
         <>
             <Stack tokens={stackTokens}>
@@ -208,7 +213,7 @@ const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
 
                 <div className="ms-Grid-row">
                     <div className="ms-Grid-col ms-sm4">
-                        <TextField label="Klient" value={customerName} onChange={onChangeCustomerName}
+                        <ComboBox label="Klient" selectedKey={customerName} options={customerOptions} autoComplete="on" onChange={onChangeCustomerName}
                         />
                     </div>
                     <div className="ms-Grid-col ms-sm6">
