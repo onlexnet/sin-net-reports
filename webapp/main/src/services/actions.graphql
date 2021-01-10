@@ -60,3 +60,12 @@ mutation updateAction($projectId: ID!, $entityId: ID!, $entityVersion: Int!, $wh
     })
   }
 }
+
+mutation removeAction($projectId: ID!, $entityId: ID!, $entityVersion: Int!) {
+  Actions(projectId: $projectId) {
+    remove(
+      entityId: $entityId,
+      entityVersion: $entityVersion,
+    )
+  }
+}

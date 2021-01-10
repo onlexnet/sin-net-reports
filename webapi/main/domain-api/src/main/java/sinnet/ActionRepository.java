@@ -14,4 +14,6 @@ public interface ActionRepository {
     Future<EntityId> update(EntityId id, ActionValue entity);
 
     Future<Entity<ActionValue>> find(UUID projectId, UUID entityId);
+
+    Future<Boolean> remove(EntityId id);
 }

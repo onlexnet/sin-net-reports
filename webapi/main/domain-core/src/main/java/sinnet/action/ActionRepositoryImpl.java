@@ -8,8 +8,11 @@ import org.springframework.stereotype.Service;
 import io.vavr.collection.Stream;
 import io.vertx.core.Future;
 import io.vertx.core.Promise;
+import io.vertx.core.json.JsonObject;
 import io.vertx.pgclient.PgPool;
 import io.vertx.sqlclient.Tuple;
+import io.vertx.sqlclient.templates.SqlTemplate;
+import io.vertx.sqlclient.templates.TupleMapper;
 import sinnet.ActionRepository;
 import sinnet.models.ActionValue;
 import sinnet.models.Entity;
@@ -94,4 +97,20 @@ public class ActionRepositoryImpl implements ActionRepository {
                 });
         return promise.future();
     }
+
+    private String deleteTemplate = "DELETE FROM customers WHERE project_id=#{a1} AND entity_id=#{a2} AND entity_version=#{a3}";
+
+    @Override
+    public Future<Boolean> remove(EntityId id) {
+        var params = new JsonObject()
+            .put("a1", id.getProjectId())
+            .put("a2", id.getId())
+            .put("a3", id.getVersion());
+        return SqlTemplate
+            .forUpdate(pgClient, deleteTemplate)
+            .mapFrom(TupleMapper.jsonObject())
+            .execute(params)
+        .map(ignored -> Boolean.TRUE);
+    }
 }
+

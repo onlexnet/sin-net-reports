@@ -8,9 +8,8 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { AppDatePicker } from "../../services/ActionList.DatePicker";
 import { LocalDate } from "../../store/viewcontext/TimePeriod";
 import { useGetUsers } from "../../api/useGetUsers";
-import { useListCustomersQuery, useUpdateActionMutation } from "../../Components/.generated/components";
+import { useListCustomersQuery, useRemoveActionMutation, useUpdateActionMutation } from "../../Components/.generated/components";
 import { dates } from "../../api/DtoMapper";
-import { argumentsObjectFromField } from "@apollo/client/utilities";
 
 const mapStateToProps = (state: RootState) => {
     if (state.appState.empty) {
@@ -167,6 +166,26 @@ const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
         cancelEdit();
     }
 
+    const [removeActionMutation, { loading: removeActionInProgress, data: data3 }] = useRemoveActionMutation();
+    if (data3) {
+        actionUpdated({
+            projectId: propsProjectId,
+            entityId: propsEntityId,
+            entityVersion: propsEntityVersion
+        });
+        cancelEdit();
+    }
+
+    const removeAndExit = () => {
+        removeActionMutation({
+            variables: {
+                projectId,
+                entityId,
+                entityVersion
+            }
+        })
+    }
+
     const updateAction = () => {
         const dtoDate = dates(actionDate).slashed;
         updateActionMutation({
@@ -187,12 +206,18 @@ const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
     const { data } = useListCustomersQuery({
         variables: {
             projectId
-          }
+        }
     })
 
     const customerOptions = _.chain(data?.Customers.list)
         .map(it => ({ key: it.data.customerName, text: it.data.customerName }))
         .value();
+
+    const btnStyles = {
+        rootHovered: {
+            backgroundColor: "#d83b01"
+        }
+    };
 
 
     return (
@@ -241,6 +266,7 @@ const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
                                     // cancelEdit();
                                 }} />
                             <DefaultButton onClick={() => cancelEdit()} text="Anuluj" />
+                            <DefaultButton text="Usuń i wyjdź" disabled={updateActionInProgress} styles={btnStyles} onClick={removeAndExit} />
                         </Stack>
                     </div>
                 </div>
