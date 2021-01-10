@@ -48,6 +48,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>
 interface ServiceCommandBarProps extends PropsFromRedux {
   onPreviousMonthRequested: () => void;
   onNextMonthRequested: () => void;
+  getCustomerRaport: () => void;
 }
 
 const ServiceCommandBarView: React.FC<ServiceCommandBarProps> = (props) => {
@@ -87,6 +88,13 @@ const ServiceCommandBarView: React.FC<ServiceCommandBarProps> = (props) => {
       split: true,
       iconProps: { iconName: 'Next' },
       onClick: props.onNextMonthRequested
+    },
+    {
+      key: 'getPdf',
+      text: 'Raport miesięczny',
+      split: true,
+      iconProps: { iconName: 'ZipFolder' },
+      onClick: props.getCustomerRaport
     },
   ];
 

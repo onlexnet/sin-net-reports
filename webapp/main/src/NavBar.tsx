@@ -38,14 +38,7 @@ export const NavBasicExample: React.FC<ChildComponentProps> = (props) => {
               target: '_blank'
             },
             {
-              name: 'Raporty',
-              onClick: () => props.history.push(routing.reports),
-              url: '',
-              key: 'key4',
-              target: '_blank'
-            },
-            {
-              name: 'Diagnostyka',
+              name: 'Debug',
               onClick: () => props.history.push(routing.debug),
               url: '',
               key: 'key5',
