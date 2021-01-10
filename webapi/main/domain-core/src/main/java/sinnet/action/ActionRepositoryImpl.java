@@ -98,7 +98,7 @@ public class ActionRepositoryImpl implements ActionRepository {
         return promise.future();
     }
 
-    private String deleteTemplate = "DELETE FROM customers WHERE project_id=#{a1} AND entity_id=#{a2} AND entity_version=#{a3}";
+    private String deleteTemplate = "DELETE FROM actions WHERE project_id=#{a1} AND entity_id=#{a2} AND entity_version=#{a3}";
 
     @Override
     public Future<Boolean> remove(EntityId id) {
