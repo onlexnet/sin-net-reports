@@ -2,6 +2,7 @@ package sinnet;
 
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutputStream;
+import java.util.UUID;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -17,6 +18,7 @@ import com.vladsch.flexmark.util.data.MutableDataSet;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,12 +30,12 @@ import lombok.SneakyThrows;
 @RequestMapping(path = "/raporty")
 public class ReportController {
 
-    @RequestMapping(value = "/klienci", method = RequestMethod.GET, produces = "application/pdf")
-    public ResponseEntity<byte[]> downloadPDFFile() {
+    @RequestMapping(value = "/klienci/{projectId}/{year}/{month}", method = RequestMethod.GET, produces = "application/pdf")
+    public ResponseEntity<byte[]> downloadPDFFile(@PathVariable UUID projectId, @PathVariable int year, @PathVariable int month) {
 
-        HttpHeaders headers = new HttpHeaders();
+        var headers = new HttpHeaders();
         headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
-        headers.add("Content-Disposition", "inline; filename=report.zip");
+        headers.add("Content-Disposition", "inline; filename=report " + year + "-" + month + ".zip");
         headers.add("Pragma", "no-cache");
         headers.add("Expires", "0");
 

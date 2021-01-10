@@ -7,8 +7,8 @@ import { Dispatch } from "redux";
 import { ViewContextState } from "../store/viewcontext/types";
 import { addressProvider } from "../addressProvider";
 
-const mapStateToProps = (state: RootState): ViewContextState => {
-  return state.viewContext;
+const mapStateToProps = (state: RootState) => {
+  return ({ viewContext: state.viewContext, appState: state.appState });
 }
 const mapDispatchToProps = (dispatch: Dispatch) => ({});
 
@@ -27,10 +27,12 @@ const MainView: React.FC<MainProps> = (props) => {
   return (
     <>
       <ServiceCommandBar getCustomerRaport={() => {
-        openInNewTab(addressProvider().host + "/raporty/klienci");
+        var projectId = props.appState.projectId;
+        var dateFrom = props.viewContext.period.getValue().dateFrom;
+        openInNewTab(addressProvider().host + `/raporty/klienci/${projectId}/${dateFrom.year}/${dateFrom.month}`);
       }} />
 
-      { props.period.toString()}
+      { props.viewContext.period.toString()}
       <Content />
     </>
   );
