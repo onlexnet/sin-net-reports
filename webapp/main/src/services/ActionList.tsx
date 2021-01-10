@@ -166,10 +166,24 @@ const ConnectedContent: React.FC<PropsFromRedux> = props => {
   }
 
   const [ onlyMyData, setOnlyMyData ] = useState(false);
-
   const filterByOnlyMyData = (item: ServiceAppModel): boolean => {
     if (!onlyMyData) return true;
     if (item.servicemanName === props.currentEmail) return true;
+    return false;
+  }
+
+  const [ onlyDay, setOnlyDay ] = useState<string | undefined>();
+  const filterByOnlyDay = (item: ServiceAppModel): boolean => {
+    if (!onlyDay) return true;
+    if (item.when.day.toString().includes(onlyDay)) return true;
+    return false;
+  }
+
+  const [ onlyCustomer, setOnlyCustomer ] = useState<string | undefined>();
+  const filterByOnlyCustomer = (item: ServiceAppModel): boolean => {
+    if (!onlyCustomer) return true;
+    if (!item.customerName) return false;
+    if (item.customerName?.toLowerCase().includes(onlyCustomer.toLowerCase())) return true;
     return false;
   }
 
@@ -177,6 +191,8 @@ const ConnectedContent: React.FC<PropsFromRedux> = props => {
   var items: ServiceAppModel[] = _.chain(data?.Actions.search.items)
     .map(it => toActionModel(it))
     .filter(it => filterByOnlyMyData(it))
+    .filter(it => filterByOnlyDay(it))
+    .filter(it => filterByOnlyCustomer(it))
     .orderBy(itemsOrderBy)
     .value();
 
@@ -187,10 +203,7 @@ const ConnectedContent: React.FC<PropsFromRedux> = props => {
   const [currentPeriod, setCurrentPeriod] = useState<TimePeriod | null>(null);
   if (currentPeriod != props.period) {
     setCurrentPeriod(props.period);
-    // setSelectedItem(null)
   }
-
-  const [selectionDetails, setSelectionDetails] = useState<ServiceAppModel | null>(null);
 
   return (
     <>
@@ -212,8 +225,8 @@ const ConnectedContent: React.FC<PropsFromRedux> = props => {
                       offText="Normal"
                       styles={controlStyles}
                     />
-                    <TextField label="Tylko dzień:" styles={controlStyles} />
-                    <TextField label="Kontrahent:" styles={controlStyles} />
+                    <TextField label="Tylko dzień:" value={onlyDay} onChange={(e, v) => setOnlyDay(v)} styles={controlStyles} />
+                    <TextField label="Kontrahent:" styles={controlStyles} value={onlyCustomer} onChange={(e, v) => setOnlyCustomer(v)} />
                   </Stack>
                 </Stack>
               </div>
