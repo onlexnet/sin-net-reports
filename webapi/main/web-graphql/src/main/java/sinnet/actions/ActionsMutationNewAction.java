@@ -35,7 +35,6 @@ public class ActionsMutationNewAction implements GraphQLResolver<ActionsMutation
         var model = ActionValue.builder()
             .who(Email.of(emailOfCurrentUser))
             .when(whenProvided)
-            .what("Jakaś usługa")
             .build();
 
         var entityId = sinnet.models.EntityId.anyNew(gcontext.getProjectId());

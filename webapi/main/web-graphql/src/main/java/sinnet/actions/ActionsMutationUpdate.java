@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import graphql.kickstart.tools.GraphQLResolver;
-import io.vertx.core.Future;
 import sinnet.ActionRepository;
 import sinnet.models.ActionDuration;
 import sinnet.models.ActionValue;
@@ -44,22 +43,22 @@ public class ActionsMutationUpdate implements GraphQLResolver<ActionsMutation> {
         var customerName = Name.of(content.getForWhatCustomer());
         return customerReader
             .get(projectId, customerName)
-            .flatMap(it -> it
-                .map(v -> {
-                    var model = ActionValue.builder()
-                        .who(Email.of(content.getServicemanName()))
-                        .when(content.getWhenProvided())
-                        .whom(v.getId().getId())
-                        .what(content.getDescription())
-                        .howLong(ActionDuration.of(content.getDuration()))
-                        .howFar(Distance.of(content.getDistance()))
-                        .build();
-                    var id = EntityId.of(projectId, entityId, entityVersion);
-                    return actionService
-                        .update(id, model)
-                        .map(o -> Boolean.TRUE);
-                })
-                .getOrElse(Future.failedFuture("No data")))
+            .flatMap(it -> {
+                var id = EntityId.of(projectId, entityId, entityVersion);
+                var model = ActionValue.builder()
+                    .who(Email.of(content.getServicemanName()))
+                    .when(content.getWhenProvided())
+                    .what(content.getDescription())
+                    .howLong(ActionDuration.of(content.getDuration()))
+                    .howFar(Distance.of(content.getDistance()));
+                if (it.isDefined()) {
+                    var customerModel = it.get();
+                    model.whom(customerModel.getId().getId());
+                }
+                return actionService
+                    .update(id, model.build())
+                    .map(o -> Boolean.TRUE);
+            })
             .toCompletionStage();
     }
 

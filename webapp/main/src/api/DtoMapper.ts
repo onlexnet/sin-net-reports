@@ -18,12 +18,12 @@ export const toActionModel = (dto: ServiceModel): ServiceAppModel => {
         projectId: dto.projectId,
         entityId: dto.entityId,
         entityVersion: dto.entityVersion,
-        description: dto.description ?? "-",
-        servicemanName: dto.servicemanName ?? "-",
-        customerName: dto.forWhatCustomer,
+        description: dto.description ?? undefined,
+        servicemanName: dto.servicemanName ?? undefined,
+        customerName: dto.forWhatCustomer ?? undefined,
         when: toModel(dto.whenProvided),
-        distance: dto.distance,
-        duration: dto.duration
+        distance: dto.distance ?? undefined,
+        duration: dto.duration ?? undefined
     }
     return item;
 }

@@ -16,12 +16,12 @@ type ActionsQuery {
 }
 
 input ServiceEntry {
-    servicemanName: String!
+    servicemanName: String
     whenProvided: Date!
-    forWhatCustomer: String!
-    description: String!
-    distance: Int!
-    duration: Int!
+    forWhatCustomer: String
+    description: String
+    distance: Int
+    duration: Int
 }
 
 type ServicesSearchResult {
@@ -33,12 +33,12 @@ type ServiceModel implements Entity {
     projectId: ID!
     entityId: ID!
     entityVersion: Int!
-    servicemanName: String!
+    servicemanName: String
     whenProvided: Date!
-    forWhatCustomer: String!
-    description: String!
-    distance: Int!
-    duration: Int!
+    forWhatCustomer: String
+    description: String
+    distance: Int
+    duration: Int
 }
 
 input ServicesFilter {

@@ -113,7 +113,7 @@ const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
     const durationRef = useRef(0);
     const [durationError, setDurationError] = useState("");
     useEffect(() => {
-        const { duration } = props.item;
+        const duration = props.item.duration ?? 0;
         var hours = Math.floor(duration / 60);
         var minutes = duration - hours * 60;
         setDurationAsText(hours + ('00' + minutes).substr(-2));

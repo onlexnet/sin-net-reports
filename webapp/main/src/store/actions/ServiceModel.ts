@@ -1,12 +1,12 @@
 import { LocalDate } from "../viewcontext/TimePeriod";
 
 export interface ServiceAppModel extends EntityId {
-  servicemanName: string,
-  description: string,
-  customerName: string,
+  servicemanName: string | undefined,
+  description: string | undefined,
+  customerName: string | undefined,
   when: LocalDate,
-  duration: number,
-  distance: number
+  duration: number | undefined,
+  distance: number | undefined
 }
 
 export interface EntityId {

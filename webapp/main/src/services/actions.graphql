@@ -45,7 +45,7 @@ mutation newServiceAction($projectId: ID!, $when: Date!) {
   }
 }
 
-mutation updateAction($projectId: ID!, $entityId: ID!, $entityVersion: Int!, $when: Date!, $what: String!, $who: String!, $whom: String!, $duration: Int!, $distance: Int!) {
+mutation updateAction($projectId: ID!, $entityId: ID!, $entityVersion: Int!, $when: Date!, $what: String, $who: String, $whom: String, $duration: Int, $distance: Int) {
   Actions(projectId: $projectId) {
     update(
       entityId: $entityId,

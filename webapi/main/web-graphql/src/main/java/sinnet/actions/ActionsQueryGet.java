@@ -103,32 +103,34 @@ final class MyRequestHandler {
                 .onMessage(OnActionData.class, it -> {
                     var projectId = it.getEntity().getProjectId();
                     var customerId = it.getEntity().getValue().getWhom();
-                    var r = service2.get(projectId, customerId).toCompletionStage();
-                    ctx.pipeToSelf(r, (ok, exc) -> exc == null
-                        ? new OnCustomerData(it.getEntity(), ok)
-                        : new Error());
+                    if (customerId == null) {
+                        var r = new OnCustomerData(it.getEntity(), Option.none());
+                        ctx.getSelf().tell(r);
+                    } else {
+                        var r = service2.get(projectId, customerId).toCompletionStage();
+                        ctx.pipeToSelf(r, (ok, exc) -> exc == null
+                            ? new OnCustomerData(it.getEntity(), ok)
+                            : new Error());
+                    }
                     return Behaviors.same();
                 })
                 .onMessage(OnCustomerData.class, it -> {
                     var actionEntity = it.actionData;
                     var maybeCustomerData = it.getCustomerData();
+                    var result = ServiceModel.builder()
+                        .projectId(actionEntity.getProjectId())
+                        .entityId(actionEntity.getEntityId())
+                        .entityVersion(actionEntity.getVersion())
+                        .servicemanName(actionEntity.getValue().getWho().getValue())
+                        .whenProvided(actionEntity.getValue().getWhen())
+                        .description(actionEntity.getValue().getWhat())
+                        .duration(actionEntity.getValue().getHowLong().getValue())
+                        .distance(actionEntity.getValue().getHowFar().getValue());
                     if (maybeCustomerData.isDefined()) {
                         var customerData = maybeCustomerData.get();
-                        var result = ServiceModel.builder()
-                            .projectId(actionEntity.getProjectId())
-                            .entityId(actionEntity.getEntityId())
-                            .entityVersion(actionEntity.getVersion())
-                            .servicemanName(actionEntity.getValue().getWho().getValue())
-                            .whenProvided(actionEntity.getValue().getWhen())
-                            .forWhatCustomer(customerData.getValue().getCustomerName().getValue())
-                            .description(actionEntity.getValue().getWhat())
-                            .duration(actionEntity.getValue().getHowLong().getValue())
-                            .distance(actionEntity.getValue().getHowFar().getValue())
-                            .build();
-                        resultHandler.completeAsync(() -> result);
-                    } else {
-                        resultHandler.completeExceptionally(new Exception("error"));
+                        result.forWhatCustomer(customerData.getValue().getCustomerName().getValue());
                     }
+                    resultHandler.completeAsync(() -> result.build());
                     return Behaviors.stopped();
                 })
                 .build());
