@@ -27,6 +27,10 @@
       <artifactId>web-security</artifactId>
     </dependency>
     <dependency>
+      <groupId>net.siudek</groupId>
+      <artifactId>domain-api</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
     </dependency>
@@ -35,10 +39,29 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
     </dependency>
+
+
     <dependency>
         <groupId>com.vladsch.flexmark</groupId>
         <artifactId>flexmark-all</artifactId>
         <version>0.62.2</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.openhtmltopdf</groupId>
+      <artifactId>openhtmltopdf-core</artifactId>
+      <version>1.0.6</version>
+    </dependency>
+    <dependency>
+      <!-- Required for PDF output. -->
+      <groupId>com.openhtmltopdf</groupId>
+      <artifactId>openhtmltopdf-pdfbox</artifactId>
+      <version>1.0.6</version>
+    </dependency>
+    <dependency>
+      <groupId>org.jsoup</groupId>
+      <artifactId>jsoup</artifactId>
+      <version>1.13.1</version>
     </dependency>
 
     <dependency>
