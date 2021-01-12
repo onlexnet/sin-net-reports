@@ -1,5 +1,6 @@
 package sinnet;
 
+import java.awt.Color;
 import java.io.ByteArrayOutputStream;
 import java.time.LocalDate;
 import java.util.UUID;
@@ -8,7 +9,10 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import com.lowagie.text.Document;
+import com.lowagie.text.Element;
 import com.lowagie.text.Paragraph;
+import com.lowagie.text.pdf.PdfPCell;
+import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
 
 import org.apache.commons.io.IOUtils;
@@ -123,10 +127,39 @@ public class ReportController implements ActionProjection {
             // step 3: we open the document
             document.open();
             // step 4: we add a paragraph to the document
-            document.add(new Paragraph("Hello World Sławomir"));
+            document.add(new Paragraph("Wersja próbna raportu"));
+            final int numberOfColumns = 3;
+            var table = new PdfPTable(numberOfColumns);
+            var cell = new PdfPCell(new Paragraph("header with colspan 3"));
+            final var some1 = 3;
+            cell.setColspan(some1);
+            table.addCell(cell);
+            table.addCell("1.1");
+            table.addCell("2.1");
+            table.addCell("3.1");
+            table.addCell("1.2");
+            table.addCell("2.2");
+            table.addCell("3.2");
+            cell = new PdfPCell(new Paragraph("cell test1"));
 
-            // step 5: we close the document
-            document.close();
+            final int maxColorValue = 255;
+            cell.setBorderColor(new Color(maxColorValue, 0, 0));
+            table.addCell(cell);
+            cell = new PdfPCell(new Paragraph("cell test2"));
+            cell.setColspan(2);
+            final var some2 = 0xC0;
+            cell.setBackgroundColor(new Color(some2, some2, some2));
+            table.addCell(cell);
+            document.add(table);
+            final int maxWidthPercentage = 100;
+            table.setWidthPercentage(maxWidthPercentage);
+            document.add(table);
+            final int halfWidthPercentage = 50;
+            table.setWidthPercentage(halfWidthPercentage);
+            table.setHorizontalAlignment(Element.ALIGN_RIGHT);
+            document.add(table);
+            table.setHorizontalAlignment(Element.ALIGN_LEFT);
+            document.add(table);
         }
 
         return os.toByteArray();
