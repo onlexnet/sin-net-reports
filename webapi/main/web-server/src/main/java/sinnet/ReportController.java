@@ -31,7 +31,7 @@ import lombok.SneakyThrows;
 import sinnet.read.ActionProjection;
 
 @RestController
-@RequestMapping(path = "/raporty")
+@RequestMapping(path = "/api/raporty")
 public class ReportController implements ActionProjection {
 
     @Autowired

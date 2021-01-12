@@ -29,7 +29,7 @@ const MainView: React.FC<MainProps> = (props) => {
       <ServiceCommandBar getCustomerRaport={() => {
         var projectId = props.appState.projectId;
         var dateFrom = props.viewContext.period.getValue().dateFrom;
-        openInNewTab(addressProvider().host + `/raporty/klienci/${projectId}/${dateFrom.year}/${dateFrom.month}`);
+        openInNewTab(addressProvider().host + `/api/raporty/klienci/${projectId}/${dateFrom.year}/${dateFrom.month}`);
       }} />
 
       { props.viewContext.period.toString()}
