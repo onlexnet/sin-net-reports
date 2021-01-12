@@ -1,5 +1,3 @@
-import { Action } from "redux";
-
 export enum SignInFlow {
     Unknown,
     SessionInitiated,
