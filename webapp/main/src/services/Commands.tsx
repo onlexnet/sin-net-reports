@@ -4,10 +4,11 @@ import { Dispatch } from 'redux';
 import { connect, ConnectedProps } from 'react-redux';
 import { RootState } from '../store/reducers';
 import { previousPeriodCommand, nextPeriodCommand } from '../store/viewcontext/actions';
-import { useNewServiceActionMutation } from '../Components/.generated/components';
-import { asDtoDates } from '../api/Mapper';
+import { useNewActionMutation } from '../Components/.generated/components';
+import { asDtoDate, asDtoDates } from '../api/Mapper';
 import { EntityId } from '../store/actions/ServiceModel';
 import { ActionEditUpdated, VIEWCONTEXT_ACTION_EDIT_UPDATED } from '../store/viewcontext/types';
+import { LocalDate, TimePeriod } from '../store/viewcontext/TimePeriod';
 
 const overflowProps: IButtonProps = { ariaLabel: 'More commands' };
 
@@ -53,9 +54,23 @@ interface ServiceCommandBarProps extends PropsFromRedux {
 
 const ServiceCommandBarView: React.FC<ServiceCommandBarProps> = (props) => {
   const { viewContext, session } = props;
-  const [newServiceMutation, { data }] = useNewServiceActionMutation();
+  const [newServiceMutation, { data }] = useNewActionMutation();
   const newService = () => {
-    const { dateFrom } = asDtoDates(viewContext.period);
+    const currentYear = new Date().getFullYear();
+    const currentMonth = new Date().getMonth() + 1;
+    const { year: requestedYear, month: requestedMonth } = viewContext.period.getValue().dateFrom;
+
+    let date: LocalDate;
+    if (currentYear == requestedYear && currentMonth == requestedMonth) {
+      date = {
+        year: currentYear,
+        month: currentMonth,
+        day: new Date().getDate()
+      }
+    } else {
+      date = viewContext.period.getValue().dateFrom
+    }
+    const dateFrom = asDtoDate(date);
     newServiceMutation({
       variables: {
         projectId: props.selectedProjectId,

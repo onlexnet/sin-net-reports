@@ -35,7 +35,7 @@ query GetAction($projectId: ID!, $actionId: ID!) {
   }
 }
 
-mutation newServiceAction($projectId: ID!, $when: Date!) {
+mutation newAction($projectId: ID!, $when: Date!) {
   Actions(projectId: $projectId) {
     newAction(whenProvided: $when) {
       projectId,
