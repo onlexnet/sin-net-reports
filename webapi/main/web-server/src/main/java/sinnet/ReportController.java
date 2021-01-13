@@ -99,9 +99,10 @@ public class ReportController implements ActionProjection {
                 table1.addCell(item.getValue().getWho().getValue());
                 table1.addCell(item.getValue().getWhen().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
                 table1.addCell(item.getValue().getWhat());
-                table1.addCell(Integer.toString(item.getValue().getHowLong().getValue()));
+                table1.addCell(item.getValue().getHowLong().toString());
                 table1.addCell(Integer.toString(item.getValue().getHowFar().getValue()));
             }
+            document.add(table1);
 
             var table = new PdfPTable(numberOfColumns);
             var cell = new PdfPCell(new Paragraph("header with colspan 3"));
