@@ -27,7 +27,7 @@ public class ActionProjectionProvider implements ActionProjection.Provider, Acti
     private static final String VIEW_SELECT = "SELECT a.project_id, a.entity_id, a.entity_version, "
             + "a.serviceman_email, a.distance, a.duration, a.date, a.description, a.serviceman_name, "
             + "a.customer_id, "
-            + "c.customer_name, c.customer_city, c.customer_address "
+            + "c.customer_name, c.customer_city_name, c.customer_address "
             + "FROM actions a LEFT JOIN customers c on a.customer_id = c.entity_id ";
 
     @Override
@@ -61,7 +61,7 @@ public class ActionProjectionProvider implements ActionProjection.Provider, Acti
             .when(row.getLocalDate("date"))
             .build();
         var customerName = row.getString("customer_name");
-        var customerCity = row.getString("customer_city");
+        var customerCity = row.getString("customer_city_name");
         var customerAddress = row.getString("customer_address");
         return ListItem.builder()
             .eid(eid)
