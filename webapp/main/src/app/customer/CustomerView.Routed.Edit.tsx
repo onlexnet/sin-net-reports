@@ -5,6 +5,7 @@ import { Dispatch } from "redux";
 import { connect, ConnectedProps } from "react-redux";
 import { RouteComponentProps } from "react-router-dom";
 import { CustomerViewEdit } from "./CustomerView.Edit";
+import { routing } from "../../Routing";
 
 
 const mapStateToProps = (state: RootState) => {
@@ -32,8 +33,8 @@ export const CustomerViewRoutedEditLocal: React.FC<CustomerViewEditProps> = prop
         entityVersion: Number(props.match.params.entityVersion)
     };
 
-    const itemSaved = () => props.history.goBack();
-    const itemRemoved = () => props.history.goBack();
+    const itemSaved = () => props.history.push(routing.customers);
+    const itemRemoved = () => props.history.push(routing.customers)
     return <CustomerViewEdit id={id} itemSaved={itemSaved}
                                      itemRemoved={itemRemoved} />;
 }

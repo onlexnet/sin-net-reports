@@ -7,6 +7,7 @@ import { RouteComponentProps } from "react-router-dom";
 import { ActionViewEdit } from "./ActionView.Edit";
 import { useGetActionQuery } from "../../Components/.generated/components";
 import { toActionModel } from "../../api/DtoMapper";
+import { routing } from "../../Routing";
 
 
 const mapStateToProps = (state: RootState) => {
@@ -31,8 +32,8 @@ export const ActionViewRoutedEditLocal: React.FC<ActionViewEditProps> = props =>
     const projectId = props.match.params.projectId;
     const entityId = props.match.params.entityId;
 
-    const actionUpdated = () => props.history.goBack();
-    const actionCancel = () => props.history.goBack();
+    const actionUpdated = () => props.history.push(routing.actions);
+    const actionCancel = () => props.history.push(routing.actions);
     const { loading, data } = useGetActionQuery({
         variables: {
             projectId,

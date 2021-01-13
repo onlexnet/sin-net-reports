@@ -5,10 +5,11 @@ import { connect, ConnectedProps } from 'react-redux';
 import { RootState } from '../store/reducers';
 import { previousPeriodCommand, nextPeriodCommand } from '../store/viewcontext/actions';
 import { useNewActionMutation } from '../Components/.generated/components';
-import { asDtoDate, asDtoDates } from '../api/Mapper';
+import { asDtoDate } from '../api/Mapper';
 import { EntityId } from '../store/actions/ServiceModel';
 import { ActionEditUpdated, VIEWCONTEXT_ACTION_EDIT_UPDATED } from '../store/viewcontext/types';
-import { LocalDate, TimePeriod } from '../store/viewcontext/TimePeriod';
+import { LocalDate } from '../store/viewcontext/TimePeriod';
+import { Redirect } from 'react-router-dom';
 
 const overflowProps: IButtonProps = { ariaLabel: 'More commands' };
 
@@ -52,16 +53,33 @@ interface ServiceCommandBarProps extends PropsFromRedux {
   getCustomerRaport: () => void;
 }
 
+enum WaitingState {
+  NOT_STARTED,
+  IN_PROGRESS,
+  FINISHED
+}
 const ServiceCommandBarView: React.FC<ServiceCommandBarProps> = (props) => {
   const { viewContext, session } = props;
-  const [newServiceMutation, { data }] = useNewActionMutation();
+  const [newServiceMutation, { data, called }] = useNewActionMutation();
+  const [waiting, setWaiting] = React.useState(WaitingState.NOT_STARTED);
+  const [waitingResult, setWaitingResult] = React.useState<EntityId | undefined>();
+
+  if (waiting === WaitingState.IN_PROGRESS) {
+    return <div>Czekanie na stworzenie wpisu usługi ...</div>
+  }
+
+  if (waiting === WaitingState.FINISHED) {
+    return <Redirect 
+      from={'/actions/'}
+      to={`/actions/${waitingResult?.projectId}/${waitingResult?.entityId}/${waitingResult?.entityVersion}`} />
+  }
   const newService = () => {
     const currentYear = new Date().getFullYear();
     const currentMonth = new Date().getMonth() + 1;
     const { year: requestedYear, month: requestedMonth } = viewContext.period.getValue().dateFrom;
 
     let date: LocalDate;
-    if (currentYear == requestedYear && currentMonth == requestedMonth) {
+    if (currentYear === requestedYear && currentMonth === requestedMonth) {
       date = {
         year: currentYear,
         month: currentMonth,
@@ -71,6 +89,7 @@ const ServiceCommandBarView: React.FC<ServiceCommandBarProps> = (props) => {
       date = viewContext.period.getValue().dateFrom
     }
     const dateFrom = asDtoDate(date);
+    setWaiting(WaitingState.IN_PROGRESS);
     newServiceMutation({
       variables: {
         projectId: props.selectedProjectId,
@@ -79,6 +98,8 @@ const ServiceCommandBarView: React.FC<ServiceCommandBarProps> = (props) => {
     }).then(r => {
       var createdEntityId = r.data?.Actions.newAction;
       if (!createdEntityId) return;
+      setWaitingResult(createdEntityId);
+      setWaiting(WaitingState.FINISHED);
       props.actionUpdated(createdEntityId);
     })
   }

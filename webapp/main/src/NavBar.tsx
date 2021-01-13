@@ -25,7 +25,7 @@ export const NavBasicExample: React.FC<ChildComponentProps> = (props) => {
           links: [
             {
               name: 'Usługi',
-              onClick: () => props.history.push(routing.services),
+              onClick: () => props.history.push(routing.actions),
               url: '',
               isExpanded: true
             },

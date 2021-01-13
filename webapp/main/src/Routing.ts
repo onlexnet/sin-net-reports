@@ -1,5 +1,5 @@
 export const routing = {
-    services: "/actions",
+    actions: "/actions",
     editAction: "/actions/:projectId/:entityId/:entityVersion",
     customers: "/customers",
     newCustomer: "/new-customer",

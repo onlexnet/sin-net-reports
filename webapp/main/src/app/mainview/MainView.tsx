@@ -73,7 +73,7 @@ const LocalView: React.FC<Props> = (props) => {
                     </div>
                     <div className="ms-Grid-col ms-sm6 ms-md8 ms-lg10">
                         <Route path={routing.editAction} component={ActionViewRoutedEdit} />
-                        <Route path={routing.services} component={Main} exact={true} />
+                        <Route path={routing.actions} component={Main} exact={true} />
                         <Route path={routing.reports} component={Reports} />
                         <Route path={routing.editCustomer} component={CustomerViewRoutedEdit} />
                         <Route path={routing.newCustomer} component={CustomerViewNew} />

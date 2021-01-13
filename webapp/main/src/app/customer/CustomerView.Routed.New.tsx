@@ -6,6 +6,7 @@ import { connect, ConnectedProps } from "react-redux";
 import { CustomerView, CustomerViewEntry } from "./CustomerView";
 import { RouteComponentProps } from "react-router-dom";
 import { useReserveCustomerMutation } from "../../Components/.generated/components";
+import { routing } from "../../Routing";
 
 
 const mapStateToProps = (state: RootState) => {
@@ -45,8 +46,8 @@ export const CustomerViewNewLocal: React.FC<CustomerViewNewProps> = props => {
             autoryzacjeEx: [],
             kontakty: []
         }
-        const itemSaved = () => props.history.goBack();
-        const itemRemoved = () => props.history.goBack();
+        const itemSaved = () => props.history.push(routing.customers);
+        const itemRemoved = () => props.history.push(routing.customers);
         return <CustomerView id={id} entry={entry} itemSaved={itemSaved} itemRemoved={itemRemoved} />;
     }
 
