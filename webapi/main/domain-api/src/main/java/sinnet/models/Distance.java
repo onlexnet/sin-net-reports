@@ -2,11 +2,9 @@ package sinnet.models;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.ToString;
 
 /** Type to keep distance between geo points. Unit - kilometers */
 @EqualsAndHashCode
-@ToString
 public final class Distance {
 
     private static Distance empty = new Distance(0);
@@ -28,5 +26,10 @@ public final class Distance {
 
     public static Distance empty() {
         return empty;
+    }
+
+    @Override
+    public String toString() {
+        return Integer.toString(value);
     }
 }

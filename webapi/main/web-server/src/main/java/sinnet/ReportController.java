@@ -1,6 +1,5 @@
 package sinnet;
 
-import java.awt.Color;
 import java.io.ByteArrayOutputStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -8,13 +7,14 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletionStage;
+import java.util.function.Consumer;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import com.lowagie.text.Document;
-import com.lowagie.text.Element;
 import com.lowagie.text.Font;
 import com.lowagie.text.Paragraph;
+import com.lowagie.text.alignment.HorizontalAlignment;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
@@ -29,8 +29,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.vavr.collection.Array;
+import lombok.AllArgsConstructor;
 import lombok.Cleanup;
 import lombok.SneakyThrows;
+import sinnet.models.ActionDuration;
+import sinnet.models.Distance;
 import sinnet.read.ActionProjection;
 
 @RestController
@@ -86,58 +89,64 @@ public class ReportController implements ActionProjection {
             // step 3: we open the document
             document.open();
 
-            var headParam = new Paragraph(customerName + " " + Objects.toString(customerCity, "") + " " + Objects.toString(customerAddress, ""));
-            var font = new Font(Font.BOLD);
-            headParam.setFont(font);
+            var baseFont = new Font();
+            final var fontSize = 6;
+            baseFont.setSize(fontSize);
+
+            var headParam = new Paragraph(Objects.toString(customerName, "Brak przypisanego kontrahenta")
+                                          + " " + Objects.toString(customerCity, "")
+                                          + " " + Objects.toString(customerAddress, ""));
+            headParam.setFont(baseFont);
             document.add(headParam);
+            document.add(new Paragraph());
 
-            final int numberOfColumns = 3;
-            final int numberOfColumns5 = 5;
-            var table1 = new PdfPTable(numberOfColumns5);
-            for (var item: items) {
-                table1.addCell(item.getValue().getWho().getValue());
-                table1.addCell(item.getValue().getWhen().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
-                table1.addCell(item.getValue().getWhat());
-                table1.addCell(item.getValue().getHowLong().toString());
-                table1.addCell(Integer.toString(item.getValue().getHowFar().getValue()));
-            }
-            document.add(table1);
-
-            var table = new PdfPTable(numberOfColumns);
-            var cell = new PdfPCell(new Paragraph("header with colspan 3"));
-            final var some1 = 3;
-            cell.setColspan(some1);
-            table.addCell(cell);
-            table.addCell("1.1");
-            table.addCell("2.1");
-            table.addCell("3.1");
-            table.addCell("1.2");
-            table.addCell("2.2");
-            table.addCell("3.2");
-            cell = new PdfPCell(new Paragraph("cell test1"));
-
-            final int maxColorValue = 255;
-            cell.setBorderColor(new Color(maxColorValue, 0, 0));
-            table.addCell(cell);
-            cell = new PdfPCell(new Paragraph("cell test2"));
-            cell.setColspan(2);
-            final var some2 = 0xC0;
-            cell.setBackgroundColor(new Color(some2, some2, some2));
-            table.addCell(cell);
-            document.add(table);
+            final int col1width = 3;
+            final int col2width = 3;
+            final int col3width = 12;
+            final int col4width = 2;
+            final int col5width = 2;
+            var table = new PdfPTable(col1width + col2width + col3width + col4width + col5width);
             final int maxWidthPercentage = 100;
             table.setWidthPercentage(maxWidthPercentage);
-            document.add(table);
-            final int halfWidthPercentage = 50;
-            table.setWidthPercentage(halfWidthPercentage);
-            table.setHorizontalAlignment(Element.ALIGN_RIGHT);
-            document.add(table);
-            table.setHorizontalAlignment(Element.ALIGN_LEFT);
-            document.add(table);
+
+            @AllArgsConstructor
+            class CellParams {
+                private String text;
+                private Integer width;
+                private Boolean alighToRight;
+            }
+            var addValue = (Consumer<CellParams>) v -> {
+                var p = new Paragraph(v.text);
+                p.setFont(baseFont);
+                var aCell = new PdfPCell(p);
+                if (v.alighToRight) aCell.setHorizontalAlignment(HorizontalAlignment.RIGHT.getId());
+                aCell.setColspan(v.width);
+                table.addCell(aCell);
+            };
+            var sumTime = 0;
+            var sumDistance = 0;
+            for (var item: items) {
+                var howLong = item.getValue().getHowLong();
+                var distance = item.getValue().getHowFar();
+                addValue.accept(new CellParams(item.getValue().getWho().getValue(), col1width, false));
+                addValue.accept(new CellParams(item.getValue().getWhen().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")), col2width, false));
+                addValue.accept(new CellParams(item.getValue().getWhat(), col3width, false));
+                addValue.accept(new CellParams(howLong.toString(), col4width, true));
+                addValue.accept(new CellParams(distance.toString(), col5width, true));
+                sumTime += howLong.getValue();
+                sumDistance += distance.getValue();
+            }
+            addValue.accept(new CellParams(null, col1width, false));
+            addValue.accept(new CellParams(null, col2width, false));
+            addValue.accept(new CellParams(null, col3width, false));
+            addValue.accept(new CellParams(ActionDuration.of(sumTime).toString(), col4width, true));
+            addValue.accept(new CellParams(Distance.of(sumDistance).toString(), col5width, true));
+        document.add(table);
         }
 
         return Optional.of(os.toByteArray());
     }
+
 
     @SneakyThrows
     byte[] getAsZip(Array<ListItem> items) {

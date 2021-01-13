@@ -95,12 +95,18 @@ const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
 
     const propsDescription = item?.description;
     const [description, setDescription] = useState(propsDescription);
+    const [descriptionError, setDescriptionError] = useState('');
     useEffect(() => {
         setDescription(propsDescription)
     }, [propsDescription]);
     const onChangeDescription = useCallback(
         (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
-            setDescription(newValue || '');
+            var value = newValue ?? '';
+            setDescription(value);
+            var errorMessage = value.length > 4000
+                ? 'Za długi opis'
+                : '';
+            if (errorMessage != descriptionError) setDescriptionError(errorMessage);
         },
         [],
     );
@@ -242,7 +248,7 @@ const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
                         />
                     </div>
                     <div className="ms-Grid-col ms-sm6">
-                        <TextField label="Usługa" value={description} onChange={onChangeDescription}
+                        <TextField label="Usługa" multiline={true} value={description} errorMessage={descriptionError} onChange={onChangeDescription}
                         />
                     </div>
                 </div>
