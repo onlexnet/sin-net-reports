@@ -15,6 +15,7 @@ import { Dispatch } from "redux";
 import { ActionEditItem, VIEWCONTEXT_ACTION_EDIT_START } from "../store/viewcontext/types";
 import { Duration } from "./ActionList.Duration";
 import { Link } from "react-router-dom";
+import { LocalDateView } from "../app/LocalDateView";
 
 const classNames = mergeStyleSets({
   fileIconHeaderIcon: {
@@ -112,8 +113,7 @@ const ConnectedContent: React.FC<PropsFromRedux> = props => {
       key: "column3", name: "Data", fieldName: "when", minWidth: 70, maxWidth: 90, isResizable: true,
       data: "date",
       onRender: (item: IDocument) => {
-        const { year, month, day } = item.when;
-        return <span>{`${year}-${month}-${day}`}</span>;
+        return <LocalDateView item={item.when} />
       },
       isPadded: true
     },
