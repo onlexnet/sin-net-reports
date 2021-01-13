@@ -120,7 +120,7 @@ const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
         const duration = props.item.duration ?? 0;
         var hours = Math.floor(duration / 60);
         var minutes = duration - hours * 60;
-        setDurationAsText(hours + ('00' + minutes).substr(-2));
+        setDurationAsText(hours + ':' + ('00' + minutes).substr(-2));
         durationRef.current = duration;
     }, versionedProps);
     const onChangeDuration = useCallback(
@@ -255,7 +255,7 @@ const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
 
                 <div className="ms-Grid-row">
                     <div className="ms-Grid-col ms-sm4">
-                        <MaskedTextField label="Czas" mask="9:99" value={durationAsText} errorMessage={durationError} onChange={onChangeDuration} />
+                        <TextField label="Czas" placeholder="0:00" value={durationAsText} errorMessage={durationError} onChange={onChangeDuration} />
                     </div>
                     <div className="ms-Grid-col ms-sm2">
                         <TextField label="Dojazd" value={distance} onChange={onChangeDistance}
