@@ -85,7 +85,7 @@ public class ReportController implements ActionProjection {
             // step 3: we open the document
             document.open();
 
-            var headParam = new Paragraph(customerName + " " + customerCity + " " + customerAddress);
+            var headParam = new Paragraph(String.format("%s %s %s", customerName, customerCity, customerAddress));
             var font = new Font(Font.BOLD);
             headParam.setFont(font);
             document.add(headParam);
