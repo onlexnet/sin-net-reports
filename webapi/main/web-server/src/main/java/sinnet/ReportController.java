@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.io.ByteArrayOutputStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletionStage;
@@ -18,6 +19,7 @@ import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -85,7 +87,7 @@ public class ReportController implements ActionProjection {
             // step 3: we open the document
             document.open();
 
-            var headParam = new Paragraph(String.format("%s %s %s", customerName, customerCity, customerAddress));
+            var headParam = new Paragraph(customerName + " " + Objects.toString(customerCity, "") + " " + Objects.toString(customerAddress, ""));
             var font = new Font(Font.BOLD);
             headParam.setFont(font);
             document.add(headParam);
