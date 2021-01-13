@@ -17,30 +17,28 @@ import sinnet.models.ActionValue;
 import sinnet.models.Distance;
 import sinnet.models.Email;
 import sinnet.models.EntityId;
-import sinnet.read.ActionProjection.ListItem;
 
 @Component
-public class ActionProjectionProvider implements ActionProjection.Provider {
+public class ActionProjectionProvider implements ActionProjection.Provider, ActionProjection {
 
     @Autowired
     private PgPool pgClient;
 
-    private static final String SOURCE = "SELECT a.project_id, a.entity_id, a.entity_version, "
-                                       + "a.serviceman_email, a.distance, a.duration, a.date, a.description, a.serviceman_name, "
-                                       + "a.customer_id, c.customer_name "
-                                       + "FROM actions a LEFT JOIN customers c on a.customer_id = c.entity_id ";
+    private static final String VIEW_SELECT = "SELECT a.project_id, a.entity_id, a.entity_version, "
+            + "a.serviceman_email, a.distance, a.duration, a.date, a.description, a.serviceman_name, "
+            + "a.customer_id, "
+            + "c.customer_name, c.customer_city, c.customer_address "
+            + "FROM actions a LEFT JOIN customers c on a.customer_id = c.entity_id ";
 
     @Override
     public Future<Array<ListItem>> find(UUID projectId, LocalDate from, LocalDate to) {
         var promise = Promise.<Array<ListItem>>promise();
         var findQuery = this.pgClient
-                .preparedQuery(SOURCE + " WHERE a.project_id=$1 AND a.date >= $2 AND a.date <= $3");
+                .preparedQuery(VIEW_SELECT + " WHERE a.project_id=$1 AND a.date >= $2 AND a.date <= $3");
         findQuery.execute(Tuple.of(projectId, from, to), ar -> {
             if (ar.succeeded()) {
                 var rows = ar.result();
-                var value = Array
-                    .ofAll(rows)
-                    .map(this::map);
+                var value = Array.ofAll(rows).map(this::map);
                 promise.complete(value);
             } else {
                 promise.fail(ar.cause());
@@ -63,12 +61,14 @@ public class ActionProjectionProvider implements ActionProjection.Provider {
             .when(row.getLocalDate("date"))
             .build();
         var customerName = row.getString("customer_name");
+        var customerCity = row.getString("customer_city");
+        var customerAddress = row.getString("customer_address");
         return ListItem.builder()
             .eid(eid)
             .value(value)
             .customerName(customerName)
+            .customerCity(customerCity)
+            .customerAddress(customerAddress)
             .build();
     }
-
-
 }

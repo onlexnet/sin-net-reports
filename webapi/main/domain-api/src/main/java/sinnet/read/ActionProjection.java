@@ -22,5 +22,7 @@ public interface ActionProjection {
         private EntityId eid;
         private ActionValue value;
         private String customerName;
+        private String customerCity;
+        private String customerAddress;
     }
 }

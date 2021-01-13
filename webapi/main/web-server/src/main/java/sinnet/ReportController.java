@@ -3,6 +3,8 @@ package sinnet;
 import java.awt.Color;
 import java.io.ByteArrayOutputStream;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletionStage;
 import java.util.zip.ZipEntry;
@@ -10,12 +12,12 @@ import java.util.zip.ZipOutputStream;
 
 import com.lowagie.text.Document;
 import com.lowagie.text.Element;
+import com.lowagie.text.Font;
 import com.lowagie.text.Paragraph;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
 
-import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -63,57 +65,13 @@ public class ReportController implements ActionProjection {
     }
 
     @SneakyThrows
-    byte[] produceReport(Array<ListItem> items) {
-        // https://stackoverflow.com/questions/25240541/how-to-add-newpage-in-rmarkdown-in-a-smart-way
-        // https://github.com/vsch/flexmark-java/blob/master/flexmark-java-samples/src/com/vladsch/flexmark/java/samples/PdfConverter.java
+    Optional<byte[]> produceReport(Array<ListItem> items) {
+        if (items.isEmpty()) return Optional.empty();
 
-        var fontsDir = "/home/siudeks/git/sin-net-reports/webapi/main/.fonts";
-        var html1 = "<html lang='en'>\n"
-            + "<head>\n"
-            + "<title>MyPage</title>\n"
-            + "<style type='text/css'>\n"
-            + "@font-face {\n"
-            + "  font-family: 'noto-sans';\n"
-            + "  src: url('file://" + fontsDir + "/NotoSans-Regular.ttf');\n"
-            + "}\n"
-            + "body {\n"
-            + "  font-family: 'noto-sans';\n"
-            + "}\n"
-            + "</style>\n"
-            + "</head>\n"
-            + "<body>\n"
-            + "<h1>Convert HTML to PDF</h1>\n"
-            + "<p>Here is an embedded image</p>\n"
-            + "<img src='image.png' width='250' height='150'>\n"
-            + "<p style='color:red'>Styled text using Inline CSS</p>\n"
-            + "<p>Sławomir!</p>\n"
-            + "<i>This is italicised text</i>\n"
-            + "<p class='fontclass'>This text uses the styling from font face font</p>\n"
-            + "<p class='myclass'>This text uses the styling from external CSS class</p>\n"
-            + "</body>\n"
-            + "</html>\n";
-        String nonLatinFontsStyle =
-        "@font-face {\n"
-        + "  font-family: 'noto-sans';\n"
-        + "  src: url('file://" + fontsDir + "/NotoSans-Regular.ttf');\n"
-        + "}\n"
-        + "\n"
-        + "body {\n"
-        + "    font-family: 'noto-sans';\n"
-        // + "    overflow: hidden;\n"
-        + "    word-wrap: break-word;\n"
-        + "    font-size: 14px;\n"
-        + "}\n"
-        + "\n"
-        + "var,\n"
-        + "code,\n"
-        + "kbd,\n"
-        + "";
-
-
-        var is = getClass().getClassLoader().getResourceAsStream("markdown.css");
-        var css1 = IOUtils.toString(is);
-
+        var sample = items.head();
+        var customerName = sample.getCustomerName();
+        var customerCity = sample.getCustomerCity();
+        var customerAddress = sample.getCustomerAddress();
         @Cleanup
         var os = new ByteArrayOutputStream();
         {
@@ -126,9 +84,23 @@ public class ReportController implements ActionProjection {
 
             // step 3: we open the document
             document.open();
-            // step 4: we add a paragraph to the document
-            document.add(new Paragraph("Wersja próbna raportu"));
+
+            var headParam = new Paragraph(customerName + " " + customerCity + " " + customerAddress);
+            var font = new Font(Font.BOLD);
+            headParam.setFont(font);
+            document.add(headParam);
+
             final int numberOfColumns = 3;
+            final int numberOfColumns5 = 5;
+            var table1 = new PdfPTable(numberOfColumns5);
+            for (var item: items) {
+                table1.addCell(item.getValue().getWho().getValue());
+                table1.addCell(item.getValue().getWhen().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+                table1.addCell(item.getValue().getWhat());
+                table1.addCell(Integer.toString(item.getValue().getHowLong().getValue()));
+                table1.addCell(Integer.toString(item.getValue().getHowFar().getValue()));
+            }
+
             var table = new PdfPTable(numberOfColumns);
             var cell = new PdfPCell(new Paragraph("header with colspan 3"));
             final var some1 = 3;
@@ -162,7 +134,7 @@ public class ReportController implements ActionProjection {
             document.add(table);
         }
 
-        return os.toByteArray();
+        return Optional.of(os.toByteArray());
     }
 
     @SneakyThrows
@@ -180,8 +152,10 @@ public class ReportController implements ActionProjection {
                 var customerName = c._2.head().getCustomerName();
                 var entry = new ZipEntry(customerName + ".pdf");
                 var itemsForCustomer = c._2;
+                var o = produceReport(itemsForCustomer);
+                if (!o.isPresent()) continue;
                 zos.putNextEntry(entry);
-                zos.write(produceReport(itemsForCustomer));
+                zos.write(o.get());
                 zos.closeEntry();
             }
 
