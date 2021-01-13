@@ -90,15 +90,16 @@ public class ReportController implements ActionProjection {
             document.open();
 
             var baseFont = new Font();
-            final var fontSize = 6;
+            final var fontSize = 10;
             baseFont.setSize(fontSize);
 
-            var headParam = new Paragraph(Objects.toString(customerName, "Brak przypisanego kontrahenta")
-                                          + " " + Objects.toString(customerCity, "")
-                                          + " " + Objects.toString(customerAddress, ""));
+            var header = Objects.toString(customerName, "Brak przypisanego kontrahenta")
+            + " " + Objects.toString(customerCity, "")
+            + " " + Objects.toString(customerAddress, "");
+            var headParam = new Paragraph(header);
             headParam.setFont(baseFont);
             document.add(headParam);
-            document.add(new Paragraph());
+            document.add(new Paragraph("-"));
 
             final int col1width = 3;
             final int col2width = 3;
@@ -128,7 +129,11 @@ public class ReportController implements ActionProjection {
             for (var item: items) {
                 var howLong = item.getValue().getHowLong();
                 var distance = item.getValue().getHowFar();
-                addValue.accept(new CellParams(item.getValue().getWho().getValue(), col1width, false));
+                var who = Optional
+                    .ofNullable(item.getValue().getWho().getValue())
+                    .map(it -> it.split("@")[0])
+                    .orElse(null);
+                addValue.accept(new CellParams(who, col1width, false));
                 addValue.accept(new CellParams(item.getValue().getWhen().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")), col2width, false));
                 addValue.accept(new CellParams(item.getValue().getWhat(), col3width, false));
                 addValue.accept(new CellParams(howLong.toString(), col4width, true));
