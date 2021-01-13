@@ -165,21 +165,21 @@ const ConnectedContent: React.FC<PropsFromRedux> = props => {
     refetch();
   }
 
-  const [ onlyMyData, setOnlyMyData ] = useState(false);
+  const [onlyMyData, setOnlyMyData] = useState(false);
   const filterByOnlyMyData = (item: ServiceAppModel): boolean => {
     if (!onlyMyData) return true;
     if (item.servicemanName === props.currentEmail) return true;
     return false;
   }
 
-  const [ onlyDay, setOnlyDay ] = useState<string | undefined>();
+  const [onlyDay, setOnlyDay] = useState<string | undefined>();
   const filterByOnlyDay = (item: ServiceAppModel): boolean => {
     if (!onlyDay) return true;
     if (item.when.day.toString().includes(onlyDay)) return true;
     return false;
   }
 
-  const [ onlyCustomer, setOnlyCustomer ] = useState<string | undefined>();
+  const [onlyCustomer, setOnlyCustomer] = useState<string | undefined>();
   const filterByOnlyCustomer = (item: ServiceAppModel): boolean => {
     if (!onlyCustomer) return true;
     if (!item.customerName) return false;
@@ -195,6 +195,19 @@ const ConnectedContent: React.FC<PropsFromRedux> = props => {
     .filter(it => filterByOnlyCustomer(it))
     .orderBy(itemsOrderBy)
     .value();
+  const fold = (reducer: (acc: number, it: number) => number, init: number, xs: number[]) => {
+    let acc = init;
+    for (const x of xs) {
+      acc = reducer(acc, x);
+    }
+    return acc;
+  };
+  const totalTime = () => {
+    const duration = fold((acc, it) => acc + it, 0, items.map(it => it.duration ?? 0));
+    var hours = Math.floor(duration / 60);
+    var minutes = duration - hours * 60;
+    return hours + ':' + ('00' + minutes).substr(-2);
+  };
 
   const stackTokens: IStackTokens = { childrenGap: 40 };
 
@@ -227,6 +240,7 @@ const ConnectedContent: React.FC<PropsFromRedux> = props => {
                     />
                     <TextField label="Tylko dzień:" value={onlyDay} onChange={(e, v) => setOnlyDay(v)} styles={controlStyles} />
                     <TextField label="Kontrahent:" styles={controlStyles} value={onlyCustomer} onChange={(e, v) => setOnlyCustomer(v)} />
+                    <TextField disabled label="Suma godzin" value={totalTime()} />
                   </Stack>
                 </Stack>
               </div>
