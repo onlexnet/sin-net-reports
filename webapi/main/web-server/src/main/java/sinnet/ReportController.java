@@ -126,6 +126,11 @@ public class ReportController implements ActionProjection {
             };
             var sumTime = 0;
             var sumDistance = 0;
+            addValue.accept(new CellParams("Serwisant", col1width, false));
+            addValue.accept(new CellParams("Dzień", col2width, false));
+            addValue.accept(new CellParams("Praca wykonana", col3width, false));
+            addValue.accept(new CellParams("Czas", col4width, true));
+            addValue.accept(new CellParams("KM", col5width, true));
             for (var item: items) {
                 var howLong = item.getValue().getHowLong();
                 var distance = item.getValue().getHowFar();
