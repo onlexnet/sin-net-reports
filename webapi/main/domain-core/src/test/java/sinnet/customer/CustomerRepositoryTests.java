@@ -28,7 +28,7 @@ import sinnet.models.CustomerValue;
 import sinnet.models.Email;
 import sinnet.models.EntityId;
 import sinnet.models.Name;
-import sinnet.read.ProjectRepository;
+import sinnet.read.Project;
 
 @SpringBootTest(webEnvironment = WebEnvironment.NONE)
 @ContextConfiguration(classes = AppTestContext.class)
@@ -38,7 +38,7 @@ import sinnet.read.ProjectRepository;
 public class CustomerRepositoryTests {
 
     @Autowired
-    private ProjectRepository projectRepository;
+    private Project.Repository projectRepository;
     @Autowired
     private CustomerRepository repository;
 

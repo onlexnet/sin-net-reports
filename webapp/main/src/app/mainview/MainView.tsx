@@ -16,6 +16,8 @@ import { ActionViewRoutedEdit } from "../actions/ActionView.Routed.Edit";
 import { CustomerViewRoutedEdit } from "../customer/CustomerView.Routed.Edit";
 import { CustomerViewNew } from "../customer/CustomerView.Routed.New";
 import { Customers } from "../customers/Customers";
+import { MainViewMultipleProjects } from "./MainView.MultipleProjects";
+import { MainViewNoProjects } from "./MainView.NoProjects";
 
 const mapStateToProps = (state: RootState) => {
     return { auth: state.auth, appState: state.appState };
@@ -51,16 +53,16 @@ const LocalView: React.FC<Props> = (props) => {
 
     const { availableProjects } = data;
     if (availableProjects.length == 0 ) {
-        return (<p>No available projects. Please contact with your app provider.</p>);
+        return <MainViewNoProjects />;
     }
 
-    if (availableProjects.length > 1 ) {
-        return (<p>Too many available projects. Please contact with your app provider.</p>);
+    if (availableProjects.length > 1 && props.appState.empty) {
+        return <MainViewMultipleProjects projects={availableProjects} projectSelected={id => props.setProject(id)} />;
     }
 
-    if (props.appState.empty) {
-        const projectId = availableProjects[0];
-        props.setProject(projectId);
+    if (availableProjects.length ===1 && props.appState.empty) {
+        const project = availableProjects[0];
+        props.setProject(project.id);
         return (<p>Set application context ....</p>);
     }
 

@@ -141,7 +141,7 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
         { key: 'Godziny', text: 'Godziny' },
     ];
 
-    const users = useGetUsers();
+    const users = useGetUsers(props.id.projectId);
     const comboBoxBasicOptions: IComboBoxOption[] = []
     users.forEach(user => {
         var userItem = { key: user, text: user };

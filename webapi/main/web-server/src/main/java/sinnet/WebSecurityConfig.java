@@ -1,6 +1,5 @@
 package sinnet;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -20,7 +19,7 @@ public class WebSecurityConfig {
      * @return the configurer
      */
     @Bean
-    @Profile("prod")
+    @Profile({ "prod", "dev" })
     public WebSecurityConfigurerAdapter webSecurityForProdProfile() {
         return new WebSecurityConfigurerAdapter() {
             @Override
@@ -43,23 +42,23 @@ public class WebSecurityConfig {
         };
     }
 
-    /**
-     * Configures security for 'dev' profile'.
-     * @return the configurer
-     */
-    @Bean
-    @Profile("dev")
-    public WebSecurityConfigurerAdapter webSecurityForDevProfile(@Autowired DevAuthenticationFilter authFilter) {
+    // /**
+    //  * Configures security for 'dev' profile'.
+    //  * @return the configurer
+    //  */
+    // @Bean
+    // @Profile("dev")
+    // public WebSecurityConfigurerAdapter webSecurityForDevProfile(@Autowired DevAuthenticationFilter authFilter) {
 
-        return new WebSecurityConfigurerAdapter() {
+    //     return new WebSecurityConfigurerAdapter() {
 
-            @Override
-            protected void configure(final HttpSecurity http) throws Exception {
-                http
-                    .cors()
-                    .and().csrf().disable()
-                    .authorizeRequests().anyRequest().permitAll();
-            }
-        };
-    }
+    //         @Override
+    //         protected void configure(final HttpSecurity http) throws Exception {
+    //             http
+    //                 .cors()
+    //                 .and().csrf().disable()
+    //                 .authorizeRequests().anyRequest().permitAll();
+    //         }
+    //     };
+    // }
 }

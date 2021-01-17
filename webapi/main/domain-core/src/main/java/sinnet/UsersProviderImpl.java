@@ -1,5 +1,7 @@
 package sinnet;
 
+import java.util.UUID;
+
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,16 +29,14 @@ public class UsersProviderImpl implements UsersProvider {
         searchQuery = this.pgClient.preparedQuery("SELECT "
                     + "sm.project_entity_id, sm.entity_id, sm.email "
                     + "FROM serviceman sm "
-                    + "WHERE sm.project_entity_id IN ("
-                    + "select project_entity_id FROM serviceman where email=$1 LIMIT 1"
-                    + ")");
+                    + "WHERE sm.project_entity_id=$1");
     }
 
     @Override
-    public Mono<Stream<UserModel>> search(Email serviceMan) {
+    public Mono<Stream<UserModel>> search(UUID projectId, Email serviceMan) {
         return Mono.create(consumer -> {
             this.searchQuery
-                .execute(Tuple.of(serviceMan.getValue()), ar -> {
+                .execute(Tuple.of(projectId), ar -> {
                     if (!ar.succeeded()) {
                         consumer.error(ar.cause());
                         return;

@@ -2,8 +2,12 @@ import _ from 'lodash';
 import { useState } from 'react';
 import { useGetUsersQuery } from '../Components/.generated/components';
 
-export const useGetUsers: () => string[] = () => {
-  const { data } = useGetUsersQuery();
+export const useGetUsers = (projectId: string) => {
+  const { data } = useGetUsersQuery({
+    variables: {
+      projectId
+    }
+  });
   const [users, setUsers] = useState<string[]>([]);
 
   if (data) {

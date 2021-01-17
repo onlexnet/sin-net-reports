@@ -25,7 +25,7 @@ import sinnet.models.Distance;
 import sinnet.models.Email;
 import sinnet.models.EntityId;
 import sinnet.read.ActionProjection;
-import sinnet.read.ProjectRepository;
+import sinnet.read.Project;
 
 @SpringBootTest(webEnvironment = WebEnvironment.NONE)
 @ContextConfiguration(classes = AppTestContext.class)
@@ -44,7 +44,7 @@ public class ActionRepositoryTests {
     private CustomerRepository customerRepository;
 
     @Autowired
-    private ProjectRepository projectRepository;
+    private Project.Repository projectRepository;
 
     @Test
     public void myTest() {

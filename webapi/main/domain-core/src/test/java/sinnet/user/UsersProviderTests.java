@@ -1,5 +1,7 @@
 package sinnet.user;
 
+import java.util.UUID;
+
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +26,7 @@ public final class UsersProviderTests {
 
     @Test
     public void myTest() {
-        var actual = sut.search(Email.of("user1@project1"))
+        var actual = sut.search(UUID.fromString("00000000-0000-0000-0001-000000000001"), Email.of("user1@project1"))
             .block()
             .map(it -> it.getEmail().getValue());
 

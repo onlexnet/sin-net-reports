@@ -10,10 +10,10 @@ import io.vertx.core.Future;
 import io.vertx.core.Promise;
 import io.vertx.pgclient.PgPool;
 import io.vertx.sqlclient.Tuple;
-import sinnet.read.ProjectRepository;
+import sinnet.read.Project;
 
 @Component
-public class ProjectRepositoryImpl implements ProjectRepository {
+public class ProjectRepositoryImpl implements Project.Repository, Project {
 
     private final PgPool pgClient;
 
@@ -37,19 +37,19 @@ public class ProjectRepositoryImpl implements ProjectRepository {
     }
 
     @Override
-    public Future<Array<UUID>> get(String filterByEmail) {
-        var promise = Promise.<Array<UUID>>promise();
+    public Future<Array<Entity>> get(String filterByEmail) {
+        var promise = Promise.<Array<Entity>>promise();
         var values = Tuple.of(filterByEmail);
         pgClient
-            .preparedQuery("SELECT project_entity_id "
-                         + "FROM serviceman "
-                         + "WHERE email=$1")
+            .preparedQuery("SELECT p.entity_id, p.name "
+                         + "FROM projects p INNER JOIN serviceman s ON p.entity_id = s.project_entity_id "
+                         + "WHERE s.email=$1")
             .execute(values, ar -> {
                 if (ar.succeeded()) {
                     var rows = ar.result();
                     var projectsIDs = Array
                         .ofAll(rows)
-                        .map(it -> it.getUUID(0));
+                        .map(it -> new Entity(it.getUUID(0), it.getString(1)));
                     promise.complete(projectsIDs);
                 } else {
                     promise.fail(ar.cause());

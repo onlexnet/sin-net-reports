@@ -48,7 +48,7 @@
                 <constraints nullable="false" primaryKey="true" primaryKeyName="servicemanPK"/>
             </column>
             <column name="email" type="VARCHAR(50)">
-                <constraints nullable="false" unique="true" primaryKeyName="servicemanPK"/>
+                <constraints nullable="false"/>
             </column>
             <column name="project_entity_id" type="UUID"/>
         </createTable>
@@ -56,11 +56,17 @@
     <changeSet author="siudeks" id="1601237109370-7">
         <addForeignKeyConstraint baseColumnNames="project_entity_id"
                                  baseTableName="serviceman"
-                                 constraintName="FKk0li9750mvero7hv6q9v1u8yl"
+                                 constraintName="serviceman_project_FK"
                                  deferrable="false"
                                  initiallyDeferred="false"
                                  referencedColumnNames="entity_id"
                                  referencedTableName="projects"
                                  validate="true"/>
+        <addUniqueConstraint  columnNames="email, project_entity_id"  
+                              constraintName="qunique_email_project"  
+                              deferrable="true"
+                              initiallyDeferred="true"
+                              tableName="serviceman"  
+                              validate="true"/> 
     </changeSet>
 </databaseChangeLog>

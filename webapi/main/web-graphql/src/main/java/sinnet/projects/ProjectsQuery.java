@@ -9,29 +9,41 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import graphql.kickstart.tools.GraphQLQueryResolver;
+import lombok.Value;
 import sinnet.IdentityProvider;
-import sinnet.read.ProjectRepository;
+import sinnet.read.Project;
 
-@Component
-public class ProjectsQuery implements GraphQLQueryResolver {
+public interface ProjectsQuery {
 
-    @Autowired
-    private IdentityProvider identityProvider;
+    @Component
+    class Resolver implements GraphQLQueryResolver {
 
-    @Autowired
-    private ProjectRepository projectRepository;
+        @Autowired
+        private IdentityProvider identityProvider;
 
-    private UUID[] empty = new UUID[0];
+        @Autowired
+        private Project.Repository projectRepository;
 
-    public CompletionStage<UUID[]> getAvailableProjects() {
-        var maybeUser = identityProvider.getCurrent();
-        if (!maybeUser.isPresent()) return completedStage(empty);
+        private ProjectEntity[] empty = new ProjectEntity[0];
 
-        var user = maybeUser.get();
-        return projectRepository
-            .get(user.getEmail())
-            .map(it -> it.toJavaArray(UUID[]::new))
-            .toCompletionStage();
+        public CompletionStage<ProjectEntity[]> getAvailableProjects() {
+            var maybeUser = identityProvider.getCurrent();
+            if (!maybeUser.isPresent()) return completedStage(empty);
+
+            var user = maybeUser.get();
+            return projectRepository
+                .get(user.getEmail())
+                .map(it -> it
+                    .map(o -> new ProjectEntity(o.getId(), o.getName()))
+                    .toJavaArray(ProjectEntity[]::new))
+                .toCompletionStage();
+        }
+    }
+
+    @Value
+    class ProjectEntity {
+        private UUID id;
+        private String name;
     }
 }
 

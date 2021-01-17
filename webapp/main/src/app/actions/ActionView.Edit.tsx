@@ -156,7 +156,7 @@ const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
 
     const stackTokens = { childrenGap: 8 }
 
-    const users = useGetUsers();
+    const users = useGetUsers(projectId);
 
     const comboBoxBasicOptions = _.chain(users)
         .map(it => ({ key: it, text: it }))
