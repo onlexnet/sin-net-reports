@@ -16,7 +16,7 @@ In scope:
 - [x] Integrate login with Azure B2C
 - [x] Register time and distance of provided service through Web site
 - [x] Define list of clients
-- [ ] Create PDF attachments per client for given period on demand
+- [x] Create PDF attachments per client for given period on demand
 
 ## To run locally for tests
 
