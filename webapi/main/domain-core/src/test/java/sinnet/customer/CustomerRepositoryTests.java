@@ -2,7 +2,6 @@ package sinnet.customer;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -21,9 +20,9 @@ import io.vertx.core.CompositeFuture;
 import lombok.experimental.UtilityClass;
 import sinnet.AppTestContext;
 import sinnet.Sync;
+import sinnet.models.CustomerContact;
 import sinnet.models.CustomerSecret;
 import sinnet.models.CustomerSecretEx;
-import sinnet.models.CustomerContact;
 import sinnet.models.CustomerValue;
 import sinnet.models.Email;
 import sinnet.models.EntityId;
