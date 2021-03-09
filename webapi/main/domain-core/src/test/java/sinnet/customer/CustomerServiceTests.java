@@ -13,11 +13,8 @@ import io.vertx.core.Vertx;
 import io.vertx.junit5.VertxExtension;
 import io.vertx.junit5.VertxTestContext;
 import lombok.Value;
-import sinnet.Dates;
 import sinnet.bus.commands.ChangeCustomer;
 import sinnet.models.CustomerSecret;
-import sinnet.models.CustomerSecretEx;
-import sinnet.models.CustomerContact;
 import sinnet.models.Email;
 
 @ExtendWith(VertxExtension.class)
