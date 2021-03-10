@@ -18,24 +18,26 @@ import sinnet.models.EntityId;
 public class CustomersMutationRemove extends AskTemplate<RemoveCustomer.Command, RemoveCustomer.Result>
                                      implements GraphQLResolver<CustomersMutation>,
                                      RemoveCustomer {
-    @Autowired
-    private IdentityProvider identityProvider;
+  @Autowired
+  private IdentityProvider identityProvider;
 
-    public CustomersMutationRemove() {
-        super(Command.ADDRESS, Result.class);
+  public CustomersMutationRemove() {
+    super(Command.ADDRESS, Result.class);
+  }
+
+  CompletableFuture<Boolean> remove(CustomersMutation gcontext, MyEntity id) {
+    var maybeRequestor = identityProvider.getCurrent();
+    if (!maybeRequestor.isPresent()) {
+      throw new GraphQLException("Access denied");
     }
 
-    CompletableFuture<Boolean> remove(CustomersMutation gcontext, MyEntity id) {
-        var maybeRequestor = identityProvider.getCurrent();
-        if (!maybeRequestor.isPresent()) throw new GraphQLException("Access denied");
-
-        if (!Objects.equals(id.getProjectId(), gcontext.getProjectId())) {
-            throw new GraphQLException("Invalid project id");
-        }
-
-        var entityId = EntityId.of(id.getProjectId(), id.getEntityId(), id.getEntityVersion());
-        var cmd = Command.builder().id(entityId).build();
-        return super.ask(cmd).thenApply(it -> it.getValue());
+    if (!Objects.equals(id.getProjectId(), gcontext.getProjectId())) {
+      throw new GraphQLException("Invalid project id");
     }
+
+    var entityId = EntityId.of(id.getProjectId(), id.getEntityId(), id.getEntityVersion());
+    var cmd = Command.builder().id(entityId).build();
+    return super.ask(cmd).thenApply(it -> it.getValue());
+  }
 }
 

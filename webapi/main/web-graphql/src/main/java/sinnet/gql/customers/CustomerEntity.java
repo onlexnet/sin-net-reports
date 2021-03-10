@@ -27,8 +27,8 @@ public class CustomerEntity {
 class CustomerModelResolverPayload implements GraphQLResolver<CustomerEntity> {
   CustomerModel getData(CustomerEntity gcontext) {
     if (gcontext.getOptionalValue() != null) {
-        var it = gcontext.getOptionalValue();
-        return new CustomerModel(
+      var it = gcontext.getOptionalValue();
+      return new CustomerModel(
             it.getOperatorEmail(),
             it.getBillingModel(),
             it.getSupportStatus(),
@@ -65,14 +65,14 @@ class CustomerModelResolverPayload implements GraphQLResolver<CustomerEntity> {
 
   sinnet.gql.customers.CustomerSecret[] getSecrets(CustomerEntity gcontext) {
     if (gcontext.getOptionalSecrets() != null) {
-        return Arrays.stream(gcontext.getOptionalSecrets())
-            .map(it -> new sinnet.gql.customers.CustomerSecret(
-                Option.of(it.getLocation()).getOrElse("?"),
-                it.getUsername(),
-                it.getPassword(),
-                Option.of(it.getChangedWho().getValue()).getOrElse("?"),
-                Option.of(it.getChangedWhen()).map(v -> timestampFormatter.format(v)).getOrElse("?")))
-            .toArray(sinnet.gql.customers.CustomerSecret[]::new);
+      return Arrays.stream(gcontext.getOptionalSecrets())
+          .map(it -> new sinnet.gql.customers.CustomerSecret(
+              Option.of(it.getLocation()).getOrElse("?"),
+              it.getUsername(),
+              it.getPassword(),
+              Option.of(it.getChangedWho().getValue()).getOrElse("?"),
+              Option.of(it.getChangedWhen()).map(v -> timestampFormatter.format(v)).getOrElse("?")))
+          .toArray(sinnet.gql.customers.CustomerSecret[]::new);
     }
     // TODO resolve if no data provided
     return null;
