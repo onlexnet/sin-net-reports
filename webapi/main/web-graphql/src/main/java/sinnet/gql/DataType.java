@@ -16,7 +16,7 @@ import graphql.schema.GraphQLScalarType;
 
 /** Implementation for Date scalar type used in GQL. */
 @Configuration
-class DateType {
+class DataType {
 
   /**
    * Adds Date type to GraphQL semantic.
