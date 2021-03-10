@@ -12,7 +12,7 @@
   <properties>
     <my.version>1.0-SNAPSHOT</my.version>
     <spring-boot-azure.version>2.3.2</spring-boot-azure.version>
-    <spring-boot.version>2.3.2.RELEASE</spring-boot.version>
+    <spring-boot.version>2.4.3</spring-boot.version>
     <jacoco.version>0.8.5</jacoco.version>
 
     <aggregate.report.dir>report-aggregate/target/site/jacoco-aggregate/jacoco.xml</aggregate.report.dir>
