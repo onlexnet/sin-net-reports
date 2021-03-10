@@ -6,11 +6,12 @@ import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Value;
+import lombok.extern.jackson.Jacksonized;
 
 @AllArgsConstructor
 @Value
-@JsonDeserialize(builder = Email.MyBuilder.class)
-@Builder(builderClassName = "MyBuilder", toBuilder = true)
+@Jacksonized
+@Builder(toBuilder = true)
 public final class Email {
 
     private static final Email EMPTY = new Email(null);
@@ -23,9 +24,5 @@ public final class Email {
 
     public static Email empty() {
         return EMPTY;
-    }
-
-    @JsonPOJOBuilder(withPrefix = "")
-    public static class MyBuilder {
     }
 }

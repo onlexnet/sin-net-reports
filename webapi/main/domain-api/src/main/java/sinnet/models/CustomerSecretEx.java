@@ -8,11 +8,12 @@ import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Value;
+import lombok.extern.jackson.Jacksonized;
 
 @AllArgsConstructor
 @Value
-@JsonDeserialize(builder = CustomerSecretEx.MyBuilder.class)
-@Builder(builderClassName = "MyBuilder", toBuilder = true)
+@Jacksonized
+@Builder(toBuilder = true)
 public final class CustomerSecretEx {
     private String location;
     private String username;
@@ -23,8 +24,4 @@ public final class CustomerSecretEx {
     @Builder.Default
     private Email changedWho = Email.empty();
     private LocalDateTime changedWhen;
-
-    @JsonPOJOBuilder(withPrefix = "")
-    public static class MyBuilder {
-    }
 }

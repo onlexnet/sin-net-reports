@@ -3,16 +3,14 @@ package sinnet.models;
 import java.time.LocalDate;
 import java.util.UUID;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
-
 import lombok.Builder;
 import lombok.Value;
+import lombok.extern.jackson.Jacksonized;
 
 /** Register details about provided service. */
 @Value
-@JsonDeserialize(builder = ActionValue.MyBuilder.class)
-@Builder(builderClassName = "MyBuilder", toBuilder = true)
+@Jacksonized
+@Builder(toBuilder = true)
 public class ActionValue implements EntityValue<ActionValue> {
 
     /** Serviceman who did the service. */
@@ -35,9 +33,4 @@ public class ActionValue implements EntityValue<ActionValue> {
     /** How far is distance to the place where service has been provided. */
     @Builder.Default
     private Distance howFar = Distance.empty();
-
-    @JsonPOJOBuilder(withPrefix = "")
-    public static class MyBuilder {
-    }
-
 }

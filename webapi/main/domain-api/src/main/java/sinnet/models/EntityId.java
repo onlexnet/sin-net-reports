@@ -7,10 +7,11 @@ import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 
 import lombok.Builder;
 import lombok.Value;
+import lombok.extern.jackson.Jacksonized;
 
 @Value
-@JsonDeserialize(builder = EntityId.MyBuilder.class)
-@Builder(builderClassName = "MyBuilder", toBuilder = true)
+@Jacksonized
+@Builder(toBuilder = true)
 public final class EntityId {
     private UUID projectId;
     private UUID id;
@@ -22,9 +23,5 @@ public final class EntityId {
 
     public static EntityId anyNew(UUID projectId) {
         return new EntityId(projectId, UUID.randomUUID(), 0);
-    }
-
-    @JsonPOJOBuilder(withPrefix = "")
-    public static class MyBuilder {
     }
 }

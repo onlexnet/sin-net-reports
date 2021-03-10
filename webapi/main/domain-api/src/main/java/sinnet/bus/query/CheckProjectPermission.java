@@ -10,22 +10,19 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Value;
+import lombok.extern.jackson.Jacksonized;
 
 public interface CheckProjectPermission {
 
     @AllArgsConstructor
     @Value
-    @JsonDeserialize(builder = CheckProjectPermission.Ask.MyBuilder.class)
-    @Builder(builderClassName = "MyBuilder", toBuilder = true)
+    @Jacksonized
+    @Builder(toBuilder = true)
     class Ask {
         /** Address used to send the query to it's handler. */
         public static final String ADDRESS = "query.CheckProjectPermission";
 
         private UUID projectId;
-
-        @JsonPOJOBuilder(withPrefix = "")
-        public static class MyBuilder {
-        }
     }
 
     @Data
@@ -33,10 +30,6 @@ public interface CheckProjectPermission {
     @NoArgsConstructor
     class Reply {
         private Boolean result;
-
-        @JsonPOJOBuilder(withPrefix = "")
-        public static class MyBuilder {
-        }
     }
 
 }

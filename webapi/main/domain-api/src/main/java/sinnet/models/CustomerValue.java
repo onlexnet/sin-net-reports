@@ -1,16 +1,14 @@
 package sinnet.models;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Value;
+import lombok.extern.jackson.Jacksonized;
 
 @AllArgsConstructor
 @Value
-@JsonDeserialize(builder = CustomerValue.MyBuilder.class)
-@Builder(builderClassName = "MyBuilder", toBuilder = true)
+@Jacksonized
+@Builder(toBuilder = true)
 public final class CustomerValue implements EntityValue<CustomerValue> {
     private String operatorEmail;
     private String billingModel;
@@ -41,8 +39,4 @@ public final class CustomerValue implements EntityValue<CustomerValue> {
     private boolean komercjaJest;
     private String komercjaNotatki;
     private String daneTechniczne;
-
-    @JsonPOJOBuilder(withPrefix = "")
-    public static class MyBuilder {
-    }
 }

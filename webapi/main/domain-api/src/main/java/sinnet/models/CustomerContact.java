@@ -1,23 +1,17 @@
 package sinnet.models;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Value;
+import lombok.extern.jackson.Jacksonized;
 
 @AllArgsConstructor
 @Value
-@JsonDeserialize(builder = CustomerContact.MyBuilder.class)
-@Builder(builderClassName = "MyBuilder", toBuilder = true)
+@Jacksonized
+@Builder(toBuilder = true)
 public final class CustomerContact {
     private String firstName;
     private String lastName;
     private String phoneNo;
     private String email;
-
-    @JsonPOJOBuilder(withPrefix = "")
-    public static class MyBuilder {
-    }
 }
