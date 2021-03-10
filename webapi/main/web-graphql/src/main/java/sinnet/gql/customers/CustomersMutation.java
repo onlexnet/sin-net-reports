@@ -9,14 +9,14 @@ import lombok.Value;
 
 @Value
 class CustomersMutation {
-    private UUID projectId;
+  private UUID projectId;
 }
 
 @Component
 class CustomerMutationResolver implements GraphQLMutationResolver {
 
-    public CustomersMutation getCustomers(UUID projectId) {
-        return new CustomersMutation(projectId);
-    }
+  public CustomersMutation getCustomers(UUID projectId) {
+    return new CustomersMutation(projectId);
+  }
 
 }

@@ -23,42 +23,42 @@ public interface TopLevelVerticle extends Verticle {
 @Component
 class VerticleRegistrar {
 
-    @Autowired
-    private TopLevelVerticle[] verticlesToRegister;
-    private Iterable<String> verticlesToUndeploy;
+  @Autowired
+  private TopLevelVerticle[] verticlesToRegister;
+  private Iterable<String> verticlesToUndeploy;
 
-    @Autowired
-    private Vertx vertx;
+  @Autowired
+  private Vertx vertx;
 
-    @PostConstruct
-    void init() {
-        var syncGuard = new CompletableFuture<>();
+  @PostConstruct
+  void init() {
+    var syncGuard = new CompletableFuture<>();
 
-        var startedDeployments = Array.of(verticlesToRegister)
-            .map(it -> vertx.deployVerticle(it))
-            .collect(Collectors.toList());
+    var startedDeployments = Array.of(verticlesToRegister)
+        .map(it -> vertx.deployVerticle(it))
+        .collect(Collectors.toList());
 
-        CompositeFuture.all((List) startedDeployments)
-            .onSuccess(it -> syncGuard.complete(null))
-            .onFailure(ex -> syncGuard.completeExceptionally(ex));
+    CompositeFuture.all((List) startedDeployments)
+        .onSuccess(it -> syncGuard.complete(null))
+        .onFailure(ex -> syncGuard.completeExceptionally(ex));
 
-        syncGuard.join();
+    syncGuard.join();
 
-        verticlesToUndeploy = startedDeployments.stream()
-            .map(it -> it.result())
-            .collect(Collectors.toList());
-    }
+    verticlesToUndeploy = startedDeployments.stream()
+        .map(it -> it.result())
+        .collect(Collectors.toList());
+  }
 
-    @PreDestroy
-    void dispose() {
-        var syncGuard = new CompletableFuture<>();
+  @PreDestroy
+  void dispose() {
+    var syncGuard = new CompletableFuture<>();
 
-        var undeployments = Stream.ofAll(verticlesToUndeploy)
-            .map(it -> vertx.undeploy(it));
-        CompositeFuture
-            .join((List) undeployments)
-            .onComplete(it -> syncGuard.complete(null));
+    var undeployments = Stream.ofAll(verticlesToUndeploy)
+        .map(it -> vertx.undeploy(it));
+    CompositeFuture
+        .join((List) undeployments)
+        .onComplete(it -> syncGuard.complete(null));
 
-        syncGuard.join();
-    }
+    syncGuard.join();
+  }
 }
