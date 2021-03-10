@@ -18,6 +18,12 @@ In scope:
 - [x] Define list of clients
 - [x] Create PDF attachments per client for given period on demand
 
+## Prepare dev environment
+* Use WSL2
+* Install VSCode
+* Install java 11 using SDKMAN
+* install npm using [nvm](https://github.com/nvm-sh/nvm)
+
 ## To run locally for tests
 
 - cd webapi/main
