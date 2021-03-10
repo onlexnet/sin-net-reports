@@ -15,23 +15,23 @@ import sinnet.bus.query.FindCustomer;
 public class CustomersQueryGet extends AskTemplate<FindCustomer.Ask, FindCustomer.Reply>
                                 implements GraphQLResolver<CustomersQuery> {
 
-    public CustomersQueryGet() {
-        super(FindCustomer.Ask.ADDRESS, FindCustomer.Reply.class);
-    }
+  public CustomersQueryGet() {
+    super(FindCustomer.Ask.ADDRESS, FindCustomer.Reply.class);
+  }
 
-    CompletableFuture<Optional<CustomerEntity>> get(CustomersQuery gcontext, MyEntity entityId) {
-        var query = new FindCustomer.Ask(gcontext.getProjectId(), entityId.getEntityId());
-        return super
-            .ask(query)
-            .thenApply(it -> {
-                var gqlId = new SomeEntity(gcontext.getProjectId(), it.getEntityId(), it.getEntityVersion());
-                var gqlValue = it.getValue();
-                var gqlSecrets = it.getSecrets();
-                var gqlSecretsEx = it.getSecretsEx();
-                var gqlContacts = it.getContacts();
-                var result = new CustomerEntity(gqlId, gqlValue, gqlSecrets, gqlSecretsEx, gqlContacts);
-                return Optional.of(result);
-            });
-    }
+  CompletableFuture<Optional<CustomerEntity>> get(CustomersQuery gcontext, MyEntity entityId) {
+    var query = new FindCustomer.Ask(gcontext.getProjectId(), entityId.getEntityId());
+    return super
+        .ask(query)
+        .thenApply(it -> {
+          var gqlId = new SomeEntity(gcontext.getProjectId(), it.getEntityId(), it.getEntityVersion());
+          var gqlValue = it.getValue();
+          var gqlSecrets = it.getSecrets();
+          var gqlSecretsEx = it.getSecretsEx();
+          var gqlContacts = it.getContacts();
+          var result = new CustomerEntity(gqlId, gqlValue, gqlSecrets, gqlSecretsEx, gqlContacts);
+          return Optional.of(result);
+        });
+  }
 }
 
