@@ -14,21 +14,21 @@ import sinnet.bus.query.FindCustomers;
 class CustomersQueryList extends AskTemplate<FindCustomers.Ask, FindCustomers.Reply>
                          implements GraphQLResolver<CustomersQuery> {
 
-    CustomersQueryList() {
-        super(FindCustomers.Ask.ADDRESS, FindCustomers.Reply.class);
-    }
+  CustomersQueryList() {
+    super(FindCustomers.Ask.ADDRESS, FindCustomers.Reply.class);
+  }
 
-    CompletableFuture<List<CustomerEntity>> list(CustomersQuery gcontext) {
-        var ask = new FindCustomers.Ask(gcontext.getProjectId());
-        return super.ask(ask)
-            .thenApply(it -> List.of(it.getData())
-                                 .map(o -> {
-                                     var id = new SomeEntity(o.getProjectId(), o.getEntityId(), o.getEntityVersion());
-                                     var value = o.getValue();
-                                     var secrets = o.getSecrets();
-                                     var secretsEx = o.getSecretsEx();
-                                     var contacts = o.getContacts();
-                                     return new CustomerEntity(id, value, secrets, secretsEx, contacts);
-                                 }));
-    }
+  CompletableFuture<List<CustomerEntity>> list(CustomersQuery gcontext) {
+    var ask = new FindCustomers.Ask(gcontext.getProjectId());
+    return super.ask(ask)
+        .thenApply(it -> List.of(it.getData())
+                              .map(o -> {
+                                var id = new SomeEntity(o.getProjectId(), o.getEntityId(), o.getEntityVersion());
+                                var value = o.getValue();
+                                var secrets = o.getSecrets();
+                                var secretsEx = o.getSecretsEx();
+                                var contacts = o.getContacts();
+                                return new CustomerEntity(id, value, secrets, secretsEx, contacts);
+                              }));
+  }
 }
