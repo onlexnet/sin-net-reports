@@ -1,4 +1,5 @@
 import _ from "lodash";
+import { Stack } from "office-ui-fabric-react";
 import React from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { HashRouter as Router, Route } from "react-router-dom";
@@ -44,15 +45,20 @@ const LocalView: React.FC<Props> = (props) => {
     const { data, loading, error } = useAvailableProjectsQuery();
 
     if (error) {
-    return (<p>Error: {JSON.stringify(error)}</p>);
+        return (<p>Error: {JSON.stringify(error)}</p>);
     }
 
     if (!data) {
-        return (<p>Loading projects ...</p>);
+        return (
+            <Stack>
+                <Stack.Item align="center">
+                    <p>Loading projects ...</p>
+                </Stack.Item>
+            </Stack>);
     }
 
     const { availableProjects } = data;
-    if (availableProjects.length == 0 ) {
+    if (availableProjects.length == 0) {
         return <MainViewNoProjects />;
     }
 
@@ -60,7 +66,7 @@ const LocalView: React.FC<Props> = (props) => {
         return <MainViewMultipleProjects projects={availableProjects} projectSelected={id => props.setProject(id)} />;
     }
 
-    if (availableProjects.length ===1 && props.appState.empty) {
+    if (availableProjects.length === 1 && props.appState.empty) {
         const project = availableProjects[0];
         props.setProject(project.id);
         return (<p>Set application context ....</p>);
