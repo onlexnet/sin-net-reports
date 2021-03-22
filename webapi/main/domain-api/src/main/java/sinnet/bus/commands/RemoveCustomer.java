@@ -9,23 +9,23 @@ import sinnet.models.EntityId;
 
 public interface RemoveCustomer {
 
-    @AllArgsConstructor
-    @Value
-    @Jacksonized
-    @Builder(toBuilder = true)
-    final class Command {
+  @AllArgsConstructor
+  @Value
+  @Jacksonized
+  @Builder(toBuilder = true)
+  final class Command {
 
-        /** Address used to send the command to it's consumer. */
-        public static final String ADDRESS = "cmd.RemoveCustomer";
+    /** Address used to send the command to it's consumer. */
+    public static final String ADDRESS = "cmd.RemoveCustomer";
 
-        private EntityId id;
-    }
+    private EntityId id;
+  }
 
-    @AllArgsConstructor
-    @Value
-    @Jacksonized
-    @Builder(toBuilder = true)
-    class Result {
-        private Boolean value;
-    }
+  @AllArgsConstructor
+  @Value
+  @Jacksonized
+  @Builder(toBuilder = true)
+  class Result {
+      private Boolean value;
+  }
 }
