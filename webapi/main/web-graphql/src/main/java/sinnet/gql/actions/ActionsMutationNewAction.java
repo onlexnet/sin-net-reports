@@ -6,6 +6,7 @@ import java.util.concurrent.CompletionStage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import graphql.GraphQLException;
 import graphql.kickstart.tools.GraphQLResolver;
 import sinnet.ActionRepository;
 import sinnet.IdentityProvider;
@@ -13,7 +14,6 @@ import sinnet.gql.SomeEntity;
 import sinnet.models.ActionValue;
 import sinnet.models.Email;
 
-/** Fixme. */
 @Component
 public class ActionsMutationNewAction implements GraphQLResolver<ActionsMutation> {
 
@@ -23,15 +23,14 @@ public class ActionsMutationNewAction implements GraphQLResolver<ActionsMutation
     @Autowired
     private IdentityProvider identityProvider;
 
-    /**
-     * FixMe.
-     *
-     * @param gcontext      ignored
-     * @param whenProvided fixme
-     * @return fixme
-     */
     public CompletionStage<SomeEntity> newAction(ActionsMutation gcontext, LocalDate whenProvided) {
-        var emailOfCurrentUser = identityProvider.getCurrent().get().getEmail();
+        var maybeRequestor = identityProvider.getCurrent();
+        if (!maybeRequestor.isPresent()) {
+          throw new GraphQLException("Access denied");
+        }
+
+        var requestor = maybeRequestor.get();
+        var emailOfCurrentUser = requestor.getEmail();
         var model = ActionValue.builder()
             .who(Email.of(emailOfCurrentUser))
             .when(whenProvided)
