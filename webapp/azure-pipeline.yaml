@@ -30,6 +30,14 @@ jobs:
 
     steps:
 
+      - task: Bash@3
+        displayName: Update application version
+        targetType: inline
+        script:
+          my_version = $(cat ../.version)
+          npm version $my_version
+
+
       - task: Npm@1
         displayName: Install dependencies
         inputs:
