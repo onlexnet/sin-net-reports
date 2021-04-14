@@ -36,7 +36,7 @@ jobs:
       - task: Npm@1
         displayName: Set version
         inputs:
-          command: custome
+          command: custom
           customCommand: version $(my_version)
           workingDir: webapp/main
 
