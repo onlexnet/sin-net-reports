@@ -36,13 +36,8 @@ jobs:
       - task: Npm@1
         displayName: Set version
         inputs:
-          command: run version $(my_version)
-          workingDir: webapp/main
-
-      - task: Npm@1
-        displayName: Install dependencies
-        inputs:
-          command: install
+          command: custome
+          customCommand: version $(my_version)
           workingDir: webapp/main
 
       - task: Npm@1
