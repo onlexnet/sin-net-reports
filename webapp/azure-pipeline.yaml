@@ -31,13 +31,18 @@ jobs:
     steps:
 
       - task: Bash@3
-        displayName: Update application version
+        displayName: Read version of application
         inputs:
           targetType: inline
           workingDirectory: webapp/main
           script:
             my_version=$(cat ../../.version) \
-            npm version $my_version
+
+      - task: Npm@1
+        displayName: Install dependencies and set version
+        inputs:
+          command: install && version $my_version
+          workingDir: webapp/main
 
       - task: Npm@1
         displayName: Install dependencies
