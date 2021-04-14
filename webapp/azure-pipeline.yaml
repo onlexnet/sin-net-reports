@@ -36,7 +36,7 @@ jobs:
           targetType: inline
           workingDirectory: webapp/main
           script:
-            my_version = $(cat ../../.version)
+            my_version=$(cat ../../.version)
             npm version $my_version
 
 
