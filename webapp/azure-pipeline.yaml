@@ -30,16 +30,17 @@ jobs:
 
     steps:
 
-      - task: Bash@3
-        displayName: Read version of application
-        inputs:
-          targetType: inline
-          workingDirectory: webapp/main
-          script:
-            my_version=$(cat ../../.version) \
+      - bash: |
+          echo "##vso[task.setvariable variable=my_version]$(cat .version)"
 
       - task: Npm@1
-        displayName: Install dependencies and set version
+        displayName: Set version
+        inputs:
+          command: version $my_version
+          workingDir: webapp/main
+
+      - task: Npm@1
+        displayName: Install dependencies
         inputs:
           command: install && version $my_version
           workingDir: webapp/main
