@@ -1,6 +1,6 @@
 import React from "react"
 
-import { IComboBoxOption, ComboBox, IComboBox } from "office-ui-fabric-react";
+import { IComboBoxOption, ComboBox, IComboBox } from "@fluentui/react";
 import _ from "lodash";
 
 

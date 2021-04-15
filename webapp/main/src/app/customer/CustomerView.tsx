@@ -1,8 +1,8 @@
 import React, { MouseEventHandler } from "react"
 
-import { Separator } from 'office-ui-fabric-react/lib/Separator';
-import { Stack, IStackTokens, IStackStyles } from 'office-ui-fabric-react/lib/Stack';
-import { IComboBoxOption, ITextFieldStyles, TextField, Checkbox, PrimaryButton, IComboBox, ComboBox, Spinner, SpinnerSize, DefaultButton } from "office-ui-fabric-react";
+import { Separator } from "@fluentui/react";
+import { Stack, IStackTokens, IStackStyles } from "@fluentui/react";
+import { IComboBoxOption, ITextFieldStyles, TextField, Checkbox, PrimaryButton, IComboBox, ComboBox, Spinner, SpinnerSize, DefaultButton } from "@fluentui/react";
 import _ from "lodash";
 import { useGetUsers } from "../../api/useGetUsers";
 import { CustomerContactInput, CustomerInput, CustomerSecretExInput, CustomerSecretInput, useRemoveCustomerMutation, useSaveCustomerMutation } from "../../Components/.generated/components";

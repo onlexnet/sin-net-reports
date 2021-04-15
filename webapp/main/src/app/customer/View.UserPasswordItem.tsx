@@ -1,4 +1,4 @@
-import { DefaultButton, IStackTokens, Separator, Stack, TextField } from "office-ui-fabric-react";
+import { DefaultButton, IStackTokens, Separator, Stack, TextField } from "@fluentui/react";
 import React from "react";
 
 const stackTokens: IStackTokens = { childrenGap: 12 };

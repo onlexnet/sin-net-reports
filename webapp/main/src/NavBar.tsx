@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { RouteComponentProps } from "react-router-dom";
-import { Nav, INavLink } from 'office-ui-fabric-react';
+import { Nav, INavLink } from "@fluentui/react";
 import { routing } from './Routing';
 
 //Child component related stuff
-interface ChildComponentProps extends RouteComponentProps<any> {}
+interface ChildComponentProps extends RouteComponentProps<any> { }
 
 export const NavBasicExample: React.FC<ChildComponentProps> = (props) => {
   return (

@@ -1,6 +1,6 @@
 import * as React from "react";
-import { DetailsList, DetailsListLayoutMode, SelectionMode, Selection, IColumn, mergeStyleSets, DefaultButton } from "office-ui-fabric-react";
-import { IStackTokens, Stack, TextField, Toggle, Announced } from "office-ui-fabric-react";
+import { DetailsList, DetailsListLayoutMode, SelectionMode, Selection, IColumn, mergeStyleSets, DefaultButton } from "@fluentui/react";
+import { IStackTokens, Stack, TextField, Toggle, Announced } from "@fluentui/react";
 import { connect, ConnectedProps } from "react-redux";
 import { RootState } from "../store/reducers";
 import { ServiceAppModel } from "../store/actions/ServiceModel";

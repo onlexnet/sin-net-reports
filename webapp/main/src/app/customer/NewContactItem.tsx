@@ -1,4 +1,4 @@
-import { DefaultButton, IStackTokens, Stack, TextField } from "office-ui-fabric-react";
+import { DefaultButton, IStackTokens, Stack, TextField } from "@fluentui/react";
 import React from "react";
 import { ContactDetails } from "./CustomerView";
 
