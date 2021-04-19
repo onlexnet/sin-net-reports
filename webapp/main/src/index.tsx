@@ -9,11 +9,11 @@ import { initializeIcons } from "@fluentui/react/lib/Icons";
 import { Provider } from "react-redux";
 import { store } from "./store/store";
 import App from "./app/App";
-import { authModule } from "./msal/autorun";
+//import { authModule } from "./msal/1autorun";
 
 initializeIcons();
 
-const definedToRunSideEffect = authModule;
+//const definedToRunSideEffect = authModule;
 
 ReactDOM.render(
   <ThemeProvider>
