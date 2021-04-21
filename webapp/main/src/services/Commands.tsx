@@ -15,7 +15,7 @@ const overflowProps: IButtonProps = { ariaLabel: 'More commands' };
 
 const mapStateToProps = (state: RootState) => {
   if (state.appState.empty) {
-    throw 'Invalid state';
+    throw new Error('Invalid state');
   }
   
   return {
