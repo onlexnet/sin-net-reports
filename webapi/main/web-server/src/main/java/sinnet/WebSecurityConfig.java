@@ -30,7 +30,7 @@ public class WebSecurityConfig {
                         .csrf().disable()
                     .authorizeRequests(conf -> {
                             conf
-                                .antMatchers("/graphql/**").hasAuthority("Actions.Read")
+                                .antMatchers("/graphql/**").authenticated()
                                 .antMatchers("/api/to-delete").permitAll()
                                 // .antMatchers("/graphql/**").hasAuthority("SCOPE_Actions.Read")
                                 .antMatchers("/actuator/**").permitAll(); })
