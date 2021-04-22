@@ -78,7 +78,7 @@ const App: React.FC<AppProps> = props => {
       current = (<MsalProvider instance={pca}><InProgressView /></MsalProvider>);
       break;
     case SignInFlow.SessionEstablished:
-      current = <AuthenticatedView />;
+      current = (<MsalProvider instance={pca}><AuthenticatedView /></MsalProvider>);
       break;
     default:
       current = <UnauthenticatedView login={props.login} />;
