@@ -66,7 +66,7 @@ let dateRangeString: string | null = null;
 export const AppDatePicker: React.FC<AppDatePickerProps> = props => {
   const [selectedDateRange, setSelectedDateRange] = React.useState<Date[]>();
 
-  const [selectedDate, setSelectedDate] = React.useState<LocalDate>();
+  const [selectedDate, setSelectedDate] = React.useState<LocalDate>(LocalDate.of(new Date()));
   useEffect(() => {
     setSelectedDate(props.current);
   }, [props.current]);
@@ -84,6 +84,7 @@ export const AppDatePicker: React.FC<AppDatePickerProps> = props => {
     let subtractFrom = dateRangeArray[0];
     let daysToSubtract = dateRangeArray.length;
     if (props.dateRangeType === DateRangeType.Month) {
+      debugger;
       subtractFrom = new Date(subtractFrom.getFullYear(), subtractFrom.getMonth(), 1);
       daysToSubtract = 1;
     }
