@@ -47,7 +47,8 @@ const View: React.FC<ViewProps> = props => {
   }, [error]);
 
   useEffect(() => {
-     if (inProgress === InteractionStatus.None && !instance.getActiveAccount()) {
+
+    if (inProgress === InteractionStatus.None && !result) {
       if (accounts.length > 0) {
         const suggestedAccount = accounts[0];
         request.loginHint = suggestedAccount.username;
