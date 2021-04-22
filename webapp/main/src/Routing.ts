@@ -5,5 +5,6 @@ export const routing = {
     newCustomer: "/new-customer",
     editCustomer: "/customers/:projectId/:entityId/:entityVersion",
     reports: "/reports",
+    login: "/login",
     debug: "/debug"
 }

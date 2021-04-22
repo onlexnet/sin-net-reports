@@ -47,19 +47,18 @@ const View: React.FC<ViewProps> = props => {
   }, [error]);
 
   useEffect(() => {
-    alert(inProgress)
-    if (inProgress === InteractionStatus.None && accounts.length > 0) {
-      const suggestedAccount = accounts[0];
-      request.loginHint = suggestedAccount.username;
-      login(InteractionType.Silent, request);
-    }
+     if (inProgress === InteractionStatus.None && !instance.getActiveAccount) {
+      if (accounts.length > 0) {
+        const suggestedAccount = accounts[0];
+        request.loginHint = suggestedAccount.username;
+        login(InteractionType.Silent, request);
+      } else {
+        login(InteractionType.Redirect, request);
+      }
+     }
 
-    if (inProgress === InteractionStatus.None && !accounts.length) {
-      login(InteractionType.Redirect, request);
-    }
-
-    if (result) {
-      props.login(result!.idToken, result!.account?.username ?? "undefined");
+    if (result && inProgress === InteractionStatus.None) {
+      props.login(result.idToken, result.account?.username ?? "undefined");
     }
 
   }, [inProgress])

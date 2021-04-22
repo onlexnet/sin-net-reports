@@ -31,7 +31,8 @@ const config: Configuration = {
   auth: {
       clientId: "36305176-2249-4ce5-8d59-a91dd7363610", // sinnetapp-prod
       authority: "https://sinnetapp.b2clogin.com/7c86200b-9308-4ebc-a462-fab0a67b91e6/B2C_1_sign-in-or-up",
-      navigateToLoginRequestUrl: true,
+      // navigateToLoginRequestUrl: true,
+      // postLogoutRedirectUri: 'https://raport.sin.net.pl/',
       knownAuthorities: [
           "sinnetapp.b2clogin.com"
       ]
@@ -72,18 +73,13 @@ const App: React.FC<AppProps> = props => {
   var current: JSX.Element;
   switch (props.flow) {
     case SignInFlow.Unknown:
-      current = <UnauthenticatedView login={props.login} />;
-      break;
     case SignInFlow.SessionInitiated:
-      current = (<MsalProvider instance={pca}><InProgressView /></MsalProvider>);
-      break;
+      return (<MsalProvider instance={pca}><InProgressView /></MsalProvider>);
     case SignInFlow.SessionEstablished:
-      current = (<MsalProvider instance={pca}><AuthenticatedView /></MsalProvider>);
-      break;
+      return (<MsalProvider instance={pca}><AuthenticatedView /></MsalProvider>);
     default:
-      current = <UnauthenticatedView login={props.login} />;
+      return <UnauthenticatedView login={props.login} />;
   }
-  return current;
 };
 
 export default connector(App)
