@@ -1,4 +1,4 @@
-import { AuthModule } from "./AuthModule";
+import { AuthModule } from "./AuthModule.ts1";
 
 export const authModule: AuthModule = new AuthModule();
 

@@ -1,5 +1,5 @@
 import _ from "lodash";
-import { Stack } from "office-ui-fabric-react";
+import { Stack } from "@fluentui/react";
 import React from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { HashRouter as Router, Route } from "react-router-dom";

@@ -3,7 +3,7 @@ import { RootState } from "../../store/reducers";
 import { Dispatch } from "redux";
 import { connect, ConnectedProps } from "react-redux";
 import _ from "lodash";
-import { ComboBox, DateRangeType, DefaultButton, IComboBox, IComboBoxOption, PrimaryButton, Stack, TextField } from "office-ui-fabric-react";
+import { ComboBox, DateRangeType, DefaultButton, IComboBox, IComboBoxOption, PrimaryButton, Stack, TextField } from "@fluentui/react";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { AppDatePicker } from "../../services/ActionList.DatePicker";
 import { LocalDate } from "../../store/viewcontext/TimePeriod";
@@ -13,7 +13,7 @@ import { dates } from "../../api/DtoMapper";
 
 const mapStateToProps = (state: RootState) => {
     if (state.appState.empty) {
-        throw 'Invalid state';
+        throw new Error('Invalid state');
     }
     return state;
 }

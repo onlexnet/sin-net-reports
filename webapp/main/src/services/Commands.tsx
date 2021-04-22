@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { CommandBar, ICommandBarItemProps, IButtonProps } from 'office-ui-fabric-react';
+import { CommandBar, ICommandBarItemProps, IButtonProps } from "@fluentui/react";
 import { Dispatch } from 'redux';
 import { connect, ConnectedProps } from 'react-redux';
 import { RootState } from '../store/reducers';
@@ -15,7 +15,7 @@ const overflowProps: IButtonProps = { ariaLabel: 'More commands' };
 
 const mapStateToProps = (state: RootState) => {
   if (state.appState.empty) {
-    throw 'Invalid state';
+    throw new Error('Invalid state');
   }
   
   return {

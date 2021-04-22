@@ -16,6 +16,7 @@ public class WebSecurityConfig {
 
     /**
      * Configures security for 'prod' profile'.
+     *
      * @return the configurer
      */
     @Bean
@@ -30,7 +31,7 @@ public class WebSecurityConfig {
                         .csrf().disable()
                     .authorizeRequests(conf -> {
                             conf
-                                .antMatchers("/graphql/**").hasAuthority("Actions.Read")
+                                .antMatchers("/graphql/**").authenticated()
                                 .antMatchers("/api/to-delete").permitAll()
                                 // .antMatchers("/graphql/**").hasAuthority("SCOPE_Actions.Read")
                                 .antMatchers("/actuator/**").permitAll(); })
@@ -41,24 +42,4 @@ public class WebSecurityConfig {
             }
         };
     }
-
-    // /**
-    //  * Configures security for 'dev' profile'.
-    //  * @return the configurer
-    //  */
-    // @Bean
-    // @Profile("dev")
-    // public WebSecurityConfigurerAdapter webSecurityForDevProfile(@Autowired DevAuthenticationFilter authFilter) {
-
-    //     return new WebSecurityConfigurerAdapter() {
-
-    //         @Override
-    //         protected void configure(final HttpSecurity http) throws Exception {
-    //             http
-    //                 .cors()
-    //                 .and().csrf().disable()
-    //                 .authorizeRequests().anyRequest().permitAll();
-    //         }
-    //     };
-    // }
 }

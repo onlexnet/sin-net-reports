@@ -150,6 +150,7 @@ export class AuthModule {
         console.log(msg);
 
         if (resp) {
+            debugger;
             const action: InitiateSessionFinishedAction = {
                 type: INITIATE_SESSION_FINISHED,
                 jwtToken: resp.accessToken ?? "undefined1",

@@ -4,7 +4,6 @@ import { ServiceCommandBar } from "./Commands";
 import { RootState } from "../store/reducers";
 import { connect, ConnectedProps } from "react-redux";
 import { Dispatch } from "redux";
-import { ViewContextState } from "../store/viewcontext/types";
 import { addressProvider } from "../addressProvider";
 
 const mapStateToProps = (state: RootState) => {

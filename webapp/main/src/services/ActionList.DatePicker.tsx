@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { Calendar, DayOfWeek, DateRangeType } from 'office-ui-fabric-react/lib/Calendar';
-import { DefaultButton } from 'office-ui-fabric-react/lib/Button';
+import { Calendar, DayOfWeek, DateRangeType } from '@fluentui/react/lib/Calendar';
+import { DefaultButton } from '@fluentui/react/lib/Button';
 import { addDays, getDateRangeArray } from '@fluentui/date-time-utilities';
 import { useEffect } from 'react';
 import { LocalDate } from '../store/viewcontext/TimePeriod';
@@ -132,7 +132,7 @@ export const AppDatePicker: React.FC<AppDatePickerProps> = props => {
         onDismiss={onDismiss}
         isMonthPickerVisible={props.isMonthPickerVisible}
         dateRangeType={props.dateRangeType}
-        autoNavigateOnSelection={props.autoNavigateOnSelection}
+        // autoNavigateOnSelection={props.autoNavigateOnSelection}
         showGoToToday={props.showGoToToday}
         value={LocalDate.toDate(selectedDate)!}
         firstDayOfWeek={props.firstDayOfWeek ? props.firstDayOfWeek : DayOfWeek.Sunday}

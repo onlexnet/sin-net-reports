@@ -1,5 +1,5 @@
 import React from "react";
-import { Label, PrimaryButton, Stack } from "office-ui-fabric-react";
+import { Label, PrimaryButton, Stack } from "@fluentui/react";
 import packageJson from '../../package.json';
 
 export const View: React.FC<{ login: () => void }> = ({ login }) => {

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { TextField, PrimaryButton, Separator, DetailsList, IColumn } from "office-ui-fabric-react";
+import { TextField, PrimaryButton, Separator, DetailsList, IColumn } from "@fluentui/react";
 import { Link, RouteComponentProps } from "react-router-dom";
 import { routing } from "../../Routing";
 import { HorizontalSeparatorStack } from "../../Components/HorizontalSeparatorStack";
