@@ -21,4 +21,3 @@ steps:
   inputs:
     pathToPublish: $(System.DefaultWorkingDirectory)/deploy/main
     artifactName: 'yaml'
-    pathToPublish: 'yaml'
