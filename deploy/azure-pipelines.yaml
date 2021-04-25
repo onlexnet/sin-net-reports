@@ -16,19 +16,9 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
-
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
-
-- publish: $(System.DefaultWorkingDirectory)/deploy
-  artifact: kubernetes-configuration
-
-
 - task: PublishBuildArtifacts@1
+  displayName: 'publish yaml folder as an artifact'
   inputs:
-    pathToPublish: $(System.DefaultWorkingDirectory)/deploy
-    artifactName: kubernetes-cluster-files
+    pathToPublish: $(System.DefaultWorkingDirectory)/deploy/main
+    artifactName: 'yaml'
+    pathToPublish: 'yaml'

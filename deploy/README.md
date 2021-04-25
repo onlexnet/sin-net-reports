@@ -32,6 +32,7 @@
 - Run shell inside microk8s to work on inside bash: **kubectl run test --image=busybox -it --rm**
 
 ## Used articles
+  * https://sabbour.me/kubernetes-ci-cd-pipelines-using-azure-devops/
   * https://github.com/ubuntu/microk8s/issues/854
   * [microk8s dns show running status but remains in 0/1 state](https://github.com/ubuntu/microk8s/issues/845)
   * https://kubernetes.io/docs/tasks/administer-cluster/dns-debugging-resolution/
