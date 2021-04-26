@@ -15,9 +15,42 @@ trigger:
 pool:
   vmImage: 'ubuntu-latest'
 
-steps:
-- task: PublishBuildArtifacts@1
-  displayName: 'publish yaml folder as an artifact'
-  inputs:
-    pathToPublish: $(System.DefaultWorkingDirectory)/deploy/main
-    artifactName: 'yaml'
+resources:
+  containers:
+  - container: webapp
+    type: ACR  
+    azureSubscription: onlex-sinnet-prod
+    resourceGroup: sinnet-default-manual
+    registry: sinnet
+    repository: webapp
+    trigger: "true"
+
+# steps:
+# - script: echo |
+#     echo $(resources.container.mycontainer.type)
+#     echo $(resources.container.mycontainer.registry)
+#     echo $(resources.container.mycontainer.repository)
+#     echo $(resources.container.webapp.tag)
+#     echo $(resources.container.mycontainer.digest)
+#     echo $(resources.container.mycontainer.URI)
+#     echo $(resources.container.mycontainer.location)
+
+stage:
+  jobs:
+  - deployment: DeployWeb
+    displayName: deploy Web App
+    pool:
+      vmImage: 'Ubuntu-latest'
+    # creates an environment if it doesn't exist
+    environment: 'smarthotel-dev'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - script: echo Hello world
+# steps:
+# - task: PublishBuildArtifacts@1
+#   displayName: 'publish yaml folder as an artifact'
+#   inputs:
+#     pathToPublish: $(System.DefaultWorkingDirectory)/deploy/main
+#     artifactName: 'yaml'
