@@ -35,19 +35,19 @@ resources:
 #     echo $(resources.container.mycontainer.URI)
 #     echo $(resources.container.mycontainer.location)
 
-stage:
-  jobs:
-  - deployment: DeployWeb
-    displayName: deploy Web App
-    pool:
-      vmImage: 'Ubuntu-latest'
-    # creates an environment if it doesn't exist
-    environment: 'smarthotel-dev'
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - script: echo Hello world
+stages:
+  - stage:
+    displayName: CD
+    jobs:
+      - deployment: DeployWeb
+        displayName: WebApp
+        # creates an environment if it doesn't exist
+        environment: 'smarthotel-dev'
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+              - script: echo Hello world
 # steps:
 # - task: PublishBuildArtifacts@1
 #   displayName: 'publish yaml folder as an artifact'
