@@ -51,7 +51,7 @@ stages:
                 displayName: Deploy to Kubernetes cluster
                 inputs:
                   action: deploy
-                  kubernetesServiceConnection: sinnet-acr
+                  kubernetesServiceConnection: onlex-sinnet-stg-onlex-sinnet-stg-1619212437055
                   namespace: $(k8sNamespace)
                   manifests: |
                     $($(System.DefaultWorkingDirectory)/deploy/main/*
