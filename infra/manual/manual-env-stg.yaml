@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: onlex-sinnet-stg
+  labels:
+    name: onlex-sinnet-stg
+
+---
+
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: onlex-sinnet-service-account-stg
+  namespace: onlex-sinnet-stg

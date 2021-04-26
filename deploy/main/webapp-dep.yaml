@@ -20,7 +20,7 @@ spec:
         - name: regcred
       containers:
         - name: webapp
-          image: sinnet.azurecr.io/webapp:latest
+          image: sinnet.azurecr.io/webapp:##BUILD_ID##
           imagePullPolicy: Always
           ports:
           - containerPort: 80
