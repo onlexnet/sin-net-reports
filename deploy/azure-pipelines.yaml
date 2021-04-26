@@ -27,13 +27,13 @@ resources:
 
 # steps:
 # - script: echo |
-#     echo $(resources.container.mycontainer.type)
-#     echo $(resources.container.mycontainer.registry)
-#     echo $(resources.container.mycontainer.repository)
+#     echo $(resources.container.webapp.type)
+#     echo $(resources.container.webapp.registry)
+#     echo $(resources.container.webapp.repository)
 #     echo $(resources.container.webapp.tag)
-#     echo $(resources.container.mycontainer.digest)
-#     echo $(resources.container.mycontainer.URI)
-#     echo $(resources.container.mycontainer.location)
+#     echo $(resources.container.webapp.digest)
+#     echo $(resources.container.webapp.URI)
+#     echo $(resources.container.webapp.location)
 
 stages:
   - stage:
@@ -51,10 +51,11 @@ stages:
                 displayName: Deploy to Kubernetes cluster
                 inputs:
                   action: deploy
+                  kubernetesServiceConnection: sinnet-acr
                   namespace: $(k8sNamespace)
                   manifests: |
                     $($(System.DefaultWorkingDirectory)/deploy/main/*
                   imagePullSecrets: |
                     $(imagePullSecret)
                   containers: |
-                    $(containerRegistry)/$(imageRepository):$(tag)
+                    $(containerRegistry)/$(imageRepository):$(resources.container.webapp.tag)
