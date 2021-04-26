@@ -16,14 +16,16 @@ pool:
   vmImage: 'ubuntu-latest'
 
 resources:
+  repositories:
+    - repository: self
   containers:
-  - container: webapp
-    type: ACR  
-    azureSubscription: onlex-sinnet-prod
-    resourceGroup: sinnet-default-manual
-    registry: sinnet
-    repository: webapp
-    trigger: "true"
+    - container: webapp
+      type: ACR  
+      azureSubscription: onlex-sinnet-prod
+      resourceGroup: sinnet-default-manual
+      registry: sinnet
+      repository: webapp
+      trigger: "true"
 
 # steps:
 # - script: echo |
