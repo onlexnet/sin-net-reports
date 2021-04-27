@@ -86,5 +86,4 @@ jobs:
           repository: webapi
           tags: |
             $(Build.SourceBranchName)-$(Build.BuildNumber)
-            latest
 
