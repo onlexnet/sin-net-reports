@@ -24,15 +24,15 @@ resources:
       repository: webapp
       trigger: "true"
 
-steps:
-- script: echo |
-    echo $(resources.container.webapp.type)
-    echo $(resources.container.webapp.registry)
-    echo $(resources.container.webapp.repository)
-    echo $(resources.container.webapp.tag)
-    echo $(resources.container.webapp.digest)
-    echo $(resources.container.webapp.URI)
-    echo $(resources.container.webapp.location)
+# steps:
+# - script: echo |
+#     echo $(resources.container.webapp.type)
+#     echo $(resources.container.webapp.registry)
+#     echo $(resources.container.webapp.repository)
+#     echo $(resources.container.webapp.tag)
+#     echo $(resources.container.webapp.digest)
+#     echo $(resources.container.webapp.URI)
+#     echo $(resources.container.webapp.location)
 
 stages:
   - stage:
