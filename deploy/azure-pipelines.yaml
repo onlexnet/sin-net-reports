@@ -23,6 +23,7 @@ resources:
       registry: sinnet
       repository: webapp
       trigger: "true"
+      image: webapp
 
 # steps:
 # - script: echo |
