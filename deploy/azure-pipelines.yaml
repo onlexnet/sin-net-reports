@@ -23,6 +23,13 @@ resources:
       registry: sinnet
       repository: webapp
       trigger: "true"
+    - container: webapi
+      type: ACR  
+      azureSubscription: sinnet-default-manual-arm
+      resourceGroup: sinnet-default-manual
+      registry: sinnet
+      repository: webapi
+      trigger: "true"
 
 stages:
   - stage:
@@ -57,3 +64,4 @@ stages:
                     deploy/main/*
                   containers: |
                       sinnet.azurecr.io/webapp:$(resources.container.webapp.tag)
+                      sinnet.azurecr.io/webapi:$(resources.container.webapi.tag)
