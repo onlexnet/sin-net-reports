@@ -31,7 +31,7 @@ stages:
     jobs:
       - job: 
         steps:
-        - script: echo $(resources.container.webapp.tag)
+        - script: echo $(System.Debug)
           displayName: Test container variables (TAG)
   - stage:
     displayName: CD
@@ -44,7 +44,6 @@ stages:
             deploy:
               steps:
               - checkout: self
-              - bash: echo $(System.Debug)
               - task: KubernetesManifest@0
                 displayName: Deploy to Kubernetes cluster
                 inputs:
