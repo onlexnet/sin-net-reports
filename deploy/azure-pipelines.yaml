@@ -23,7 +23,6 @@ resources:
       registry: sinnet
       repository: webapp
       trigger: "true"
-      image: webapp
 
 stages:
   - stage: 
