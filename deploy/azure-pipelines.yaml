@@ -42,7 +42,7 @@ stages:
         displayName: Checkout source code
         steps:
           - checkout: self
-          - bash: ls
+          - bash: ls deploy/main
       - deployment: DeployWeb
         displayName: WebApp
         # creates an environment if it doesn't exist
@@ -57,7 +57,7 @@ stages:
                   action: deploy
                   kubernetesServiceConnection: onlex-sinnet-stg-onlex-sinnet-stg-1619212437055
                   namespace: $(k8sNamespace)
-                  manifests: $(Agent.BuildDirectory)/deploy/main/webapp-dep.yaml
+                  manifests: deploy/main/webapp-dep.yaml
                   imagePullSecrets: |
                     $(imagePullSecret)
                   containers: |
