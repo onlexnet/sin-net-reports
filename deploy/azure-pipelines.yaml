@@ -54,6 +54,8 @@ stages:
                   kubernetesServiceConnection: sinnet-microk8s
                   namespace: onlex-sinnet-stg
                   manifests: |
-                    deploy/main/
+                    deploy/main/*
                   imagePullSecrets: |
                     $(imagePullSecret)
+                  containers: |
+                      sinnet.azurecr.io/webapp:$(resources.container.webapp.tag)
