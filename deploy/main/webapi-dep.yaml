@@ -16,8 +16,8 @@ spec:
         app: webapi
     
     spec:
-      imagePullSecrets:
-        - name: regcred
+      # imagePullSecrets:
+      #   - name: regcred
       containers:
         - name: webapi
           image: sinnet.azurecr.io/webapi:latest

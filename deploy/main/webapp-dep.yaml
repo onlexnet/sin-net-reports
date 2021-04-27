@@ -16,8 +16,8 @@ spec:
         app: webapp
     
     spec:
-      imagePullSecrets:
-        - name: regcred
+      # imagePullSecrets:
+      #   - name: regcred
       containers:
         - name: webapp
           image: sinnet.azurecr.io/webapp:##BUILD_ID##

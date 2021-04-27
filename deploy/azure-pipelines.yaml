@@ -45,7 +45,7 @@ stages:
                   namespace: onlex-sinnet-prd
                   manifests: |
                     deploy/main/*
-                  imagePullSecrets: |
-                    $(imagePullSecret)
+                  # imagePullSecrets: |
+                  #   $(imagePullSecret)
                   containers: |
                       sinnet.azurecr.io/webapp:$(resources.container.webapp.tag)
