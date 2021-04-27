@@ -16,8 +16,6 @@ pool:
   vmImage: 'ubuntu-latest'
 
 resources:
-  repositories:
-    - repository: self
   containers:
     - container: webapp
       type: ACR  
@@ -41,6 +39,11 @@ stages:
   - stage:
     displayName: CD
     jobs:
+      - job:
+        displayName: Checkout source code
+        steps:
+          - checkout: self
+
       - deployment: DeployWeb
         displayName: WebApp
         # creates an environment if it doesn't exist
