@@ -35,8 +35,8 @@ stages:
   - stage:
     displayName: CD
     jobs:
-      - deployment: deploy-latest
-        displayName: WebApp
+      - deployment: DeployAppComponents
+        displayName: Deploy app components
         environment: 'onlex-sinnet-prd'
         strategy:
           runOnce:
