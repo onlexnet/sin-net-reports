@@ -54,7 +54,7 @@ stages:
                   kubernetesServiceConnection: onlex-sinnet-stg-onlex-sinnet-stg-1619212437055
                   namespace: $(k8sNamespace)
                   manifests: |
-                    $(System.ArtifactsDirectory)/deploy/main/webapp-dep.yaml
+                    deploy/main/webapp-dep.yaml
                   imagePullSecrets: |
                     $(imagePullSecret)
                   containers: |
