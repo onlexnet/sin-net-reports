@@ -26,13 +26,6 @@ resources:
       image: webapp
 
 stages:
-  - stage: 
-    displayName: Test variables
-    jobs:
-      - job: 
-        steps:
-        - script: echo $(System.DefaultWorkingDirectory)
-          displayName: Test container variables (TAG)
   - stage:
     displayName: CD
     jobs:
@@ -48,7 +41,7 @@ stages:
                 displayName: Deploy to Kubernetes cluster
                 inputs:
                   action: deploy
-                  rolloutStatusTimeout: 60
+                  # rolloutStatusTimeout: 60
                   kubernetesServiceConnection: sinnet-microk8s
                   namespace: onlex-sinnet-prd
                   manifests: |
