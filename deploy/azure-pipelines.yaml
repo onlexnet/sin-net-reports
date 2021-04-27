@@ -25,24 +25,26 @@ resources:
       trigger: "true"
       image: webapp
 
-# steps:
-# - script: echo |
-#     echo $(resources.container.webapp.type)
-#     echo $(resources.container.webapp.registry)
-#     echo $(resources.container.webapp.repository)
-#     echo $(resources.container.webapp.tag)
-#     echo $(resources.container.webapp.digest)
-#     echo $(resources.container.webapp.URI)
-#     echo $(resources.container.webapp.location)
-
 stages:
+  - stage: 
+    displayName: Test variables
+    jobs:
+      - job: 
+        steps:
+        - script: echo |
+            echo $(resources.container.webapp.type)
+            echo $(resources.container.webapp.registry)
+            echo $(resources.container.webapp.repository)
+            echo $(resources.container.webapp.tag)
+            echo $(resources.container.webapp.digest)
+            echo $(resources.container.webapp.URI)
+            echo $(resources.container.webapp.location)
   - stage:
     displayName: CD
     jobs:
       - deployment: DeployWeb
         displayName: WebApp
-        # creates an environment if it doesn't exist
-        environment: 'onlex-sinnet-stg'
+        environment: 'sinnet-microk8s'
         strategy:
           runOnce:
             deploy:
