@@ -31,7 +31,7 @@ stages:
     jobs:
       - job: 
         steps:
-        - script: echo $(System.Debug)
+        - script: echo ${System.Debug}
           displayName: Test container variables (TAG)
   - stage:
     displayName: CD
