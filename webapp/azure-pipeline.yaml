@@ -70,5 +70,4 @@ jobs:
           command: buildAndPush
           tags: |
             $(Build.SourceBranchName)-$(Build.BuildNumber)
-            latest
 
