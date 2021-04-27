@@ -41,7 +41,7 @@ stages:
       - deployment: DeployWeb
         displayName: WebApp
         # creates an environment if it doesn't exist
-        environment: 'smarthotel-dev'
+        environment: 'onlex-sinnet-stg'
         strategy:
           runOnce:
             deploy:
