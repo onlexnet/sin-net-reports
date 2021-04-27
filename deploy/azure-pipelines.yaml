@@ -28,9 +28,9 @@ stages:
   - stage:
     displayName: CD
     jobs:
-      - deployment: DeployWeb
+      - deployment: Deploy Latest
         displayName: WebApp
-        environment: 'sinnet-microk8s'
+        environment: 'onlex-sinnet-prd'
         strategy:
           runOnce:
             deploy:
