@@ -52,6 +52,7 @@ stages:
                 inputs:
                   action: deploy
                   kubernetesServiceConnection: onlex-sinnet-stg-onlex-sinnet-stg-1619212437055
+                  namespace: onlex-sinnet-stg
                   manifests: |
                     deploy/main/webapp-dep.yaml
                   imagePullSecrets: |
