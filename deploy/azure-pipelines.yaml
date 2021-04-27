@@ -23,6 +23,13 @@ resources:
       registry: sinnet
       repository: webapp
       trigger: "true"
+    - container: webapi
+      type: ACR  
+      azureSubscription: sinnet-default-manual-arm
+      resourceGroup: sinnet-default-manual
+      registry: sinnet
+      repository: webapi
+      trigger: "true"
 
 stages:
   - stage:
@@ -35,6 +42,7 @@ stages:
           runOnce:
             deploy:
               steps:
+              - bash: echo $(resources.container.webapp.tag)
               - task: KubernetesManifest@0
                 displayName: Create secret
                 inputs: 
@@ -54,7 +62,6 @@ stages:
                   namespace: onlex-sinnet-prd
                   manifests: |
                     deploy/main/*
-                  # imagePullSecrets: |
-                  #   $(imagePullSecret)
                   containers: |
                       sinnet.azurecr.io/webapp:$(resources.container.webapp.tag)
+                      sinnet.azurecr.io/webapi:$(resources.container.webapi.tag)
