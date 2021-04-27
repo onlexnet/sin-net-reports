@@ -57,5 +57,3 @@ stages:
                     deploy/main/
                   imagePullSecrets: |
                     $(imagePullSecret)
-                  containers: |
-                    $(containerRegistry)/$(imageRepository):$(resources.container.webapp.tag)
