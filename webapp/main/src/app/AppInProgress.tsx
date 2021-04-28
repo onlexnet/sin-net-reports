@@ -36,7 +36,7 @@ const View: React.FC<ViewProps> = props => {
   }
   let interactionType = InteractionType.Redirect;
 
-  const { instance, accounts, inProgress } = useMsal();
+  const { accounts, inProgress } = useMsal();
   const { login, result, error } = useMsalAuthentication(interactionType, request);
   
   useEffect(() => {
