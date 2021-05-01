@@ -16,23 +16,6 @@ spec:
     http:
       paths:
 
-        # - path: /voyager
-        #   backend:
-        #     name: webapi-svc
-        #     port: 8080
-        # - path: /altair
-        #   backend:
-        #     name: webapi-svc
-        #     port: 8080
-        # - path: /vendor
-        #   backend:
-        #     name: webapi-svc
-        #     port: 8080
-        # - path: /actuator
-        #   backend:
-        #     name: webapi-svc
-        #     port: 8080
-
         - path: /graphiql
           pathType: Prefix
           backend:
@@ -48,6 +31,34 @@ spec:
               port:
                 number: 8080
         - path: /api
+          pathType: Prefix
+          backend:
+            service:
+              name: webapi-svc
+              port:
+                number: 8080
+        - path: /voyager
+          pathType: Prefix
+          backend:
+            service:
+              name: webapi-svc
+              port:
+                number: 8080
+        - path: /altair
+          pathType: Prefix
+          backend:
+            service:
+              name: webapi-svc
+              port:
+                number: 8080
+        - path: /vendor
+          pathType: Prefix
+          backend:
+            service:
+              name: webapi-svc
+              port:
+                number: 8080
+        - path: /actuator
           pathType: Prefix
           backend:
             service:
