@@ -1,4 +1,4 @@
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: nginx
@@ -10,41 +10,49 @@ spec:
   tls:
   - hosts:
     - raport.sin.net.pl
-    secretName: tls-secret
+    secretName: sinnet-tls-secret
   rules:
   - host: raport.sin.net.pl
     http:
       paths:
+
+        # - path: /voyager
+        #   backend:
+        #     name: webapi-svc
+        #     port: 8080
+        # - path: /altair
+        #   backend:
+        #     name: webapi-svc
+        #     port: 8080
+        # - path: /vendor
+        #   backend:
+        #     name: webapi-svc
+        #     port: 8080
+        # - path: /graphql
+        #   backend:
+        #     name: webapi-svc
+        #     port: 8080
+        # - path: /api
+        #   backend:
+        #     name: webapi-svc
+        #     port: 8080
+        # - path: /actuator
+        #   backend:
+        #     name: webapi-svc
+        #     port: 8080
+
         - path: /graphiql
+          pathType: Prefix
           backend:
-            serviceName: webapi-svc
-            servicePort: 8080
-        - path: /voyager
-          backend:
-            serviceName: webapi-svc
-            servicePort: 8080
-        - path: /altair
-          backend:
-            serviceName: webapi-svc
-            servicePort: 8080
-        - path: /vendor
-          backend:
-            serviceName: webapi-svc
-            servicePort: 8080
-        - path: /graphql
-          backend:
-            serviceName: webapi-svc
-            servicePort: 8080
-        - path: /api
-          backend:
-            serviceName: webapi-svc
-            servicePort: 8080
-        - path: /actuator
-          backend:
-            serviceName: webapi-svc
-            servicePort: 8080
+            service:
+              name: webapi-svc
+              port:
+                number: 8080
 
         - path: /
+          pathType: Prefix
           backend:
-            serviceName: webapp-svc
-            servicePort: 80
+            service:
+              name: webapp-svc
+              port:
+                number: 80
