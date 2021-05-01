@@ -28,20 +28,26 @@ spec:
         #   backend:
         #     name: webapi-svc
         #     port: 8080
-        # - path: /graphql
-        #   backend:
-        #     name: webapi-svc
-        #     port: 8080
-        # - path: /api
-        #   backend:
-        #     name: webapi-svc
-        #     port: 8080
         # - path: /actuator
         #   backend:
         #     name: webapi-svc
         #     port: 8080
 
         - path: /graphiql
+          pathType: Prefix
+          backend:
+            service:
+              name: webapi-svc
+              port:
+                number: 8080
+        - path: /graphql
+          pathType: Prefix
+          backend:
+            service:
+              name: webapi-svc
+              port:
+                number: 8080
+        - path: /api
           pathType: Prefix
           backend:
             service:
