@@ -1,6 +1,6 @@
 import { InteractionStatus, InteractionType, RedirectRequest, SsoSilentRequest } from "@azure/msal-browser";
 import { useMsal, useMsalAuthentication } from "@azure/msal-react";
-import React, { useEffect } from "react";
+import React from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { Dispatch } from "redux";
 import { graphQlClient } from "../api";
@@ -28,27 +28,16 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 interface ViewProps extends PropsFromRedux {
 }
 
+const request : RedirectRequest | SsoSilentRequest = {
+  scopes: ["openid", "profile"],
+}
 
 const View: React.FC<ViewProps> = props => {
 
-  let request : RedirectRequest | SsoSilentRequest = {
-    scopes: ["openid", "profile"],
-  }
-  let interactionType = InteractionType.Redirect;
+  const { accounts, inProgress } = useMsal();
+  const { login, result } = useMsalAuthentication(InteractionType.Redirect, request);
 
-  const { instance, accounts, inProgress } = useMsal();
-  const { login, result, error } = useMsalAuthentication(interactionType, request);
-  
-  useEffect(() => {
-    if (error) {
-      console.error(error);
-      login(InteractionType.Redirect, request);
-    }
-  }, [error]);
-
-  useEffect(() => {
-
-    if (inProgress === InteractionStatus.None && !result) {
+  if (inProgress === InteractionStatus.None && !result) {
       if (accounts.length > 0) {
         const suggestedAccount = accounts[0];
         request.loginHint = suggestedAccount.username;
@@ -56,13 +45,11 @@ const View: React.FC<ViewProps> = props => {
       } else {
         login(InteractionType.Redirect, request);
       }
-    }
+  }
 
-    if (result && inProgress === InteractionStatus.None) {
-      props.login(result.idToken, result.account?.username ?? "undefined");
-    }
-
-  }, [inProgress])
+  if (result && inProgress === InteractionStatus.None) {
+    props.login(result.idToken, result.account?.username ?? "undefined");
+  }
 
   return (
     <>

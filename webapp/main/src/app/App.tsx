@@ -70,7 +70,6 @@ const pca = new PublicClientApplication(config);
 
 const App: React.FC<AppProps> = props => {
 
-  var current: JSX.Element;
   switch (props.flow) {
     case SignInFlow.Unknown:
     case SignInFlow.SessionInitiated:
