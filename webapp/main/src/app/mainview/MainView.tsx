@@ -1,5 +1,5 @@
 import _ from "lodash";
-import { Stack } from "@fluentui/react";
+import { Spinner, Stack } from "@fluentui/react";
 import React from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { HashRouter as Router, Route } from "react-router-dom";
@@ -52,7 +52,7 @@ const LocalView: React.FC<Props> = (props) => {
         return (
             <Stack>
                 <Stack.Item align="center">
-                    <p>Loading projects ...</p>
+                    <Spinner label="Ładowanie projektów ..." ariaLive="assertive" labelPosition="right" />
                 </Stack.Item>
             </Stack>);
     }

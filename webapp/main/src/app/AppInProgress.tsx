@@ -1,5 +1,6 @@
 import { InteractionStatus, InteractionType, RedirectRequest, SsoSilentRequest } from "@azure/msal-browser";
 import { useMsal, useMsalAuthentication } from "@azure/msal-react";
+import { IStackTokens, Label, Spinner, Stack } from "@fluentui/react";
 import React from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { Dispatch } from "redux";
@@ -28,7 +29,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 interface ViewProps extends PropsFromRedux {
 }
 
-const request : RedirectRequest | SsoSilentRequest = {
+const request: RedirectRequest | SsoSilentRequest = {
   scopes: ["openid", "profile"],
 }
 
@@ -38,23 +39,32 @@ const View: React.FC<ViewProps> = props => {
   const { login, result } = useMsalAuthentication(InteractionType.Redirect, request);
 
   if (inProgress === InteractionStatus.None && !result) {
-      if (accounts.length > 0) {
-        const suggestedAccount = accounts[0];
-        request.loginHint = suggestedAccount.username;
-        login(InteractionType.Silent, request);
-      } else {
-        login(InteractionType.Redirect, request);
-      }
+    if (accounts.length > 0) {
+      const suggestedAccount = accounts[0];
+      request.loginHint = suggestedAccount.username;
+      login(InteractionType.Silent, request);
+    } else {
+      login(InteractionType.Redirect, request);
+    }
   }
 
   if (result && inProgress === InteractionStatus.None) {
     props.login(result.idToken, result.account?.username ?? "undefined");
   }
 
+  const stackTokens: IStackTokens = {
+    childrenGap: 20,
+    maxWidth: 250,
+  };
+
   return (
-    <>
-      <p>Login in progress...</p>
-    </>
+    <Stack >
+      <Stack.Item align="center">
+        <span>
+          <Spinner label="Sprawdzanie konta użytkownika ..." ariaLive="assertive" labelPosition="right" />
+        </span>
+      </Stack.Item>
+    </Stack>
   );
 }
 
