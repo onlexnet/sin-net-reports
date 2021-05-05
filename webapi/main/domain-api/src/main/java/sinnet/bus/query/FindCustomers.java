@@ -13,15 +13,15 @@ import sinnet.models.CustomerValue;
 
 public interface FindCustomers {
 
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    class Ask {
-        /** Address used to send the query to it's handler. */
-        public static final String ADDRESS = "query.FindCustomers";
+  @Data
+  @NoArgsConstructor
+  @AllArgsConstructor
+  class Ask {
+      /** Address used to send the query to it's handler. */
+      public static final String ADDRESS = "query.FindCustomers";
 
-        private UUID projectId;
-    }
+      private UUID projectId;
+  }
 
     @Data
     @AllArgsConstructor
