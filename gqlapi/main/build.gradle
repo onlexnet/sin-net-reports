@@ -32,3 +32,10 @@ compileScala {
     sourceCompatibility = JavaVersion.VERSION_11
     targetCompatibility = JavaVersion.VERSION_11
 }
+
+test {
+    // required setting
+    // removing it will stop tests
+    // https://quarkus.io/guides/logging#how-to-configure-logging-for-quarkustest
+	systemProperty "java.util.logging.manager", "org.jboss.logmanager.LogManager"
+}

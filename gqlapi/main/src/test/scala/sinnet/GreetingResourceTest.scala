@@ -8,21 +8,21 @@ import io.quarkus.grpc.runtime.annotations.GrpcService;
 import io.quarkus.example.GreeterGrpc;
 import io.quarkus.example.HelloRequest;
 import javax.inject.Inject
+import scala.annotation.meta.field
+import org.junit.jupiter.api.Assertions
 
 @QuarkusTest
 class GreetingResourceTest {
-
+    
     @Inject
     @GrpcService("hello")
-    var client: GreeterGrpc.GreeterBlockingStub;
+    var client: GreeterGrpc.GreeterBlockingStub = _
 
     @Test
     def testHelloEndpoint() = {
-        given()
-          .`when`().get("/hello-resteasy")
-          .then()
-             .statusCode(200)
-             .body(`is`("Hello RESTEasy"))
+        var request = HelloRequest.newBuilder().setName("Ala ma kota").build()
+        var a = client.sayHello(request)
+        Assertions.assertEquals(a.getMessage(), "Hello Ala ma kota")
     }
 
 }
