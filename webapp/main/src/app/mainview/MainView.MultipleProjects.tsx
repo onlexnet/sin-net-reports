@@ -17,13 +17,15 @@ export const MainViewMultipleProjects: React.FC<MainViewMultipleProjectsProps> =
 
     return (
         <Stack>
-            <span>
-                <ChoiceGroup options={options} label="Wybierz projekt na którym chcesz pracować:" onChange={(e, v) => setSelected(v?.key)} />
-            </span>
-            <span>
-                <DefaultButton disabled={selected ? false : true} 
-                               onClick={e => props.projectSelected(selected!)}>Kontunuuj pracę z wybranym projektem</DefaultButton>
-            </span>
+            <Stack.Item align="center">
+                <span>
+                    <ChoiceGroup options={options} label="Wybierz projekt na którym chcesz pracować:" onChange={(e, v) => setSelected(v?.key)} />
+                </span>
+                <span>
+                    <DefaultButton disabled={selected ? false : true}
+                        onClick={e => props.projectSelected(selected!)}>Kontunuuj pracę z wybranym projektem</DefaultButton>
+                </span>
+            </Stack.Item>
         </Stack>
     );
 }
