@@ -1,0 +1,17 @@
+.metals
+.bloop
+
+# Gradle
+.gradle/
+build/
+
+# Eclipse
+.project
+.classpath
+.settings/
+bin/
+
+# Visual Studio Code
+.vscode
+.factorypath
+
