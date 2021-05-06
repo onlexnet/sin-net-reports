@@ -80,6 +80,7 @@ jobs:
         inputs:
           command: build
           dockerfile: uservice-reports/main/src/main/docker/Dockerfile.jvm
+          buildContext: uservice-reports/main
           containerRegistry: $(dockerRegistryServiceConnection)
           repository: $(dockerRepository)
           tags: |
