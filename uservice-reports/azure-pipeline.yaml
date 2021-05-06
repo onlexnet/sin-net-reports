@@ -33,7 +33,7 @@ jobs:
       - task: Gradle@2
         inputs:
           displayName: 'Project compilation with Gradle'
-          gradleWrapperFile: 'gradlew' 
+          gradleWrapperFile: 'uservice-reports/main/gradlew' 
           cwd: 'uservice-reports/main'
           #options: # Optional
           #tasks: 'build' # A list of tasks separated by spaces, such as 'build test'
