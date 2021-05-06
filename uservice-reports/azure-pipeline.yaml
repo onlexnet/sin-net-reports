@@ -37,8 +37,8 @@ jobs:
           cwd: 'uservice-reports/main'
           #options: # Optional
           #tasks: 'build' # A list of tasks separated by spaces, such as 'build test'
-          #publishJUnitResults: true 
-          #testResultsFiles: '**/TEST-*.xml' # Required when publishJUnitResults == True
+          publishJUnitResults: true 
+          testResultsFiles: '**/TEST-*.xml' # Required when publishJUnitResults == True
           #testRunTitle: # Optional
           #codeCoverageToolOption: 'None' # Optional. Options: none, cobertura, jaCoCo
           #codeCoverageClassFilesDirectories: 'build/classes/main/' # Required when codeCoverageToolOption == False
@@ -52,7 +52,7 @@ jobs:
           #sonarQubeRunAnalysis: false 
           #sqGradlePluginVersionChoice: 'specify' # Required when sonarQubeRunAnalysis == True# Options: specify, build
           #sonarQubeGradlePluginVersion: '2.6.1' # Required when sonarQubeRunAnalysis == True && SqGradlePluginVersionChoice == Specify
-          #checkStyleRunAnalysis: false # Optional
+          checkStyleRunAnalysis: false # Optional
           #findBugsRunAnalysis: false # Optional
           #pmdRunAnalysis: false # Optional
       # - task: Maven@3
