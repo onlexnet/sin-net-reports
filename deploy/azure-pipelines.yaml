@@ -7,31 +7,19 @@ resources:
   - pipeline: webapp_CI
     project: sinnet
     source: onlex-sinnet-webapp
-    trigger:
-      branches:
-        include:
-        - master
+    trigger: true
   - pipeline: webapi_CI
     project: sinnet
     source: onlex-sinnet-webapi
-    trigger:
-      branches:
-        include:
-        - master
+    trigger: true
   - pipeline: report_CI
     project: sinnet
     source: onlex-sinnet-reports
-    trigger:
-      branches:
-        include:
-        - master
+    trigger: true
   - pipeline: manifest_CI
     project: sinnet
     source: onlex-sinnet-manifest
-    trigger:
-      branches:
-        include:
-        - master
+    trigger: true
   containers:
     - container: webapp
       type: ACR  
@@ -79,6 +67,7 @@ stages:
                   #patterns: '**' # Optional
                   #path: '$(Pipeline.Workspace)' 
               - bash: ls -l
+                workingDirectory: $(PIPELINE.WORKSPACE)/manifest_CI/default
               - task: KubernetesManifest@0
                 displayName: Create secret
                 inputs: 
