@@ -65,6 +65,7 @@ stages:
               steps:
               - bash: echo $(resources.container.webapp.tag)
               - task: DownloadPipelineArtifact@2
+                displayName: Download Manifest
                 inputs:
                   source: specific
                   project: sinnet
@@ -77,6 +78,7 @@ stages:
                   #artifact: # Optional
                   #patterns: '**' # Optional
                   #path: '$(Pipeline.Workspace)' 
+              - bash: ls -l
               - task: KubernetesManifest@0
                 displayName: Create secret
                 inputs: 
