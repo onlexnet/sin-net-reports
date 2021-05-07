@@ -12,7 +12,7 @@ import _ from "lodash";
 
 const mapStateToProps = (state: RootState) => {
     if (state.appState.empty) {
-        throw 'Invalid state';
+        throw new Error('Invalid state');
     }
     return state;
 }
