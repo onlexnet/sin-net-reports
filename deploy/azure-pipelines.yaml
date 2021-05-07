@@ -89,7 +89,7 @@ stages:
                   kubernetesServiceConnection: sinnet-microk8s
                   namespace: onlex-sinnet-prd
                   manifests: |
-                    $(manifestDir)
+                    $(manifestDir)/*
                   containers: |
                       sinnet.azurecr.io/webapp:$(resources.container.webapp.tag)
                       sinnet.azurecr.io/webapi:$(resources.container.webapi.tag)
