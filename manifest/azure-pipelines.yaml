@@ -16,4 +16,4 @@ pool:
 
 steps:
 - publish: manifest/main
-  artifact: manifest
+  artifact: default
