@@ -47,6 +47,9 @@ stages:
       - deployment: DeployAppComponents
         displayName: Deploy app components
         environment: 'onlex-sinnet-prd'
+        variables:
+          - name: manifestDir
+            value: $(PIPELINE.WORKSPACE)/manifest_CI/default
         strategy:
           runOnce:
             deploy:
@@ -67,7 +70,7 @@ stages:
                   #patterns: '**' # Optional
                   #path: '$(Pipeline.Workspace)' 
               - bash: ls -l
-                workingDirectory: $(PIPELINE.WORKSPACE)/manifest_CI/default
+                workingDirectory: $(manifestDir)
               - task: KubernetesManifest@0
                 displayName: Create secret
                 inputs: 
@@ -86,7 +89,7 @@ stages:
                   kubernetesServiceConnection: sinnet-microk8s
                   namespace: onlex-sinnet-prd
                   manifests: |
-                    deploy/main/*
+                    $(manifestDir)
                   containers: |
                       sinnet.azurecr.io/webapp:$(resources.container.webapp.tag)
                       sinnet.azurecr.io/webapi:$(resources.container.webapi.tag)
