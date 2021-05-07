@@ -14,11 +14,11 @@ resources:
     trigger: 'true'
   - pipeline: report_CI
     project: sinnet
-    source: onlex-sinnet-report
+    source: onlex-sinnet-reports
     trigger: 'true'
   - pipeline: manifest_CI
     project: sinnet
-    source: onlex-sinnet-manifesr
+    source: onlex-sinnet-manifest
     trigger: 'true'
   containers:
     - container: webapp
