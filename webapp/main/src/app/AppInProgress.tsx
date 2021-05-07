@@ -1,6 +1,6 @@
 import { InteractionStatus, InteractionType, RedirectRequest, SsoSilentRequest } from "@azure/msal-browser";
 import { useMsal, useMsalAuthentication } from "@azure/msal-react";
-import { IStackTokens, Label, Spinner, Stack } from "@fluentui/react";
+import { IStackTokens, Spinner, Stack } from "@fluentui/react";
 import React from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { Dispatch } from "redux";
@@ -51,11 +51,6 @@ const View: React.FC<ViewProps> = props => {
   if (result && inProgress === InteractionStatus.None) {
     props.login(result.idToken, result.account?.username ?? "undefined");
   }
-
-  const stackTokens: IStackTokens = {
-    childrenGap: 20,
-    maxWidth: 250,
-  };
 
   return (
     <Stack >

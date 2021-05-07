@@ -26,11 +26,10 @@ In scope:
 
 ## To run locally for tests
 
-- cd webapi/main
-- TBD
-- goto **http://localhost:3000** to see UI
-- goto **http://localhost:8080/graphiql** to see webapi
-
+- run docker
+- run docker-compose (to start database)
+- run backend
+- run frontend
 ## Used articles
 - https://devhub.io/repos/JrCs-docker-letsencrypt-nginx-proxy-companion
 - https://blog.linuxserver.io/2017/11/28/how-to-setup-a-reverse-proxy-with-letsencrypt-ssl-for-all-your-docker-apps/
