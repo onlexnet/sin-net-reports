@@ -15,5 +15,5 @@ pool:
 
 
 steps:
-- publish: deployment/main
+- publish: manifest/main
   artifact: manifest
