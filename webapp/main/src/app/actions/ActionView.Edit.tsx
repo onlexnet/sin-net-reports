@@ -282,5 +282,5 @@ const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
     );
 }
 
-export const ActionViewEdit = connect(mapStateToProps, mapDispatchToProps)(ActionViewEditLocal);
+export default connect(mapStateToProps, mapDispatchToProps)(ActionViewEditLocal);
 

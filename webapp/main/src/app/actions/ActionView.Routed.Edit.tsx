@@ -1,10 +1,9 @@
 import React from "react"
-import { EntityId } from "../../store/actions/ServiceModel";
 import { RootState } from "../../store/reducers";
 import { Dispatch } from "redux";
 import { connect, ConnectedProps } from "react-redux";
 import { RouteComponentProps } from "react-router-dom";
-import { ActionViewEdit } from "./ActionView.Edit";
+import ActionViewEdit from "./ActionView.Edit";
 import { useGetActionQuery } from "../../Components/.generated/components";
 import { toActionModel } from "../../api/DtoMapper";
 import { routing } from "../../Routing";
@@ -12,7 +11,7 @@ import { routing } from "../../Routing";
 
 const mapStateToProps = (state: RootState) => {
     if (state.appState.empty) {
-        throw 'Invalid state';
+        throw new Error('Invalid state');
     }
     return state;
 }
@@ -32,9 +31,8 @@ export const ActionViewRoutedEditLocal: React.FC<ActionViewEditProps> = props =>
     const projectId = props.match.params.projectId;
     const entityId = props.match.params.entityId;
 
-    const actionUpdated = () => props.history.push(routing.actions);
     const actionCancel = () => props.history.push(routing.actions);
-    const { loading, data } = useGetActionQuery({
+    const { data } = useGetActionQuery({
         variables: {
             projectId,
             actionId: entityId
@@ -47,7 +45,7 @@ export const ActionViewRoutedEditLocal: React.FC<ActionViewEditProps> = props =>
         return <ActionViewEdit item={model}
                                actionUpdated={() => { }}
                                cancelEdit={actionCancel} />;
-    };
+    }
 
     return <div>Loading ...</div>
 }

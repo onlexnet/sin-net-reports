@@ -41,7 +41,7 @@ interface Props extends PropsFromRedux {
 
 const LocalView: React.FC<Props> = (props) => {
 
-    const { data, loading, error } = useAvailableProjectsQuery();
+    const { data, error } = useAvailableProjectsQuery();
 
     if (error) {
         return (<p>Error: {JSON.stringify(error)}</p>);
@@ -57,7 +57,7 @@ const LocalView: React.FC<Props> = (props) => {
     }
 
     const { availableProjects } = data;
-    if (availableProjects.length == 0) {
+    if (availableProjects.length === 0) {
         return <MainViewNoProjects />;
     }
 
