@@ -1,20 +1,25 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-
-trigger:
-  batch: true
-  branches:
-    include:
-      - master
-  paths:
-    include:
-      - /deploy/
 pool:
   vmImage: 'ubuntu-latest'
 
+
 resources:
+  pipelines:
+  - pipeline: webapp_CI
+    project: sinnet
+    source: onlex-sinnet-webapp
+    trigger: 'true'
+  - pipeline: webapi_CI
+    project: sinnet
+    source: onlex-sinnet-webapi
+    trigger: 'true'
+  - pipeline: uservice_report_CI
+    project: sinnet
+    source: onlex-sinnet-webapi
+    trigger: 'true'
+  - pipeline: manifest_CI
+    project: sinnet
+    source: onlex-sinnet-reports
+    trigger: 'true'
   containers:
     - container: webapp
       type: ACR  
@@ -22,14 +27,18 @@ resources:
       resourceGroup: sinnet-default-manual
       registry: sinnet
       repository: webapp
-      trigger: "true"
     - container: webapi
       type: ACR  
       azureSubscription: sinnet-default-manual-arm
       resourceGroup: sinnet-default-manual
       registry: sinnet
       repository: webapi
-      trigger: "true"
+    - container: reports
+      type: ACR  
+      azureSubscription: sinnet-default-manual-arm
+      resourceGroup: sinnet-default-manual
+      registry: sinnet
+      repository: onlex-sinnet-reports
 
 stages:
   - stage:
@@ -65,3 +74,4 @@ stages:
                   containers: |
                       sinnet.azurecr.io/webapp:$(resources.container.webapp.tag)
                       sinnet.azurecr.io/webapi:$(resources.container.webapi.tag)
+                      sinnet.azurecr.io/onlex-sinnet-reports:$(resources.container.reports.tag)

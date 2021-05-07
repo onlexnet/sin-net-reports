@@ -9,7 +9,7 @@ trigger:
       - master
   paths:
     include:
-      - deployment
+      - manifest
 pool:
   vmImage: 'ubuntu-latest'
 
