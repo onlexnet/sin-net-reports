@@ -7,19 +7,31 @@ resources:
   - pipeline: webapp_CI
     project: sinnet
     source: onlex-sinnet-webapp
-    trigger: 'true'
+    trigger:
+      branches:
+        include:
+        - master
   - pipeline: webapi_CI
     project: sinnet
     source: onlex-sinnet-webapi
-    trigger: 'true'
+    trigger:
+      branches:
+        include:
+        - master
   - pipeline: report_CI
     project: sinnet
     source: onlex-sinnet-reports
-    trigger: 'true'
+    trigger:
+      branches:
+        include:
+        - master
   - pipeline: manifest_CI
     project: sinnet
     source: onlex-sinnet-manifest
-    trigger: 'true'
+    trigger:
+      branches:
+        include:
+        - master
   containers:
     - container: webapp
       type: ACR  
@@ -52,6 +64,19 @@ stages:
             deploy:
               steps:
               - bash: echo $(resources.container.webapp.tag)
+              - task: DownloadPipelineArtifact@2
+                inputs:
+                  source: specific
+                  project: sinnet
+                  pipeline: onlex-sinnet-manifest
+                  preferTriggeringPipeline: true
+                  #runVersion: 'latest' # Required when source == Specific# Options: latest, latestFromBranch, specific
+                  #runBranch: 'refs/heads/master' # Required when source == Specific && RunVersion == LatestFromBranch
+                  #runId: # Required when source == Specific && RunVersion == Specific
+                  #tags: # Optional
+                  #artifact: # Optional
+                  #patterns: '**' # Optional
+                  #path: '$(Pipeline.Workspace)' 
               - task: KubernetesManifest@0
                 displayName: Create secret
                 inputs: 
