@@ -75,7 +75,7 @@ jobs:
           repository: webapi
           # to use inside docker variable do use version with build
           # lets put them from just obtained value from .version file
-          arguments: --build-arg $(my_version)
+          arguments: --build-arg REVISION=$(my_version)
           tags: |
             $(Build.SourceBranchName)-$(Build.BuildNumber)
 

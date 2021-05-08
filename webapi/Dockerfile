@@ -9,10 +9,6 @@ COPY . .
 
 WORKDIR /app/main
 RUN chmod +x ./mvnw
-# download maven dependencies and disable log entries (a lot of entries) related to downloaded artifacts
-# source @ https://blogs.itemis.com/en/in-a-nutshell-removing-artifact-messages-from-maven-log-output
-# we also skip tests because testing and build appllication is done in a different step of builds.
-ENV REVISION=$REVISION
 RUN ./mvnw clean install -Drevision=$REVISION -DskipTests -B --no-transfer-progress
 
 #----------
