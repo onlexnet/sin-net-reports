@@ -67,17 +67,15 @@ jobs:
           checkStyleRunAnalysis: true # We use checkstyle in coding, so let's use it with Maven as well
 
       - task: Docker@2
-        env:
-          # to use inside docker variable do use version with build
-          # lets put them from just obtained value from .version file
-          REVISION: $(my_version)
         displayName: Build webapi image
         inputs:
           command: build
           dockerfile: webapi/Dockerfile
           containerRegistry: $(dockerRegistryServiceConnection)
           repository: webapi
-          arguments: --build-arg AZURE_APP_SECRET
+          # to use inside docker variable do use version with build
+          # lets put them from just obtained value from .version file
+          arguments: --build-arg $(my_version)
           tags: |
             $(Build.SourceBranchName)-$(Build.BuildNumber)
 
