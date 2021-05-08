@@ -1,8 +1,7 @@
-ARG REVISION
-
 #----------
 # more images see https://hub.docker.com/_/microsoft-java-jdk
-FROM mcr.microsoft.com/java/jdk:11u5-zulu-alpine as build
+FROM mcr.microsoft.com/java/jdk:11u10-zulu-alpine as build
+ARG REVISION
 
 WORKDIR /app
 COPY . .

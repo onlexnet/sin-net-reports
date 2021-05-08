@@ -66,6 +66,14 @@ class CustomerModel {
   private String komercjaNotatki;
   private String daneTechniczne;
 }
+
+/**
+ * Value to keep together information about some security data used to acess - on behalf ot a client - to remote location
+ * protected by username and password.
+ *
+ * <p>Properties: changedWhen and changedWho allows to see who last time changed them and when. It is not
+ * an audit, but only just for info.
+ */
 @Value
 class CustomerSecret {
   private String location;

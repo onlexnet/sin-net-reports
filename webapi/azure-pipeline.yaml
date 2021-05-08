@@ -42,7 +42,6 @@ jobs:
         displayName: Read version from .version file
 
       - task: Maven@3
-        
         env:
           # pom.xml uses SONAR_TOKEN env variable to communicate with sonarcloud.
           # The crrent CI/CD pipeline has secret named SONAR_TOKEN with proper value.
