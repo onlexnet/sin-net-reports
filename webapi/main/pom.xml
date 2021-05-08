@@ -4,7 +4,7 @@
   <packaging>pom</packaging>
   <groupId>net.siudek</groupId>
   <artifactId>aggregation</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>${revision}</version>
 
   <modules>
     <module>base-pom</module>
@@ -23,7 +23,6 @@
   </modules>
 
   <properties>
-
     <!-- sonar properties -> https://docs.sonarqube.org/latest/analysis/analysis-parameters/ -->
     <sonar.organization>on-lex-net</sonar.organization>
     <sonar.projectKey>sin-net-reports</sonar.projectKey>

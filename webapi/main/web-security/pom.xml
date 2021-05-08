@@ -3,13 +3,13 @@
   <parent>
     <artifactId>sinnet</artifactId>
     <groupId>net.siudek</groupId>
-    <version>1.0-SNAPSHOT</version>
+    <version>${revision}</version>
     <relativePath>../base-pom/pom.xml</relativePath>
   </parent>
 
   <groupId>net.siudek</groupId>
   <artifactId>web-security</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>${revision}</version>
 
   <name>web-security</name>
 

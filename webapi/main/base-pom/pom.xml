@@ -4,13 +4,12 @@
 
   <groupId>net.siudek</groupId>
   <artifactId>sinnet</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>${revision}</version>
   <packaging>pom</packaging>
 
   <name>parent-pom</name>
   
   <properties>
-    <my.version>1.0-SNAPSHOT</my.version>
     <spring-boot-azure.version>2.3.2</spring-boot-azure.version>
     <spring-boot.version>2.4.3</spring-boot.version>
     <jacoco.version>0.8.5</jacoco.version>
@@ -82,35 +81,35 @@
       <dependency>
         <groupId>net.siudek</groupId>
         <artifactId>web-security</artifactId>
-        <version>${my.version}</version>
+        <version>${project.version}</version>
         <scope>compile</scope>
       </dependency>
 
       <dependency>
         <groupId>net.siudek</groupId>
         <artifactId>web-server</artifactId>
-        <version>${my.version}</version>
+        <version>${project.version}</version>
         <scope>compile</scope>
       </dependency>
 
       <dependency>
         <groupId>net.siudek</groupId>
         <artifactId>web-graphql</artifactId>
-        <version>${my.version}</version>
+        <version>${project.version}</version>
         <scope>compile</scope>
       </dependency>
 
       <dependency>
         <groupId>net.siudek</groupId>
         <artifactId>domain-core</artifactId>
-        <version>${my.version}</version>
+        <version>${project.version}</version>
         <scope>compile</scope>
       </dependency>
 
       <dependency>
         <groupId>net.siudek</groupId>
         <artifactId>domain-api</artifactId>
-        <version>${my.version}</version>
+        <version>${project.version}</version>
         <scope>compile</scope>
       </dependency>
 
