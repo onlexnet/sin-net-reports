@@ -21,4 +21,4 @@ ENV APP_DB_HOST: db
 VOLUME /tmp
 COPY --from=build /app/main/host/target/*.jar /app/target/
 EXPOSE 8080
-ENTRYPOINT ["java","-jar","/app/target/host-1.0-SNAPSHOT.jar"]
+ENTRYPOINT ["java","-jar","/app/target/host-$REVISION.jar"]
