@@ -1,6 +1,13 @@
 pool:
   vmImage: 'ubuntu-latest'
 
+trigger:
+  branches:
+    include:
+      - master
+  paths:
+    include:
+      - deploy
 
 resources:
   pipelines:
