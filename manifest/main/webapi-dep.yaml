@@ -20,7 +20,7 @@ spec:
         - name: regcred
       containers:
         - name: webapi
-          image: sinnet.azurecr.io/webapi:latest
+          image: sinnet.azurecr.io/webapi:##BUILD_ID##
           imagePullPolicy: Always
           ports:
           - containerPort: 8080
