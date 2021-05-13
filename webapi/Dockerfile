@@ -20,6 +20,6 @@ ENV APP_DB_HOST: db
 
 VOLUME /tmp
 COPY --from=build /app/main/host/target/*.jar /app
-RUN mv /app/host-$REVISION.jar /app/host.jar
+RUN mv /app/host-${REVISION}.jar /app/host.jar
 EXPOSE 8080
 ENTRYPOINT ["java","-jar","/app/host.jar"]
