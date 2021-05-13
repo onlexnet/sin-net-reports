@@ -13,6 +13,7 @@ RUN ./mvnw clean install -Drevision=$REVISION -DskipTests -B --no-transfer-progr
 #----------
 # list of images is located @ https://hub.docker.com/_/microsoft-java-jre-headless
 FROM mcr.microsoft.com/java/jre-headless:11u7-zulu-alpine
+ARG REVISION
 
 # The application needs some configuration
 ENV SPRING_PROFILES_ACTIVE=prod
