@@ -14,7 +14,7 @@ RUN ./mvnw clean install -Drevision=$REVISION -DskipTests -B --no-transfer-progr
 
 #----------
 # list of images is located @ https://hub.docker.com/_/microsoft-java-jre-headless
-FROM mcr.microsoft.com/java/jre-headless:11u7-zulu-alpine
+FROM mcr.microsoft.com/java/jre-headless:11u10-zulu-alpine
 ARG REVISION
 
 # The application needs some configuration
@@ -22,7 +22,7 @@ ENV SPRING_PROFILES_ACTIVE=prod
 ENV APP_DB_HOST: db
 
 VOLUME /tmp
-COPY --from=build /app/main/host/target/*.jar /app
-RUN mv /app/host-${REVISION}.jar /app/host.jar
+COPY --from=build /app/main/host/target/*.jar /app/
+RUN mv /app/host-$REVISION.jar /app/host.jar
 EXPOSE 8080
 ENTRYPOINT ["java","-jar","/app/host.jar"]
