@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 /** Fixme. */
 @RestController
-public class HelloController {
+public class TestController {
 
     /**
      * Fixme.
