@@ -80,6 +80,13 @@
       
       <dependency>
         <groupId>net.siudek</groupId>
+        <artifactId>grpc-client</artifactId>
+        <version>${project.version}</version>
+        <scope>compile</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>net.siudek</groupId>
         <artifactId>web-security</artifactId>
         <version>${project.version}</version>
         <scope>compile</scope>
@@ -154,7 +161,27 @@
           <compilerArgs>
             <arg>-Werror</arg>
             <arg>-parameters</arg> <!-- so that @Param is not required in JPA -->
+
+            <!-- https://errorprone.info/docs/installation -->
+            <arg>-XDcompilePolicy=simple</arg>
+            <arg>-Xplugin:ErrorProne</arg>
+
           </compilerArgs>
+
+          <annotationProcessorPaths>
+
+            <!-- https://errorprone.info/docs/installation -->
+            <path>
+              <groupId>com.google.errorprone</groupId>
+              <artifactId>error_prone_core</artifactId>
+              <version>2.7.0</version>
+            </path>
+            <!-- Other annotation processors go here.
+
+            If 'annotationProcessorPaths' is set, processors will no longer be
+            discovered on the regular -classpath; see also 'Using Error Prone
+            together with other annotation processors' below. -->
+          </annotationProcessorPaths>
         </configuration>
       </plugin>
 
