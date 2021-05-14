@@ -8,6 +8,7 @@
 
   <modules>
     <module>base-pom</module>
+    <module>grpc-client</module>
     <module>domain-api</module>
     <module>domain-core</module>
     <module>web-security</module>
