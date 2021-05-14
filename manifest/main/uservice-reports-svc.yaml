@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: uservice-reports-svc
+  labels:
+    app: webapp-scv
+spec:
+  type: NodePort
+  ports:
+  - port: 9000
+  selector:
+    app: uservice-reports
