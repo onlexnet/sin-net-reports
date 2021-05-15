@@ -17,7 +17,7 @@ import io.quarkus.example.HelloRequest;
 
 /** Test controller to find connection from webapi to backend service through gRPC api. */
 @RestController
-@RequestMapping("/debug")
+@RequestMapping("/api/debug")
 public class HelloController {
 
   private GreeterGrpc.GreeterBlockingStub client;
