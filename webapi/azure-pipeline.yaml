@@ -65,9 +65,11 @@ jobs:
           sqMavenPluginVersionChoice: 'latest' # Required when sonarQubeRunAnalysis == True# Options: latest, pom
           checkStyleRunAnalysis: true # We use checkstyle in coding, so let's use it with Maven as well
 
+      - bash: |
+          links.sh
+          cp -Lr .links .links-COPY && rm -r .links && mv .links-COPY .links
+        displayName: Create local copy of used external resources
 
-      - bash: docker-build-before.sh
-        displayName: Copy external files reuired by Docker build
       - task: Docker@2
         displayName: Build webapi image
         inputs:
