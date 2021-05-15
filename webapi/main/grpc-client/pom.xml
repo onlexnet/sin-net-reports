@@ -57,6 +57,10 @@
         <artifactId>protobuf-maven-plugin</artifactId>
         <version>0.6.1</version>
         <configuration>
+          <!-- Important: location of source proto files is located outside ot the source folder
+          so that it will not be avaiable for Docker build as Docker is limited to the folder where the build happens
+          So, before starting build using Docker proto source files are copied from location protoSourceRoot
+          to folder with the same name but inside docker -->
           <protoSourceRoot>../../../uservice-reports/main/src/main/proto</protoSourceRoot>
           <!--
             Two params below: clearOutputDirectory and checkStaleness because with default values generated source files

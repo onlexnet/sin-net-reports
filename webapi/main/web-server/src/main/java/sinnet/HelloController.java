@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.grpc.ManagedChannelBuilder;
 import io.quarkus.example.GreeterGrpc;
-import io.quarkus.example.HelloReply;
 import io.quarkus.example.HelloRequest;
 
 /** Test controller to find connection from webapi to backend service through gRPC api. */
