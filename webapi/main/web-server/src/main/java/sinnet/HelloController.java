@@ -23,7 +23,7 @@ public class HelloController {
 
   @PostConstruct
   public void init() {
-    var channel = ManagedChannelBuilder.forAddress("localhost", 9000)
+    var channel = ManagedChannelBuilder.forAddress("uservice-reports", 9000)
         .usePlaintext()
         .build();
     this.client = GreeterGrpc.newBlockingStub(channel);
