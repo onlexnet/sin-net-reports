@@ -58,23 +58,6 @@ jobs:
           #pmdRunAnalysis: false # Optional
       # - task: Maven@3
         
-      #   env:
-      #   # https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/build/maven
-      #   displayName: 'Project compilation with Maven'
-      #   inputs:
-      #     mavenPomFile: 'webapi/main/pom.xml'
-      #     goals: 'verify'
-      #     javaHomeOption: 'JDKVersion'
-      #     jdkVersionOption: '1.11'
-      #     jdkArchitectureOption: 'x64'
-      #     publishJUnitResults: false
-      #     # options:
-      #     #  - disable log entries (a lot of entries) related to artifacts downloaded by maven
-      #     options: -B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
-      #     sonarQubeRunAnalysis: true
-      #     sqMavenPluginVersionChoice: 'latest' # Required when sonarQubeRunAnalysis == True# Options: latest, pom
-      #     checkStyleRunAnalysis: true # We use checkstyle in coding, so let's use it with Maven as well
-
       - task: Docker@2
         displayName: Build uservice image
         inputs:
@@ -95,3 +78,8 @@ jobs:
           tags: |
             $(Build.SourceBranchName)-$(Build.BuildNumber)
 
+      - task: PublishPipelineArtifact@1
+        displayName: Publish gRPC API
+        inputs:
+          targetPath: $(System.DefaultWorkingDirectory)/main/src/main/proto
+          artifactName: api.grpc
