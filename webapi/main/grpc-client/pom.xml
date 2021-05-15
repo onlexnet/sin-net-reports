@@ -58,6 +58,11 @@
         <version>0.6.1</version>
         <configuration>
           <protoSourceRoot>../../../uservice-reports/main/src/main/proto</protoSourceRoot>
+          <!--
+            Default: true, but unfortunattely when uses non-standard protoSourceRoot all generated files are deleted
+            so we use false to keep saved all generated code.
+          -->
+          <clearOutputDirectory>false</clearOutputDirectory>
           <protocArtifact>com.google.protobuf:protoc:3.12.0:exe:${os.detected.classifier}</protocArtifact>
           <pluginId>grpc-java</pluginId>
           <pluginArtifact>io.grpc:protoc-gen-grpc-java:1.37.1:exe:${os.detected.classifier}</pluginArtifact>
