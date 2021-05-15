@@ -42,7 +42,7 @@ jobs:
         displayName: Read version from .version file
 
       - bash: |
-          links.sh
+          ./links.sh
           cp -Lr .links .links-COPY && rm -r .links && mv .links-COPY .links
         workingDirectory: webapi
         displayName: Create local copy of used external resources
