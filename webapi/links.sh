@@ -3,7 +3,7 @@
 # named .docker-externals so that later on Docker, having such files, will copy them to its original locations but
 # located inside docker build process.
 
-rm -rf .docker-externals
-mkdir .docker-externals
+rm -rf .links
+mkdir .links
 
-cp -r ../uservice-reports/main/src/main/proto/ .docker-externals/proto/
+ln -s $(realpath ../uservice-reports/main/src/main/proto) .links/uservice-reports-proto

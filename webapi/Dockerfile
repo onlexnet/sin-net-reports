@@ -8,7 +8,6 @@ ARG REVISION
 WORKDIR /app
 COPY . .
 
-RUN ./docker-build-inside.sh
 WORKDIR /app/main
 RUN chmod +x ./mvnw
 RUN ./mvnw clean install -Drevision=$REVISION -DskipTests -Dcheckstyle.skip -B --no-transfer-progress
