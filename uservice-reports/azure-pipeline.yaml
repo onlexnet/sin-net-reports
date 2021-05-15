@@ -69,6 +69,12 @@ jobs:
           tags: |
             $(Build.SourceBranchName)-$(Build.BuildNumber)
 
+      - task: PublishPipelineArtifact@1
+        displayName: Publish gRPC API
+        inputs:
+          targetPath: $(System.DefaultWorkingDirectory)/uservice-reports/main/src/main/proto
+          artifactName: api.grpc
+
       - task: Docker@2
         displayName: Push webapi image to docker ACR
         inputs:
@@ -78,8 +84,3 @@ jobs:
           tags: |
             $(Build.SourceBranchName)-$(Build.BuildNumber)
 
-      - task: PublishPipelineArtifact@1
-        displayName: Publish gRPC API
-        inputs:
-          targetPath: $(System.DefaultWorkingDirectory)/main/src/main/proto
-          artifactName: api.grpc
