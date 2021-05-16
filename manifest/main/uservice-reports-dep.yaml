@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: uservice-reports-dep
+  name: uservice-reports
   labels:
     app: uservice-reports
 spec:
