@@ -11,22 +11,22 @@ import lombok.extern.jackson.Jacksonized;
 
 public interface CheckProjectPermission {
 
-    @AllArgsConstructor
-    @Value
-    @Jacksonized
-    @Builder(toBuilder = true)
-    class Ask {
-        /** Address used to send the query to it's handler. */
-        public static final String ADDRESS = "query.CheckProjectPermission";
+  @AllArgsConstructor
+  @Value
+  @Jacksonized
+  @Builder(toBuilder = true)
+  class Ask {
+    /** Address used to send the query to it's handler. */
+    public static final String ADDRESS = "query.CheckProjectPermission";
 
-        private UUID projectId;
-    }
+    private UUID projectId;
+  }
 
-    @Data
-    @AllArgsConstructor
-    @NoArgsConstructor
-    class Reply {
-        private Boolean result;
-    }
+  @Data
+  @AllArgsConstructor
+  @NoArgsConstructor
+  class Reply {
+    private Boolean result;
+  }
 
 }

@@ -30,5 +30,6 @@ public class FutureExecutor {
         result.completeExceptionally(ex);
       }
     }, taskExecutor);
+    return result;
   }
 }

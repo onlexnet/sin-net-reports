@@ -20,8 +20,8 @@ import sinnet.FutureExecutor;
 
 /**
  * Test controller to test calls endpoint -> webapi -> backend service using gRPC api.
- * <p>
- * We use apache benchamrking tool (ab) for simple performance tests. (sudo apt install apache2-utils)
+ *
+ * <p>We use Apache benchmark tool (ab) for simple performance tests. (sudo apt install apache2-utils)
  * Test webapi response: ab -n 10 -c 2 https://raport.sin.net.pl/api/debug/hello-by-webapi?name=asia
  * Test service response: ab -n 10 -c 2 https://raport.sin.net.pl/api/debug/hello-by-service?name=asia
  */
