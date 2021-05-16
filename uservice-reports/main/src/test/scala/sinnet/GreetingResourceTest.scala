@@ -22,7 +22,7 @@ class GreetingResourceTest {
     def testHelloEndpoint() = {
         var request = HelloRequest.newBuilder().setName("Ala ma kota").build()
         var a = client.sayHello(request)
-        Assertions.assertEquals(a.getMessage(), "Hello Ala ma kota")
+        Assertions.assertEquals(a.getMessage(), "Hello from uservice Reposts, Ala ma kota")
     }
 
 }
