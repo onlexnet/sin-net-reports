@@ -1,4 +1,4 @@
-package sinnet;
+package sinnet.web;
 
 import java.security.Principal;
 
@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 /** Fixme. */
 @RestController
-public class TestController {
+class TestController {
 
     /**
      * Fixme.

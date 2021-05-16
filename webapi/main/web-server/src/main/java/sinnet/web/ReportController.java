@@ -1,4 +1,4 @@
-package sinnet;
+package sinnet.web;
 
 import java.io.ByteArrayOutputStream;
 import java.time.LocalDate;
@@ -38,7 +38,7 @@ import sinnet.read.ActionProjection;
 
 @RestController
 @RequestMapping(path = "/api/raporty")
-public class ReportController implements ActionProjection {
+class ReportController implements ActionProjection {
 
   @Autowired
   private ActionProjection.Provider projection;

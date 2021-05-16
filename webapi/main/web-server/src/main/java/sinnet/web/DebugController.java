@@ -1,6 +1,4 @@
-package sinnet;
-
-import java.security.Principal;
+package sinnet.web;
 
 import javax.annotation.PostConstruct;
 
@@ -17,7 +15,7 @@ import io.quarkus.example.HelloRequest;
 /** Test controller to find connection from webapi to backend service through gRPC api. */
 @RestController
 @RequestMapping("/api/debug")
-public class HelloController {
+class DebugController {
 
   private GreeterGrpc.GreeterBlockingStub client;
 
@@ -29,12 +27,18 @@ public class HelloController {
     this.client = GreeterGrpc.newBlockingStub(channel);
   }
 
-  @RequestMapping(value = "/hello", method = RequestMethod.GET)
+  @RequestMapping(value = "/hello-by-service", method = RequestMethod.GET)
   @ResponseBody
-  public String helloWorld(@RequestParam(defaultValue = "no-name") String name) {
+  public String helloByService(@RequestParam(defaultValue = "no-name") String name) {
     var request = HelloRequest.newBuilder().setName(name).build();
     var response = client.sayHello(request);
     return response.getMessage();
+  }
+
+  @RequestMapping(value = "/hello-by-webapi", method = RequestMethod.GET)
+  @ResponseBody
+  public String helloByWebapi(@RequestParam(defaultValue = "no-name") String name) {
+    return "Hello, " + name;
   }
 }
 
