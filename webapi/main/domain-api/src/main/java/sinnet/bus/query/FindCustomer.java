@@ -11,26 +11,26 @@ import sinnet.models.CustomerContact;
 import sinnet.models.CustomerValue;
 
 public interface FindCustomer {
-    @Data
-    @AllArgsConstructor
-    @NoArgsConstructor
-    class Ask {
-        /** Address used to send the query to it's handler. */
-        public static final String ADDRESS = "query.FindCustomer";
+  @Data
+  @AllArgsConstructor
+  @NoArgsConstructor
+  class Ask {
+    /** Address used to send the query to it's handler. */
+    public static final String ADDRESS = "query.FindCustomer";
 
-        private UUID projectId;
-        private UUID entityId;
-    }
+    private UUID projectId;
+    private UUID entityId;
+  }
 
-    @Data
-    @AllArgsConstructor
-    @NoArgsConstructor
-    class Reply {
-        private UUID entityId;
-        private int entityVersion;
-        private CustomerValue value;
-        private CustomerSecret[] secrets;
-        private CustomerSecretEx[] secretsEx;
-        private CustomerContact[] contacts;
-    }
+  @Data
+  @AllArgsConstructor
+  @NoArgsConstructor
+  class Reply {
+    private UUID entityId;
+    private int entityVersion;
+    private CustomerValue value;
+    private CustomerSecret[] secrets;
+    private CustomerSecretEx[] secretsEx;
+    private CustomerContact[] contacts;
+  }
 }

@@ -12,7 +12,7 @@ class HelloService extends GreeterGrpc.GreeterImplBase {
 
     override def sayHello(request: HelloRequest, responseObserver: StreamObserver[HelloReply]) { 
         val name = request.getName;
-        val message = "Hello " + name;
+        val message = "Hello from uservice Reposts, " + name;
         responseObserver.onNext(HelloReply.newBuilder().setMessage(message).build());         
         responseObserver.onCompleted();                                                       
     }

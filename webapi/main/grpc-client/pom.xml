@@ -18,6 +18,11 @@
   </properties>
 
   <dependencies>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter</artifactId>
+    </dependency>
+
     <!-- Dependencies to generate gRPC -->
     <dependency>
       <groupId>io.grpc</groupId>
