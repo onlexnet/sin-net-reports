@@ -7,7 +7,7 @@ import io.quarkus.example.HelloRequest;
 
 import javax.inject.Singleton;
 
-@Singleton                                                                                    
+@Singleton
 class HelloService extends GreeterGrpc.GreeterImplBase {                               
 
     override def sayHello(request: HelloRequest, responseObserver: StreamObserver[HelloReply]) { 

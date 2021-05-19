@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "sinnet.reports";
+option java_outer_classname = "ReportsProto";
+
+package sinnet.reports;
+
+service Reports {
+    rpc Produce (ReportRequest) returns (Response) { }
+}
+
+// The request message containing the user's name.
+message ReportRequest {
+    CustomerDetails customer = 1;
+    repeated ActionDetails details = 2;
+}
+
+message CustomerDetails {
+    string customerId = 1;
+    string customerName = 2;
+    string customerCity = 3;
+    string customerAddress = 4;
+}
+
+message ActionDetails {
+    string description = 1;
+}
+
+// The response message containing the greetings
+message Response {
+    bytes data = 1;
+}
