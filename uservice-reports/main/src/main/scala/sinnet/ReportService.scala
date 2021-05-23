@@ -45,6 +45,8 @@ class ReportService extends ReportsGrpc.ReportsImplBase {
     val response = Response.newBuilder()
       .setData(data)
       .build()
+    responseObserver.onNext(response)
+    responseObserver.onCompleted()
 
   }
 }

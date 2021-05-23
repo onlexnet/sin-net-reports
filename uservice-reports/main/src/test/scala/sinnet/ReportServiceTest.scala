@@ -11,18 +11,20 @@ import javax.inject.Inject
 import scala.annotation.meta.field
 import org.junit.jupiter.api.Assertions
 import sinnet.reports.ReportRequest
+import sinnet.reports.ReportsGrpc
 
 @QuarkusTest
-class GreetingResourceTest {
+class ReportsGrpcTest {
     
     @Inject
-    @GrpcService("hello")
-    var client: GreeterGrpc.GreeterBlockingStub = _
+    @GrpcService("reports")
+    var client: ReportsGrpc.ReportsBlockingStub = _
 
     @Test
-    def testHelloEndpoint() = {
-        var request = HelloRequest.newBuilder().setName("Ala ma kota").build()
-        var a = client.sayHello(request)
-        Assertions.assertEquals(a.getMessage(), "Hello from uservice Reposts, Ala ma kota")
+    def produceEndpoint() = {
+        val request = ReportRequest.newBuilder().build
+        val res = client.produce(request)
+        Assertions.assertNotNull(res.getData())
     }
+
 }
