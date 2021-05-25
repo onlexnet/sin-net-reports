@@ -16,7 +16,7 @@ import sinnet.reports.ReportRequest
 class GreetingResourceTest {
     
     @Inject
-    @GrpcService("hello")
+    @GrpcService("self")
     var client: GreeterGrpc.GreeterBlockingStub = _
 
     @Test

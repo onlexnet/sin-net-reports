@@ -17,7 +17,7 @@ import sinnet.reports.ReportsGrpc
 class ReportsGrpcTest {
     
     @Inject
-    @GrpcService("reports")
+    @GrpcService("self")
     var client: ReportsGrpc.ReportsBlockingStub = _
 
     @Test
