@@ -1,20 +1,14 @@
-
-# variable onlex_tenant_id {}
-# variable sinnet_subscription_id {}
-# variable sinnet_client_id {}
-# variable sinnet_client_secret {}
-
-# variable resource_group_name {
-#     default = "sinnet"
-# }
-
 variable environment_name {
+}
+
+variable environment_location {
 }
 
 variable application_name {
 }
 
-
-# variable location {
-#     default = "westeurope"
-# }
+# for security reason value of the variable is not hardcoded in
+# local files and should be provided from command line
+variable subscription_id {
+  sensitive=true
+}

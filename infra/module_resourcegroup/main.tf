@@ -1,5 +1,6 @@
 resource "azurerm_resource_group" "default" {
-    name     = "${var.resource_group_name}-env-${var.environment}"
-    location = var.location
+    name     = "${var.application_name}-env-${var.environment_name}"
+    location = var.environment_location
+    
 }
 

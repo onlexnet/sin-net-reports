@@ -10,5 +10,7 @@ provider "azurerm" {
   # however, please note that the error messages returned from Azure may be confusing as a result
   # (example: API version 2019-01-01 was not found for Microsoft.Foo).
   skip_provider_registration = true
+
+  subscription_id = var.subscription_id 
   features {}
 }

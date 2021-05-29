@@ -1,13 +1,20 @@
 module "application" {
   source = "./module_application"
-  application_name=var.application_name
-  environment_name=var.environment_name
+  application_name = var.application_name
+  environment_name = var.environment_name
 }
 
 module "resourcegroup" {
-  source = "./module_application"
-  application_name=var.application_name
-  environment_name=var.environment_name
+  source = "./module_resourcegroup"
+  application_name     = var.application_name
+  environment_name     = var.environment_name
+  environment_location = var.environment_location
+  subscription_id      = var.subscription_id
+}
+
+module "appinsights" {
+  source = "./module_appinsights"
+  resourcegroup = module.resourcegroup.resourcegroup
 }
 
 # data "azurerm_client_config" "current" {
