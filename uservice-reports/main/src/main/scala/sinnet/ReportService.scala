@@ -19,7 +19,8 @@ import com.google.protobuf.ByteString
 @Singleton
 class ReportService extends ReportsGrpc.ReportsImplBase {
   override def produce(request: ReportRequest, responseObserver: StreamObserver[Response]): Unit = {
-    var customer = request.getCustomer();
+    
+    var customer = request.getCustomer()
     var customerName = Option(customer.getCustomerName()).getOrElse("Brak przypisanego kontrahenta")
     var customerCity = Option(customer.getCustomerCity()).getOrElse("")
     var customerAddress = Option(customer.getCustomerAddress()).getOrElse("")
@@ -30,23 +31,23 @@ class ReportService extends ReportsGrpc.ReportsImplBase {
     var header = s"$customerName $customerCity $customerAddress"
     var headParam = new Paragraph(header, baseFont)
 
-    var os = new ByteArrayOutputStream()
-    var document = new Document()
-    val pdfWriter = PdfWriter.getInstance(document, os)
+    for (output <- managed(new ByteArrayOutputStream())) {
+      var document = new Document()
+      val pdfWriter = PdfWriter.getInstance(document, os)
 
-    document.open();
-    document.add(headParam);
-    document.add(new Paragraph("-"))
+      document.open();
+      document.add(headParam);
+      document.add(new Paragraph("-"))
 
-    val result = os.toByteArray()
-    os.close()
+      val result = os.toByteArray()
+      os.close()
 
-    val data = ByteString.copyFrom(result)
-    val response = Response.newBuilder()
-      .setData(data)
-      .build()
-    responseObserver.onNext(response)
-    responseObserver.onCompleted()
-
+      val data = ByteString.copyFrom(result)
+      val response = Response.newBuilder()
+        .setData(data)
+        .build()
+      responseObserver.onNext(response)
+      responseObserver.onCompleted()
+    }
   }
 }
