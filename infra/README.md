@@ -16,6 +16,7 @@ export ARM_CLIENT_ID="onlex-infra" # required by azurerm and azuread providers. 
 export ARM_CLIENT_CERTIFICATE_PASSWORD= ... proper value from secrets mentioned above # required by azurerm provider
 export ARM_CLIENT_SECRET= ... proper value from secrets mentioned above # required by azuread provider
 export ARM_TENANT_ID= ... onlex.net tenant # Tenant where the resources are created. Required by azurerm and azuread providers
+export ARM_SUBSCRIPTION_ID= ... onlex prod subscription # required by backend provider
 
 ### Work locally
 * Assumption: use bash
