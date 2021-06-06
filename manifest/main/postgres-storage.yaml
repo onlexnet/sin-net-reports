@@ -13,7 +13,9 @@ spec:
     - ReadWriteMany
   hostPath:
     path: "/mnt/data"
+
 ---
+
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
