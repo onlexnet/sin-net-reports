@@ -16,6 +16,6 @@ metadata:
   name: database-prd
 subsets:
   - addresses:
-      - ip: 83.0.169.165 # raport.sin.net.pl
+      - ip: 10.1.43.0 # raport.sin.net.pl - one of internal interfaces
     ports:
       - port: 5432
