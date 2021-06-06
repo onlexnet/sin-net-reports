@@ -8,17 +8,15 @@ provider "kubernetes" {
   insecure = true
 }
 
-# resource "kubernetes_secret" "example" {
-#   metadata {
-#     name = "basic-auth"
-#     namespace = "onlex-sinnet-prd"
-#   }
 
-#   data = {
-#     username = "admin"
-#     password = "P4ssw0rd"
-#   }
+resource "kubernetes_secret" "example" {
+  metadata {
+    name = "webapp-config"
+    namespace = "onlex-sinnet-prd"
+  }
 
-#   type = "kubernetes.io/basic-auth"
-# }
+  data = {
+    appinsight_connection_string = var.secret_appinsight_connection_string
+  }
+}
 

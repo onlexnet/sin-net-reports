@@ -32,8 +32,8 @@ resource "azurerm_key_vault" "example" {
   }
 }
 
-resource "azurerm_key_vault_secret" "instrumentation-key" {
-  name         = "instrumentation-key"
-  value        = var.instrumentation_key
+resource "azurerm_key_vault_secret" "appinsight_connection_string" {
+  name         = "appinsight-connection-string"
+  value        = var.appinsight_connection_string
   key_vault_id = azurerm_key_vault.example.id
 }

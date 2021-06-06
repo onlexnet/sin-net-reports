@@ -7,5 +7,5 @@ variable environment_name {
 variable resourcegroup {
 }
 
-variable instrumentation_key {
+variable appinsight_connection_string {
 }

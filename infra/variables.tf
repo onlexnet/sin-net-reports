@@ -15,10 +15,12 @@ variable environment_location {
   # Used to construct some names where environment name is the part of constructed name
   # Used as param for some Azure services where location name is required
   type = string
+  default = "westeurope"
 }
 
 variable application_name {
   type = string
+  default = "sinnet"
 }
 
 # Target subscription used to create all resources defined by the Terraform scripts

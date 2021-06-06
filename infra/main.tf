@@ -21,6 +21,7 @@ module "sinnetk8s" {
   source = "./module_sinnetk8s"
   k8s_host = var.sinnet_k8s_host
   k8s_token = var.sinnet_k8s_token
+  secret_appinsight_connection_string = module.appinsights.connection_string
 }
 
 module "keyvault" {
@@ -28,7 +29,8 @@ module "keyvault" {
   application_name = var.application_name
   environment_name = var.environment_name
   resourcegroup = module.resourcegroup.resourcegroup
-  instrumentation_key = module.appinsights.instrumentation_key
+
+  appinsight_connection_string = module.appinsights.connection_string
 }
 
 
