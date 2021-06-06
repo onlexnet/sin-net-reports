@@ -1,3 +1,6 @@
+# Goal
+Create infrastructure for environments and distribute proper configuration about the environments
+
 ### Prerequisites
 * Application named **onlex-infra** *(single tenant application)* with 
   - 'Contributor' role (to create resources) 
@@ -28,3 +31,8 @@ export ARM_SUBSCRIPTION_ID= ... onlex prod subscription # required by backend pr
     where subscription_id will be used as subscription for created resources (especially resource group)
 
 **terraform plan** to see plan of changes for your current desired infrastructure
+
+### Not used but promosing articles
+- https://medium.com/citihub/a-more-secure-way-to-call-kubectl-from-terraform-1052adf37af8
+- https://docs.microsoft.com/en-us/azure/key-vault/general/key-vault-integrate-kubernetes
+- https://mrdevops.io/introducing-azure-key-vault-to-kubernetes-931f82364354

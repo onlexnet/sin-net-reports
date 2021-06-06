@@ -17,6 +17,21 @@ module "appinsights" {
   resourcegroup = module.resourcegroup.resourcegroup
 }
 
+module "sinnetk8s" {
+  source = "./module_sinnetk8s"
+  k8s_host = var.sinnet_k8s_host
+  k8s_token = var.sinnet_k8s_token
+}
+
+module "keyvault" {
+  source = "./module_keyvault"
+  application_name = var.application_name
+  environment_name = var.environment_name
+  resourcegroup = module.resourcegroup.resourcegroup
+  instrumentation_key = module.appinsights.instrumentation_key
+}
+
+
 # data "azurerm_client_config" "current" {
 # #   client_id     = data.azurerm_client_config.current.client_id
 # #   client_secret = data.azurerm_client_config.current.
