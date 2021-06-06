@@ -28,7 +28,7 @@ spec:
           - name: SPRING_PROFILES_ACTIVE
             value: "prod"
           - name: APP_DB_HOST
-            value: "db"
+            value: "database-prd"
           - name: APPLICATIONINSIGHTS_CONNECTION_STRING
             valueFrom:
               secretKeyRef:
