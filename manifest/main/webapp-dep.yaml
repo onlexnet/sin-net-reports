@@ -21,6 +21,12 @@ spec:
       containers:
         - name: webapp
           image: sinnet.azurecr.io/webapp:##BUILD_ID##
+          env:
+          - name: APPLICATIONINSIGHTS_CONNECTION_STRING
+            valueFrom:
+              secretKeyRef:
+                name: webapp-config
+                key: appinsight_connection_string
           imagePullPolicy: Always
           ports:
           - containerPort: 80
