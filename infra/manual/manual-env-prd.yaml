@@ -1,3 +1,5 @@
+# Account create manually is used bu Azure DevOps pipeline
+
 apiVersion: v1
 kind: Namespace
 metadata:
