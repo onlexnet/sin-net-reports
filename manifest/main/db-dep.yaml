@@ -27,4 +27,4 @@ spec:
             - name: POSTGRES_USER
               value: "sinnet"
             - name: POSTGRES_PASSWORD
-              value: "password"
+              value: "sinnet"

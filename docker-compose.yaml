@@ -11,7 +11,7 @@ services:
     image: postgres:11-alpine
     environment:
       - POSTGRES_USER=sinnet
-      - POSTGRES_PASSWORD=password
+      - POSTGRES_PASSWORD=sinnet
     ports:
       - 5432:5432
     

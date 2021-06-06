@@ -24,7 +24,7 @@ public class DbConnectionConfig {
             .setHost(dbHost)
             .setDatabase("sinnet")
             .setUser("sinnet")
-            .setPassword("password");
+            .setPassword("sinnet");
         var poolOptions = new PoolOptions();
 
         return PgPool.pool(connectOptions, poolOptions);
