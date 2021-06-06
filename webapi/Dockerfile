@@ -23,10 +23,15 @@ ARG REVISION
 ENV SPRING_PROFILES_ACTIVE=prod
 ENV APP_DB_HOST: db
 
-ENV _JAVA_OPTIONS="-javaagent:/app/main/applicationinsights-agent-3.1.0.jar -Xmx512m -XX:+UseG1GC"
-
-VOLUME /tmp
+# the application os fat jar so only one file is required to run the app
 COPY --from=build /app/main/host/target/*.jar /app/
+
+# we we require application insight agent when app is run
+# let's copy agent from expected location and set properly jvm option
+COPY --from=build /app/applicationinsights /app/
+ENV _JAVA_OPTIONS="-javaagent:/app/applicationinsights-agent-3.1.0.jar -Xmx512m -XX:+UseG1GC"
+
+# fat-jar name is well-known, let's simplify the name so that we can use simpler name in ENTRYPOINT
 RUN mv /app/host-$REVISION.jar /app/host.jar
 EXPOSE 8080
 ENTRYPOINT ["java","-jar","/app/host.jar"]
