@@ -1,6 +1,6 @@
 resource "azurerm_application_insights" "default" {
-  name                = "appinsights"
+  name                = "appinsights-webapi"
   location            = var.resourcegroup.location
   resource_group_name = var.resourcegroup.name
-  application_type    = "web"
+  application_type    = "java"
 }
