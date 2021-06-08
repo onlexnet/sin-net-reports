@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import io.grpc.ManagedChannelBuilder;
 import io.quarkus.example.GreeterGrpc;
 import io.quarkus.example.HelloRequest;
+import lombok.extern.slf4j.Slf4j;
 import sinnet.FutureExecutor;
 import sinnet.reports.ActionDetails;
 import sinnet.reports.CustomerDetails;
@@ -32,6 +33,7 @@ import sinnet.reports.ReportsGrpc;
  */
 @RestController
 @RequestMapping("/api/debug")
+@Slf4j
 class DebugController {
 
   private GreeterGrpc.GreeterFutureStub client;
@@ -88,6 +90,7 @@ class DebugController {
     var response = reportsClient.produce(request);
     return executor.asFuture(response, it -> {
       var result = it.getData().toByteArray();
+      log.info("Raport: rozmiar:{}", result.length);
       return ResponseEntity.ok()
         .headers(headers)
         .contentLength(result.length)
