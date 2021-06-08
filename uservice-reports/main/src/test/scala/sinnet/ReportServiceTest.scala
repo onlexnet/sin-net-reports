@@ -24,7 +24,7 @@ class ReportsGrpcTest {
     def produceEndpoint() = {
         val request = ReportRequest.newBuilder().build
         val res = client.produce(request)
-        Assertions.assertThat(res.getData()).isNotEmpty()
+        Assertions.assertThat(res.getData().toByteArray()).isNotEmpty()
     }
 
 }

@@ -36,7 +36,7 @@ class ReportService extends ReportsGrpc.ReportsImplBase {
     for (os <- managed(new ByteArrayOutputStream());
          document <- managed(new Document())) {
       val pdfWriter = PdfWriter.getInstance(document, os)
-      document.open();
+      document.open()
       document.add(headParam);
       document.add(new Paragraph("-"))
 
