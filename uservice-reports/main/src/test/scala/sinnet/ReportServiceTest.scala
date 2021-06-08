@@ -9,9 +9,9 @@ import io.quarkus.example.GreeterGrpc;
 import io.quarkus.example.HelloRequest;
 import javax.inject.Inject
 import scala.annotation.meta.field
-import org.junit.jupiter.api.Assertions
 import sinnet.reports.ReportRequest
 import sinnet.reports.ReportsGrpc
+import org.assertj.core.api.Assertions
 
 @QuarkusTest
 class ReportsGrpcTest {
@@ -24,7 +24,7 @@ class ReportsGrpcTest {
     def produceEndpoint() = {
         val request = ReportRequest.newBuilder().build
         val res = client.produce(request)
-        Assertions.assertNotNull(res.getData())
+        Assertions.assertThat(res.getData()).isNotEmpty()
     }
 
 }
