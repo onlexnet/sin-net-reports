@@ -6,6 +6,8 @@ import io.grpc.stub.StreamObserver
 import sinnet.reports.{ReportRequest, Response}
 import scala.util.Try
 
+import resource._
+
 import com.lowagie.text.Document
 import com.lowagie.text.Font
 import com.lowagie.text.Paragraph
@@ -28,19 +30,17 @@ class ReportService extends ReportsGrpc.ReportsImplBase {
     val fontSize = 10
     val baseFont = new Font(Font.TIMES_ROMAN, fontSize, Font.NORMAL)
 
-    var header = s"$customerName $customerCity $customerAddress"
-    var headParam = new Paragraph(header, baseFont)
+    val header = s"$customerName $customerCity $customerAddress"
+    val headParam = new Paragraph(header, baseFont)
 
-    for (output <- managed(new ByteArrayOutputStream())) {
-      var document = new Document()
+    for (os <- managed(new ByteArrayOutputStream());
+         document <- managed(new Document())) {
       val pdfWriter = PdfWriter.getInstance(document, os)
-
       document.open();
       document.add(headParam);
       document.add(new Paragraph("-"))
 
       val result = os.toByteArray()
-      os.close()
 
       val data = ByteString.copyFrom(result)
       val response = Response.newBuilder()
