@@ -21,10 +21,10 @@ class ReportServiceTest {
     var client: ReportsGrpc.ReportsBlockingStub = _
 
     @Test
-    def produceEndpoint() : Unit = {
+    def produceEndpoint(): Unit = {
         val request = ReportRequest.newBuilder().build
         val res = client.produce(request)
-        var data = res.getData().toByteArray();
+        var data = res.getData().toByteArray()
         Assertions.assertThat(data).isNotEmpty()
     }
 

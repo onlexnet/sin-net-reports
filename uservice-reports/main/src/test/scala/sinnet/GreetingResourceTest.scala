@@ -9,8 +9,8 @@ import io.quarkus.example.GreeterGrpc;
 import io.quarkus.example.HelloRequest;
 import javax.inject.Inject
 import scala.annotation.meta.field
-import org.junit.jupiter.api.Assertions
 import sinnet.reports.ReportRequest
+import org.assertj.core.api.Assertions
 
 @QuarkusTest
 class GreetingResourceTest {
@@ -20,9 +20,9 @@ class GreetingResourceTest {
     var client: GreeterGrpc.GreeterBlockingStub = _
 
     @Test
-    def testHelloEndpoint() = {
+    def testHelloEndpoint(): Unit = {
         var request = HelloRequest.newBuilder().setName("Ala ma kota").build()
         var a = client.sayHello(request)
-        Assertions.assertEquals(a.getMessage(), "Hello from uservice Reposts, Ala ma kota")
+        Assertions.assertThat(a.getMessage()).startsWith("Hello from uservice Reposts, Ala")
     }
 }

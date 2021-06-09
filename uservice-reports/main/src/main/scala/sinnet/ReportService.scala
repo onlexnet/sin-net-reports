@@ -17,11 +17,14 @@ import com.lowagie.text.pdf.PdfPTable
 import com.lowagie.text.pdf.PdfWriter
 import java.io.ByteArrayOutputStream
 import com.google.protobuf.ByteString
+import io.grpc.Deadline
+import io.grpc.Context
+import sinnet.reports.ReportRequests
 
 @Singleton
 class ReportService extends ReportsGrpc.ReportsImplBase {
   override def produce(request: ReportRequest, responseObserver: StreamObserver[Response]): Unit = {
-    
+
     var customer = request.getCustomer()
     var customerName = Option(customer.getCustomerName()).getOrElse("Brak przypisanego kontrahenta")
     var customerCity = Option(customer.getCustomerCity()).getOrElse("")
@@ -54,4 +57,35 @@ class ReportService extends ReportsGrpc.ReportsImplBase {
       responseObserver.onCompleted()
     }
   }
+
+  override def producePack(request: ReportRequests, responseObserver: StreamObserver[Response]): Unit = {
+    
+  }
+
+  // def getAsZip(items: Array[ListItem]): Array[Byte] {
+  // }
+  // //   @Cleanup
+  //   var baos = new ByteArrayOutputStream();
+  //   {
+  //       var customers = items.groupBy(it -> it.getValue().getWhom());
+
+  //       @Cleanup
+  //       var zos = new ZipOutputStream(baos);
+
+  //       for (var c : customers) {
+  //           var customerName = c._2.head().getCustomerName();
+  //           var entry = new ZipEntry(customerName + ".pdf");
+  //           var itemsForCustomer = c._2;
+  //           var o = produceReport(itemsForCustomer);
+  //           if (!o.isPresent()) continue;
+  //           zos.putNextEntry(entry);
+  //           zos.write(o.get());
+  //           zos.closeEntry();
+  //       }
+
+  //   }
+
+  //   return baos.toByteArray();
+
+  // }
 }

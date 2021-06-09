@@ -8,12 +8,16 @@ package sinnet.reports;
 
 service Reports {
     rpc Produce (ReportRequest) returns (Response) { }
+    rpc ProducePack (ReportRequests) returns (Response) { }
 }
 
-// The request message containing the user's name.
 message ReportRequest {
     CustomerDetails customer = 1;
     repeated ActionDetails details = 2;
+}
+
+message ReportRequests {
+    ReportRequest data = 1;
 }
 
 message CustomerDetails {
