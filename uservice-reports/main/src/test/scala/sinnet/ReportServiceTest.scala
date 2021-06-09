@@ -14,17 +14,18 @@ import sinnet.reports.ReportsGrpc
 import org.assertj.core.api.Assertions
 
 @QuarkusTest
-class ReportsGrpcTest {
+class ReportServiceTest {
     
     @Inject
     @GrpcService("self")
     var client: ReportsGrpc.ReportsBlockingStub = _
 
     @Test
-    def produceEndpoint() = {
+    def produceEndpoint() : Unit = {
         val request = ReportRequest.newBuilder().build
         val res = client.produce(request)
-        Assertions.assertThat(res.getData().toByteArray()).isNotEmpty()
+        var data = res.getData().toByteArray();
+        Assertions.assertThat(data).isNotEmpty()
     }
 
 }

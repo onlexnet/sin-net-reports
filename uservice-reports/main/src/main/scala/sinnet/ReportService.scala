@@ -33,13 +33,17 @@ class ReportService extends ReportsGrpc.ReportsImplBase {
     val header = s"$customerName $customerCity $customerAddress"
     val headParam = new Paragraph(header, baseFont)
 
-    for (os <- managed(new ByteArrayOutputStream());
-         document <- managed(new Document())) {
+    for (os <- managed(new ByteArrayOutputStream())) {
+
+      val document = new Document()
       val pdfWriter = PdfWriter.getInstance(document, os)
       document.open()
       document.add(headParam);
       document.add(new Paragraph("-"))
 
+      // We have to invoke close method so that content of the document is written
+      // to os and can be obtained as the result of the whole operation
+      document.close()
       val result = os.toByteArray()
 
       val data = ByteString.copyFrom(result)
