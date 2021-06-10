@@ -9,7 +9,7 @@ import io.quarkus.example.GreeterGrpc;
 import io.quarkus.example.HelloRequest;
 import javax.inject.Inject
 import scala.annotation.meta.field
-import sinnet.reports.ReportRequest
+import sinnet.reports.{ ReportRequest, ReportRequests}
 import sinnet.reports.ReportsGrpc
 import org.assertj.core.api.Assertions
 
@@ -28,4 +28,14 @@ class ReportServiceTest {
         Assertions.assertThat(data).isNotEmpty()
     }
 
+    @Test
+    def producePackEndpoint(): Unit = {
+        val request = ReportRequest.newBuilder().build
+        val pack = ReportRequests.newBuilder()
+            .addItems(request)
+            .build()
+        val res = client.producePack(pack)
+        var data = res.getData().toByteArray()
+        Assertions.assertThat(data).isNotEmpty()
+    }
 }

@@ -20,11 +20,26 @@ import com.google.protobuf.ByteString
 import io.grpc.Deadline
 import io.grpc.Context
 import sinnet.reports.ReportRequests
+import java.util.zip.ZipOutputStream
+
+import scala.collection.JavaConverters._
+import java.util.UUID
+import java.util.zip.ZipEntry
 
 @Singleton
 class ReportService extends ReportsGrpc.ReportsImplBase {
   override def produce(request: ReportRequest, responseObserver: StreamObserver[Response]): Unit = {
+    val binaryData = produceReport(request)
+    val dtoData = ByteString.copyFrom(binaryData)
+    var response = Response.newBuilder()
+        .setData(dtoData)
+        .build()
 
+    responseObserver.onNext(response)
+    responseObserver.onCompleted()
+  }
+
+  def produceReport(request: ReportRequest): Array[Byte] = {
     var customer = request.getCustomer()
     var customerName = Option(customer.getCustomerName()).getOrElse("Brak przypisanego kontrahenta")
     var customerCity = Option(customer.getCustomerCity()).getOrElse("")
@@ -36,56 +51,51 @@ class ReportService extends ReportsGrpc.ReportsImplBase {
     val header = s"$customerName $customerCity $customerAddress"
     val headParam = new Paragraph(header, baseFont)
 
-    for (os <- managed(new ByteArrayOutputStream())) {
+    val d = managed(new ByteArrayOutputStream()) map {
+      os => 
+        val document = new Document()
+        val pdfWriter = PdfWriter.getInstance(document, os)
+        document.open()
+        document.add(headParam);
+        document.add(new Paragraph("-"))
 
-      val document = new Document()
-      val pdfWriter = PdfWriter.getInstance(document, os)
-      document.open()
-      document.add(headParam);
-      document.add(new Paragraph("-"))
+        // We have to invoke close method so that content of the document is written
+        // to os and can be obtained as the result of the whole operation
+        document.close()
 
-      // We have to invoke close method so that content of the document is written
-      // to os and can be obtained as the result of the whole operation
-      document.close()
-      val result = os.toByteArray()
+        os.toByteArray()
+    }
 
-      val data = ByteString.copyFrom(result)
-      val response = Response.newBuilder()
-        .setData(data)
-        .build()
+    d.opt match {
+      case Some(value) => value
+      case None => Array.emptyByteArray
+    }
+    
+    
+  }
+
+  override def producePack(request: ReportRequests, responseObserver: StreamObserver[Response]): Unit = {
+    for (
+      baos <- managed(new ByteArrayOutputStream());
+      zos <- managed(new ZipOutputStream(baos))) {
+
+      for ( 
+        item <- request.getItemsList().asScala;
+        (report, index) <- produceReport(item).zip(Stream from 1) ) {
+        val entry = new ZipEntry( s"$index-${ item.getCustomer.getCustomerName() }.pdf")
+        zos.putNextEntry(entry)
+        zos.write(report)
+        zos.closeEntry()
+      }
+      
+      val binaryData = baos.toByteArray()
+      val dtoData = ByteString.copyFrom(binaryData)
+      var response = Response.newBuilder()
+          .setData(dtoData)
+          .build()
+
       responseObserver.onNext(response)
       responseObserver.onCompleted()
     }
   }
-
-  override def producePack(request: ReportRequests, responseObserver: StreamObserver[Response]): Unit = {
-    
-  }
-
-  // def getAsZip(items: Array[ListItem]): Array[Byte] {
-  // }
-  // //   @Cleanup
-  //   var baos = new ByteArrayOutputStream();
-  //   {
-  //       var customers = items.groupBy(it -> it.getValue().getWhom());
-
-  //       @Cleanup
-  //       var zos = new ZipOutputStream(baos);
-
-  //       for (var c : customers) {
-  //           var customerName = c._2.head().getCustomerName();
-  //           var entry = new ZipEntry(customerName + ".pdf");
-  //           var itemsForCustomer = c._2;
-  //           var o = produceReport(itemsForCustomer);
-  //           if (!o.isPresent()) continue;
-  //           zos.putNextEntry(entry);
-  //           zos.write(o.get());
-  //           zos.closeEntry();
-  //       }
-
-  //   }
-
-  //   return baos.toByteArray();
-
-  // }
 }

@@ -17,7 +17,7 @@ message ReportRequest {
 }
 
 message ReportRequests {
-    ReportRequest data = 1;
+    repeated ReportRequest items = 1;
 }
 
 message CustomerDetails {
