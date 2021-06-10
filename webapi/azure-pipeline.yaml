@@ -67,7 +67,7 @@ jobs:
           # options:
           #  - disable log entries (a lot of entries) related to artifacts downloaded by maven
           options: -B --no-transfer-progress
-          sonarQubeRunAnalysis: true
+          sonarQubeRunAnalysis: false # TODO enable sonar - today sonarcloud.io does not response
           sqMavenPluginVersionChoice: 'latest' # Required when sonarQubeRunAnalysis == True# Options: latest, pom
           checkStyleRunAnalysis: true # We use checkstyle in coding, so let's use it with Maven as well
 
