@@ -22,6 +22,7 @@ import sinnet.FutureExecutor;
 import sinnet.reports.ActionDetails;
 import sinnet.reports.CustomerDetails;
 import sinnet.reports.ReportRequest;
+import sinnet.reports.ReportRequests;
 import sinnet.reports.ReportsGrpc;
 
 /**
@@ -66,28 +67,15 @@ class DebugController {
     return "Hello from WebApi, " + name;
   }
 
-  @RequestMapping(value = "/report", method = RequestMethod.GET, produces = "application/pdf")
-  public CompletionStage<ResponseEntity<byte[]>> downloadPDFFile() {
+  @RequestMapping(value = "/report-pdf", method = RequestMethod.GET, produces = "application/pdf")
+  public CompletionStage<ResponseEntity<byte[]>> downloadPdfFile() {
     var headers = new HttpHeaders();
     headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
-    headers.add("Content-Disposition", "inline; filename=test-report.zip");
+    headers.add("Content-Disposition", "inline; filename=test-report.pdf");
     headers.add("Pragma", "no-cache");
     headers.add("Expires", "0");
 
-    var customer = CustomerDetails.newBuilder()
-        .setCustomerAddress("Adres")
-        .setCustomerCity("Miasto")
-        .setCustomerId("ID klienta")
-        .setCustomerName("Nazwa klienta")
-        .build();
-    var action = ActionDetails.newBuilder()
-        .setDescription("Opis usługi")
-        .build();
-    var request = ReportRequest.newBuilder()
-        .setCustomer(customer)
-        .addDetails(action)
-        .build();
-    var response = reportsClient.produce(request);
+    var response = reportsClient.produce(generateRequest(0));
     return executor.asFuture(response, it -> {
       var result = it.getData().toByteArray();
       log.info("Raport: rozmiar:{}", result.length);
@@ -99,5 +87,47 @@ class DebugController {
     });
   }
 
+  @RequestMapping(value = "/report-zip", method = RequestMethod.GET, produces = "application/zip")
+  public CompletionStage<ResponseEntity<byte[]>> downloadZipFile() {
+    var headers = new HttpHeaders();
+    headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
+    headers.add("Content-Disposition", "inline; filename=test-report.zip");
+    headers.add("Pragma", "no-cache");
+    headers.add("Expires", "0");
+
+    var request1 = generateRequest(1);
+    var request2 = generateRequest(2);
+    var requests = ReportRequests.newBuilder()
+        .addItems(request1)
+        .addItems(request2)
+        .build();
+    var response = reportsClient.producePack(requests);
+    return executor.asFuture(response, it -> {
+      var result = it.getData().toByteArray();
+      log.info("Raport: rozmiar:{}", result.length);
+      return ResponseEntity.ok()
+        .headers(headers)
+        .contentLength(result.length)
+        .contentType(MediaType.parseMediaType("application/octet-stream"))
+        .body(result);
+    });
+  }
+
+  private static ReportRequest generateRequest(int no) {
+    var customMarker = " [" + no + "]";
+    var customer = CustomerDetails.newBuilder()
+        .setCustomerAddress("Adres" + customMarker)
+        .setCustomerCity("Miasto" + customMarker)
+        .setCustomerId("ID klienta" + customMarker)
+        .setCustomerName("Nazwa klienta" + customMarker)
+        .build();
+    var action = ActionDetails.newBuilder()
+        .setDescription("Opis usługi" + customMarker)
+        .build();
+    return ReportRequest.newBuilder()
+        .setCustomer(customer)
+        .addDetails(action)
+        .build();
+  }
 }
 
