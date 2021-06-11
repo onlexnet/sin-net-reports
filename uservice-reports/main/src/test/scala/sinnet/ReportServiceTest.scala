@@ -12,6 +12,8 @@ import scala.annotation.meta.field
 import sinnet.reports.{ ReportRequest, ReportRequests}
 import sinnet.reports.ReportsGrpc
 import org.assertj.core.api.Assertions
+import java.util.zip.ZipInputStream
+import java.io.ByteArrayInputStream
 
 @QuarkusTest
 class ReportServiceTest {
@@ -33,9 +35,20 @@ class ReportServiceTest {
         val request = ReportRequest.newBuilder().build
         val pack = ReportRequests.newBuilder()
             .addItems(request)
+            .addItems(request)
             .build()
         val res = client.producePack(pack)
+
         var data = res.getData().toByteArray()
-        Assertions.assertThat(data).isNotEmpty()
+        val byteStream = new ByteArrayInputStream(data)
+        val zis = new ZipInputStream(byteStream)
+
+        var entry1 = zis.getNextEntry()
+        var entry2 = zis.getNextEntry()
+        var entry3 = zis.getNextEntry()
+        Assertions.assertThat(entry1).isNotNull()
+        Assertions.assertThat(entry2).isNotNull()
+        Assertions.assertThat(entry3).isNull()
+
     }
 }

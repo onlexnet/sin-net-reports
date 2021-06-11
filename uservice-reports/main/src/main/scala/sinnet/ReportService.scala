@@ -80,8 +80,8 @@ class ReportService extends ReportsGrpc.ReportsImplBase {
       zos <- managed(new ZipOutputStream(baos))) {
 
       for ( 
-        item <- request.getItemsList().asScala;
-        (report, index) <- produceReport(item).zip(Stream from 1) ) {
+        (item, index) <- request.getItemsList().asScala.zip(Stream from 1)) {
+        val report = produceReport(item)
         val entry = new ZipEntry( s"$index-${ item.getCustomer.getCustomerName() }.pdf")
         zos.putNextEntry(entry)
         zos.write(report)
