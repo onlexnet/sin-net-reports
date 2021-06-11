@@ -46,8 +46,8 @@ class ReportServiceTest {
         var entry1 = zis.getNextEntry()
         var entry2 = zis.getNextEntry()
         var entry3 = zis.getNextEntry()
-        Assertions.assertThat(entry1).isNotNull()
-        Assertions.assertThat(entry2).isNotNull()
+        Assertions.assertThat(entry1.getSize()).isNotZero()
+        Assertions.assertThat(entry2.getSize()).isNotZero()
         Assertions.assertThat(entry3).isNull()
 
     }
