@@ -86,6 +86,7 @@ class ReportService extends ReportsGrpc.ReportsImplBase {
         zos.putNextEntry(entry)
         zos.write(report)
         zos.closeEntry()
+        zos.flush()
       }
       
       val binaryData = baos.toByteArray()
