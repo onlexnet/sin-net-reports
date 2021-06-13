@@ -12,11 +12,11 @@ import sinnet.models.EntityId;
  */
 public interface ActionRepository {
 
-    Future<Boolean> save(EntityId entityId, ActionValue entity);
+  Future<Boolean> save(EntityId entityId, ActionValue entity);
 
-    Future<EntityId> update(EntityId id, ActionValue entity);
+  Future<EntityId> update(EntityId id, ActionValue entity);
 
-    Future<Entity<ActionValue>> find(UUID projectId, UUID entityId);
+  Future<Entity<ActionValue>> find(UUID projectId, UUID entityId);
 
-    Future<Boolean> remove(EntityId id);
+  Future<Boolean> remove(EntityId id);
 }

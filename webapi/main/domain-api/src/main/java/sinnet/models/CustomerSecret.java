@@ -12,10 +12,10 @@ import lombok.extern.jackson.Jacksonized;
 @Jacksonized
 @Builder(toBuilder = true)
 public final class CustomerSecret {
-    private String location;
-    private String username;
-    private String password;
-    @Builder.Default
-    private Email changedWho = Email.empty();
-    private LocalDateTime changedWhen;
+  private String location;
+  private String username;
+  private String password;
+  @Builder.Default
+  private Email changedWho = Email.empty();
+  private LocalDateTime changedWhen;
 }

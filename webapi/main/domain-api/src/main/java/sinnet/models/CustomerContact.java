@@ -10,8 +10,8 @@ import lombok.extern.jackson.Jacksonized;
 @Jacksonized
 @Builder(toBuilder = true)
 public final class CustomerContact {
-    private String firstName;
-    private String lastName;
-    private String phoneNo;
-    private String email;
+  private String firstName;
+  private String lastName;
+  private String phoneNo;
+  private String email;
 }
