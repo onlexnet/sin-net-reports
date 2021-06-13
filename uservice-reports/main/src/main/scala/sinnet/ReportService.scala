@@ -40,10 +40,10 @@ class ReportService extends ReportsGrpc.ReportsImplBase {
   }
 
   def produceReport(request: ReportRequest): Array[Byte] = {
-    var customer = request.getCustomer()
-    var customerName = Option(customer.getCustomerName()).getOrElse("Brak przypisanego kontrahenta")
-    var customerCity = Option(customer.getCustomerCity()).getOrElse("")
-    var customerAddress = Option(customer.getCustomerAddress()).getOrElse("")
+    val customer = request.getCustomer()
+    val customerName = Option(customer.getCustomerName()).getOrElse("Brak przypisanego kontrahenta")
+    val customerCity = Option(customer.getCustomerCity()).getOrElse("")
+    val customerAddress = Option(customer.getCustomerAddress()).getOrElse("")
 
     val fontSize = 10
     val baseFont = new Font(Font.TIMES_ROMAN, fontSize, Font.NORMAL)
@@ -70,7 +70,93 @@ class ReportService extends ReportsGrpc.ReportsImplBase {
       case Some(value) => value
       case None => Array.emptyByteArray
     }
-    
+   
+//  if (items.isEmpty()) {
+//       return Optional.empty();
+//     }
+
+//     var sample = items.head();
+//     var customerName = sample.getCustomerName();
+//     var customerCity = sample.getCustomerCity();
+//     var customerAddress = sample.getCustomerAddress();
+//     @Cleanup
+//     var os = new ByteArrayOutputStream();
+//     {
+//       @Cleanup
+//       var document = new Document();
+//       // step 2:
+//       // we create a writer that listens to the document
+//       // and directs a PDF-stream to a file
+//       PdfWriter.getInstance(document, os);
+
+//       // step 3: we open the document
+//       document.open();
+
+//       final var fontSize = 10;
+//       var baseFont = new Font(Font.TIMES_ROMAN, fontSize, Font.NORMAL);
+
+//       var header = Objects.toString(customerName, "Brak przypisanego kontrahenta")
+//           + " " + Objects.toString(customerCity, "")
+//           + " " + Objects.toString(customerAddress, "");
+//       var headParam = new Paragraph(header, baseFont);
+//       document.add(headParam);
+//       document.add(new Paragraph("-"));
+
+//       final int col1width = 3;
+//       final int col2width = 3;
+//       final int col3width = 12;
+//       final int col4width = 2;
+//       final int col5width = 2;
+//       var table = new PdfPTable(col1width + col2width + col3width + col4width + col5width);
+//       final int maxWidthPercentage = 100;
+//       table.setWidthPercentage(maxWidthPercentage);
+
+//       @AllArgsConstructor
+//       class CellParams {
+//           private String text;
+//           private Integer width;
+//           private HorizontalAlignment alignment;
+//       }
+
+//       var addValue = (Consumer<CellParams>) v -> {
+//         var p = new Paragraph(v.text, baseFont);
+//         var cell = new PdfPCell(p);
+//         cell.setHorizontalAlignment(v.alignment.getId());
+//         cell.setColspan(v.width);
+//         table.addCell(cell);
+//       };
+//       var sumTime = 0;
+//       var sumDistance = 0;
+//       addValue.accept(new CellParams("Serwisant", col1width, HorizontalAlignment.CENTER));
+//       addValue.accept(new CellParams("Dzień", col2width, HorizontalAlignment.CENTER));
+//       addValue.accept(new CellParams("Praca wykonana", col3width, HorizontalAlignment.CENTER));
+//       addValue.accept(new CellParams("Czas", col4width, HorizontalAlignment.RIGHT));
+//       addValue.accept(new CellParams("KM", col5width, HorizontalAlignment.RIGHT));
+//       final var timeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+//       for (var item : items) {
+//           var howLong = item.getValue().getHowLong();
+//           var distance = item.getValue().getHowFar();
+//           var who = Optional
+//               .ofNullable(item.getValue().getWho().getValue())
+//               .map(it -> it.split("@")[0])
+//               .orElse(null);
+//           addValue.accept(new CellParams(who, col1width, HorizontalAlignment.LEFT));
+//           addValue.accept(new CellParams(item.getValue().getWhen().format(timeFormatter), col2width, HorizontalAlignment.LEFT));
+//           addValue.accept(new CellParams(item.getValue().getWhat(), col3width, HorizontalAlignment.LEFT));
+//           addValue.accept(new CellParams(howLong.toString(), col4width, HorizontalAlignment.RIGHT));
+//           addValue.accept(new CellParams(distance.toString(), col5width, HorizontalAlignment.RIGHT));
+//           sumTime += howLong.getValue();
+//           sumDistance += distance.getValue();
+//       }
+//       addValue.accept(new CellParams(null, col1width, HorizontalAlignment.LEFT));
+//       addValue.accept(new CellParams(null, col2width, HorizontalAlignment.LEFT));
+//       addValue.accept(new CellParams("Suma", col3width, HorizontalAlignment.RIGHT));
+//       addValue.accept(new CellParams(ActionDuration.of(sumTime).toString(), col4width, HorizontalAlignment.RIGHT));
+//       addValue.accept(new CellParams(Distance.of(sumDistance).toString(), col5width, HorizontalAlignment.RIGHT));
+//       document.add(table);
+//       }
+
+//     return Optional.of(os.toByteArray());
     
   }
 
