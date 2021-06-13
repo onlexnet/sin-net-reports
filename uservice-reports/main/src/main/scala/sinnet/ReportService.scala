@@ -82,13 +82,14 @@ class ReportService extends ReportsGrpc.ReportsImplBase {
       for ( 
         (item, index) <- request.getItemsList().asScala.zip(Stream from 1)) {
         val report = produceReport(item)
-        val entry = new ZipEntry( s"$index-${ item.getCustomer.getCustomerName() }.pdf")
+        val entry = new ZipEntry(s"$index-${ item.getCustomer.getCustomerName() }.pdf")
         zos.putNextEntry(entry)
         zos.write(report)
         zos.closeEntry()
-        zos.flush()
       }
-      
+
+      zos.close()
+
       val binaryData = baos.toByteArray()
       val dtoData = ByteString.copyFrom(binaryData)
       var response = Response.newBuilder()

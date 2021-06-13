@@ -2,8 +2,6 @@ package sinnet.web;
 
 import java.util.concurrent.CompletionStage;
 
-import javax.annotation.PostConstruct;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -14,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.grpc.ManagedChannelBuilder;
 import io.quarkus.example.GreeterGrpc;
 import io.quarkus.example.HelloRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -37,21 +34,14 @@ import sinnet.reports.ReportsGrpc;
 @Slf4j
 class DebugController {
 
+  @Autowired
   private GreeterGrpc.GreeterFutureStub client;
+
+  @Autowired
   private ReportsGrpc.ReportsFutureStub reportsClient;
 
   @Autowired
   private FutureExecutor executor;
-
-  @PostConstruct
-  public void init() {
-    var channel = ManagedChannelBuilder.forAddress("uservice-reports", 9000)
-        .usePlaintext()
-        .build();
-
-    this.client = GreeterGrpc.newFutureStub(channel);
-    this.reportsClient = ReportsGrpc.newFutureStub(channel);
-  }
 
   @RequestMapping(value = "/hello-by-service", method = RequestMethod.GET)
   @ResponseBody

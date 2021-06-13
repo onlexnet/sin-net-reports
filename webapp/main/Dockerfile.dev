@@ -1,0 +1,11 @@
+FROM node:12.18-alpine
+WORKDIR /src
+COPY package.json packege-lock.json ./
+
+RUN npm ci
+
+COPY . ./
+
+RUN npm run generate
+
+ENTRYPOINT ["npm", "start"]

@@ -14,4 +14,32 @@ services:
       - POSTGRES_PASSWORD=sinnet
     ports:
       - 5432:5432
+  
+  # webapp:
+  #   # https://dev.to/igmrrf/docker-react-exited-with-code-0-398n
+  #   build:
+  #     context: webapp/main
+  #     dockerfile: Dockerfile.dev
+  #   ports:
+  #     - "3000:3000"
+  #   depends_on:
+  #     - webapi
+  #   webapi:
+  #     build:
+  #       context: webapi/main
+  #       dockerfile: Dockerfile.dev
+  #     ports:
+  #       - "8080:8080"  
+  #     environments:
+  #       - "POSTGRES_URL=db"
+  #       - ...
+  #     depends_on:
+  #       - pgsql
+  #   pgsql:
+  #     image: postgres:10-alpine
+  #     environment:
+  #       - "POSTGRES_PASSWORD=asdsadas"
+  #     ports:
+  #       - "5432:5432"
+
     
