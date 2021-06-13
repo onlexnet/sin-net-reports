@@ -10,16 +10,16 @@ import sinnet.read.CustomerProjection;
 
 public interface CustomerRepository extends CustomerProjection {
 
-    /**
-     * Saves a new version of Entity identified by given eid.
-     * <p>
-     * @return new EID for just stored entity.
-     */
-    Future<EntityId> write(EntityId eid,
+  /**
+   * Saves a new version of Entity identified by given eid.
+   *
+   * @return new EID for just stored entity.
+   */
+  Future<EntityId> write(EntityId eid,
                            CustomerValue value,
                            CustomerSecret[] secrets,
                            CustomerSecretEx[] secretsEx,
                            CustomerContact[] contacts);
 
-    Future<Boolean> remove(EntityId id);
+  Future<Boolean> remove(EntityId id);
 }

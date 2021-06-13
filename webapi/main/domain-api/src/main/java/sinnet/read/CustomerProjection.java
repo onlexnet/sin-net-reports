@@ -15,29 +15,31 @@ import sinnet.models.Name;
 
 public interface CustomerProjection {
 
-    /**
-     * Returns a model pointed by given {@code id} or empty value if the model does not exists.
-     * @param id if of the requested model.
-     */
-    Future<Option<CustomerModel>> get(EntityId id);
+  /**
+   * Returns a model pointed by given {@code id} or empty value if the model does not exists.
+   *
+   * @param id if of the requested model.
+   */
+  Future<Option<CustomerModel>> get(EntityId id);
 
-    /**
-     * Returns a latest model pointed by given {@code projectId} {@code id} or empty value if the model does not exists.
-     * @param id if of the requested model.
-     */
-    Future<Option<CustomerModel>> get(UUID projectId, UUID id);
+  /**
+   * Returns a latest model pointed by given {@code projectId} {@code id} or empty value if the model does not exists.
+   *
+   * @param id if of the requested model.
+   */
+  Future<Option<CustomerModel>> get(UUID projectId, UUID id);
 
-    Future<Option<CustomerModel>> get(UUID projectId, Name customerName);
+  Future<Option<CustomerModel>> get(UUID projectId, Name customerName);
 
-    Future<List<CustomerModel>> list(UUID projectId);
+  Future<List<CustomerModel>> list(UUID projectId);
 
-    @Value
-    class CustomerModel {
-        private EntityId id;
-        private CustomerValue value;
-        private CustomerSecret[] secrets;
-        private CustomerSecretEx[] secretsEx;
-        private CustomerContact[] contacts;
-    }
+  @Value
+  class CustomerModel {
+    private EntityId id;
+    private CustomerValue value;
+    private CustomerSecret[] secrets;
+    private CustomerSecretEx[] secretsEx;
+    private CustomerContact[] contacts;
+  }
 
 }

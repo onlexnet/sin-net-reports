@@ -11,6 +11,7 @@ import sinnet.models.CustomerContact;
 import sinnet.models.CustomerValue;
 
 public interface FindCustomer {
+
   @Data
   @AllArgsConstructor
   @NoArgsConstructor
