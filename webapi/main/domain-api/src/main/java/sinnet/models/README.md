@@ -1,3 +1,5 @@
 All models are
-1) imutable
+1) immutable
 2) serializable
+
+to allow share them and distribute over the network

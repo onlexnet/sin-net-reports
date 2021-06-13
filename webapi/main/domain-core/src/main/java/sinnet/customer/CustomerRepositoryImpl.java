@@ -35,54 +35,54 @@ import sinnet.models.Name;
 @Component
 public class CustomerRepositoryImpl implements CustomerRepository {
 
-    private final PgPool pgClient;
+  private final PgPool pgClient;
 
-    @Autowired
-    public CustomerRepositoryImpl(PgPool pgclient) {
-        this.pgClient = pgclient;
-    }
+  @Autowired
+  public CustomerRepositoryImpl(PgPool pgclient) {
+    this.pgClient = pgclient;
+  }
 
-    @Value
-    @Builder
-    @FieldNameConstants
-    static class SaveEntry {
-        private UUID projectId;
-        private UUID entityId;
-        private int entityVersion;
-        private String operatorEmail;
-        private String billingModel;
-        private String supportStatus;
-        private Integer distance;
-        private String customerName;
-        private String customerCityName;
-        private String customerAddress;
-        private boolean nfzUmowa;
-        private boolean nfzMaFilie;
-        private boolean nfzLekarz;
-        private boolean nfzPolozna;
-        private boolean nfzPielegniarkaSrodowiskowa;
-        private boolean nfzMedycynaSzkolna;
-        private boolean nfzTransportSanitarny;
-        private boolean nfzNocnaPomocLekarska;
-        private boolean nfzAmbulatoryjnaOpiekaSpecjalistyczna;
-        private boolean nfzRehabilitacja;
-        private boolean nfzStomatologia;
-        private boolean nfzPsychiatria;
-        private boolean nfzSzpitalnictwo;
-        private boolean nfzProgramyProfilaktyczne;
-        private boolean nfzZaopatrzenieOrtopedyczne;
-        private boolean nfzOpiekaDlugoterminowa;
-        private String nfzNotatki;
-        private boolean komercjaJest;
-        private String komercjaNotatki;
-        private String daneTechniczne;
-    }
+  @Value
+  @Builder
+  @FieldNameConstants
+  static class SaveEntry {
+    private UUID projectId;
+    private UUID entityId;
+    private int entityVersion;
+    private String operatorEmail;
+    private String billingModel;
+    private String supportStatus;
+    private Integer distance;
+    private String customerName;
+    private String customerCityName;
+    private String customerAddress;
+    private boolean nfzUmowa;
+    private boolean nfzMaFilie;
+    private boolean nfzLekarz;
+    private boolean nfzPolozna;
+    private boolean nfzPielegniarkaSrodowiskowa;
+    private boolean nfzMedycynaSzkolna;
+    private boolean nfzTransportSanitarny;
+    private boolean nfzNocnaPomocLekarska;
+    private boolean nfzAmbulatoryjnaOpiekaSpecjalistyczna;
+    private boolean nfzRehabilitacja;
+    private boolean nfzStomatologia;
+    private boolean nfzPsychiatria;
+    private boolean nfzSzpitalnictwo;
+    private boolean nfzProgramyProfilaktyczne;
+    private boolean nfzZaopatrzenieOrtopedyczne;
+    private boolean nfzOpiekaDlugoterminowa;
+    private String nfzNotatki;
+    private boolean komercjaJest;
+    private String komercjaNotatki;
+    private String daneTechniczne;
+  }
 
-    private String deleteTemplate = String.format("DELETE FROM "
+  private String deleteTemplate = String.format("DELETE FROM "
         + "customers WHERE project_id=#{%s} AND entity_id=#{%s} AND entity_version=#{%s}",
         SaveEntry.Fields.projectId, SaveEntry.Fields.entityId, SaveEntry.Fields.entityVersion);
 
-    private String insertTemplate = String.format("INSERT INTO "
+  private String insertTemplate = String.format("INSERT INTO "
         + "customers ("
         + "project_id, entity_id, entity_version,"
         + "customer_name, customer_city_name, customer_address,"
@@ -118,18 +118,18 @@ public class CustomerRepositoryImpl implements CustomerRepository {
         SaveEntry.Fields.nfzNotatki,
         SaveEntry.Fields.komercjaJest, SaveEntry.Fields.komercjaNotatki, SaveEntry.Fields.daneTechniczne);
 
-    @Value
-    @Builder
-    @FieldNameConstants
-    static class SaveSecretEntry {
-        private UUID customerId;
-        private String location;
-        private String username;
-        private String password;
-        private String changedWho;
-        private LocalDateTime changedWhen;
-    }
-    private String insertSecretTemplate = String.format(
+  @Value
+  @Builder
+  @FieldNameConstants
+  static class SaveSecretEntry {
+    private UUID customerId;
+    private String location;
+    private String username;
+    private String password;
+    private String changedWho;
+    private LocalDateTime changedWhen;
+  }
+  private String insertSecretTemplate = String.format(
         "INSERT INTO secret "
         + "("
         + "customer_id, location, username, password, changed_who, changed_when"
@@ -144,20 +144,20 @@ public class CustomerRepositoryImpl implements CustomerRepository {
         SaveSecretEntry.Fields.changedWho,
         SaveSecretEntry.Fields.changedWhen);
 
-    @Value
-    @Builder
-    @FieldNameConstants
-    static class SaveSecretExEntry {
-        private UUID customerId;
-        private String location;
-        private String username;
-        private String password;
-        private String entityName;
-        private String entityCode;
-        private String changedWho;
-        private LocalDateTime changedWhen;
-}
-    private String insertSecretExTemplate = String.format(
+  @Value
+  @Builder
+  @FieldNameConstants
+  static class SaveSecretExEntry {
+    private UUID customerId;
+    private String location;
+    private String username;
+    private String password;
+    private String entityName;
+    private String entityCode;
+    private String changedWho;
+    private LocalDateTime changedWhen;
+  }
+  private String insertSecretExTemplate = String.format(
         "INSERT INTO secret_ex "
         + "("
         + "customer_id, location, username, password, entity_name, entity_code, changed_who, changed_when"

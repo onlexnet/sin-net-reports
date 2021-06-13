@@ -8,5 +8,5 @@ import sinnet.models.EntityValue;
 @Value
 @Builder(toBuilder = true)
 public class UserModel implements EntityValue<UserModel> {
-    private Email email;
+  private Email email;
 }

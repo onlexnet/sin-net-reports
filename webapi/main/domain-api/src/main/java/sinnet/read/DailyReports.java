@@ -15,39 +15,39 @@ import lombok.Singular;
  */
 public interface DailyReports {
 
-    /** Ask part of Query. */
+  /** Ask part of Query. */
+  @NoArgsConstructor
+  @Data
+  @AllArgsConstructor
+  class Ask {
+    /** Date when services has been done. */
+    private LocalDate when;
+  }
+
+  /** Marker type for Replies. */
+  abstract class Reply {
+
+    /** Private ctor to prevent creation of marker class. */
+    private Reply() {
+    }
+
+    /** Answer is: no data. */
+    public static class None extends Reply {
+
+    }
+
+    /** Answer is: Some data exists. */
     @NoArgsConstructor
     @Data
+    @EqualsAndHashCode(callSuper = false)
     @AllArgsConstructor
-    class Ask {
-        /** Date when services has been done. */
-        private LocalDate when;
+    @Builder
+    public static class Some extends Reply {
+      /** What to add ... data. */
+      @Singular
+      private List<ServiceSummary> entries;
     }
-
-    /** Marker type for Replies. */
-    abstract class Reply {
-
-        /** Private ctor to prevent creation of marker class. */
-        private Reply() {
-        }
-
-        /** Answer is: no data. */
-        public static class None extends Reply {
-
-        }
-
-        /** Answer is: Some data exists. */
-        @NoArgsConstructor
-        @Data
-        @EqualsAndHashCode(callSuper = false)
-        @AllArgsConstructor
-        @Builder
-        public static class Some extends Reply {
-            /** What to add ... data. */
-            @Singular
-            private List<ServiceSummary> entries;
-        }
-    }
+  }
 
     /** Description of a single service. */
     @NoArgsConstructor
