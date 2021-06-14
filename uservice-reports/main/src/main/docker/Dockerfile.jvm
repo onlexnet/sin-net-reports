@@ -50,7 +50,7 @@ COPY --chown=1001 build/quarkus-app/quarkus/ /deployments/quarkus/
 
 # siudek - custome action to include application insight agent
 COPY --chown=1001 applicationinsights /app/
-ENV _JAVA_OPTIONS="-javaagent:/app/applicationinsights-agent-3.1.0.jar -Xmx512m -XX:+UseG1GC"
+ENV _JAVA_OPTIONS="-javaagent:/app/applicationinsights-agent-3.1.0.jar"
 
 
 EXPOSE 8080
