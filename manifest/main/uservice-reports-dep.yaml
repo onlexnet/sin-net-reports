@@ -24,3 +24,9 @@ spec:
           imagePullPolicy: Always
           ports:
           - containerPort: 80
+          env:
+          - name: APPLICATIONINSIGHTS_CONNECTION_STRING
+            valueFrom:
+              secretKeyRef:
+                name: webapp-config
+                key: appinsight_connection_string
