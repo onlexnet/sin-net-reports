@@ -9,16 +9,17 @@ import { initializeIcons } from "@fluentui/react/lib/Icons";
 import { Provider } from "react-redux";
 import { store } from "./store/store";
 import App from "./app/App";
-//import { authModule } from "./msal/1autorun";
+import { AppInsightsContext } from "@microsoft/applicationinsights-react-js";
+import { reactPlugin } from "./app/AppInsight";
 
 initializeIcons();
-
-//const definedToRunSideEffect = authModule;
 
 ReactDOM.render(
   <ThemeProvider>
     <Provider store={store}>
-      <App />
+      <AppInsightsContext.Provider value={reactPlugin}>
+        <App />
+      </AppInsightsContext.Provider>
     </Provider>
   </ThemeProvider>,
   document.getElementById("app")
