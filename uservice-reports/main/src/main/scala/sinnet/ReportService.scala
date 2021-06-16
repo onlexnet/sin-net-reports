@@ -48,16 +48,30 @@ class ReportService extends ReportsGrpc.ReportsImplBase {
     val fontSize = 10
     val baseFont = new Font(Font.TIMES_ROMAN, fontSize, Font.NORMAL)
 
-    val header = s"$customerName $customerCity $customerAddress"
-    val headParam = new Paragraph(header, baseFont)
-
     val d = managed(new ByteArrayOutputStream()) map {
       os => 
         val document = new Document()
         val pdfWriter = PdfWriter.getInstance(document, os)
+
         document.open()
+
+        val header = s"$customerName $customerCity $customerAddress"
+        val headParam = new Paragraph(header, baseFont)
+
         document.add(headParam);
         document.add(new Paragraph("-"))
+
+        val col1width = 3
+        val col2width = 3
+        val col3width = 12
+        val col4width = 2
+        val col5width = 2
+        val table = new PdfPTable(col1width + col2width + col3width + col4width + col5width)
+        val maxWidthPercentage = 100
+        table.setWidthPercentage(maxWidthPercentage)
+
+        case class CellParams(text: String, width: Int, alignment: HorizontalAlignment)
+
 
         // We have to invoke close method so that content of the document is written
         // to os and can be obtained as the result of the whole operation
@@ -71,52 +85,9 @@ class ReportService extends ReportsGrpc.ReportsImplBase {
       case None => Array.emptyByteArray
     }
    
-//  if (items.isEmpty()) {
-//       return Optional.empty();
-//     }
 
-//     var sample = items.head();
-//     var customerName = sample.getCustomerName();
-//     var customerCity = sample.getCustomerCity();
-//     var customerAddress = sample.getCustomerAddress();
-//     @Cleanup
-//     var os = new ByteArrayOutputStream();
-//     {
-//       @Cleanup
-//       var document = new Document();
-//       // step 2:
-//       // we create a writer that listens to the document
-//       // and directs a PDF-stream to a file
-//       PdfWriter.getInstance(document, os);
 
-//       // step 3: we open the document
-//       document.open();
 
-//       final var fontSize = 10;
-//       var baseFont = new Font(Font.TIMES_ROMAN, fontSize, Font.NORMAL);
-
-//       var header = Objects.toString(customerName, "Brak przypisanego kontrahenta")
-//           + " " + Objects.toString(customerCity, "")
-//           + " " + Objects.toString(customerAddress, "");
-//       var headParam = new Paragraph(header, baseFont);
-//       document.add(headParam);
-//       document.add(new Paragraph("-"));
-
-//       final int col1width = 3;
-//       final int col2width = 3;
-//       final int col3width = 12;
-//       final int col4width = 2;
-//       final int col5width = 2;
-//       var table = new PdfPTable(col1width + col2width + col3width + col4width + col5width);
-//       final int maxWidthPercentage = 100;
-//       table.setWidthPercentage(maxWidthPercentage);
-
-//       @AllArgsConstructor
-//       class CellParams {
-//           private String text;
-//           private Integer width;
-//           private HorizontalAlignment alignment;
-//       }
 
 //       var addValue = (Consumer<CellParams>) v -> {
 //         var p = new Paragraph(v.text, baseFont);
