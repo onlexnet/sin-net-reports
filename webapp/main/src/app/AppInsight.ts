@@ -11,7 +11,9 @@ const appInsights = new ApplicationInsights({
         extensions: [reactPlugin],
         extensionConfig: {
           [reactPlugin.identifier]: { history: browserHistory }
-        }
+        },
+
+        enableAutoRouteTracking: true
     }
 });
 appInsights.loadAppInsights();
