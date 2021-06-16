@@ -271,7 +271,7 @@ const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
                                     updateAction();
                                     // cancelEdit();
                                 }} />
-                            <DefaultButton onClick={() => cancelEdit()} text="Anuluj" />
+                            <DefaultButton onClick={() => cancelEdit()} text="Wyjdź" />
                             <DefaultButton text="Usuń i wyjdź" disabled={updateActionInProgress} styles={btnStyles} onClick={removeAndExit} />
                         </Stack>
                     </div>
