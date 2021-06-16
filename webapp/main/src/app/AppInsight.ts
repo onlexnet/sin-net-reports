@@ -13,8 +13,18 @@ const appInsights = new ApplicationInsights({
           [reactPlugin.identifier]: { history: browserHistory }
         },
 
-        enableAutoRouteTracking: true
-    }
+        // Correlation generates and sends data that enables distributed tracing and powers the application map,
+        // end-to-end transaction view, and other diagnostic tools.
+        // https://docs.microsoft.com/en-us/azure/azure-monitor/app/javascript#enable-correlation
+        disableFetchTracking: false,
+        enableCorsCorrelation: true,
+        enableRequestHeaderTracking: true,
+        enableResponseHeaderTracking: true,
+
+        // Use enableAutoRouteTracking: true only if you are not using the React plugin.
+        // Both are capable of sending new PageViews when the route changes. If both are enabled, duplicate PageViews may be sent.
+        enableAutoRouteTracking: false
+      }
 });
 appInsights.loadAppInsights();
 appInsights.trackPageView();
