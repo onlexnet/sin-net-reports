@@ -23,10 +23,22 @@ const appInsights = new ApplicationInsights({
 
         // Use enableAutoRouteTracking: true only if you are not using the React plugin.
         // Both are capable of sending new PageViews when the route changes. If both are enabled, duplicate PageViews may be sent.
-        enableAutoRouteTracking: false
+        enableAutoRouteTracking: false,
+
+        // TODO read more about excluding correlation headers
+        // correlationHeaderExcludedDomains: config.THIRD_PARTY_DOMAINS
       }
 });
+
 appInsights.loadAppInsights();
+
+appInsights.addTelemetryInitializer(telemetryItem => {
+  // ai.cloud.role 
+  // more @ https://docs.microsoft.com/en-us/azure/azure-monitor/app/app-map?tabs=net#understanding-cloud-role-name-within-the-context-of-the-application-map
+  telemetryItem.tags!['ai.cloud.role'] = 'sinnet-webapp';
+})
+
+
 appInsights.trackPageView();
 
 export { reactPlugin, appInsights };
