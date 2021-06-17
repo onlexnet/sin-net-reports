@@ -25,6 +25,7 @@ import java.util.zip.ZipOutputStream
 import scala.collection.JavaConverters._
 import java.util.UUID
 import java.util.zip.ZipEntry
+import com.lowagie.text.pdf.PdfTable
 
 @Singleton
 class ReportService extends ReportsGrpc.ReportsImplBase {
@@ -70,7 +71,43 @@ class ReportService extends ReportsGrpc.ReportsImplBase {
         val maxWidthPercentage = 100
         table.setWidthPercentage(maxWidthPercentage)
 
+        implicit class PdfPTableEx(val it: PdfPTable) {
+          def addValue(v: CellParams): Unit = {
+            val p = new Paragraph(v.text, baseFont)
+            var cell = new PdfPCell(p)
+            cell.setHorizontalAlignment(v.alignment.getId())
+            cell.setColspan(v.width)
+            it.addCell(cell)
+          }
+        }
+
         case class CellParams(text: String, width: Int, alignment: HorizontalAlignment)
+
+        var sumTime = 0
+        var sumDistance = 0
+        table.addValue(new CellParams("Serwisant", col1width, HorizontalAlignment.CENTER))
+        table.addValue(new CellParams("Dzień", col2width, HorizontalAlignment.CENTER))
+        table.addValue(new CellParams("Praca wykonana", col3width, HorizontalAlignment.CENTER))
+        table.addValue(new CellParams("Czas", col4width, HorizontalAlignment.RIGHT))
+        table.addValue(new CellParams("KM", col5width, HorizontalAlignment.RIGHT))
+
+//       final var timeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+//       for (var item : items) {
+//           var howLong = item.getValue().getHowLong();
+//           var distance = item.getValue().getHowFar();
+//           var who = Optional
+//               .ofNullable(item.getValue().getWho().getValue())
+//               .map(it -> it.split("@")[0])
+//               .orElse(null);
+//           addValue.accept(new CellParams(who, col1width, HorizontalAlignment.LEFT));
+//           addValue.accept(new CellParams(item.getValue().getWhen().format(timeFormatter), col2width, HorizontalAlignment.LEFT));
+//           addValue.accept(new CellParams(item.getValue().getWhat(), col3width, HorizontalAlignment.LEFT));
+//           addValue.accept(new CellParams(howLong.toString(), col4width, HorizontalAlignment.RIGHT));
+//           addValue.accept(new CellParams(distance.toString(), col5width, HorizontalAlignment.RIGHT));
+//           sumTime += howLong.getValue();
+//           sumDistance += distance.getValue();
+//       }
+
 
 
         // We have to invoke close method so that content of the document is written
@@ -89,36 +126,7 @@ class ReportService extends ReportsGrpc.ReportsImplBase {
 
 
 
-//       var addValue = (Consumer<CellParams>) v -> {
-//         var p = new Paragraph(v.text, baseFont);
-//         var cell = new PdfPCell(p);
-//         cell.setHorizontalAlignment(v.alignment.getId());
-//         cell.setColspan(v.width);
-//         table.addCell(cell);
-//       };
-//       var sumTime = 0;
-//       var sumDistance = 0;
-//       addValue.accept(new CellParams("Serwisant", col1width, HorizontalAlignment.CENTER));
-//       addValue.accept(new CellParams("Dzień", col2width, HorizontalAlignment.CENTER));
-//       addValue.accept(new CellParams("Praca wykonana", col3width, HorizontalAlignment.CENTER));
-//       addValue.accept(new CellParams("Czas", col4width, HorizontalAlignment.RIGHT));
-//       addValue.accept(new CellParams("KM", col5width, HorizontalAlignment.RIGHT));
-//       final var timeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-//       for (var item : items) {
-//           var howLong = item.getValue().getHowLong();
-//           var distance = item.getValue().getHowFar();
-//           var who = Optional
-//               .ofNullable(item.getValue().getWho().getValue())
-//               .map(it -> it.split("@")[0])
-//               .orElse(null);
-//           addValue.accept(new CellParams(who, col1width, HorizontalAlignment.LEFT));
-//           addValue.accept(new CellParams(item.getValue().getWhen().format(timeFormatter), col2width, HorizontalAlignment.LEFT));
-//           addValue.accept(new CellParams(item.getValue().getWhat(), col3width, HorizontalAlignment.LEFT));
-//           addValue.accept(new CellParams(howLong.toString(), col4width, HorizontalAlignment.RIGHT));
-//           addValue.accept(new CellParams(distance.toString(), col5width, HorizontalAlignment.RIGHT));
-//           sumTime += howLong.getValue();
-//           sumDistance += distance.getValue();
-//       }
+
 //       addValue.accept(new CellParams(null, col1width, HorizontalAlignment.LEFT));
 //       addValue.accept(new CellParams(null, col2width, HorizontalAlignment.LEFT));
 //       addValue.accept(new CellParams("Suma", col3width, HorizontalAlignment.RIGHT));
