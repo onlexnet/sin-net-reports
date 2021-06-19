@@ -13,7 +13,7 @@ service Reports {
 
 message ReportRequest {
     CustomerDetails customer = 1;
-    repeated ActionDetails details = 2;
+    repeated ActivityDetails details = 2;
 }
 
 message ReportRequests {
@@ -27,11 +27,23 @@ message CustomerDetails {
     string customerAddress = 4;
 }
 
-message ActionDetails {
-    string description = 1;
+message ActivityDetails {
+    string description = 1; // description of the activity
+    string who = 2; // main person engaged in the activity
+    Date when = 3;
+    int32 howLongInMins = 4;
+    int32 howFarInKms = 5;
 }
 
 // The response message containing the greetings
 message Response {
     bytes data = 1;
+}
+
+message Date {
+  int32 year = 1;
+  /** Month from 1 to 12 */
+  int32 month = 2;
+  /** from 1 - 31 */
+  int32 dayOfTheMonth = 3;
 }

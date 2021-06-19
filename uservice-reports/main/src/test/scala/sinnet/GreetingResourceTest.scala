@@ -9,7 +9,7 @@ import io.quarkus.example.GreeterGrpc;
 import io.quarkus.example.HelloRequest;
 import javax.inject.Inject
 import scala.annotation.meta.field
-import sinnet.reports.ReportRequest
+import sinnet.reports.{ReportRequest => ReportRequestDTO}
 import org.assertj.core.api.Assertions
 
 @QuarkusTest

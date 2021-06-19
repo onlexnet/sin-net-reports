@@ -9,7 +9,7 @@ import io.quarkus.example.GreeterGrpc;
 import io.quarkus.example.HelloRequest;
 import javax.inject.Inject
 import scala.annotation.meta.field
-import sinnet.reports.{ ReportRequest, ReportRequests}
+import sinnet.reports.{ ReportRequest => ReportRequestDTO, ReportRequests => ReportRequestsDTO}
 import sinnet.reports.ReportsGrpc
 import org.assertj.core.api.Assertions
 import java.util.zip.ZipInputStream
@@ -24,7 +24,7 @@ class ReportServiceTest {
 
     @Test
     def produceEndpoint(): Unit = {
-        val request = ReportRequest.newBuilder().build
+        val request = ReportRequestDTO.newBuilder().build
         val res = client.produce(request)
         var data = res.getData().toByteArray()
         Assertions.assertThat(data).isNotEmpty()
@@ -32,8 +32,8 @@ class ReportServiceTest {
 
     @Test
     def producePackEndpoint(): Unit = {
-        val request = ReportRequest.newBuilder().build
-        val pack = ReportRequests.newBuilder()
+        val request = ReportRequestDTO.newBuilder().build
+        val pack = ReportRequestsDTO.newBuilder()
             .addItems(request)
             .addItems(request)
             .build()
