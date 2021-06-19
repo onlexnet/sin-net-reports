@@ -16,7 +16,7 @@ import io.quarkus.example.GreeterGrpc;
 import io.quarkus.example.HelloRequest;
 import lombok.extern.slf4j.Slf4j;
 import sinnet.FutureExecutor;
-import sinnet.reports.ActionDetails;
+import sinnet.reports.ActivityDetails;
 import sinnet.reports.CustomerDetails;
 import sinnet.reports.ReportRequest;
 import sinnet.reports.ReportRequests;
@@ -62,7 +62,6 @@ class DebugController {
     var headers = new HttpHeaders();
     headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
     headers.add("Content-Disposition", "inline; filename=test-report.pdf");
-    headers.add("Pragma", "no-cache");
     headers.add("Expires", "0");
 
     var response = reportsClient.produce(generateRequest(0));
@@ -82,7 +81,6 @@ class DebugController {
     var headers = new HttpHeaders();
     headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
     headers.add("Content-Disposition", "inline; filename=test-report.zip");
-    headers.add("Pragma", "no-cache");
     headers.add("Expires", "0");
 
     var request1 = generateRequest(1);
@@ -111,7 +109,7 @@ class DebugController {
         .setCustomerId("ID klienta" + customMarker)
         .setCustomerName("Nazwa klienta" + customMarker)
         .build();
-    var action = ActionDetails.newBuilder()
+    var action = ActivityDetails.newBuilder()
         .setDescription("Opis usługi" + customMarker)
         .build();
     return ReportRequest.newBuilder()
