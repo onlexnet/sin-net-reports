@@ -9,7 +9,10 @@ import io.quarkus.example.GreeterGrpc;
 import io.quarkus.example.HelloRequest;
 import javax.inject.Inject
 import scala.annotation.meta.field
-import sinnet.reports.{ ReportRequest => ReportRequestDTO, ReportRequests => ReportRequestsDTO}
+import sinnet.reports.{ ReportRequest => ReportRequestDTO,
+        ReportRequests => ReportRequestsDTO,
+        CustomerDetails => CustomerDetailsDTO,
+        ActivityDetails => ActivityDetailsDTO}
 import sinnet.reports.ReportsGrpc
 import org.assertj.core.api.Assertions
 import java.util.zip.ZipInputStream
@@ -23,8 +26,23 @@ class ReportServiceTest {
     var client: ReportsGrpc.ReportsBlockingStub = _
 
     @Test
-    def produceEndpoint(): Unit = {
-        val request = ReportRequestDTO.newBuilder().build
+    def produceReportWithMinDataCase1(): Unit = {
+        val customer = CustomerDetailsDTO.newBuilder().build()
+        val activity = ActivityDetailsDTO.newBuilder().build();
+        val request = ReportRequestDTO.newBuilder().build()
+        val res = client.produce(request)
+        var data = res.getData().toByteArray()
+        Assertions.assertThat(data).isNotEmpty()
+    }
+
+    @Test
+    def produceReportWithMinDataCase2(): Unit = {
+        val customer = CustomerDetailsDTO.newBuilder().build()
+        val activity = ActivityDetailsDTO.newBuilder().build()
+        val request = ReportRequestDTO.newBuilder()
+            .setCustomer(customer)
+            .addDetails(activity)
+            .build()
         val res = client.produce(request)
         var data = res.getData().toByteArray()
         Assertions.assertThat(data).isNotEmpty()

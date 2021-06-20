@@ -37,15 +37,15 @@ class ReportService extends ReportsGrpc.ReportsImplBase {
   implicit def def4(x: sinnet.reports.Date) =
     LocalDate.of(x.getYear(), x.getMonth(), x.getDayOfTheMonth())
   implicit def def3(x: sinnet.reports.ActivityDetails) =
-    ActivityDetails(x.getDescription(), x.getWho(), x.getWhen(), x.getHowLongInMins(), x.getHowFarInKms())
+    ActivityDetails(x.getDescription(), x.getWho(), x.getWhen(), new TimeInMins(x.getHowLongInMins()), new DistanceInKms(x.getHowFarInKms()))
   implicit def def2(x: sinnet.reports.CustomerDetails) =
     CustomerDetails(x.getCustomerName(), x.getCustomerCity(), x.getCustomerAddress())
   implicit def def1(x: sinnet.reports.ReportRequest) =
     ReportRequest(x.getCustomer(), x.getDetailsList().toSeq.map(def3 _))
 
   override def produce(request: ReportRequestDTO, responseObserver: StreamObserver[Response]): Unit = {
-    val model = new ReportModel(request);
-    val binaryData = model.pdfContent;
+    val model = ReportModel(request)
+    val binaryData = model.content
     val dtoData = ByteString.copyFrom(binaryData)
     var response = Response
       .newBuilder()
@@ -63,8 +63,8 @@ class ReportService extends ReportsGrpc.ReportsImplBase {
     ) {
 
       for ((item, index) <- request.getItemsList.zip(Stream from 1)) {
-        val model = ReportModel(item);
-        val report = model.pdfContent
+        val model = ReportModel(item)
+        val report = model.content
         val entry = new ZipEntry(
           s"$index-${item.customer.customerName}.pdf"
         )
