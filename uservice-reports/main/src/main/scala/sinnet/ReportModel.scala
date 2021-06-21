@@ -57,8 +57,7 @@ object ReportModel {
       val col3width = 12
       val col4width = 2
       val col5width = 2
-      val table =
-        new PdfPTable(col1width + col2width + col3width + col4width + col5width)
+      val table = new PdfPTable(col1width + col2width + col3width + col4width + col5width)
       val maxWidthPercentage = 100
       table.setWidthPercentage(maxWidthPercentage)
 
@@ -99,11 +98,7 @@ object ReportModel {
         // sumDistance += distance.getValue();
       }
 
-      // val [sumTime, sumDistance] = request.details.
-      val (id, name) = (5, "Prashant")
-      val sum = List(1, 2, 3).foldLeft(0)((agg, v) => agg + v)
-
-      val agg = (new DistanceInKms(0), new TimeInMins(0))
+      val agg = (new Kilometers(0), new Minutes(0))
       val (howFar, howLong) = request.details.foldLeft(agg)((acc, v) => (acc._1 + v.howFarInKms, acc._2 + v.howLongInMins))
 
       // We have to invoke close method so that content of the document is written

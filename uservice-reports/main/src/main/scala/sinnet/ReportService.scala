@@ -37,7 +37,7 @@ class ReportService extends ReportsGrpc.ReportsImplBase {
   implicit def def4(x: sinnet.reports.Date) =
     LocalDate.of(x.getYear(), x.getMonth(), x.getDayOfTheMonth())
   implicit def def3(x: sinnet.reports.ActivityDetails) =
-    ActivityDetails(x.getDescription(), x.getWho(), x.getWhen(), new TimeInMins(x.getHowLongInMins()), new DistanceInKms(x.getHowFarInKms()))
+    ActivityDetails(x.getDescription(), x.getWho(), x.getWhen(), new Minutes(x.getHowLongInMins()), new Kilometers(x.getHowFarInKms()))
   implicit def def2(x: sinnet.reports.CustomerDetails) =
     CustomerDetails(x.getCustomerName(), x.getCustomerCity(), x.getCustomerAddress())
   implicit def def1(x: sinnet.reports.ReportRequest) =

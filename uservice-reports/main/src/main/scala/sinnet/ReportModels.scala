@@ -19,14 +19,14 @@ case class ActivityDetails(
     description: String,
     who: String,
     when: LocalDate,
-    howLongInMins: TimeInMins,
-    howFarInKms: DistanceInKms
+    howLongInMins: Minutes,
+    howFarInKms: Kilometers
 )
 
-class DistanceInKms(val value: Int) extends AnyVal {
-    def +(m: DistanceInKms): DistanceInKms = new DistanceInKms(value + m.value)
+class Kilometers(val value: Int) extends AnyVal {
+    def +(m: Kilometers): Kilometers = new Kilometers(value + m.value)
 }
 
-class TimeInMins(val value: Int) extends AnyVal {
-    def +(m: TimeInMins): TimeInMins = new TimeInMins(value + m.value)
+class Minutes(val value: Int) extends AnyVal {
+    def +(m: Minutes): Minutes = new Minutes(value + m.value)
 }
