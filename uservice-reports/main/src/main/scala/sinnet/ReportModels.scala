@@ -18,13 +18,21 @@ case class ReportRequests(items: Seq[ReportRequest])
 case class ActivityDetails(
     description: String,
     who: String,
-    when: LocalDate,
+    when: Option[LocalDate],
     howLongInMins: Minutes,
     howFarInKms: Kilometers
 )
 
 class Kilometers(val value: Int) extends AnyVal {
     def +(m: Kilometers): Kilometers = new Kilometers(value + m.value)
+}
+
+object Kilometers {
+    def apply(value: Int) = new Kilometers(value)
+}
+
+object Minutes {
+    def apply(value: Int) = new Minutes(value)
 }
 
 class Minutes(val value: Int) extends AnyVal {

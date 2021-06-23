@@ -1,7 +1,5 @@
 package sinnet
 
-import scala.collection.JavaConversions._
-
 import scala.language.implicitConversions
 import javax.inject.Singleton;
 import sinnet.reports.ReportsGrpc
@@ -77,19 +75,26 @@ object ReportModel {
           alignment: HorizontalAlignment
       )
 
+      val timeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
+      val double = (i: Int) => { i * 2 }
+      implicit val a: (Option[LocalDate]) => String = it =>
+        it match {
+          case Some(date) => date.format(timeFormatter)
+          case None       => "-"
+        }
+
       table.addValue(new CellParams("Serwisant", col1width, HorizontalAlignment.CENTER))
       table.addValue(new CellParams("Dzień", col2width, HorizontalAlignment.CENTER))
       table.addValue(new CellParams("Praca wykonana", col3width, HorizontalAlignment.CENTER))
       table.addValue(new CellParams("Czas", col4width, HorizontalAlignment.RIGHT))
       table.addValue(new CellParams("KM", col5width, HorizontalAlignment.RIGHT))
 
-      val timeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
       for (item <- request.details) {
         val howLong = item.howLongInMins
         var distance = item.howFarInKms
         var who = item.who
         table.addValue(new CellParams(who, col1width, HorizontalAlignment.LEFT))
-        table.addValue(new CellParams(item.when.format(timeFormatter), col2width, HorizontalAlignment.LEFT))
+        table.addValue(new CellParams(item.when, col2width, HorizontalAlignment.LEFT))
         table.addValue(new CellParams(item.description, col3width, HorizontalAlignment.LEFT))
         table.addValue(new CellParams(howLong.toString(), col4width, HorizontalAlignment.RIGHT))
         table.addValue(new CellParams(distance.toString(), col5width, HorizontalAlignment.RIGHT))
@@ -98,8 +103,8 @@ object ReportModel {
         // sumDistance += distance.getValue();
       }
 
-      val agg = (new Kilometers(0), new Minutes(0))
-      val (howFar, howLong) = request.details.foldLeft(agg)((acc, v) => (acc._1 + v.howFarInKms, acc._2 + v.howLongInMins))
+      val initialAcc = (Kilometers(0), Minutes(0))
+      val (howFar, howLong) = request.details.foldLeft(initialAcc)((acc, v) => (acc._1 + v.howFarInKms, acc._2 + v.howLongInMins))
 
       // We have to invoke close method so that content of the document is written
       // to os and can be obtained as the result of the whole operation

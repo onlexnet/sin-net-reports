@@ -34,17 +34,9 @@ import java.time.format.DateTimeFormatter
 @Singleton
 class ReportService extends ReportsGrpc.ReportsImplBase {
 
-  implicit def def4(x: sinnet.reports.Date) =
-    LocalDate.of(x.getYear(), x.getMonth(), x.getDayOfTheMonth())
-  implicit def def3(x: sinnet.reports.ActivityDetails) =
-    ActivityDetails(x.getDescription(), x.getWho(), x.getWhen(), new Minutes(x.getHowLongInMins()), new Kilometers(x.getHowFarInKms()))
-  implicit def def2(x: sinnet.reports.CustomerDetails) =
-    CustomerDetails(x.getCustomerName(), x.getCustomerCity(), x.getCustomerAddress())
-  implicit def def1(x: sinnet.reports.ReportRequest) =
-    ReportRequest(x.getCustomer(), x.getDetailsList().toSeq.map(def3 _))
-
   override def produce(request: ReportRequestDTO, responseObserver: StreamObserver[Response]): Unit = {
-    val model = ReportModel(request)
+    var requestModel = Mapper(request)
+    val model = ReportModel(requestModel)
     val binaryData = model.content
     val dtoData = ByteString.copyFrom(binaryData)
     var response = Response
@@ -62,8 +54,9 @@ class ReportService extends ReportsGrpc.ReportsImplBase {
       zos <- managed(new ZipOutputStream(baos))
     ) {
 
-      for ((item, index) <- request.getItemsList.zip(Stream from 1)) {
-        val model = ReportModel(item)
+      for ((itemDto, index) <- request.getItemsList().asScala.zip(Stream from 1)) {
+        val item = Mapper(itemDto)
+        var model = ReportModel(item)
         val report = model.content
         val entry = new ZipEntry(
           s"$index-${item.customer.customerName}.pdf"
