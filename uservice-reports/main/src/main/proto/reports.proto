@@ -43,8 +43,7 @@ message Response {
 message Date {
   int32 year = 1;
   /** Month from 1 to 12 */
-  int32 mon
-  th = 2;
+  int32 month = 2;
   /** allowable values: 1 - 31 */
   int32 dayOfTheMonth = 3;
 }
