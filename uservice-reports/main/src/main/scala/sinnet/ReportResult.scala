@@ -29,6 +29,7 @@ import com.lowagie.text.pdf.PdfTable
 import java.time.format.DateTimeFormatter
 
 object ReportResult {
+
   def apply(request: ReportRequest): ReportResult = {
     val customer = request.customer
     val customerName = Option(customer.customerName).getOrElse("(Brak wskazanego kontrahenta")
@@ -50,66 +51,65 @@ object ReportResult {
       document.add(headParam);
       document.add(new Paragraph("-"))
 
-      val col1width = 3
-      val col2width = 3
-      val col3width = 12
-      val col4width = 2
-      val col5width = 2
-      val table = new PdfPTable(col1width + col2width + col3width + col4width + col5width)
-      val maxWidthPercentage = 100
-      table.setWidthPercentage(maxWidthPercentage)
+      def asTable(activities: Seq[ActivityDetails]): PdfPTable = {
+        val col1width = 3
+        val col2width = 3
+        val col3width = 12
+        val col4width = 2
+        val col5width = 2
+        val table = new PdfPTable(col1width + col2width + col3width + col4width + col5width)
+        val maxWidthPercentage = 100
+        table.setWidthPercentage(maxWidthPercentage)
 
-      implicit class PdfPTableEx(val it: PdfPTable) {
-        def addValue(v: CellParams): Unit = {
-          val p = new Paragraph(v.text, baseFont)
-          var cell = new PdfPCell(p)
-          cell.setHorizontalAlignment(v.alignment.getId())
-          cell.setColspan(v.width)
-          it.addCell(cell)
-        }
-      }
-
-      case class CellParams(
-          text: String,
-          width: Int,
-          alignment: HorizontalAlignment
-      )
-
-      val timeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
-      val double = (i: Int) => { i * 2 }
-      implicit val a: (Option[LocalDate]) => String = it =>
-        it match {
-          case Some(date) => date.format(timeFormatter)
-          case None       => "-"
+        implicit class PdfPTableEx(val it: PdfPTable) {
+          def addValue(v: CellParams): Unit = {
+            val p = new Paragraph(v.text, baseFont)
+            var cell = new PdfPCell(p)
+            cell.setHorizontalAlignment(v.alignment.getId())
+            cell.setColspan(v.width)
+            it.addCell(cell)
+          }
         }
 
-      table.addValue(new CellParams("Serwisant", col1width, HorizontalAlignment.CENTER))
-      table.addValue(new CellParams("Dzień", col2width, HorizontalAlignment.CENTER))
-      table.addValue(new CellParams("Praca wykonana", col3width, HorizontalAlignment.CENTER))
-      table.addValue(new CellParams("Czas", col4width, HorizontalAlignment.RIGHT))
-      table.addValue(new CellParams("KM", col5width, HorizontalAlignment.RIGHT))
+        case class CellParams(text: String, width: Int, alignment: HorizontalAlignment)
+  
+        val timeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
+        implicit val a: (Option[LocalDate]) => String = it =>
+          it match {
+            case Some(date) => date.format(timeFormatter)
+            case None       => "-"
+          }
 
-      for (item <- request.details) {
-        val howLong = item.howLongInMins
-        var distance = item.howFarInKms
-        var who = item.who
-        table.addValue(new CellParams(who, col1width, HorizontalAlignment.LEFT))
-        table.addValue(new CellParams(item.when, col2width, HorizontalAlignment.LEFT))
-        table.addValue(new CellParams(item.description, col3width, HorizontalAlignment.LEFT))
+        table.addValue(new CellParams("Serwisant", col1width, HorizontalAlignment.CENTER))
+        table.addValue(new CellParams("Dzień", col2width, HorizontalAlignment.CENTER))
+        table.addValue(new CellParams("Praca wykonana", col3width, HorizontalAlignment.CENTER))
+        table.addValue(new CellParams("Czas", col4width, HorizontalAlignment.RIGHT))
+        table.addValue(new CellParams("KM", col5width, HorizontalAlignment.RIGHT))
+          
+        for (item <- request.details) {
+          val howLong = item.howLongInMins
+          var distance = item.howFarInKms
+          var who = item.who
+          table.addValue(new CellParams(who, col1width, HorizontalAlignment.LEFT))
+          table.addValue(new CellParams(item.when, col2width, HorizontalAlignment.LEFT))
+          table.addValue(new CellParams(item.description, col3width, HorizontalAlignment.LEFT))
+          table.addValue(new CellParams(howLong.toString(), col4width, HorizontalAlignment.RIGHT))
+          table.addValue(new CellParams(distance.toString(), col5width, HorizontalAlignment.RIGHT))
+        }
+
+        val initialAcc = (Kilometers(0), Minutes(0))
+        val (howFar, howLong) = request.details.foldLeft(initialAcc)((acc, v) => (acc._1 + v.howFarInKms, acc._2 + v.howLongInMins))
+
+        table.addValue(new CellParams(null, col1width, HorizontalAlignment.LEFT))
+        table.addValue(new CellParams(null, col2width, HorizontalAlignment.LEFT))
+        table.addValue(new CellParams("Suma", col3width, HorizontalAlignment.RIGHT))
         table.addValue(new CellParams(howLong.toString(), col4width, HorizontalAlignment.RIGHT))
-        table.addValue(new CellParams(distance.toString(), col5width, HorizontalAlignment.RIGHT))
+        table.addValue(new CellParams(howFar.toString(), col5width, HorizontalAlignment.RIGHT))
+
+        table
       }
 
-      val initialAcc = (Kilometers(0), Minutes(0))
-      val (howFar, howLong) = request.details.foldLeft(initialAcc)((acc, v) => (acc._1 + v.howFarInKms, acc._2 + v.howLongInMins))
-
-      table.addValue(new CellParams(null, col1width, HorizontalAlignment.LEFT))
-      table.addValue(new CellParams(null, col2width, HorizontalAlignment.LEFT))
-      table.addValue(new CellParams("Suma", col3width, HorizontalAlignment.RIGHT))
-      table.addValue(new CellParams(howLong.toString(), col4width, HorizontalAlignment.RIGHT))
-      table.addValue(new CellParams(howFar.toString(), col5width, HorizontalAlignment.RIGHT))
-
-      document.add(table);
+      document.add(asTable(request.details));
 
       // We have to invoke close method so that content of the document is written
       // to os and can be obtained as the result of the whole operation
@@ -126,6 +126,7 @@ object ReportResult {
     new ReportResult(request, content)
 
   }
+
 }
 
 case class ReportModel()
