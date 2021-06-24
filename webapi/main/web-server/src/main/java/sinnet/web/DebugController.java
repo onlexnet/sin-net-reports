@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import sinnet.FutureExecutor;
 import sinnet.reports.ActivityDetails;
 import sinnet.reports.CustomerDetails;
+import sinnet.reports.Date;
 import sinnet.reports.ReportRequest;
 import sinnet.reports.ReportRequests;
 import sinnet.reports.ReportsGrpc;
@@ -111,6 +112,13 @@ class DebugController {
         .build();
     var action = ActivityDetails.newBuilder()
         .setDescription("Opis usługi" + customMarker)
+        .setHowFarInKms(1)
+        .setHowLongInMins(1)
+        .setWho("Some serviceman")
+        .setWhen(Date.newBuilder()
+          .setYear(2000)
+          .setMonth(1)
+          .setDayOfTheMonth(2))
         .build();
     return ReportRequest.newBuilder()
         .setCustomer(customer)
