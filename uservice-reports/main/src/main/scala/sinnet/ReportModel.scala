@@ -56,6 +56,7 @@ object ReportModel {
       val col4width = 2
       val col5width = 2
       val table = new PdfPTable(col1width + col2width + col3width + col4width + col5width)
+      document.add(table);
       val maxWidthPercentage = 100
       table.setWidthPercentage(maxWidthPercentage)
 
@@ -98,13 +99,16 @@ object ReportModel {
         table.addValue(new CellParams(item.description, col3width, HorizontalAlignment.LEFT))
         table.addValue(new CellParams(howLong.toString(), col4width, HorizontalAlignment.RIGHT))
         table.addValue(new CellParams(distance.toString(), col5width, HorizontalAlignment.RIGHT))
-
-        // sumTime += howLong.getValue();
-        // sumDistance += distance.getValue();
       }
 
       val initialAcc = (Kilometers(0), Minutes(0))
       val (howFar, howLong) = request.details.foldLeft(initialAcc)((acc, v) => (acc._1 + v.howFarInKms, acc._2 + v.howLongInMins))
+
+      table.addValue(new CellParams(null, col1width, HorizontalAlignment.LEFT))
+      table.addValue(new CellParams(null, col2width, HorizontalAlignment.LEFT))
+      table.addValue(new CellParams("Suma", col3width, HorizontalAlignment.RIGHT))
+      table.addValue(new CellParams(howLong.toString(), col4width, HorizontalAlignment.RIGHT))
+      table.addValue(new CellParams(howFar.toString(), col5width, HorizontalAlignment.RIGHT))
 
       // We have to invoke close method so that content of the document is written
       // to os and can be obtained as the result of the whole operation
@@ -119,16 +123,6 @@ object ReportModel {
     }
 
     new ReportModel(request, content)
-
-//       addValue.accept(new CellParams(null, col1width, HorizontalAlignment.LEFT));
-//       addValue.accept(new CellParams(null, col2width, HorizontalAlignment.LEFT));
-//       addValue.accept(new CellParams("Suma", col3width, HorizontalAlignment.RIGHT));
-//       addValue.accept(new CellParams(ActionDuration.of(sumTime).toString(), col4width, HorizontalAlignment.RIGHT));
-//       addValue.accept(new CellParams(Distance.of(sumDistance).toString(), col5width, HorizontalAlignment.RIGHT));
-//       document.add(table);
-//       }
-
-//     return Optional.of(os.toByteArray());
 
   }
 }
