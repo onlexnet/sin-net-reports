@@ -25,6 +25,7 @@ case class ActivityDetails(
 
 class Kilometers(val value: Int) extends AnyVal {
     def +(m: Kilometers): Kilometers = new Kilometers(value + m.value)
+    override def toString: String = value.toString
 }
 
 object Kilometers {
@@ -37,4 +38,5 @@ object Minutes {
 
 class Minutes(val value: Int) extends AnyVal {
     def +(m: Minutes): Minutes = new Minutes(value + m.value)
+    override def toString: String = value.toString
 }
