@@ -5,7 +5,7 @@ import java.time.LocalDate
 import scala.collection.JavaConverters._
 import scala.util.Try
 
-/** Converts ReportRequest (DTO) to local model. */
+/** Converts ReportRequest (DTO) to its local model. */
 object Mapper {
   private implicit def toLocalDate(x: sinnet.reports.Date): Option[LocalDate] = 
     Try(LocalDate.of(x.getYear(), x.getMonth(), x.getDayOfTheMonth())).toOption

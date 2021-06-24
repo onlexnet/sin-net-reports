@@ -28,8 +28,8 @@ import java.util.zip.ZipEntry
 import com.lowagie.text.pdf.PdfTable
 import java.time.format.DateTimeFormatter
 
-object ReportModel {
-  def apply(request: ReportRequest): ReportModel = {
+object ReportResult {
+  def apply(request: ReportRequest): ReportResult = {
     val customer = request.customer
     val customerName = Option(customer.customerName).getOrElse("(Brak wskazanego kontrahenta")
     val customerCity = Option(customer.customerCity).getOrElse("(miejscowość)")
@@ -122,9 +122,10 @@ object ReportModel {
       case None        => Array.emptyByteArray
     }
 
-    new ReportModel(request, content)
+    new ReportResult(request, content)
 
   }
 }
 
-case class ReportModel(val request: ReportRequest, val content: Array[Byte])
+case class ReportModel()
+case class ReportResult(val request: ReportRequest, val content: Array[Byte])

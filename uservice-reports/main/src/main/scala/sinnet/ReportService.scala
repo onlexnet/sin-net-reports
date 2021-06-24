@@ -31,12 +31,13 @@ import java.util.zip.ZipEntry
 import com.lowagie.text.pdf.PdfTable
 import java.time.format.DateTimeFormatter
 
+/** Exposes gRPC endpoints to allow produce PDF report based on requested data. */
 @Singleton
 class ReportService extends ReportsGrpc.ReportsImplBase {
 
   override def produce(request: ReportRequestDTO, responseObserver: StreamObserver[Response]): Unit = {
     var requestModel = Mapper(request)
-    val model = ReportModel(requestModel)
+    val model = ReportResult(requestModel)
     val binaryData = model.content
     val dtoData = ByteString.copyFrom(binaryData)
     var response = Response
@@ -56,7 +57,7 @@ class ReportService extends ReportsGrpc.ReportsImplBase {
 
       for ((itemDto, index) <- request.getItemsList().asScala.zip(Stream from 1)) {
         val item = Mapper(itemDto)
-        var model = ReportModel(item)
+        var model = ReportResult(item)
         val report = model.content
         val entry = new ZipEntry(
           s"$index-${item.customer.customerName}.pdf"
