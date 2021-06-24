@@ -56,7 +56,6 @@ object ReportResult {
       val col4width = 2
       val col5width = 2
       val table = new PdfPTable(col1width + col2width + col3width + col4width + col5width)
-      document.add(table);
       val maxWidthPercentage = 100
       table.setWidthPercentage(maxWidthPercentage)
 
@@ -109,6 +108,8 @@ object ReportResult {
       table.addValue(new CellParams("Suma", col3width, HorizontalAlignment.RIGHT))
       table.addValue(new CellParams(howLong.toString(), col4width, HorizontalAlignment.RIGHT))
       table.addValue(new CellParams(howFar.toString(), col5width, HorizontalAlignment.RIGHT))
+
+      document.add(table);
 
       // We have to invoke close method so that content of the document is written
       // to os and can be obtained as the result of the whole operation
