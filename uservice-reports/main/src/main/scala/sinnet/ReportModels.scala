@@ -38,5 +38,13 @@ object Minutes {
 
 class Minutes(val value: Int) extends AnyVal {
     def +(m: Minutes): Minutes = new Minutes(value + m.value)
-    override def toString: String = value.toString
+    override def toString: String = {
+        val minutesPerHour = 60
+        var minutes = value % minutesPerHour
+        var hours = value / minutesPerHour
+        val minumuValueWithDoubleDigits = 10
+        val minutesPrefix = if (minutes < minumuValueWithDoubleDigits) ":0" else ":"
+        var minutesAsText = s"$minutesPrefix$minutes";
+        hours + minutesAsText
+    }
 }
