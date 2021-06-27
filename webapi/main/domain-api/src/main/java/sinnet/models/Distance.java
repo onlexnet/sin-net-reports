@@ -28,8 +28,4 @@ public final class Distance {
     return empty;
   }
 
-  @Override
-  public String toString() {
-    return Integer.toString(value);
-  }
 }

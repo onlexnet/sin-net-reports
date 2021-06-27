@@ -26,15 +26,4 @@ public final class ActionDuration {
   public static ActionDuration empty() {
     return EMPTY;
   }
-
-  @Override
-  public String toString() {
-    final int minutesPerHour = 60;
-    var minutes = value % minutesPerHour;
-    var hours = value / minutesPerHour;
-    final int minumuValueWithDoubleDigits = 10;
-    var minutesPrefix = minutes < minumuValueWithDoubleDigits ? ":0" : ":";
-    var minutesAsText = minutesPrefix + minutes;
-    return hours + minutesAsText;
-  }
 }
