@@ -70,21 +70,26 @@ class ReportController implements ActionProjection {
   Option<ReportRequest> asReportRequest(Array<ListItem> items) {
     return items.headOption()
       .map(it -> {
+        var requestBuilder = ReportRequest.newBuilder();
+
         var customerId = it.getValue().getWhom();
         var customerName = it.getCustomerName();
         var customerCity = it.getCustomerCity();
         var customerAddress = it.getCustomerAddress();
-        var builder = ReportRequest.newBuilder()
-            .setCustomer(CustomerDetails.newBuilder()
-              .setCustomerId(customerId.toString())
-              .setCustomerName(customerName)
-              .setCustomerCity(customerCity)
-              .setCustomerAddress(customerAddress)
-              .build());
+        
+        if (customerId != null) {
+          var customerBuilder = CustomerDetails.newBuilder()
+              .setCustomerId(customerId.toString());
+          Option.of(customerName).forEach(customerBuilder::setCustomerName);
+          Option.of(customerCity).forEach(customerBuilder::setCustomerCity);
+          Option.of(customerAddress).forEach(customerBuilder::setCustomerAddress);
+          requestBuilder.setCustomer(customerBuilder);
+        }
+
         return items
           // let's simplify path of obtaining the value
           .map(v -> v.getValue())
-          .foldLeft(builder, (acc, v) -> acc.addDetails(ActivityDetails.newBuilder()
+          .foldLeft(requestBuilder, (acc, v) -> acc.addDetails(ActivityDetails.newBuilder()
             .setDescription(v.getWhat())
             .setHowFarInKms(v.getHowFar().getValue())
             .setHowLongInMins(v.getHowLong().getValue())
