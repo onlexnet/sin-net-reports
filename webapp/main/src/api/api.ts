@@ -34,7 +34,6 @@ export const apolloClientFactory = (jwtToken: string) => {
     const traceId = uuid().split('-').join('').substr(0, 32);
     const traceFlags = '01'; // sampled
     var traceparent = `${traceContextVersion}-${traceId}-${traceParentId}-${traceFlags}`;
-    alert(traceparent);
     operation.setContext({
       headers: {
         "Access-Control-Allow-Origin": "*",
