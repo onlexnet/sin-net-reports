@@ -100,7 +100,9 @@ class ReportController implements ActionProjection {
                 .setYear(v.getWhen().getYear())
                 .setMonth(v.getWhen().getMonthValue())
                 .setDayOfTheMonth(v.getWhen().getDayOfMonth())));
-            Option.of(v.getWho().getValue()).forEach(builder::setWho);
+            Option.of(v.getWho().getValue())
+              .map(o -> o.split("@")[0])
+              .forEach(builder::setWho);
 
             requestBuilder.addDetails(builder);
           });
