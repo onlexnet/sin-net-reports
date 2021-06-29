@@ -36,6 +36,7 @@ export const apolloClientFactory = (jwtToken: string) => {
     var traceparent = `${traceContextVersion}-${traceId}-${traceParentId}-${traceFlags}`;
     operation.setContext({
       headers: {
+        "siudek-test": Date.now(),
         "traceparent": traceparent,
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Credentials": true,
