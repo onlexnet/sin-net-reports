@@ -86,20 +86,26 @@ class ReportController implements ActionProjection {
           requestBuilder.setCustomer(customerBuilder);
         }
 
-        return items
+        items
           // let's simplify path of obtaining the value
           .map(v -> v.getValue())
-          .foldLeft(requestBuilder, (acc, v) -> acc.addDetails(ActivityDetails.newBuilder()
-            .setDescription(v.getWhat())
-            .setHowFarInKms(v.getHowFar().getValue())
-            .setHowLongInMins(v.getHowLong().getValue())
-            .setWhen(Date.newBuilder()
-              .setYear(v.getWhen().getYear())
-              .setMonth(v.getWhen().getMonthValue())
-              .setDayOfTheMonth(v.getWhen().getDayOfMonth())
-              .build())
-            .setWho(v.getWho().getValue())))
-          .build();
+          .forEach(v -> {
+            var builder = ActivityDetails.newBuilder();
+            Option.of(v.getWhat()).forEach(builder::setDescription);
+            builder
+              .setHowFarInKms(v.getHowFar().getValue())
+              .setHowLongInMins(v.getHowLong().getValue());
+            Option.of(v.getWhen()).forEach(o -> builder
+                .setWhen(Date.newBuilder()
+                .setYear(v.getWhen().getYear())
+                .setMonth(v.getWhen().getMonthValue())
+                .setDayOfTheMonth(v.getWhen().getDayOfMonth())));
+            Option.of(v.getWho().getValue()).forEach(builder::setWho);
+
+            requestBuilder.addDetails(builder);
+          });
+        
+        return requestBuilder.build();
       });
   }
 
