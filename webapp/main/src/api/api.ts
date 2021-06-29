@@ -36,6 +36,7 @@ export const apolloClientFactory = (jwtToken: string) => {
     var traceparent = `${traceContextVersion}-${traceId}-${traceParentId}-${traceFlags}`;
     operation.setContext({
       headers: {
+        "traceparent": traceparent,
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Credentials": true,
         Authorization: `Bearer ${jwtToken}`,
