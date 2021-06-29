@@ -1,23 +1,8 @@
 package sinnet.web;
 
-import java.io.ByteArrayOutputStream;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Objects;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletionStage;
-import java.util.function.Consumer;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
-
-import com.lowagie.text.Document;
-import com.lowagie.text.Font;
-import com.lowagie.text.Paragraph;
-import com.lowagie.text.alignment.HorizontalAlignment;
-import com.lowagie.text.pdf.PdfPCell;
-import com.lowagie.text.pdf.PdfPTable;
-import com.lowagie.text.pdf.PdfWriter;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -28,13 +13,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.vavr.Function1;
 import io.vavr.collection.Array;
-import lombok.AllArgsConstructor;
-import lombok.Cleanup;
-import lombok.SneakyThrows;
-import sinnet.models.ActionDuration;
-import sinnet.models.Distance;
+import io.vavr.control.Option;
+import sinnet.FutureExecutor;
 import sinnet.read.ActionProjection;
+import sinnet.reports.ActivityDetails;
+import sinnet.reports.CustomerDetails;
+import sinnet.reports.Date;
+import sinnet.reports.ReportRequest;
+import sinnet.reports.ReportRequests;
+import sinnet.reports.ReportsGrpc;
 
 @RestController
 @RequestMapping(path = "/api/raporty")
@@ -43,13 +32,19 @@ class ReportController implements ActionProjection {
   @Autowired
   private ActionProjection.Provider projection;
 
+  @Autowired
+  private ReportsGrpc.ReportsFutureStub reportsClient;
+
+  @Autowired
+  private FutureExecutor executor;
+
   @RequestMapping(value = "/klienci/{projectId}/{year}/{month}", method = RequestMethod.GET, produces = "application/pdf")
-  public CompletionStage<ResponseEntity<byte[]>> downloadPDFFile(@PathVariable UUID projectId, @PathVariable int year, @PathVariable int month) {
+  public CompletionStage<ResponseEntity<byte[]>> downloadPdfFile(@PathVariable UUID projectId,
+                                                                 @PathVariable int year, @PathVariable int month) {
 
     var headers = new HttpHeaders();
     headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
     headers.add("Content-Disposition", "inline; filename=report " + year + "-" + month + ".zip");
-    headers.add("Pragma", "no-cache");
     headers.add("Expires", "0");
 
     var dateFrom = LocalDate.of(year, month, 1);
@@ -57,134 +52,62 @@ class ReportController implements ActionProjection {
     return projection
         .find(projectId, dateFrom, dateTo)
         .toCompletionStage()
+        .thenCompose(it -> {
+          var reportRequest = asReportRequests(it);
+          var reportResult = reportsClient.producePack(reportRequest);
+          return executor.asFuture(reportResult, Function1.identity());
+        })
         .thenApplyAsync(it -> {
-          var result = getAsZip(it);
+          var result = it.getData().toByteArray();
           return ResponseEntity.ok()
               .headers(headers)
               .contentLength(result.length)
               .contentType(MediaType.parseMediaType("application/octet-stream"))
               .body(result);
         });
-
   }
 
-  @SneakyThrows
-  Optional<byte[]> produceReport(Array<ListItem> items) {
-    if (items.isEmpty()) {
-      return Optional.empty();
-    }
-
-    var sample = items.head();
-    var customerName = sample.getCustomerName();
-    var customerCity = sample.getCustomerCity();
-    var customerAddress = sample.getCustomerAddress();
-    @Cleanup
-    var os = new ByteArrayOutputStream();
-    {
-      @Cleanup
-      var document = new Document();
-      // step 2:
-      // we create a writer that listens to the document
-      // and directs a PDF-stream to a file
-      PdfWriter.getInstance(document, os);
-
-      // step 3: we open the document
-      document.open();
-
-      final var fontSize = 10;
-      var baseFont = new Font(Font.TIMES_ROMAN, fontSize, Font.NORMAL);
-
-      var header = Objects.toString(customerName, "Brak przypisanego kontrahenta")
-          + " " + Objects.toString(customerCity, "")
-          + " " + Objects.toString(customerAddress, "");
-      var headParam = new Paragraph(header, baseFont);
-      document.add(headParam);
-      document.add(new Paragraph("-"));
-
-      final int col1width = 3;
-      final int col2width = 3;
-      final int col3width = 12;
-      final int col4width = 2;
-      final int col5width = 2;
-      var table = new PdfPTable(col1width + col2width + col3width + col4width + col5width);
-      final int maxWidthPercentage = 100;
-      table.setWidthPercentage(maxWidthPercentage);
-
-      @AllArgsConstructor
-      class CellParams {
-          private String text;
-          private Integer width;
-          private HorizontalAlignment alignment;
-      }
-
-      var addValue = (Consumer<CellParams>) v -> {
-        var p = new Paragraph(v.text, baseFont);
-        var cell = new PdfPCell(p);
-        cell.setHorizontalAlignment(v.alignment.getId());
-        cell.setColspan(v.width);
-        table.addCell(cell);
-      };
-      var sumTime = 0;
-      var sumDistance = 0;
-      addValue.accept(new CellParams("Serwisant", col1width, HorizontalAlignment.CENTER));
-      addValue.accept(new CellParams("Dzień", col2width, HorizontalAlignment.CENTER));
-      addValue.accept(new CellParams("Praca wykonana", col3width, HorizontalAlignment.CENTER));
-      addValue.accept(new CellParams("Czas", col4width, HorizontalAlignment.RIGHT));
-      addValue.accept(new CellParams("KM", col5width, HorizontalAlignment.RIGHT));
-      final var timeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-      for (var item : items) {
-          var howLong = item.getValue().getHowLong();
-          var distance = item.getValue().getHowFar();
-          var who = Optional
-              .ofNullable(item.getValue().getWho().getValue())
-              .map(it -> it.split("@")[0])
-              .orElse(null);
-          addValue.accept(new CellParams(who, col1width, HorizontalAlignment.LEFT));
-          addValue.accept(new CellParams(item.getValue().getWhen().format(timeFormatter), col2width, HorizontalAlignment.LEFT));
-          addValue.accept(new CellParams(item.getValue().getWhat(), col3width, HorizontalAlignment.LEFT));
-          addValue.accept(new CellParams(howLong.toString(), col4width, HorizontalAlignment.RIGHT));
-          addValue.accept(new CellParams(distance.toString(), col5width, HorizontalAlignment.RIGHT));
-          sumTime += howLong.getValue();
-          sumDistance += distance.getValue();
-      }
-      addValue.accept(new CellParams(null, col1width, HorizontalAlignment.LEFT));
-      addValue.accept(new CellParams(null, col2width, HorizontalAlignment.LEFT));
-      addValue.accept(new CellParams("Suma", col3width, HorizontalAlignment.RIGHT));
-      addValue.accept(new CellParams(ActionDuration.of(sumTime).toString(), col4width, HorizontalAlignment.RIGHT));
-      addValue.accept(new CellParams(Distance.of(sumDistance).toString(), col5width, HorizontalAlignment.RIGHT));
-      document.add(table);
-      }
-
-    return Optional.of(os.toByteArray());
+  Option<ReportRequest> asReportRequest(Array<ListItem> items) {
+    return items.headOption()
+      .map(it -> {
+        var customerId = it.getValue().getWhom();
+        var customerName = it.getCustomerName();
+        var customerCity = it.getCustomerCity();
+        var customerAddress = it.getCustomerAddress();
+        var builder = ReportRequest.newBuilder()
+            .setCustomer(CustomerDetails.newBuilder()
+              .setCustomerId(customerId.toString())
+              .setCustomerName(customerName)
+              .setCustomerCity(customerCity)
+              .setCustomerAddress(customerAddress)
+              .build());
+        return items
+          // let's simplify path of obtaining the value
+          .map(v -> v.getValue())
+          .foldLeft(builder, (acc, v) -> acc.addDetails(ActivityDetails.newBuilder()
+            .setDescription(v.getWhat())
+            .setHowFarInKms(v.getHowFar().getValue())
+            .setHowLongInMins(v.getHowLong().getValue())
+            .setWhen(Date.newBuilder()
+              .setYear(v.getWhen().getYear())
+              .setMonth(v.getWhen().getMonthValue())
+              .setDayOfTheMonth(v.getWhen().getDayOfMonth())
+              .build())
+            .setWho(v.getWho().getValue())))
+          .build();
+      });
   }
 
-
-  @SneakyThrows
-  byte[] getAsZip(Array<ListItem> items) {
-
-    @Cleanup
-    var baos = new ByteArrayOutputStream();
-    {
-        var customers = items.groupBy(it -> it.getValue().getWhom());
-
-        @Cleanup
-        var zos = new ZipOutputStream(baos);
-
-        for (var c : customers) {
-            var customerName = c._2.head().getCustomerName();
-            var entry = new ZipEntry(customerName + ".pdf");
-            var itemsForCustomer = c._2;
-            var o = produceReport(itemsForCustomer);
-            if (!o.isPresent()) continue;
-            zos.putNextEntry(entry);
-            zos.write(o.get());
-            zos.closeEntry();
-        }
-
-    }
-
-    return baos.toByteArray();
-
+  ReportRequests asReportRequests(Array<ListItem> items) {
+    return items
+        // lets group actions related to the same customer
+        .groupBy(it -> it.getValue().getWhom())
+        .mapValues(this::asReportRequest)
+        // key is no longer needed
+        .map(kv -> kv._2)
+        // unpack Option value to raw value
+        .flatMap(Function1.identity())
+        .foldLeft(ReportRequests.newBuilder(), (acc, v) -> acc.addItems(v))
+        .build();
   }
 }
-
