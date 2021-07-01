@@ -13,7 +13,7 @@ Create infrastructure for environments and distribute proper configuration about
 ### Environment variables
 set properly variables (for CI in pipeline, for CLI in local environment):
 
-# To simplify management of multiple application in very smalll organization OnLex.net
+# To simplify management of multiple application in very small organization OnLex.net
 # We use one infra account (with Contributor role) to allow access to Azure infrastructure
 export ARM_CLIENT_ID="onlex-infra" # required by azurerm and azuread providers. Defines a principal able to create resources
 export ARM_CLIENT_CERTIFICATE_PASSWORD= ... proper value from secrets mentioned above # required by azurerm provider
@@ -32,7 +32,7 @@ export ARM_SUBSCRIPTION_ID= ... onlex prod subscription # required by backend pr
 
 **terraform plan** to see plan of changes for your current desired infrastructure
 
-### Not used but promosing articles
+### Not used but promising articles
 - https://medium.com/citihub/a-more-secure-way-to-call-kubectl-from-terraform-1052adf37af8
 - https://docs.microsoft.com/en-us/azure/key-vault/general/key-vault-integrate-kubernetes
 - https://mrdevops.io/introducing-azure-key-vault-to-kubernetes-931f82364354
