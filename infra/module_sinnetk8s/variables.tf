@@ -4,3 +4,8 @@ variable k8s_token {}
 variable secret_appinsight_connection_string {
   type=string
 }
+
+variable environment_name {
+  type=string
+}
+

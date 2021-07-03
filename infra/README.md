@@ -1,14 +1,13 @@
 # Goal
-Create infrastructure for environments and distribute proper configuration about the environments
+Infrastructre as  code: creates environments and configure them
 
 ### Prerequisites
-* Application named **onlex-infra** *(single tenant application)* with 
-  - 'Contributor' role (to create resources) 
-  - 'Application administrator' to create service principals required to run code and use created resources for separated applications and environments.
-  - 
-  * with secret named e.g. 'terraform-cli' (used by support from CLI tools)
-  * with secret named e.g. 'terraform-cicd' (used in CICD pipeline)
-* Container to keep terraform state ***az storage container create -n tfstate --account-name \<YourAzureStorageAccountName> --account-key \<YourAzureStorageAccountKey>***
+* We need a privileged service account to apply changes in Azure. For such reason application named **onlex-infra** *(single tenant application) has been created with some permissions:
+  - 'Contributor' role (to be able create resources) 
+  - 'Application administrator' to create service principals used in environments
+  - with a secret named e.g. 'terraform-cli' (used to support CLI tool)
+* We need a storage to keep terraform configuration. For such purpose there is created storage ***az storage container create -n tfstate --account-name \<YourAzureStorageAccountName> --account-key \<YourAzureStorageAccountKey>***
+* We need a superuser role in external PostgreSQL server to create databases and schemas. The name of the role os **onlex_infra**, and password for such role is provided as environment variable (described below). **(The account has been created using *CREATE ROLE onlex_infra LOGIN SUPERUSER PASSWORD 'some password';*)**
 
 ### Environment variables
 set properly variables (for CI in pipeline, for CLI in local environment):

@@ -33,6 +33,13 @@ module "keyvault" {
   appinsight_connection_string = module.appinsights.connection_string
 }
 
+module "database" {
+  source = "./module_database"
+  application_name = var.application_name
+  environment_name = var.environment_name
+  db_user_name = var.psql_infrauser_name
+  db_user_password = var.psql_infrauser_password
+}
 
 # data "azurerm_client_config" "current" {
 # #   client_id     = data.azurerm_client_config.current.client_id

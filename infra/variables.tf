@@ -9,6 +9,14 @@ variable environment_name {
   type = string
 }
 
+# Name of predefined superuser on externam postgres server where all
+# databases are created. In such small project we use single SQL server with multiple databases / schemas.
+variable psql_infrauser_name {
+  # Name predefined in external database: "onlex_infra"
+}
+# PAssword, as sensitive information, should be provided as env variable
+variable psql_infrauser_password {}
+
 variable environment_location {
   # Example values: westeurope, germanynorth
   # More examples: az account list-locations -o table --query '[].{Name:name}'
@@ -35,5 +43,4 @@ variable subscription_id {
 # please fullfil variables as below using standard Terraform approaches (vars file, var param of env variables)
 variable sinnet_k8s_host {}
 variable sinnet_k8s_token {}
-
 
