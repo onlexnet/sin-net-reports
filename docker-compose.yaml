@@ -2,16 +2,13 @@
 
 version: '3.8'
 services:
-  redis:
-    image: "redis:alpine"
-    ports:
-      - 6379:6379
-    network_mode: "host"
   postgres:
-    image: postgres:11-alpine
+    build:
+      context: .db
+      dockerfile: Dockerfile.dev
     environment:
-      - POSTGRES_USER=sinnet
-      - POSTGRES_PASSWORD=sinnet
+      - POSTGRES_USER=devlocaldb
+      - POSTGRES_PASSWORD=devlocaldb
     ports:
       - 5432:5432
   
