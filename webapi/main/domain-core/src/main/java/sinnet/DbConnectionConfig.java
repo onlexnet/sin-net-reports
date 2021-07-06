@@ -9,7 +9,7 @@ import io.vertx.pgclient.PgConnectOptions;
 import io.vertx.pgclient.PgPool;
 import io.vertx.sqlclient.PoolOptions;
 
-@Configuration()
+@Configuration
 @Profile({ "prod", "dev" })
 public class DbConnectionConfig {
 

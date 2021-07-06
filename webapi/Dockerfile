@@ -21,7 +21,6 @@ ARG REVISION
 
 # The application needs some configuration
 ENV SPRING_PROFILES_ACTIVE=prod
-ENV APP_DB_HOST: db
 
 # the application os fat jar so only one file is required to run the app
 COPY --from=build /app/main/host/target/*.jar /app/
