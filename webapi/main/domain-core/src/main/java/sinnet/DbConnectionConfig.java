@@ -13,20 +13,23 @@ import io.vertx.sqlclient.PoolOptions;
 @Profile({ "prod", "dev" })
 public class DbConnectionConfig {
 
-    @Value("${app.db.host}")
-    private String dbHost;
+  @Value("${app.db.host}")
+  private String dbHost;
 
-    @Bean
-    PgPool pgClient() {
-        final var defaultPostgressPort = 5432;
-        var connectOptions = new PgConnectOptions()
-            .setPort(defaultPostgressPort)
-            .setHost(dbHost)
-            .setDatabase("sinnet")
-            .setUser("sinnet")
-            .setPassword("sinnet");
-        var poolOptions = new PoolOptions();
+  @Value("${app.db.name}")
+  private String dbName;
 
-        return PgPool.pool(connectOptions, poolOptions);
-    }
+  @Bean
+  PgPool pgClient() {
+    final var defaultPostgressPort = 5432;
+    var connectOptions = new PgConnectOptions()
+        .setPort(defaultPostgressPort)
+        .setHost(dbHost)
+        .setDatabase(dbName)
+        .setUser("sinnet")
+        .setPassword("sinnet");
+    var poolOptions = new PoolOptions();
+
+    return PgPool.pool(connectOptions, poolOptions);
+  }
 }

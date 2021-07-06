@@ -29,7 +29,7 @@ spec:
             value: "prod"
           - name: APP_DB_HOST
             value: "database-prd"
-          - name: APP_DB_NAME
+          - name: APP_DB_HOST
             value: "sinnet"
           - name: APPLICATIONINSIGHTS_CONNECTION_STRING
             valueFrom:
