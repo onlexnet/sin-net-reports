@@ -3,4 +3,4 @@
 !build/*-runner.jar
 !build/lib/*
 !build/quarkus-app/*
-!applicationinsights
+!src/main/imagebase/*

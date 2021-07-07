@@ -28,6 +28,7 @@ import java.util.zip.ZipEntry
 import com.lowagie.text.pdf.PdfTable
 import java.time.format.DateTimeFormatter
 import org.librepdf.openpdf.fonts.Liberation
+import com.lowagie.text.pdf.BaseFont
 
 object ReportResult {
 
@@ -38,8 +39,9 @@ object ReportResult {
     val customerAddress = Option(customer.address).getOrElse("(adres)")
 
     val fontSize = 10f
-    val baseFont = Liberation.SANS.create();
-    baseFont.setSize(fontSize);
+    val baseFont = BaseFont.createFont("OpenSans-Regular.ttf", BaseFont.IDENTITY_H, false)
+    var myFont = new Font(baseFont, fontSize);
+    myFont.setSize(fontSize);
 
     val d = managed(new ByteArrayOutputStream()) map { os =>
       val document = new Document()
@@ -48,7 +50,7 @@ object ReportResult {
       document.open()
 
       val header = s"$customerName $customerCity $customerAddress"
-      val headParam = new Paragraph(header, baseFont)
+      val headParam = new Paragraph(header, myFont)
 
       document.add(headParam);
       document.add(new Paragraph("-"))
@@ -65,7 +67,7 @@ object ReportResult {
 
         implicit class PdfPTableEx(val it: PdfPTable) {
           def addValue(v: CellParams): Unit = {
-            val p = new Paragraph(v.text, baseFont)
+            val p = new Paragraph(v.text, myFont)
             var cell = new PdfPCell(p)
             cell.setHorizontalAlignment(v.alignment.getId())
             cell.setColspan(v.width)
