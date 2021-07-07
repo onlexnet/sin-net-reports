@@ -31,8 +31,15 @@ import org.librepdf.openpdf.fonts.Liberation
 import com.lowagie.text.pdf.BaseFont
 import scala.util.Success
 import scala.util.Failure
+import com.lowagie.text.FontFactory
+import javax.inject.Inject
 
 object ReportResult {
+
+  {
+    // without the initialization font discovery (FontFactory.getFont) does not find proper fonts
+    FontFactory.registerDirectories()
+  }
 
   def apply(request: ReportRequest): ReportResult = {
     val customer = request.customer
@@ -43,10 +50,8 @@ object ReportResult {
     // Not all fonts are available without proper dcker image
     // so that we need some alternative to run the logic in unit tests
     val fontSize = 10
-    val myFont = Try(BaseFont.createFont("OpenSans-Regular.ttf", BaseFont.IDENTITY_H, false)) match {
-      case Success(baseFont) => new Font(baseFont, fontSize)
-      case Failure(exception) => Liberation.SANS.create(fontSize)
-    }
+    val myFont = FontFactory.getFont("OpenSans-Regular.ttf")
+    myFont.setSize(fontSize)
 
     val d = managed(new ByteArrayOutputStream()) map { os =>
       val document = new Document()
