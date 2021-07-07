@@ -29,6 +29,8 @@ import com.lowagie.text.pdf.PdfTable
 import java.time.format.DateTimeFormatter
 import org.librepdf.openpdf.fonts.Liberation
 import com.lowagie.text.pdf.BaseFont
+import scala.util.Success
+import scala.util.Failure
 
 object ReportResult {
 
@@ -38,10 +40,13 @@ object ReportResult {
     val customerCity = Option(customer.customerCity).getOrElse("(miejscowość)")
     val customerAddress = Option(customer.address).getOrElse("(adres)")
 
-    val fontSize = 10f
-    val baseFont = BaseFont.createFont("OpenSans-Regular.ttf", BaseFont.IDENTITY_H, false)
-    var myFont = new Font(baseFont, fontSize);
-    myFont.setSize(fontSize);
+    // Not all fonts are available without proper dcker image
+    // so that we need some alternative to run the logic in unit tests
+    val fontSize = 10
+    val myFont = Try(BaseFont.createFont("OpenSans-Regular.ttf", BaseFont.IDENTITY_H, false)) match {
+      case Success(baseFont) => new Font(baseFont, fontSize)
+      case Failure(exception) => Liberation.SANS.create(fontSize)
+    }
 
     val d = managed(new ByteArrayOutputStream()) map { os =>
       val document = new Document()
