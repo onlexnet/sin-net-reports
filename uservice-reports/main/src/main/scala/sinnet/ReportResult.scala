@@ -27,6 +27,7 @@ import java.util.UUID
 import java.util.zip.ZipEntry
 import com.lowagie.text.pdf.PdfTable
 import java.time.format.DateTimeFormatter
+import org.librepdf.openpdf.fonts.Liberation
 
 object ReportResult {
 
@@ -36,8 +37,9 @@ object ReportResult {
     val customerCity = Option(customer.customerCity).getOrElse("(miejscowość)")
     val customerAddress = Option(customer.address).getOrElse("(adres)")
 
-    val fontSize = 10
-    val baseFont = new Font(Font.TIMES_ROMAN, fontSize, Font.NORMAL)
+    val fontSize = 10f
+    val baseFont = Liberation.SERIF.create();
+    baseFont.setSize(fontSize);
 
     val d = managed(new ByteArrayOutputStream()) map { os =>
       val document = new Document()
