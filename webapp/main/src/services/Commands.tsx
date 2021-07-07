@@ -17,7 +17,7 @@ const mapStateToProps = (state: RootState) => {
   if (state.appState.empty) {
     throw new Error('Invalid state');
   }
-  
+
   return {
     viewContext: state.viewContext,
     session: state.auth,
@@ -59,8 +59,8 @@ enum WaitingState {
   FINISHED
 }
 const ServiceCommandBarView: React.FC<ServiceCommandBarProps> = (props) => {
-  const { viewContext, session } = props;
-  const [newServiceMutation, { data, called }] = useNewActionMutation();
+  const { viewContext } = props;
+  const [newServiceMutation] = useNewActionMutation();
   const [waiting, setWaiting] = React.useState(WaitingState.NOT_STARTED);
   const [waitingResult, setWaitingResult] = React.useState<EntityId | undefined>();
 
@@ -69,7 +69,7 @@ const ServiceCommandBarView: React.FC<ServiceCommandBarProps> = (props) => {
   }
 
   if (waiting === WaitingState.FINISHED) {
-    return <Redirect 
+    return <Redirect
       from={'/actions/'}
       to={`/actions/${waitingResult?.projectId}/${waitingResult?.entityId}/${waitingResult?.entityVersion}`} />
   }
