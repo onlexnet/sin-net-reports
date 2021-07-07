@@ -43,8 +43,6 @@ const View: React.FC<ViewProps> = props => {
       const suggestedAccount = accounts[0];
       request.loginHint = suggestedAccount.username;
       login(InteractionType.Silent, request);
-    } else {
-      login(InteractionType.Redirect, request);
     }
   }
 
