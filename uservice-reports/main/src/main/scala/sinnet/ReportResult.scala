@@ -38,7 +38,7 @@ object ReportResult {
     val customerAddress = Option(customer.address).getOrElse("(adres)")
 
     val fontSize = 10f
-    val baseFont = Liberation.SERIF.create();
+    val baseFont = Liberation.SANS.create();
     baseFont.setSize(fontSize);
 
     val d = managed(new ByteArrayOutputStream()) map { os =>
