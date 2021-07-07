@@ -50,7 +50,7 @@ object ReportResult {
     // Not all fonts are available without proper dcker image
     // so that we need some alternative to run the logic in unit tests
     val fontSize = 10
-    val myFont = FontFactory.getFont("OpenSans-Regular.ttf")
+    val myFont = FontFactory.getFont("OpenSans.ttf")
     myFont.setSize(fontSize)
 
     val d = managed(new ByteArrayOutputStream()) map { os =>
