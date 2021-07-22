@@ -12,13 +12,17 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class Sync {
 
-    public static <T> AsyncStep<T> of(Supplier<Future<T>> action) {
-        var exitGuard = new CompletableFuture<T>();
-        action.get()
-            .onSuccess(it -> exitGuard.complete(it))
-            .onFailure(ex -> exitGuard.completeExceptionally(ex));
-        return new AsyncStep<T>(exitGuard);
-    }
+  public static <T> AsyncStep<T> of(Future<T> action) {
+    var exitGuard = new CompletableFuture<T>();
+    action
+        .onSuccess(it -> exitGuard.complete(it))
+        .onFailure(ex -> exitGuard.completeExceptionally(ex));
+    return new AsyncStep<T>(exitGuard);
+  }
+
+  public static <T> AsyncStep<T> of(Supplier<Future<T>> action) {
+    return of(action.get());
+  }
 
     public static final class AsyncStep<T> {
         private final CompletableFuture<T> chainStep;

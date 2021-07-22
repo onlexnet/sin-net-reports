@@ -1,12 +1,3 @@
-# because I use spring-boot:run to run application from sources, my expectation is application does
-# restart when some of modules are updated. To make it happen, Spring plugin shpouldshould be aware
-# where are resources which should trigger restarting applicationm, when changed.
-# The list below should cover all modules where we keep sources expected to restart application, when changed.
-spring:
-  datasource:
-    hikari:
-      maximum-pool-size: 1 # we use sync hikari pool for liquibase so that 
-      idle-timeout: 10000
 management:
     metrics:
         binders:

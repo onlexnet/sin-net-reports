@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.Builder.Default;
 import sinnet.models.CustomerSecret;
 import sinnet.models.CustomerSecretEx;
 import sinnet.models.CustomerContact;
@@ -38,8 +39,11 @@ public interface FindCustomers {
     private UUID entityId;
     private int entityVersion;
     private CustomerValue value;
-    private CustomerSecret[] secrets;
-    private CustomerSecretEx[] secretsEx;
-    private CustomerContact[] contacts;
+    @Default
+    private CustomerSecret[] secrets = new CustomerSecret[0];
+    @Default
+    private CustomerSecretEx[] secretsEx = new CustomerSecretEx[0];
+    @Default
+    private CustomerContact[] contacts = new CustomerContact[0];
   }
 }

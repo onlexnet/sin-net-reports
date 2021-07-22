@@ -1,15 +1,12 @@
 package sinnet.customer;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertThat;
-import sinnet.bus.commands.ChangeCustomerData;
-
-import org.apache.commons.lang3.ArrayUtils;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 import java.util.function.Supplier;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -20,10 +17,12 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 
 import io.vavr.collection.List;
+import io.vavr.control.Try;
 import lombok.experimental.UtilityClass;
 import sinnet.Api;
 import sinnet.AppTestContext;
 import sinnet.Sync;
+import sinnet.bus.commands.ChangeCustomerData;
 import sinnet.bus.query.FindCustomers;
 import sinnet.models.CustomerContact;
 import sinnet.models.CustomerSecret;
@@ -32,6 +31,7 @@ import sinnet.models.CustomerValue;
 import sinnet.models.Email;
 import sinnet.models.EntityId;
 import sinnet.models.Name;
+import sinnet.read.CustomerProjection;
 
 @SpringBootTest(webEnvironment = WebEnvironment.NONE)
 @ContextConfiguration(classes = AppTestContext.class)
@@ -44,7 +44,7 @@ public class CustomerRepositoryTests {
   Api api;
 
   @Autowired
-
+  CustomerProjection customerProjection;
 
   @Test
   void initialiListOfCustomersIsEmpty() {
@@ -57,25 +57,22 @@ public class CustomerRepositoryTests {
   @Test
   void saveMinModel() {
     var projectId = api.createNewProject();
-    var givenEntityId = EntityId.anyNew(projectId.getId());
     var model = Given.minValidModel();
-    var customerId = api.changeCustomer(model);
+    var customerId = api.defineCustomer(EntityId.anyNew(projectId.getId()), model);
     Assertions.assertThat(customerId).isNotNull();
   }
 
   @Test
   void saveFullModel() {
     var projectId = api.createNewProject();
-    var givenEntityId = EntityId.anyNew(projectId.getId());
     var model = Given.fullModel();
-    var customerId = api.changeCustomer(model);
+    var customerId = api.defineCustomer(EntityId.anyNew(projectId.getId()), model);
     Assertions.assertThat(customerId).isNotNull();
   }
 
   @Test
   public void list() {
     var projectId = api.createNewProject();
-    var someModel = Given.minValidModel();
     var id1 = api.defineCustomer(EntityId.anyNew(projectId));
     var id2 = api.defineCustomer(EntityId.anyNew(projectId));
     var list = api.queryCustomers(projectId);
@@ -95,8 +92,8 @@ public class CustomerRepositoryTests {
         .projectId(eidV2.getProjectId())
         .entityId(eidV2.getId())
         .entityVersion(eidV2.getVersion())
+        .value(validModel)
         .build();
-         //, validModel, Given.emptySecrets(), Given.emptySecretsEx(), Given.emptyContacts());
     var list = api.queryCustomers(projectId);
     Assertions
         .assertThat(list)
@@ -106,7 +103,8 @@ public class CustomerRepositoryTests {
   @Test
   public void shouldNotDeleteLastVersionIfNewSaveFailed() {
     var projectId = api.createNewProject();
-    var eid = api.defineCustomer(EntityId.anyNew(projectId));
+    var validModel = Given.minValidModel();
+    var eid = api.defineCustomer(EntityId.anyNew(projectId), validModel);
 
     var invalidModel = Given.invalidModel();
     Assertions
@@ -115,12 +113,12 @@ public class CustomerRepositoryTests {
     var expected = FindCustomers.CustomerData.builder()
         .projectId(eid.getProjectId())
         .entityId(eid.getId())
+        .value(validModel)
         .entityVersion(eid.getVersion())
         .build();
-    // var expected = new CustomerRepository.CustomerModel(newEid, validModel, Given.emptySecrets(), Given.emptySecretsEx(), Given.emptyContacts());
     var list = api.queryCustomers(projectId);
     Assertions
-      .assertThat(list).containsOnly(expected);
+        .assertThat(list).containsOnly(expected);
 
   }
 
@@ -131,17 +129,21 @@ public class CustomerRepositoryTests {
     var eid = api.defineCustomer(EntityId.anyNew(projectId));
 
     var invalidEid = EntityId.of(eid.getProjectId(), eid.getId(), eid.getVersion() + 1);
-    api.defineCustomer(invalidEid);
+    
+    Try.run(() -> api.defineCustomer(invalidEid));
 
+    var value = CustomerValue.builder()
+        .customerName(Name.of("some not-empty name"))
+        .build();
     var expected = FindCustomers.CustomerData.builder()
         .projectId(eid.getProjectId())
         .entityId(eid.getId())
         .entityVersion(eid.getVersion())
+        .value(value)
         .build();
-    // var expected = new CustomerRepository.CustomerModel(nextId, validModel, Given.emptySecrets(), Given.emptySecretsEx(), Given.emptyContacts());
     var list = api.queryCustomers(projectId);
     Assertions
-      .assertThat(list).containsOnly(expected);
+        .assertThat(list).containsOnly(expected);
   }
 
   @Nested
@@ -153,15 +155,18 @@ public class CustomerRepositoryTests {
 
       var someId = EntityId.anyNew(projectId);
       var model = Given.minValidModel();
-      var secrets = Given.multipleSecrets();
-      var secret = ChangeCustomerData.Secret.builder()
+      var secretEntry = ChangeCustomerData.Secret.builder()
           .location("My location " + UUID.randomUUID())
           .username("My username " + UUID.randomUUID())
           .password("My password " + UUID.randomUUID())
           .build();
-      var id = api.defineCustomer(someId, model, ArrayUtils.toArray(secret), ArrayUtils.toArray(), ArrayUtils.toArray());
-      var customer = api.queryCustomers(projectId);
-      assertThat(customer).asList().containsOnly(secrets);
+      var id = api.defineCustomer(someId, model, ArrayUtils.toArray(secretEntry), ArrayUtils.toArray(), ArrayUtils.toArray());
+      var customer = Sync.of(customerProjection.get(id)).get().get().getSecrets();
+      assertThat(customer).allSatisfy(it -> {
+        Assertions.assertThat(it.getLocation()).isEqualTo(secretEntry.getLocation());
+        Assertions.assertThat(it.getUsername()).isEqualTo(secretEntry.getUsername());
+        Assertions.assertThat(it.getPassword()).isEqualTo(secretEntry.getPassword());
+      });
     }
 
     // TODO

@@ -33,6 +33,7 @@ public class ActionRepositoryTests {
   @Autowired
   private Api api;
 
+  @Autowired
   private ActionRepository sut;
 
   @Autowired

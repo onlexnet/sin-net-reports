@@ -91,14 +91,6 @@ public class Api {
     var request = new FindCustomers.Ask(projectId.getId());
     return sync.ask(address, request, FindCustomers.Ask.class, FindCustomers.Reply.class).getData();
   }
-
-  public EntityId changeCustomer(CustomerValue value) {
-    var address = ChangeCustomerData.Command.ADDRESS;
-    var command = ChangeCustomerData.Command.builder()
-        .value(value)
-        .build();
-    return sync.ask(address, command, ChangeCustomerData.Command.class, EntityId.class);
-  }
 }
 
 /** Helper class to invoke async methods in sync way to simplify tests. */
