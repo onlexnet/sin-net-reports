@@ -12,7 +12,7 @@ import graphql.kickstart.tools.GraphQLQueryResolver;
 import lombok.Value;
 import sinnet.IdentityProvider;
 import sinnet.models.Email;
-import sinnet.read.ProjectProjection;
+import sinnet.read.ProjectProjector;
 
 /** Provides multiple projections related to Projects. */
 public interface ProjectsQuery {
@@ -24,7 +24,7 @@ public interface ProjectsQuery {
     private IdentityProvider identityProvider;
 
     @Autowired
-    private ProjectProjection.Provider projectProjection;
+    private ProjectProjector.Provider projectProjector;
 
     private ProjectEntity[] empty = new ProjectEntity[0];
 
@@ -35,7 +35,7 @@ public interface ProjectsQuery {
       }
 
       var user = maybeUser.get();
-      return projectProjection
+      return projectProjector
           .findByServiceman(Email.of(user.getEmail()))
           .map(it -> it
               .map(o -> new ProjectEntity(o.getId().getId(), o.getName()))

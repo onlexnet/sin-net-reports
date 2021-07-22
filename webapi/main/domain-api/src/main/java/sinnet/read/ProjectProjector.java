@@ -7,7 +7,7 @@ import sinnet.models.Email;
 import sinnet.models.ProjectId;
 
 /** Container interface to keep together Provider and its models. */
-public interface ProjectProjection {
+public interface ProjectProjector {
 
   /** Provides projections where Project is the main subject of the query. */
   interface Provider {

@@ -10,24 +10,29 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 
+import io.vavr.collection.Array;
 import lombok.SneakyThrows;
 import sinnet.Api;
 import sinnet.AppTestContext;
 import sinnet.UsersProjector;
 import sinnet.models.Email;
+import sinnet.read.ProjectProjector;
 
 @SpringBootTest(webEnvironment = WebEnvironment.NONE)
 @ContextConfiguration(classes = AppTestContext.class)
 @TestPropertySource(value = {
     "/domain-core.properties"
 })
-public final class UsersProjectorTests {
+public final class UsersProjectorTests implements ProjectProjector {
 
   @Autowired
   private UsersProjector sut;
 
   @Autowired
   private Api api;
+
+  @Autowired
+  private ProjectProjector.Provider projectProjector;
 
   @Test
   public void myTest() {
@@ -49,10 +54,10 @@ public final class UsersProjectorTests {
     var emailOfInvitedServiceman = randomPart + "@test";
     api.assignToProject(emailOfInvitedServiceman, "name of the serviceman", projectId);
 
-    // var actual = api.queryServicemen(projectId);
+    var actual = projectProjector.findByServiceman(Email.of(emailOfInvitedServiceman)).result();
 
-    // var expected = new ListServicemen.Model("a", "b");
-    // Assertions.assertThat(actual).containsExactly(expected);
+    var expected = new FindByServicemanModel(projectId, "aaa");
+    Assertions.assertThat(actual).containsExactly(expected);
   }
 
 }

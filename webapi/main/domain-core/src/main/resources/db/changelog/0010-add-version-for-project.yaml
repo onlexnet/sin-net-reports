@@ -12,13 +12,13 @@ databaseChangeLog:
             defaultValue: '1'
             constraints:
               nullable: false
-    - dropPrimaryKey:
+    - createIndex:
         tableName: projects
-        constraintName: PK_projects
-        dropIndex: true
-    - addPrimaryKey:
-          columnNames: entity_id, entity_version
-          clustered: true
-          constraintName: project_PK
-          tableName: projects
-          validate: true
+        indexName: projects_UQ1
+        unique: true
+        clustered: false
+        columns:
+          - column:
+              name: entity_id
+          - column:
+              name: entity_version  
