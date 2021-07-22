@@ -59,7 +59,7 @@ object ReportResult {
 
       document.open()
 
-      val header = s"$customerName $customerCity $customerAddress"
+      val header = s"$customerName, $customerCity ul. $customerAddress"
       val headParam = new Paragraph(header, myFont)
 
       document.add(headParam);
