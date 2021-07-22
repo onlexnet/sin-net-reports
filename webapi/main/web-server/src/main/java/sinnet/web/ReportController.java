@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
 
 import io.vavr.Function1;
 import io.vavr.collection.Array;
@@ -90,8 +89,8 @@ class ReportController implements ActionProjector {
 
         items
           // let's simplify path of obtaining the value
-          .map(v -> v.getValue())
-          .forEach(v -> {
+          .forEach(item -> {
+            var v = item.getValue();
             var builder = ActivityDetails.newBuilder();
             Option.of(v.getWhat()).forEach(builder::setDescription);
             builder
@@ -104,6 +103,8 @@ class ReportController implements ActionProjector {
                 .setDayOfTheMonth(v.getWhen().getDayOfMonth())));
             Option.of(v.getWho().getValue())
               .map(o -> o.split("@")[0])
+              .forEach(builder::setWho);
+            Option.of(item.getServicemanName())
               .forEach(builder::setWho);
 
             requestBuilder.addDetails(builder);
