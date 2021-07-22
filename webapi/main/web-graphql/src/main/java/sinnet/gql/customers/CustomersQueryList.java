@@ -6,16 +6,17 @@ import org.springframework.stereotype.Component;
 
 import graphql.kickstart.tools.GraphQLResolver;
 import io.vavr.collection.List;
-import sinnet.gql.AskTemplate;
+import io.vertx.core.eventbus.EventBus;
 import sinnet.gql.SomeEntity;
+import sinnet.bus.AskTemplate;
 import sinnet.bus.query.FindCustomers;
 
 @Component
 class CustomersQueryList extends AskTemplate<FindCustomers.Ask, FindCustomers.Reply>
                          implements GraphQLResolver<CustomersQuery> {
 
-  CustomersQueryList() {
-    super(FindCustomers.Ask.ADDRESS, FindCustomers.Reply.class);
+  CustomersQueryList(EventBus eventBus) {
+    super(FindCustomers.Ask.ADDRESS, FindCustomers.Reply.class, eventBus);
   }
 
   CompletableFuture<List<CustomerEntity>> list(CustomersQuery gcontext) {

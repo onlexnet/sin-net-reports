@@ -9,7 +9,7 @@ import sinnet.models.Email;
 import sinnet.models.EntityId;
 
 
-public interface ChangeCustomer {
+public interface ChangeCustomerData {
 
   @AllArgsConstructor
   @Value
@@ -18,8 +18,9 @@ public interface ChangeCustomer {
   final class Command {
 
     /** Address used to send the command to it's consumer. */
-    public static final String ADDRESS = "cmd.RegisterNewCustomer";
+    public static final String ADDRESS = "cmd.ChangeCustomerData";
 
+    /** TODO describe */
     private Email requestor;
     private EntityId id;
     private CustomerValue value;

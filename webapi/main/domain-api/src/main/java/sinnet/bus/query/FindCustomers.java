@@ -17,30 +17,29 @@ public interface FindCustomers {
   @NoArgsConstructor
   @AllArgsConstructor
   class Ask {
-      /** Address used to send the query to it's handler. */
-      public static final String ADDRESS = "query.FindCustomers";
-
-      private UUID projectId;
+    /** Address used to send the query to it's handler. */
+    public static final String ADDRESS = "query.FindCustomers";
+    private UUID projectId;
   }
 
-    @Data
-    @AllArgsConstructor
-    @NoArgsConstructor
-    class Reply {
-        private CustomerData[] data;
-    }
+  @Data
+  @AllArgsConstructor
+  @NoArgsConstructor
+  class Reply {
+    private CustomerData[] data;
+  }
 
-    @Data
-    @AllArgsConstructor
-    @NoArgsConstructor
-    @Builder
-    class CustomerData {
-        private UUID projectId;
-        private UUID entityId;
-        private int entityVersion;
-        private CustomerValue value;
-        private CustomerSecret[] secrets;
-        private CustomerSecretEx[] secretsEx;
-        private CustomerContact[] contacts;
-    }
+  @Data
+  @AllArgsConstructor
+  @NoArgsConstructor
+  @Builder
+  class CustomerData {
+    private UUID projectId;
+    private UUID entityId;
+    private int entityVersion;
+    private CustomerValue value;
+    private CustomerSecret[] secrets;
+    private CustomerSecretEx[] secretsEx;
+    private CustomerContact[] contacts;
+  }
 }

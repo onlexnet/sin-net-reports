@@ -3,10 +3,10 @@
 # where are resources which should trigger restarting applicationm, when changed.
 # The list below should cover all modules where we keep sources expected to restart application, when changed.
 spring:
-    devtools:
-        restart:
-            additional-paths: ../web-server,../web-graphql,../domain-api,../domain-core
-
+  datasource:
+    hikari:
+      maximum-pool-size: 1 # we use sync hikari pool for liquibase so that 
+      idle-timeout: 10000
 management:
     metrics:
         binders:

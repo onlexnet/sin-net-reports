@@ -9,11 +9,12 @@ import org.springframework.stereotype.Component;
 
 import graphql.GraphQLException;
 import graphql.kickstart.tools.GraphQLResolver;
-import sinnet.gql.AskTemplate;
+import io.vertx.core.eventbus.EventBus;
 import sinnet.IdentityProvider;
 import sinnet.gql.MyEntity;
 import sinnet.gql.SomeEntity;
-import sinnet.bus.commands.ChangeCustomer;
+import sinnet.bus.AskTemplate;
+import sinnet.bus.commands.ChangeCustomerData;
 import sinnet.models.CustomerContact;
 import sinnet.models.CustomerValue;
 import sinnet.models.Email;
@@ -21,14 +22,14 @@ import sinnet.models.EntityId;
 import sinnet.models.Name;
 
 @Component
-public class CustomersMutationSave extends AskTemplate<ChangeCustomer.Command, EntityId>
+public class CustomersMutationSave extends AskTemplate<ChangeCustomerData.Command, EntityId>
                                    implements GraphQLResolver<CustomersMutation> {
 
   @Autowired
   private IdentityProvider identityProvider;
 
-  public CustomersMutationSave() {
-    super(ChangeCustomer.Command.ADDRESS, EntityId.class);
+  public CustomersMutationSave(EventBus eventBus) {
+    super(ChangeCustomerData.Command.ADDRESS, EntityId.class, eventBus);
   }
 
   CompletableFuture<SomeEntity> save(CustomersMutation gcontext, MyEntity id, CustomerInput entry,
@@ -76,34 +77,34 @@ public class CustomersMutationSave extends AskTemplate<ChangeCustomer.Command, E
         .build();
     var mSecrets = Arrays
         .stream(secrets)
-        .map(it -> ChangeCustomer.Secret.builder()
+        .map(it -> ChangeCustomerData.Secret.builder()
             .location(it.getLocation())
             .username(it.getUsername())
             .password(it.getPassword())
             .build())
-        .toArray(ChangeCustomer.Secret[]::new);
+        .toArray(ChangeCustomerData.Secret[]::new);
     var mSecretsEx = Arrays
         .stream(secretsEx)
-        .map(it -> ChangeCustomer.SecretEx.builder()
+        .map(it -> ChangeCustomerData.SecretEx.builder()
             .location(it.getLocation())
             .username(it.getUsername())
             .password(it.getPassword())
             .entityName(it.getEntityName())
             .entityCode(it.getEntityCode())
             .build())
-        .toArray(ChangeCustomer.SecretEx[]::new);
+        .toArray(ChangeCustomerData.SecretEx[]::new);
     var mContacts = Arrays
         .stream(contacts)
-        .map(it -> ChangeCustomer.Contact.builder()
+        .map(it -> ChangeCustomerData.Contact.builder()
             .firstName(it.getFirstName())
             .lastName(it.getLastName())
             .phoneNo(it.getPhoneNo())
             .email(it.getEmail())
             .build())
-        .toArray(ChangeCustomer.Contact[]::new);
+        .toArray(ChangeCustomerData.Contact[]::new);
 
     var emailOfRequestor = maybeRequestor.get().getEmail();
-    var cmd = ChangeCustomer.Command.builder()
+    var cmd = ChangeCustomerData.Command.builder()
         .requestor(Email.of(emailOfRequestor))
         .id(eid)
         .value(value)

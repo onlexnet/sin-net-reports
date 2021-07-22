@@ -8,9 +8,10 @@ import org.springframework.stereotype.Component;
 
 import graphql.GraphQLException;
 import graphql.kickstart.tools.GraphQLResolver;
-import sinnet.gql.AskTemplate;
+import io.vertx.core.eventbus.EventBus;
 import sinnet.IdentityProvider;
 import sinnet.gql.MyEntity;
+import sinnet.bus.AskTemplate;
 import sinnet.bus.commands.RemoveCustomer;
 import sinnet.models.EntityId;
 
@@ -21,8 +22,8 @@ public class CustomersMutationRemove extends AskTemplate<RemoveCustomer.Command,
   @Autowired
   private IdentityProvider identityProvider;
 
-  public CustomersMutationRemove() {
-    super(Command.ADDRESS, Result.class);
+  public CustomersMutationRemove(EventBus eventBus) {
+    super(Command.ADDRESS, Result.class, eventBus);
   }
 
   CompletableFuture<Boolean> remove(CustomersMutation gcontext, MyEntity id) {

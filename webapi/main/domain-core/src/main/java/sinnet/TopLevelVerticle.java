@@ -13,13 +13,20 @@ import org.springframework.stereotype.Component;
 import io.vavr.collection.Array;
 import io.vavr.collection.Stream;
 import io.vertx.core.CompositeFuture;
+import io.vertx.core.Future;
 import io.vertx.core.Verticle;
 import io.vertx.core.Vertx;
 
-/** Marker for verticles designed to be register by the host application. */
+/**
+ * Mark your verticle as TopLevelVerticle if you need your Verticle instaniated
+ * when the application starts.
+ */
 public interface TopLevelVerticle extends Verticle {
 }
 
+/**
+ * Starts all {@see TopLevelVerticle}.
+ */
 @Component
 class VerticleRegistrar {
 
@@ -54,9 +61,11 @@ class VerticleRegistrar {
     var syncGuard = new CompletableFuture<>();
 
     var undeployments = Stream.ofAll(verticlesToUndeploy)
-        .map(it -> vertx.undeploy(it));
+        .map(it -> vertx.undeploy(it))
+        .map(Future.class::cast)
+        .toJavaList();
     CompositeFuture
-        .join((List) undeployments)
+        .join(undeployments)
         .onComplete(it -> syncGuard.complete(null));
 
     syncGuard.join();

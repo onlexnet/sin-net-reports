@@ -1,21 +1,30 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <project>
-  <modelVersion>4.0.0</modelVersion>
+    <modelVersion>4.0.0</modelVersion>
 
-  <parent>
-    <groupId>net.siudek</groupId>
-    <artifactId>sinnet</artifactId>
-    <version>${revision}</version>
-    <relativePath>../base-pom/pom.xml</relativePath>
-  </parent>
+    <parent>
+        <groupId>net.siudek</groupId>
+        <artifactId>sinnet</artifactId>
+        <version>${revision}</version>
+        <relativePath>../base-pom/pom.xml</relativePath>
+    </parent>
 
-  <artifactId>domain-core</artifactId>
+    <artifactId>domain-core</artifactId>
 
-  <properties>
-      <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/../${aggregate.report.dir}</sonar.coverage.jacoco.xmlReportPaths>
-  </properties>
+    <properties>
+        <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/../${aggregate.report.dir}</sonar.coverage.jacoco.xmlReportPaths>
+    </properties>
 
     <dependencies>
+
+        <dependency>
+            <groupId>org.jmolecules</groupId>
+            <artifactId>jmolecules-cqrs-architecture</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jmolecules</groupId>
+            <artifactId>jmolecules-ddd</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>io.projectreactor</groupId>
@@ -70,7 +79,16 @@
             <groupId>io.vertx</groupId>
             <artifactId>vertx-junit5</artifactId>
         </dependency>
-        
+        <!-- We use jackson binding so that all lombok jacksonized classes are immutable and serializable through bus -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+        </dependency>
+          
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>

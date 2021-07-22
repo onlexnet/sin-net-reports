@@ -2,6 +2,8 @@ package sinnet.bus.query;
 
 import java.util.UUID;
 
+import org.jmolecules.architecture.cqrs.annotation.Command;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,6 +13,7 @@ import lombok.extern.jackson.Jacksonized;
 
 public interface CheckProjectPermission {
 
+  @Command
   @AllArgsConstructor
   @Value
   @Jacksonized

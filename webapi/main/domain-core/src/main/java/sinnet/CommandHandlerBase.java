@@ -6,12 +6,13 @@ import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 
+/** Hides repeatable code of handling request as Json type and convert response back to Json. */
 @Slf4j
-public abstract class VertxHandlerTemplate<T1, T2> implements Handler<Message<JsonObject>> {
+public abstract class CommandHandlerBase<T1, T2> implements Handler<Message<JsonObject>> {
 
   private final Class<T1> requestClass;
 
-  protected VertxHandlerTemplate(Class<T1> requestClass) {
+  protected CommandHandlerBase(Class<T1> requestClass) {
     this.requestClass = requestClass;
   }
 
@@ -25,7 +26,7 @@ public abstract class VertxHandlerTemplate<T1, T2> implements Handler<Message<Js
         })
         .onFailure(ex -> {
           log.error("Error", ex);
-          message.reply(null);
+          message.fail(0, ex.getMessage());
         });
   }
 

@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Objects;
 
+import org.jmolecules.architecture.cqrs.annotation.CommandHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -14,8 +15,8 @@ import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
 import io.vertx.core.Promise;
 import sinnet.TopLevelVerticle;
-import sinnet.VertxHandlerTemplate;
-import sinnet.bus.commands.ChangeCustomer;
+import sinnet.CommandHandlerBase;
+import sinnet.bus.commands.ChangeCustomerData;
 import sinnet.bus.commands.RemoveCustomer;
 import sinnet.bus.query.FindCustomer;
 import sinnet.bus.query.FindCustomer.Reply;
@@ -30,33 +31,33 @@ import sinnet.models.EntityId;
 import sinnet.read.CustomerProjection.CustomerModel;
 
 @Component
-public class CustomerService extends AbstractVerticle implements TopLevelVerticle {
+public class CommandHandlers extends AbstractVerticle implements TopLevelVerticle {
 
   private final CustomerRepository repository;
 
   @Autowired
-  public CustomerService(CustomerRepository repository) {
+  public CommandHandlers(CustomerRepository repository) {
     this.repository = repository;
   }
 
   @Override
   public void start(Promise<Void> startPromise) throws Exception {
-    // TODO handle when registration of consumers is ready
-    vertx.eventBus().consumer(ChangeCustomer.Command.ADDRESS, new SaveCustomerHandler());
+    vertx.eventBus().consumer(ChangeCustomerData.Command.ADDRESS, new SaveCustomerHandler());
     vertx.eventBus().consumer(FindCustomer.Ask.ADDRESS, new FindCustomerHandler());
     vertx.eventBus().consumer(FindCustomers.Ask.ADDRESS, new FindCustomersHandler());
     vertx.eventBus().consumer(RemoveCustomer.Command.ADDRESS, new RemoveCustomerHandler());
     super.start(startPromise);
   }
 
-  final class SaveCustomerHandler extends VertxHandlerTemplate<ChangeCustomer.Command, EntityId> {
+  final class SaveCustomerHandler extends CommandHandlerBase<ChangeCustomerData.Command, EntityId> {
 
     SaveCustomerHandler() {
-      super(ChangeCustomer.Command.class);
+      super(ChangeCustomerData.Command.class);
     }
 
     @Override
-    protected Future<EntityId> onRequest(ChangeCustomer.Command msg) {
+    @CommandHandler
+    protected Future<EntityId> onRequest(ChangeCustomerData.Command msg) {
       var eid = EntityId.of(msg.getId().getProjectId(), msg.getId().getId(), msg.getId().getVersion());
       var requestor = msg.getRequestor();
       var newValue = msg.getValue();
@@ -69,13 +70,13 @@ public class CustomerService extends AbstractVerticle implements TopLevelVerticl
             var actualSecrets = it
                 .map(v -> v.getSecrets())
                 .getOrElse(new CustomerSecret[0]);
-            var newSecrets = CustomerService.merge(requestor,
+            var newSecrets = CommandHandlers.merge(requestor,
                                                     LocalDateTime.now(),
                                                     requestedSecrets, actualSecrets);
             var actualSecretsEx = it
                 .map(v -> v.getSecretsEx())
                 .getOrElse(new CustomerSecretEx[0]);
-            var newSecretsEx = CustomerService.merge(requestor,
+            var newSecretsEx = CommandHandlers.merge(requestor,
                                                       LocalDateTime.now(),
                                                       requestedSecretsEx, actualSecretsEx);
             var newContacts = Arrays.stream(requestedContacts)
@@ -95,7 +96,7 @@ public class CustomerService extends AbstractVerticle implements TopLevelVerticl
     }
   }
 
-  final class FindCustomerHandler extends VertxHandlerTemplate<FindCustomer.Ask, FindCustomer.Reply> {
+  final class FindCustomerHandler extends CommandHandlerBase<FindCustomer.Ask, FindCustomer.Reply> {
     FindCustomerHandler() {
       super(FindCustomer.Ask.class);
     }
@@ -113,7 +114,7 @@ public class CustomerService extends AbstractVerticle implements TopLevelVerticl
     }
   }
 
-  final class FindCustomersHandler extends VertxHandlerTemplate<FindCustomers.Ask, FindCustomers.Reply> {
+  final class FindCustomersHandler extends CommandHandlerBase<FindCustomers.Ask, FindCustomers.Reply> {
     FindCustomersHandler() {
       super(FindCustomers.Ask.class);
     }
@@ -122,12 +123,12 @@ public class CustomerService extends AbstractVerticle implements TopLevelVerticl
     protected Future<FindCustomers.Reply> onRequest(Ask request) {
       var projectId = request.getProjectId();
       return repository.list(projectId)
-          .map(it -> List.ofAll(it).map(CustomerService::map).toJavaArray(CustomerData[]::new))
+          .map(it -> List.ofAll(it).map(CommandHandlers::map).toJavaArray(CustomerData[]::new))
           .map(it -> new FindCustomers.Reply(it));
     }
   }
 
-  final class RemoveCustomerHandler extends VertxHandlerTemplate<RemoveCustomer.Command, RemoveCustomer.Result>
+  final class RemoveCustomerHandler extends CommandHandlerBase<RemoveCustomer.Command, RemoveCustomer.Result>
                                     implements RemoveCustomer {
     RemoveCustomerHandler() {
       super(RemoveCustomer.Command.class);
@@ -159,7 +160,7 @@ public class CustomerService extends AbstractVerticle implements TopLevelVerticl
    * Combines set of requested secrets with existing secrets so that
    * defines new secrets, updated secrets and remove non used secrets.
    */
-  public static  CustomerSecret[] merge(Email requestor, LocalDateTime when, ChangeCustomer.Secret[] requested, CustomerSecret[] actual) {
+  public static  CustomerSecret[] merge(Email requestor, LocalDateTime when, ChangeCustomerData.Secret[] requested, CustomerSecret[] actual) {
 
     // 1) Extract items are identical (location / username / password) so that can be marked as 'unchanged'
     // 2) The rest is considered as 'updated' or 'new'
@@ -210,7 +211,7 @@ public class CustomerService extends AbstractVerticle implements TopLevelVerticl
     return result.toArray(CustomerSecret[]::new);
   }
 
-  public static  CustomerSecretEx[] merge(Email requestor, LocalDateTime when, ChangeCustomer.SecretEx[] requested, CustomerSecretEx[] actual) {
+  public static  CustomerSecretEx[] merge(Email requestor, LocalDateTime when, ChangeCustomerData.SecretEx[] requested, CustomerSecretEx[] actual) {
 
     // 1) Extract items are identical (location / username / password) so that can be marked as 'unchanged'
     // 2) The rest is considered as 'updated' or 'new'

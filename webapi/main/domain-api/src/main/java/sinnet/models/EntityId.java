@@ -21,4 +21,8 @@ public final class EntityId {
   public static EntityId anyNew(UUID projectId) {
     return new EntityId(projectId, UUID.randomUUID(), 0);
   }
+
+  public static EntityId anyNew(ProjectId projectId) {
+    return anyNew(projectId.getId());
+  }
 }

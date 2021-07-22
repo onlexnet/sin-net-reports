@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 import io.vavr.Function1;
 import io.vavr.collection.Array;
@@ -66,6 +67,7 @@ class ReportController implements ActionProjection {
               .body(result);
         });
   }
+
 
   Option<ReportRequest> asReportRequest(Array<ListItem> items) {
     return items.headOption()

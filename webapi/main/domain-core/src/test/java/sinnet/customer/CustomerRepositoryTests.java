@@ -1,6 +1,10 @@
 package sinnet.customer;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertThat;
+import sinnet.bus.commands.ChangeCustomerData;
+
+import org.apache.commons.lang3.ArrayUtils;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -16,10 +20,11 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 
 import io.vavr.collection.List;
-import io.vertx.core.CompositeFuture;
 import lombok.experimental.UtilityClass;
+import sinnet.Api;
 import sinnet.AppTestContext;
 import sinnet.Sync;
+import sinnet.bus.query.FindCustomers;
 import sinnet.models.CustomerContact;
 import sinnet.models.CustomerSecret;
 import sinnet.models.CustomerSecretEx;
@@ -27,7 +32,6 @@ import sinnet.models.CustomerValue;
 import sinnet.models.Email;
 import sinnet.models.EntityId;
 import sinnet.models.Name;
-import sinnet.read.Project;
 
 @SpringBootTest(webEnvironment = WebEnvironment.NONE)
 @ContextConfiguration(classes = AppTestContext.class)
@@ -36,162 +40,147 @@ import sinnet.read.Project;
 })
 public class CustomerRepositoryTests {
 
-    @Autowired
-    private Project.Repository projectRepository;
-    @Autowired
-    private CustomerRepository repository;
+  @Autowired
+  Api api;
+
+  @Autowired
+
+
+  @Test
+  void initialiListOfCustomersIsEmpty() {
+    var projectId = api.createNewProject();
+    var actual = api.queryCustomers(projectId);
+    Assertions.assertThat(actual).isEmpty();
+  }
+
+
+  @Test
+  void saveMinModel() {
+    var projectId = api.createNewProject();
+    var givenEntityId = EntityId.anyNew(projectId.getId());
+    var model = Given.minValidModel();
+    var customerId = api.changeCustomer(model);
+    Assertions.assertThat(customerId).isNotNull();
+  }
+
+  @Test
+  void saveFullModel() {
+    var projectId = api.createNewProject();
+    var givenEntityId = EntityId.anyNew(projectId.getId());
+    var model = Given.fullModel();
+    var customerId = api.changeCustomer(model);
+    Assertions.assertThat(customerId).isNotNull();
+  }
+
+  @Test
+  public void list() {
+    var projectId = api.createNewProject();
+    var someModel = Given.minValidModel();
+    var id1 = api.defineCustomer(EntityId.anyNew(projectId));
+    var id2 = api.defineCustomer(EntityId.anyNew(projectId));
+    var list = api.queryCustomers(projectId);
+
+    var actual = List.of(list).map(it -> it.getEntityId());
+    assertThat(actual).contains(id1.getId(), id2.getId());
+  }
+
+  @Test
+  public void shouldUpdate() {
+    var projectId = api.createNewProject();
+    var validModel = Given.minValidModel();
+    var eidV1 = api.defineCustomer(EntityId.anyNew(projectId), validModel);
+    var eidV2 = api.defineCustomer(eidV1, validModel);
+
+    var expected = FindCustomers.CustomerData.builder()
+        .projectId(eidV2.getProjectId())
+        .entityId(eidV2.getId())
+        .entityVersion(eidV2.getVersion())
+        .build();
+         //, validModel, Given.emptySecrets(), Given.emptySecretsEx(), Given.emptyContacts());
+    var list = api.queryCustomers(projectId);
+    Assertions
+        .assertThat(list)
+        .containsOnly(expected);
+  }
+
+  @Test
+  public void shouldNotDeleteLastVersionIfNewSaveFailed() {
+    var projectId = api.createNewProject();
+    var eid = api.defineCustomer(EntityId.anyNew(projectId));
+
+    var invalidModel = Given.invalidModel();
+    Assertions
+        .catchThrowable(() -> api.defineCustomer(eid, invalidModel));
+
+    var expected = FindCustomers.CustomerData.builder()
+        .projectId(eid.getProjectId())
+        .entityId(eid.getId())
+        .entityVersion(eid.getVersion())
+        .build();
+    // var expected = new CustomerRepository.CustomerModel(newEid, validModel, Given.emptySecrets(), Given.emptySecretsEx(), Given.emptyContacts());
+    var list = api.queryCustomers(projectId);
+    Assertions
+      .assertThat(list).containsOnly(expected);
+
+  }
+
+  @Test
+  public void shouldNotSaveWhenVersionIsNotNext() {
+    var projectId = api.createNewProject();
+
+    var eid = api.defineCustomer(EntityId.anyNew(projectId));
+
+    var invalidEid = EntityId.of(eid.getProjectId(), eid.getId(), eid.getVersion() + 1);
+    api.defineCustomer(invalidEid);
+
+    var expected = FindCustomers.CustomerData.builder()
+        .projectId(eid.getProjectId())
+        .entityId(eid.getId())
+        .entityVersion(eid.getVersion())
+        .build();
+    // var expected = new CustomerRepository.CustomerModel(nextId, validModel, Given.emptySecrets(), Given.emptySecretsEx(), Given.emptyContacts());
+    var list = api.queryCustomers(projectId);
+    Assertions
+      .assertThat(list).containsOnly(expected);
+  }
+
+  @Nested
+  public class ShouldSupportSecrets {
 
     @Test
-    void shouldSupportEmptyList() {
-        var projectId = UUID.randomUUID();
-        Sync.of(() -> projectRepository.save(projectId)).get();
+    void write() {
+      var projectId = api.createNewProject();
 
-        var actual = Sync.of(() -> repository.list(projectId)).get();
-        Assertions.assertThat(actual).isEmpty();
+      var someId = EntityId.anyNew(projectId);
+      var model = Given.minValidModel();
+      var secrets = Given.multipleSecrets();
+      var secret = ChangeCustomerData.Secret.builder()
+          .location("My location " + UUID.randomUUID())
+          .username("My username " + UUID.randomUUID())
+          .password("My password " + UUID.randomUUID())
+          .build();
+      var id = api.defineCustomer(someId, model, ArrayUtils.toArray(secret), ArrayUtils.toArray(), ArrayUtils.toArray());
+      var customer = api.queryCustomers(projectId);
+      assertThat(customer).asList().containsOnly(secrets);
     }
 
+    // TODO
+        // @Test
+        // void delete() {
+        //     var projectId = api.createNewProject();
 
-    @Test
-    void saveMinModel() {
-        var projectId = UUID.randomUUID();
-        var givenEntityId = EntityId.anyNew(projectId);
-        var actual = Sync
-            .of(() -> projectRepository.save(projectId))
-            .and(ignored -> {
-                var model = Given.minValidModel();
-                return repository
-                       .write(givenEntityId, model, Given.emptySecrets(), Given.emptySecretsEx(), Given.emptyContacts()); })
-            .get();
+        //     var someId = EntityId.anyNew(projectId);
+        //     var model = Given.minValidModel();
+        //     var auths = Given.multipleSecrets();
+        //     var emptyAuths = Given.emptySecrets();
+        //     var secretsEx = Given.emptySecretsEx();
+        //     var contacts = Given.emptyContacts();
 
-        var expected = EntityId.of(projectId, givenEntityId.getId(), givenEntityId.getVersion() + 1);
-        Assertions.assertThat(actual).isEqualTo(expected);
-    }
-
-    @Test
-    void saveFullModel() {
-        var projectId = UUID.randomUUID();
-        Sync.of(() -> projectRepository.save(projectId));
-
-        var someId = EntityId.anyNew(projectId);
-        var model = Given.fullModel();
-
-        Sync.of(() -> repository.write(someId, model, Given.emptySecrets(), Given.emptySecretsEx(), Given.emptyContacts()))
-            .and(it -> repository.get(it))
-            .checkpoint(it -> assertThat(it.get().getValue()).isEqualTo(model));
-    }
-
-    @Test
-    public void list() {
-        var projectId = UUID.randomUUID();
-        var id1 = EntityId.anyNew(projectId);
-        var id2 = EntityId.anyNew(projectId);
-        var list = Sync
-            .of(() -> projectRepository.save(projectId))
-            .and(ignored -> {
-                var someModel = Given.minValidModel();
-                return CompositeFuture
-                    .all(repository.write(id1, someModel, Given.emptySecrets(), Given.emptySecretsEx(), Given.emptyContacts()),
-                        repository.write(id2, someModel, Given.emptySecrets(), Given.emptySecretsEx(), Given.emptyContacts()))
-                    .map(it -> true); })
-            .and(it -> repository.list(projectId))
-            .get();
-
-        var actual = List.ofAll(list).map(it -> it.getId().getId());
-        assertThat(actual).contains(id1.getId(), id2.getId());
-    }
-
-    @Test
-    public void shouldUpdate() {
-        var projectId = UUID.randomUUID();
-        Sync.of(() -> projectRepository.save(projectId));
-
-        var validModel = Given.minValidModel();
-        var eid = EntityId.anyNew(projectId);
-        var eidV1 = Sync.of(() -> repository.write(eid, validModel, Given.emptySecrets(), Given.emptySecretsEx(), Given.emptyContacts())).get();
-        var eidV2 = Sync.of(() -> repository.write(eidV1, validModel, Given.emptySecrets(), Given.emptySecretsEx(), Given.emptyContacts())).get();
-
-        var expected = new CustomerRepository.CustomerModel(eidV2, validModel, Given.emptySecrets(), Given.emptySecretsEx(), Given.emptyContacts());
-        Sync
-            .of(() -> repository.list(projectId))
-            .checkpoint(it -> Assertions
-                                .assertThat(it)
-                                .containsOnly(expected));
-    }
-
-    @Test
-    public void shouldNotDeleteLastVersionIfNewSaveFailed() {
-        var projectId = UUID.randomUUID();
-        Sync.of(() -> projectRepository.save(projectId));
-
-        var validModel = Given.minValidModel();
-        var eid = EntityId.anyNew(projectId);
-        var newEid = Sync.of(() -> repository.write(eid, validModel, Given.emptySecrets(), Given.emptySecretsEx(), Given.emptyContacts())).get();
-
-        var invalidModel = Given.invalidModel();
-        Assertions
-            .catchThrowable(() -> Sync.of(() -> repository.write(newEid, invalidModel, Given.emptySecrets(), Given.emptySecretsEx(), Given.emptyContacts())).get());
-
-        var expected = new CustomerRepository.CustomerModel(newEid, validModel, Given.emptySecrets(), Given.emptySecretsEx(), Given.emptyContacts());
-        var list = Sync.of(() -> repository.list(projectId)).get();
-        Assertions
-            .assertThat(list).containsOnly(expected);
-
-    }
-
-    @Test
-    public void shouldNotSaveWhenVersionIsNotNext() {
-        var projectId = UUID.randomUUID();
-        Sync.of(() -> projectRepository.save(projectId));
-
-        var validModel = Given.minValidModel();
-        var eid = EntityId.anyNew(projectId);
-        var nextId = Sync.of(() -> repository.write(eid, validModel, Given.emptySecrets(), Given.emptySecretsEx(), Given.emptyContacts())).get();
-
-        var invalidEid = EntityId.of(nextId.getProjectId(), nextId.getId(), nextId.getVersion() + 1);
-        Sync.of(() -> repository.write(invalidEid, validModel, Given.emptySecrets(), Given.emptySecretsEx(), Given.emptyContacts())).tryGet();
-
-        var expected = new CustomerRepository.CustomerModel(nextId, validModel, Given.emptySecrets(), Given.emptySecretsEx(), Given.emptyContacts());
-        Sync
-            .of(() -> repository.list(projectId))
-            .checkpoint(it -> Assertions.assertThat(it).containsOnly(expected));
-    }
-
-    @Nested
-    public class ShouldSupportSecrets {
-
-        @Test
-        void write() {
-            var projectId = UUID.randomUUID();
-            Sync.of(() -> projectRepository.save(projectId));
-
-            var someId = EntityId.anyNew(projectId);
-            var model = Given.minValidModel();
-            var secrets = Given.multipleSecrets();
-            var secretsEx = Given.emptySecretsEx();
-            var contacts = Given.emptyContacts();
-
-            Sync.of(() -> repository.write(someId, model, secrets, secretsEx, contacts))
-                .and(it -> repository.get(it))
-                .checkpoint(it -> assertThat(it.get().getSecrets()).containsOnly(secrets));
-        }
-
-        @Test
-        void delete() {
-            var projectId = UUID.randomUUID();
-            Sync.of(() -> projectRepository.save(projectId));
-
-            var someId = EntityId.anyNew(projectId);
-            var model = Given.minValidModel();
-            var auths = Given.multipleSecrets();
-            var emptyAuths = Given.emptySecrets();
-            var secretsEx = Given.emptySecretsEx();
-            var contacts = Given.emptyContacts();
-
-            Sync.of(() -> repository.write(someId, model, auths, secretsEx, contacts))
-                .and(newId -> repository.write(newId, model, emptyAuths, secretsEx, contacts))
-                .and(it -> repository.get(it))
-                .checkpoint(it -> assertThat(it.get().getSecrets()).isEmpty());
-        }
+        //     Sync.of(() -> repository.write(someId, model, auths, secretsEx, contacts))
+        //         .and(newId -> repository.write(newId, model, emptyAuths, secretsEx, contacts))
+        //         .and(it -> repository.get(it))
+        //         .checkpoint(it -> assertThat(it.get().getSecrets()).isEmpty());
+        // }
     }
 }
 

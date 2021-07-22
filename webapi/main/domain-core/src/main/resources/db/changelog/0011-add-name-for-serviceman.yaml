@@ -1,0 +1,30 @@
+databaseChangeLog:
+- changeSet:
+    id: '20210709-2'
+    author: siudeks
+    changes:
+    - addColumn:
+        tableName: serviceman
+        columns:
+        - column:
+            name: entity_version
+            type: INTEGER
+            defaultValue: '1'
+            constraints:
+              nullable: false
+    - addColumn:
+        tableName: serviceman
+        columns:
+        - column:
+            name: customName
+            type: varchar(50)
+    - dropPrimaryKey:
+        tableName: serviceman
+        constraintName: servicemanPK
+        dropIndex: true
+    - addPrimaryKey:
+          columnNames: entity_id, entity_version
+          clustered: true
+          constraintName: serviceman_PK
+          tableName: serviceman
+          validate: true

@@ -6,10 +6,10 @@ import lombok.Value;
 
 public interface IdentityProvider {
 
-    Optional<User> getCurrent();
+  Optional<User> getCurrent();
 
-    @Value
-    class User {
-        private String email;
-    }
+  @Value
+  class User {
+    private String email;
+  }
 }

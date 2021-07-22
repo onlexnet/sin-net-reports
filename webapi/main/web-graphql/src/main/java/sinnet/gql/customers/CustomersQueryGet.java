@@ -3,20 +3,22 @@ package sinnet.gql.customers;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import graphql.kickstart.tools.GraphQLResolver;
-import sinnet.gql.AskTemplate;
+import io.vertx.core.eventbus.EventBus;
 import sinnet.gql.MyEntity;
 import sinnet.gql.SomeEntity;
+import sinnet.bus.AskTemplate;
 import sinnet.bus.query.FindCustomer;
 
 @Component
 public class CustomersQueryGet extends AskTemplate<FindCustomer.Ask, FindCustomer.Reply>
-                                implements GraphQLResolver<CustomersQuery> {
+                               implements GraphQLResolver<CustomersQuery> {
 
-  public CustomersQueryGet() {
-    super(FindCustomer.Ask.ADDRESS, FindCustomer.Reply.class);
+  public CustomersQueryGet(EventBus eventBus) {
+    super(FindCustomer.Ask.ADDRESS, FindCustomer.Reply.class, eventBus);
   }
 
   CompletableFuture<Optional<CustomerEntity>> get(CustomersQuery gcontext, MyEntity entityId) {

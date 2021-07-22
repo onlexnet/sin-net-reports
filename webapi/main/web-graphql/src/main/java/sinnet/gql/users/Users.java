@@ -10,20 +10,20 @@ import graphql.kickstart.tools.GraphQLResolver;
 import io.vavr.collection.Stream;
 import lombok.Value;
 import sinnet.IdentityProvider;
-import sinnet.UsersProvider;
+import sinnet.UsersProjector;
 import sinnet.models.Email;
 
 @Value
 public class Users {
-    private UUID projectId;
+  private UUID projectId;
 }
 
 @Component
 class UsersQuery implements GraphQLQueryResolver {
 
-    public Users getUsers(UUID projectId) {
-        return new Users(projectId);
-    }
+  public Users getUsers(UUID projectId) {
+      return new Users(projectId);
+  }
 
 }
 
@@ -31,7 +31,7 @@ class UsersQuery implements GraphQLQueryResolver {
 class UsersQuerySearch implements GraphQLResolver<Users> {
 
     @Autowired
-    private UsersProvider usersProvider;
+    private UsersProjector usersProvider;
 
     @Autowired
     private IdentityProvider identity;
