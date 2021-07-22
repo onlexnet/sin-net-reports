@@ -5,8 +5,11 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
+import io.vertx.core.CompositeFuture;
+import io.vavr.Tuple2;
 import io.vavr.collection.Array;
+import io.vavr.collection.HashMap;
+import io.vavr.collection.Map;
 import io.vertx.core.Future;
 import io.vertx.core.Promise;
 import io.vertx.pgclient.PgPool;
@@ -33,21 +36,45 @@ public class ActionProjectorProvider implements ActionProjector.Provider, Action
   @Override
   public Future<Array<ListItem>> find(UUID projectId, LocalDate from, LocalDate to) {
     var promise = Promise.<Array<ListItem>>promise();
-    var findQuery = this.pgClient
+
+    var findDataQuery = this.pgClient
             .preparedQuery(VIEW_SELECT + " WHERE a.project_id=$1 AND a.date >= $2 AND a.date <= $3");
-    findQuery.execute(Tuple.of(projectId, from, to), ar -> {
-      if (ar.succeeded()) {
-        var rows = ar.result();
-        var value = Array.ofAll(rows).map(this::map);
-        promise.complete(value);
-      } else {
-        promise.fail(ar.cause());
-      }
-    });
-    return promise.future();
+    var findServicemanQuery = this.pgClient
+            .preparedQuery("SELECT email, custom_name from serviceman t WHERE t.project_entity_id=$1");
+
+    var f1 = findDataQuery.execute(Tuple.of(projectId, from, to));
+    var f2 = findServicemanQuery.execute(Tuple.of(projectId));
+
+    CompositeFuture.all(f1, f2)
+      .onSuccess(ignored -> {
+        var items = Array.ofAll(f1.result()).map(this::mapItem);
+        var users = Array.ofAll(f2.result()).map(this::mapServiceman)
+            .toMap(it -> it._1, it -> it._2);
+        var mappedItems = items.map(item -> {
+          var servicemanEmail = item.build().getValue().getWho().getValue();
+          var servicemanCustomName = users.get(servicemanEmail).getOrElse((String)null);
+          return item.servicemanName(servicemanCustomName).build();
+        });
+        promise.complete(mappedItems);
+      })
+      .onFailure(ex -> promise.fail(ex));
+
+    //   .onSuccess(rows -> Array.ofAll(rows)
+    // , ar -> {
+    //   if (ar.succeeded()) {
+    //     var rows = ar.result();
+    //     var value = Array.ofAll(rows).map(this::map);
+    //     promise.complete(value);
+    //   } else {
+    //     promise.fail(ar.cause());
+    //   }
+    // });
+
+    return promise
+      .future();
   }
 
-  ListItem map(Row row) {
+  ListItem.ListItemBuilder mapItem(Row row) {
     var projectId = row.getUUID("project_id");
     var entityId = row.getUUID("entity_id");
     var entityVersion = row.getInteger("entity_version");
@@ -68,7 +95,12 @@ public class ActionProjectorProvider implements ActionProjector.Provider, Action
         .value(value)
         .customerName(customerName)
         .customerCity(customerCity)
-        .customerAddress(customerAddress)
-        .build();
+        .customerAddress(customerAddress);
+  }
+
+  Tuple2<String, String> mapServiceman(Row row) {
+    var email = row.getString(0);
+    var customName = row.getString(1);
+    return new Tuple2<>(email, customName);
   }
 }

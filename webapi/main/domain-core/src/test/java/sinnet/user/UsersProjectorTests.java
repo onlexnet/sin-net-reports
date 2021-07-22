@@ -77,6 +77,7 @@ public final class UsersProjectorTests implements ProjectProjector {
     var expected = ActionProjector.ListItem.builder()
         .eid(actionId)
         .value(action)
+        .servicemanName("name of the serviceman")
         .build();
     Assertions.assertThat(actual).containsExactly(expected);
   }

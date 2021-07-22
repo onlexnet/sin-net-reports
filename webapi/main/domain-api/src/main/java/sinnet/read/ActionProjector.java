@@ -21,6 +21,7 @@ public interface ActionProjector {
   class ListItem {
     private EntityId eid;
     private ActionValue value;
+    private String servicemanName;
     private String customerName;
     private String customerCity;
     private String customerAddress;
