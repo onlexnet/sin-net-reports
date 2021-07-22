@@ -2,7 +2,6 @@ package sinnet.bus;
 
 import java.util.concurrent.CompletableFuture;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.remoting.RemoteAccessException;
 
 import io.vertx.core.eventbus.EventBus;
@@ -26,9 +25,7 @@ public abstract class AskTemplate<ASK, REPLY> {
     var query = JsonObject.mapFrom(ask);
     eventBus
         .request(address, query)
-        .onFailure(it -> {
-          result.completeExceptionally(new RemoteAccessException(it.getMessage()));
-        })
+        .onFailure(it -> result.completeExceptionally(new RemoteAccessException(it.getMessage())))
         .onSuccess(it -> {
           var body = it.body();
           var reply = JsonObject.mapFrom(body).mapTo(replyClass);

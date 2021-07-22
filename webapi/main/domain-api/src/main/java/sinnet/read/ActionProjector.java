@@ -10,7 +10,7 @@ import lombok.Value;
 import sinnet.models.ActionValue;
 import sinnet.models.EntityId;
 
-public interface ActionProjection {
+public interface ActionProjector {
 
   interface Provider {
     Future<Array<ListItem>> find(UUID projectId, LocalDate from, LocalDate to);

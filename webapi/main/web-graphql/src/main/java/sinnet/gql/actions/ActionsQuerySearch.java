@@ -11,15 +11,15 @@ import graphql.kickstart.tools.GraphQLResolver;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import sinnet.read.ActionProjection;
+import sinnet.read.ActionProjector;
 
 /** Fixme. */
 @Component
 public class ActionsQuerySearch implements GraphQLResolver<ActionsQuery>,
-                                           ActionProjection  {
+                                           ActionProjector  {
 
     @Autowired
-    private ActionProjection.Provider projection;
+    private ActionProjector.Provider projection;
 
     /**
      * FixMe.

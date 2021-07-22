@@ -11,15 +11,15 @@ import lombok.extern.jackson.Jacksonized;
 @Builder(toBuilder = true)
 public final class Email {
 
-    private static final Email EMPTY = new Email(null);
+  private static final Email EMPTY = new Email(null);
 
-    private String value;
+  private String value;
 
-    public static Email of(String value) {
-        return new Email(value);
-    }
+  public static Email of(String value) {
+    return new Email(value);
+  }
 
-    public static Email empty() {
-        return EMPTY;
-    }
+  public static Email empty() {
+    return EMPTY;
+  }
 }

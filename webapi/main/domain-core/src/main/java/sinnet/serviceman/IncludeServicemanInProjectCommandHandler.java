@@ -15,7 +15,7 @@ public class IncludeServicemanInProjectCommandHandler
 
   @Override
   protected Future<EntityId> onRequest(Command request) {
-    return Future.failedFuture("Not yet implemented");
+    return Future.failedFuture("Not yet implemented [2]");
   }
   
 }

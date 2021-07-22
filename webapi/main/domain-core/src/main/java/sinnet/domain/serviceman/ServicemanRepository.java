@@ -24,15 +24,19 @@ public class ServicemanRepository {
     private int entityVersion;
     private UUID projectEntityId;
     private String email;
-    private String name;
+    private String customName;
   }
 
   private String writeSql = "INSERT INTO "
       + "serviceman ("
-      + "entity_id, entity_version, email, name, project_entity_id"
+      + "project_entity_id, entity_id, entity_version, email, custom_name"
       + ")"
-      + "VALUES ("
-      + "#{" + DboEntry.Fields.entityId + "}, #{}, #{}, #{}, #{})";
+      + " VALUES ("
+      + "#{" + DboEntry.Fields.projectEntityId + "}, "
+      + "#{" + DboEntry.Fields.entityId + "}, "
+      + "#{" + DboEntry.Fields.entityVersion + "}, "
+      + "#{" + DboEntry.Fields.email + "}, "
+      + "#{" + DboEntry.Fields.customName + "})";
 
   Future<EntityId> write(SqlClient sqlClient, ServicemanState state) {
     var projectEntityId = state.getEntityId().getProjectId();
@@ -44,7 +48,7 @@ public class ServicemanRepository {
         .entityVersion(newVersion)
         .projectEntityId(projectEntityId)
         .email(state.getEmail().getValue())
-        .name(state.getName())
+        .customName(state.getName())
         .build();
     return SqlTemplate
       .forUpdate(sqlClient, writeSql)

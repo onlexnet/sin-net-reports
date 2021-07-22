@@ -1,5 +1,6 @@
 package sinnet.user;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 import org.assertj.core.api.Assertions;
@@ -10,12 +11,16 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 
-import io.vavr.collection.Array;
 import lombok.SneakyThrows;
+import sinnet.ActionRepository;
 import sinnet.Api;
 import sinnet.AppTestContext;
+import sinnet.Sync;
 import sinnet.UsersProjector;
+import sinnet.models.ActionValue;
 import sinnet.models.Email;
+import sinnet.models.EntityId;
+import sinnet.read.ActionProjector;
 import sinnet.read.ProjectProjector;
 
 @SpringBootTest(webEnvironment = WebEnvironment.NONE)
@@ -33,6 +38,12 @@ public final class UsersProjectorTests implements ProjectProjector {
 
   @Autowired
   private ProjectProjector.Provider projectProjector;
+
+  @Autowired
+  private ActionRepository actionRepository;
+  
+  @Autowired
+  private ActionProjector.Provider actionProjector;
 
   @Test
   public void myTest() {
@@ -54,9 +65,19 @@ public final class UsersProjectorTests implements ProjectProjector {
     var emailOfInvitedServiceman = randomPart + "@test";
     api.assignToProject(emailOfInvitedServiceman, "name of the serviceman", projectId);
 
-    var actual = projectProjector.findByServiceman(Email.of(emailOfInvitedServiceman)).result();
+    var now = LocalDate.now();
+    var action = ActionValue.builder()
+        .who(Email.of(emailOfInvitedServiceman))
+        .when(now)
+        .build();
+    var actionId = EntityId.anyNew(projectId);
+    Sync.of(() -> actionRepository.save(actionId, action)).get();
 
-    var expected = new FindByServicemanModel(projectId, "aaa");
+    var actual = Sync.of(() -> actionProjector.find(projectId.getId(), now, now)).get();
+    var expected = ActionProjector.ListItem.builder()
+        .eid(actionId)
+        .value(action)
+        .build();
     Assertions.assertThat(actual).containsExactly(expected);
   }
 

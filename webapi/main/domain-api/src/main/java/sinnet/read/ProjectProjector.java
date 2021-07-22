@@ -12,6 +12,9 @@ public interface ProjectProjector {
   /** Provides projections where Project is the main subject of the query. */
   interface Provider {
 
+    /**
+     * Returns list of projects where is already assigned serviceman with provided email.
+     */
     Future<Array<FindByServicemanModel>> findByServiceman(Email email);
   }
 

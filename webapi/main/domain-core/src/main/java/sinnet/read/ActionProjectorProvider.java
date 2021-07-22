@@ -19,7 +19,7 @@ import sinnet.models.Email;
 import sinnet.models.EntityId;
 
 @Component
-public class ActionProjectionProvider implements ActionProjection.Provider, ActionProjection {
+public class ActionProjectorProvider implements ActionProjector.Provider, ActionProjector {
 
   @Autowired
   private PgPool pgClient;

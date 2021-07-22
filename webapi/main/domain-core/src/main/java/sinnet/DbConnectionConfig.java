@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
+import io.vertx.core.tracing.TracingPolicy;
 import io.vertx.pgclient.PgConnectOptions;
 import io.vertx.pgclient.PgPool;
 import io.vertx.sqlclient.PoolOptions;
@@ -27,6 +28,7 @@ public class DbConnectionConfig {
         .setHost(dbHost)
         .setDatabase(dbName)
         .setUser("sinnet")
+        .setTracingPolicy(TracingPolicy.ALWAYS)
         .setPassword("sinnet");
     var poolOptions = new PoolOptions();
 

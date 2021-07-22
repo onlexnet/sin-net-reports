@@ -8,8 +8,10 @@ import sinnet.models.Entity;
 import sinnet.models.EntityId;
 
 /**
- * Basic operations on store / get an entity fro mdatabase.
+ * Basic operations on store / get an entity from database.
  */
+// TODO Move behing bus
+// TODO add gherkin test
 public interface ActionRepository {
 
   Future<Boolean> save(EntityId entityId, ActionValue entity);

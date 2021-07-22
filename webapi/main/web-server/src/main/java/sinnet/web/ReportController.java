@@ -18,7 +18,7 @@ import io.vavr.Function1;
 import io.vavr.collection.Array;
 import io.vavr.control.Option;
 import sinnet.FutureExecutor;
-import sinnet.read.ActionProjection;
+import sinnet.read.ActionProjector;
 import sinnet.reports.ActivityDetails;
 import sinnet.reports.CustomerDetails;
 import sinnet.reports.Date;
@@ -28,10 +28,10 @@ import sinnet.reports.ReportsGrpc;
 
 @RestController
 @RequestMapping(path = "/api/raporty")
-class ReportController implements ActionProjection {
+class ReportController implements ActionProjector {
 
   @Autowired
-  private ActionProjection.Provider projection;
+  private ActionProjector.Provider projection;
 
   @Autowired
   private ReportsGrpc.ReportsFutureStub reportsClient;

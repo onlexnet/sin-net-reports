@@ -16,7 +16,7 @@ databaseChangeLog:
         tableName: serviceman
         columns:
         - column:
-            name: customName
+            name: custom_name
             type: varchar(50)
     - dropPrimaryKey:
         tableName: serviceman

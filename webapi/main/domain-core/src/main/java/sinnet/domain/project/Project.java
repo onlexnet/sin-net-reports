@@ -8,7 +8,7 @@ import io.vertx.sqlclient.SqlClient;
 import lombok.Value;
 import sinnet.models.ProjectId;
 
-interface Project {
+public interface Project {
 
   interface Repository {
 
@@ -19,7 +19,7 @@ interface Project {
 
   @Value
   class Entity {
-    private UUID id;
+    private ProjectId id;
     private String name;
   }
 }

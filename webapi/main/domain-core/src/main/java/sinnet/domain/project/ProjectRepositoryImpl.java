@@ -66,14 +66,14 @@ public class ProjectRepositoryImpl implements Project.Repository, Project {
     var promise = Promise.<Array<Entity>>promise();
     var values = Tuple.of(filterByEmail);
     sqlClient
-          .preparedQuery("SELECT p.entity_id, p.name "
+          .preparedQuery("SELECT p.entity_id, p.entity_version, p.name "
                         + "FROM projects p INNER JOIN serviceman s ON p.entity_id = s.project_entity_id "
                         + "WHERE s.email=$1")
           .execute(values)
           .onSuccess(rows -> {
             var projectsIds = Array
                 .ofAll(rows)
-                .map(it -> new Entity(it.getUUID(0), it.getString(1)));
+                .map(it -> new Entity(ProjectId.of(it.getUUID(0), it.getInteger(1)), it.getString(2)));
             promise.complete(projectsIds);
           }).onFailure(promise::fail);
     return promise.future();
