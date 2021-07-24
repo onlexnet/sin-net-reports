@@ -45,7 +45,7 @@ object ReportResult {
     // Fonts should be available because they are part of the project and they are included in proper
     // location in target docker image.
     val fontSize = 10
-    val baseFont = FontFactory.getFont("OpenSans.ttf")
+    val baseFont = FontFactory.getFont("OpenSans")
     baseFont.setSize(fontSize)
     baseFont
   }
@@ -54,7 +54,7 @@ object ReportResult {
     // Fonts should be available because they are part of the project and they are included in proper
     // location in target docker image.
     val fontSize = 10
-    val baseFont = FontFactory.getFont("OpenSans-Bold.ttf")
+    val baseFont = FontFactory.getFont("OpenSans-Bold")
     baseFont.setSize(fontSize)
     baseFont
   }
