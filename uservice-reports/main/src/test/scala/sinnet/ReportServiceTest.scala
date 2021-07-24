@@ -38,19 +38,28 @@ class ReportServiceTest {
     @Test
     def produceReportWithMinDataCase2(): Unit = {
         val customer = CustomerDetailsDTO.newBuilder().build()
-        val activity = ActivityDetailsDTO.newBuilder().build()
         val request = ReportRequestDTO.newBuilder()
             .setCustomer(customer)
-            .addDetails(activity)
+            .addDetails(ActivityDetailsDTO
+                .newBuilder()
+                .setDescription("Position 1")
+                .setHowFarInKms(23)
+                .build())
+            .addDetails(ActivityDetailsDTO
+                .newBuilder()
+                .setDescription("Position 2")
+                .setHowLongInMins(12)
+                .setHowFarInKms(34)
+                .build())
             .build()
         val res = client.produce(request)
         var data = res.getData().toByteArray()
         
-        // uncomment block of lines  below to produce a local example raport file
-        // import java.io.File
-        // import java.nio.file.Files
-        // import java.nio.file.Paths
-        // Files.write(Paths.get("temp_raport_from_test.pdf"), data)
+        // uncomment block of lines below to produce a local example raport file
+        import java.io.File
+        import java.nio.file.Files
+        import java.nio.file.Paths
+        Files.write(Paths.get("temp_raport_from_test.pdf"), data)
 
         Assertions.assertThat(data).isNotEmpty()
     }

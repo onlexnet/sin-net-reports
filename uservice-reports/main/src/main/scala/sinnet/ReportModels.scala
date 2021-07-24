@@ -2,9 +2,14 @@ package sinnet
 
 import java.time.LocalDate
 
+/**
+  * Represents printable data content of a report. Useful for testing before being converted to PDF file.
+  */
 case class ReportRequest(
+    /** Details about the customer whome the activities have been addressed. */
     customer: CustomerDetails,
-    details: Seq[ActivityDetails]
+    /** List of the activities. */
+    activities: Seq[ActivityDetails]
 )
 
 case class CustomerDetails(
@@ -16,6 +21,14 @@ case class CustomerDetails(
 case class ReportRequests(items: Seq[ReportRequest])
 
 case class ActivityDetails(
+    description: String,
+    who: String,
+    when: Option[LocalDate],
+    howLongInMins: Minutes,
+    howFarInKms: Kilometers
+)
+
+case class SpecialActivityDetails(
     description: String,
     who: String,
     when: Option[LocalDate],

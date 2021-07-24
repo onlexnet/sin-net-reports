@@ -26,7 +26,6 @@ import scala.collection.JavaConverters._
 import java.util.UUID
 import java.util.zip.ZipEntry
 import com.lowagie.text.pdf.PdfTable
-import java.time.format.DateTimeFormatter
 import org.librepdf.openpdf.fonts.Liberation
 import com.lowagie.text.pdf.BaseFont
 import scala.util.Success
@@ -37,21 +36,25 @@ import javax.inject.Inject
 object ReportResult {
 
   {
-    // without the initialization font discovery (FontFactory.getFont) does not find proper fonts
+    // without the initialization font discovery (method: FontFactory.getFont) does not find proper fonts
+    // and all fonts in the report will stay with some default font
     FontFactory.registerDirectories()
+  }
+
+  def myFont() = {
+    // Fonts should be available because they are part of the project and they are included in proper
+    // location in target docker image.
+    val fontSize = 10
+    val baseFont = FontFactory.getFont("OpenSans.ttf")
+    baseFont.setSize(fontSize)
+    baseFont
   }
 
   def apply(request: ReportRequest): ReportResult = {
     val customer = request.customer
-    val customerName = Option(customer.customerName).getOrElse("(Brak wskazanego kontrahenta")
+    val customerName = Option(customer.customerName).getOrElse("(Brak wskazanego kontrahenta)")
     val customerCity = Option(customer.customerCity).getOrElse("(miejscowość)")
     val customerAddress = Option(customer.address).getOrElse("(adres)")
-
-    // Not all fonts are available without proper dcker image
-    // so that we need some alternative to run the logic in unit tests
-    val fontSize = 10
-    val myFont = FontFactory.getFont("OpenSans.ttf")
-    myFont.setSize(fontSize)
 
     val d = managed(new ByteArrayOutputStream()) map { os =>
       val document = new Document()
@@ -62,68 +65,32 @@ object ReportResult {
       val header = s"$customerName, $customerCity ul. $customerAddress"
       val headParam = new Paragraph(header, myFont)
 
-      document.add(headParam);
-      document.add(new Paragraph("-"))
+      val newLineParagraph = new Paragraph("\n")
+      document.add(headParam)
+      document.add(newLineParagraph)
 
-      def asTable(activities: Seq[ActivityDetails]): PdfPTable = {
-        val col1width = 3
-        val col2width = 3
-        val col3width = 12
-        val col4width = 2
-        val col5width = 2
-        val table = new PdfPTable(col1width + col2width + col3width + col4width + col5width)
-        val maxWidthPercentage = 100
-        table.setWidthPercentage(maxWidthPercentage)
-
-        implicit class PdfPTableEx(val it: PdfPTable) {
-          def addValue(v: CellParams): Unit = {
-            val p = new Paragraph(v.text, myFont)
-            var cell = new PdfPCell(p)
-            cell.setHorizontalAlignment(v.alignment.getId())
-            cell.setColspan(v.width)
-            it.addCell(cell)
-          }
-        }
-
-        case class CellParams(text: String, width: Int, alignment: HorizontalAlignment)
-  
-        val timeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
-        implicit val a: (Option[LocalDate]) => String = it =>
-          it match {
-            case Some(date) => date.format(timeFormatter)
-            case None       => "-"
-          }
-
-        table.addValue(new CellParams("Serwisant", col1width, HorizontalAlignment.CENTER))
-        table.addValue(new CellParams("Dzień", col2width, HorizontalAlignment.CENTER))
-        table.addValue(new CellParams("Praca wykonana", col3width, HorizontalAlignment.CENTER))
-        table.addValue(new CellParams("Czas", col4width, HorizontalAlignment.RIGHT))
-        table.addValue(new CellParams("KM", col5width, HorizontalAlignment.RIGHT))
-          
-        for (item <- request.details) {
-          val howLong = item.howLongInMins
-          var distance = item.howFarInKms
-          var who = item.who
-          table.addValue(new CellParams(who, col1width, HorizontalAlignment.LEFT))
-          table.addValue(new CellParams(item.when, col2width, HorizontalAlignment.LEFT))
-          table.addValue(new CellParams(item.description, col3width, HorizontalAlignment.LEFT))
-          table.addValue(new CellParams(howLong.toString(), col4width, HorizontalAlignment.RIGHT))
-          table.addValue(new CellParams(distance.toString(), col5width, HorizontalAlignment.RIGHT))
-        }
-
-        val initialAcc = (Kilometers(0), Minutes(0))
-        val (howFar, howLong) = request.details.foldLeft(initialAcc)((acc, v) => (acc._1 + v.howFarInKms, acc._2 + v.howLongInMins))
-
-        table.addValue(new CellParams(null, col1width, HorizontalAlignment.LEFT))
-        table.addValue(new CellParams(null, col2width, HorizontalAlignment.LEFT))
-        table.addValue(new CellParams("Suma", col3width, HorizontalAlignment.RIGHT))
-        table.addValue(new CellParams(howLong.toString(), col4width, HorizontalAlignment.RIGHT))
-        table.addValue(new CellParams(howFar.toString(), col5width, HorizontalAlignment.RIGHT))
-
-        table
+      def addValue(table: PdfPTable)(v: CellParams): Unit = {
+        val p = new Paragraph(v.text, myFont)
+        var cell = new PdfPCell(p)
+        cell.setHorizontalAlignment(v.alignment.getId())
+        cell.setColspan(v.width.width)
+        table.addCell(cell)
       }
 
-      document.add(asTable(request.details));
+      val noTime = Minutes(0)
+      val (timedActivities, noTimedActivities) = request.activities.partition(_.howLongInMins != noTime)
+
+      var table1 = newTable()
+      if (asTable(addValue(table1), timedActivities)) {
+        document.add(table1);
+        document.add(newLineParagraph)
+      }
+
+      var table2 = newTable()
+      if (tableSpecial(addValue(table2), noTimedActivities)) {
+        document.add(table2);
+        document.add(newLineParagraph)
+      }
 
       // We have to invoke close method so that content of the document is written
       // to os and can be obtained as the result of the whole operation
@@ -141,6 +108,106 @@ object ReportResult {
 
   }
 
+  // List of all columns available for activities.
+  // In some logic we can merge some of them (using e.g. sum of two values for one column)
+  // but finally we should use all columns so that all tables create using such columns will have
+  // similar location of columns.
+  case class TableColumn(val width: Int) {
+    def +(that: TableColumn) = new TableColumn(this.width + that.width)
+  }
+  object TableColumns {
+    def Col1widthServiceman = new TableColumn(3)
+    def Col2widthDay = new TableColumn(3)
+    def Col3widthDescription = new TableColumn(12)
+    def Col4widthDuration = new TableColumn(2)
+    def Col5widthDistance = new TableColumn(2)
+    def width = Col1widthServiceman.width +
+                Col2widthDay.width +
+                Col3widthDescription.width +
+                Col4widthDuration.width +
+                Col5widthDistance.width
+  }
+
+  case class CellParams(text: String, width: TableColumn, alignment: HorizontalAlignment)
+
+  private def newTable(): PdfPTable = {
+    val table = new PdfPTable(TableColumns.width)
+    val maxWidthPercentage = 100
+    table.setWidthPercentage(maxWidthPercentage)
+    table
+  }
+
+  import java.time.format.DateTimeFormatter
+  val timeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
+  implicit val a: (Option[LocalDate]) => String = it =>
+    it match {
+      case Some(date) => date.format(timeFormatter)
+      case None       => "-"
+    }
+
+  private def asTable(addValue: CellParams => Unit, activities: Seq[ActivityDetails]): Boolean = {
+
+    addValue(new CellParams("Serwisant", TableColumns.Col1widthServiceman, HorizontalAlignment.CENTER))
+    addValue(new CellParams("Dzień", TableColumns.Col2widthDay, HorizontalAlignment.CENTER))
+    addValue(new CellParams("Praca wykonana", TableColumns.Col3widthDescription, HorizontalAlignment.CENTER))
+    addValue(new CellParams("Czas", TableColumns.Col4widthDuration, HorizontalAlignment.RIGHT))
+    addValue(new CellParams("KM", TableColumns.Col5widthDistance, HorizontalAlignment.RIGHT))
+
+    for (item <- activities) {
+      val howLong = item.howLongInMins
+      var distance = item.howFarInKms
+      var who = item.who
+      addValue(new CellParams(who, TableColumns.Col1widthServiceman, HorizontalAlignment.LEFT))
+      addValue(new CellParams(item.when, TableColumns.Col2widthDay, HorizontalAlignment.LEFT))
+      addValue(new CellParams(item.description, TableColumns.Col3widthDescription, HorizontalAlignment.LEFT))
+      addValue(new CellParams(howLong.toString(), TableColumns.Col4widthDuration, HorizontalAlignment.RIGHT))
+      addValue(new CellParams(distance.toString(), TableColumns.Col5widthDistance, HorizontalAlignment.RIGHT))
+    }
+
+    val initialAcc = (Kilometers(0), Minutes(0))
+    val (howFar, howLong) = activities.foldLeft(initialAcc)((acc, v) => (acc._1 + v.howFarInKms, acc._2 + v.howLongInMins))
+
+    addValue(new CellParams(null, TableColumns.Col1widthServiceman, HorizontalAlignment.LEFT))
+    addValue(new CellParams(null, TableColumns.Col2widthDay, HorizontalAlignment.LEFT))
+    addValue(new CellParams("Suma", TableColumns.Col3widthDescription, HorizontalAlignment.RIGHT))
+    addValue(new CellParams(howLong.toString(), TableColumns.Col4widthDuration, HorizontalAlignment.RIGHT))
+    addValue(new CellParams(howFar.toString(), TableColumns.Col5widthDistance, HorizontalAlignment.RIGHT))
+
+    true
+  }
+
+  private def tableSpecial(addValue: CellParams => Unit, activities: Seq[ActivityDetails]): Boolean = {
+
+    val col1 = TableColumns.Col1widthServiceman
+    val col2 = TableColumns.Col2widthDay
+    val col3 = TableColumns.Col3widthDescription + TableColumns.Col4widthDuration
+    val col4 = TableColumns.Col5widthDistance
+
+    addValue(new CellParams("Serwisant", col1, HorizontalAlignment.CENTER))
+    addValue(new CellParams("Dzień", col2, HorizontalAlignment.CENTER))
+    addValue(new CellParams("Praca wykonana", col3, HorizontalAlignment.CENTER))
+    addValue(new CellParams("KM", col4, HorizontalAlignment.RIGHT))
+
+    for (item <- activities) {
+      val howLong = item.howLongInMins
+      var distance = item.howFarInKms
+      var who = item.who
+      addValue(new CellParams(who, col1, HorizontalAlignment.LEFT))
+      addValue(new CellParams(item.when, col2, HorizontalAlignment.LEFT))
+      addValue(new CellParams(item.description, col3, HorizontalAlignment.LEFT))
+      addValue(new CellParams(distance.toString(), col4, HorizontalAlignment.RIGHT))
+    }
+
+    val initialAcc = Kilometers(0)
+    val howFar = activities.foldLeft(initialAcc)((acc, v) => (acc + v.howFarInKms))
+
+    addValue(new CellParams(null, col1, HorizontalAlignment.LEFT))
+    addValue(new CellParams(null, col2, HorizontalAlignment.LEFT))
+    addValue(new CellParams("Suma", col3, HorizontalAlignment.RIGHT))
+    addValue(new CellParams(howFar.toString(), col4, HorizontalAlignment.RIGHT))
+
+    true
+  }
 }
 
 case class ReportModel()
