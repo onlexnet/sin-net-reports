@@ -88,27 +88,27 @@ class ReportController implements ActionProjector {
         }
 
         items
-          // let's simplify path of obtaining the value
-          .forEach(item -> {
-            var v = item.getValue();
-            var builder = ActivityDetails.newBuilder();
-            Option.of(v.getWhat()).forEach(builder::setDescription);
-            builder
-              .setHowFarInKms(v.getHowFar().getValue())
-              .setHowLongInMins(v.getHowLong().getValue());
-            Option.of(v.getWhen()).forEach(o -> builder
-                .setWhen(Date.newBuilder()
-                .setYear(v.getWhen().getYear())
-                .setMonth(v.getWhen().getMonthValue())
-                .setDayOfTheMonth(v.getWhen().getDayOfMonth())));
-            Option.of(v.getWho().getValue())
-              .map(o -> o.split("@")[0])
-              .forEach(builder::setWho);
-            Option.of(item.getServicemanName())
-              .forEach(builder::setWho);
+            // let's simplify path of obtaining the value
+            .forEach(item -> {
+              var v = item.getValue();
+              var builder = ActivityDetails.newBuilder();
+              Option.of(v.getWhat()).forEach(builder::setDescription);
+              builder
+                  .setHowFarInKms(v.getHowFar().getValue())
+                  .setHowLongInMins(v.getHowLong().getValue());
+              Option.of(v.getWhen()).forEach(o -> builder
+                  .setWhen(Date.newBuilder()
+                  .setYear(v.getWhen().getYear())
+                  .setMonth(v.getWhen().getMonthValue())
+                  .setDayOfTheMonth(v.getWhen().getDayOfMonth())));
+              Option.of(v.getWho().getValue())
+                  .map(o -> o.split("@")[0])
+                  .forEach(builder::setWho);
+              Option.of(item.getServicemanName())
+                  .forEach(builder::setWho);
 
-            requestBuilder.addDetails(builder);
-          });
+              requestBuilder.addDetails(builder);
+            });
         
         return requestBuilder.build();
       });

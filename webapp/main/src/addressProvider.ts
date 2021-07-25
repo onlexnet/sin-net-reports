@@ -1,11 +1,9 @@
 export const addressProvider = (): { host: string } => {
-  switch (window.location.origin) {
-    case "https://raport.sin.net.pl":
-      return {
+  return (window.location.origin === "https://raport.sin.net.pl")
+    ? {
         host: "https://raport.sin.net.pl",
-      };
-    default:
-      return {
+      }
+    : {
         host: "http://localhost:8080",
       };
   }
