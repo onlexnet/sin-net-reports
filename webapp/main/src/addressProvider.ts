@@ -7,4 +7,3 @@ export const addressProvider = (): { host: string } => {
         host: "http://localhost:8080",
       };
   }
-};
