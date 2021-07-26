@@ -39,7 +39,6 @@ public class ActionsQuerySearch implements GraphQLResolver<ActionsQuery>,
                         .entityId(item.getEid().getId())
                         .servicemanName(item.getValue().getWho().getValue())
                         .whenProvided(item.getValue().getWhen())
-                        .forWhatCustomer(item.getCustomerName())
                         .description(item.getValue().getWhat())
                         .duration(item.getValue().getHowLong().getValue())
                         .distance(item.getValue().getHowFar().getValue())

@@ -1,3 +1,19 @@
+fragment ServiceItem on ServiceModel {
+  projectId
+  entityId
+  entityVersion
+  whenProvided
+  servicemanName
+  customer {
+    data {
+      customerName
+    }
+  }
+  description
+  duration
+  distance
+}
+
 query FetchServices($projectId: ID!, $from: Date!, $to: Date!) {
   Actions(projectId: $projectId) {
     search (filter: {
@@ -5,15 +21,7 @@ query FetchServices($projectId: ID!, $from: Date!, $to: Date!) {
       to: $to
     }) {
       items {
-        projectId,
-        entityId,
-        entityVersion,
-        whenProvided
-        forWhatCustomer
-        servicemanName
-        description
-        duration
-        distance
+        ...ServiceItem
       }
     }
   }
@@ -22,15 +30,7 @@ query FetchServices($projectId: ID!, $from: Date!, $to: Date!) {
 query GetAction($projectId: ID!, $actionId: ID!) {
   Actions(projectId: $projectId) {
     get (actionId: $actionId) {
-      projectId,
-      entityId,
-      entityVersion,
-      whenProvided
-      forWhatCustomer
-      servicemanName
-      description
-      duration
-      distance
+      ...ServiceItem
     }
   }
 }

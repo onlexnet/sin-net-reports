@@ -10,7 +10,7 @@ import sinnet.models.EntityId;
 /**
  * Basic operations on store / get an entity from database.
  */
-// TODO Move behing bus
+// TODO Move behind bus
 // TODO add gherkin test
 public interface ActionRepository {
 

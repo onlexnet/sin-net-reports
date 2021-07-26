@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import graphql.kickstart.tools.GraphQLResolver;
 import io.vavr.control.Option;
 import lombok.Value;
-import sinnet.gql.Entity;
+import sinnet.gql.Identified;
 import sinnet.models.CustomerSecret;
 import sinnet.models.CustomerSecretEx;
 import sinnet.models.CustomerContact;
@@ -16,7 +16,7 @@ import sinnet.models.CustomerValue;
 
 @Value
 public class CustomerEntity {
-  private Entity id;
+  private Identified id;
   private CustomerValue optionalValue;
   private CustomerSecret[] optionalSecrets;
   private CustomerSecretEx[] optionalSecretsEx;

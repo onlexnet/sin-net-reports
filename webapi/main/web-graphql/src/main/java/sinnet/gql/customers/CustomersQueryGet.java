@@ -3,7 +3,6 @@ package sinnet.gql.customers;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import graphql.kickstart.tools.GraphQLResolver;

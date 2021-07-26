@@ -1,6 +1,6 @@
 import { InteractionStatus, InteractionType, RedirectRequest, SsoSilentRequest } from "@azure/msal-browser";
 import { useMsal, useMsalAuthentication } from "@azure/msal-react";
-import { IStackTokens, Spinner, Stack } from "@fluentui/react";
+import { Spinner, Stack } from "@fluentui/react";
 import React from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { Dispatch } from "redux";

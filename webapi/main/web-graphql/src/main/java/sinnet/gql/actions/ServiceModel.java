@@ -5,19 +5,19 @@ import java.util.UUID;
 
 import lombok.Builder;
 import lombok.Getter;
-import sinnet.gql.Entity;
+import sinnet.gql.Identified;
 
 /** FixMe. */
 @Builder
 @Getter
-public class ServiceModel implements Entity {
-    private UUID projectId;
-    private UUID entityId;
-    private int entityVersion;
-    private String servicemanName;
-    private LocalDate whenProvided;
-    private String forWhatCustomer;
-    private String description;
-    private Integer duration;
-    private Integer distance;
+public class ServiceModel implements Identified {
+  private UUID projectId;
+  private UUID entityId;
+  private int entityVersion;
+  private String servicemanName;
+  private LocalDate whenProvided;
+  private String description;
+  private Integer duration;
+  private Integer distance;
+  private UUID contextCustomerId;
 }

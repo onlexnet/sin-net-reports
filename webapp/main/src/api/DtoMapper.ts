@@ -1,4 +1,4 @@
-import { ServiceModel } from "../Components/.generated/components";
+import { ServiceItemFragment } from "../Components/.generated/components";
 import { ServiceAppModel } from "../store/actions/ServiceModel";
 import { LocalDate } from "../store/viewcontext/TimePeriod";
 
@@ -13,19 +13,19 @@ export const toModel = (dtoDate: string): LocalDate => {
     return { year, month, day };
 }
 
-export const toActionModel = (dto: ServiceModel): ServiceAppModel => {
-    const item: ServiceAppModel = {
+export const toActionModel = (dto: ServiceItemFragment): ServiceAppModel => {
+    const item = {
         projectId: dto.projectId,
         entityId: dto.entityId,
         entityVersion: dto.entityVersion,
         description: dto.description ?? undefined,
         servicemanName: dto.servicemanName ?? undefined,
-        customerName: dto.forWhatCustomer ?? undefined,
+        customerName: dto.customer?.data.customerName ?? undefined,
         when: toModel(dto.whenProvided),
         distance: dto.distance ?? undefined,
         duration: dto.duration ?? undefined
     }
-    return item;
+    return item as ServiceAppModel;
 }
 
 export const dates = (it: LocalDate | null | undefined) => {
