@@ -45,13 +45,13 @@ const toHint = (key: SECRET_TYPE): SecretHint => {
         case "SIMP":
             return { key, text: 'SIMP', extended: true }
         case "PORTAL_PERSONELU":
-            return { key, text: 'Portal personelu', extended: false }
+            return { key, text: 'Portal personelu', extended: true }
         case 'MUS':
-            return { key, text: 'MUS', extended: false }
+            return { key, text: 'MUS', extended: true }
         case 'SZOI':
             return { key, text: 'SZOI', extended: false }
         case "EWUS":
-            return { key, text: 'EWUŚ', extended: false }
+            return { key, text: 'EWUŚ', extended: true }
         case "EPUB":
             return { key, text: 'ePUB', extended: false }
         case 'GUS':
