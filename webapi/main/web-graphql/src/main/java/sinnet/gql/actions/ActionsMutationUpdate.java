@@ -20,11 +20,11 @@ import sinnet.read.CustomerProjection;
 @Component
 public class ActionsMutationUpdate implements GraphQLResolver<ActionsMutation> {
 
-    @Autowired
-    private ActionRepository actionService;
+  @Autowired
+  private ActionRepository actionService;
 
-    @Autowired
-    private CustomerProjection customerReader;
+  @Autowired
+  private CustomerProjection customerReader;
 
     /**
      * FixMe.
