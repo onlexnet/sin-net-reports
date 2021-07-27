@@ -1,7 +1,7 @@
-import { Label, Separator, TextField } from "@fluentui/react"
+import { Label, Separator } from "@fluentui/react"
 import _ from "lodash";
-import React, { useEffect, useState } from "react"
-import { useGetCustomerLazyQuery, useGetCustomerQuery } from "../../Components/.generated/components";
+import React from "react"
+import { useGetCustomerQuery } from "../../Components/.generated/components";
 
 interface ViewProps {
   projectId: string | undefined,
@@ -11,7 +11,7 @@ interface ViewProps {
 const View: React.FC<ViewProps> = props => {
 
   const { projectId, customerId } = props;
-  const { data, error, loading } = useGetCustomerQuery({
+  const { data } = useGetCustomerQuery({
     variables: {
         projectId: projectId!,
         entityId: customerId!
