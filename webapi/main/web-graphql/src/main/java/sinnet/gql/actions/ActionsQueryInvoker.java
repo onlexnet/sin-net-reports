@@ -26,6 +26,7 @@ public class ActionsQueryInvoker {
         .description(actionEntity.getValue().getWhat())
         .duration(actionEntity.getValue().getHowLong().getValue())
         .distance(actionEntity.getValue().getHowFar().getValue())
+        .localCustomerId(actionEntity.getValue().getWhom())
         .build())
       .toCompletionStage();
   }

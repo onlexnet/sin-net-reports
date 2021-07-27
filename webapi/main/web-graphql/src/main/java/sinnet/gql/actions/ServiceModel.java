@@ -19,5 +19,5 @@ public class ServiceModel implements Identified {
   private String description;
   private Integer duration;
   private Integer distance;
-  private UUID contextCustomerId;
+  private UUID localCustomerId;
 }

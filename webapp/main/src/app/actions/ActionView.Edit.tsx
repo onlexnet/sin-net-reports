@@ -10,6 +10,7 @@ import { LocalDate } from "../../store/viewcontext/TimePeriod";
 import { useGetUsers } from "../../api/useGetUsers";
 import { useListCustomersQuery, useRemoveActionMutation, useUpdateActionMutation } from "../../Components/.generated/components";
 import { dates } from "../../api/DtoMapper";
+import CustomerView from "./ActionView.Edit.CustomerView"
 
 const mapStateToProps = (state: RootState) => {
     if (state.appState.empty) {
@@ -80,17 +81,14 @@ const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
         versionedProps,
     );
 
-    const defaultCustomerName = item?.customerName;
-    const [customerName, setCustomerName] = useState(defaultCustomerName);
-    // useEffect(() => {
-    //   setCustomerName(defaultCustomerName);
-    // }, [defaultCustomerName]);
+    const defaultCustomerId = item?.customer?.id.entityId;
+    const [customerId, setCustomerId] = useState(defaultCustomerId);
     const onChangeCustomerName = useCallback(
         (ev: React.FormEvent<IComboBox>, option?: IComboBoxOption) => {
-            const a = option?.key as string;
-            setCustomerName(a);
+            const a = option?.key as typeof defaultCustomerId;
+            setCustomerId(a);
         },
-        [setCustomerName],
+        [setCustomerId],
     );
 
     const propsDescription = item?.description;
@@ -204,7 +202,7 @@ const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
                 what: description,
                 when: dtoDate,
                 who: servicemanName,
-                whom: customerName
+                customerId: customerId
             }
         })
     };
@@ -216,7 +214,7 @@ const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
     })
 
     const customerOptions = _.chain(data?.Customers.list)
-        .map(it => ({ key: it.data.customerName, text: it.data.customerName }))
+        .map(it => ({ key: it.id.entityId, text: it.data.customerName }))
         .value();
 
     const btnStyles = {
@@ -231,8 +229,15 @@ const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
             <Stack tokens={stackTokens}>
                 <div className="ms-Grid-row">
                     <div className="ms-Grid-col ms-sm4">
-                        <ComboBox label="Pracownik" selectedKey={servicemanName} options={comboBoxBasicOptions} autoComplete="on" onChange={onChangeServicemanName}
-                        />
+                        <div className="ms-Grid-row">
+                            <div className="ms-Grid-col ms-sm12">
+                                <ComboBox label="Pracownik" selectedKey={servicemanName} options={comboBoxBasicOptions} autoComplete="on" onChange={onChangeServicemanName}
+                                />
+                                <div className="ms-Grid-row">
+                                    <CustomerView projectId={projectId} customerName={"Test 1"} />
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div className="ms-Grid-col ms-sm2">
                         <AppDatePicker
@@ -244,7 +249,7 @@ const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
 
                 <div className="ms-Grid-row">
                     <div className="ms-Grid-col ms-sm4">
-                        <ComboBox label="Klient" selectedKey={customerName} options={customerOptions} autoComplete="on" onChange={onChangeCustomerName}
+                        <ComboBox label="Wybór klienta" selectedKey={customerId} options={customerOptions} autoComplete="on" onChange={onChangeCustomerName}
                         />
                     </div>
                     <div className="ms-Grid-col ms-sm6">

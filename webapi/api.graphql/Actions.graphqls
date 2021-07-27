@@ -19,7 +19,7 @@ type ActionsQuery {
 input ServiceEntry {
     servicemanName: String
     whenProvided: Date!
-    forWhatCustomer: String
+    customerId: ID
     description: String
     distance: Int
     duration: Int

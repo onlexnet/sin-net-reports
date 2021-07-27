@@ -337,23 +337,14 @@ public class CustomerRepositoryImpl implements CustomerRepository {
             .flatMap(it -> it);
     }
 
-    @Override
-    public Future<Option<CustomerModel>> get(UUID projectId, Name customerName) {
-        var whereClause = "project_id=$1 AND customer_name=$2";
-        var values = Tuple.of(projectId, customerName.getValue());
-        return get(whereClause, values)
-            .map(this::extractResult)
-            .flatMap(it -> it);
-    }
-
-    @Override
-    public Future<Option<CustomerModel>> get(UUID projectId, UUID id) {
-        var whereClause = "project_id=$1 AND entity_id=$2";
-        var values = Tuple.of(projectId, id);
-        return get(whereClause, values)
-            .map(this::extractResult)
-            .flatMap(it -> it);
-    }
+  @Override
+  public Future<Option<CustomerModel>> get(UUID projectId, UUID customerId) {
+    var whereClause = "project_id=$1 AND entity_id=$2";
+    var values = Tuple.of(projectId, customerId);
+    return get(whereClause, values)
+        .map(this::extractResult)
+        .flatMap(it -> it);
+  }
 
     @Override
     public Future<List<CustomerModel>> list(UUID projectId) {

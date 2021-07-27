@@ -20,11 +20,11 @@ class ServiceModelResolvers implements GraphQLResolver<ServiceModel> {
 
   public CompletionStage<Optional<CustomerEntity>> customer(ServiceModel gcontext) {
     var projectId = gcontext.getProjectId();
-    var actionId = gcontext.getEntityId();
-    if (actionId == null) {
+    var customerId = gcontext.getLocalCustomerId();
+    if (customerId == null) {
       return CompletableFuture.completedStage(Optional.empty());
     }
-    return invoker.get(projectId, actionId)
+    return invoker.get(projectId, customerId)
       .map(sinnet.gql.customers.Mapper::gql)
       .toCompletionStage();
   }

@@ -11,7 +11,6 @@ import sinnet.models.CustomerSecret;
 import sinnet.models.CustomerSecretEx;
 import sinnet.models.CustomerValue;
 import sinnet.models.EntityId;
-import sinnet.models.Name;
 
 public interface CustomerProjection {
 
@@ -25,11 +24,9 @@ public interface CustomerProjection {
   /**
    * Returns a latest model pointed by given {@code projectId} {@code id} or empty value if the model does not exists.
    *
-   * @param id if of the requested model.
+   * @param customerId if of the requested model.
    */
-  Future<Option<CustomerModel>> get(UUID projectId, UUID id);
-
-  Future<Option<CustomerModel>> get(UUID projectId, Name customerName);
+  Future<Option<CustomerModel>> get(UUID projectId, UUID customerId);
 
   Future<List<CustomerModel>> list(UUID projectId);
 

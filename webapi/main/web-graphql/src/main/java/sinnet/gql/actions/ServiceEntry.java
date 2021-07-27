@@ -1,6 +1,7 @@
 package sinnet.gql.actions;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,7 +17,7 @@ public class ServiceEntry {
   /** Name of the person who provided the service. */
   private String servicemanName;
   private LocalDate whenProvided;
-  private String forWhatCustomer;
+  private UUID customerId;
   /** Description of the provided service to be printed later as a position of invoice's attachment. */
   private String description;
   private int distance;

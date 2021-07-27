@@ -23,7 +23,15 @@ export const toActionModel = (dto: ServiceItemFragment): ServiceAppModel => {
         customerName: dto.customer?.data.customerName ?? undefined,
         when: toModel(dto.whenProvided),
         distance: dto.distance ?? undefined,
-        duration: dto.duration ?? undefined
+        duration: dto.duration ?? undefined,
+        customer: {
+            id: { 
+                projectId: dto.customer?.id.projectId,
+                entityId: dto.customer?.id.entityId,
+                entityVersion: dto.customer?.id.entityVersion
+            },
+            name: dto.customer?.data.customerName
+        }
     }
     return item as ServiceAppModel;
 }

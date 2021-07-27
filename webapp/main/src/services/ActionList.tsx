@@ -1,9 +1,8 @@
 import * as React from "react";
-import { DetailsList, DetailsListLayoutMode, SelectionMode, Selection, IColumn, mergeStyleSets, DefaultButton } from "@fluentui/react";
+import { DetailsList, DetailsListLayoutMode, SelectionMode, IColumn, mergeStyleSets } from "@fluentui/react";
 import { IStackTokens, Stack, TextField, Toggle, Announced } from "@fluentui/react";
 import { connect, ConnectedProps } from "react-redux";
 import { RootState } from "../store/reducers";
-import { ServiceAppModel } from "../store/actions/ServiceModel";
 import { useState } from "react";
 import { TimePeriod } from "../store/viewcontext/TimePeriod";
 import { HorizontalSeparatorStack } from "../Components/HorizontalSeparatorStack";
@@ -16,6 +15,8 @@ import { ActionEditItem, VIEWCONTEXT_ACTION_EDIT_START } from "../store/viewcont
 import { Duration } from "./ActionList.Duration";
 import { Link } from "react-router-dom";
 import { LocalDateView } from "../app/LocalDateView";
+import { ServiceListModel } from "./ServiceListModel";
+import { ServiceAppModel } from "../store/actions/ServiceModel";
 
 const classNames = mergeStyleSets({
   fileIconHeaderIcon: {
@@ -67,7 +68,7 @@ export interface IContentState {
   announcedMessage?: string;
 }
 
-export interface IDocument extends ServiceAppModel {
+export interface IDocument extends ServiceListModel {
 }
 
 export interface TypedColumn extends IColumn {
@@ -117,6 +118,7 @@ const ConnectedContent: React.FC<PropsFromRedux> = props => {
       },
       isPadded: true
     },
+    // siudek
     {
       key: "column2", name: "Klient", fieldName: "customerName", minWidth: 210, maxWidth: 350, isRowHeader: true, isResizable: true,
       data: "string",
@@ -166,21 +168,21 @@ const ConnectedContent: React.FC<PropsFromRedux> = props => {
   }
 
   const [onlyMyData, setOnlyMyData] = useState(false);
-  const filterByOnlyMyData = (item: ServiceAppModel): boolean => {
+  const filterByOnlyMyData = (item: ServiceListModel): boolean => {
     if (!onlyMyData) return true;
     if (item.servicemanName === props.currentEmail) return true;
     return false;
   }
 
   const [onlyDay, setOnlyDay] = useState<string | undefined>();
-  const filterByOnlyDay = (item: ServiceAppModel): boolean => {
+  const filterByOnlyDay = (item: ServiceListModel): boolean => {
     if (!onlyDay) return true;
     if (item.when.day.toString().includes(onlyDay)) return true;
     return false;
   }
 
   const [onlyCustomer, setOnlyCustomer] = useState<string | undefined>();
-  const filterByOnlyCustomer = (item: ServiceAppModel): boolean => {
+  const filterByOnlyCustomer = (item: ServiceListModel): boolean => {
     if (!onlyCustomer) return true;
     if (!item.customerName) return false;
     if (item.customerName?.toLowerCase().includes(onlyCustomer.toLowerCase())) return true;
@@ -188,8 +190,9 @@ const ConnectedContent: React.FC<PropsFromRedux> = props => {
   }
 
   var itemsOrderBy: (keyof IDocument)[] = ['servicemanName', 'when', 'entityId'];
-  var items: ServiceAppModel[] = _.chain(data?.Actions.search.items)
+  var items: ServiceListModel[] = _.chain(data?.Actions.search.items)
     .map(it => toActionModel(it))
+    .map(it => toLocalModel(it))
     .filter(it => filterByOnlyMyData(it))
     .filter(it => filterByOnlyDay(it))
     .filter(it => filterByOnlyCustomer(it))
@@ -270,3 +273,17 @@ const ConnectedContent: React.FC<PropsFromRedux> = props => {
 }
 
 export const Content = connector(ConnectedContent);
+
+const toLocalModel = (it: ServiceAppModel): ServiceListModel => {
+  return {
+    projectId: it.projectId,
+    entityId: it.entityId,
+    entityVersion: it.entityVersion,
+    servicemanName: it.servicemanName,
+    description: it.description,
+    when: it.when,
+    duration: it.duration,
+    distance: it.distance,
+    customerName: it.customer?.name
+    }
+}

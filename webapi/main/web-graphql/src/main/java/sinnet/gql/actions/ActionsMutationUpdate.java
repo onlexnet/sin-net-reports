@@ -26,23 +26,23 @@ public class ActionsMutationUpdate implements GraphQLResolver<ActionsMutation> {
   @Autowired
   private CustomerProjection customerReader;
 
-    /**
-     * FixMe.
-     *
-     * @param gcontext ignored
-     * @param content fixme.
-     * @return fixme
-     */
-    // https://www.appsdeveloperblog.com/spring-security-preauthorize-annotation-example/
-    // @PreAuthorize("hasAuthority('SCOPE_Actions.Write')")
-    public CompletionStage<Boolean> update(ActionsMutation gcontext,
-                                           UUID entityId,
-                                           int entityVersion,
-                                           ServiceEntry content) {
-        var projectId = gcontext.getProjectId();
-        var customerName = Name.of(content.getForWhatCustomer());
-        return customerReader
-            .get(projectId, customerName)
+  /**
+   * FixMe.
+   *
+   * @param gcontext ignored
+   * @param content fixme.
+   * @return fixme
+   */
+  // https://www.appsdeveloperblog.com/spring-security-preauthorize-annotation-example/
+  // @PreAuthorize("hasAuthority('SCOPE_Actions.Write')")
+  public CompletionStage<Boolean> update(ActionsMutation gcontext,
+                                         UUID entityId,
+                                         int entityVersion,
+                                         ServiceEntry content) {
+    var projectId = gcontext.getProjectId();
+    var customerId = content.getCustomerId(); // TODO change to untainted ID
+    return customerReader
+            .get(projectId, customerId)
             .flatMap(it -> {
                 var id = EntityId.of(projectId, entityId, entityVersion);
                 var model = ActionValue.builder()

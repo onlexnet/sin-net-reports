@@ -42,6 +42,7 @@ public class ActionsQuerySearch implements GraphQLResolver<ActionsQuery>,
                         .description(item.getValue().getWhat())
                         .duration(item.getValue().getHowLong().getValue())
                         .distance(item.getValue().getHowFar().getValue())
+                        .localCustomerId(item.getValue().getWhom())
                         .build())
                     .toJavaList();
                 return new ServicesSearchResult(items, 2);

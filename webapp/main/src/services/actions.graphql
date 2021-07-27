@@ -5,6 +5,11 @@ fragment ServiceItem on ServiceModel {
   whenProvided
   servicemanName
   customer {
+    id {
+      projectId
+      entityId
+      entityVersion
+    }
     data {
       customerName
     }
@@ -45,7 +50,7 @@ mutation newAction($projectId: ID!, $when: Date!) {
   }
 }
 
-mutation updateAction($projectId: ID!, $entityId: ID!, $entityVersion: Int!, $when: Date!, $what: String, $who: String, $whom: String, $duration: Int, $distance: Int) {
+mutation updateAction($projectId: ID!, $entityId: ID!, $entityVersion: Int!, $when: Date!, $what: String, $who: String, $customerId: ID, $duration: Int, $distance: Int) {
   Actions(projectId: $projectId) {
     update(
       entityId: $entityId,
@@ -53,7 +58,7 @@ mutation updateAction($projectId: ID!, $entityId: ID!, $entityVersion: Int!, $wh
       content: {
         servicemanName: $who,
         whenProvided: $when,
-        forWhatCustomer: $whom,
+        customerId: $customerId,
         description: $what,
         duration: $duration,
         distance: $distance
