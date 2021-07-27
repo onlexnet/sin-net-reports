@@ -1,6 +1,6 @@
 import { Label, Separator, TextField } from "@fluentui/react"
 import _ from "lodash";
-import React from "react"
+import React, { useEffect, useState } from "react"
 import { useGetCustomerLazyQuery, useGetCustomerQuery } from "../../Components/.generated/components";
 
 interface ViewProps {
@@ -10,27 +10,14 @@ interface ViewProps {
 
 const View: React.FC<ViewProps> = props => {
 
-  const [ getData, { data, error, called }] = useGetCustomerLazyQuery();
-
   const { projectId, customerId } = props;
-
-  if (!projectId) return null;
-  if (!customerId) return null;
-
-  if (!called) {
-    getData({
-      variables: {
-          projectId,
-          entityId: customerId
-      }
-    })
-  }
+  const { data, error, loading } = useGetCustomerQuery({
+    variables: {
+        projectId: projectId!,
+        entityId: customerId!
+    }});
 
   if (!data) return null;
-
-  if(error) {
-      return <div>Error: {JSON.stringify(error)}</div>;
-  }
 
   const it = data.Customers.get!;
   const { customerName, customerCityName, customerAddress, operatorEmail, distance } = it.data ;
@@ -48,6 +35,7 @@ const View: React.FC<ViewProps> = props => {
           <Label>Miejscowość: {customerCityName ?? '---'} </Label>
           <Label>Adres: {customerAddress ?? '---'} </Label>
           <Label>Operator: {operatorEmail ?? '---'}</Label>
+          <Label>Dystans: {distance ?? '---'}</Label>
           <Label>Kod świadczeniodawcy (z Portalu): {specialAuthValue ?? '---'}</Label>
         </div>
       </div>
