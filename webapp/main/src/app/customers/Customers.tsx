@@ -52,7 +52,7 @@ const CustomersLocal: React.FC<CustomersProps> = (props) => {
         if (!template) return 1;
         const lowerActual = actual.toLowerCase();
         const lowerTemplate = template.toLowerCase().trim();
-        if (lowerTemplate == '') return 1;
+        if (lowerTemplate === '') return 1;
         if (lowerActual === lowerTemplate) return 100;
         if (lowerActual.startsWith(lowerTemplate)) return 80;
         if (lowerActual.includes(' '+lowerTemplate)) return 60;

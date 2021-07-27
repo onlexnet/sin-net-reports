@@ -1,9 +1,8 @@
-import * as React from 'react';
 import { Calendar, DayOfWeek, DateRangeType } from '@fluentui/react/lib/Calendar';
 import { DefaultButton } from '@fluentui/react/lib/Button';
 import { addDays, getDateRangeArray } from '@fluentui/date-time-utilities';
-import { useEffect } from 'react';
 import { LocalDate } from '../store/viewcontext/TimePeriod';
+import React, { useEffect } from 'react';
 
 export interface AppDatePickerProps {
   onSelectDate(value: LocalDate): void;
@@ -107,12 +106,6 @@ export const AppDatePicker: React.FC<AppDatePickerProps> = props => {
   const onDismiss = () => {
     return selectedDate;
   };
-
-  if (selectedDateRange) {
-    const rangeStart = selectedDateRange[0];
-    const rangeEnd = selectedDateRange[selectedDateRange.length - 1];
-    dateRangeString = rangeStart.toLocaleDateString() + '-' + rangeEnd.toLocaleDateString();
-  }
 
   return (
     <div style={divStyle}>

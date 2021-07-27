@@ -118,7 +118,6 @@ const ConnectedContent: React.FC<PropsFromRedux> = props => {
       },
       isPadded: true
     },
-    // siudek
     {
       key: "column2", name: "Klient", fieldName: "customerName", minWidth: 210, maxWidth: 350, isRowHeader: true, isResizable: true,
       data: "string",

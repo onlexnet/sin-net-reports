@@ -42,10 +42,10 @@ const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
     const propsEntityVersion = item?.entityVersion;
     const versionedProps = [propsEntityId, propsEntityVersion, propsProjectId];
 
-    const [projectId, setProjectId] = useState(propsProjectId);
+    const [projectId, ] = useState(propsProjectId);
     useEffect(() => {
         setEntityId(propsProjectId);
-    }, versionedProps);
+    }, [propsEntityId, propsEntityVersion, propsProjectId]);
 
     const [entityId, setEntityId] = useState(propsEntityId);
     useEffect(() => {
@@ -83,12 +83,12 @@ const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
 
     const defaultCustomerId = item?.customer?.id.entityId;
     const [customerId, setCustomerId] = useState(defaultCustomerId);
-    const onChangeCustomerName = useCallback(
+    const onChangeCustomerId = useCallback(
         (ev: React.FormEvent<IComboBox>, option?: IComboBoxOption) => {
-            const a = option?.key as typeof defaultCustomerId;
-            setCustomerId(a);
+            const newCustomerId = option?.key as typeof defaultCustomerId;
+            setCustomerId(newCustomerId);
         },
-        [setCustomerId],
+        [],
     );
 
     const propsDescription = item?.description;
@@ -234,7 +234,7 @@ const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
                                 <ComboBox label="Pracownik" selectedKey={servicemanName} options={comboBoxBasicOptions} autoComplete="on" onChange={onChangeServicemanName}
                                 />
                                 <div className="ms-Grid-row">
-                                    <CustomerView projectId={projectId} customerName={"Test 1"} />
+                                    <CustomerView projectId={projectId} customerId={customerId} />
                                 </div>
                             </div>
                         </div>
@@ -249,7 +249,7 @@ const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
 
                 <div className="ms-Grid-row">
                     <div className="ms-Grid-col ms-sm4">
-                        <ComboBox label="Wybór klienta" selectedKey={customerId} options={customerOptions} autoComplete="on" onChange={onChangeCustomerName}
+                        <ComboBox label="Wybór klienta" selectedKey={customerId} options={customerOptions} autoComplete="on" onChange={onChangeCustomerId}
                         />
                     </div>
                     <div className="ms-Grid-col ms-sm6">

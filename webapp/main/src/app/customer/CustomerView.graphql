@@ -28,9 +28,9 @@ mutation RemoveCustomer($projectId: ID!, $id: MyEntity!) {
   }
 }
 
-query GetCustomer($projectId: ID!, $id: MyEntity!) {
+query GetCustomer($projectId: ID!, $entityId: ID!) {
   Customers(projectId:$projectId) {
-    get(entityId: $id) {
+    get(entityId: $entityId) {
       id {
         projectId
         entityId

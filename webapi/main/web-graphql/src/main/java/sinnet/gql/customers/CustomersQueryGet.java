@@ -1,6 +1,7 @@
 package sinnet.gql.customers;
 
 import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 import org.springframework.stereotype.Component;
@@ -20,8 +21,8 @@ public class CustomersQueryGet extends AskTemplate<FindCustomer.Ask, FindCustome
     super(FindCustomer.Ask.ADDRESS, FindCustomer.Reply.class, eventBus);
   }
 
-  CompletableFuture<Optional<CustomerEntity>> get(CustomersQuery gcontext, MyEntity entityId) {
-    var query = new FindCustomer.Ask(gcontext.getProjectId(), entityId.getEntityId());
+  CompletableFuture<Optional<CustomerEntity>> get(CustomersQuery gcontext, UUID entityId) {
+    var query = new FindCustomer.Ask(gcontext.getProjectId(), entityId);
     return super
         .ask(query)
         .thenApply(it -> {

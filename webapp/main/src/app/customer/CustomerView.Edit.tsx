@@ -33,7 +33,7 @@ export const CustomerViewEditLocal: React.FC<CustomerViewEditProps> = props => {
     const { data, error } = useGetCustomerQuery({
         variables: {
             projectId: props.appState.projectId,
-            id: props.id
+            entityId: props.id.entityId
         }
     })
     
