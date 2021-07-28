@@ -32,7 +32,6 @@ export ARM_SUBSCRIPTION_ID= ... onlex prod subscription # required by backend pr
     
 * apply changes on production manually
     **terraform apply -var-file prd.tfvars**
-    where subscription_id will be used as subscription for created resources (especially resource group)
 
 **terraform plan** to see plan of changes for your current desired infrastructure
 
