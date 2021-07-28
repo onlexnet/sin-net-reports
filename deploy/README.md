@@ -2,19 +2,20 @@
 
 ## Pre requisits
 
+1. Remove previous version (if any) **sudo snap remove microk8s**
 1. Install **sudo snap install microk8s --classic**
 1. Create local copy of microk8s configuration to integrate with local tools (like kubectl / VSCode)  
    **sudo microk8s kubectl config view --raw > $HOME/.kube/config** [more](https://github.com/ubuntu/microk8s)
 1. **microk8s enable dns ingress**
-1. Login to ACR to save credentials. It is required because ACR can't provide public repose and we have images hosteted in ACR
-   so some integration is required.
+1. Login to ACR to save credentials. It is required because ACR can't provide public image repos and we have images hosted in ACR so some integration is required.
    more - [here](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/)
    **docker login sinnet.azurecr.io --username=sinnet --password=<Access key>**
-   This will generate a config file *config.json*
-   Now, use this this command to create secret based on just created config.json file
+   This will generate a local config file *config.json*
+   Now, use this this command to create in k8s secret based on just created config.json file so that later on k8s is able to download images from the ACR
    **sudo microk8s.kubectl create secret generic regcred --type=kubernetes.io/dockerconfigjson --from-file .dockerconfigjson=$HOME/.docker/config.json**
-   Perfect! now our kubectl is ready to pull image from private repo [using provided secret](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/#registry-secret-existing-credentials)
-1. Now it time to add support for (let's encrypt)[https://cert-manager.io/docs/installation/kubernetes/]
+   Purfect! now our kubectl is ready to pull image from private repo [using provided secret](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/#registry-secret-existing-credentials)
+1. Now add manually support for (let's encrypt)[https://cert-manager.io/docs/installation/]
+1. Apply current state using teraform definition located in *infra* folder
 
 
 
