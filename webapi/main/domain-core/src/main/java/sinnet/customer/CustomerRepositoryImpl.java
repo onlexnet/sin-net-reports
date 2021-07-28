@@ -129,6 +129,7 @@ public class CustomerRepositoryImpl implements CustomerRepository {
     private String changedWho;
     private LocalDateTime changedWhen;
   }
+
   private String insertSecretTemplate = String.format(
         "INSERT INTO secret "
         + "("
@@ -157,6 +158,7 @@ public class CustomerRepositoryImpl implements CustomerRepository {
     private String changedWho;
     private LocalDateTime changedWhen;
   }
+
   private String insertSecretExTemplate = String.format(
         "INSERT INTO secret_ex "
         + "("
@@ -174,17 +176,18 @@ public class CustomerRepositoryImpl implements CustomerRepository {
         SaveSecretEntry.Fields.changedWho,
         SaveSecretEntry.Fields.changedWhen);
 
-    @Value
-    @Builder
-    @FieldNameConstants
-    static class SaveContactEntry {
-        private UUID customerId;
-        private String firstName;
-        private String lastName;
-        private String phoneNo;
-        private String email;
-    }
-    private String insertContactTemplate = String.format(
+  @Value
+  @Builder
+  @FieldNameConstants
+  static class SaveContactEntry {
+    private UUID customerId;
+    private String firstName;
+    private String lastName;
+    private String phoneNo;
+    private String email;
+  }
+
+  private String insertContactTemplate = String.format(
         "INSERT INTO contact "
         + "("
         + "customer_id, first_name, last_name, phone_no, email"
@@ -198,144 +201,147 @@ public class CustomerRepositoryImpl implements CustomerRepository {
         SaveContactEntry.Fields.phoneNo,
         SaveContactEntry.Fields.email);
 
-    @Override
-    public Future<EntityId> write(EntityId id, CustomerValue entity,
-                                               CustomerSecret[] secrets,
-                                               CustomerSecretEx[] secretsEx,
-                                               CustomerContact[] contacts) {
-        var entry = SaveEntry.builder()
-            .projectId(id.getProjectId())
-            .entityId(id.getId())
-            .entityVersion(id.getVersion())
-            .operatorEmail(entity.getOperatorEmail())
-            .billingModel(entity.getBillingModel())
-            .supportStatus(entity.getSupportStatus())
-            .distance(entity.getDistance())
-            .customerName(entity.getCustomerName().getValue())
-            .customerCityName(entity.getCustomerCityName().getValue())
-            .customerAddress(entity.getCustomerAddress())
-            .nfzUmowa(entity.isNfzUmowa())
-            .nfzMaFilie(entity.isNfzMaFilie())
-            .nfzLekarz(entity.isNfzLekarz())
-            .nfzPolozna(entity.isNfzPolozna())
-            .nfzPielegniarkaSrodowiskowa(entity.isNfzPielegniarkaSrodowiskowa())
-            .nfzMedycynaSzkolna(entity.isNfzMedycynaSzkolna())
-            .nfzTransportSanitarny(entity.isNfzTransportSanitarny())
-            .nfzNocnaPomocLekarska(entity.isNfzNocnaPomocLekarska())
-            .nfzAmbulatoryjnaOpiekaSpecjalistyczna(entity.isNfzAmbulatoryjnaOpiekaSpecjalistyczna())
-            .nfzRehabilitacja(entity.isNfzRehabilitacja())
-            .nfzStomatologia(entity.isNfzStomatologia())
-            .nfzPsychiatria(entity.isNfzPsychiatria())
-            .nfzSzpitalnictwo(entity.isNfzSzpitalnictwo())
-            .nfzProgramyProfilaktyczne(entity.isNfzProgramyProfilaktyczne())
-            .nfzZaopatrzenieOrtopedyczne(entity.isNfzZaopatrzenieOrtopedyczne())
-            .nfzOpiekaDlugoterminowa(entity.isNfzOpiekaDlugoterminowa())
-            .nfzNotatki(entity.getNfzNotatki())
-            .komercjaJest(entity.isKomercjaJest())
-            .komercjaNotatki(entity.getKomercjaNotatki())
-            .daneTechniczne(entity.getDaneTechniczne())
-            .build();
-        var secretBatch = Arrays.stream(secrets)
-            .map(it -> new JsonObject()
-                .put(SaveSecretEntry.Fields.customerId, id.getId())
-                .put(SaveSecretEntry.Fields.location, it.getLocation())
-                .put(SaveSecretEntry.Fields.username, it.getUsername())
-                .put(SaveSecretEntry.Fields.password, it.getPassword())
-                .put(SaveSecretEntry.Fields.changedWho, it.getChangedWho().getValue())
-                .put(SaveSecretEntry.Fields.changedWhen, it.getChangedWhen()))
-            .collect(Collectors.toList());
-        var secretExBatch = Arrays.stream(secretsEx)
-            .map(it -> new JsonObject()
-                .put(SaveSecretExEntry.Fields.customerId, id.getId())
-                .put(SaveSecretExEntry.Fields.location, it.getLocation())
-                .put(SaveSecretExEntry.Fields.username, it.getUsername())
-                .put(SaveSecretExEntry.Fields.password, it.getPassword())
-                .put(SaveSecretExEntry.Fields.entityName, it.getEntityName())
-                .put(SaveSecretExEntry.Fields.entityCode, it.getEntityCode())
-                .put(SaveSecretExEntry.Fields.changedWho, it.getChangedWho().getValue())
-                .put(SaveSecretExEntry.Fields.changedWhen, it.getChangedWhen()))
-            .collect(Collectors.toList());
-        var contactBatch = Arrays.stream(contacts)
-            .map(it -> SaveContactEntry
-                .builder()
-                .customerId(id.getId())
-                .firstName(it.getFirstName())
-                .lastName(it.getLastName())
-                .phoneNo(it.getPhoneNo())
-                .email(it.getEmail())
-                .build())
-            .collect(Collectors.toList());
-        return pgClient.withTransaction(client -> SqlTemplate
-                .forUpdate(client, deleteTemplate)
+  @Override
+  public Future<EntityId> write(EntityId id, CustomerValue entity,
+                                CustomerSecret[] secrets,
+                                CustomerSecretEx[] secretsEx,
+                                CustomerContact[] contacts) {
+    var entry = SaveEntry.builder()
+        .projectId(id.getProjectId())
+        .entityId(id.getId())
+        .entityVersion(id.getVersion())
+        .operatorEmail(entity.getOperatorEmail())
+        .billingModel(entity.getBillingModel())
+        .supportStatus(entity.getSupportStatus())
+        .distance(entity.getDistance())
+        .customerName(entity.getCustomerName().getValue())
+        .customerCityName(entity.getCustomerCityName().getValue())
+        .customerAddress(entity.getCustomerAddress())
+        .nfzUmowa(entity.isNfzUmowa())
+        .nfzMaFilie(entity.isNfzMaFilie())
+        .nfzLekarz(entity.isNfzLekarz())
+        .nfzPolozna(entity.isNfzPolozna())
+        .nfzPielegniarkaSrodowiskowa(entity.isNfzPielegniarkaSrodowiskowa())
+        .nfzMedycynaSzkolna(entity.isNfzMedycynaSzkolna())
+        .nfzTransportSanitarny(entity.isNfzTransportSanitarny())
+        .nfzNocnaPomocLekarska(entity.isNfzNocnaPomocLekarska())
+        .nfzAmbulatoryjnaOpiekaSpecjalistyczna(entity.isNfzAmbulatoryjnaOpiekaSpecjalistyczna())
+        .nfzRehabilitacja(entity.isNfzRehabilitacja())
+        .nfzStomatologia(entity.isNfzStomatologia())
+        .nfzPsychiatria(entity.isNfzPsychiatria())
+        .nfzSzpitalnictwo(entity.isNfzSzpitalnictwo())
+        .nfzProgramyProfilaktyczne(entity.isNfzProgramyProfilaktyczne())
+        .nfzZaopatrzenieOrtopedyczne(entity.isNfzZaopatrzenieOrtopedyczne())
+        .nfzOpiekaDlugoterminowa(entity.isNfzOpiekaDlugoterminowa())
+        .nfzNotatki(entity.getNfzNotatki())
+        .komercjaJest(entity.isKomercjaJest())
+        .komercjaNotatki(entity.getKomercjaNotatki())
+        .daneTechniczne(entity.getDaneTechniczne())
+        .build();
+    var secretBatch = Arrays.stream(secrets)
+        .map(it -> new JsonObject()
+            .put(SaveSecretEntry.Fields.customerId, id.getId())
+            .put(SaveSecretEntry.Fields.location, it.getLocation())
+            .put(SaveSecretEntry.Fields.username, it.getUsername())
+            .put(SaveSecretEntry.Fields.password, it.getPassword())
+            .put(SaveSecretEntry.Fields.changedWho, it.getChangedWho().getValue())
+            .put(SaveSecretEntry.Fields.changedWhen, it.getChangedWhen()))
+        .collect(Collectors.toList());
+    var secretExBatch = Arrays.stream(secretsEx)
+        .map(it -> new JsonObject()
+            .put(SaveSecretExEntry.Fields.customerId, id.getId())
+            .put(SaveSecretExEntry.Fields.location, it.getLocation())
+            .put(SaveSecretExEntry.Fields.username, it.getUsername())
+            .put(SaveSecretExEntry.Fields.password, it.getPassword())
+            .put(SaveSecretExEntry.Fields.entityName, it.getEntityName())
+            .put(SaveSecretExEntry.Fields.entityCode, it.getEntityCode())
+            .put(SaveSecretExEntry.Fields.changedWho, it.getChangedWho().getValue())
+            .put(SaveSecretExEntry.Fields.changedWhen, it.getChangedWhen()))
+        .collect(Collectors.toList());
+    var contactBatch = Arrays.stream(contacts)
+        .map(it -> SaveContactEntry
+            .builder()
+            .customerId(id.getId())
+            .firstName(it.getFirstName())
+            .lastName(it.getLastName())
+            .phoneNo(it.getPhoneNo())
+            .email(it.getEmail())
+            .build())
+        .collect(Collectors.toList());
+    return pgClient.withTransaction(client -> SqlTemplate
+            .forUpdate(client, deleteTemplate)
+            .mapFrom(SaveEntry.class)
+            .execute(entry)
+            .flatMap(res -> SqlTemplate
+                .forUpdate(client, insertTemplate)
                 .mapFrom(SaveEntry.class)
-                .execute(entry)
-                .flatMap(res -> SqlTemplate
-                    .forUpdate(client, insertTemplate)
-                    .mapFrom(SaveEntry.class)
-                    .execute(entry))
-                .flatMap(res -> {
-                    if (secretBatch.isEmpty()) return Future.succeededFuture(Boolean.TRUE);
-                    return SqlTemplate
-                        .forUpdate(client, insertSecretTemplate)
-                        .mapFrom(TupleMapper.jsonObject())
-                        .executeBatch(secretBatch)
-                        .map(ignored -> Boolean.TRUE);
-                })
-                .flatMap(res -> {
-                    if (secretExBatch.isEmpty()) return Future.succeededFuture(Boolean.TRUE);
-                    return SqlTemplate
-                        .forUpdate(client, insertSecretExTemplate)
-                        .mapFrom(TupleMapper.jsonObject())
-                        .executeBatch(secretExBatch)
-                        .map(ignored -> Boolean.TRUE);
-                })
-                .flatMap(res -> {
-                    if (contactBatch.isEmpty()) return Future.succeededFuture(Boolean.TRUE);
-                    return SqlTemplate
-                        .forUpdate(client, insertContactTemplate)
-                        .mapFrom(SaveContactEntry.class)
-                        .executeBatch(contactBatch)
-                        .map(ignored -> Boolean.TRUE);
-                })
-                .map(ignored -> EntityId.of(id.getProjectId(), id.getId(), id.getVersion() + 1)));
-    }
+                .execute(entry))
+            .flatMap(res -> {
+              if (secretBatch.isEmpty()) {
+                return Future.succeededFuture(Boolean.TRUE);
+              }
+              return SqlTemplate
+                  .forUpdate(client, insertSecretTemplate)
+                  .mapFrom(TupleMapper.jsonObject())
+                  .executeBatch(secretBatch)
+                  .map(ignored -> Boolean.TRUE);
+            })
+            .flatMap(res -> {
+              if (secretExBatch.isEmpty()) {
+                return Future.succeededFuture(Boolean.TRUE);
+              }
+              return SqlTemplate
+                  .forUpdate(client, insertSecretExTemplate)
+                  .mapFrom(TupleMapper.jsonObject())
+                  .executeBatch(secretExBatch)
+                  .map(ignored -> Boolean.TRUE);
+            })
+            .flatMap(res -> {
+              if (contactBatch.isEmpty()) {
+                return Future.succeededFuture(Boolean.TRUE);
+              }
+              return SqlTemplate
+                  .forUpdate(client, insertContactTemplate)
+                  .mapFrom(SaveContactEntry.class)
+                  .executeBatch(contactBatch)
+                  .map(ignored -> Boolean.TRUE);
+            })
+            .map(ignored -> EntityId.of(id.getProjectId(), id.getId(), id.getVersion() + 1)));
+  }
 
-    private Future<Option<CustomerModel>> extractResult(Iterable<CustomerModel> candidates) {
-        var iter = candidates.iterator();
-        var result = iter.hasNext()
-                   ? Option.of(iter.next())
-                   : Option.<CustomerModel>none();
-        return Future.succeededFuture(result);
-    }
+  private Future<Option<CustomerModel>> extractResult(Iterable<CustomerModel> candidates) {
+    var iter = candidates.iterator();
+    var result = iter.hasNext()
+                ? Option.of(iter.next())
+                : Option.<CustomerModel>none();
+    return Future.succeededFuture(result);
+  }
 
+  @Override
+  public Future<Boolean> remove(EntityId id) {
+    var params = new JsonObject()
+        .put("project_id", id.getProjectId())
+        .put("entity_id", id.getId())
+        .put("entity_version", id.getVersion());
+    return SqlTemplate
+        .forQuery(pgClient, "DELETE "
+            + "FROM customers "
+            + "WHERE project_id=#{project_id} "
+            + "AND entity_id=#{entity_id} "
+            + "AND entity_version=#{entity_version}")
+        .mapFrom(TupleMapper.jsonObject())
+        .execute(params)
+        .map(v -> Boolean.TRUE);
+  }
 
-    @Override
-    public Future<Boolean> remove(EntityId id) {
-        var params = new JsonObject()
-            .put("project_id", id.getProjectId())
-            .put("entity_id", id.getId())
-            .put("entity_version", id.getVersion());
-        return SqlTemplate
-            .forQuery(pgClient, "DELETE "
-                + "FROM customers "
-                + "WHERE project_id=#{project_id} "
-                + "AND entity_id=#{entity_id} "
-                + "AND entity_version=#{entity_version}")
-            .mapFrom(TupleMapper.jsonObject())
-            .execute(params)
-            .map(v -> {
-                return Boolean.TRUE;
-            });
-    }
-
-    @Override
-    public Future<Option<CustomerModel>> get(EntityId id) {
-        var whereClause = "project_id=$1 AND entity_id=$2 AND entity_version=$3";
-        var values = Tuple.of(id.getProjectId(), id.getId(), id.getVersion());
-        return get(whereClause, values)
-            .map(this::extractResult)
-            .flatMap(it -> it);
-    }
+  @Override
+  public Future<Option<CustomerModel>> get(EntityId id) {
+    var whereClause = "project_id=$1 AND entity_id=$2 AND entity_version=$3";
+    var values = Tuple.of(id.getProjectId(), id.getId(), id.getVersion());
+    return get(whereClause, values)
+        .map(this::extractResult)
+        .flatMap(it -> it);
+  }
 
   @Override
   public Future<Option<CustomerModel>> get(UUID projectId, UUID customerId) {
@@ -481,8 +487,8 @@ public class CustomerRepositoryImpl implements CustomerRepository {
         return new Tuple2<>(key, result);
     }
 
-    static Entity<CustomerValue> toCustomerEntity(Row row) {
-        var value = CustomerValue.builder()
+  static Entity<CustomerValue> toCustomerEntity(Row row) {
+    var value = CustomerValue.builder()
         .customerName(Name.of(row.getString("customer_name")))
         .customerCityName(Name.of(row.getString("customer_city_name")))
         .customerAddress(row.getString("customer_address"))
@@ -511,9 +517,9 @@ public class CustomerRepositoryImpl implements CustomerRepository {
         .komercjaNotatki(row.getString("komercja_notatki"))
         .daneTechniczne(row.getString("dane_techniczne"))
         .build();
-        var projectId = row.getUUID("project_id");
-        var entityId = row.getUUID("entity_id");
-        var entityVersion = row.getInteger("entity_version");
-        return value.withId(projectId, entityId, entityVersion);
-    }
+    var projectId = row.getUUID("project_id");
+    var entityId = row.getUUID("entity_id");
+    var entityVersion = row.getInteger("entity_version");
+    return value.withId(projectId, entityId, entityVersion);
+  }
 }
