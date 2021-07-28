@@ -76,15 +76,26 @@ spec:
               port:
                 number: 80
 
-# ---
+---
 
-# # Virtual services to redirect to proper namespace
+# Virtual services to redirect to proper namespace backend definitions mentioned above
 
-# apiVersion: v1
-# kind: Service
-# metadata:
-#   name: webapp-svc
-#   namespace: ingress
-# spec:
-#   type: ExternalName
-#   externalName: webapp-svc.onlex-sinnet-prd.svc.cluster.local
+apiVersion: v1
+kind: Service
+metadata:
+  name: webapp-svc
+  namespace: ingress
+spec:
+  type: ExternalName
+  externalName: webapp-svc.onlex-sinnet-prd.svc.cluster.local
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: webapi-svc
+  namespace: ingress
+spec:
+  type: ExternalName
+  externalName: webapi-svc.onlex-sinnet-prd.svc.cluster.local
