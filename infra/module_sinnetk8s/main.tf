@@ -1,4 +1,5 @@
-# copied from
+# Because we do not hae ability to handle Arc enabled kubernetes, we need to access kubernetes
+# in traditional way assuming current context has access to kubernetes
 # https://github.com/terraform-providers/terraform-provider-azurerm/issues/10635
 
 provider "kubernetes" {
@@ -8,11 +9,20 @@ provider "kubernetes" {
   insecure = true
 }
 
+locals {
+  namespace_name = "onlex-sinnet-${var.environment_name}"
+}
+
+resource "kubernetes_namespace" "default" {
+  metadata {
+    name = local.namespace_name
+  }
+}
 
 resource "kubernetes_secret" "example" {
   metadata {
     name = "webapp-config"
-    namespace = "onlex-sinnet-${var.environment_name}"
+    namespace = local.namespace_name
   }
 
   data = {
@@ -22,7 +32,7 @@ resource "kubernetes_secret" "example" {
 
 resource "kubernetes_secret" "customers_db_user_name" {
   metadata {
-    name = "customers_db_user_name"
+    name = "customers-db-user-name"
     namespace = "onlex-sinnet-${var.environment_name}"
   }
 

@@ -25,6 +25,11 @@ export ARM_SUBSCRIPTION_ID= ... onlex prod subscription # required by backend pr
 * add env variables as described above
 * init your terraform
     **terraform init**
+* get access to remote secured database
+  because database is (by design) secured on remote VM
+  we assume port 5432 is already redirected from database VM
+  ssh -L 5432:localhost:5432 <USERNAME>@raport.sin.net.pl
+    
 * apply changes on production manually
     **terraform apply -var-file prd.tfvars**
     where subscription_id will be used as subscription for created resources (especially resource group)

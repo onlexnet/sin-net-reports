@@ -8,9 +8,6 @@ terraform {
 }
 
 provider "postgresql" {
-  // because database is (by design) secured on remote VM
-  // we assume port 5432 is already redirected from database VM
-  // ssh -L 5432:localhost:5432 <USERNAME>@raport.sin.net.pl
   host            = "localhost"
   port            = 5432
   username        = var.db_user_name
