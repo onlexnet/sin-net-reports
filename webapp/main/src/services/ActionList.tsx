@@ -80,7 +80,7 @@ export interface ContentProps {
 
 const mapStateToProps = (state: RootState) => {
   if (state.appState.empty) {
-    throw 'Invalid state';
+    throw new Error('Invalid state');
   }
   return { ...state.viewContext, selectedProjectId: state.appState.projectId, currentEmail: state.auth.email };
 };
