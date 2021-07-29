@@ -6,7 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.Value;
 import lombok.Builder.Default;
+import lombok.extern.jackson.Jacksonized;
 import sinnet.models.CustomerSecret;
 import sinnet.models.CustomerSecretEx;
 import sinnet.models.CustomerContact;
@@ -23,9 +25,10 @@ public interface FindCustomers {
     private UUID projectId;
   }
 
-  @Data
-  @AllArgsConstructor
-  @NoArgsConstructor
+  
+  @Value
+  @Builder
+  @Jacksonized
   class Reply {
     private CustomerData[] data;
   }

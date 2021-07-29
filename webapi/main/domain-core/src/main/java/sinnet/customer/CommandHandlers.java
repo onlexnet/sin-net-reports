@@ -124,7 +124,7 @@ public class CommandHandlers extends AbstractVerticle implements TopLevelVerticl
       var projectId = request.getProjectId();
       return repository.list(projectId)
           .map(it -> List.ofAll(it).map(CommandHandlers::map).toJavaArray(CustomerData[]::new))
-          .map(it -> new FindCustomers.Reply(it));
+          .map(it -> FindCustomers.Reply.builder().data(it).build());
     }
   }
 
