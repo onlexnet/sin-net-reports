@@ -57,8 +57,6 @@ const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
         setEntityVersion(propsEntityVersion);
     }, versionedProps);
 
-    console.log(`edit : ${propsEntityId}:${propsEntityVersion}`);
-
     const defaultServicemanName = item?.servicemanName;
     const [servicemanName, setServicemanName] = useState(defaultServicemanName);
     const onChangeServicemanName = useCallback(
@@ -249,7 +247,12 @@ const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
 
                 <div className="ms-Grid-row">
                     <div className="ms-Grid-col ms-sm4">
-                        <ComboBox label="Wybór klienta" selectedKey={customerId} options={customerOptions} autoComplete="on" onChange={onChangeCustomerId}
+                        <ComboBox label="Wybór klienta" 
+                                  selectedKey={customerId}
+                                  options={customerOptions}
+                                  autoComplete="on"
+                                  allowFreeform
+                                  onChange={onChangeCustomerId}
                         />
                     </div>
                     <div className="ms-Grid-col ms-sm6">
