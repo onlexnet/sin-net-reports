@@ -3,7 +3,7 @@ import { RootState } from "../../store/reducers";
 import { Dispatch } from "redux";
 import { connect, ConnectedProps } from "react-redux";
 import _ from "lodash";
-import { ComboBox, DateRangeType, DefaultButton, IComboBox, IComboBoxOption, PrimaryButton, Stack, TextField } from "@fluentui/react";
+import { ComboBox, DateRangeType, DefaultButton, IComboBox, IComboBoxOption, IComboBoxStyles, Label, PrimaryButton, Stack, TextField } from "@fluentui/react";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { AppDatePicker } from "../../services/ActionList.DatePicker";
 import { LocalDate } from "../../store/viewcontext/TimePeriod";
@@ -42,7 +42,7 @@ const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
     const propsEntityVersion = item?.entityVersion;
     const versionedProps = [propsEntityId, propsEntityVersion, propsProjectId];
 
-    const [projectId, ] = useState(propsProjectId);
+    const [projectId,] = useState(propsProjectId);
     useEffect(() => {
         setEntityId(propsProjectId);
     }, [propsEntityId, propsEntityVersion, propsProjectId]);
@@ -81,13 +81,17 @@ const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
 
     const defaultCustomerId = item?.customer?.id.entityId;
     const [customerId, setCustomerId] = useState(defaultCustomerId);
-    const onChangeCustomerId = useCallback(
-        (ev: React.FormEvent<IComboBox>, option?: IComboBoxOption) => {
-            const newCustomerId = option?.key as typeof defaultCustomerId;
-            setCustomerId(newCustomerId);
-        },
-        [],
-    );
+    const onChangeCustomerId = (ev: React.FormEvent<IComboBox>, option?: IComboBoxOption) => {
+        console.log('onChangeCustomerId ' + Date())
+        const newCustomerId = option?.key as typeof defaultCustomerId;
+        setCustomerId(newCustomerId);
+    };
+    const onPendingValueChanged = (option?: IComboBoxOption, index?: number, value?: string) => {
+        // for some reason the event is invoked twice and value is undefined
+        if (value == null) return; // it handles undefined as well
+
+        setFilteredCustomers(filteredElements(value));
+    }
 
     const propsDescription = item?.description;
     const [description, setDescription] = useState(propsDescription);
@@ -102,7 +106,7 @@ const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
             var errorMessage = value.length > 4000
                 ? 'Za długi opis'
                 : '';
-            if (errorMessage != descriptionError) setDescriptionError(errorMessage);
+            if (errorMessage !== descriptionError) setDescriptionError(errorMessage);
         },
         [],
     );
@@ -211,9 +215,33 @@ const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
         }
     })
 
-    const customerOptions = _.chain(data?.Customers.list)
+    type OptionType = { key: string, text: string }
+    const [filteredCustomers, setFilteredCustomers] = useState<OptionType[]>([])
+
+
+    const items = data?.Customers.list;
+
+    const filteredElements = (partName: string) => {
+        return _.chain(items)
         .map(it => ({ key: it.id.entityId, text: it.data.customerName }))
-        .value();
+        .filter(it => {
+            if (!partName) return true;
+            var optionText = it.text;
+            return optionText.toUpperCase().indexOf(partName.toUpperCase()) !== -1;
+        })
+        .value()
+    }
+
+    const renderAfterLostLoad = useRef(0);
+    if (renderAfterLostLoad.current === 0 && data) {
+        renderAfterLostLoad.current = renderAfterLostLoad.current + 1;
+        if (renderAfterLostLoad.current === 1) {
+            setFilteredCustomers(filteredElements(''));
+        }
+    }
+    if (renderAfterLostLoad.current !== 0 && !data) {
+        renderAfterLostLoad.current = 0;
+    }
 
     const btnStyles = {
         rootHovered: {
@@ -247,12 +275,14 @@ const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
 
                 <div className="ms-Grid-row">
                     <div className="ms-Grid-col ms-sm4">
-                        <ComboBox label="Wybór klienta" 
-                                  selectedKey={customerId}
-                                  options={customerOptions}
-                                  autoComplete="on"
-                                  allowFreeform
-                                  onChange={onChangeCustomerId}
+                        <ComboBox label="Wybór klienta"
+                            selectedKey={customerId}
+                            options={filteredCustomers}
+                            autoComplete="on"
+                            allowFreeform
+                            openOnKeyboardFocus
+                            onChange={onChangeCustomerId}
+                            onPendingValueChanged={onPendingValueChanged}
                         />
                     </div>
                     <div className="ms-Grid-col ms-sm6">
