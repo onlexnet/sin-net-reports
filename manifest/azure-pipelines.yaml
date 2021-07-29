@@ -15,5 +15,7 @@ pool:
 
 
 steps:
-- publish: manifest/main
-  artifact: default
+- publish: manifest/main/app
+  artifact: app-namespace
+- publish: manifest/main/ingress
+  artifact: ingress-namespace
