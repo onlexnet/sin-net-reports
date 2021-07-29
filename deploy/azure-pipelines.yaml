@@ -56,7 +56,7 @@ stages:
         environment: 'onlex-sinnet-prd'
         variables:
           - name: manifestDir
-            value: $(PIPELINE.WORKSPACE)/manifest_CI/default
+            value: $(PIPELINE.WORKSPACE)/manifest_CI/app-namespace
         strategy:
           runOnce:
             deploy:
@@ -84,3 +84,23 @@ stages:
                       sinnet.azurecr.io/webapp:$(resources.container.webapp.tag)
                       sinnet.azurecr.io/webapi:$(resources.container.webapi.tag)
                       sinnet.azurecr.io/onlex-sinnet-reports:$(resources.container.reports.tag)
+      - deployment: DeployIngressRules
+        displayName: Deploy ingress rules
+        environment: 'ingress'
+        variables:
+          - name: manifestDir
+            value: $(PIPELINE.WORKSPACE)/manifest_CI/ingress-namespace
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+              - checkout: self
+              - task: KubernetesManifest@0
+                displayName: Deploy to Kubernetes cluster
+                inputs:
+                  action: deploy
+                  rolloutStatusTimeout: "300"
+                  kubernetesServiceConnection: sinnet-microk8s
+                  namespace: ingress
+                  manifests: |
+                    $(manifestDir)/*
