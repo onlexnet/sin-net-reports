@@ -86,7 +86,7 @@ stages:
                       sinnet.azurecr.io/onlex-sinnet-reports:$(resources.container.reports.tag)
       - deployment: DeployIngressRules
         displayName: Deploy ingress rules
-        environment: 'ingress'
+        environment: onlex-sinnet-prd
         variables:
           - name: manifestDir
             value: $(PIPELINE.WORKSPACE)/manifest_CI/ingress-namespace
