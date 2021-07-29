@@ -3,14 +3,15 @@ import { RootState } from "../../store/reducers";
 import { Dispatch } from "redux";
 import { connect, ConnectedProps } from "react-redux";
 import _ from "lodash";
-import { ComboBox, DateRangeType, DefaultButton, IComboBox, IComboBoxOption, IComboBoxStyles, Label, PrimaryButton, Stack, TextField } from "@fluentui/react";
+import { ComboBox, DateRangeType, DefaultButton, IComboBox, IComboBoxOption, PrimaryButton, Stack, TextField } from "@fluentui/react";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { AppDatePicker } from "../../services/ActionList.DatePicker";
 import { LocalDate } from "../../store/viewcontext/TimePeriod";
 import { useGetUsers } from "../../api/useGetUsers";
-import { useListCustomersQuery, useRemoveActionMutation, useUpdateActionMutation } from "../../Components/.generated/components";
+import { useRemoveActionMutation, useUpdateActionMutation } from "../../Components/.generated/components";
 import { dates } from "../../api/DtoMapper";
 import CustomerView from "./ActionView.Edit.CustomerView"
+import { CustomerComboBox } from "./CustomerComboBox";
 
 const mapStateToProps = (state: RootState) => {
     if (state.appState.empty) {
@@ -81,17 +82,10 @@ const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
 
     const defaultCustomerId = item?.customer?.id.entityId;
     const [customerId, setCustomerId] = useState(defaultCustomerId);
-    const onChangeCustomerId = (ev: React.FormEvent<IComboBox>, option?: IComboBoxOption) => {
+    const onChangeCustomerId = (id: string | undefined) => {
         console.log('onChangeCustomerId ' + Date())
-        const newCustomerId = option?.key as typeof defaultCustomerId;
-        setCustomerId(newCustomerId);
+        setCustomerId(id);
     };
-    const onPendingValueChanged = (option?: IComboBoxOption, index?: number, value?: string) => {
-        // for some reason the event is invoked twice and value is undefined
-        if (value == null) return; // it handles undefined as well
-
-        setFilteredCustomers(filteredElements(value));
-    }
 
     const propsDescription = item?.description;
     const [description, setDescription] = useState(propsDescription);
@@ -209,40 +203,6 @@ const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
         })
     };
 
-    const { data } = useListCustomersQuery({
-        variables: {
-            projectId
-        }
-    })
-
-    type OptionType = { key: string, text: string }
-    const [filteredCustomers, setFilteredCustomers] = useState<OptionType[]>([])
-
-
-    const items = data?.Customers.list;
-
-    const filteredElements = (partName: string) => {
-        return _.chain(items)
-        .map(it => ({ key: it.id.entityId, text: it.data.customerName }))
-        .filter(it => {
-            if (!partName) return true;
-            var optionText = it.text;
-            return optionText.toUpperCase().indexOf(partName.toUpperCase()) !== -1;
-        })
-        .value()
-    }
-
-    const renderAfterLostLoad = useRef(0);
-    if (renderAfterLostLoad.current === 0 && data) {
-        renderAfterLostLoad.current = renderAfterLostLoad.current + 1;
-        if (renderAfterLostLoad.current === 1) {
-            setFilteredCustomers(filteredElements(''));
-        }
-    }
-    if (renderAfterLostLoad.current !== 0 && !data) {
-        renderAfterLostLoad.current = 0;
-    }
-
     const btnStyles = {
         rootHovered: {
             backgroundColor: "#d83b01"
@@ -275,15 +235,10 @@ const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
 
                 <div className="ms-Grid-row">
                     <div className="ms-Grid-col ms-sm4">
-                        <ComboBox label="Wybór klienta"
-                            selectedKey={customerId}
-                            options={filteredCustomers}
-                            autoComplete="on"
-                            allowFreeform
-                            openOnKeyboardFocus
-                            onChange={onChangeCustomerId}
-                            onPendingValueChanged={onPendingValueChanged}
-                        />
+                        <CustomerComboBox
+                            projectId={projectId}
+                            customerId={customerId}
+                            onSelected={onChangeCustomerId} />
                     </div>
                     <div className="ms-Grid-col ms-sm6">
                         <TextField label="Usługa" multiline={true} value={description} errorMessage={descriptionError} onChange={onChangeDescription}
