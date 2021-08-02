@@ -54,8 +54,8 @@ jobs:
         displayName: Build uservice image
         inputs:
           command: build
-          dockerfile: uservice-customers/main/src/main/docker/Dockerfile.jvm
-          buildContext: uservice-customers/main
+          dockerfile: uservice-customers/Dockerfile
+          buildContext: uservice-customers
           containerRegistry: $(dockerRegistryServiceConnection)
           repository: $(dockerRepository)
           tags: |
