@@ -25,7 +25,7 @@ RUN REVISION=$(cat ../.version) && \
 # to temporal folder
 WORKDIR /dist
 
-RUN REVISION=$(cat ../.version) && \
+RUN REVISION=$(cat /app/.version) && \
     java -Djarmode=layertools -jar /app/main/build/libs/customers-$REVISION.jar extract
 
 #----------
