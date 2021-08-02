@@ -25,7 +25,7 @@ RUN REVISION=$(cat ../.version) && \
 # to temporal folder
 WORKDIR /dist
 
-RUN java -Djarmode=layertools -jar /app/main/build/libs/customers-*-.jar extract
+RUN java -Djarmode=layertools -jar /app/main/build/libs/customers-$REVISION.jar extract
 
 #----------
 # list of images is located @ https://hub.docker.com/_/microsoft-java-jre-headless
