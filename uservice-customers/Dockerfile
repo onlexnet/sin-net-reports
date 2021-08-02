@@ -31,13 +31,17 @@ RUN REVISION=$(cat /app/.version) && \
 #----------
 # list of images is located @ https://hub.docker.com/_/microsoft-java-jre-headless
 # If you are considering to use newest image, update compilation platform and local java version as well
-FROM mcr.microsoft.com/java/jre-headless:11u11-zulu-alpine
+FROM mcr.microsoft.com/java/jre-headless:11u11-zulu-alpine as dist
 
 # Copy well known (defined by Spring Boot) jar layers
 # more: https://www.baeldung.com/docker-layers-spring-boot#3-dockerfile-configuration
+# why RUN true? see # see https://github.com/moby/moby/issues/37965#issuecomment-426853382
 COPY --from=build /dist/dependencies/ /app/
+RUN true
 COPY --from=build /dist/snapshot-dependencies/ /app/
+RUN true
 COPY --from=build /dist/spring-boot-loader/ /app/
+RUN true
 COPY --from=build /dist/application/ /app/
 
 # # The application needs some configuration
