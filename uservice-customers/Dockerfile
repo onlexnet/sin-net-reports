@@ -35,10 +35,10 @@ FROM mcr.microsoft.com/java/jre-headless:11u11-zulu-alpine
 
 # Copy well known (defined by Spring Boot) jar layers
 # more: https://www.baeldung.com/docker-layers-spring-boot#3-dockerfile-configuration
-COPY --from=builder /dist/dependencies/ /app/
-COPY --from=builder /dist/snapshot-dependencies/ /app/
-COPY --from=builder /dist/spring-boot-loader/ /app/
-COPY --from=builder /dist/application/ /app/
+COPY --from=build /dist/dependencies/ /app/
+COPY --from=build /dist/snapshot-dependencies/ /app/
+COPY --from=build /dist/spring-boot-loader/ /app/
+COPY --from=build /dist/application/ /app/
 
 # # The application needs some configuration
 # ENV SPRING_PROFILES_ACTIVE=prod
