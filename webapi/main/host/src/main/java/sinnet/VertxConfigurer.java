@@ -19,10 +19,12 @@ public class VertxConfigurer {
    */
   @Bean
   public Vertx vertx() {
+    var options = new ZipkinTracingOptions()
+          .setServiceName("A cute service");
+    options.getSenderOptions().setDefaultHost("otel-collector");
     return Vertx.vertx(
       new VertxOptions()
-      .setTracingOptions(
-        new ZipkinTracingOptions().setServiceName("A cute service")));
+      .setTracingOptions(options));
   }
 
   /** Fixme.
