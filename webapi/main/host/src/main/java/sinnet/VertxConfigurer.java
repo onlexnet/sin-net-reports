@@ -21,7 +21,8 @@ public class VertxConfigurer {
   public Vertx vertx() {
     var options = new ZipkinTracingOptions()
           .setServiceName("A cute service");
-    options.getSenderOptions().setDefaultHost("otel-collector");
+    options.getSenderOptions()
+      .setSenderEndpoint("http://otel-collector:9411/api/v2/spans");
     return Vertx.vertx(
       new VertxOptions()
       .setTracingOptions(options));
