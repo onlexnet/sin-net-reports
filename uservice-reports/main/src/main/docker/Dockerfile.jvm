@@ -43,7 +43,7 @@ RUN microdnf install curl ca-certificates ${JAVA_PACKAGE} \
 # siudek - custom action: # Pre-action: copy all files predicted to be copied to target image
 COPY --chown=1001 src/main/imagebase/ /
 # action 1: include application insight agent
-ENV _JAVA_OPTIONS="-javaagent:/applicationinsights/applicationinsights-agent-3.1.0.jar"
+ENV _JAVA_OPTIONS="-javaagent:/applicationinsights/applicationinsights-agent-3.1.1.jar"
 
 # Configure the JAVA_OPTIONS, you can add -XshowSettings:vm to also display the heap size.
 ENV JAVA_OPTIONS="-Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=org.jboss.logmanager.LogManager"
