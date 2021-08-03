@@ -16,14 +16,7 @@ data:
       logging:
         loglevel: debug
       azuremonitor:
-        endpoint: "https://westeurope-2.in.applicationinsights.azure.com/"
         instrumentation_key: 44384d39-b3d7-41fc-a694-2b8039ecdb5e
-        # maxbatchsize is the maximum number of items that can be
-        # queued before calling to the configured endpoint
-        maxbatchsize: 100
-        # maxbatchinterval is the maximum time to wait before calling
-        # the configured endpoint.
-        maxbatchinterval: 10s
     service:
       extensions: [health_check]
       pipelines:
@@ -67,7 +60,7 @@ spec:
     spec:
       containers:
       - name: otel-collector
-        image: otel/opentelemetry-collector-contrib:0.31.0
+        image: otel/opentelemetry-collector-contrib-dev:latest
         command:
           - "/otelcontribcol"
           - "--config=/conf/otel-collector-config.yaml"
