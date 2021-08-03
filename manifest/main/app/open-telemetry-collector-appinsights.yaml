@@ -20,6 +20,7 @@ data:
       logging:
         loglevel: debug
       azuremonitor:
+      azuremonitor/2:
         endpoint: "https://dc.services.visualstudio.com/v2/track"
         instrumentation_key: "44384d39-b3d7-41fc-a694-2b8039ecdb5e"
         # maxbatchsize is the maximum number of items that can be
@@ -33,7 +34,7 @@ data:
       pipelines:
         traces:
           receivers: [zipkin]
-          exporters: [azuremonitor,logging]
+          exporters: [azuremonitor/2,logging]
 ---
 apiVersion: v1
 kind: Service
