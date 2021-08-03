@@ -4,8 +4,10 @@ import java.util.concurrent.CompletableFuture;
 
 import org.springframework.remoting.RemoteAccessException;
 
+import io.vertx.core.eventbus.DeliveryOptions;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.json.JsonObject;
+import io.vertx.core.tracing.TracingPolicy;
 
 public abstract class AskTemplate<ASK, REPLY> {
 
@@ -23,8 +25,9 @@ public abstract class AskTemplate<ASK, REPLY> {
   protected final CompletableFuture<REPLY> ask(ASK ask) {
     var result = new CompletableFuture<REPLY>();
     var query = JsonObject.mapFrom(ask);
+    var options = new DeliveryOptions().setTracingPolicy(TracingPolicy.ALWAYS);
     eventBus
-        .request(address, query)
+        .request(address, query, options)
         .onFailure(it -> result.completeExceptionally(new RemoteAccessException(it.getMessage())))
         .onSuccess(it -> {
           var body = it.body();
