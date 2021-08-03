@@ -32,6 +32,6 @@ public class VertxConfigurer {
    */
   @Bean
   public EventBus vertxEventBus(Vertx vertx) {
-      return vertx.eventBus();
+    return vertx.eventBus();
   }
 }
