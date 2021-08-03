@@ -41,9 +41,13 @@
         <artifactId>reactor-core</artifactId>
     </dependency>
 
-    <dependency>
+    <!-- <dependency>
       <groupId>io.vertx</groupId>
       <artifactId>vertx-opentelemetry</artifactId>
+    </dependency> -->
+    <dependency>
+      <groupId>io.vertx</groupId>
+      <artifactId>vertx-zipkin</artifactId>
     </dependency>
     <dependency>
       <groupId>io.vertx</groupId>

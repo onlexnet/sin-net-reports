@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import io.vertx.core.Vertx;
 import io.vertx.core.VertxOptions;
 import io.vertx.core.eventbus.EventBus;
-import io.vertx.tracing.opentelemetry.OpenTelemetryOptions;
+import io.vertx.tracing.zipkin.ZipkinTracingOptions;
 
 /** Single configuration class for Vertx related components. */
 @Configuration
@@ -22,8 +22,7 @@ public class VertxConfigurer {
     return Vertx.vertx(
       new VertxOptions()
       .setTracingOptions(
-        new OpenTelemetryOptions())
-    );
+        new ZipkinTracingOptions().setServiceName("A cute service")));
   }
 
   /** Fixme.
