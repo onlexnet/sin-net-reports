@@ -2,13 +2,19 @@ import { ComboBox, IComboBox, IComboBoxOption } from "@fluentui/react";
 import React, { useCallback } from "react";
 
 export interface FilteredComboBoxProps {
+  /** Label of the ComboBox */
   label: string,
+  /** Key value of just selected option to allow select proper element */
   selectedKey?: string,
+  /** List of available options */
   items: { key: string, text: string }[]
   onChange: (key?: string) => void,
   onPendingValueChanged: (value: string) => void,
 }
 
+/**
+ * Simplified version of ComboBox used in selection key-value options.
+ */
 export const FilteredComboBox: React.FC<FilteredComboBoxProps> = props => {
 
   const { label, selectedKey, items, onChange, onPendingValueChanged } = props;
