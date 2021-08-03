@@ -22,7 +22,7 @@ data:
       pipelines:
         traces:
           receivers: [zipkin]
-          exporters: [azuremonitor,logging]
+          exporters: [logging,azuremonitor]
 ---
 apiVersion: v1
 kind: Service
