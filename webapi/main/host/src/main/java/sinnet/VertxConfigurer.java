@@ -4,7 +4,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import io.vertx.core.Vertx;
+import io.vertx.core.VertxOptions;
 import io.vertx.core.eventbus.EventBus;
+import io.vertx.tracing.opentelemetry.OpenTelemetryOptions;
 
 /** Single configuration class for Vertx related components. */
 @Configuration
@@ -12,11 +14,16 @@ public class VertxConfigurer {
 
   /**
    * Fixme.
-   * @return fixme
+   *
+   * @return shared vertx instance use across layers
    */
   @Bean
   public Vertx vertx() {
-      return Vertx.vertx();
+    return Vertx.vertx(
+      new VertxOptions()
+      .setTracingOptions(
+        new OpenTelemetryOptions())
+    );
   }
 
   /** Fixme.
