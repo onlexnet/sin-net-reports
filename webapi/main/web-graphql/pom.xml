@@ -43,6 +43,14 @@
 
     <dependency>
       <groupId>io.vertx</groupId>
+      <artifactId>vertx-opentelemetry</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.vertx</groupId>
+      <artifactId>vertx-micrometer-metrics</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.vertx</groupId>
       <artifactId>vertx-core</artifactId>
     </dependency>
 

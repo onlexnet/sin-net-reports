@@ -36,6 +36,7 @@ FROM mcr.microsoft.com/java/jre-headless:11u11-zulu-alpine as dist
 # Copy well known (defined by Spring Boot) jar layers
 # more: https://www.baeldung.com/docker-layers-spring-boot#3-dockerfile-configuration
 # why RUN true? see # see https://github.com/moby/moby/issues/37965#issuecomment-426853382
+# feel free to remove RUN true and' if build is green, stay without the 'RUN true' statement
 COPY --from=build /dist/dependencies/ /app/
 RUN true
 COPY --from=build /dist/snapshot-dependencies/ /app/
