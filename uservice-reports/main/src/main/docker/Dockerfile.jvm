@@ -40,20 +40,22 @@ RUN microdnf install curl ca-certificates ${JAVA_PACKAGE} \
     && chmod 540 /deployments/run-java.sh \
     && echo "securerandom.source=file:/dev/urandom" >> /etc/alternatives/jre/conf/security/java.security
 
-# siudek - custom action: # Pre-action: copy all files predicted to be copied to target image
+# siudek - START custom actions
+# Pre-action: copy all files predicted to be copied to target image
 COPY --chown=1001 src/main/imagebase/ /
 # action 1: include application insight agent
-# ENV _JAVA_OPTIONS="-javaagent:/applicationinsights/applicationinsights-agent-3.1.1.jar"
+ENV _JAVA_OPTIONS="-javaagent:/applicationinsights/applicationinsights-agent-3.1.1.jar"
+# siudek - END custom actions
 
 # Configure the JAVA_OPTIONS, you can add -XshowSettings:vm to also display the heap size.
 ENV JAVA_OPTIONS="-Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=org.jboss.logmanager.LogManager"
+
+# Siudek: layered build (experimental)
 # We make four distinct layers so if there are application changes the library layers can be re-used
 COPY --chown=1001 build/quarkus-app/lib/ /deployments/lib/
 COPY --chown=1001 build/quarkus-app/*.jar /deployments/
 COPY --chown=1001 build/quarkus-app/app/ /deployments/app/
 COPY --chown=1001 build/quarkus-app/quarkus/ /deployments/quarkus/
-
-
 
 EXPOSE 8080
 USER 1001
