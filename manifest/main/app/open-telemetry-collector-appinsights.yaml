@@ -12,17 +12,12 @@ data:
         endpoint: 0.0.0.0:9411
     extensions:
       health_check:
-      pprof:
-        endpoint: :1888
-      zpages:
-        endpoint: :55679
     exporters:
       logging:
         loglevel: debug
       azuremonitor:
-      azuremonitor/2:
-        endpoint: "https://dc.services.visualstudio.com/v2/track"
-        instrumentation_key: "44384d39-b3d7-41fc-a694-2b8039ecdb5e"
+        endpoint: "https://westeurope-2.in.applicationinsights.azure.com/"
+        instrumentation_key: 44384d39-b3d7-41fc-a694-2b8039ecdb5e
         # maxbatchsize is the maximum number of items that can be
         # queued before calling to the configured endpoint
         maxbatchsize: 100
@@ -30,11 +25,11 @@ data:
         # the configured endpoint.
         maxbatchinterval: 10s
     service:
-      extensions: [pprof, zpages, health_check]
+      extensions: [health_check]
       pipelines:
         traces:
           receivers: [zipkin]
-          exporters: [azuremonitor/2,logging]
+          exporters: [azuremonitor,logging]
 ---
 apiVersion: v1
 kind: Service
