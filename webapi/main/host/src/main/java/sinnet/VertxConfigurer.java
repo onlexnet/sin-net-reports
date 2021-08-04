@@ -6,32 +6,31 @@ import org.springframework.context.annotation.Configuration;
 import io.vertx.core.Vertx;
 import io.vertx.core.VertxOptions;
 import io.vertx.core.eventbus.EventBus;
-import io.vertx.tracing.zipkin.ZipkinTracingOptions;
+import io.vertx.tracing.opentelemetry.OpenTelemetryOptions;
 
 /** Single configuration class for Vertx related components. */
 @Configuration
 public class VertxConfigurer {
 
   /**
-   * Fixme.
+   * Shared vertx instance to be used across the app instance.
    *
-   * @return shared vertx instance use across layers
+   * @return Vertx singleton instance
    */
   @Bean
   public Vertx vertx() {
-    var options = new ZipkinTracingOptions()
-          .setServiceName("A cute service");
-    options.getSenderOptions()
-      .setSenderEndpoint("http://otel-collector:9411/api/v2/spans");
+    var options = new OpenTelemetryOptions();
     return Vertx.vertx(
       new VertxOptions()
       .setTracingOptions(options));
   }
 
-  /** Fixme.
+  /** 
+   * EventBus property of shared Verx instance.
+   * Equivalent of @Autowired Vertx vertx; vertx.eventBus().
    *
-   * @param vertx fixme
-   * @return fixme
+   * @param vertx Shared Vertx instance
+   * @return vertx.eventBus() shared instance
    */
   @Bean
   public EventBus vertxEventBus(Vertx vertx) {
