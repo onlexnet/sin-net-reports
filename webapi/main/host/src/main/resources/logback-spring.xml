@@ -12,6 +12,9 @@
     <logger name="graphql" level="INFO" additivity="false">
         <appender-ref ref="CONSOLE" />
     </logger>
+    <logger name="notprivacysafe.graphql" level="INFO" additivity="false">
+        <appender-ref ref="CONSOLE" />
+    </logger>
     <logger name="org.springframework" level="INFO" additivity="false">
         <appender-ref ref="CONSOLE" />
     </logger>
@@ -40,6 +43,9 @@
         <appender-ref ref="CONSOLE" />
     </logger>
     <logger name="org.apache.catalina" level="INFO" additivity="false">
+        <appender-ref ref="CONSOLE" />
+    </logger>
+    <logger name="liquibase" level="INFO" additivity="false">
         <appender-ref ref="CONSOLE" />
     </logger>
 

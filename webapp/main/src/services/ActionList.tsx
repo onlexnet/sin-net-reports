@@ -139,12 +139,7 @@ const ConnectedContent: React.FC<PropsFromRedux> = props => {
     }
   ];
 
-  const [state, setState] = useState({
-    columns: initialColumns,
-    isModalSelection: false,
-    announcedMessage: ""
-  });
-  const { columns, announcedMessage } = state;
+  const announcedMessage = "";
 
   const [lastTouchedActionId, setlastTouchedActionId] = useState(props.lastTouchedActionId);
 
@@ -255,7 +250,7 @@ const ConnectedContent: React.FC<PropsFromRedux> = props => {
               <DetailsList
                 items={items}
                 compact={true}
-                columns={columns}
+                columns={initialColumns}
                 selectionMode={SelectionMode.none}
                 setKey="none"
                 layoutMode={DetailsListLayoutMode.justified}
