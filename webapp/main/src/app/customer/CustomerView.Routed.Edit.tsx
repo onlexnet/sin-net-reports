@@ -10,7 +10,7 @@ import { routing } from "../../Routing";
 
 const mapStateToProps = (state: RootState) => {
     if (state.appState.empty) {
-        throw 'Invalid state';
+        throw new Error('Invalid state');
     }
     return state;
 }
