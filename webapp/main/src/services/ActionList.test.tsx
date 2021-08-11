@@ -2,9 +2,9 @@ import { shallow, configure } from 'enzyme';
 import React from 'react';
 import { Content } from './ActionList';
 
-import Adapter from 'enzyme-adapter-react-16';
+import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 
-// configure({ adapter: new Adapter() })
+configure({ adapter: new Adapter() });
 
 describe('<Content />', () => {
   it('renders only selected days', () => {
