@@ -227,9 +227,9 @@ const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
                     </div>
                     <div className="ms-Grid-col ms-sm2">
                         <AppDatePicker
+                            gotoTodayText='Idź do aktualnego miesiąca'
                             onSelectDate={value => onChangeDate(value)}
-                            current={actionDate}
-                            dateRangeType={DateRangeType.Day} autoNavigateOnSelection={true} showGoToToday={true} />
+                            current={actionDate}/>
                     </div>
                 </div>
 

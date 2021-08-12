@@ -60,6 +60,7 @@ export class TimePeriod {
 
 type PeriodScope = 'MONTH';
 
+/** Application-level model of date. */
 export interface LocalDate {
     year: number;
     /** Month 1-12 */

@@ -61,7 +61,7 @@ const CustomersLocal: React.FC<CustomersProps> = (props) => {
     }
 
     const sortedItems = _.chain(items)
-        .map(it => ({ ... it, sortPriority: similarity(it.name, searchPhrase) }))
+        .map(it => ({ ...it, sortPriority: similarity(it.name, searchPhrase) }))
         .filter(it => it.sortPriority > 0)
         .orderBy(it => it.name)
         .orderBy(it => -it.sortPriority)

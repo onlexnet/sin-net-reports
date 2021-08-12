@@ -231,8 +231,8 @@ const ConnectedContent: React.FC<PropsFromRedux> = props => {
                       label="Tylko moje dane"
                       checked={onlyMyData}
                       onChange={(e, v) => setOnlyMyData(v ?? false)}
-                      onText="Compact"
-                      offText="Normal"
+                      onText="Tylko moje"
+                      offText="Wszystkie"
                       styles={controlStyles}
                     />
                     <TextField label="Tylko dzień:" value={onlyDay} onChange={(e, v) => setOnlyDay(v)} styles={controlStyles} />

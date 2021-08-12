@@ -1,27 +1,12 @@
 import { Calendar, DayOfWeek, DateRangeType } from '@fluentui/react/lib/Calendar';
-import { DefaultButton } from '@fluentui/react/lib/Button';
-import { addDays, getDateRangeArray } from '@fluentui/date-time-utilities';
 import { LocalDate } from '../store/viewcontext/TimePeriod';
-import React, { useEffect } from 'react';
+import React from 'react';
 
 export interface AppDatePickerProps {
   onSelectDate(value: LocalDate): void;
+  /** Text displayed on the link used to change date to current date. */
+  gotoTodayText: string;
   current: LocalDate;
-  isMonthPickerVisible?: boolean;
-  dateRangeType: DateRangeType;
-  autoNavigateOnSelection: boolean;
-  showGoToToday: boolean;
-  showNavigateButtons?: boolean;
-  highlightCurrentMonth?: boolean;
-  highlightSelectedMonth?: boolean;
-  isDayPickerVisible?: boolean;
-  showMonthPickerAsOverlay?: boolean;
-  showWeekNumbers?: boolean;
-  minDate?: Date;
-  maxDate?: Date;
-  showSixWeeksByDefault?: boolean;
-  workWeekDays?: DayOfWeek[];
-  firstDayOfWeek?: DayOfWeek;
 }
 
 const dayPickerStrings = {
@@ -42,7 +27,6 @@ const dayPickerStrings = {
   shortMonths: ['Sty', 'Lut', 'Mar', 'Kwie', 'Maj', 'Czer', 'Lip', 'Sier', 'Wrze', 'Paź', 'List', 'Gru'],
   days: ['Niedziela', 'Poniedziałek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek', 'Sobota'],
   shortDays: ['N', 'P', 'W', 'Ś', 'C', 'P', 'S'],
-  goToToday: 'Idź do dzisiaj',
   weekNumberFormatString: 'Numer tygodnia {0}',
   prevMonthAriaLabel: 'Poprzedni miesiąc',
   nextMonthAriaLabel: 'Następny miesiąc',
@@ -57,102 +41,30 @@ const dayPickerStrings = {
 const divStyle: React.CSSProperties = {
   height: 'auto',
 };
-const buttonStyle: React.CSSProperties = {
-  margin: '17px 10px 0 0',
-};
 
 export const AppDatePicker: React.FC<AppDatePickerProps> = props => {
-  const [selectedDate, setSelectedDate] = React.useState<LocalDate>(LocalDate.of(new Date()));
-  useEffect(() => {
-    setSelectedDate(props.current);
-  }, [props.current]);
-  
+
+  const { current: currentDate } = props;
+
   const onSelectDate = (date: Date, dateRangeArray?: Date[]): void => {
     const asLocalDate = LocalDate.of(date);
-    setSelectedDate(asLocalDate);
     props.onSelectDate(asLocalDate);
-  };
-
-  const goPrevious = () => {
-    const goPreviousSelectedDate = LocalDate.toDate(selectedDate) || new Date();
-    const dateRangeArray = getDateRangeArray(goPreviousSelectedDate, props.dateRangeType, DayOfWeek.Sunday);
-    let subtractFrom = dateRangeArray[0];
-    let daysToSubtract = dateRangeArray.length;
-    if (props.dateRangeType === DateRangeType.Month) {
-      debugger;
-      subtractFrom = new Date(subtractFrom.getFullYear(), subtractFrom.getMonth(), 1);
-      daysToSubtract = 1;
-    }
-    const newSelectedDate = addDays(subtractFrom, -daysToSubtract);
-    return {
-      goPreviousSelectedDate: newSelectedDate,
-    };
-  };
-
-  const goNext = () => {
-    const goNextSelectedDate = LocalDate.toDate(selectedDate) ?? new Date();
-    const dateRangeArray = getDateRangeArray(goNextSelectedDate, props.dateRangeType, DayOfWeek.Sunday);
-    const newSelectedDate = addDays(dateRangeArray.pop()!, 1);
-
-    return {
-      goNextSelectedDate: newSelectedDate,
-    };
-  };
-
-  const onDismiss = () => {
-    return selectedDate;
   };
 
   return (
     <div style={divStyle}>
-      {(props.minDate || props.maxDate) && (
-        <div>
-          Date boundary:
-          <span>
-            {' '}
-            {props.minDate ? props.minDate.toLocaleDateString() : 'Not set'}-
-            {props.maxDate ? props.maxDate.toLocaleDateString() : 'Not set'}
-          </span>
-        </div>
-      )}
       <Calendar
         // eslint-disable-next-line react/jsx-no-bind
         onSelectDate={onSelectDate}
-        // eslint-disable-next-line react/jsx-no-bind
-        onDismiss={onDismiss}
-        isMonthPickerVisible={props.isMonthPickerVisible}
-        dateRangeType={props.dateRangeType}
-        // autoNavigateOnSelection={props.autoNavigateOnSelection}
-        showGoToToday={props.showGoToToday}
-        value={LocalDate.toDate(selectedDate)!}
-        firstDayOfWeek={props.firstDayOfWeek ? props.firstDayOfWeek : DayOfWeek.Sunday}
-        strings={dayPickerStrings}
-        highlightCurrentMonth={props.highlightCurrentMonth}
-        highlightSelectedMonth={props.highlightSelectedMonth}
-        isDayPickerVisible={props.isDayPickerVisible}
-        showMonthPickerAsOverlay={props.showMonthPickerAsOverlay}
-        showWeekNumbers={props.showWeekNumbers}
-        minDate={props.minDate}
-        maxDate={props.maxDate}
-        showSixWeeksByDefault={props.showSixWeeksByDefault}
-        workWeekDays={props.workWeekDays}
+        isDayPickerVisible={true}
+        isMonthPickerVisible={true}
+        dateRangeType={DateRangeType.Day}
+        value={LocalDate.toDate(currentDate)!}
+        firstDayOfWeek={DayOfWeek.Monday}
+        strings={{ ...dayPickerStrings, goToToday: props.gotoTodayText }}
+        highlightCurrentMonth={false}
+        highlightSelectedMonth={true}
       />
-      {props.showNavigateButtons && (
-        <div>
-          <DefaultButton
-            style={buttonStyle}
-            // eslint-disable-next-line react/jsx-no-bind
-            onClick={goPrevious}
-            text="Previous"
-          />
-          <DefaultButton
-            style={buttonStyle}
-            // eslint-disable-next-line react/jsx-no-bind
-            onClick={goNext}
-            text="Next"
-          />
-        </div>
-      )}
     </div>
   );
 };

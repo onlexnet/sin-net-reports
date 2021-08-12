@@ -226,7 +226,7 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
     }
 
     const [saveCustomerMutation, { data: saveResult, loading: saveInProgress }] = useSaveCustomerMutation();
-    const [removeCustomerMutation, { data: removeResult, loading: removeInProgress }] = useRemoveCustomerMutation();
+    const [removeCustomerMutation, { data: removeResult }] = useRemoveCustomerMutation();
 
     if (saveResult) {
         props.itemSaved();
@@ -560,13 +560,13 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
                         changedWhen={item.when ?? "-"}
                         onChange={v => {
                             const clone = _.clone(model);
-                            const index = _.findIndex(clone.AutoryzacjeEx, it => it.localKey == v.localKey);
+                            const index = _.findIndex(clone.AutoryzacjeEx, it => it.localKey === v.localKey);
                             clone.AutoryzacjeEx[index] = v;
                             setModel(clone);
                         }}
                         onRemove={localKey => {
                             const clone = _.clone(model);
-                            const index = _.findIndex(clone.AutoryzacjeEx, it => it.localKey == localKey);
+                            const index = _.findIndex(clone.AutoryzacjeEx, it => it.localKey === localKey);
                             clone.AutoryzacjeEx.splice(index, 1);
                             setModel(clone);
                         }}
