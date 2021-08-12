@@ -10,7 +10,7 @@ import { v1 as uuid } from 'uuid';
 
 const mapStateToProps = (state: RootState) => {
     if (state.appState.empty) {
-        throw 'Invalid state';
+        throw new Error('Invalid state');
     }
     return state;
 }

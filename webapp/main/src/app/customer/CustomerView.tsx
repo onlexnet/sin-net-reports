@@ -579,13 +579,13 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
                         changedWhen={item.when ?? "-"}
                         onChange={v => {
                             const clone = _.clone(model);
-                            const index = _.findIndex(clone.Autoryzacje, it => it.localKey == v.localKey);
+                            const index = _.findIndex(clone.Autoryzacje, it => it.localKey === v.localKey);
                             clone.Autoryzacje[index] = v;
                             setModel(clone);
                         }}
                         onRemove={localKey => {
                             const clone = _.clone(model);
-                            const index = _.findIndex(clone.Autoryzacje, it => it.localKey == localKey);
+                            const index = _.findIndex(clone.Autoryzacje, it => it.localKey === localKey);
                             clone.Autoryzacje.splice(index, 1);
                             setModel(clone);
                         }}
@@ -621,13 +621,13 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
                         model={item}
                         onChange={v => {
                             const clone = _.clone(model);
-                            const index = _.findIndex(clone.Kontakty, it => it.localKey == v.localKey);
+                            const index = _.findIndex(clone.Kontakty, it => it.localKey === v.localKey);
                             clone.Kontakty[index] = v;
                             setModel(clone);
                         }}
                         onRemove={localKey => {
                             const clone = _.clone(model);
-                            const index = _.findIndex(clone.Kontakty, it => it.localKey == localKey);
+                            const index = _.findIndex(clone.Kontakty, it => it.localKey === localKey);
                             clone.Kontakty.splice(index, 1);
                             setModel(clone);
                         }}
