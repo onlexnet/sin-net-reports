@@ -2,8 +2,20 @@ import { Action } from "redux";
 import { EntityId } from "../actions/ServiceModel";
 import { TimePeriod } from "./TimePeriod";
 
+/**
+ * We decided to define shared UI context as a single intended state so that all componenst has
+ * to understand the meaning of the context and should react when the context is changing
+ * to reflect the changes accordingly.
+ * <p>
+ * For instance, let's assume we have state 'logged' with meanings
+ * 1 - User is authorized, 2 - unknown user, 3 - operation in progress
+ * so all components based on shared state should refreshe it's view and load child component based
+ * on the fact what is the state.
+ */
 export interface ViewContextState {
+    /** Limitation of service presented to the current user. Defines time from-to and by default only that actions are loaded to UI.  */
     period: TimePeriod,
+    /** ID of currently edited Action, otherwide null */
     editedActionId: string | null
     // UI has adjust view to the fact of updating / creating some new Action
     lastTouchedActionId: EntityId | null
@@ -21,12 +33,12 @@ export const VIEWCONTEXT_ACTION_EDIT_UPDATED = "VIEWCONTEXT_ACTION_EDIT_UPDATED"
 
 export interface PeriodPrev extends Action<typeof VIEWCONTEXT_PREV_PERIOD> {
     type: typeof VIEWCONTEXT_PREV_PERIOD,
-    payload: { }
+    payload: {}
 }
 
 export interface PeriodNext extends Action<typeof VIEWCONTEXT_NEXT_PERIOD> {
     type: typeof VIEWCONTEXT_NEXT_PERIOD,
-    payload: { }
+    payload: {}
 }
 
 export interface PeriodSelected extends Action<typeof VIEWCONTEXT_PERIOD_SELECTED> {
@@ -45,7 +57,7 @@ export interface ActionEditItem extends Action<typeof VIEWCONTEXT_ACTION_EDIT_ST
 
 export interface ActionEditCancel extends Action<typeof VIEWCONTEXT_ACTION_EDIT_CANCEL> {
     type: typeof VIEWCONTEXT_ACTION_EDIT_CANCEL,
-    payload: { }
+    payload: {}
 }
 
 export interface ActionEditUpdated extends Action<typeof VIEWCONTEXT_ACTION_EDIT_UPDATED> {
@@ -56,9 +68,9 @@ export interface ActionEditUpdated extends Action<typeof VIEWCONTEXT_ACTION_EDIT
 }
 
 export type ViewContextAction = PeriodSelected
-                              | PeriodPrev
-                              | PeriodNext
-                              | ActionEditItem
-                              | ActionEditCancel
-                              | ActionEditUpdated;
+    | PeriodPrev
+    | PeriodNext
+    | ActionEditItem
+    | ActionEditCancel
+    | ActionEditUpdated;
 export type ViewContextCommand = PeriodPrev | PeriodNext;

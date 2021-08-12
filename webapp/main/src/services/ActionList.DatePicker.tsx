@@ -60,11 +60,8 @@ const divStyle: React.CSSProperties = {
 const buttonStyle: React.CSSProperties = {
   margin: '17px 10px 0 0',
 };
-let dateRangeString: string | null = null;
 
 export const AppDatePicker: React.FC<AppDatePickerProps> = props => {
-  const [selectedDateRange, setSelectedDateRange] = React.useState<Date[]>();
-
   const [selectedDate, setSelectedDate] = React.useState<LocalDate>(LocalDate.of(new Date()));
   useEffect(() => {
     setSelectedDate(props.current);
@@ -73,7 +70,6 @@ export const AppDatePicker: React.FC<AppDatePickerProps> = props => {
   const onSelectDate = (date: Date, dateRangeArray?: Date[]): void => {
     const asLocalDate = LocalDate.of(date);
     setSelectedDate(asLocalDate);
-    setSelectedDateRange(dateRangeArray);
     props.onSelectDate(asLocalDate);
   };
 

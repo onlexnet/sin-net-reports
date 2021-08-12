@@ -143,14 +143,14 @@ const ConnectedContent: React.FC<PropsFromRedux> = props => {
 
   const [lastTouchedActionId, setlastTouchedActionId] = useState(props.lastTouchedActionId);
 
-  const newDataIsComing = props.lastTouchedActionId != null && props.lastTouchedActionId != lastTouchedActionId;
+  const newDataIsComing = props.lastTouchedActionId != null && props.lastTouchedActionId !== lastTouchedActionId;
   if (newDataIsComing) {
     console.log('newDataIsComing');
     setlastTouchedActionId(props.lastTouchedActionId);
   }
 
   const periodDto = asDtoDates(props.period);
-  const { data, loading, error, refetch } = useFetchServicesQuery({
+  const { data, refetch } = useFetchServicesQuery({
     variables: {
       projectId: props.selectedProjectId,
       from: periodDto.dateFrom,
@@ -211,7 +211,7 @@ const ConnectedContent: React.FC<PropsFromRedux> = props => {
 
 
   const [currentPeriod, setCurrentPeriod] = useState<TimePeriod | null>(null);
-  if (currentPeriod != props.period) {
+  if (currentPeriod !== props.period) {
     setCurrentPeriod(props.period);
   }
 
