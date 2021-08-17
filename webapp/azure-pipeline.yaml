@@ -35,7 +35,7 @@ jobs:
         displayName: Read version from .version file
 
       - task: Npm@1
-        displayName: Set version
+        displayName: Set version of webapp
         inputs:
           command: custom
           customCommand: version $(my_version)
@@ -44,7 +44,8 @@ jobs:
       - task: Npm@1
         displayName: Install dependencies
         inputs:
-          command: install
+          command: custom
+          customCommand: ci
           workingDir: webapp/main
 
       - task: Npm@1
