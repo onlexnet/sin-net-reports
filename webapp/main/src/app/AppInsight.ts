@@ -30,13 +30,16 @@ const appInsights = new ApplicationInsights({
       }
 });
 
-appInsights.loadAppInsights();
-
-appInsights.addTelemetryInitializer(telemetryItem => {
-  // ai.cloud.role 
-  // more @ https://docs.microsoft.com/en-us/azure/azure-monitor/app/app-map?tabs=net#understanding-cloud-role-name-within-the-context-of-the-application-map
-  telemetryItem.tags!['ai.cloud.role'] = 'sinnet-webapp';
-})
+// we don't want to have AppInsight measured from localhost
+// in the same way appinsight agent is run only on k8s ebv so backend on lcoalhost is also not monitored
+if (process.env.NODE_ENV === 'production') {
+  appInsights.loadAppInsights();
+  appInsights.addTelemetryInitializer(telemetryItem => {
+    // ai.cloud.role 
+    // more @ https://docs.microsoft.com/en-us/azure/azure-monitor/app/app-map?tabs=net#understanding-cloud-role-name-within-the-context-of-the-application-map
+    telemetryItem.tags!['ai.cloud.role'] = 'sinnet-webapp';
+  })
+}
 
 
 appInsights.trackPageView();

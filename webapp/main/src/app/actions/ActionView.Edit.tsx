@@ -34,6 +34,11 @@ interface ActionViewEditProps extends PropsFromRedux {
     actionUpdated: (entity: EntityId) => void
 }
 
+/**
+ * View used to edit data for a Service.
+ * @param props
+ * @returns 
+ */
 const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
 
     const { item, cancelEdit, actionUpdated } = props;
