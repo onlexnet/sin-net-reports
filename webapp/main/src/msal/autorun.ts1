@@ -1,9 +1,0 @@
-import { AuthModule } from "./AuthModule.ts1";
-
-export const authModule: AuthModule = new AuthModule();
-
-// Load auth module when browser window loads. Only required for redirect flows.
-window.addEventListener("load", async () => {
-  authModule.loadAuthModule();
-});
-
