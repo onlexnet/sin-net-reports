@@ -2,11 +2,12 @@ import * as React from 'react';
 import { RouteComponentProps } from "react-router-dom";
 import { Nav, INavLink } from "@fluentui/react";
 import { routing } from './Routing';
+import _ from 'lodash';
+import { workMode, WORK_MODE } from './app/configuration/Configuration';
 
-//Child component related stuff
-interface ChildComponentProps extends RouteComponentProps<any> { }
+interface NavBarProps extends RouteComponentProps<any> { }
 
-export const NavBasicExample: React.FC<ChildComponentProps> = (props) => {
+export const NavBar: React.FC<NavBarProps> = (props) => {
   return (
     <Nav
       onLinkClick={_onLinkClick}
@@ -22,34 +23,31 @@ export const NavBasicExample: React.FC<ChildComponentProps> = (props) => {
       }}
       groups={[
         {
-          links: [
-            {
-              name: 'Usługi',
-              onClick: () => props.history.push(routing.actions),
-              url: '',
-              isExpanded: true
-            },
-            {
-              name: 'Klienci',
-              onClick: () => props.history.push(routing.customers),
-              url: '',
-              key: 'key3',
-              isExpanded: true,
-              target: '_blank'
-            },
-            {
-              name: 'Debug',
-              onClick: () => props.history.push(routing.debug),
-              url: '',
-              key: 'key5',
-              target: '_blank'
-            },
-          ]
+          links: links(
+            link('Usługi', () => props.history.push(routing.actions)),
+            link('Klienci', () => props.history.push(routing.customers), false),
+            link('Debug', () => props.history.push(routing.debug)),
+            link('Projekty', () => props.history.push(routing.debug), true))
+          
         }
       ]}
     />
   );
 };
+
+interface INavLinkDev extends INavLink {
+  /** true when the link should be visible only for developers, otherwise false. */
+  devOnly: boolean;
+}
+
+const link = (uniqueName: string, onClick: () => void, devOnly: boolean = false): INavLinkDev => {
+  const defaultProps = { url: '', target: '_blank' };
+  return { name: uniqueName, key: uniqueName, onClick, devOnly, ...defaultProps };
+}
+
+const links = (...links: INavLinkDev[]): INavLink[] => {
+  return _.chain(links).filter(it => !it.devOnly || workMode() === WORK_MODE.DEV).value();
+}
 
 function _onLinkClick(ev?: React.MouseEvent<HTMLElement>, item?: INavLink) {
   if (item && item.name === 'News') {

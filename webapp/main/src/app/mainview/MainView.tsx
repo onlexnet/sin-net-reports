@@ -6,7 +6,7 @@ import { Dispatch } from "redux";
 import { useAvailableProjectsQuery } from "../../Components/.generated/components";
 import { Debug } from "../../debug/Debug";
 import { Home } from "../../Home";
-import { NavBasicExample } from "../../NavBar";
+import { NavBar } from "../../NavBar";
 import { Reports } from "../../reports/Reports";
 import { routing } from "../../Routing";
 import { Main } from "../../services";
@@ -76,7 +76,7 @@ const LocalView: React.FC<Props> = (props) => {
             <div className="ms-Grid" dir="ltr">
                 <div className="ms-Grid-row">
                     <div className="ms-Grid-col ms-sm6 ms-md4 ms-lg2">
-                        <Route path="/" component={NavBasicExample} />
+                        <Route path="/" component={NavBar} />
                     </div>
                     <div className="ms-Grid-col ms-sm6 ms-md8 ms-lg10">
                         <Route path={routing.editAction} component={ActionViewRoutedEdit} />

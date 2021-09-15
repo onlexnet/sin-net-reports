@@ -1,7 +1,7 @@
-// AppInsights.js
 import { ApplicationInsights } from '@microsoft/applicationinsights-web';
 import { ReactPlugin } from '@microsoft/applicationinsights-react-js';
 import { createBrowserHistory } from 'history';
+import { workMode, WORK_MODE } from './configuration/Configuration';
 
 const browserHistory = createBrowserHistory({ basename: '' });
 const reactPlugin = new ReactPlugin();
@@ -32,7 +32,7 @@ const appInsights = new ApplicationInsights({
 
 // we don't want to have AppInsight measured from localhost
 // in the same way appinsight agent is run only on k8s ebv so backend on lcoalhost is also not monitored
-if (process.env.NODE_ENV === 'production') {
+if (workMode() === WORK_MODE.PROD) {
   appInsights.loadAppInsights();
   appInsights.addTelemetryInitializer(telemetryItem => {
     // ai.cloud.role 
