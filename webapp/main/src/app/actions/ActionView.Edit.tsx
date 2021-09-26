@@ -12,6 +12,7 @@ import { useRemoveActionMutation, useUpdateActionMutation } from "../../Componen
 import { dates } from "../../api/DtoMapper";
 import CustomerView from "./ActionView.Edit.CustomerView"
 import { CustomerComboBox } from "./CustomerComboBox";
+import { useAppInsightsContext, useTrackMetric } from "@microsoft/applicationinsights-react-js";
 
 const mapStateToProps = (state: RootState) => {
     if (state.appState.empty) {
@@ -40,7 +41,9 @@ interface ActionViewEditProps extends PropsFromRedux {
  * @returns 
  */
 const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
-
+    const appInsights = useAppInsightsContext();
+    const trackComponent = useTrackMetric(appInsights, "ActionViewEditLocal");
+    
     const { item, cancelEdit, actionUpdated } = props;
 
     const propsProjectId = item?.projectId;
