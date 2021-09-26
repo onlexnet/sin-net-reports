@@ -37,7 +37,7 @@ if (workMode() === WORK_MODE.PROD) {
   appInsights.addTelemetryInitializer(telemetryItem => {
     // ai.cloud.role 
     // more @ https://docs.microsoft.com/en-us/azure/azure-monitor/app/app-map?tabs=net#understanding-cloud-role-name-within-the-context-of-the-application-map
-    telemetryItem.tags!['ai.cloud.role'] = 'sinnet-webapp';
+    telemetryItem.tags!['ai.cloud.role'] = 'sinnet-webapp-test1';
   })
 }
 
