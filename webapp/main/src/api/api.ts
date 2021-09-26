@@ -3,16 +3,7 @@ import { GraphQLClient } from 'graphql-request';
 import { ApolloClient, ApolloLink, createHttpLink, DefaultOptions, InMemoryCache } from "@apollo/client";
 import { v4 as uuid } from 'uuid';
 
-// const wsLink = new WebSocketLink({
-//   uri: "wss://raport.sin.net.pl/subscriptions",
-//   options: {
-//     reconnect: false,
-//   },
-// });
-
 const graphqlUrl = `${addressProvider().host}/graphql`;
-
-const traceParentId = uuid().split('-').join('').substr(0, 16);
 
 export const apolloClientFactory = (jwtToken: string) => {
   // configuration below is focused on Authentication
@@ -30,13 +21,8 @@ export const apolloClientFactory = (jwtToken: string) => {
   });
 
   const middlewareAuthLink = new ApolloLink((operation, forward) => {
-    const traceContextVersion = '00'; // https://www.w3.org/TR/trace-context-1/
-    const traceId = uuid().split('-').join('').substr(0, 32);
-    const traceFlags = '01'; // sampled
-    var traceparent = `${traceContextVersion}-${traceId}-${traceParentId}-${traceFlags}`;
     operation.setContext({
       headers: {
-        "traceparent": traceparent,
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Credentials": true,
         Authorization: `Bearer ${jwtToken}`,

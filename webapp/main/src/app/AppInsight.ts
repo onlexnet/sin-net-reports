@@ -1,10 +1,12 @@
-import { ApplicationInsights } from '@microsoft/applicationinsights-web';
+import { ApplicationInsights, DistributedTracingModes } from '@microsoft/applicationinsights-web';
 import { ReactPlugin } from '@microsoft/applicationinsights-react-js';
 import { createBrowserHistory } from 'history';
 import { workMode, WORK_MODE } from './configuration/Configuration';
 
 const browserHistory = createBrowserHistory({ basename: '' });
 const reactPlugin = new ReactPlugin();
+
+// configuration details: https://docs.microsoft.com/en-us/azure/azure-monitor/app/javascript
 const appInsights = new ApplicationInsights({
     config: {
         instrumentationKey: 'a0599196-9031-45c9-9521-b065ce853f0b',
@@ -20,6 +22,9 @@ const appInsights = new ApplicationInsights({
         enableCorsCorrelation: true,
         enableRequestHeaderTracking: true,
         enableResponseHeaderTracking: true,
+
+        // https://docs.microsoft.com/en-us/azure/azure-monitor/app/correlation#enable-w3c-distributed-tracing-support-for-web-apps
+        distributedTracingMode: DistributedTracingModes.W3C,
 
         // Use enableAutoRouteTracking: true only if you are not using the React plugin.
         // Both are capable of sending new PageViews when the route changes. If both are enabled, duplicate PageViews may be sent.
