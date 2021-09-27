@@ -28,12 +28,12 @@ public class ProjectRepositoryImpl implements Project.Repository, Project {
   }
 
   private String deleteTemplate = String.format("DELETE FROM "
-      + "projects WHERE entity_id=#{%s} AND entity_version=#{%s}",
+      + "projects WHERE entity_id=#{%s}::uuid AND entity_version=#{%s}",
       DboTemplate.Fields.entityId, DboTemplate.Fields.entityVersion);
 
   private String insertTemplate = String.format("INSERT INTO "
       + "projects (entity_id, entity_version, name) "
-      + "values(#{%s}, #{%s}, #{%s})",
+      + "values(#{%s}::uuid, #{%s}, #{%s})",
       DboTemplate.Fields.entityId, DboTemplate.Fields.entityVersion, DboTemplate.Fields.name);
 
   /**

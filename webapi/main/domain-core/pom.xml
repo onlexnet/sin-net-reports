@@ -77,6 +77,15 @@
         </dependency>
         <dependency>
             <groupId>io.vertx</groupId>
+            <artifactId>vertx-jdbc-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.agroal</groupId>
+            <artifactId>agroal-pool</artifactId>
+            <version>1.12</version>
+        </dependency>
+        <dependency>
+            <groupId>io.vertx</groupId>
             <artifactId>vertx-junit5</artifactId>
         </dependency>
         <!-- We use jackson binding so that all lombok jacksonized classes are immutable and serializable through bus -->
