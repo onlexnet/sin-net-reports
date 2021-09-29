@@ -67,11 +67,9 @@
         -->
         <artifactId>smallrye-graphql-maven-plugin</artifactId>
         <groupId>io.smallrye</groupId>
+        <version>1.1.2</version>
         <executions>
           <execution>
-            <configuration>
-              <includeDependencies>true</includeDependencies>
-            </configuration>
             <goals>
               <goal>generate-schema</goal>
             </goals>
