@@ -3,9 +3,11 @@ package sinnet;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import io.opentelemetry.api.OpenTelemetry;
 import io.vertx.core.Vertx;
 import io.vertx.core.VertxOptions;
 import io.vertx.core.eventbus.EventBus;
+import io.vertx.core.metrics.MetricsOptions;
 import io.vertx.tracing.opentelemetry.OpenTelemetryOptions;
 
 /** Single configuration class for Vertx related components. */
@@ -19,10 +21,13 @@ public class VertxConfigurer {
    */
   @Bean
   public Vertx vertx() {
-    var options = new OpenTelemetryOptions();
+    var tracingOptions = new OpenTelemetryOptions();
+    var metricOptions = new MetricsOptions()
+        .setEnabled(true);
     return Vertx.vertx(
       new VertxOptions()
-      .setTracingOptions(options));
+      .setTracingOptions(tracingOptions)
+      .setMetricsOptions(metricOptions));
   }
 
   /** 
