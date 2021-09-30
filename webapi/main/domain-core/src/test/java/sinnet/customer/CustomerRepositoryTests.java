@@ -7,6 +7,7 @@ import java.util.UUID;
 import java.util.function.Supplier;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -227,14 +228,17 @@ class Given {
         .build();
     }
 
-    static CustomerValue fullModel() {
-        return CustomerValue.builder()
+  static CustomerValue fullModel() {
+    var addresWithMaxLength = "Some address with max length";
+    addresWithMaxLength += StringUtils.repeat("X", 100 - addresWithMaxLength.length());
+
+    return CustomerValue.builder()
         .operatorEmail("operatorEmail")
         .billingModel("billingModel")
         .supportStatus("supportStatus")
         .customerName(Name.of("some not-empty name"))
-        .customerCityName(Name.of("some city"))
-        .customerAddress("Some address")
+        .customerCityName(Name.of("some city name"))
+        .customerAddress(addresWithMaxLength)
         .nfzUmowa(true)
         .nfzMaFilie(true)
         .nfzLekarz(true)

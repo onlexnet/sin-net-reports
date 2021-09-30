@@ -1,0 +1,9 @@
+databaseChangeLog:
+- changeSet:
+    id: '20210930-1'
+    author: siudeks
+    changes:
+    - modifyDataType:
+        tableName: customers
+        columnName: customer_address
+        newDataType: VARCHAR(100)
