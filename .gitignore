@@ -2,3 +2,6 @@
 .generated
 azagent
 .project
+.classpath
+.factorypath
+.settings
