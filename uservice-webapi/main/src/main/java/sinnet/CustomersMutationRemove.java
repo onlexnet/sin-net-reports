@@ -10,7 +10,7 @@ import org.eclipse.microprofile.graphql.Source;
 @ApplicationScoped
 public class CustomersMutationRemove {
 
-  public Boolean remove(@Source CustomersMutation self, @NonNull MyEntity id) {
+  public Boolean remove(@Source CustomersMutation self, @NonNull Entity id) {
     return false;
   }
 }

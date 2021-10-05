@@ -10,7 +10,7 @@ import org.eclipse.microprofile.graphql.Source;
 @ApplicationScoped
 public class CustomersMutationReserve {
 
-  public @NonNull SomeEntity reserve(@Source CustomersMutation self) {
+  public @NonNull Entity reserve(@Source CustomersMutation self) {
     return null;
   }
 }

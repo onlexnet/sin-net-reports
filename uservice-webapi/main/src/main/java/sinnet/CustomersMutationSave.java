@@ -10,8 +10,8 @@ import org.eclipse.microprofile.graphql.Source;
 @ApplicationScoped
 public class CustomersMutationSave {
 
-  public SomeEntity save(@Source CustomersMutation self,
-                         @NonNull MyEntity id,
+  public Entity save(@Source CustomersMutation self,
+                         @NonNull Entity id,
                          @NonNull CustomerInput entry,
                          @NonNull CustomerSecretInput[] secrets,
                          @NonNull CustomerSecretExInput[] secretsEx,
