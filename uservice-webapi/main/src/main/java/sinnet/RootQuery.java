@@ -6,6 +6,7 @@ import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 
 import org.eclipse.microprofile.graphql.GraphQLApi;
+import org.eclipse.microprofile.graphql.Id;
 import org.eclipse.microprofile.graphql.NonNull;
 import org.eclipse.microprofile.graphql.Query;
 
@@ -23,13 +24,19 @@ public class RootQuery {
   }
 
   @Query
-  public @NonNull CustomersQuery customers(UUID projectId) {
+  public @NonNull CustomersQuery customers(@NonNull @Id UUID projectId) {
     return new CustomersQuery(projectId);
   }
 
   @Query
-  public @NonNull ActionsQuery actions(UUID projectId) {
+  public @NonNull ActionsQuery actions(@NonNull @Id UUID projectId) {
     return new ActionsQuery(projectId);
   }
+
+  @Query
+  public Users Users(@NonNull @Id UUID projectId) {
+    return new Users(projectId);
+  }
+
 
 }
