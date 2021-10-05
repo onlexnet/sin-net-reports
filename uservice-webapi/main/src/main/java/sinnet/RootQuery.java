@@ -27,4 +27,9 @@ public class RootQuery {
     return new CustomersQuery(projectId);
   }
 
+  @Query
+  public @NonNull ActionsQuery actions(UUID projectId) {
+    return new ActionsQuery(projectId);
+  }
+
 }
