@@ -55,4 +55,5 @@ Easily start your RESTful Web Services
 
 ## Dev notes:
 
-- we use @Id for non-string elements. It is against specification
+- we use @Id for non-string elements. It is non-compliant with GraphQL specification.
+- generated schema will be stored in target/generated/ https://quarkus.io/blog/experimental_graphql/#build-tools

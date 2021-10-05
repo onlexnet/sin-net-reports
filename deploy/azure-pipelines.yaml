@@ -17,7 +17,7 @@ resources:
     trigger: true
   - pipeline: webapi_CI
     project: sinnet
-    source: onlex-sinnet-webapi
+    source: onlex-sinnet-webapi2
     trigger: true
   - pipeline: report_CI
     project: sinnet
