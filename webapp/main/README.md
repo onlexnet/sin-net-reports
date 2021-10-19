@@ -1,8 +1,10 @@
 # Content
 Folder contains codebase of client part of SinNet PSA application.
 
-- how to run against loal backend: **npm start**
-- how to run against production: 
+- **npm install** install packages
+- **npm run generate** generate local graphql models
+- **npm start** to run against loal backend
+
 ## Used articles
 
 * https://reactgo.com/react-hooks-apollo/
