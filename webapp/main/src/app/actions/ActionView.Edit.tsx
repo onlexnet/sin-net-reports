@@ -184,7 +184,13 @@ const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
         cancelEdit();
     }
 
-    const removeAndExit = () => {
+    const [removeConfirmed, setRemoveConfirmed] = useState(false);
+
+    const removeAndExit1 = () => {
+            setRemoveConfirmed(true);
+    }
+
+    const removeAndExit2 = () => {
         removeActionMutation({
             variables: {
                 projectId,
@@ -273,7 +279,8 @@ const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
                                     // cancelEdit();
                                 }} />
                             <DefaultButton onClick={() => cancelEdit()} text="Wyjdź" />
-                            <DefaultButton text="Usuń i wyjdź" disabled={updateActionInProgress} styles={btnStyles} onClick={removeAndExit} />
+                            <DefaultButton text="Usuń i wyjdź" disabled={updateActionInProgress || removeConfirmed} styles={btnStyles} onClick={removeAndExit1} />
+                            <DefaultButton text="Tak, Usuń i wyjdź" disabled={updateActionInProgress || !removeConfirmed } styles={btnStyles} onClick={removeAndExit2} />
                         </Stack>
                     </div>
                 </div>
