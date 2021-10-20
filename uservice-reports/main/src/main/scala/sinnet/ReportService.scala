@@ -30,9 +30,10 @@ import java.util.UUID
 import java.util.zip.ZipEntry
 import com.lowagie.text.pdf.PdfTable
 import java.time.format.DateTimeFormatter
+import io.quarkus.grpc.GrpcService
 
 /** Exposes gRPC endpoints to allow produce PDF report based on requested data. */
-@Singleton
+@GrpcService
 class ReportService extends ReportsGrpc.ReportsImplBase {
 
   override def produce(request: ReportRequestDTO, responseObserver: StreamObserver[Response]): Unit = {

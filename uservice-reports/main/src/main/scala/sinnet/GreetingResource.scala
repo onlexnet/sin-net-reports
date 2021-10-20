@@ -1,7 +1,5 @@
 package sinnet
 
-import io.quarkus.example.GreeterGrpc
-import io.quarkus.grpc.runtime.annotations.GrpcService
 
 import javax.inject.Inject
 import javax.ws.rs.GET
