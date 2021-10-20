@@ -8,7 +8,7 @@ import io.quarkus.example.GreeterGrpc;
 import io.quarkus.example.HelloRequest;
 import javax.inject.Inject
 import scala.annotation.meta.field
-import sinnet.reports.{ReportRequest => ReportRequestDTO}
+import sinnet.reports.report1.{ReportRequest => ReportRequestDTO}
 import org.assertj.core.api.Assertions
 import io.quarkus.grpc.GrpcService
 import io.quarkus.grpc.GrpcClient
@@ -17,7 +17,7 @@ import io.quarkus.grpc.GrpcClient
 class GreetingResourceTest {
     
     @Inject
-    @GrpcClient("self")
+    @GrpcClient
     var self: GreeterGrpc.GreeterBlockingStub = _
 
     @Test

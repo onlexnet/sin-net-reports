@@ -3,7 +3,7 @@ syntax = "proto3";
 import "reports.proto";
 
 option java_multiple_files = true;
-option java_package = "sinnet.reports";
+option java_package = "sinnet.reports.report1";
 option java_outer_classname = "Reports1Proto";
 
 package sinnet.reports;

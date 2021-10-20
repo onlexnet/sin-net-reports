@@ -8,11 +8,11 @@ import io.quarkus.example.GreeterGrpc;
 import io.quarkus.example.HelloRequest;
 import javax.inject.Inject
 import scala.annotation.meta.field
-import sinnet.reports.{ ReportRequest => ReportRequestDTO,
+import sinnet.reports.report1.{ ReportRequest => ReportRequestDTO,
         ReportRequests => ReportRequestsDTO,
         CustomerDetails => CustomerDetailsDTO,
         ActivityDetails => ActivityDetailsDTO}
-import sinnet.reports.ReportsGrpc
+import sinnet.reports.report1.ReportsGrpc
 import org.assertj.core.api.Assertions
 import java.util.zip.ZipInputStream
 import java.io.ByteArrayInputStream
@@ -22,7 +22,7 @@ import io.quarkus.grpc.GrpcClient
 class ReportServiceTest {
     
     @Inject
-    @GrpcClient("self")
+    @GrpcClient
     var self: ReportsGrpc.ReportsBlockingStub = _
 
     @Test
