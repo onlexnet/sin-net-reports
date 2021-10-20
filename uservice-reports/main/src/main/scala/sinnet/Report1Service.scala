@@ -35,7 +35,7 @@ import io.quarkus.grpc.GrpcService
 
 /** Exposes gRPC endpoints to allow produce PDF report based on requested data. */
 @GrpcService
-class ReportService extends ReportsGrpc.ReportsImplBase {
+class Report1Service extends ReportsGrpc.ReportsImplBase {
 
   override def produce(request: ReportRequestDTO, responseObserver: StreamObserver[Response]): Unit = {
     var requestModel = Mapper(request)

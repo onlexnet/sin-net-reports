@@ -19,3 +19,9 @@ message Date {
   /** allowable values: 1 - 31 */
   int32 dayOfTheMonth = 3;
 }
+
+message YearMonth {
+  int32 year = 1;
+  /** Month from 1 to 12 */
+  int32 month = 2;
+}
