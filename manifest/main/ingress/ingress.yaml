@@ -12,7 +12,7 @@ spec:
   tls:
   - hosts:
     - raport.sin.net.pl
-    secretName: onlex-sinnet-prd-secret8
+    secretName: onlex-sinnet-prd-secret
   rules:
   - host: raport.sin.net.pl
     http:
