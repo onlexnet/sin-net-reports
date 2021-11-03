@@ -9,12 +9,11 @@ variable environment_name {
   type = string
 }
 
-# Name of predefined superuser on externam postgres server where all
+# Name of predefined superuser on external postgres server where all
 # databases are created. In such small project we use single SQL server with multiple databases / schemas.
 variable psql_infrauser_name {
-  # Name predefined in external database: "onlex_infra"
 }
-# PAssword, as sensitive information, should be provided as env variable
+# Password, as sensitive information, should be provided as env variable
 variable psql_infrauser_password {}
 
 variable environment_location {
