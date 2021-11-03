@@ -1,24 +1,26 @@
 # Goal
-Infrastructre as  code: creates environments and configure them
+Infrastructre as code: creates environments and configure them
 
 ### Prerequisites
-* We need a privileged service account to apply changes in Azure. For such reason application named **onlex-infra** *(single tenant application) has been created with some permissions:
+* We need a privileged service account to apply changes in Azure. For such reason application named **onlex-infra** (single tenant application) has been created with some permissions:
   - 'Contributor' role (to be able create resources) 
   - 'Application administrator' to create service principals used in environments
   - with a secret named e.g. 'terraform-cli' (used to support CLI tool)
-* We need a storage to keep terraform configuration. For such purpose there is created storage ***az storage container create -n tfstate --account-name \<YourAzureStorageAccountName> --account-key \<YourAzureStorageAccountKey>***
+* We need a storage to keep terraform backend configuration. For such purpose there is created storage ***az storage container create -n tfstate --account-name \<YourAzureStorageAccountName> --account-key \<YourAzureStorageAccountKey>***
 * We need a superuser role in external PostgreSQL server to create databases and schemas. The name of the role os **onlex_infra**, and password for such role is provided as environment variable (described below). **(The account has been created using *CREATE ROLE onlex_infra LOGIN SUPERUSER PASSWORD 'some password';*)**
 
-### Environment variables
-set properly variables (for CI in pipeline, for CLI in local environment):
-
-# To simplify management of multiple application in very small organization OnLex.net
-# We use one infra account (with Contributor role) to allow access to Azure infrastructure
-export ARM_CLIENT_ID="onlex-infra" # required by azurerm and azuread providers. Defines a principal able to create resources
+### Set environment variables for local environment
+set properly variables (for CI in pipeline, for CLI in local environment).
+We suggest to create local - never commited - bash file in user home directory, where all required environment variables are defined. The file may be named 'onlex-sinnet-init.sh' with values:
+```bash
+export ARM_CLIENT_ID= ... client ID of onlex-infra # required by azurerm and azuread providers. Defines a principal able to create resources
 export ARM_CLIENT_CERTIFICATE_PASSWORD= ... proper value from secrets mentioned above # required by azurerm provider
 export ARM_CLIENT_SECRET= ... proper value from secrets mentioned above # required by azuread provider
 export ARM_TENANT_ID= ... onlex.net tenant # Tenant where the resources are created. Required by azurerm and azuread providers
-export ARM_SUBSCRIPTION_ID= ... onlex prod subscription # required by backend provider
+export ARM_SUBSCRIPTION_ID= ... OnLexNet subscription ID # required by backend provider
+```
+, so is enough to run *. ~/onlex-sinnet-init.sh* to have fully working terraform.
+
 
 ### Work locally
 * Assumption: use bash
