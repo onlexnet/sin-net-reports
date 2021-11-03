@@ -8,6 +8,10 @@ Infrastructre as code: creates environments and configure them
   - with a secret named e.g. 'terraform-cli' (used to support CLI tool)
 * We need a storage to keep terraform backend configuration. For such purpose there is created storage ***az storage container create -n tfstate --account-name \<YourAzureStorageAccountName> --account-key \<YourAzureStorageAccountKey>***
 * We need a superuser role in external PostgreSQL server to create databases and schemas. The name of the role os **onlex_infra**, and password for such role is provided as environment variable (described below). **(The account has been created using *CREATE ROLE onlex_infra LOGIN SUPERUSER PASSWORD 'some password';*)**
+If you do not remember the password change it:
+* login to host machine using ssh connection
+* open SQL console *sudo psql -U postgres*
+* change password *ALTER USER onlex_infra WITH PASSWORD 'new exciting password'* 
 
 ### Set prerequisit environment variables for local environment
 set properly variables (for CI in pipeline, for CLI in local environment).
