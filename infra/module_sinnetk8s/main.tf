@@ -5,7 +5,10 @@
 provider "kubernetes" {
   
   host = var.k8s_host
-  token = var.k8s_token
+
+  client_certificate     = "${file("~/onlex_infra.crt")}"
+  client_key             = "${file("~/onlex_infra.key")}"
+  # cluster_ca_certificate = "${file("~/.kube/cluster-ca-cert.pem")}"}
   insecure = true
 }
 
@@ -40,4 +43,3 @@ resource "kubernetes_secret" "customers_db_user_name" {
     appinsight_connection_string = var.secret_appinsight_connection_string
   }
 }
-

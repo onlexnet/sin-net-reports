@@ -11,7 +11,7 @@ Infrastructre as code: creates environments and configure them
 If you do not remember the password change it:
 * login to host machine using ssh connection
 * open SQL console *sudo psql -U postgres*
-* change password *ALTER USER onlex_infra WITH PASSWORD 'new exciting password'* 
+* change password *ALTER USER onlex_infra WITH PASSWORD 'new exciting password';* 
 
 ### Set prerequisit environment variables for local environment
 set properly variables (for CI in pipeline, for CLI in local environment).
@@ -22,9 +22,8 @@ export ARM_CLIENT_CERTIFICATE_PASSWORD= ... proper value from secrets mentioned 
 export ARM_CLIENT_SECRET= ... proper value from secrets mentioned above # required by azuread provider
 export ARM_TENANT_ID= ... onlex.net tenant # Tenant where the resources are created. Required by azurerm and azuread providers
 export ARM_SUBSCRIPTION_ID= ... OnLexNet subscription ID # required by backend provider
-export TF_VAR_sinnet_k8s_host=raport.sin.net.pl
-export TF_VAR_sinnet_k8s_token= ... generate using token=$(microk8s kubectl -n kube-system get secret | grep default-token | cut -d " " -f1)
-                                                   microk8s kubectl -n kube-system describe secret $token
+export TF_VAR_sinnet_k8s_host=localhost:1644 # remote server raport.sin.net.pl should be already linked to localhost using port redirection
+export TF_VAR_sinnet_k8s_token= ... valid token created e.g. using https://giangpham.io/blog/blog-acquiring-access-token-for-kubernetes-dashboard/
 export TF_VAR_subscription_id= ... onlexnet-sinnet-prod subscription ID
 ```
 , so is enough to run *. ~/onlex-sinnet-init.sh* to have fully working terraform.
@@ -38,7 +37,7 @@ export TF_VAR_subscription_id= ... onlexnet-sinnet-prod subscription ID
 * get access to remote secured database
   because database is (by design) secured on remote VM
   we assume port 5432 is already redirected from database VM
-  ssh -L 5432:localhost:5432 <USERNAME>@raport.sin.net.pl
+  **ssh -L 5432:localhost:5432 -L 16443:localhost:16443 <USERNAME>@raport.sin.net.pl**
 * apply changes on production manually
     **terraform apply -var-file prd.tfvars**
 
