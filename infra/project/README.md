@@ -35,11 +35,11 @@ export TF_VAR_subscription_id= ... onlexnet-sinnet-prod subscription ID
 * init your terraform
     **terraform init**
 * get access to remote secured database
-  because database is (by design) secured on remote VM
-  we assume port 5432 is already redirected from database VM
+  because database is (by design) secured on remote VM, and remote microk8s is also secured
+  we assume port 5432 is already redirected from database VM, and 16443 from microk8s
   **ssh -L 5432:localhost:5432 -L 16443:localhost:16443 <USERNAME>@raport.sin.net.pl**
 * apply changes on production manually
-    **terraform apply -var-file prd.tfvars**
+    **terraform apply -var-file environments/prd.tfvars**
 
 **terraform plan** to see plan of changes for your current desired infrastructure
 
