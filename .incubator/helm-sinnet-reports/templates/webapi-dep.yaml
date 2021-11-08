@@ -20,7 +20,7 @@ spec:
         - name: regcred
       containers:
         - name: webapi
-          image: sinnet.azurecr.io/webapi:##BUILD_ID##
+          image: sinnet.azurecr.io/webapi:master-20210930.1
           imagePullPolicy: Always
           ports:
           - containerPort: 8080
@@ -28,7 +28,7 @@ spec:
           - name: SPRING_PROFILES_ACTIVE
             value: "prod"
           - name: APP_DB_HOST
-            value: "database-prd"
+            value: {{ databaseName }}
           - name: APP_DB_NAME
             value: "sinnet"
           - name: APPLICATIONINSIGHTS_CONNECTION_STRING

@@ -77,3 +77,13 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+# There is assumption we use minikube to host dev environment
+databaseHost: host.minikube.internal
+
+# https://github.com/bitnami/charts/tree/master/bitnami/postgresql/#parameters
+postgresql:
+  # we use postgresql 13.4 on prod, so dev should be the same
+  image:
+    tag: 13.4.0
+

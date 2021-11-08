@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: database-prd
+  name: database-{{ .Values.env }}
 spec:
   ports:
     - protocol: TCP
@@ -13,9 +13,9 @@ spec:
 apiVersion: v1
 kind: Endpoints
 metadata:
-  name: database-prd
+  name: database-{{ .Values.env }}
 subsets:
   - addresses:
-      - ip: 83.0.169.165 # raport.sin.net.pl - one of the network interfaces interfaces
+      - ip: 83.0.169.165 # raport.sin.net.pl - one of the network interfaces
     ports:
       - port: 5432

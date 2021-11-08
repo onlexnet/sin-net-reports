@@ -1,3 +1,7 @@
+{{- define "database.name" -}}
+{{- default .Values.env }}
+{{- end}}
+
 {{/*
 Expand the name of the chart.
 */}}
