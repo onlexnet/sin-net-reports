@@ -2,7 +2,7 @@
 Infrastructre as code: creates environments and configure them
 
 ### Prerequisites
-* We need a privileged service account to apply changes in Azure. For such reason application named **onlex-infra** (single tenant application) has been created with some permissions:
+* We need a single privileged service account to apply changes in Azure for all environments. It is not the best practicew for large companies, where prod and non-prod should be separated, but it is very convinient for my local work and small clients. For such reason aad application named **onlex-infra** (single tenant application) has been created with permissions:
   - 'Contributor' role (to be able create resources) 
   - 'Application administrator' to create service principals used in environments
   - with a secret named e.g. 'terraform-cli' (used to support CLI tool)
@@ -18,28 +18,32 @@ set properly variables (for CI in pipeline, for CLI in local environment).
 We suggest to create local - never commited - bash file in user home directory, where all required environment variables are defined. The file may be named 'onlex-sinnet-init.sh' with values:
 ```bash
 export ARM_CLIENT_ID= ... client ID of onlex-infra # required by azurerm and azuread providers. Defines a principal able to create resources
-export ARM_CLIENT_CERTIFICATE_PASSWORD= ... proper value from secrets mentioned above # required by azurerm provider
 export ARM_CLIENT_SECRET= ... proper value from secrets mentioned above # required by azuread provider
 export ARM_TENANT_ID= ... onlex.net tenant # Tenant where the resources are created. Required by azurerm and azuread providers
 export ARM_SUBSCRIPTION_ID= ... OnLexNet subscription ID # required by backend provider
+
+export TF_VAR_psql_infrauser_name="onlex_infra"
+export TF_VAR_psql_infrauser_password= ... password of the infrauser
 export TF_VAR_sinnet_k8s_host=localhost:1644 # remote server raport.sin.net.pl should be already linked to localhost using port redirection
-export TF_VAR_sinnet_k8s_token= ... valid token created e.g. using https://giangpham.io/blog/blog-acquiring-access-token-for-kubernetes-dashboard/
-export TF_VAR_subscription_id= ... onlexnet-sinnet-prod subscription ID
+export TF_VAR_sinnet_k8s_token= ... valid token stolen from k8s config from the host
+export TF_VAR_B2C_subscription_id=subscription of B2C
+export TF_VAR_B2C_tenant_id=tenant ID of B2C
+
+export TF_VAR_onlexnet_sinnet_prd01_subscription_id= ... onlexnet-sinnet-app-prd01 subscription ID
+export TF_VAR_onlexnet_sinnet_dev01_subscription_id= ... onlexnet-sinnet-app-dev01 subscription ID
+
+
 ```
-, so is enough to run *. ~/onlex-sinnet-init.sh* to have fully working terraform.
 
 
 ### Work locally
 * Assumption: use bash
-* add env variables as described above
-* init your terraform
-    **terraform init**
-* get access to remote secured database
-  because database is (by design) secured on remote VM, and remote microk8s is also secured
-  we assume port 5432 is already redirected from database VM, and 16443 from microk8s
-  **ssh -L 5432:localhost:5432 -L 16443:localhost:16443 <USERNAME>@raport.sin.net.pl**
-* apply changes on production manually
-    **terraform apply -var-file environments/prd.tfvars**
+* go to folder of the environment where you would like to apply changes (e.g. cd environments/dev01/)
+* **terraform init** init your terraform once 
+* **ssh -L 5432:localhost:5432 -L 16443:localhost:16443 <USERNAME>@raport.sin.net.pl** open session to unmanaged resources required by providers 
+  * get access to remote secured database   because database is (by design) secured on remote VM, and remote microk8s is also secured we assume port 5432 is already redirected from database VM, and 16443 from microk8s
+* **. ~/onlex-sinnet-init.sh** set env variables 
+* **terraform apply** apply changes on selected env manually
 
 **terraform plan** to see plan of changes for your current desired infrastructure
 

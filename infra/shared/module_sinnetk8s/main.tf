@@ -36,7 +36,7 @@ resource "kubernetes_secret" "example" {
 resource "kubernetes_secret" "customers_db_user_name" {
   metadata {
     name = "customers-db-user-name"
-    namespace = "onlex-sinnet-${var.environment_name}"
+    namespace = local.namespace_name
   }
 
   data = {
