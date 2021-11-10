@@ -34,3 +34,12 @@ resource "postgresql_database" "customers" {
   connection_limit  = -1
   allow_connections = true
 }
+
+resource "postgresql_database" "services" {
+  name              = "services_${var.environment_name}"
+  owner             = postgresql_role.uservice_customers.name
+  template          = "template0"
+  lc_collate        = "C"
+  connection_limit  = -1
+  allow_connections = true
+}

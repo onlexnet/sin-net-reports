@@ -43,3 +43,13 @@ resource "kubernetes_secret" "customers_db_user_name" {
     appinsight_connection_string = var.secret_appinsight_connection_string
   }
 }
+
+resource "kubernetes_config_map" "default" {
+  metadata {
+    name = "my-configuration"
+    namespace = local.namespace_name
+  }
+  data = {
+    services_database_name = var.config_services_database_name
+  }
+}

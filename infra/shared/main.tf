@@ -22,6 +22,7 @@ module "sinnetk8s" {
   k8s_host                            = var.sinnet_k8s_host
   k8s_token                           = var.sinnet_k8s_token
   secret_appinsight_connection_string = module.appinsights.connection_string
+  config_services_database_name       = module.database.services_database_name
   environment_name                    = var.environment_name
 }
 
