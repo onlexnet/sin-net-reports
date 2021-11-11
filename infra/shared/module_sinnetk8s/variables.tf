@@ -5,10 +5,16 @@ variable secret_appinsight_connection_string {
   type=string
 }
 
-variable config_services_database_name {
-}
+variable config_services_database_name {}
+variable config_services_database_username {}
+variable config_services_database_password {}
 
 variable environment_name {
   type=string
 }
+
+variable docker_registry_username {}
+variable docker_registry_password {}
+variable docker_registry_server {}
+
 

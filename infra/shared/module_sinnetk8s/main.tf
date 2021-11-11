@@ -33,14 +33,17 @@ resource "kubernetes_secret" "example" {
   }
 }
 
-resource "kubernetes_secret" "customers_db_user_name" {
+resource "kubernetes_secret" "default" {
   metadata {
-    name = "customers-db-user-name"
+    name = "app-secrets"
     namespace = local.namespace_name
   }
 
   data = {
     appinsight_connection_string = var.secret_appinsight_connection_string
+    services_database_name       = var.config_services_database_name
+    services_database_username   = var.config_services_database_username
+    services_database_password   = var.config_services_database_password
   }
 }
 
@@ -50,6 +53,5 @@ resource "kubernetes_config_map" "default" {
     namespace = local.namespace_name
   }
   data = {
-    services_database_name = var.config_services_database_name
   }
 }

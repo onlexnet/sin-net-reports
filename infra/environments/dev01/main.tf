@@ -6,5 +6,6 @@ module "shared" {
   psql_infrauser_password = var.psql_infrauser_password
   sinnet_k8s_host         = var.sinnet_k8s_host
   sinnet_k8s_token        = var.sinnet_k8s_token
-  subscription_id         = var.onlexnet_sinnet_dev01_subscription_id
+  env_subscription_id     = var.onlexnet_sinnet_dev01_subscription_id
+  shared_subscription_id  = var.sinnet_prod_subscription_id
 }

@@ -11,6 +11,12 @@ provider "azurerm" {
   # (example: API version 2019-01-01 was not found for Microsoft.Foo).
   # skip_provider_registration = true
 
-  subscription_id = var.subscription_id 
+  subscription_id = var.env_subscription_id 
+  features {}
+}
+
+provider "azurerm" {
+  alias = "shared"
+  subscription_id = var.shared_subscription_id
   features {}
 }

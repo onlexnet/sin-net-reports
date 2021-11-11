@@ -32,7 +32,16 @@ variable application_name {
 
 # Target subscription used to create all resources defined by the Terraform scripts
 # please fullfil variables as below using standard Terraform approaches (vars file, var param of env variables)
-variable subscription_id {
+variable env_subscription_id {
+  type = string
+  sensitive=true
+}
+
+# Subscription used to acces shared resources used by SinNet application
+# Generally all non-prod envs shares some subscription, and prod envs share some common subscription
+# In my small project probably prod and non-prod shares the same subscription
+# It allow to keep e.g. shared DNS or shared Container REgistry
+variable shared_subscription_id {
   type = string
   sensitive=true
 }

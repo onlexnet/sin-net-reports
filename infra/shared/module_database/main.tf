@@ -35,9 +35,19 @@ resource "postgresql_database" "customers" {
   allow_connections = true
 }
 
+resource "random_id" "services_owner" {
+	  byte_length = 8
+}
+
+resource "postgresql_role" "services_owner" {
+  name     = "services_owner_${var.environment_name}"
+  login    = true
+  password = random_id.services_owner.hex
+}
+
 resource "postgresql_database" "services" {
   name              = "services_${var.environment_name}"
-  owner             = postgresql_role.uservice_customers.name
+  owner             = postgresql_role.services_owner.name
   template          = "template0"
   lc_collate        = "C"
   connection_limit  = -1
