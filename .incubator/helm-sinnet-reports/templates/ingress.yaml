@@ -2,19 +2,19 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: nginx
-  namespace: {{ .Values.ingress.namespace }}
+  # namespace: {{ .Values.ingress.namespace }}
   annotations:
     # use the shared ingress-nginx
     kubernetes.io/ingress.class: {{ .Values.ingress.class }}
     # Securing Ingress Resources https://cert-manager.io/docs/usage/ingress/
-    cert-manager.io/issuer: my-letsencrypt-issuer
+    # cert-manager.io/issuer: my-letsencrypt-issuer
 spec:
   tls:
   # - hosts:
   #   - {{ .Values.ingress.host }}
   #   secretName: onlex-sinnet-prd-secret
   rules:
-  - host: {{ .Values.ingress.host }}
+  - host: {{ (split "-" .Release.Namespace)._2 }}.{{ .Values.ingress.baseHost }}
     http:
       paths:
         - path: /graphiql
@@ -67,41 +67,34 @@ spec:
               port:
                 number: 8080
 
-        - path: /abc
-          pathType: Prefix
-          backend:
-            service:
-              name: webapp-svc-link
-              port:
-                number: 80
         - path: /
           pathType: Prefix
           backend:
             service:
-              name: webapp-svc-link
+              name: webapp-svc
               port:
                 number: 80
 
----
+# ---
 
-# Virtual services to redirect to proper namespace backend definitions mentioned above
+# # Virtual services to redirect to proper namespace backend definitions mentioned above
 
-apiVersion: v1
-kind: Service
-metadata:
-  name: webapp-svc-link
-  namespace: {{ .Values.ingress.namespace }}
-spec:
-  type: ExternalName
-  externalName: webapp-svc.{{ .Release.Namespace }}.svc.cluster.local
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: webapp-svc-link
+#   namespace: {{ .Values.ingress.namespace }}
+# spec:
+#   type: ExternalName
+#   externalName: webapp-svc.{{ .Release.Namespace }}.svc.cluster.local
 
----
+# ---
 
-apiVersion: v1
-kind: Service
-metadata:
-  name: webapi-svc-link
-  namespace: {{ .Values.ingress.namespace }}
-spec:
-  type: ExternalName
-  externalName: webapi-svc.{{ .Release.Namespace }}.svc.cluster.local
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: webapi-svc-link
+#   namespace: {{ .Values.ingress.namespace }}
+# spec:
+#   type: ExternalName
+#   externalName: webapi-svc.{{ .Release.Namespace }}.svc.cluster.local
