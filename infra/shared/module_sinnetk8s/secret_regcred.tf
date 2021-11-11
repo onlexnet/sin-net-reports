@@ -4,6 +4,7 @@
 resource "kubernetes_secret" "docker-registry" {
   metadata {
     name = "regcred"
+    namespace = local.namespace_name
   }
 
   data = {

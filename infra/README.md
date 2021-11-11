@@ -29,6 +29,7 @@ export TF_VAR_sinnet_k8s_token= ... valid token stolen from k8s config from the 
 export TF_VAR_B2C_subscription_id=subscription of B2C
 export TF_VAR_B2C_tenant_id=tenant ID of B2C
 
+export TF_VAR_sinnet_prod_subscription_id= ... onlexnet-sinnet-app-prd01 subscription ID
 export TF_VAR_onlexnet_sinnet_prd01_subscription_id= ... onlexnet-sinnet-app-prd01 subscription ID
 export TF_VAR_onlexnet_sinnet_dev01_subscription_id= ... onlexnet-sinnet-app-dev01 subscription ID
 
@@ -47,7 +48,10 @@ export TF_VAR_onlexnet_sinnet_dev01_subscription_id= ... onlexnet-sinnet-app-dev
 
 **terraform plan** to see plan of changes for your current desired infrastructure
 
+### Used articles
+- [How to add Docker registry secret to k8s](https://kubernetes.io/docs/concepts/configuration/secret/)
 ### Not used but promising articles
+- https://stackoverflow.com/questions/62137632/create-kubernetes-secret-for-docker-registry-terraform
 - https://medium.com/citihub/a-more-secure-way-to-call-kubectl-from-terraform-1052adf37af8
 - https://docs.microsoft.com/en-us/azure/key-vault/general/key-vault-integrate-kubernetes
 - https://mrdevops.io/introducing-azure-key-vault-to-kubernetes-931f82364354
