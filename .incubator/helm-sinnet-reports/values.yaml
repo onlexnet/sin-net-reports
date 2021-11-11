@@ -77,8 +77,8 @@ tolerations: []
 
 affinity: {}
 
-# There is assumption we use minikube to host dev environment
-databaseHost: host.minikube.internal
+# raport.sin.net.pl - one of the network interfaces interfaces
+databaseHost: 83.0.169.165
 
 # https://github.com/bitnami/charts/tree/master/bitnami/postgresql/#parameters
 postgresql:
