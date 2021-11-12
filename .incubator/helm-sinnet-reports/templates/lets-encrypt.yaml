@@ -10,8 +10,6 @@ spec:
     # certificates, and issues related to your account.
     email: siudeks+letsencrypt@gmail.com
 
-    preferredChain: "ISRG Root X1"
-    
     # Alternative locations
     # for prod certificates use https://acme-v02.api.letsencrypt.org/directory
     # for non-prod certificates use https://acme-staging-v02.api.letsencrypt.org/directory
