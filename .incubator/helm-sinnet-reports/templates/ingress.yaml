@@ -4,14 +4,14 @@ metadata:
   name: nginx
   annotations:
     kubernetes.io/ingress.class: {{ .Values.ingress.class }}
-    cert-manager.io/issuer: letsencrypt-staging
+    cert-manager.io/issuer: {{ include "letsencrypt.instance" . }}
 spec:
   tls:
   - hosts:
-    - {{ (split "-" .Release.Namespace)._2 }}.{{ .Values.ingress.baseHost }}
+    - {{ include "ingress.host" . }}
     secretName: portal-tls-secret
   rules:
-  - host: {{ (split "-" .Release.Namespace)._2 }}.{{ .Values.ingress.baseHost }}
+  - host: {{ include "ingress.host" . }}
     http:
       paths:
         - path: /graphiql

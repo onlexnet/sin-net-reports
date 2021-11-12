@@ -10,7 +10,6 @@ image:
   # Overrides the image tag whose default is the chart appVersion.
   tag: "1.21"
 
-imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
@@ -64,13 +63,6 @@ resources: {}
   #   cpu: 100m
   #   memory: 128Mi
 
-autoscaling:
-  enabled: false
-  minReplicas: 1
-  maxReplicas: 100
-  targetCPUUtilizationPercentage: 80
-  # targetMemoryUtilizationPercentage: 80
-
 nodeSelector: {}
 
 tolerations: []
@@ -80,9 +72,5 @@ affinity: {}
 # raport.sin.net.pl - one of the network interfaces interfaces
 databaseHost: 83.0.169.165
 
-# https://github.com/bitnami/charts/tree/master/bitnami/postgresql/#parameters
-postgresql:
-  # we use postgresql 13.4 on prod, so dev should be the same
-  image:
-    tag: 13.4.0
-
+rootEnvName: prd00
+productionEnvPrefix: prd

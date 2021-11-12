@@ -2,6 +2,29 @@
 {{- default .Values.env }}
 {{- end}}
 
+{{- define "ingress.host" -}}
+{{- $parts := split "-" .Release.Namespace -}}
+{{- $envName := $parts._2 -}}
+{{- if hasPrefix .Values.rootEnvName $envName -}}
+raport.sin.net.pl
+{{- else -}}
+{{ $envName }}.raport.sin.net.pl
+{{- end -}}
+{{- end }}
+
+{{- define "letsencrypt.instance" -}}
+{{- $parts := split "-" .Release.Namespace -}}
+{{- $envName := $parts._2 -}}
+{{- if hasPrefix .Values.productionEnvPrefix $envName -}}
+letsencrypt-prod
+{{- else -}}
+letsencrypt-nonprod
+{{- end -}}
+{{- end }}
+
+
+
+
 {{/*
 Expand the name of the chart.
 */}}
