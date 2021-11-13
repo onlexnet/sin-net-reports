@@ -1,3 +1,12 @@
+resources:
+  - repo: self
+
+variables:
+  dockerRegistryServiceConnection: "sinnet-acr"
+  imageName: "uservice-customers"
+  containerRegistry: "sinnetapps.azurecr.io"
+  dockerRepository: onlex-sinnet-reports
+
 trigger:
   branches:
     include:
@@ -9,9 +18,16 @@ pool:
   vmImage: 'ubuntu-latest'
 
 
-- task: HelmDeploy@0
-  displayName: Helm package
-  inputs:
-    command: package
-    chartPath: main
-    destination: $(Build.ArtifactStagingDirectory)
+jobs:
+  - job: CICD
+    displayName: CI/CD build
+    pool:
+      vmImage: ubuntu-latest
+    steps:
+    - task: HelmDeploy@0
+      displayName: Helm package and deploy
+      inputs:
+        command: package
+        chartPath: helm/main
+        azureContainerRegistry: $(dockerRegistryServiceConnection)
+        
