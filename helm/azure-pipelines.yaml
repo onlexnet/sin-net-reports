@@ -17,6 +17,8 @@ pool:
 
 resources:
   - repo: self
+
+resources:
   pipelines:
   - pipeline: webapp_CI
     project: sinnet
