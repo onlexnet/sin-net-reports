@@ -78,4 +78,6 @@ jobs:
         command: upgrade
         install: false
         chartPath: helm/main
+        chartName: .
+        releaseName: sinnet-reports
         arguments: -f config.yaml
