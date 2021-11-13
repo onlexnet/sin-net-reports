@@ -20,7 +20,7 @@ spec:
         - name: regcred
       containers:
         - name: webapp
-          image: sinnet.azurecr.io/webapp:master-20211019.3
+          image: sinnet.azurecr.io/webapp:{{ required "Tag of WebApp image has to be provided" .Values.imageWebappTag }}
           imagePullPolicy: Always
           ports:
           - containerPort: 80

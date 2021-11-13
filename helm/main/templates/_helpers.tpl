@@ -22,9 +22,6 @@ letsencrypt-nonprod
 {{- end -}}
 {{- end }}
 
-
-
-
 {{/*
 Expand the name of the chart.
 */}}

@@ -9,10 +9,9 @@ type: application
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
 version: 0.3.14
 
-# This is the version number of the application being deployed. This version number should be
-# incremented each time you make changes to the application. Versions are not expected to
-# follow Semantic Versioning. They should reflect the version the application is using.
-appVersion: 1.0.3
+# Do not use such value as long as https://github.com/helm/helm/issues/8194 is not finished
+# Ideal should be use version combined from tags of build blocks
+appVersion: 1.0.0
 
 dependencies:
   - name: postgresql
