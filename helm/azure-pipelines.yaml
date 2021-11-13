@@ -66,7 +66,7 @@ jobs:
         chartPath: helm/main
         azureContainerRegistry: $(dockerRegistryServiceConnection)
     - bash: |
-          echo "##vso[task.setvariable variable=my_version]$(resources.container.webapp.tag)"
+          echo "##vso[task.setvariable WEBAPP_IMAGE_TAG]$(resources.container.webapp.tag)"
           ./makeconfig.sh
       workingDirectory: helm/main
     - task: HelmDeploy@0
@@ -77,5 +77,5 @@ jobs:
         namespace: onlex-sinnet-dev01
         command: upgrade
         install: false
-        chartName: sinnet-reports
+        chartPath: helm/main
         arguments: -f config.yaml
