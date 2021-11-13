@@ -1,21 +1,17 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-
 trigger:
   branches:
     include:
       - master
   paths:
     include:
-      - manifest
+      - helm
 pool:
   vmImage: 'ubuntu-latest'
 
 
-steps:
-- publish: manifest/main/app
-  artifact: app-namespace
-- publish: manifest/main/ingress
-  artifact: ingress-namespace
+- task: HelmDeploy@0
+  displayName: Helm package
+  inputs:
+    command: package
+    chartPath: main
+    destination: $(Build.ArtifactStagingDirectory)
