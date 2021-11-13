@@ -68,8 +68,6 @@ jobs:
     - task: HelmDeploy@0
       displayName: Helm deploy
       inputs:
-        connectionType: Azure Resource Manager
-        azureSubscriptionEndpoint: sinnet-default-manual-arm
-        azureResourceGroup: sinnet-default-manual
-        kubernetesCluster: sinnet-microk8s
+        connectionType: Kubernetes Service Connection
+        kubernetesServiceEndpoint: sinnet-microk8s
         namespace: onlex-sinnet-dev01        
