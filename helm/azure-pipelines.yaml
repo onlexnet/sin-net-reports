@@ -77,4 +77,5 @@ jobs:
         namespace: onlex-sinnet-dev01
         command: upgrade
         install: false
-        arguments: 
+        chartName: sinnet-reports
+        arguments: -f config.yaml
