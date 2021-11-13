@@ -77,7 +77,6 @@ jobs:
         namespace: onlex-sinnet-dev01
         command: upgrade
         install: false
-        chartPath: helm/main
-        chartName: .
+        chartName: helm/main/.
         releaseName: sinnet-reports
-        arguments: -f config.yaml
+        arguments: -f helm/main/config.yaml
