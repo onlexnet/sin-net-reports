@@ -28,6 +28,6 @@ jobs:
       displayName: Helm package and deploy
       inputs:
         command: package
-        chartPath: main
+        chartPath: helm/main
         azureContainerRegistry: $(dockerRegistryServiceConnection)
         
