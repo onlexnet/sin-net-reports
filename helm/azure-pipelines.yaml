@@ -65,9 +65,16 @@ jobs:
         command: package
         chartPath: helm/main
         azureContainerRegistry: $(dockerRegistryServiceConnection)
+    - bash: |
+          echo "##vso[task.setvariable variable=my_version]$(resources.container.webapp.tag)"
+          ./makeconfig.sh
+      workingDirectory: helm/main
     - task: HelmDeploy@0
       displayName: Helm deploy
       inputs:
         connectionType: Kubernetes Service Connection
         kubernetesServiceEndpoint: sinnet-microk8s
-        namespace: onlex-sinnet-dev01        
+        namespace: onlex-sinnet-dev01
+        command: upgrade
+        install: false
+        arguments: 
