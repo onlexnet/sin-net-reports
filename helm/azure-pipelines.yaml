@@ -81,7 +81,7 @@ jobs:
         kubernetesServiceEndpoint: sinnet-micro8s2
         namespace: onlex-sinnet-dev01
         command: upgrade
-        install: false
+        install: true
         chartName: helm/main/.
         releaseName: sinnet-reports
         arguments: -f helm/main/config.yaml
