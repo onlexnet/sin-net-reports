@@ -67,8 +67,6 @@ jobs:
         azureContainerRegistry: $(dockerRegistryServiceConnection)
     - bash: |
           echo "##vso[task.setvariable variable=WEBAPP_IMAGE_TAG]$(resources.container.webapp.tag)"
-          ./makeconfig.sh
-          echo 1. WEBAPP_IMAGE_TAG=$WEBAPP_IMAGE_TAG
       workingDirectory: helm/main
     - bash: |
           echo "##vso[task.setvariable variable=WEBAPP_IMAGE_TAG]$(resources.container.webapp.tag)"
@@ -80,7 +78,7 @@ jobs:
       displayName: Helm deploy
       inputs:
         connectionType: Kubernetes Service Connection
-        kubernetesServiceEndpoint: sinnet-microk8s
+        kubernetesServiceEndpoint: sinnet-micro8s2
         namespace: onlex-sinnet-dev01
         command: upgrade
         install: false

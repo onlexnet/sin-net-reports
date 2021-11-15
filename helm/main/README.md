@@ -8,7 +8,7 @@ export WEBAPP_IMAGE_TAG=master-20211019.3
 And later on apply on e.g. dev01
 ```bash
 . initshell.sh dev01
-
+h upgrade sinnet-reports -f helm/main/config.yaml
 ```
 
 ##
