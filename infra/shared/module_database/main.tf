@@ -21,13 +21,13 @@ resource "random_id" "id" {
 }
 
 resource "postgresql_role" "uservice_customers" {
-  name     = "uservice_customers_${var.environment_name}"
+  name     = "onlexnet_sinnet_${var.environment_name}_customers"
   login    = true
   password = random_id.id.hex
 }
 
 resource "postgresql_database" "customers" {
-  name              = "customers_${var.environment_name}"
+  name              = postgresql_role.uservice_customers.name
   owner             = postgresql_role.uservice_customers.name
   template          = "template0"
   lc_collate        = "C"
@@ -40,13 +40,13 @@ resource "random_id" "services_owner" {
 }
 
 resource "postgresql_role" "services_owner" {
-  name     = "services_owner_${var.environment_name}"
+  name     = "onlexnet_sinnet_${var.environment_name}_services"
   login    = true
   password = random_id.services_owner.hex
 }
 
 resource "postgresql_database" "services" {
-  name              = "services_${var.environment_name}"
+  name              = postgresql_role.services_owner.name
   owner             = postgresql_role.services_owner.name
   template          = "template0"
   lc_collate        = "C"
