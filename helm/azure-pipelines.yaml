@@ -23,7 +23,7 @@ resources:
     trigger: true
   - pipeline: webapi_CI
     project: sinnet
-    source: onlex-sinnet-webapi2
+    source: onlex-sinnet-webapi
     trigger: true
   - pipeline: report_CI
     project: sinnet
@@ -65,6 +65,7 @@ jobs:
           echo "##vso[task.setvariable variable=WEBAPP_IMAGE_TAG]$(resources.container.webapp.tag)"
           echo "##vso[task.setvariable variable=WEBAPI_IMAGE_TAG]$(resources.container.webapi.tag)"
           echo "##vso[task.setvariable variable=REPORTS_IMAGE_TAG]$(resources.container.reports.tag)"
+          ./makeconfig.sh
       workingDirectory: helm/main
 
     - task: HelmDeploy@0
