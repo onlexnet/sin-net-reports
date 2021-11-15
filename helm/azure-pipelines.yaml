@@ -68,7 +68,14 @@ jobs:
     - bash: |
           echo "##vso[task.setvariable variable=WEBAPP_IMAGE_TAG]$(resources.container.webapp.tag)"
           ./makeconfig.sh
+          echo 1) WEBAPP_IMAGE_TAG=$WEBAPP_IMAGE_TAG
       workingDirectory: helm/main
+    - bash: |
+          echo "##vso[task.setvariable variable=WEBAPP_IMAGE_TAG]$(resources.container.webapp.tag)"
+          ./makeconfig.sh
+          echo 2) WEBAPP_IMAGE_TAG=$WEBAPP_IMAGE_TAG
+      workingDirectory: helm/main
+
     - task: HelmDeploy@0
       displayName: Helm deploy
       inputs:
