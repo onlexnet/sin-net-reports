@@ -1,8 +1,8 @@
 #TBD
 
-To configure some dynamic properties on CI pipeline, you may use something as script below:
+To configure some dynamic properties on CI pipeline, you may use locally something as script below:
 ```bash
-export WEBAPP_IMAGE_TAG=master-20211019.3
+export WEBAPP_IMAGE_TAG=master:latest
 ./makeconfig.sh
 ```
 And later on apply on e.g. dev01
