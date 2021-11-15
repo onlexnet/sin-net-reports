@@ -2,13 +2,13 @@
 
 To configure some dynamic properties on CI pipeline, you may use locally something as script below:
 ```bash
-export WEBAPP_IMAGE_TAG=master:latest
+export WEBAPP_IMAGE_TAG=latest
 ./makeconfig.sh
 ```
 And later on apply on e.g. dev01
 ```bash
 . initshell.sh dev01
-h upgrade sinnet-reports -f helm/main/config.yaml
+h upgrade sinnet-reports . -f config.yaml
 ```
 
 ##
