@@ -1,6 +1,6 @@
 export const addressProvider = (): { host: string } => {
   const origin = window.location.origin;
-  return (origin.endsWith("raport.sin.net.pl")
+  return (origin.endsWith("raport.sin.net.pl"))
     ? {
         host: origin,
       }
