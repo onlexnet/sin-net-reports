@@ -78,8 +78,8 @@ jobs:
       displayName: Helm deploy
       inputs:
         connectionType: Kubernetes Service Connection
-        kubernetesServiceEndpoint: sinnet-micro8s2
-        namespace: onlex-sinnet-dev01
+        kubernetesServiceEndpoint: sinnet-microk8s
+        namespace: onlex-sinnet-prd01
         command: upgrade
         install: true
         chartName: helm/main/.
