@@ -3,6 +3,8 @@
 To configure some dynamic properties on CI pipeline, you may use locally something as script below:
 ```bash
 export WEBAPP_IMAGE_TAG=latest
+export WEBAPI_IMAGE_TAG=latest
+export REPORTS_IMAGE_TAG=latest
 ./makeconfig.sh
 ```
 And later on apply on e.g. dev01

@@ -77,4 +77,5 @@ jobs:
           repository: $(dockerRepository)
           tags: |
             $(Build.SourceBranchName)-$(Build.BuildNumber)
+            latest
 

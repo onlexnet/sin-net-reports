@@ -20,7 +20,7 @@ spec:
         - name: regcred
       containers:
         - name: webapi
-          image: sinnet.azurecr.io/webapi:master-20210930.1
+          image: sinnet.azurecr.io/webapi::{{ required "Tag of WebApi image has to be provided" .Values.imageWebApiTag }}
           imagePullPolicy: Always
           ports:
           - containerPort: 8080

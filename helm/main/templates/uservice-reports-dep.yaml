@@ -20,7 +20,7 @@ spec:
         - name: regcred
       containers:
         - name: uservice-reports
-          image: sinnet.azurecr.io/onlex-sinnet-reports:##BUILD_ID##
+          image: sinnet.azurecr.io/onlex-sinnet-reports:{{ required "Tag of Reports image has to be provided" .Values.imageReportsTag }}
           imagePullPolicy: Always
           ports:
           - containerPort: 80
