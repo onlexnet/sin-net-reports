@@ -7,14 +7,7 @@
 1. Create local copy of microk8s configuration to integrate with local tools (like kubectl / VSCode)  
    **sudo microk8s kubectl config view --raw > $HOME/.kube/config** [more](https://github.com/ubuntu/microk8s)
 1. **microk8s enable dns ingress**
-1. Login to ACR to save credentials. It is required because ACR can't provide public image repos and we have images hosted in ACR so some integration is required.
-   more - [here](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/)
-   **docker login sinnet.azurecr.io --username=sinnet --password=<Access key>**
-   This will generate a local config file *config.json*
-   Now, use this this command to create in k8s secret based on just created config.json file so that later on k8s is able to download images from the ACR
-   **sudo microk8s.kubectl create secret generic regcred --type=kubernetes.io/dockerconfigjson --from-file .dockerconfigjson=$HOME/.docker/config.json**
-   Purfect! now our kubectl is ready to pull image from private repo [using provided secret](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/#registry-secret-existing-credentials)
-1. Now add manually support for (let's encrypt)[https://cert-manager.io/docs/installation/]
+1. add raport.sin.net.pl as additional DNS as described **[here](https://github.com/ubuntu/microk8s/issues/849#issuecomment-562892386)**
 1. Apply current state using teraform definition located in *infra* folder
 
 

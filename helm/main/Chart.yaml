@@ -12,8 +12,3 @@ version: 0.3.14
 # Do not use such value as long as https://github.com/helm/helm/issues/8194 is not finished
 # Ideal should be use version combined from tags of build blocks
 appVersion: 1.0.0
-
-dependencies:
-  - name: postgresql
-    version: 10.13.5
-    repository: file://./charts/postgresql
