@@ -94,5 +94,4 @@ stages:
             namespace: onlex-sinnet-stg01
             command: upgrade
             install: true
-            chartName: sinnet-reports-0.3.14.tgz
-            releaseName: $(System.DefaultWorkingDirectory)/sinnet-reports
+            chartName: $(System.DefaultWorkingDirectory)/sinnet-reports-0.3.14.tgz
