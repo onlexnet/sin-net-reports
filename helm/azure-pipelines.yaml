@@ -78,8 +78,8 @@ stages:
             connectionType: Kubernetes Service Connection
             command: save
             chartNameForACR: sinnet-reports
-            chartPath:  helm/main
-            destination: $(Build.ArtifactStagingDirectory)
+            chartPath:  helm/main/.
+            # destination: $(Build.ArtifactStagingDirectory)
         # - publish: $(Build.ArtifactStagingDirectory)
         #   artifact: chart
   # - stage: deployHelmChart
