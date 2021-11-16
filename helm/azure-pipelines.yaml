@@ -75,6 +75,7 @@ stages:
           inputs:
             connectionType: Kubernetes Service Connection
             command: save
+            chartNameForACR: onlex/sinnet-reports
             chartPath:  helm/main
             destination: $(Build.ArtifactStagingDirectory)
         - publish: $(Build.ArtifactStagingDirectory)
