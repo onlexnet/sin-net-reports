@@ -73,7 +73,6 @@ stages:
         - task: HelmDeploy@0
           displayName: Helm package
           inputs:
-            connectionType: Kubernetes Service Connection
             command: package
             chartName: sinnet-reports
             chartPath:  helm/main/.
@@ -85,7 +84,7 @@ stages:
         - bash: |
               mkdir $(Build.ArtifactStagingDirectory)/artifact1
               mv chart.config $(Build.ArtifactStagingDirectory)/artifact1
-              mv $(CHART_FILE_NAME) $(Build.ArtifactStagingDirectory)/artifact1
+              mv helm/main/$(CHART_FILE_NAME) $(Build.ArtifactStagingDirectory)/artifact1
               mv config.yaml $(Build.ArtifactStagingDirectory)/artifact1
           displayName: Move artifacts to single location before publishing
         - publish: $(Build.ArtifactStagingDirectory)/artifact1/
