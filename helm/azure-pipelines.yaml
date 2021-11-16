@@ -68,7 +68,7 @@ stages:
               echo "##vso[task.setvariable variable=REPORTS_IMAGE_TAG]$(resources.container.reports.tag)"
           workingDirectory: helm/main
         - bash: |
-              ./makeconfig.sh
+              ./helm/main/makeconfig.sh
               displayName: Generate config.yaml
         - task: HelmDeploy@0
           displayName: Helm package
