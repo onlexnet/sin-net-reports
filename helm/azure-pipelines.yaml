@@ -54,6 +54,8 @@ stages:
     displayName: Create HELM Chart
     jobs:
       - job: CICD
+        variables:
+          HELM_EXPERIMENTAL_OCI: 1
         displayName: CI/CD build
         steps:
         - task: HelmDeploy@0
@@ -75,11 +77,11 @@ stages:
           inputs:
             connectionType: Kubernetes Service Connection
             command: save
-            chartNameForACR: onlex/sinnet-reports
+            chartNameForACR: sinnet-reports
             chartPath:  helm/main
             destination: $(Build.ArtifactStagingDirectory)
-        - publish: $(Build.ArtifactStagingDirectory)
-          artifact: chart
+        # - publish: $(Build.ArtifactStagingDirectory)
+        #   artifact: chart
   # - stage: deployHelmChart
   #   displayName: Deploy HELM Chart
   #   jobs:
