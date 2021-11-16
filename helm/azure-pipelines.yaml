@@ -78,11 +78,15 @@ stages:
             chartName: sinnet-reports
             chartPath:  helm/main/.
             chartVersion: $(Build.BuildNumber)
-            destination: $(Build.ArtifactStagingDirectory)/artifact1
+            destination: $(Build.ArtifactStagingDirectory)
         - bash: |
               echo "##vso[task.setvariable variable=CHART_FILE_NAME]sinnet-reports-$(Build.BuildNumber).tgz"
         - bash: |
-              echo "{ chartFileName: $(CHART_FILE_NAME)}" > $(Build.ArtifactStagingDirectory)/artifact1/chart.config
+              echo "{ chartFileName: $(CHART_FILE_NAME)}" > chart.config
+        - bash: |
+              mv chart.config $(Build.ArtifactStagingDirectory)/artifact1/
+              mv $(CHART_FILE_NAME) $(Build.ArtifactStagingDirectory)/artifact1/
+              mv config.yaml $(Build.ArtifactStagingDirectory)/artifact1/
         - publish: $(Build.ArtifactStagingDirectory)/artifact1/
           artifact: chart
   # - stage: 
