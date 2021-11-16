@@ -73,6 +73,14 @@ stages:
               ./makeconfig.sh
           workingDirectory: helm/main
 
+  - stage: deployHelmChart
+    displayName: Create HELM Chart
+    jobs:
+      - job: deployment
+        displayName: Deploy HELM chart
+        pool:
+          vmImage: ubuntu-latest
+        steps:
         - task: HelmDeploy@0
           displayName: Helm deploy
           inputs:
