@@ -49,35 +49,38 @@ resources:
       registry: sinnet
       repository: onlex-sinnet-reports
 
-jobs:
-  - job: CICD
-    displayName: CI/CD build
-    pool:
-      vmImage: ubuntu-latest
-    steps:
-    - task: HelmDeploy@0
-      displayName: Helm package and deploy
-      inputs:
-        command: package
-        chartPath: helm/main
-        azureContainerRegistry: $(dockerRegistryServiceConnection)
-    - bash: |
-          echo "##vso[task.setvariable variable=WEBAPP_IMAGE_TAG]$(resources.container.webapp.tag)"
-          echo "##vso[task.setvariable variable=WEBAPI_IMAGE_TAG]$(resources.container.webapi.tag)"
-          echo "##vso[task.setvariable variable=REPORTS_IMAGE_TAG]$(resources.container.reports.tag)"
-      workingDirectory: helm/main
-    - bash: |
-          ./makeconfig.sh
-      workingDirectory: helm/main
+stages:
+  - stage: createHelmChart
+    displayName: Create HELM Chart
+    jobs:
+      - job: CICD
+        displayName: CI/CD build
+        pool:
+          vmImage: ubuntu-latest
+        steps:
+        - task: HelmDeploy@0
+          displayName: Helm package and deploy
+          inputs:
+            command: package
+            chartPath: helm/main
+            azureContainerRegistry: $(dockerRegistryServiceConnection)
+        - bash: |
+              echo "##vso[task.setvariable variable=WEBAPP_IMAGE_TAG]$(resources.container.webapp.tag)"
+              echo "##vso[task.setvariable variable=WEBAPI_IMAGE_TAG]$(resources.container.webapi.tag)"
+              echo "##vso[task.setvariable variable=REPORTS_IMAGE_TAG]$(resources.container.reports.tag)"
+          workingDirectory: helm/main
+        - bash: |
+              ./makeconfig.sh
+          workingDirectory: helm/main
 
-    - task: HelmDeploy@0
-      displayName: Helm deploy
-      inputs:
-        connectionType: Kubernetes Service Connection
-        kubernetesServiceEndpoint: sinnet-microk8s
-        namespace: onlex-sinnet-prd01
-        command: upgrade
-        install: true
-        chartName: helm/main/.
-        releaseName: sinnet-reports
-        arguments: -f helm/main/config.yaml
+        - task: HelmDeploy@0
+          displayName: Helm deploy
+          inputs:
+            connectionType: Kubernetes Service Connection
+            kubernetesServiceEndpoint: sinnet-microk8s
+            namespace: onlex-sinnet-prd01
+            command: upgrade
+            install: true
+            chartName: helm/main/.
+            releaseName: sinnet-reports
+            arguments: -f helm/main/config.yaml
