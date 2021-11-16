@@ -77,7 +77,6 @@ stages:
             command: package
             chartName: helm/main
             destination: $(Build.ArtifactStagingDirectory)
-            arguments: -f helm/main/config.yaml
         - publish: $(System.DefaultWorkingDirectory)
           artifact: chart
   - stage: deployHelmChart
