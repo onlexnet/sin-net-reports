@@ -85,6 +85,7 @@ stages:
       - job: deployment
         displayName: Deploy HELM chart
         steps:
+        - checkout: none
         - task: HelmDeploy@0
           displayName: Helm deploy
           inputs:
@@ -93,6 +94,5 @@ stages:
             namespace: onlex-sinnet-stg01
             command: upgrade
             install: true
-            chartName: helm/main/.
-            releaseName: sinnet-reports
-            arguments: -f helm/main/config.yaml
+            chartName: sinnet-reports-0.3.14.tgz
+            releaseName: $(System.DefaultWorkingDirectory)/sinnet-reports
