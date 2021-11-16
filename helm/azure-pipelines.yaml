@@ -78,6 +78,9 @@ stages:
             chartPath:  helm/main/.
             chartVersion: $(Build.BuildNumber)
         - bash: |
+              ls
+              ls helm/main
+        - bash: |
               echo "##vso[task.setvariable variable=CHART_FILE_NAME]sinnet-reports-$(Build.BuildNumber).tgz"
         - bash: |
               echo "{ chartFileName: $(CHART_FILE_NAME)}" > chart.config
