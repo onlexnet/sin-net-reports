@@ -55,8 +55,6 @@ stages:
     jobs:
       - job: CICD
         displayName: CI/CD build
-        pool:
-          vmImage: ubuntu-latest
         steps:
         - task: HelmDeploy@0
           displayName: Helm package and deploy
@@ -72,21 +70,28 @@ stages:
         - bash: |
               ./makeconfig.sh
           workingDirectory: helm/main
-
+        - task: HelmDeploy@0
+          displayName: Helm package
+          inputs:
+            connectionType: Kubernetes Service Connection
+            command: package
+            chartName: helm/main
+            destination: $(Build.ArtifactStagingDirectory)
+            arguments: -f helm/main/config.yaml
+        - publish: $(System.DefaultWorkingDirectory)
+          artifact: chart
   - stage: deployHelmChart
-    displayName: Create HELM Chart
+    displayName: Deploy HELM Chart
     jobs:
       - job: deployment
         displayName: Deploy HELM chart
-        pool:
-          vmImage: ubuntu-latest
         steps:
         - task: HelmDeploy@0
           displayName: Helm deploy
           inputs:
             connectionType: Kubernetes Service Connection
             kubernetesServiceEndpoint: sinnet-microk8s
-            namespace: onlex-sinnet-prd01
+            namespace: onlex-sinnet-stg01
             command: upgrade
             install: true
             chartName: helm/main/.
