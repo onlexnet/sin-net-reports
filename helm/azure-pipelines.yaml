@@ -74,24 +74,24 @@ stages:
           displayName: Helm package
           inputs:
             connectionType: Kubernetes Service Connection
-            command: package
+            command: save
             chartPath:  helm/main
             destination: $(Build.ArtifactStagingDirectory)
         - publish: $(Build.ArtifactStagingDirectory)
           artifact: chart
-  - stage: deployHelmChart
-    displayName: Deploy HELM Chart
-    jobs:
-      - job: deployment
-        displayName: Deploy HELM chart
-        steps:
-        - checkout: none
-        - task: HelmDeploy@0
-          displayName: Helm deploy
-          inputs:
-            connectionType: Kubernetes Service Connection
-            kubernetesServiceEndpoint: sinnet-microk8s
-            namespace: onlex-sinnet-stg01
-            command: upgrade
-            install: true
-            chartName: $(Build.ArtifactStagingDirectory)/sinnet-reports-0.3.14.tgz
+  # - stage: deployHelmChart
+  #   displayName: Deploy HELM Chart
+  #   jobs:
+  #     - job: deployment
+  #       displayName: Deploy HELM chart
+  #       steps:
+  #       - checkout: none
+  #       - task: HelmDeploy@0
+  #         displayName: Helm deploy
+  #         inputs:
+  #           connectionType: Kubernetes Service Connection
+  #           kubernetesServiceEndpoint: sinnet-microk8s
+  #           namespace: onlex-sinnet-stg01
+  #           command: upgrade
+  #           install: true
+  #           chartName: $(Build.ArtifactStagingDirectory)/sinnet-reports-0.3.14.tgz
