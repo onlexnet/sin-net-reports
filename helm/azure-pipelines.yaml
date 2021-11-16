@@ -87,7 +87,7 @@ stages:
               echo "{ chartFileName: $(CHART_FILE_NAME)}" > $(Build.ArtifactStagingDirectory)/chart.config
         - publish: $(Build.ArtifactStagingDirectory)/chart.config
           artifact: chart-config
-  - stage: 
+  # - stage: 
   # - stage: deployHelmChart
   #   displayName: Deploy HELM Chart
   #   jobs:
