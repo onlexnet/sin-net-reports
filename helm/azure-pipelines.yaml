@@ -75,7 +75,7 @@ stages:
           inputs:
             connectionType: Kubernetes Service Connection
             command: package
-            chartName: helm/main/.
+            chartPath:  helm/main
             destination: $(Build.ArtifactStagingDirectory)
         - publish: $(System.DefaultWorkingDirectory)
           artifact: chart
