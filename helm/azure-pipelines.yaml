@@ -103,7 +103,16 @@ stages:
               steps:
                 - download: current
                   artifact: chart
-                - bash: echo $(myOutputVar)
+                - bash: |
+                    export CHART_FILE_NAME=$(echo cat $(Pipeline.Workspace)/config.yaml | jq '.chartFileName')
+                    echo $CHART_FILE_NAME
+                # - task: HelmDeploy@0
+                #   displayName: Helm package
+                #   inputs:
+                #     command: package
+                #     chartName: sinnet-reports
+                #     chartPath:  helm/main/.
+                #     chartVersion: $(Build.BuildNumber)
 
 
 
