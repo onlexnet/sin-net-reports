@@ -96,7 +96,7 @@ stages:
     jobs:
       - deployment: deployToStg
         displayName: Deploy to STG01 (Beta)
-        environment: onlex-sinnet-stg01
+        environment: onlexnet-sinnet-stg01
         strategy:                  
           runOnce:
             deploy:
