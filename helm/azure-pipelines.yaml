@@ -69,7 +69,7 @@ stages:
           workingDirectory: helm/main
         - bash: |
               ./makeconfig.sh
-          workingDirectory: helm/main
+              displayName: Generate config.yaml
         - task: HelmDeploy@0
           displayName: Helm package
           inputs:
