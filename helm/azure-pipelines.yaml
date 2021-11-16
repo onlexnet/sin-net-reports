@@ -84,6 +84,7 @@ stages:
         - bash: |
               echo "{ chartFileName: $(CHART_FILE_NAME)}" > chart.config
         - bash: |
+              mkdir $(Build.ArtifactStagingDirectory)/artifact1
               mv chart.config $(Build.ArtifactStagingDirectory)/artifact1/
               mv $(CHART_FILE_NAME) $(Build.ArtifactStagingDirectory)/artifact1/
               mv config.yaml $(Build.ArtifactStagingDirectory)/artifact1/
