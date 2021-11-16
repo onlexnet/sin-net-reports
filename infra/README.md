@@ -1,6 +1,12 @@
 # Goal
 Infrastructre as code: creates environments and configure them
 
+# Manual preparation
+Because DNS is not automated by Terraform, so DNS prefixes are added manually:
+dev01 - for dev env
+stg01 and beta - for staging environment
+prd01 - for production. also prd01 will be exposed as root DNS name
+
 ### Prerequisites
 * We need a single privileged service account to apply changes in Azure for all environments. It is not the best practicew for large companies, where prod and non-prod should be separated, but it is very convinient for my local work and small clients. For such reason aad application named **onlex-infra** (single tenant application) has been created with permissions:
   - 'Contributor' role (to be able create resources) on each app subscription
