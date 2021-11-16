@@ -79,7 +79,7 @@ stages:
             chartPath:  helm/main/.
             chartVersion: $(Build.BuildNumber)
             destination: $(Build.ArtifactStagingDirectory)
-        - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildNumber)-$(Build.ArtifactStagingDirectory).tgz
+        - publish: $(Build.ArtifactStagingDirectory)/sinnet-reports-$(Build.BuildNumber).tgz
           artifact: chart
   # - stage: deployHelmChart
   #   displayName: Deploy HELM Chart
