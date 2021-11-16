@@ -54,4 +54,8 @@ resource "kubernetes_config_map" "default" {
   }
   data = {
   }
+
+  depends_on = [
+    kubernetes_namespace.default
+  ]
 }

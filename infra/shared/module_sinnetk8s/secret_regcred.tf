@@ -12,6 +12,10 @@ resource "kubernetes_secret" "docker-registry" {
   }
 
   type = "kubernetes.io/dockerconfigjson"
+
+  depends_on = [
+    kubernetes_namespace.default
+  ]
 }
 
 

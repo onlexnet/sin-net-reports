@@ -38,8 +38,9 @@ export TF_VAR_B2C_subscription_id=subscription of B2C
 export TF_VAR_B2C_tenant_id=tenant ID of B2C
 
 export TF_VAR_sinnet_prod_subscription_id= ... onlexnet-sinnet-app-prd01 subscription ID
-export TF_VAR_onlexnet_sinnet_prd01_subscription_id= ... onlexnet-sinnet-app-prd01 subscription ID
 export TF_VAR_onlexnet_sinnet_dev01_subscription_id= ... onlexnet-sinnet-app-dev01 subscription ID
+export TF_VAR_onlexnet_sinnet_stg01_subscription_id= ... onlexnet-sinnet-app-stg01 subscription ID
+export TF_VAR_onlexnet_sinnet_prd01_subscription_id= ... onlexnet-sinnet-app-prd01 subscription ID
 
 
 ```

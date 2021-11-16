@@ -1,7 +1,7 @@
-provider "azuread" {
+provider azuread {
 }
 
-provider "azurerm" {
+provider azurerm {
 
   # By default, Terraform will attempt to register any Resource Providers that it supports,
   # even if they're not used in your configurations to be able to display more helpful error messages.
@@ -15,7 +15,7 @@ provider "azurerm" {
   features {}
 }
 
-provider "azurerm" {
+provider azurerm {
   alias = "shared"
   subscription_id = var.shared_subscription_id
   features {}
