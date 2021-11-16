@@ -87,7 +87,9 @@ stages:
               mv chart.config $(Build.ArtifactStagingDirectory)/artifact1
               mv $(CHART_FILE_NAME) $(Build.ArtifactStagingDirectory)/artifact1
               mv config.yaml $(Build.ArtifactStagingDirectory)/artifact1
+          displayName: Move artifacts to single location before publishing
         - publish: $(Build.ArtifactStagingDirectory)/artifact1/
+          displayName: Publish collected artifacts
           artifact: chart
   # - stage: 
   # - stage: deployHelmChart
