@@ -18,7 +18,7 @@ module "appinsights" {
 }
 
 data "azurerm_container_registry" "sinnet" {
-  provider            = "azurerm.shared"
+  provider            = azurerm.shared
   name                = "sinnet"
   resource_group_name = "sinnet-default-manual"
 }
