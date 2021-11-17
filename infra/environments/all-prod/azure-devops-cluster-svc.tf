@@ -14,10 +14,19 @@ resource "kubernetes_cluster_role" "azure-devops-cluster-svc" {
     name = "azure-devops-cluster-svc"
   }
 
+  # required to connect namespace to ADO
   rule {
     api_groups     = [""]
     resources      = ["namespaces"]
     verbs          = ["get"]
+  }
+
+  # required to deploy app to ADO
+
+  rule {
+    api_groups     = ["*","apps","extensions"]
+    resources      = ["*"]
+    verbs          = ["get", "list", "watch", "create", "update", "patch", "delete"]
   }
 
 }
