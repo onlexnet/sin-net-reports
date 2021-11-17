@@ -67,8 +67,8 @@ jobs:
           containerRegistry: $(dockerRegistryServiceConnection)
           repository: $(dockerRepository)
           tags: |
-            $(Build.SourceBranchName)-$(Build.BuildNumber)
             latest
+            $(Build.SourceBranchName)-$(Build.BuildNumber)
 
       - task: Docker@2
         displayName: Push webapi image to docker ACR
@@ -77,6 +77,5 @@ jobs:
           containerRegistry: $(dockerRegistryServiceConnection)
           repository: $(dockerRepository)
           tags: |
-            $(Build.SourceBranchName)-$(Build.BuildNumber)
             latest
-
+            $(Build.SourceBranchName)-$(Build.BuildNumber)
