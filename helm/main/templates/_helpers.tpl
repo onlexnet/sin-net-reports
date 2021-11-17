@@ -18,7 +18,7 @@ raport.sin.net.pl
 {{- if hasPrefix .Values.productionEnvPrefix $envName -}}
 letsencrypt-prod
 {{- else -}}
-letsencrypt-nonprod
+letsencrypt-prod
 {{- end -}}
 {{- end }}
 
