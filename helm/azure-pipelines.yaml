@@ -113,9 +113,10 @@ stages:
                     kubernetesServiceEndpoint: sinnet-microk8s 
                     command: upgrade
                     install: true
+                    chartName: $(Pipeline.Workspace)/chart/$(var_chart_file_name)
+                    arguments: -f $(Pipeline.Workspace)/chart/config.yaml
                     releaseName: sinnet-reports
                     namespace: onlex-sinnet-stg01
-                    chartPath: $(Pipeline.Workspace)/chart/$(var_chart_file_name)
 
 
       # - job: deployment
