@@ -107,13 +107,13 @@ stages:
                     export CHART_FILE_NAME=$(cat $(Pipeline.Workspace)/chart/chart.config | jq '.chartFileName')
                     echo "##vso[task.setvariable variable=WEBAPI_IMAGE_TAG]$(CHART_FILE_NAME)"
                 - bash: |
-                    echo $CHART_FILE_NAME
+                    echo $(Pipeline.Workspace)/chart/$CHART_FILE_NAME
                 # - task: HelmDeploy@0
                 #   displayName: Helm install
                 #   inputs:
-                    
-                #     command: package
-                #     chartName: sinnet-reports
+                #     command: upgrade
+                #     install: true
+                #     chartName:  $(Pipeline.Workspace)/chart/$CHART_FILE_NAME
                 #     chartPath:  helm/main/.
                 #     chartVersion: $(Build.BuildNumber)
 
