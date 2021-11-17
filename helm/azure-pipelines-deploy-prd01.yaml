@@ -30,16 +30,16 @@ stages:
                 - download: helm_CI
                   artifact: chart
                 - bash: |
-                    echo "##vso[task.setvariable variable=var_chart_file_name]$(cat $(Pipeline.Workspace)/helm_ci/chart/chart.config | jq '.chartFileName')"
+                    echo "##vso[task.setvariable variable=var_chart_file_name]$(cat $(Pipeline.Workspace)/helm_CI/chart/chart.config | jq '.chartFileName')"
                 - bash: |
-                    echo $(Pipeline.Workspace)/helm_ci/chart/$(var_chart_file_name)
+                    echo $(Pipeline.Workspace)/helm_CI/chart/$(var_chart_file_name)
                 - task: HelmDeploy@0
                   displayName: Helm install
                   inputs:
                     kubernetesServiceEndpoint: PRD01-onlex-sinnet-prd01-1637174649680 
                     command: upgrade
                     install: true
-                    chartName: $(Pipeline.Workspace)/helm_ci/chart/$(var_chart_file_name)
-                    arguments: -f $(Pipeline.Workspace)/helm_ci/chart/config.yaml
+                    chartName: $(Pipeline.Workspace)/helm_CI/chart/$(var_chart_file_name)
+                    arguments: -f $(Pipeline.Workspace)/helm_CI/chart/config.yaml
                     releaseName: sinnet-reports
                     namespace: onlex-sinnet-prd01
