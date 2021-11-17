@@ -104,7 +104,7 @@ stages:
                 - download: current
                   artifact: chart
                 - bash: |
-                    export CHART_FILE_NAME=$(cat $(Pipeline.Workspace)/chart.config | jq '.chartFileName')
+                    export CHART_FILE_NAME=$(cat $(Pipeline.Workspace)/chart/chart.config | jq '.chartFileName')
                     echo $CHART_FILE_NAME
                 # - task: HelmDeploy@0
                 #   displayName: Helm package
