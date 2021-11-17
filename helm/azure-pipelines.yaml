@@ -110,9 +110,10 @@ stages:
                 - task: HelmDeploy@0
                   displayName: Helm install
                   inputs:
+                    kubernetesServiceEndpoint: sinnet-microk8s 
                     command: upgrade
                     install: true
-                    chartName: sinnet-reports
+                    releaseName: sinnet-reports
                     namespace: onlex-sinnet-stg01
                     chartPath: $(Pipeline.Workspace)/chart/$(var_chart_file_name)
 
