@@ -95,7 +95,7 @@ stages:
     displayName: Deploy HELM Chart to STG
     jobs:
       - deployment: deployToStg
-        displayName: Deploy to STG01 (Beta)
+        displayName: Deploy to STG01
         environment: onlexnet-sinnet-stg01
         strategy:                  
           runOnce:
@@ -104,7 +104,7 @@ stages:
                 - download: current
                   artifact: chart
                 - bash: |
-                    export CHART_FILE_NAME=$(echo cat $(Pipeline.Workspace)/chart.config | jq '.chartFileName')
+                    export CHART_FILE_NAME=$(cat $(Pipeline.Workspace)/chart.config | jq '.chartFileName')
                     echo $CHART_FILE_NAME
                 # - task: HelmDeploy@0
                 #   displayName: Helm package
