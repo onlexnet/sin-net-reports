@@ -70,6 +70,6 @@ jobs:
           repository: webapp
           command: buildAndPush
           tags: |
-            $(Build.SourceBranchName)-$(Build.BuildNumber)
             latest
+            $(Build.SourceBranchName)-$(Build.BuildNumber)
 
