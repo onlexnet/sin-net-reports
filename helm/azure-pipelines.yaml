@@ -66,7 +66,7 @@ stages:
               echo "##vso[task.setvariable variable=WEBAPP_IMAGE_TAG]$(resources.container.webapp.tag)"
               echo "##vso[task.setvariable variable=WEBAPI_IMAGE_TAG]$(resources.container.webapi.tag)"
               echo "##vso[task.setvariable variable=REPORTS_IMAGE_TAG]$(resources.container.reports.tag)"
-          workingDirectory: helm/main
+          displayName: Store all used image tags in variables for future use.
         - bash: |
               ./helm/main/makeconfig.sh
           displayName: Generate config.yaml
@@ -80,7 +80,7 @@ stages:
         - bash: |
               echo "##vso[task.setvariable variable=CHART_FILE_NAME]sinnet-reports-$(Build.BuildNumber).tgz"
         - bash: |
-              echo "{ chartFileName: $(CHART_FILE_NAME)}" > chart.config
+              echo '{ "chartFileName": "$(CHART_FILE_NAME)"}' > chart.config
         - bash: |
               mkdir $(Build.ArtifactStagingDirectory)/artifact1
               mv chart.config $(Build.ArtifactStagingDirectory)/artifact1
