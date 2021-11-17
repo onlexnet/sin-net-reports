@@ -27,7 +27,7 @@ stages:
             deploy:
               steps:
                 - checkout: none
-                - download: current
+                - download: helm_CI
                   artifact: chart
                 - bash: |
                     echo "##vso[task.setvariable variable=var_chart_file_name]$(cat $(Pipeline.Workspace)/chart/chart.config | jq '.chartFileName')"
