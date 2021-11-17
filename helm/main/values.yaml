@@ -72,5 +72,4 @@ affinity: {}
 # raport.sin.net.pl - one of the network interfaces interfaces
 databaseHost: 83.0.169.165
 
-rootEnvName: prd00
 productionEnvPrefix: prd

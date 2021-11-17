@@ -5,8 +5,10 @@
 {{- define "ingress.host" -}}
 {{- $parts := split "-" .Release.Namespace -}}
 {{- $envName := $parts._2 -}}
-{{- if hasPrefix .Values.rootEnvName $envName -}}
+{{- if eq $envName "prd01" -}}
 raport.sin.net.pl
+{{- else if eq $envName "stg01" -}}
+beta.raport.sin.net.pl
 {{- else -}}
 {{ $envName }}.raport.sin.net.pl
 {{- end -}}
