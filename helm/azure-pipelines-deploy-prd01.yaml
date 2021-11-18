@@ -21,7 +21,9 @@ stages:
     jobs:
       - deployment: deployToPrd
         displayName: Deploy to PRD01
-        environment: PRD01
+        environment:
+          name: PRD01
+          resourceType: Kubernetes
         strategy:                  
           runOnce:
             deploy:
