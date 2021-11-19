@@ -31,7 +31,7 @@ jobs:
     steps:
 
       - bash: |
-          echo "##vso[task.setvariable variable=my_version]$(cat .version)"
+          echo "##vso[task.setvariable variable=my_version]$(cat webapp/.version)"
         displayName: Read version from .version file
 
       - task: Npm@1
