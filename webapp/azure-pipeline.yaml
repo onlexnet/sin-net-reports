@@ -64,6 +64,7 @@ jobs:
 
       - task: Docker@2
         displayName: Build and push image to docker ACR
+        condition: eq($(System.PullRequest.SourceBranch),'')
         inputs:
           containerRegistry: $(dockerRegistryServiceConnection)
           dockerfile: webapp/Dockerfile
