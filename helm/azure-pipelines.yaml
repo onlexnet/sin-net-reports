@@ -99,7 +99,9 @@ stages:
     jobs:
       - deployment: deployToStg
         displayName: Deploy to STG01
-        environment: STG01
+        environment:
+          name: STG01
+          resourceType: Kubernetes
         strategy:                  
           runOnce:
             deploy:
