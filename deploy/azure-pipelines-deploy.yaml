@@ -16,6 +16,36 @@ resources:
     trigger: true
 
 stages:
+  - stage: deployToStg
+    displayName: Deploy HELM Chart to STG
+    jobs:
+      - deployment: deployToStg
+        displayName: Deploy to STG01
+        environment:
+          name: STG01
+          resourceType: Kubernetes
+        strategy:                  
+          runOnce:
+            deploy:
+              steps:
+                - checkout: none
+                - download: helm_CI
+                  artifact: chart
+                - bash: |
+                    echo "##vso[task.setvariable variable=var_chart_file_name]$(cat $(Pipeline.Workspace)/helm_CI/chart/chart.config | jq '.chartFileName')"
+                - bash: |
+                    echo $(Pipeline.Workspace)/helm_CI/chart/$(var_chart_file_name)
+                - task: HelmDeploy@0
+                  displayName: Helm install
+                  inputs:
+                    kubernetesServiceEndpoint: STG01-onlex-sinnet-stg01-1637108826557 
+                    command: upgrade
+                    install: true
+                    chartName: $(Pipeline.Workspace)/helm_CI/chart/$(var_chart_file_name)
+                    arguments: -f $(Pipeline.Workspace)/helm_CI/chart/config.yaml
+                    releaseName: sinnet-reports
+                    namespace: onlex-sinnet-stg01
+
   - stage: deployToProd
     displayName: Deploy HELM Chart to PROD
     jobs:
