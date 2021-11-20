@@ -10,6 +10,10 @@ variables:
   # name of the docker registry where the image is hosted on.
   # in Docker world, it is also part of image name (prefix)
   containerRegistry: "sinnetapps.azurecr.io"
+  ${{ if eq( variables['build.reason'], 'PullRequest' ) }}:
+    date: ''
+  ${{ if ne( variables['build.reason'], 'PullRequest' ) }}:
+    date: ${{ '$(Date:yyyyMMdd)' }}
 
 trigger:
   batch: true
@@ -64,7 +68,7 @@ jobs:
 
       - task: Docker@2
         displayName: Build and push image to docker ACR
-        condition: eq($(System.PullRequest.SourceBranch),'')
+        condition: ne(variables['Build.Reason'], 'PullRequest')
         inputs:
           containerRegistry: $(dockerRegistryServiceConnection)
           dockerfile: webapp/Dockerfile
