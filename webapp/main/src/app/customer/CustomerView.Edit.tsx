@@ -7,6 +7,7 @@ import { ContactDetails, CustomerView, CustomerViewEntry, SecretExModel, SecretM
 import { useGetCustomerQuery } from "../../Components/.generated/components";
 import _ from "lodash";
 import { v1 as uuid } from 'uuid';
+import { SecretsTimestamp } from "./SecretsTimestamp";
 
 const mapStateToProps = (state: RootState) => {
     if (state.appState.empty) {
@@ -59,7 +60,7 @@ export const CustomerViewEditLocal: React.FC<CustomerViewEditProps> = props => {
                     username: it.username ?? undefined,
                     password: it.password ?? undefined,
                     who: it.changedWho,
-                    when: it.changedWhen
+                    when: SecretsTimestamp.of(it.changedWhen)
                 };
                 return ret;
             })
@@ -75,7 +76,7 @@ export const CustomerViewEditLocal: React.FC<CustomerViewEditProps> = props => {
                 entityName: it.entityName ?? undefined,
                 entityCode: it.entityCode ?? undefined,
                 who: it.changedWho,
-                when: it.changedWhen
+                when: SecretsTimestamp.of(it.changedWhen)
             };
             return ret;
         })

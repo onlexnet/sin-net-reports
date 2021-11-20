@@ -13,7 +13,6 @@ import sinnet.models.ActionValue;
 import sinnet.models.Distance;
 import sinnet.models.Email;
 import sinnet.models.EntityId;
-import sinnet.models.Name;
 import sinnet.read.CustomerProjection;
 
 /** Fixme. */

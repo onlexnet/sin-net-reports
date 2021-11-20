@@ -8,10 +8,9 @@ import org.springframework.stereotype.Component;
 
 import graphql.kickstart.tools.GraphQLResolver;
 import io.vertx.core.eventbus.EventBus;
-import sinnet.gql.MyEntity;
-import sinnet.gql.SomeEntity;
 import sinnet.bus.AskTemplate;
 import sinnet.bus.query.FindCustomer;
+import sinnet.gql.SomeEntity;
 
 @Component
 public class CustomersQueryGet extends AskTemplate<FindCustomer.Ask, FindCustomer.Reply>
