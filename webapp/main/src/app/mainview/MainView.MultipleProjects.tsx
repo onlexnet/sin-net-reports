@@ -19,7 +19,7 @@ export const MainViewMultipleProjects: React.FC<MainViewMultipleProjectsProps> =
         <Stack>
             <Stack.Item align="center">
                 <span>
-                    <ChoiceGroup options={options} label="Wybierz projekt na którym chcesz pracować (1):" onChange={(e, v) => setSelected(v?.key)} />
+                    <ChoiceGroup options={options} label="Wybierz projekt na którym chcesz pracować:" onChange={(e, v) => setSelected(v?.key)} />
                 </span>
                 <span>
                     <DefaultButton disabled={selected ? false : true}
