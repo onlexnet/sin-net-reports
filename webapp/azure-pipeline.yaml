@@ -68,7 +68,7 @@ jobs:
 
       - task: Docker@2
         displayName: Build and push image to docker ACR
-        condition: ne(variables['Build.Reason'], 'PullRequest')
+        condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
         inputs:
           containerRegistry: $(dockerRegistryServiceConnection)
           dockerfile: webapp/Dockerfile
