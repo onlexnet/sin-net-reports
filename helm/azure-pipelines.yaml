@@ -56,6 +56,9 @@ stages:
       - job: CICD
         displayName: CI/CD build
         steps:
+        - task: HelmInstaller@1
+          inputs:
+            helmVersionToInstall: 'latest' # Optional
         - task: HelmDeploy@0
           displayName: Helm package and deploy
           inputs:
