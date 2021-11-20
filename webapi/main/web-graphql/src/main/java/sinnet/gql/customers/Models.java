@@ -79,8 +79,8 @@ class CustomerSecret {
   private String location;
   private String username;
   private String password;
-  private String changedWhen;
   private String changedWho;
+  private String changedWhen;
 }
 
 @Value
@@ -90,8 +90,8 @@ class CustomerSecretEx {
   private String password;
   private String entityName;
   private String entityCode;
-  private String changedWhen;
   private String changedWho;
+  private String changedWhen;
 }
 
 @Value

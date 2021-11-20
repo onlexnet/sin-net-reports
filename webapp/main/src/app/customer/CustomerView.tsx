@@ -12,6 +12,8 @@ import { UserPasswordItem } from "./View.UserPasswordItem";
 import { UserPasswordItemExt } from "./View.UserPasswordItemEx";
 import { v1 as uuid } from 'uuid';
 import { NewContactItem } from "./NewContactItem";
+import moment from "moment";
+import { SecretsTimestamp } from "./SecretsTimestamp";
 
 
 const stackStyles: Partial<IStackStyles> = { root: { width: 650 } };
@@ -107,7 +109,7 @@ export interface SecretModel {
     username?: string
     password?: string
     who?: string
-    when?: string
+    when?: SecretsTimestamp
 }
 
 export interface SecretExModel {
@@ -118,7 +120,7 @@ export interface SecretExModel {
     entityName?: string
     entityCode?: string
     who?: string
-    when?: string
+    when?: SecretsTimestamp
 }
 
 interface CustomerViewProps {
@@ -557,7 +559,7 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
                     .map(item => <UserPasswordItemExt
                         model={item}
                         changedBy={item.who ?? "-"}
-                        changedWhen={item.when ?? "-"}
+                        changedWhen={item.when?.value ?? "-"}
                         onChange={v => {
                             const clone = _.clone(model);
                             const index = _.findIndex(clone.AutoryzacjeEx, it => it.localKey === v.localKey);
@@ -576,7 +578,7 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
                     .map(item => <UserPasswordItem
                         model={item}
                         changedBy={item.who ?? "-"}
-                        changedWhen={item.when ?? "-"}
+                        changedWhen={item.when?.value ?? "-"}
                         onChange={v => {
                             const clone = _.clone(model);
                             const index = _.findIndex(clone.Autoryzacje, it => it.localKey === v.localKey);

@@ -15,3 +15,4 @@ input MyEntity {
     entityId: ID!
     entityVersion: Int!
 }
+

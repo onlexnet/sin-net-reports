@@ -1,8 +1,15 @@
 # Dev notes
 
+## To run locally
+- one time poeration when you cloned new repo:
+  - cd ..
+  - ./links.sh
+- **docker-compose up** to run database
+- next, run from VSCode using F5 (assumption: java pack extension installed in VSCode)
+
 ## Profiles
 We support some profiles in backend code to allow run them with different configurations:
-- dev - no security, inmemory database
+- dev - no security
 - prod - ready for deployment, postgresql database
 
 ## Good development practices

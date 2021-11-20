@@ -1,7 +1,6 @@
-import { addressProvider } from "../addressProvider";
-import { GraphQLClient } from 'graphql-request';
 import { ApolloClient, ApolloLink, createHttpLink, DefaultOptions, InMemoryCache } from "@apollo/client";
-import { v4 as uuid } from 'uuid';
+import { GraphQLClient } from 'graphql-request';
+import { addressProvider } from "../addressProvider";
 
 const graphqlUrl = `${addressProvider().host}/graphql`;
 

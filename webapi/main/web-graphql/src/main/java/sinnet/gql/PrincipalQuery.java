@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import lombok.Value;
 
-/** Fixme. */
+/** Fixme. */   
 @Component
 public class PrincipalQuery implements GraphQLQueryResolver {
 

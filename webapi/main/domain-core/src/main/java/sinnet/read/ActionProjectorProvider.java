@@ -5,11 +5,10 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import io.vertx.core.CompositeFuture;
+
 import io.vavr.Tuple2;
 import io.vavr.collection.Array;
-import io.vavr.collection.HashMap;
-import io.vavr.collection.Map;
+import io.vertx.core.CompositeFuture;
 import io.vertx.core.Future;
 import io.vertx.core.Promise;
 import io.vertx.pgclient.PgPool;

@@ -109,8 +109,8 @@ type CustomerSecret {
     location: String!
     username: String
     password: String
-    changedWhen: String!
     changedWho: String!
+    changedWhen: String!
 }
 type CustomerSecretEx {
     location: String!
@@ -118,8 +118,8 @@ type CustomerSecretEx {
     password: String
     entityName: String
     entityCode: String
-    changedWhen: String!
     changedWho: String!
+    changedWhen: String!
 }
 type CustomerContact {
     firstName: String
@@ -127,5 +127,3 @@ type CustomerContact {
     phoneNo: String
     email: String
 }
-
-
