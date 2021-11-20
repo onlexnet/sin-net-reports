@@ -51,7 +51,6 @@ stages:
     jobs:
       - deployment: deployToPrd
         displayName: Deploy to PRD01
-        timeoutInMinutes: 3
         environment:
           name: PRD01
           resourceType: Kubernetes
