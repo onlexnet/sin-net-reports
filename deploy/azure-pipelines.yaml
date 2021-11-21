@@ -1,0 +1,86 @@
+pool:
+  vmImage: 'ubuntu-latest'
+
+trigger:
+  branches:
+    include:
+      - master
+  paths:
+    include:
+      - deploy
+
+resources:
+  pipelines:
+  - pipeline: webapp_CI
+    project: sinnet
+    source: onlex-sinnet-webapp
+    trigger: true
+  - pipeline: webapi_CI
+    project: sinnet
+    source: onlex-sinnet-webapi
+    trigger: true
+  - pipeline: report_CI
+    project: sinnet
+    source: onlex-sinnet-reports
+    trigger: true
+  - pipeline: manifest_CI
+    project: sinnet
+    source: onlex-sinnet-manifest
+    trigger: true
+  containers:
+    - container: webapp
+      type: ACR  
+      azureSubscription: sinnet-default-manual-arm
+      resourceGroup: sinnet-default-manual
+      registry: sinnet
+      repository: webapp
+    - container: webapi
+      type: ACR  
+      azureSubscription: sinnet-default-manual-arm
+      resourceGroup: sinnet-default-manual
+      registry: sinnet
+      repository: webapi
+    - container: reports
+      type: ACR  
+      azureSubscription: sinnet-default-manual-arm
+      resourceGroup: sinnet-default-manual
+      registry: sinnet
+      repository: onlex-sinnet-reports
+
+stages:
+  - stage:
+    displayName: CD
+    jobs:
+      - deployment: DeployAppComponents
+        displayName: Deploy app components
+        environment: 'onlex-sinnet-prd'
+        variables:
+          - name: manifestDir
+            value: $(PIPELINE.WORKSPACE)/manifest_CI/default
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+              - task: KubernetesManifest@0
+                displayName: Create secret
+                inputs: 
+                  action: createSecret
+                  secretType: dockerRegistry
+                  secretName: regcred
+                  dockerRegistryEndpoint: sinnet-acr
+                  kubernetesServiceConnection: sinnet-microk8s
+                  namespace: onlex-sinnet-prd
+              - checkout: self
+              - task: KubernetesManifest@0
+                displayName: Deploy to Kubernetes cluster
+                inputs:
+                  action: deploy
+                  rolloutStatusTimeout: "300"
+                  kubernetesServiceConnection: sinnet-microk8s
+                  namespace: onlex-sinnet-prd
+                  manifests: |
+                    $(manifestDir)/*
+                  containers: |
+                      sinnet.azurecr.io/webapp:$(resources.container.webapp.tag)
+                      sinnet.azurecr.io/webapi:$(resources.container.webapi.tag)
+                      sinnet.azurecr.io/onlex-sinnet-reports:$(resources.container.reports.tag)
