@@ -8,15 +8,12 @@
 | Helm | [![Build Status](https://dev.azure.com/onlex/sinnet/_apis/build/status/onlex-sinnet-helm?branchName=master)](https://dev.azure.com/onlex/sinnet/_build/latest?definitionId=12&branchName=master) |
 | Deploy| [![Build Status](https://dev.azure.com/onlex/sinnet/_apis/build/status/onlex-sinnet-deploy?branchName=master)](https://dev.azure.com/onlex/sinnet/_build/latest?definitionId=15&branchName=master) |
 
-Build status Frontend
-  
-Build status Backend
+## Goal
+- Small project created for [Sin.Net](http://www.sin.net.pl/)
+- My testing sandbox to use any technology to improve my tech skills
 
-Small project created for [Sin.Net](http://www.sin.net.pl/)
-
-Project site: [raport.sin.net.pl](https://raport.sin.net.pl/)
-
-Project allows register customer services and produce summarized reports in form of small PDF attachments for invoices..
+## Business
+Project allows register service actions provided for some customers, and produce summarized reports in form of small PDF attachments for invoices..
 
 In scope:
 - [x] Integrate login with Azure B2C
