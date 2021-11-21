@@ -1,10 +1,16 @@
 # SinNet Reports
 
+| Pipeline | Status |
+|----------|--------|
+| WebApp | [![Build Status](https://dev.azure.com/onlex/sinnet/_apis/build/status/onlex-sinnet-webapp?branchName=master)](https://dev.azure.com/onlex/sinnet/_build/latest?definitionId=2&branchName=master) |
+| WebApi | [![Build Status](https://dev.azure.com/onlex/sinnet/_apis/build/status/onlex-sinnet-webapi?branchName=master)](https://dev.azure.com/onlex/sinnet/_build/latest?definitionId=4&branchName=master) |
+| Customers | [![Build Status](https://dev.azure.com/onlex/sinnet/_apis/build/status/onlex-sinnet-customers?branchName=master)](https://dev.azure.com/onlex/sinnet/_build/latest?definitionId=11&branchName=master) |
+| Helm | [![Build Status](https://dev.azure.com/onlex/sinnet/_apis/build/status/onlex-sinnet-helm?branchName=master)](https://dev.azure.com/onlex/sinnet/_build/latest?definitionId=12&branchName=master) |
+| Deploy| [![Build Status](https://dev.azure.com/onlex/sinnet/_apis/build/status/onlex-sinnet-deploy?branchName=master)](https://dev.azure.com/onlex/sinnet/_build/latest?definitionId=15&branchName=master) |
+
 Build status Frontend
-[![Build Status](https://dev.azure.com/siudeks/sinnetreports/_apis/build/status/sin-net-reports%20webapp?branchName=master)](https://dev.azure.com/siudeks/sinnetreports/_build/latest?definitionId=2&branchName=master)
+  
 Build status Backend
-[![Build Status](https://dev.azure.com/siudeks/sinnetreports/_apis/build/status/sin-net-reports%20webapi?branchName=master)](https://dev.azure.com/siudeks/sinnetreports/_build/latest?definitionId=1&branchName=master) 
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=net.siudek%3Asinnet-group&metric=coverage)](https://sonarcloud.io/dashboard?id=net.siudek%3Asinnet-group)
 
 Small project created for [Sin.Net](http://www.sin.net.pl/)
 
