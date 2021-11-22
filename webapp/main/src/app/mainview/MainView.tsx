@@ -9,7 +9,7 @@ import { Home } from "../../Home";
 import { NavBar } from "../../NavBar";
 import { Reports } from "../../reports/Reports";
 import { routing } from "../../Routing";
-import { Main } from "../../services";
+import { ServicesDefault } from "../../services";
 import { AppContextAction } from "../../store/appcontext/types";
 import { RootState } from "../../store/reducers";
 import { ActionViewRoutedEdit } from "../actions/ActionView.Routed.Edit";
@@ -72,25 +72,25 @@ const LocalView: React.FC<Props> = (props) => {
     }
 
     return (
-        <Router>
-            <div className="ms-Grid" dir="ltr">
-                <div className="ms-Grid-row">
-                    <div className="ms-Grid-col ms-sm6 ms-md4 ms-lg2">
+        <div style={{ height: "100vh" }}  >
+            <Router>
+                <Stack horizontal styles={{ root: { height: "100%" } }}>
+                    <Stack.Item>
                         <Route path="/" component={NavBar} />
-                    </div>
-                    <div className="ms-Grid-col ms-sm6 ms-md8 ms-lg10">
+                    </Stack.Item>
+                    <Stack.Item styles={{ root: { width: "100%", padding: "10" } }}>
                         <Route path={routing.editAction} component={ActionViewRoutedEdit} />
-                        <Route path={routing.actions} component={Main} exact={true} />
+                        <Route path={routing.actions} component={ServicesDefault} exact={true} />
                         <Route path={routing.reports} component={Reports} />
                         <Route path={routing.editCustomer} component={CustomerViewRoutedEdit} />
                         <Route path={routing.newCustomer} component={CustomerViewNew} />
                         <Route path={routing.customers} component={Customers} exact={true} />
                         <Route path={routing.debug} render={(localProps) => <Debug {...props} />} />
                         <Route path="/" exact component={Home} />
-                    </div>
-                </div>
-            </div>
-        </Router>);
+                    </Stack.Item>
+                </Stack>
+            </Router>
+        </div>);
 
 }
 

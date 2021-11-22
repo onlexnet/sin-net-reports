@@ -1,5 +1,5 @@
 import { shallow } from 'enzyme';
-import { Main } from '.';
+import { ServicesDefault } from '.';
 import React from 'react';
 
 import { configure } from 'enzyme';

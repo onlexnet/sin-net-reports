@@ -1,3 +1,4 @@
+import './App.css';
 import React from "react";
 
 import { View as AuthenticatedView } from "./AppAuthenticated";
