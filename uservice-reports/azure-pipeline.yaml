@@ -21,7 +21,7 @@ trigger:
 
 stages:
   - stage: build
-    displayName: Build
+    displayName: Build docker image
     jobs:
       - job: CICD
         displayName: Webapi CI/CD build
@@ -70,17 +70,6 @@ stages:
               command: build
               dockerfile: uservice-reports/main/src/main/docker/Dockerfile.jvm
               buildContext: uservice-reports/main
-              containerRegistry: $(dockerRegistryServiceConnection)
-              repository: $(dockerRepository)
-              tags: |
-                latest
-                $(Build.SourceBranchName)-$(Build.BuildNumber)
-
-          - task: Docker@2
-            displayName: Push webapi image to docker ACR
-            condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
-            inputs:
-              command: push
               containerRegistry: $(dockerRegistryServiceConnection)
               repository: $(dockerRepository)
               tags: |
