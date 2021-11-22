@@ -24,7 +24,7 @@ stages:
     displayName: Build docker image
     jobs:
       - job: ci_build
-        displayName: Webapi CI/CD build
+        displayName: Build image
         pool:
           vmImage: ubuntu-latest
 
@@ -77,7 +77,7 @@ stages:
                 $(Build.SourceBranchName)-$(Build.BuildNumber)
           
       - job: ci_push
-        displayName: Webapi CI/CD build
+        displayName: Push image
         condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
         steps:
           - task: Docker@2
