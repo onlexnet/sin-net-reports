@@ -43,7 +43,7 @@ interface ActionViewEditProps extends PropsFromRedux {
 const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
     const appInsights = useAppInsightsContext();
     const trackComponent = useTrackMetric(appInsights, "ActionViewEditLocal");
-    
+
     const { item, cancelEdit, actionUpdated } = props;
 
     const propsProjectId = item?.projectId;
@@ -187,7 +187,7 @@ const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
     const [removeConfirmed, setRemoveConfirmed] = useState(false);
 
     const removeAndExit1 = () => {
-            setRemoveConfirmed(true);
+        setRemoveConfirmed(true);
     }
 
     const removeAndExit2 = () => {
@@ -225,68 +225,73 @@ const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
 
 
     return (
-        <>
-            <Stack tokens={stackTokens}>
-                <div className="ms-Grid-row">
-                    <div className="ms-Grid-col ms-sm4">
+        <div className="ms-Grid" dir="ltr">
+            <div className="ms-Grid-row">
+                <div className="ms-Grid-col ms-sm6 ms-md8 ms-lg10">
+
+                    <Stack tokens={stackTokens}>
                         <div className="ms-Grid-row">
-                            <div className="ms-Grid-col ms-sm12">
-                                <ComboBox label="Pracownik" selectedKey={servicemanName} options={comboBoxBasicOptions} autoComplete="on" onChange={onChangeServicemanName}
-                                />
+                            <div className="ms-Grid-col ms-sm4">
                                 <div className="ms-Grid-row">
-                                    <CustomerView projectId={projectId} customerId={customerId} />
+                                    <div className="ms-Grid-col ms-sm12">
+                                        <ComboBox label="Pracownik" selectedKey={servicemanName} options={comboBoxBasicOptions} autoComplete="on" onChange={onChangeServicemanName}
+                                        />
+                                        <div className="ms-Grid-row">
+                                            <CustomerView projectId={projectId} customerId={customerId} />
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
+                            <div className="ms-Grid-col ms-sm2">
+                                <AppDatePicker
+                                    gotoTodayText='Idź do aktualnego miesiąca'
+                                    onSelectDate={value => onChangeDate(value)}
+                                    current={actionDate} />
+                            </div>
                         </div>
-                    </div>
-                    <div className="ms-Grid-col ms-sm2">
-                        <AppDatePicker
-                            gotoTodayText='Idź do aktualnego miesiąca'
-                            onSelectDate={value => onChangeDate(value)}
-                            current={actionDate}/>
-                    </div>
-                </div>
 
-                <div className="ms-Grid-row">
-                    <div className="ms-Grid-col ms-sm4">
-                        <CustomerComboBox
-                            projectId={projectId}
-                            customerId={customerId}
-                            onSelected={onChangeCustomerId} />
-                    </div>
-                    <div className="ms-Grid-col ms-sm6">
-                        <TextField label="Usługa" multiline={true} value={description} errorMessage={descriptionError} onChange={onChangeDescription}
-                        />
-                    </div>
-                </div>
+                        <div className="ms-Grid-row">
+                            <div className="ms-Grid-col ms-sm4">
+                                <CustomerComboBox
+                                    projectId={projectId}
+                                    customerId={customerId}
+                                    onSelected={onChangeCustomerId} />
+                            </div>
+                            <div className="ms-Grid-col ms-sm6">
+                                <TextField label="Usługa" multiline={true} value={description} errorMessage={descriptionError} onChange={onChangeDescription}
+                                />
+                            </div>
+                        </div>
 
-                <div className="ms-Grid-row">
-                    <div className="ms-Grid-col ms-sm4">
-                        <TextField label="Czas" placeholder="0:00" value={durationAsText} errorMessage={durationError} onChange={onChangeDuration} />
-                    </div>
-                    <div className="ms-Grid-col ms-sm2">
-                        <TextField label="Dojazd" value={distance} onChange={onChangeDistance}
-                        />
-                    </div>
-                </div>
+                        <div className="ms-Grid-row">
+                            <div className="ms-Grid-col ms-sm4">
+                                <TextField label="Czas" placeholder="0:00" value={durationAsText} errorMessage={durationError} onChange={onChangeDuration} />
+                            </div>
+                            <div className="ms-Grid-col ms-sm2">
+                                <TextField label="Dojazd" value={distance} onChange={onChangeDistance}
+                                />
+                            </div>
+                        </div>
 
-                <div className="ms-Grid-row">
-                    <div className="ms-Grid-col ms-sm12">
-                        <Stack horizontal tokens={stackTokens}>
-                            <PrimaryButton disabled={updateActionInProgress} text="Aktualizuj"
-                                onClick={() => {
-                                    updateAction();
-                                    // cancelEdit();
-                                }} />
-                            <DefaultButton onClick={() => cancelEdit()} text="Wyjdź" />
-                            <DefaultButton text="Usuń i wyjdź" disabled={updateActionInProgress || removeConfirmed} styles={btnStyles} onClick={removeAndExit1} />
-                            <DefaultButton text="Tak, Usuń i wyjdź" disabled={updateActionInProgress || !removeConfirmed } styles={btnStyles} onClick={removeAndExit2} />
-                        </Stack>
-                    </div>
-                </div>
-            </Stack>
-        </>
+                        <div className="ms-Grid-row">
+                            <div className="ms-Grid-col ms-sm12">
+                                <Stack horizontal tokens={stackTokens}>
+                                    <PrimaryButton disabled={updateActionInProgress} text="Aktualizuj"
+                                        onClick={() => {
+                                            updateAction();
+                                            // cancelEdit();
+                                        }} />
+                                    <DefaultButton onClick={() => cancelEdit()} text="Wyjdź" />
+                                    <DefaultButton text="Usuń i wyjdź" disabled={updateActionInProgress || removeConfirmed} styles={btnStyles} onClick={removeAndExit1} />
+                                    <DefaultButton text="Tak, Usuń i wyjdź" disabled={updateActionInProgress || !removeConfirmed} styles={btnStyles} onClick={removeAndExit2} />
+                                </Stack>
+                            </div>
+                        </div>
+                    </Stack>
 
+                </div>
+            </div>
+        </div>
     );
 }
 
