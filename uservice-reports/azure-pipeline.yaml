@@ -87,7 +87,7 @@ stages:
                 latest
                 $(Build.SourceBranchName)-$(Build.BuildNumber)
 
-  - stage: build
+  - stage: push
     displayName: Push image to ACR
     condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
     jobs:
