@@ -6,6 +6,19 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Launch Program with Kubernetes",
+            "request": "launch",
+            "mainClass": "sinnet.Program",
+            "projectName": "host",
+            "env": {
+                "SPRING_PROFILES_ACTIVE": "dev",
+                "APP_DB_HOST": "localhost",
+                "APP_DB_NAME": "postgres"
+            },
+            "preLaunchTask": "bridge-to-kubernetes.resource"
+        },
+        {
+            "type": "java",
             "name": "Launch Program",
             "request": "launch",
             "mainClass": "sinnet.Program",
