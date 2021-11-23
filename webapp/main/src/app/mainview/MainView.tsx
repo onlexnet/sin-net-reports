@@ -15,7 +15,7 @@ import { RootState } from "../../store/reducers";
 import { ActionViewRoutedEdit } from "../actions/ActionView.Routed.Edit";
 import { CustomerViewRoutedEdit } from "../customer/CustomerView.Routed.Edit";
 import { CustomerViewNew } from "../customer/CustomerView.Routed.New";
-import { Customers } from "../customers/Customers";
+import { CustomersRoutedConnectedView } from "../customers/Customers.Routed";
 import { MainViewMultipleProjects } from "./MainView.MultipleProjects";
 import { MainViewNoProjects } from "./MainView.NoProjects";
 
@@ -84,7 +84,7 @@ const LocalView: React.FC<Props> = (props) => {
                         <Route path={routing.reports} component={Reports} />
                         <Route path={routing.editCustomer} component={CustomerViewRoutedEdit} />
                         <Route path={routing.newCustomer} component={CustomerViewNew} />
-                        <Route path={routing.customers} component={Customers} exact={true} />
+                        <Route path={routing.customers} component={CustomersRoutedConnectedView} exact={true} />
                         <Route path={routing.debug} render={(localProps) => <Debug {...props} />} />
                         <Route path="/" exact component={Home} />
                     </Stack.Item>

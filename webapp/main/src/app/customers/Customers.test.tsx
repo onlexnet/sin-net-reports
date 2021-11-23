@@ -1,14 +1,14 @@
 import { configure, shallow } from 'enzyme';
 
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
-import { Customers } from './Customers';
+import { CustomersRoutedConnectedView } from './Customers.Routed';
 
 configure({ adapter: new Adapter() });
 
 describe('<Customers />', () => {
 
   it('renders three <Main /> components', () => {
-    // const wrapper = shallow(<Customers match={undefined} history={undefined} location={undefined} />);
+    const wrapper = shallow(<CustomersRoutedConnectedView match={{}} history={undefined} location={undefined} />);
     // //expect(wrapper.find(Foo)).to.have.lengthOf(3);
   });
 

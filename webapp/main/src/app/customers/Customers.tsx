@@ -1,40 +1,23 @@
-import React, { useState } from "react";
-import { TextField, PrimaryButton, Separator, DetailsList, IColumn } from "@fluentui/react";
+import { DetailsList, IColumn, PrimaryButton, Separator, TextField } from "@fluentui/react";
 import { Link, RouteComponentProps } from "react-router-dom";
-import { routing } from "../../Routing";
-import { HorizontalSeparatorStack } from "../../Components/HorizontalSeparatorStack";
-import { useListCustomers, UseListCustomersItem } from "../../api/useListCustomers";
-import { RootState } from "../../store/reducers";
-import { Dispatch } from "redux";
-import { connect, ConnectedProps } from "react-redux";
 import _ from "lodash";
+import { useState } from "react";
+import { useListCustomers, UseListCustomersItem } from "../../api/useListCustomers";
+import { HorizontalSeparatorStack } from "../../Components/HorizontalSeparatorStack";
 
-
-const mapStateToProps = (state: RootState) => {
-    if (state.appState.empty) {
-        throw new Error('Invalid state');
-    }
-    return state;
+interface CustomersProps {
+    projectId: string,
+    onNewClientCommand: () => void;
 }
 
-const mapDispatchToProps = (dispatch: Dispatch) => {
-    return { }
-}
 
-const connector = connect(mapStateToProps, mapDispatchToProps);
-type PropsFromRedux = ConnectedProps<typeof connector>;
-  
-interface CustomersProps extends PropsFromRedux, RouteComponentProps {
-
-}
-
-const CustomersLocal: React.FC<CustomersProps> = (props) => {
+export const CustomersView: React.FC<CustomersProps> = (props) => {
 
     interface TypedColumn extends IColumn {
         fieldName: keyof UseListCustomersItem;
     }
 
-    const items = useListCustomers(props.appState.projectId);
+    const items = useListCustomers(props.projectId);
     const [searchPhrase, setSearchPhrase] = useState<string | undefined>('');
 
     const columns: TypedColumn[] = [
@@ -55,7 +38,7 @@ const CustomersLocal: React.FC<CustomersProps> = (props) => {
         if (lowerTemplate === '') return 1;
         if (lowerActual === lowerTemplate) return 100;
         if (lowerActual.startsWith(lowerTemplate)) return 80;
-        if (lowerActual.includes(' '+lowerTemplate)) return 60;
+        if (lowerActual.includes(' ' + lowerTemplate)) return 60;
         if (lowerActual.includes(lowerTemplate)) return 40;
         return 0;
     }
@@ -72,12 +55,12 @@ const CustomersLocal: React.FC<CustomersProps> = (props) => {
             <HorizontalSeparatorStack >
                 <div className="ms-Grid-row">
                     <div className="ms-Grid-col ms-sm3">
-                        <PrimaryButton text="Dodaj nowego klienta" onClick={() => props.history.push(routing.newCustomer)} />
+                        <PrimaryButton text="Dodaj nowego klienta" onClick={() => props.onNewClientCommand()} />
                     </div>
                 </div>
                 <div className="ms-Grid-row">
                     <div className="ms-Grid-col ms-sm12">
-                        <TextField placeholder="Wprowadź fragment nazwy klienta ..."value={searchPhrase} onChange={(e, v) => setSearchPhrase(v)} />
+                        <TextField placeholder="Wprowadź fragment nazwy klienta ..." value={searchPhrase} onChange={(e, v) => setSearchPhrase(v)} />
                     </div>
                 </div>
 
@@ -100,6 +83,3 @@ const CustomersLocal: React.FC<CustomersProps> = (props) => {
         </div >
     )
 }
-
-
-export const Customers = connect(mapStateToProps, mapDispatchToProps)(CustomersLocal);
