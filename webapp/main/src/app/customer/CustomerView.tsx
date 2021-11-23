@@ -1,6 +1,6 @@
 import React, { MouseEventHandler } from "react"
 
-import { Separator } from "@fluentui/react";
+import { ScrollablePane, ScrollbarVisibility, Separator } from "@fluentui/react";
 import { Stack, IStackTokens, IStackStyles } from "@fluentui/react";
 import { IComboBoxOption, ITextFieldStyles, TextField, Checkbox, PrimaryButton, IComboBox, ComboBox, Spinner, SpinnerSize, DefaultButton } from "@fluentui/react";
 import _ from "lodash";
@@ -14,7 +14,6 @@ import { v1 as uuid } from 'uuid';
 import { NewContactItem } from "./NewContactItem";
 import moment from "moment";
 import { SecretsTimestamp } from "./SecretsTimestamp";
-
 
 const stackStyles: Partial<IStackStyles> = { root: { width: 650 } };
 const stackTokens: IStackTokens = { childrenGap: 12 };
@@ -338,329 +337,342 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
         }
     };
 
+    const styles = {
+         padding: 5,
+         margin: 5
+    };
+
     return (
-
-        <div className="ms-Grid" dir="ltr">
-            <div className="ms-Grid-row">
-                <div className="ms-Grid-col ms-sm6 ms-md8 ms-lg10">
-
-                    <HorizontalSeparatorStack>
-                        <>
-                            <Separator alignContent="start">Akcje</Separator>
-
-                            <div className="ms-Grid-row">
-                                <div className="ms-Grid-col ms-smPush1 ms-sm4">
-                                    <PrimaryButton text="Zapisz i wyjdź" disabled={actionsDisabled} onClick={saveEndExit} />
-                                    <DefaultButton text="Usuń klienta i wyjdź" disabled={actionsDisabled} styles={btnStyles} onClick={removeEndExit} />
-                                </div>
-                            </div>
-                            <Separator alignContent="start">Dane ogólne: </Separator>
-
-                            <div className="ms-Grid-row">
-                                <div className="ms-Grid-col ms-smPush1 ms-sm4 ">
-                                    <ComboBox
-                                        label="Operator"
-                                        options={comboBoxBasicOptions}
-                                        defaultSelectedKey={model.Operator}
-                                        selectedKey={model.Operator}
-                                        onChange={onChangeCombo((m, v) => m.Operator = v)} />
-                                </div>
-                            </div>
-                            <div className="ms-Grid-row">
-                                <div className="ms-Grid-col ms-smPush1 ms-sm4 ">
-                                    <ComboBox
-                                        label="Obsługa"
-                                        options={obsluga}
-                                        defaultSelectedKey={model.Obsluga}
-                                        selectedKey={model.Obsluga}
-                                        onChange={onChangeCombo((m, v) => m.Obsluga = v)} />
-                                </div>
-                            </div>
-                            <div className="ms-Grid-row">
-                                <div className="ms-Grid-col ms-smPush1 ms-sm4 ">
-                                    <ComboBox
-                                        label="Rozliczenie"
-                                        options={rozliczenia}
-                                        defaultSelectedKey={model.Rozliczenie}
-                                        selectedKey={model.Rozliczenie}
-                                        onChange={onChangeCombo((m, v) => m.Rozliczenie = v)} />
-                                </div>
-                            </div>
-                            <div className="ms-Grid-row">
-                                <div className="ms-Grid-col ms-smPush1 ms-sm2">
-                                    <TextField
-                                        label="Dystans"
-                                        value={model.Dystans}
-                                        onChange={onChangeText((m, v) => m.Dystans = v)}
-                                        styles={narrowTextFieldStyles}
-                                    />
-                                </div>
-                            </div>
-
-                            <Separator alignContent="start">Dane adresowe</Separator>
-
-                            <div className="ms-Grid-row">
-                                <div className="ms-Grid-col ms-sm3 ms-smPush1">
-                                    <TextField label="Nazwa"
-                                        value={model.Nazwa}
-                                        placeholder="Nazwa klienta"
-                                        onChange={onChangeText((m, v) => m.Nazwa = v)} />
-                                </div>
-                            </div>
-                            <div className="ms-Grid-row">
-                                <div className="ms-Grid-col ms-sm3 ms-smPush1">
-                                    <TextField label="Miejscowość"
-                                        value={model.Miejscowosc}
-                                        placeholder="Miejscowość klienta"
-                                        onChange={onChangeText((m, v) => m.Miejscowosc = v)} />
-                                </div>
-                            </div>
-                            <div className="ms-Grid-row">
-                                <div className="ms-Grid-col ms-sm3 ms-smPush1">
-                                    <TextField label="Adres"
-                                        value={model.Adres}
-                                        placeholder="Adres klienta"
-                                        onChange={onChangeText((m, v) => m.Adres = v)} />
-                                </div>
-                            </div>
-
-                            <Separator alignContent="start">NFZ</Separator>
-
-                            <Stack horizontal tokens={stackTokens} styles={stackStyles}>
-                            </Stack>
-
-                            <div className="ms-Grid-row">
-                                <div className="ms-Grid-col ms-smPush1">
-                                    <Stack tokens={stackTokens}>
-                                        <Stack horizontal tokens={stackTokens}>
-                                            <Checkbox label="Umowa z NFZ"
-                                                checked={model.UmowaZNFZ}
-                                                onChange={onChangeBoolean((m, v) => m.UmowaZNFZ = v)} />
-                                            <Checkbox label="Posiada filię"
-                                                checked={model.MaFilie}
-                                                onChange={onChangeBoolean((m, v) => m.MaFilie = v)} />
-                                        </Stack>
-
-                                    </Stack>
-                                </div>
-                            </div>
-                            <div className="ms-Grid-row">
-                                <div className="ms-Grid-col ms-sm5 ms-smPush1">
-                                    <Checkbox label="L Lekarz" checked={model.Lekarz} onChange={onChangeBoolean((m, v) => m.Lekarz = v)} />
-                                </div>
-                                <div className="ms-Grid-col ms-sm5">
-                                    <Checkbox label="PS Pielęgniarka Środowiskowa"
-                                        checked={model.PielegniarkaSrodowiskowa}
-                                        onChange={onChangeBoolean((m, v) => m.PielegniarkaSrodowiskowa = v)} />
-                                </div>
-                            </div>
-                            <div className="ms-Grid-row">
-                                <div className="ms-Grid-col ms-sm5 ms-smPush1">
-                                    <Checkbox label="O Położna"
-                                        checked={model.Polozna}
-                                        onChange={onChangeBoolean((m, v) => m.Polozna = v)} />
-                                </div>
-                                <div className="ms-Grid-col ms-sm5">
-                                    <Checkbox label="MPSZ Medycyna Szkolna"
-                                        checked={model.MedycynaSzkolna}
-                                        onChange={onChangeBoolean((m, v) => m.MedycynaSzkolna = v)} />
-                                </div>
-                            </div>
-                            <div className="ms-Grid-row">
-                                <div className="ms-Grid-col ms-sm5 ms-smPush1">
-                                    <Checkbox label="Transport Sanitarny"
-                                        checked={model.TransportSanitarny}
-                                        onChange={onChangeBoolean((m, v) => m.TransportSanitarny = v)} />
-                                </div>
-                                <div className="ms-Grid-col ms-sm5">
-                                    <Checkbox label="NPL Nocna pomoc lekarska"
-                                        checked={model.NocnaPomocLekarska}
-                                        onChange={onChangeBoolean((m, v) => m.NocnaPomocLekarska = v)} />
-                                </div>
-                            </div>
-                            <div className="ms-Grid-row">
-                                <div className="ms-Grid-col ms-sm5 ms-smPush1">
-                                    <Checkbox label="AOS Ambulatoryjna opieka specjalistyczna"
-                                        checked={model.AmbulatoryjnaOpiekaSpecjalistyczna}
-                                        onChange={onChangeBoolean((m, v) => m.AmbulatoryjnaOpiekaSpecjalistyczna = v)} />
-                                </div>
-                                <div className="ms-Grid-col ms-sm5">
-                                    <Checkbox label="REH Rehabilitacja"
-                                        checked={model.Rehabilitacja}
-                                        onChange={onChangeBoolean((m, v) => m.Rehabilitacja = v)} />
-                                </div>
-                            </div>
-                            <div className="ms-Grid-row">
-                                <div className="ms-Grid-col ms-sm5 ms-smPush1">
-                                    <Checkbox label="STM Stomatologia"
-                                        checked={model.Stomatologia}
-                                        onChange={onChangeBoolean((m, v) => m.Stomatologia = v)} />
-                                </div>
-                                <div className="ms-Grid-col ms-sm5">
-                                    <Checkbox label="PSY Psychiatria"
-                                        checked={model.Psychiatria}
-                                        onChange={onChangeBoolean((m, v) => m.Psychiatria = v)} />
-                                </div>
-                            </div>
-                            <div className="ms-Grid-row">
-                                <div className="ms-Grid-col ms-sm5 ms-smPush1">
-                                    <Checkbox label="SZP Szpitalnictwo"
-                                        checked={model.Szpitalnictwo}
-                                        onChange={onChangeBoolean((m, v) => m.Szpitalnictwo = v)} />
-                                </div>
-                                <div className="ms-Grid-col ms-sm5">
-                                    <Checkbox label="PROF Programy profilaktyczne"
-                                        checked={model.ProgramyProfilaktyczne}
-                                        onChange={onChangeBoolean((m, v) => m.ProgramyProfilaktyczne = v)} />
-                                </div>
-                            </div>
-                            <div className="ms-Grid-row">
-                                <div className="ms-Grid-col ms-sm5 ms-smPush1">
-                                    <Checkbox label="ZOP Zaopatrzenie ortopedyczne i pomocniczne"
-                                        checked={model.ZaopatrzenieOrtopedyczne}
-                                        onChange={onChangeBoolean((m, v) => m.ZaopatrzenieOrtopedyczne = v)} />
-                                </div>
-                                <div className="ms-Grid-col ms-sm5">
-                                    <Checkbox label="OPD Opieka długoterminowa"
-                                        checked={model.OpiekaDlugoterminowa}
-                                        onChange={onChangeBoolean((m, v) => m.OpiekaDlugoterminowa = v)} />
-                                </div>
-                            </div>
-                            <div className="ms-Grid-row">
-                                <div className="ms-Grid-col ms-sm6 ms-smPush1">
-                                    <TextField
-                                        multiline={true}
-                                        value={model.NfzNotatki}
-                                        placeholder="Notatki NFZ"
-                                        onChange={onChangeMemo((m, v) => m.NfzNotatki = v)}
-                                    />
-                                </div>
-                            </div>
-
-
-                            <Separator alignContent="start">Komercja</Separator>
-                            <div className="ms-Grid-row">
-                                <div className="ms-Grid-col ms-sm5 ms-smPush1">
-                                    <Checkbox label="Komercja"
-                                        checked={model.Komercja}
-                                        onChange={onChangeBoolean((m, v) => m.Komercja = v)} />
-                                </div>
-                            </div>
-                            <div className="ms-Grid-row">
-                                <div className="ms-Grid-col ms-sm6 ms-smPush1">
-                                    <TextField
-                                        multiline={true}
-                                        placeholder="Dane opisowe"
-                                        value={model.KomercjaNotatki}
-                                        onChange={onChangeMemo((m, v) => m.KomercjaNotatki = v)}
-                                    />
-                                </div>
-                            </div>
-                        </>
-                        <>
-                            <Separator alignContent="start">Autoryzacje</Separator>
-
-                            {model.AutoryzacjeEx
-                                .map(item => <UserPasswordItemExt
-                                    model={item}
-                                    changedBy={item.who ?? "-"}
-                                    changedWhen={item.when?.value ?? "-"}
-                                    onChange={v => {
-                                        const clone = _.clone(model);
-                                        const index = _.findIndex(clone.AutoryzacjeEx, it => it.localKey === v.localKey);
-                                        clone.AutoryzacjeEx[index] = v;
-                                        setModel(clone);
-                                    }}
-                                    onRemove={localKey => {
-                                        const clone = _.clone(model);
-                                        const index = _.findIndex(clone.AutoryzacjeEx, it => it.localKey === localKey);
-                                        clone.AutoryzacjeEx.splice(index, 1);
-                                        setModel(clone);
-                                    }}
-                                />)}
-
-                            {model.Autoryzacje
-                                .map(item => <UserPasswordItem
-                                    model={item}
-                                    changedBy={item.who ?? "-"}
-                                    changedWhen={item.when?.value ?? "-"}
-                                    onChange={v => {
-                                        const clone = _.clone(model);
-                                        const index = _.findIndex(clone.Autoryzacje, it => it.localKey === v.localKey);
-                                        clone.Autoryzacje[index] = v;
-                                        setModel(clone);
-                                    }}
-                                    onRemove={localKey => {
-                                        const clone = _.clone(model);
-                                        const index = _.findIndex(clone.Autoryzacje, it => it.localKey === localKey);
-                                        clone.Autoryzacje.splice(index, 1);
-                                        setModel(clone);
-                                    }}
-                                />)}
-
-                            <NewSecret
-                                newAuthorisationExRequested={name => {
-                                    const clone = _.clone(model);
-                                    const localKey = uuid();
-                                    const newItem: SecretExModel = {
-                                        localKey,
-                                        location: name
-                                    };
-                                    clone.AutoryzacjeEx.push(newItem);
-                                    setModel(clone);
-                                }}
-                                newAuthorisationRequested={name => {
-                                    const clone = _.clone(model);
-                                    const localKey = uuid();
-                                    const newItem: SecretModel = {
-                                        localKey,
-                                        location: name
-                                    };
-                                    clone.Autoryzacje.push(newItem);
-                                    setModel(clone);
-                                }} />
-                        </>
-                        <>
-                            <Separator alignContent="start">Dane kontaktowe</Separator>
-
-                            {model.Kontakty
-                                .map(item => <NewContactItem
-                                    model={item}
-                                    onChange={v => {
-                                        const clone = _.clone(model);
-                                        const index = _.findIndex(clone.Kontakty, it => it.localKey === v.localKey);
-                                        clone.Kontakty[index] = v;
-                                        setModel(clone);
-                                    }}
-                                    onRemove={localKey => {
-                                        const clone = _.clone(model);
-                                        const index = _.findIndex(clone.Kontakty, it => it.localKey === localKey);
-                                        clone.Kontakty.splice(index, 1);
-                                        setModel(clone);
-                                    }}
-                                />)}
-
-                            <div className="ms-Grid-row">
-                                <div className="ms-Grid-col ms-smPush1 ms-sm4">
-                                    <DefaultButton onClick={addContact}>Dodaj nowy kontakt</DefaultButton>
-                                </div>
-                            </div>
-                        </>
-                        <>
-                            <Separator alignContent="start">Dane techniczne</Separator>
-                            <div className="ms-Grid-row">
-                                <div className="ms-Grid-col ms-sm6 ms-smPush1">
-                                    <TextField
-                                        multiline={true}
-                                        placeholder="Adresy IP serwerów, inne"
-                                        value={model.DaneTechniczne}
-                                        onChange={onChangeMemo((m, v) => m.DaneTechniczne = v)} />
-                                </div>
-                            </div>
-                        </>
-                    </HorizontalSeparatorStack>
+        <Stack verticalFill>
+            <Stack.Item>
+                <Separator alignContent="start">Akcje: </Separator>
+                <div style={styles}  >
+                    <PrimaryButton text="Zapisz i wyjdź" disabled={actionsDisabled} onClick={saveEndExit} />
+                    <DefaultButton text="Usuń klienta i wyjdź" disabled={actionsDisabled} styles={btnStyles} onClick={removeEndExit} />
                 </div>
-            </div>
-        </div>
+            </Stack.Item>
+            <Stack.Item verticalFill>
+                <div style={{ position: "relative", height: "100%" }}>
+                    <ScrollablePane scrollbarVisibility={ScrollbarVisibility.auto}>
+
+                        <div className="ms-Grid" dir="ltr">
+                            <div className="ms-Grid-row">
+                                <div className="ms-Grid-col ms-sm6 ms-md8 ms-lg10">
+
+                                    <HorizontalSeparatorStack>
+                                        <>
+                                            <Separator alignContent="start">Dane ogólne: </Separator>
+
+                                            <div className="ms-Grid-row">
+                                                <div className="ms-Grid-col ms-smPush1 ms-sm4 ">
+                                                    <ComboBox
+                                                        label="Operator"
+                                                        options={comboBoxBasicOptions}
+                                                        defaultSelectedKey={model.Operator}
+                                                        selectedKey={model.Operator}
+                                                        onChange={onChangeCombo((m, v) => m.Operator = v)} />
+                                                </div>
+                                            </div>
+                                            <div className="ms-Grid-row">
+                                                <div className="ms-Grid-col ms-smPush1 ms-sm4 ">
+                                                    <ComboBox
+                                                        label="Obsługa"
+                                                        options={obsluga}
+                                                        defaultSelectedKey={model.Obsluga}
+                                                        selectedKey={model.Obsluga}
+                                                        onChange={onChangeCombo((m, v) => m.Obsluga = v)} />
+                                                </div>
+                                            </div>
+                                            <div className="ms-Grid-row">
+                                                <div className="ms-Grid-col ms-smPush1 ms-sm4 ">
+                                                    <ComboBox
+                                                        label="Rozliczenie"
+                                                        options={rozliczenia}
+                                                        defaultSelectedKey={model.Rozliczenie}
+                                                        selectedKey={model.Rozliczenie}
+                                                        onChange={onChangeCombo((m, v) => m.Rozliczenie = v)} />
+                                                </div>
+                                            </div>
+                                            <div className="ms-Grid-row">
+                                                <div className="ms-Grid-col ms-smPush1 ms-sm2">
+                                                    <TextField
+                                                        label="Dystans"
+                                                        value={model.Dystans}
+                                                        onChange={onChangeText((m, v) => m.Dystans = v)}
+                                                        styles={narrowTextFieldStyles}
+                                                    />
+                                                </div>
+                                            </div>
+
+                                            <Separator alignContent="start">Dane adresowe</Separator>
+
+                                            <div className="ms-Grid-row">
+                                                <div className="ms-Grid-col ms-sm3 ms-smPush1">
+                                                    <TextField label="Nazwa"
+                                                        value={model.Nazwa}
+                                                        placeholder="Nazwa klienta"
+                                                        onChange={onChangeText((m, v) => m.Nazwa = v)} />
+                                                </div>
+                                            </div>
+                                            <div className="ms-Grid-row">
+                                                <div className="ms-Grid-col ms-sm3 ms-smPush1">
+                                                    <TextField label="Miejscowość"
+                                                        value={model.Miejscowosc}
+                                                        placeholder="Miejscowość klienta"
+                                                        onChange={onChangeText((m, v) => m.Miejscowosc = v)} />
+                                                </div>
+                                            </div>
+                                            <div className="ms-Grid-row">
+                                                <div className="ms-Grid-col ms-sm3 ms-smPush1">
+                                                    <TextField label="Adres"
+                                                        value={model.Adres}
+                                                        placeholder="Adres klienta"
+                                                        onChange={onChangeText((m, v) => m.Adres = v)} />
+                                                </div>
+                                            </div>
+
+                                            <Separator alignContent="start">NFZ</Separator>
+
+                                            <Stack horizontal tokens={stackTokens} styles={stackStyles}>
+                                            </Stack>
+
+                                            <div className="ms-Grid-row">
+                                                <div className="ms-Grid-col ms-smPush1">
+                                                    <Stack tokens={stackTokens}>
+                                                        <Stack horizontal tokens={stackTokens}>
+                                                            <Checkbox label="Umowa z NFZ"
+                                                                checked={model.UmowaZNFZ}
+                                                                onChange={onChangeBoolean((m, v) => m.UmowaZNFZ = v)} />
+                                                            <Checkbox label="Posiada filię"
+                                                                checked={model.MaFilie}
+                                                                onChange={onChangeBoolean((m, v) => m.MaFilie = v)} />
+                                                        </Stack>
+
+                                                    </Stack>
+                                                </div>
+                                            </div>
+                                            <div className="ms-Grid-row">
+                                                <div className="ms-Grid-col ms-sm5 ms-smPush1">
+                                                    <Checkbox label="L Lekarz" checked={model.Lekarz} onChange={onChangeBoolean((m, v) => m.Lekarz = v)} />
+                                                </div>
+                                                <div className="ms-Grid-col ms-sm5">
+                                                    <Checkbox label="PS Pielęgniarka Środowiskowa"
+                                                        checked={model.PielegniarkaSrodowiskowa}
+                                                        onChange={onChangeBoolean((m, v) => m.PielegniarkaSrodowiskowa = v)} />
+                                                </div>
+                                            </div>
+                                            <div className="ms-Grid-row">
+                                                <div className="ms-Grid-col ms-sm5 ms-smPush1">
+                                                    <Checkbox label="O Położna"
+                                                        checked={model.Polozna}
+                                                        onChange={onChangeBoolean((m, v) => m.Polozna = v)} />
+                                                </div>
+                                                <div className="ms-Grid-col ms-sm5">
+                                                    <Checkbox label="MPSZ Medycyna Szkolna"
+                                                        checked={model.MedycynaSzkolna}
+                                                        onChange={onChangeBoolean((m, v) => m.MedycynaSzkolna = v)} />
+                                                </div>
+                                            </div>
+                                            <div className="ms-Grid-row">
+                                                <div className="ms-Grid-col ms-sm5 ms-smPush1">
+                                                    <Checkbox label="Transport Sanitarny"
+                                                        checked={model.TransportSanitarny}
+                                                        onChange={onChangeBoolean((m, v) => m.TransportSanitarny = v)} />
+                                                </div>
+                                                <div className="ms-Grid-col ms-sm5">
+                                                    <Checkbox label="NPL Nocna pomoc lekarska"
+                                                        checked={model.NocnaPomocLekarska}
+                                                        onChange={onChangeBoolean((m, v) => m.NocnaPomocLekarska = v)} />
+                                                </div>
+                                            </div>
+                                            <div className="ms-Grid-row">
+                                                <div className="ms-Grid-col ms-sm5 ms-smPush1">
+                                                    <Checkbox label="AOS Ambulatoryjna opieka specjalistyczna"
+                                                        checked={model.AmbulatoryjnaOpiekaSpecjalistyczna}
+                                                        onChange={onChangeBoolean((m, v) => m.AmbulatoryjnaOpiekaSpecjalistyczna = v)} />
+                                                </div>
+                                                <div className="ms-Grid-col ms-sm5">
+                                                    <Checkbox label="REH Rehabilitacja"
+                                                        checked={model.Rehabilitacja}
+                                                        onChange={onChangeBoolean((m, v) => m.Rehabilitacja = v)} />
+                                                </div>
+                                            </div>
+                                            <div className="ms-Grid-row">
+                                                <div className="ms-Grid-col ms-sm5 ms-smPush1">
+                                                    <Checkbox label="STM Stomatologia"
+                                                        checked={model.Stomatologia}
+                                                        onChange={onChangeBoolean((m, v) => m.Stomatologia = v)} />
+                                                </div>
+                                                <div className="ms-Grid-col ms-sm5">
+                                                    <Checkbox label="PSY Psychiatria"
+                                                        checked={model.Psychiatria}
+                                                        onChange={onChangeBoolean((m, v) => m.Psychiatria = v)} />
+                                                </div>
+                                            </div>
+                                            <div className="ms-Grid-row">
+                                                <div className="ms-Grid-col ms-sm5 ms-smPush1">
+                                                    <Checkbox label="SZP Szpitalnictwo"
+                                                        checked={model.Szpitalnictwo}
+                                                        onChange={onChangeBoolean((m, v) => m.Szpitalnictwo = v)} />
+                                                </div>
+                                                <div className="ms-Grid-col ms-sm5">
+                                                    <Checkbox label="PROF Programy profilaktyczne"
+                                                        checked={model.ProgramyProfilaktyczne}
+                                                        onChange={onChangeBoolean((m, v) => m.ProgramyProfilaktyczne = v)} />
+                                                </div>
+                                            </div>
+                                            <div className="ms-Grid-row">
+                                                <div className="ms-Grid-col ms-sm5 ms-smPush1">
+                                                    <Checkbox label="ZOP Zaopatrzenie ortopedyczne i pomocniczne"
+                                                        checked={model.ZaopatrzenieOrtopedyczne}
+                                                        onChange={onChangeBoolean((m, v) => m.ZaopatrzenieOrtopedyczne = v)} />
+                                                </div>
+                                                <div className="ms-Grid-col ms-sm5">
+                                                    <Checkbox label="OPD Opieka długoterminowa"
+                                                        checked={model.OpiekaDlugoterminowa}
+                                                        onChange={onChangeBoolean((m, v) => m.OpiekaDlugoterminowa = v)} />
+                                                </div>
+                                            </div>
+                                            <div className="ms-Grid-row">
+                                                <div className="ms-Grid-col ms-sm6 ms-smPush1">
+                                                    <TextField
+                                                        multiline={true}
+                                                        value={model.NfzNotatki}
+                                                        placeholder="Notatki NFZ"
+                                                        onChange={onChangeMemo((m, v) => m.NfzNotatki = v)}
+                                                    />
+                                                </div>
+                                            </div>
+
+
+                                            <Separator alignContent="start">Komercja</Separator>
+                                            <div className="ms-Grid-row">
+                                                <div className="ms-Grid-col ms-sm5 ms-smPush1">
+                                                    <Checkbox label="Komercja"
+                                                        checked={model.Komercja}
+                                                        onChange={onChangeBoolean((m, v) => m.Komercja = v)} />
+                                                </div>
+                                            </div>
+                                            <div className="ms-Grid-row">
+                                                <div className="ms-Grid-col ms-sm6 ms-smPush1">
+                                                    <TextField
+                                                        multiline={true}
+                                                        placeholder="Dane opisowe"
+                                                        value={model.KomercjaNotatki}
+                                                        onChange={onChangeMemo((m, v) => m.KomercjaNotatki = v)}
+                                                    />
+                                                </div>
+                                            </div>
+                                        </>
+                                        <>
+                                            <Separator alignContent="start">Autoryzacje</Separator>
+
+                                            {model.AutoryzacjeEx
+                                                .map(item => <UserPasswordItemExt
+                                                    model={item}
+                                                    changedBy={item.who ?? "-"}
+                                                    changedWhen={item.when?.value ?? "-"}
+                                                    onChange={v => {
+                                                        const clone = _.clone(model);
+                                                        const index = _.findIndex(clone.AutoryzacjeEx, it => it.localKey === v.localKey);
+                                                        clone.AutoryzacjeEx[index] = v;
+                                                        setModel(clone);
+                                                    }}
+                                                    onRemove={localKey => {
+                                                        const clone = _.clone(model);
+                                                        const index = _.findIndex(clone.AutoryzacjeEx, it => it.localKey === localKey);
+                                                        clone.AutoryzacjeEx.splice(index, 1);
+                                                        setModel(clone);
+                                                    }}
+                                                />)}
+
+                                            {model.Autoryzacje
+                                                .map(item => <UserPasswordItem
+                                                    model={item}
+                                                    changedBy={item.who ?? "-"}
+                                                    changedWhen={item.when?.value ?? "-"}
+                                                    onChange={v => {
+                                                        const clone = _.clone(model);
+                                                        const index = _.findIndex(clone.Autoryzacje, it => it.localKey === v.localKey);
+                                                        clone.Autoryzacje[index] = v;
+                                                        setModel(clone);
+                                                    }}
+                                                    onRemove={localKey => {
+                                                        const clone = _.clone(model);
+                                                        const index = _.findIndex(clone.Autoryzacje, it => it.localKey === localKey);
+                                                        clone.Autoryzacje.splice(index, 1);
+                                                        setModel(clone);
+                                                    }}
+                                                />)}
+
+                                            <NewSecret
+                                                newAuthorisationExRequested={name => {
+                                                    const clone = _.clone(model);
+                                                    const localKey = uuid();
+                                                    const newItem: SecretExModel = {
+                                                        localKey,
+                                                        location: name
+                                                    };
+                                                    clone.AutoryzacjeEx.push(newItem);
+                                                    setModel(clone);
+                                                }}
+                                                newAuthorisationRequested={name => {
+                                                    const clone = _.clone(model);
+                                                    const localKey = uuid();
+                                                    const newItem: SecretModel = {
+                                                        localKey,
+                                                        location: name
+                                                    };
+                                                    clone.Autoryzacje.push(newItem);
+                                                    setModel(clone);
+                                                }} />
+                                        </>
+                                        <>
+                                            <Separator alignContent="start">Dane kontaktowe</Separator>
+
+                                            {model.Kontakty
+                                                .map(item => <NewContactItem
+                                                    model={item}
+                                                    onChange={v => {
+                                                        const clone = _.clone(model);
+                                                        const index = _.findIndex(clone.Kontakty, it => it.localKey === v.localKey);
+                                                        clone.Kontakty[index] = v;
+                                                        setModel(clone);
+                                                    }}
+                                                    onRemove={localKey => {
+                                                        const clone = _.clone(model);
+                                                        const index = _.findIndex(clone.Kontakty, it => it.localKey === localKey);
+                                                        clone.Kontakty.splice(index, 1);
+                                                        setModel(clone);
+                                                    }}
+                                                />)}
+
+                                            <div className="ms-Grid-row">
+                                                <div className="ms-Grid-col ms-smPush1 ms-sm4">
+                                                    <DefaultButton onClick={addContact}>Dodaj nowy kontakt</DefaultButton>
+                                                </div>
+                                            </div>
+                                        </>
+                                        <>
+                                            <Separator alignContent="start">Dane techniczne</Separator>
+                                            <div className="ms-Grid-row">
+                                                <div className="ms-Grid-col ms-sm6 ms-smPush1">
+                                                    <TextField
+                                                        multiline={true}
+                                                        placeholder="Adresy IP serwerów, inne"
+                                                        value={model.DaneTechniczne}
+                                                        onChange={onChangeMemo((m, v) => m.DaneTechniczne = v)} />
+                                                </div>
+                                            </div>
+                                        </>
+                                    </HorizontalSeparatorStack>
+                                </div>
+                            </div>
+                        </div>
+                    </ScrollablePane>
+                </div>
+
+            </Stack.Item>
+        </Stack>
     );
 }
