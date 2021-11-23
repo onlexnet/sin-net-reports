@@ -52,6 +52,7 @@ resources:
 stages:
   - stage: createHelmChart
     displayName: Create HELM Chart
+    condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
     jobs:
       - job: CICD
         displayName: CI/CD build
