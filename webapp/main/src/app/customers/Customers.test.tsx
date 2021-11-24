@@ -1,24 +1,20 @@
-import { configure, shallow } from 'enzyme';
-
+import { DetailsList } from '@fluentui/react';
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
-import { CustomersRoutedConnectedView } from './Customers.Routed';
+import { configure, shallow } from 'enzyme';
 import { CustomersView } from './Customers';
+
 
 configure({ adapter: new Adapter() });
 
 describe('<Customers />', () => {
 
-  it('should render', () => {
+  it('exposes provided list', () => {
     const wrapper = shallow(<CustomersView
       projectId="my project id"
       onNewClientCommand={() => { }}
       listCustomers={projectId => []} />);
-    // //expect(wrapper.find(Foo)).to.have.lengthOf(3);
-  });
-
-  it('exposes provided list', () => {
-    // const wrapper = shallow(<Main />);
-    // //expect(wrapper.find(Foo)).to.have.lengthOf(3);
+      var details = wrapper.find(DetailsList).props();
+      expect(details.items).not.toBeEmpty();
   });
 
   it('filters by name', () => {
