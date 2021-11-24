@@ -1,13 +1,10 @@
-import React, { useState } from "react";
-import { TextField, PrimaryButton, Separator, DetailsList, IColumn } from "@fluentui/react";
-import { Link, RouteComponentProps } from "react-router-dom";
-import { routing } from "../../Routing";
-import { HorizontalSeparatorStack } from "../../Components/HorizontalSeparatorStack";
-import { useListCustomers, UseListCustomersItem } from "../../api/useListCustomers";
-import { RootState } from "../../store/reducers";
-import { Dispatch } from "redux";
+import React from "react";
 import { connect, ConnectedProps } from "react-redux";
-import _ from "lodash";
+import { RouteComponentProps } from "react-router-dom";
+import { Dispatch } from "redux";
+import { useListCustomers } from "../../api/useListCustomers";
+import { routing } from "../../Routing";
+import { RootState } from "../../store/reducers";
 import { CustomersView } from "./Customers";
 
 
@@ -31,7 +28,9 @@ interface CustomersProps extends PropsFromRedux, RouteComponentProps {
 const CustomersRoutedView: React.FC<CustomersProps> = (props) => {
     const projectId = props.appState.projectId;
     const newCustomerCommand = () => props.history.push(routing.newCustomer);
-    return (<CustomersView projectId={projectId} onNewClientCommand={newCustomerCommand} />);
+    return (<CustomersView projectId={projectId}
+        onNewClientCommand={newCustomerCommand}
+        listCustomers={useListCustomers} />);
 }
 
 

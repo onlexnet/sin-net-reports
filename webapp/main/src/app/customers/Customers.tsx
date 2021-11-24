@@ -1,29 +1,30 @@
 import { DetailsList, IColumn, PrimaryButton, Separator, TextField } from "@fluentui/react";
-import { Link, RouteComponentProps } from "react-router-dom";
+import { Link } from "react-router-dom";
 import _ from "lodash";
 import { useState } from "react";
-import { useListCustomers, UseListCustomersItem } from "../../api/useListCustomers";
 import { HorizontalSeparatorStack } from "../../Components/HorizontalSeparatorStack";
+import { UseListCustomersItem as ListCustomersItem } from "../../api/useListCustomers";
 
 interface CustomersProps {
     projectId: string,
     onNewClientCommand: () => void;
+    listCustomers: (projectId: string) => ListCustomersItem[];
 }
 
 
 export const CustomersView: React.FC<CustomersProps> = (props) => {
 
     interface TypedColumn extends IColumn {
-        fieldName: keyof UseListCustomersItem;
+        fieldName: keyof ListCustomersItem;
     }
 
-    const items = useListCustomers(props.projectId);
+    const items = props.listCustomers(props.projectId);
     const [searchPhrase, setSearchPhrase] = useState<string | undefined>('');
 
     const columns: TypedColumn[] = [
         {
             key: "column1", name: "Klient", fieldName: "name", minWidth: 70, maxWidth: 90, isResizable: true, isCollapsible: true, data: "string",
-            onRender: (item: UseListCustomersItem) => {
+            onRender: (item: ListCustomersItem) => {
                 return <Link to={`/customers/${item.customerId.projectId}/${item.customerId.entityId}/${item.customerId.entityVersion}`}>{item.name}</Link>;
             },
             isPadded: true
