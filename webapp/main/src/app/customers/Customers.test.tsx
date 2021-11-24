@@ -17,7 +17,7 @@ describe('<Customers />', () => {
       entityVersion: 42,
     }
     const rand = Math.random().toString().substr(2, 8);
-    const result: ListCustomersItem = { name: 'any-' + rand, customerId };
+    const result: ListCustomersItem = { name: 'any-' + rand, customerId, termNfzKodSwiadczeniodawcy: 'term1-' + rand };
     return result;
   }
 
@@ -72,9 +72,23 @@ describe('<Customers />', () => {
     expect(details.items.length).toEqual(1);
   });
 
+  /** https://github.com/onlexnet/sin-net-reports/issues/58 */
   it('filters by prop: portal świadczeniodawcy/kod świadczeniodawcy', () => {
-    // const wrapper = shallow(<Main />);
-    // //expect(wrapper.find(Foo)).to.have.lengthOf(3);
+    const item1 = createItem();
+    const wrapper = shallow(<CustomersView
+      givenProjectId="my project id"
+      onNewClientCommand={() => { }}
+      listCustomers={projectId => [item1]} />);
+
+    const event = {
+      target: {
+        value: "term1" // well known part of tested code
+      }
+    };
+    var input = wrapper.find(TextField).first();
+    input.simulate("change", event);
+    var details = wrapper.find(DetailsList).props();
+    expect(details.items.length).toEqual(1);
   });
 
 });
