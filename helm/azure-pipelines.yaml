@@ -4,6 +4,7 @@ variables:
   imageName: "uservice-customers"
   containerRegistry: "sinnetapps.azurecr.io"
   dockerRepository: onlex-sinnet-reports
+  buildOnMaster: $[ eq(variables['build.sourceBranch'], 'refs/heads/master') ]
 
 trigger:
   branches:
@@ -93,4 +94,5 @@ stages:
           displayName: Move artifacts to single location before publishing
         - publish: $(Build.ArtifactStagingDirectory)/artifact1/
           displayName: Publish collected artifacts
+          condition: buildOnMaster
           artifact: chart
