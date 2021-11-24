@@ -94,5 +94,5 @@ stages:
           displayName: Move artifacts to single location before publishing
         - publish: $(Build.ArtifactStagingDirectory)/artifact1/
           displayName: Publish collected artifacts
-          condition: buildOnMaster
+          condition: and(succeeded(), eq(variables.buildOnMaster, 'true'))
           artifact: chart
