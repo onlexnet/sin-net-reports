@@ -6,7 +6,7 @@ import { HorizontalSeparatorStack } from "../../Components/HorizontalSeparatorSt
 import { ListCustomersItem } from "../../api/useListCustomers";
 
 interface CustomersProps {
-    projectId: string,
+    givenProjectId: string,
     onNewClientCommand: () => void;
     listCustomers: (projectId: string) => ListCustomersItem[];
 }
@@ -18,7 +18,7 @@ export const CustomersView: React.FC<CustomersProps> = (props) => {
         fieldName: keyof ListCustomersItem;
     }
 
-    const items = props.listCustomers(props.projectId);
+    const items = props.listCustomers(props.givenProjectId);
     const [searchPhrase, setSearchPhrase] = useState<string | undefined>('');
 
     const columns: TypedColumn[] = [
@@ -61,7 +61,7 @@ export const CustomersView: React.FC<CustomersProps> = (props) => {
                 </div>
                 <div className="ms-Grid-row">
                     <div className="ms-Grid-col ms-sm12">
-                        <TextField placeholder="Wprowadź fragment nazwy klienta ..." value={searchPhrase} onChange={(e, v) => setSearchPhrase(v)} />
+                        <TextField placeholder="Wprowadź fragment nazwy klienta ..." value={searchPhrase} onChange={e => setSearchPhrase((e.target as any).value)} />
                     </div>
                 </div>
 

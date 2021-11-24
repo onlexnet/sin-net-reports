@@ -28,7 +28,7 @@ interface CustomersProps extends PropsFromRedux, RouteComponentProps {
 const CustomersRoutedView: React.FC<CustomersProps> = (props) => {
     const projectId = props.appState.projectId;
     const newCustomerCommand = () => props.history.push(routing.newCustomer);
-    return (<CustomersView projectId={projectId}
+    return (<CustomersView givenProjectId={projectId}
         onNewClientCommand={newCustomerCommand}
         listCustomers={useListCustomers} />);
 }
