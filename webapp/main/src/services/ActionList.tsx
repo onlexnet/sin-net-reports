@@ -1,22 +1,20 @@
-import * as React from "react";
-import { DetailsList, DetailsListLayoutMode, SelectionMode, IColumn, mergeStyleSets, ScrollablePane, ScrollbarVisibility, IRenderFunction, IDetailsHeaderProps, IDetailsColumnRenderTooltipProps, TooltipHost, Sticky, StickyPositionType } from "@fluentui/react";
-import { IStackTokens, Stack, TextField, Toggle, Announced } from "@fluentui/react";
-import { connect, ConnectedProps } from "react-redux";
-import { RootState } from "../store/reducers";
-import { useState } from "react";
-import { TimePeriod } from "../store/viewcontext/TimePeriod";
-import { HorizontalSeparatorStack } from "../Components/HorizontalSeparatorStack";
-import { toActionModel } from "../api/DtoMapper";
-import { useFetchServicesQuery } from "../Components/.generated/components";
+import { DetailsList, DetailsListLayoutMode, IColumn, IDetailsColumnRenderTooltipProps, IDetailsHeaderProps, IRenderFunction, IStackTokens, mergeStyleSets, ScrollablePane, ScrollbarVisibility, SelectionMode, Stack, Sticky, StickyPositionType, TextField, Toggle, TooltipHost } from "@fluentui/react";
 import _ from "lodash";
-import { asDtoDates } from "../api/Mapper";
+import * as React from "react";
+import { useState } from "react";
+import { connect, ConnectedProps } from "react-redux";
+import { Link } from "react-router-dom";
 import { Dispatch } from "redux";
+import { toActionModel } from "../api/DtoMapper";
+import { asDtoDates } from "../api/Mapper";
+import { LocalDateView } from "../app/LocalDateView";
+import { useFetchServicesQuery } from "../Components/.generated/components";
+import { ServiceAppModel } from "../store/actions/ServiceModel";
+import { RootState } from "../store/reducers";
+import { TimePeriod } from "../store/viewcontext/TimePeriod";
 import { ActionEditItem, VIEWCONTEXT_ACTION_EDIT_START } from "../store/viewcontext/types";
 import { Duration } from "./ActionList.Duration";
-import { Link } from "react-router-dom";
-import { LocalDateView } from "../app/LocalDateView";
 import { ServiceListModel } from "./ServiceListModel";
-import { ServiceAppModel } from "../store/actions/ServiceModel";
 
 const classNames = mergeStyleSets({
   fileIconHeaderIcon: {

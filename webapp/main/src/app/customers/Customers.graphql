@@ -11,6 +11,10 @@ query ListCustomers($projectId: ID!) {
         customerCityName
         customerAddress
       }
+      secretsEx {
+        location,
+        entityCode
+      }
     }
   }
 }

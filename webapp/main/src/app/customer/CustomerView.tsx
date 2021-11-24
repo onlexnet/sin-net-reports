@@ -1,19 +1,16 @@
-import React, { MouseEventHandler } from "react"
-
-import { ScrollablePane, ScrollbarVisibility, Separator } from "@fluentui/react";
-import { Stack, IStackTokens, IStackStyles } from "@fluentui/react";
-import { IComboBoxOption, ITextFieldStyles, TextField, Checkbox, PrimaryButton, IComboBox, ComboBox, Spinner, SpinnerSize, DefaultButton } from "@fluentui/react";
+import { Checkbox, ComboBox, DefaultButton, IComboBox, IComboBoxOption, IStackStyles, IStackTokens, ITextFieldStyles, PrimaryButton, ScrollablePane, ScrollbarVisibility, Separator, Spinner, SpinnerSize, Stack, TextField } from "@fluentui/react";
 import _ from "lodash";
+import React, { MouseEventHandler } from "react";
+import { v1 as uuid } from 'uuid';
 import { useGetUsers } from "../../api/useGetUsers";
 import { CustomerContactInput, CustomerInput, CustomerSecretExInput, CustomerSecretInput, useRemoveCustomerMutation, useSaveCustomerMutation } from "../../Components/.generated/components";
 import { EntityId } from "../../store/actions/ServiceModel";
+import { NewContactItem } from "./NewContactItem";
+import { SecretsTimestamp } from "./SecretsTimestamp";
 import { NewSecret } from "./View.NewSecret";
 import { UserPasswordItem } from "./View.UserPasswordItem";
 import { UserPasswordItemExt } from "./View.UserPasswordItemEx";
-import { v1 as uuid } from 'uuid';
-import { NewContactItem } from "./NewContactItem";
-import moment from "moment";
-import { SecretsTimestamp } from "./SecretsTimestamp";
+
 
 const stackStyles: Partial<IStackStyles> = { root: { width: 650 } };
 const stackTokens: IStackTokens = { childrenGap: 12 };
