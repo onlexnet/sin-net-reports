@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import _ from "lodash";
 import { useState } from "react";
 import { HorizontalSeparatorStack } from "../../Components/HorizontalSeparatorStack";
-import { UseListCustomersItem as ListCustomersItem } from "../../api/useListCustomers";
+import { ListCustomersItem } from "../../api/useListCustomers";
 
 interface CustomersProps {
     projectId: string,
@@ -55,7 +55,7 @@ export const CustomersView: React.FC<CustomersProps> = (props) => {
         <div className="ms-Grid">
             <HorizontalSeparatorStack >
                 <div className="ms-Grid-row">
-                    <div className="ms-Grid-col ms-sm3">
+                    <div className="ms-Grid-col ms-sm3" style={{ padding: 10 }}>
                         <PrimaryButton text="Dodaj nowego klienta" onClick={() => props.onNewClientCommand()} />
                     </div>
                 </div>

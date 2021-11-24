@@ -3,12 +3,12 @@ import { useState } from 'react';
 import { useListCustomersQuery } from '../Components/.generated/components';
 import { EntityId } from '../store/actions/ServiceModel';
 
-export interface UseListCustomersItem {
+export interface ListCustomersItem {
   customerId: EntityId,
   name: string
 }
 
-export const useListCustomers: (projectId: string) => UseListCustomersItem[] = (projectId) => {
+export const useListCustomers: (projectId: string) => ListCustomersItem[] = (projectId) => {
   const { data } = useListCustomersQuery({
     variables: {
       projectId
