@@ -1,22 +1,20 @@
-import * as React from "react";
-import { DetailsList, DetailsListLayoutMode, SelectionMode, IColumn, mergeStyleSets } from "@fluentui/react";
-import { IStackTokens, Stack, TextField, Toggle, Announced } from "@fluentui/react";
-import { connect, ConnectedProps } from "react-redux";
-import { RootState } from "../store/reducers";
-import { useState } from "react";
-import { TimePeriod } from "../store/viewcontext/TimePeriod";
-import { HorizontalSeparatorStack } from "../Components/HorizontalSeparatorStack";
-import { toActionModel } from "../api/DtoMapper";
-import { useFetchServicesQuery } from "../Components/.generated/components";
+import { DetailsList, DetailsListLayoutMode, IColumn, IDetailsColumnRenderTooltipProps, IDetailsHeaderProps, IRenderFunction, IStackTokens, mergeStyleSets, ScrollablePane, ScrollbarVisibility, SelectionMode, Stack, Sticky, StickyPositionType, TextField, Toggle, TooltipHost } from "@fluentui/react";
 import _ from "lodash";
-import { asDtoDates } from "../api/Mapper";
+import * as React from "react";
+import { useState } from "react";
+import { connect, ConnectedProps } from "react-redux";
+import { Link } from "react-router-dom";
 import { Dispatch } from "redux";
+import { toActionModel } from "../api/DtoMapper";
+import { asDtoDates } from "../api/Mapper";
+import { LocalDateView } from "../app/LocalDateView";
+import { useFetchServicesQuery } from "../Components/.generated/components";
+import { ServiceAppModel } from "../store/actions/ServiceModel";
+import { RootState } from "../store/reducers";
+import { TimePeriod } from "../store/viewcontext/TimePeriod";
 import { ActionEditItem, VIEWCONTEXT_ACTION_EDIT_START } from "../store/viewcontext/types";
 import { Duration } from "./ActionList.Duration";
-import { Link } from "react-router-dom";
-import { LocalDateView } from "../app/LocalDateView";
 import { ServiceListModel } from "./ServiceListModel";
-import { ServiceAppModel } from "../store/actions/ServiceModel";
 
 const classNames = mergeStyleSets({
   fileIconHeaderIcon: {
@@ -206,7 +204,7 @@ const ConnectedContent: React.FC<PropsFromRedux> = props => {
     return hours + ':' + ('00' + minutes).substr(-2);
   };
 
-  const stackTokens: IStackTokens = { childrenGap: 40 };
+  const stackTokens: IStackTokens = { padding: "10px" };
 
 
 
@@ -215,54 +213,61 @@ const ConnectedContent: React.FC<PropsFromRedux> = props => {
     setCurrentPeriod(props.period);
   }
 
+
+  const onRenderDetailsHeader: IRenderFunction<IDetailsHeaderProps> = (props, defaultRender) => {
+    if (!props) {
+      return null;
+    }
+    const onRenderColumnHeaderTooltip: IRenderFunction<IDetailsColumnRenderTooltipProps> = tooltipHostProps => (
+      <TooltipHost {...tooltipHostProps} />
+    );
+    return (
+      <Sticky stickyPosition={StickyPositionType.Header} isScrollSynced>
+        {defaultRender!({
+          ...props,
+          onRenderColumnHeaderTooltip,
+        })}
+      </Sticky>
+    );
+  };
+
+
+
   return (
-    <>
+    <Stack verticalFill>
+      <Stack.Item>
+        <Stack horizontal tokens={stackTokens}>
+            <Toggle
+              label="Tylko moje dane"
+              checked={onlyMyData}
+              onChange={(e, v) => setOnlyMyData(v ?? false)}
+              onText="Tylko moje"
+              offText="Wszystkie"
+              styles={controlStyles}
+            />
+            <TextField label="Tylko dzień:" value={onlyDay} onChange={(e, v) => setOnlyDay(v)} styles={controlStyles} />
+            <TextField label="Kontrahent:" styles={controlStyles} value={onlyCustomer} onChange={(e, v) => setOnlyCustomer(v)} />
+            <TextField disabled label="Suma godzin" value={totalTime()} />
+        </Stack>
+      </Stack.Item>
+      <Stack.Item verticalFill>
+        <div style={{ position: "relative", height: "100%" }}>
+          <ScrollablePane scrollbarVisibility={ScrollbarVisibility.auto}>
+            <DetailsList
+              onRenderDetailsHeader={onRenderDetailsHeader}
+              items={items}
+              compact={true}
+              columns={initialColumns}
+              selectionMode={SelectionMode.none}
+              setKey="none"
+              layoutMode={DetailsListLayoutMode.justified}
+              isHeaderVisible={true}
+            />
+          </ScrollablePane>
+        </div>
+      </Stack.Item>
+    </Stack>
 
-      <div className="ms-Grid">
-        <HorizontalSeparatorStack >
-          {/* <Separator alignContent="start">Dane ogólne: </Separator> */}
-
-          <div className="ms-Grid-row">
-            <div className="ms-Grid-col ms-sm12">
-              <div className={classNames.controlWrapper}>
-                <Stack>
-                  <Stack horizontal tokens={stackTokens}>
-                    <Toggle
-                      label="Tylko moje dane"
-                      checked={onlyMyData}
-                      onChange={(e, v) => setOnlyMyData(v ?? false)}
-                      onText="Tylko moje"
-                      offText="Wszystkie"
-                      styles={controlStyles}
-                    />
-                    <TextField label="Tylko dzień:" value={onlyDay} onChange={(e, v) => setOnlyDay(v)} styles={controlStyles} />
-                    <TextField label="Kontrahent:" styles={controlStyles} value={onlyCustomer} onChange={(e, v) => setOnlyCustomer(v)} />
-                    <TextField disabled label="Suma godzin" value={totalTime()} />
-                  </Stack>
-                </Stack>
-              </div>
-              {announcedMessage ? <Announced message={announcedMessage} /> : undefined}
-            </div>
-          </div>
-
-          <div className="ms-Grid-row">
-            <div className="ms-Grid-col ms-sm12">
-              <DetailsList
-                items={items}
-                compact={true}
-                columns={initialColumns}
-                selectionMode={SelectionMode.none}
-                setKey="none"
-                layoutMode={DetailsListLayoutMode.justified}
-                isHeaderVisible={true}
-              />
-            </div>
-          </div>
-
-        </HorizontalSeparatorStack>
-      </div>
-
-    </>
   );
 }
 
@@ -279,5 +284,5 @@ const toLocalModel = (it: ServiceAppModel): ServiceListModel => {
     duration: it.duration,
     distance: it.distance,
     customerName: it.customer?.name
-    }
+  }
 }

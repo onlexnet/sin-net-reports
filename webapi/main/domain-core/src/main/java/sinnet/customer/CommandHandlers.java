@@ -1,6 +1,7 @@
 package sinnet.customer;
 
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -71,13 +72,13 @@ public class CommandHandlers extends AbstractVerticle implements TopLevelVerticl
                 .map(v -> v.getSecrets())
                 .getOrElse(new CustomerSecret[0]);
             var newSecrets = CommandHandlers.merge(requestor,
-                                                    LocalDateTime.now(),
+                                                    LocalDateTime.now(ZoneOffset.UTC),
                                                     requestedSecrets, actualSecrets);
             var actualSecretsEx = it
                 .map(v -> v.getSecretsEx())
                 .getOrElse(new CustomerSecretEx[0]);
             var newSecretsEx = CommandHandlers.merge(requestor,
-                                                      LocalDateTime.now(),
+                                                      LocalDateTime.now(ZoneOffset.UTC),
                                                       requestedSecretsEx, actualSecretsEx);
             var newContacts = Arrays.stream(requestedContacts)
                 .map(v -> CustomerContact

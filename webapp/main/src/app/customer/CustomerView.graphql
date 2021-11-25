@@ -69,8 +69,8 @@ query GetCustomer($projectId: ID!, $entityId: ID!) {
         location
         username
         password
-        changedWhen
         changedWho
+        changedWhen
       }
       secretsEx {
         location
@@ -78,8 +78,8 @@ query GetCustomer($projectId: ID!, $entityId: ID!) {
         password
         entityName
         entityCode
-        changedWhen
         changedWho
+        changedWhen
       }
       contacts {
         firstName

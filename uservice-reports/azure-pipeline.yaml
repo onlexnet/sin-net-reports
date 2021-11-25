@@ -1,3 +1,6 @@
+pool:
+  vmImage: ubuntu-latest
+
 resources:
   - repo: self
 
@@ -16,65 +19,70 @@ trigger:
     include:
       - uservice-reports
 
-jobs:
-  - job: CICD
-    displayName: Webapi CI/CD build
-    pool:
-      vmImage: ubuntu-latest
+stages:
+  - stage: build
+    displayName: Build docker image
+    jobs:
+      - job: ci_build
+        displayName: Build image
+        pool:
+          vmImage: ubuntu-latest
 
-    variables:
-      # We have enabled the build pipelines for Pull Request vs master.
-      # There are some differences between a normal build and the build triggered by a PR though:
-      # The build triggered from a PR do not push the docker images to any docker registry.
-      buildImageOnMaster: $[ eq(variables['build.sourceBranch'], 'refs/heads/master') ]
-      buildImageAndPush: $[ startsWith(variables['build.sourceBranch'], 'refs/heads/release/webapi/') ]
-    
-    steps:
-
-      - task: Gradle@2
-        inputs:
-          displayName: 'Project compilation with Gradle'
-          gradleWrapperFile: 'uservice-reports/main/gradlew' 
-          cwd: 'uservice-reports/main'
-          #options: # Optional
-          #tasks: 'build' # A list of tasks separated by spaces, such as 'build test'
-          publishJUnitResults: true 
-          testResultsFiles: '**/TEST-*.xml' # Required when publishJUnitResults == True
-          #testRunTitle: # Optional
-          #codeCoverageToolOption: 'None' # Optional. Options: none, cobertura, jaCoCo
-          #codeCoverageClassFilesDirectories: 'build/classes/main/' # Required when codeCoverageToolOption == False
-          #codeCoverageClassFilter: # Optional. Comma-separated list of filters to include or exclude classes from collecting code coverage. For example: +:com.*,+:org.*,-:my.app*.*
-          #codeCoverageFailIfEmpty: false # Optional
-          #javaHomeOption: 'JDKVersion' # Options: jDKVersion, path
-          jdkVersionOption: '1.11'
-          #jdkDirectory: # Required when javaHomeOption == Path
-          #jdkArchitectureOption: 'x64' # Optional. Options: x86, x64
-          #gradleOptions: '-Xmx1024m' # Optional
-          #sonarQubeRunAnalysis: false 
-          #sqGradlePluginVersionChoice: 'specify' # Required when sonarQubeRunAnalysis == True# Options: specify, build
-          #sonarQubeGradlePluginVersion: '2.6.1' # Required when sonarQubeRunAnalysis == True && SqGradlePluginVersionChoice == Specify
-          checkStyleRunAnalysis: false # Optional
-          #findBugsRunAnalysis: false # Optional
-          #pmdRunAnalysis: false # Optional
-      # - task: Maven@3
+        variables:
+          # We have enabled the build pipelines for Pull Request vs master.
+          # There are some differences between a normal build and the build triggered by a PR though:
+          # The build triggered from a PR do not push the docker images to any docker registry.
+          buildImageOnMaster: $[ eq(variables['build.sourceBranch'], 'refs/heads/master') ]
+          buildImageAndPush: $[ startsWith(variables['build.sourceBranch'], 'refs/heads/release/webapi/') ]
         
-      - task: Docker@2
-        displayName: Build uservice image
-        inputs:
-          command: build
-          dockerfile: uservice-reports/main/src/main/docker/Dockerfile.jvm
-          buildContext: uservice-reports/main
-          containerRegistry: $(dockerRegistryServiceConnection)
-          repository: $(dockerRepository)
-          tags: |
-            $(Build.SourceBranchName)-$(Build.BuildNumber)
+        steps:
 
-      - task: Docker@2
-        displayName: Push webapi image to docker ACR
-        inputs:
-          command: push
-          containerRegistry: $(dockerRegistryServiceConnection)
-          repository: $(dockerRepository)
-          tags: |
-            $(Build.SourceBranchName)-$(Build.BuildNumber)
-
+          - task: Gradle@2
+            inputs:
+              displayName: 'Project compilation with Gradle'
+              gradleWrapperFile: 'uservice-reports/main/gradlew' 
+              cwd: 'uservice-reports/main'
+              #options: # Optional
+              #tasks: 'build' # A list of tasks separated by spaces, such as 'build test'
+              publishJUnitResults: true 
+              testResultsFiles: '**/TEST-*.xml' # Required when publishJUnitResults == True
+              #testRunTitle: # Optional
+              #codeCoverageToolOption: 'None' # Optional. Options: none, cobertura, jaCoCo
+              #codeCoverageClassFilesDirectories: 'build/classes/main/' # Required when codeCoverageToolOption == False
+              #codeCoverageClassFilter: # Optional. Comma-separated list of filters to include or exclude classes from collecting code coverage. For example: +:com.*,+:org.*,-:my.app*.*
+              #codeCoverageFailIfEmpty: false # Optional
+              #javaHomeOption: 'JDKVersion' # Options: jDKVersion, path
+              jdkVersionOption: '1.11'
+              #jdkDirectory: # Required when javaHomeOption == Path
+              #jdkArchitectureOption: 'x64' # Optional. Options: x86, x64
+              #gradleOptions: '-Xmx1024m' # Optional
+              #sonarQubeRunAnalysis: false 
+              #sqGradlePluginVersionChoice: 'specify' # Required when sonarQubeRunAnalysis == True# Options: specify, build
+              #sonarQubeGradlePluginVersion: '2.6.1' # Required when sonarQubeRunAnalysis == True && SqGradlePluginVersionChoice == Specify
+              checkStyleRunAnalysis: false # Optional
+              #findBugsRunAnalysis: false # Optional
+              #pmdRunAnalysis: false # Optional
+          # - task: Maven@3
+            
+          - task: Docker@2
+            displayName: Build uservice image
+            inputs:
+              command: build
+              dockerfile: uservice-reports/main/src/main/docker/Dockerfile.jvm
+              buildContext: uservice-reports/main
+              containerRegistry: $(dockerRegistryServiceConnection)
+              repository: $(dockerRepository)
+              tags: |
+                latest
+                $(Build.SourceBranchName)-$(Build.BuildNumber)
+          
+          - task: Docker@2
+            displayName: Push webapi image to docker ACR
+            condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
+            inputs:
+              command: push
+              containerRegistry: $(dockerRegistryServiceConnection)
+              repository: $(dockerRepository)
+              tags: |
+                latest
+                $(Build.SourceBranchName)-$(Build.BuildNumber)

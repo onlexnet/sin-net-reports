@@ -1,0 +1,98 @@
+
+variables:
+  dockerRegistryServiceConnection: "sinnet-acr"
+  imageName: "uservice-customers"
+  containerRegistry: "sinnetapps.azurecr.io"
+  dockerRepository: onlex-sinnet-reports
+  buildOnMaster: $[ eq(variables['build.sourceBranch'], 'refs/heads/master') ]
+
+trigger:
+  branches:
+    include:
+      - master
+  paths:
+    include:
+      - helm
+pool:
+  vmImage: 'ubuntu-latest'
+
+resources:
+  pipelines:
+  - pipeline: webapp_CI
+    project: sinnet
+    source: onlex-sinnet-webapp
+    trigger: true
+  - pipeline: webapi_CI
+    project: sinnet
+    source: onlex-sinnet-webapi
+    trigger: true
+  - pipeline: report_CI
+    project: sinnet
+    source: onlex-sinnet-reports
+    trigger: true
+  containers:
+    - container: webapp
+      type: ACR  
+      azureSubscription: sinnet-default-manual-arm
+      resourceGroup: sinnet-default-manual
+      registry: sinnet
+      repository: webapp
+    - container: webapi
+      type: ACR  
+      azureSubscription: sinnet-default-manual-arm
+      resourceGroup: sinnet-default-manual
+      registry: sinnet
+      repository: webapi
+    - container: reports
+      type: ACR  
+      azureSubscription: sinnet-default-manual-arm
+      resourceGroup: sinnet-default-manual
+      registry: sinnet
+      repository: onlex-sinnet-reports
+
+stages:
+  - stage: createHelmChart
+    displayName: Create HELM Chart
+    condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
+    jobs:
+      - job: CICD
+        displayName: CI/CD build
+        steps:
+        - task: HelmInstaller@1
+          inputs:
+            helmVersionToInstall: 'latest' # Optional
+        - task: HelmDeploy@0
+          displayName: Helm package and deploy
+          inputs:
+            command: package
+            chartPath: helm/main
+            azureContainerRegistry: $(dockerRegistryServiceConnection)
+        - bash: |
+              echo "##vso[task.setvariable variable=WEBAPP_IMAGE_TAG]$(resources.container.webapp.tag)"
+              echo "##vso[task.setvariable variable=WEBAPI_IMAGE_TAG]$(resources.container.webapi.tag)"
+              echo "##vso[task.setvariable variable=REPORTS_IMAGE_TAG]$(resources.container.reports.tag)"
+          displayName: Store all used image tags in variables for future use.
+        - bash: |
+              ./helm/main/makeconfig.sh
+          displayName: Generate config.yaml
+        - task: HelmDeploy@0
+          displayName: Helm package
+          inputs:
+            command: package
+            chartName: sinnet-reports
+            chartPath:  helm/main/.
+            chartVersion: $(Build.BuildNumber)
+        - bash: |
+              echo "##vso[task.setvariable variable=CHART_FILE_NAME]sinnet-reports-$(Build.BuildNumber).tgz"
+        - bash: |
+              echo '{ "chartFileName": "$(CHART_FILE_NAME)"}' > chart.config
+        - bash: |
+              mkdir $(Build.ArtifactStagingDirectory)/artifact1
+              mv chart.config $(Build.ArtifactStagingDirectory)/artifact1
+              mv $(Build.ArtifactStagingDirectory)/$(CHART_FILE_NAME) $(Build.ArtifactStagingDirectory)/artifact1
+              mv config.yaml $(Build.ArtifactStagingDirectory)/artifact1
+          displayName: Move artifacts to single location before publishing
+        - publish: $(Build.ArtifactStagingDirectory)/artifact1/
+          displayName: Publish collected artifacts
+          condition: and(succeeded(), eq(variables.buildOnMaster, 'true'))
+          artifact: chart

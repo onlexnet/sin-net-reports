@@ -1,0 +1,74 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nginx
+  annotations:
+    kubernetes.io/ingress.class: {{ .Values.ingress.class }}
+    cert-manager.io/issuer: {{ include "letsencrypt.instance" . }}
+spec:
+  tls:
+  - hosts:
+    - {{ include "ingress.host" . }}
+    secretName: portal-tls-secret
+  rules:
+  - host: {{ include "ingress.host" . }}
+    http:
+      paths:
+        - path: /graphiql
+          pathType: Prefix
+          backend:
+            service:
+              name: webapi-svc
+              port:
+                number: 8080
+        - path: /graphql
+          pathType: Prefix
+          backend:
+            service:
+              name: webapi-svc
+              port:
+                number: 8080
+        - path: /api
+          pathType: Prefix
+          backend:
+            service:
+              name: webapi-svc
+              port:
+                number: 8080
+        - path: /voyager
+          pathType: Prefix
+          backend:
+            service:
+              name: webapi-svc
+              port:
+                number: 8080
+        - path: /altair
+          pathType: Prefix
+          backend:
+            service:
+              name: webapi-svc
+              port:
+                number: 8080
+        - path: /vendor
+          pathType: Prefix
+          backend:
+            service:
+              name: webapi-svc
+              port:
+                number: 8080
+        - path: /actuator
+          pathType: Prefix
+          backend:
+            service:
+              name: webapi-svc
+              port:
+                number: 8080
+
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: webapp-svc
+              port:
+                number: 80
+                

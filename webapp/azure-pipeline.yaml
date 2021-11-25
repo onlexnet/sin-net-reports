@@ -10,6 +10,10 @@ variables:
   # name of the docker registry where the image is hosted on.
   # in Docker world, it is also part of image name (prefix)
   containerRegistry: "sinnetapps.azurecr.io"
+  ${{ if eq( variables['build.reason'], 'PullRequest' ) }}:
+    date: ''
+  ${{ if ne( variables['build.reason'], 'PullRequest' ) }}:
+    date: ${{ '$(Date:yyyyMMdd)' }}
 
 trigger:
   batch: true
@@ -31,7 +35,7 @@ jobs:
     steps:
 
       - bash: |
-          echo "##vso[task.setvariable variable=my_version]$(cat .version)"
+          echo "##vso[task.setvariable variable=my_version]$(cat webapp/.version)"
         displayName: Read version from .version file
 
       - task: Npm@1
@@ -64,11 +68,13 @@ jobs:
 
       - task: Docker@2
         displayName: Build and push image to docker ACR
+        condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
         inputs:
           containerRegistry: $(dockerRegistryServiceConnection)
           dockerfile: webapp/Dockerfile
           repository: webapp
           command: buildAndPush
           tags: |
+            latest
             $(Build.SourceBranchName)-$(Build.BuildNumber)
 
