@@ -37,19 +37,19 @@ import io.quarkus.grpc.GrpcService
 @GrpcService
 class Report2Service extends ReportsGrpc.ReportsImplBase {
 
-  // override def produce(request: ReportRequestDTO, responseObserver: StreamObserver[Response]): Unit = {
-  //   var requestModel = (request)
-  //   val model = ReportResult(requestModel)
-  //   val binaryData = model.content
-  //   val dtoData = ByteString.copyFrom(binaryData)
-  //   var response = Response
-  //     .newBuilder()
-  //     .setData(dtoData)
-  //     .build()
+  override def produce(request: ReportRequestDTO, responseObserver: StreamObserver[Response]): Unit = {
+    // var requestModel = (request)
+    // val model = ReportResult(requestModel)
+    // val binaryData = model.content
+    // val dtoData = ByteString.copyFrom(binaryData)
+    // var response = Response
+    //   .newBuilder()
+    //   .setData(dtoData)
+    //   .build()
 
-  //   responseObserver.onNext(response)
-  //   responseObserver.onCompleted()
-  // }
+    // responseObserver.onNext(response)
+    // responseObserver.onCompleted()
+  }
 
   // override def producePack(request: ReportRequestsDTO, responseObserver: StreamObserver[Response]): Unit = {
   //   for (

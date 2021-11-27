@@ -19,7 +19,7 @@ import java.io.ByteArrayInputStream
 import io.quarkus.grpc.GrpcClient
 
 @QuarkusTest
-class ReportServiceTest {
+class ReportService1Test {
     
     @Inject
     @GrpcClient
