@@ -4,6 +4,7 @@ import sinnet.reports.report1.{ReportRequest => Report1RequestDTO, ReportRequest
 import java.time.LocalDate
 import scala.collection.JavaConverters._
 import scala.util.Try
+import java.time.YearMonth
 
 /** Converts ReportRequest (DTO) to its local model. */
 object Mapper {
@@ -14,7 +15,8 @@ object Mapper {
   private implicit def toCustomerDetails(x: sinnet.reports.report1.CustomerDetails) =
     CustomerDetails(x.getCustomerName(), x.getCustomerCity(), x.getCustomerAddress())
 
-    
+  implicit def toLocal(x: sinnet.reports.YearMonth) = YearMonth.of(x.getYear(), x.getMonth());
+
   implicit def apply(dto: Report1RequestDTO): ReportRequest = {
     ReportRequest(dto.getCustomer(), dto.getDetailsList().asScala.map(toActivityDetails _))
   }

@@ -3,7 +3,7 @@ syntax = "proto3";
 import "reports.proto";
 
 option java_multiple_files = true;
-option java_outer_classname = "Reports1Proto";
+option java_outer_classname = "Reports2Proto";
 
 package sinnet.reports.report2;
 
@@ -12,18 +12,11 @@ service Reports {
 }
 
 message ReportRequest {
-    YearMonth yearMonth = 1;
-    repeated ActivityDetails details = 2;
-}
-
-message CustomerDetails {
-    string customerId = 1;
-    string customerName = 2;
-    string customerCity = 3;
-    string customerAddress = 4;
+    repeated ActivityDetails details = 1;
 }
 
 message ActivityDetails {
-    string personName = 1;
-    int32 howLongInMins = 2;
+    YearMonth yearMonth = 1;
+    string personName = 2;
+    int32 howLongInMins = 3;
 }
