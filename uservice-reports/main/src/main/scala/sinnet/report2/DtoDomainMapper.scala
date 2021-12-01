@@ -10,8 +10,7 @@ import sinnet.Minutes
 object DtoDomainMapper {
   import sinnet.Mapper._
 
-  private implicit def toActivityDetails(x: ActivityDetailsDto) =
-    ActivityDetails(x.getYearMonth(), x.getPersonName(), Minutes(x.getHowLongInMins()));
+  implicit def toActivityDetails(x: ActivityDetailsDto) = ActivityDetails(x.getYearMonth(), x.getPersonName(), Minutes(x.getHowLongInMins()));
   // private implicit def toCustomerDetails(x: sinnet.reports.report1.CustomerDetails) =
   //   CustomerDetails(x.getCustomerName(), x.getCustomerCity(), x.getCustomerAddress())
 

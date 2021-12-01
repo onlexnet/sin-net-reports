@@ -38,6 +38,9 @@ import io.quarkus.grpc.GrpcService
 class Report2Service extends ReportsGrpc.ReportsImplBase {
 
   override def produce(request: ReportRequestDTO, responseObserver: StreamObserver[Response]): Unit = {
+    val result = produce(request.getDetailsList().asScala.map(DtoDomainMapper.toActivityDetails))
+    responseObserver.onNext(result)
+    responseObserver.onCompleted()
     // var requestModel = (request)
     // val model = ReportResult(requestModel)
     // val binaryData = model.content
@@ -47,15 +50,17 @@ class Report2Service extends ReportsGrpc.ReportsImplBase {
     //   .setData(dtoData)
     //   .build()
 
-    // responseObserver.onNext(response)
-    // responseObserver.onCompleted()
   }
 
-  // override def producePack(request: ReportRequestsDTO, responseObserver: StreamObserver[Response]): Unit = {
-  //   for (
-  //     baos <- managed(new ByteArrayOutputStream());
-  //     zos <- managed(new ZipOutputStream(baos))
-  //   ) {
+  private def produce(request: Iterable[ActivityDetails]): Response = {
+
+    Response.newBuilder().build()
+  }
+    // ???
+    // for (
+    //   baos <- managed(new ByteArrayOutputStream());
+    //   zos <- managed(new ZipOutputStream(baos))
+    // ) {
 
   //     for ((itemDto, index) <- request.getItemsList().asScala.zip(Stream from 1)) {
   //       val item = DtoDomainMapper(itemDto)
@@ -81,5 +86,7 @@ class Report2Service extends ReportsGrpc.ReportsImplBase {
   //     responseObserver.onNext(response)
   //     responseObserver.onCompleted()
   //   }
+  // }
+    // }
   // }
 }
