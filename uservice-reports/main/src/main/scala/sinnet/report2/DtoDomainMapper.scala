@@ -4,12 +4,10 @@ import sinnet.reports.report2.{ReportRequest => ReportRequestDTO, ActivityDetail
 import java.time.LocalDate
 import scala.collection.JavaConverters._
 import scala.util.Try
-import sinnet.Minutes
-import sinnet.Kilometers
+import sinnet.reports._
 
 /** Converts ReportRequest (DTO) to its local model. */
 object DtoDomainMapper {
-  import sinnet.Mapper._
 
   implicit def toActivityDetails(x: ActivityDetailsDto) = ActivityDetails(x.getYearMonth(), x.getPersonName(), Kilometers(0), Minutes(x.getHowLongInMins()));
     

@@ -1,4 +1,4 @@
-package sinnet
+package sinnet.report1
 
 import scala.collection.JavaConversions._
 

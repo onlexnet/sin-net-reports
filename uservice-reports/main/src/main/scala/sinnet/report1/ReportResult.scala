@@ -1,4 +1,4 @@
-package sinnet
+package sinnet.report1
 
 import scala.language.implicitConversions
 import javax.inject.Singleton;
@@ -32,6 +32,9 @@ import scala.util.Success
 import scala.util.Failure
 import com.lowagie.text.FontFactory
 import javax.inject.Inject
+
+import sinnet.reports._
+
 
 object ReportResult {
 

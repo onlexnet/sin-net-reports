@@ -32,8 +32,7 @@ import scala.util.Success
 import scala.util.Failure
 import com.lowagie.text.FontFactory
 import javax.inject.Inject
-import sinnet.Minutes
-import sinnet.Kilometers
+import sinnet.reports._
 
 object ReportResult {
 

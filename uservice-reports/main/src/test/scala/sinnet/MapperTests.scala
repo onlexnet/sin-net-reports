@@ -7,6 +7,12 @@ import sinnet.reports.report1.{ReportRequest => ReportRequestDTO,
   CustomerDetails => CustomerDetailsDTO}
 import sinnet.reports.Date
 import java.time.LocalDate
+import sinnet.report1.Mapper
+import sinnet.report1.ReportRequest
+import sinnet.report1.CustomerDetails
+import sinnet.report1.ActivityDetails
+import sinnet.reports.Kilometers
+import sinnet.reports.Minutes
 
 class MapperTests {
 

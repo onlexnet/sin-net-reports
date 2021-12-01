@@ -2,8 +2,7 @@
 package sinnet.report2
 
 import java.time.YearMonth
-import sinnet.Minutes
-import sinnet.Kilometers
+import sinnet.reports._
 
 case class ActivityDetails(period: YearMonth, personName: String, kilometers: Kilometers, minutes: Minutes);
 
