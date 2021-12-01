@@ -41,33 +41,16 @@ class Report2Service extends ReportsGrpc.ReportsImplBase {
     val result = produce(request)
     responseObserver.onNext(result)
     responseObserver.onCompleted()
-    // var requestModel = (request)
-    // val model = ReportResult(requestModel)
-    // val binaryData = model.content
-    // val dtoData = ByteString.copyFrom(binaryData)
-    // var response = Response
-    //   .newBuilder()
-    //   .setData(dtoData)
-    //   .build()
-
   }
 
   private def produce(request: ReportRequestDTO): Response = {
     // TODO close resource on exit
     val baos = new ByteArrayOutputStream()
-    // TODO close resource on exit
-    val zos = new ZipOutputStream(baos)
     val model = ReportResult(request)
     val report = model.content
-    val entry = new ZipEntry(
-      // s"$index-${item.customer.customerName}.pdf"
-      "raport.pdf"
-    )
-    zos.putNextEntry(entry)
-    zos.write(report)
-    zos.closeEntry()
-
+    baos.write(report)
     baos.close()
+
     val binaryData = baos.toByteArray()
     val dtoData = ByteString.copyFrom(binaryData)
     Response.newBuilder()
