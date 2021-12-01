@@ -56,10 +56,10 @@ class ReportService1Test {
         var data = res.getData().toByteArray()
         
         // uncomment block of lines below to produce a local example raport file
-        // import java.io.File
-        // import java.nio.file.Files
-        // import java.nio.file.Paths
-        // Files.write(Paths.get("temp_raport_from_test.pdf"), data)
+        import java.io.File
+        import java.nio.file.Files
+        import java.nio.file.Paths
+        Files.write(Paths.get("temp_raport1_from_test.pdf"), data)
 
         Assertions.assertThat(data).isNotEmpty()
     }

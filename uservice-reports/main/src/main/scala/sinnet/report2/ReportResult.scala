@@ -32,8 +32,8 @@ import scala.util.Success
 import scala.util.Failure
 import com.lowagie.text.FontFactory
 import javax.inject.Inject
-import sinnet.reports.report2.ReportRequest
 import sinnet.Minutes
+import sinnet.Kilometers
 
 object ReportResult {
 
@@ -84,9 +84,9 @@ object ReportResult {
         }
       }
 
-      // var table1 = newTable()
-      // asTable(addLine(table1), timedActivities)
-      // document.add(table1);
+      var table1 = newTable()
+      asTable(addLine(table1), request.activities)
+      document.add(table1);
       // document.add(newLineParagraph)
 
       // var table2 = newTable()
@@ -147,38 +147,38 @@ object ReportResult {
       case None       => "-"
     }
 
-  // private def asTable(addValue: (Boolean, CellParams*) => Unit, activities: Seq[ActivityDetails]): Unit = {
+  private def asTable(addValue: (Boolean, CellParams*) => Unit, activities: Seq[ActivityDetails]): Unit = {
 
-  //   addValue(false,
-  //     new CellParams("Serwisant", TableColumns.Col1widthServiceman, HorizontalAlignment.CENTER),
-  //     new CellParams("Dzień", TableColumns.Col2widthDay, HorizontalAlignment.CENTER),
-  //     new CellParams("Praca wykonana", TableColumns.Col3widthDescription, HorizontalAlignment.CENTER),
-  //     new CellParams("Czas", TableColumns.Col4widthDuration, HorizontalAlignment.RIGHT),
-  //     new CellParams("KM", TableColumns.Col5widthDistance, HorizontalAlignment.RIGHT))
+    addValue(false,
+      new CellParams("Serwisant1", TableColumns.Col1widthServiceman, HorizontalAlignment.CENTER),
+      new CellParams("Dzień1", TableColumns.Col2widthDay, HorizontalAlignment.CENTER),
+      new CellParams("Praca wykonana1", TableColumns.Col3widthDescription, HorizontalAlignment.CENTER),
+      new CellParams("Czas1", TableColumns.Col4widthDuration, HorizontalAlignment.RIGHT),
+      new CellParams("KM1", TableColumns.Col5widthDistance, HorizontalAlignment.RIGHT))
 
-  //   for (item <- activities) {
-  //     val howLong = item.howLongInMins
-  //     var distance = item.howFarInKms
-  //     var who = item.who
-  //     addValue(false,
-  //       new CellParams(who, TableColumns.Col1widthServiceman, HorizontalAlignment.LEFT),
-  //       new CellParams(item.when, TableColumns.Col2widthDay, HorizontalAlignment.LEFT),
-  //       new CellParams(item.description, TableColumns.Col3widthDescription, HorizontalAlignment.LEFT),
-  //       new CellParams(howLong.toString(), TableColumns.Col4widthDuration, HorizontalAlignment.RIGHT),
-  //       new CellParams(distance.toString(), TableColumns.Col5widthDistance, HorizontalAlignment.RIGHT))
-  //   }
+    for (item <- activities) {
+      val howLong = 42
+      var distance = 42
+      var who = "Aaaaa"
+      addValue(false,
+        new CellParams(who, TableColumns.Col1widthServiceman, HorizontalAlignment.LEFT),
+        new CellParams(item.personName, TableColumns.Col2widthDay, HorizontalAlignment.LEFT),
+        new CellParams(item.personName, TableColumns.Col3widthDescription, HorizontalAlignment.LEFT),
+        new CellParams(howLong.toString(), TableColumns.Col4widthDuration, HorizontalAlignment.RIGHT),
+        new CellParams(distance.toString(), TableColumns.Col5widthDistance, HorizontalAlignment.RIGHT))
+    }
 
-  //   val initialAcc = (Kilometers(0), Minutes(0))
-  //   val (howFar, howLong) = activities.foldLeft(initialAcc)((acc, v) => (acc._1 + v.howFarInKms, acc._2 + v.howLongInMins))
+    val initialAcc = (Kilometers(0), Minutes(0))
+    val (howFar, howLong) = activities.foldLeft(initialAcc)((acc, v) => (acc._1 + v.kilometers, acc._2 + v.minutes))
 
-  //   addValue(true,
-  //     new CellParams(null, TableColumns.Col1widthServiceman, HorizontalAlignment.LEFT),
-  //     new CellParams(null, TableColumns.Col2widthDay, HorizontalAlignment.LEFT),
-  //     new CellParams("Suma", TableColumns.Col3widthDescription, HorizontalAlignment.RIGHT),
-  //     new CellParams(howLong.toString(), TableColumns.Col4widthDuration, HorizontalAlignment.RIGHT),
-  //     new CellParams(howFar.toString(), TableColumns.Col5widthDistance, HorizontalAlignment.RIGHT))
+    addValue(true,
+      new CellParams(null, TableColumns.Col1widthServiceman, HorizontalAlignment.LEFT),
+      new CellParams(null, TableColumns.Col2widthDay, HorizontalAlignment.LEFT),
+      new CellParams("Suma", TableColumns.Col3widthDescription, HorizontalAlignment.RIGHT),
+      new CellParams(howLong.toString(), TableColumns.Col4widthDuration, HorizontalAlignment.RIGHT),
+      new CellParams(howFar.toString(), TableColumns.Col5widthDistance, HorizontalAlignment.RIGHT))
 
-  // }
+  }
 
   // private def tableSpecial(addValue: (Boolean, CellParams*) => Unit, activities: Seq[ActivityDetails]): Unit = {
 

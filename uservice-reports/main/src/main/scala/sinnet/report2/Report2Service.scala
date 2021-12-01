@@ -1,7 +1,7 @@
 package sinnet.report2
 
 import scala.collection.JavaConversions._
-
+import DtoDomainMapper._
 import scala.language.implicitConversions
 import javax.inject.Singleton;
 import sinnet.reports.report2.ReportsGrpc
@@ -38,7 +38,7 @@ import io.quarkus.grpc.GrpcService
 class Report2Service extends ReportsGrpc.ReportsImplBase {
 
   override def produce(request: ReportRequestDTO, responseObserver: StreamObserver[Response]): Unit = {
-    val result = produce(request.getDetailsList().asScala.map(DtoDomainMapper.toActivityDetails))
+    val result = produce(request)
     responseObserver.onNext(result)
     responseObserver.onCompleted()
     // var requestModel = (request)
@@ -52,26 +52,33 @@ class Report2Service extends ReportsGrpc.ReportsImplBase {
 
   }
 
-  private def produce(request: Iterable[ActivityDetails]): Response = {
+  private def produce(request: ReportRequestDTO): Response = {
+    // TODO close resource on exit
+    val baos = new ByteArrayOutputStream()
+    // TODO close resource on exit
+    val zos = new ZipOutputStream(baos)
+    val model = ReportResult(request)
+    val report = model.content
+    val entry = new ZipEntry(
+      // s"$index-${item.customer.customerName}.pdf"
+      "raport.pdf"
+    )
+    zos.putNextEntry(entry)
+    zos.write(report)
+    zos.closeEntry()
 
-    Response.newBuilder().build()
+    baos.close()
+    val binaryData = baos.toByteArray()
+    val dtoData = ByteString.copyFrom(binaryData)
+    Response.newBuilder()
+      .setData(dtoData)
+      .build()
   }
-    // ???
-    // for (
-    //   baos <- managed(new ByteArrayOutputStream());
-    //   zos <- managed(new ZipOutputStream(baos))
-    // ) {
 
   //     for ((itemDto, index) <- request.getItemsList().asScala.zip(Stream from 1)) {
   //       val item = DtoDomainMapper(itemDto)
   //       var model = ReportResult(item)
   //       val report = model.content
-  //       val entry = new ZipEntry(
-  //         s"$index-${item.customer.customerName}.pdf"
-  //       )
-  //       zos.putNextEntry(entry)
-  //       zos.write(report)
-  //       zos.closeEntry()
   //     }
 
   //     zos.close()
@@ -87,6 +94,6 @@ class Report2Service extends ReportsGrpc.ReportsImplBase {
   //     responseObserver.onCompleted()
   //   }
   // }
-    // }
+  // }
   // }
 }
