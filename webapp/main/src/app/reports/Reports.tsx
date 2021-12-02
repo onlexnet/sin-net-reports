@@ -3,7 +3,7 @@ import { TextField, PrimaryButton, Separator, DetailsList, IColumn } from "@flue
 import { Link, RouteComponentProps } from "react-router-dom";
 import { routing } from "../../Routing";
 import { HorizontalSeparatorStack } from "../../Components/HorizontalSeparatorStack";
-import { useListCustomers, UseListCustomersItem } from "../../api/useListCustomers";
+import { useListCustomers, ListCustomersItem } from "../../api/useListCustomers";
 import { RootState } from "../../store/reducers";
 import { Dispatch } from "redux";
 import { connect, ConnectedProps } from "react-redux";
@@ -31,7 +31,7 @@ interface ReportsProps extends PropsFromRedux, RouteComponentProps {
 const Reports: React.FC<ReportsProps> = (props) => {
 
     interface TypedColumn extends IColumn {
-        fieldName: keyof UseListCustomersItem;
+        fieldName: keyof ListCustomersItem;
     }
 
     const items = useListCustomers(props.appState.projectId);
@@ -40,7 +40,7 @@ const Reports: React.FC<ReportsProps> = (props) => {
     const columns: TypedColumn[] = [
         {
             key: "column1", name: "Klient", fieldName: "name", minWidth: 70, maxWidth: 90, isResizable: true, isCollapsible: true, data: "string",
-            onRender: (item: UseListCustomersItem) => {
+            onRender: (item: ListCustomersItem) => {
                 return <Link to={`/customers/${item.customerId.projectId}/${item.customerId.entityId}/${item.customerId.entityVersion}`}>{item.name}</Link>;
             },
             isPadded: true
@@ -102,4 +102,4 @@ const Reports: React.FC<ReportsProps> = (props) => {
 }
 
 
-export const Customers = connect(mapStateToProps, mapDispatchToProps)(CustomersLocal);
+export const Customers = connect(mapStateToProps, mapDispatchToProps)(Reports);
