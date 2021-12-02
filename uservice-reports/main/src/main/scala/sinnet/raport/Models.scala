@@ -1,16 +1,12 @@
 package sinnet.reports
 
-object Kilometers {
-    def apply(value: Int) = new Kilometers(value)
-}
-
 class Kilometers(val value: Int) extends AnyVal {
     def +(m: Kilometers): Kilometers = new Kilometers(value + m.value)
     override def toString: String = value.toString
 }
 
-object Minutes {
-    def apply(value: Int) = new Minutes(value)
+object Kilometers {
+    def apply(value: Int) = new Kilometers(value)
 }
 
 class Minutes(val value: Int) extends AnyVal {
@@ -24,5 +20,9 @@ class Minutes(val value: Int) extends AnyVal {
         var minutesAsText = s"$minutesPrefix$minutes";
         hours + minutesAsText
     }
+}
+
+object Minutes {
+    def apply(value: Int) = new Minutes(value)
 }
 
