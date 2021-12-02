@@ -15,6 +15,21 @@ resources:
     source: onlex-sinnet-helm
     trigger: true
 
+
+trigger:
+  batch: true
+  branches:
+    include:
+      - master
+  paths:
+    include:
+      - /deploy/
+pr:
+  branches:
+    exclude:
+    - '*'
+
+
 stages:
   - stage: deployToStg
     displayName: Deploy HELM Chart to STG
