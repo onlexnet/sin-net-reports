@@ -46,11 +46,13 @@ class ReportService2Test {
                 .newBuilder()
                 .setPersonName("Ala")
                 .setYearMonth(period)
+                .setHowLongInMins(42)
                 .build())
             .addDetails(ActivityDetailsDTO
                 .newBuilder()
                 .setPersonName("Ola")
                 .setYearMonth(period)
+                .setHowLongInMins(123)
                 .build())
             .build()
         val res = self.produce(request)

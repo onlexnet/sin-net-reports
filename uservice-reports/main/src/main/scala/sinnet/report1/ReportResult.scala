@@ -158,7 +158,7 @@ object ReportResult {
         new CellParams(who, TableColumns.Col1widthServiceman, HorizontalAlignment.LEFT),
         new CellParams(item.when, TableColumns.Col2widthDay, HorizontalAlignment.LEFT),
         new CellParams(item.description, TableColumns.Col3widthDescription, HorizontalAlignment.LEFT),
-        new CellParams(howLong.toString(), TableColumns.Col4widthDuration, HorizontalAlignment.RIGHT),
+        new CellParams(howLong.asString, TableColumns.Col4widthDuration, HorizontalAlignment.RIGHT),
         new CellParams(distance.toString(), TableColumns.Col5widthDistance, HorizontalAlignment.RIGHT))
     }
 
@@ -169,7 +169,7 @@ object ReportResult {
       new CellParams(null, TableColumns.Col1widthServiceman, HorizontalAlignment.LEFT),
       new CellParams(null, TableColumns.Col2widthDay, HorizontalAlignment.LEFT),
       new CellParams("Suma", TableColumns.Col3widthDescription, HorizontalAlignment.RIGHT),
-      new CellParams(howLong.toString(), TableColumns.Col4widthDuration, HorizontalAlignment.RIGHT),
+      new CellParams(howLong.asString, TableColumns.Col4widthDuration, HorizontalAlignment.RIGHT),
       new CellParams(howFar.toString(), TableColumns.Col5widthDistance, HorizontalAlignment.RIGHT))
 
   }

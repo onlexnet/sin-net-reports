@@ -65,12 +65,6 @@ object ReportResult {
       var table1 = newTable()
       asTable(addLine(table1), request.activities)
       document.add(table1);
-      // document.add(newLineParagraph)
-
-      // var table2 = newTable()
-      // tableSpecial(addLine(table2), noTimedActivities)
-      // document.add(table2);
-      // document.add(newLineParagraph)
 
       // We have to invoke close method so that content of the document is written
       // to os and can be obtained as the result of the whole operation
@@ -96,16 +90,10 @@ object ReportResult {
     def +(that: TableColumn) = new TableColumn(this.width + that.width)
   }
   object TableColumns {
-    def Col1widthServiceman = new TableColumn(3)
-    def Col2widthDay = new TableColumn(3)
-    def Col3widthDescription = new TableColumn(12)
-    def Col4widthDuration = new TableColumn(2)
-    def Col5widthDistance = new TableColumn(2)
-    def width = Col1widthServiceman.width +
-                Col2widthDay.width +
-                Col3widthDescription.width +
-                Col4widthDuration.width +
-                Col5widthDistance.width
+    def Col1widthPerson = new TableColumn(10)
+    def Col2widthHours = new TableColumn(2)
+    def width = Col1widthPerson.width +
+                Col2widthHours.width
   }
 
   case class CellParams(text: String, width: TableColumn, alignment: HorizontalAlignment)
@@ -128,33 +116,23 @@ object ReportResult {
   private def asTable(addValue: (Boolean, CellParams*) => Unit, activities: Seq[ActivityDetails]): Unit = {
 
     addValue(false,
-      new CellParams("Serwisant1", TableColumns.Col1widthServiceman, HorizontalAlignment.CENTER),
-      new CellParams("Dzień1", TableColumns.Col2widthDay, HorizontalAlignment.CENTER),
-      new CellParams("Praca wykonana1", TableColumns.Col3widthDescription, HorizontalAlignment.CENTER),
-      new CellParams("Czas1", TableColumns.Col4widthDuration, HorizontalAlignment.RIGHT),
-      new CellParams("KM1", TableColumns.Col5widthDistance, HorizontalAlignment.RIGHT))
+      new CellParams("Opis", TableColumns.Col1widthPerson, HorizontalAlignment.CENTER),
+      new CellParams("Godziny", TableColumns.Col2widthHours, HorizontalAlignment.CENTER))
 
     for (item <- activities) {
-      val howLong = 42
-      var distance = 42
-      var who = "Aaaaa"
+      val description = item.personName;
+      val minutes = item.minutes;
       addValue(false,
-        new CellParams(who, TableColumns.Col1widthServiceman, HorizontalAlignment.LEFT),
-        new CellParams(item.personName, TableColumns.Col2widthDay, HorizontalAlignment.LEFT),
-        new CellParams(item.personName, TableColumns.Col3widthDescription, HorizontalAlignment.LEFT),
-        new CellParams(howLong.toString(), TableColumns.Col4widthDuration, HorizontalAlignment.RIGHT),
-        new CellParams(distance.toString(), TableColumns.Col5widthDistance, HorizontalAlignment.RIGHT))
+        new CellParams(description.toString, TableColumns.Col1widthPerson, HorizontalAlignment.LEFT),
+        new CellParams(minutes.asString, TableColumns.Col2widthHours, HorizontalAlignment.RIGHT))
     }
 
     val initialAcc = (Kilometers(0), Minutes(0))
     val (howFar, howLong) = activities.foldLeft(initialAcc)((acc, v) => (acc._1 + v.kilometers, acc._2 + v.minutes))
 
     addValue(true,
-      new CellParams(null, TableColumns.Col1widthServiceman, HorizontalAlignment.LEFT),
-      new CellParams(null, TableColumns.Col2widthDay, HorizontalAlignment.LEFT),
-      new CellParams("Suma", TableColumns.Col3widthDescription, HorizontalAlignment.RIGHT),
-      new CellParams(howLong.toString(), TableColumns.Col4widthDuration, HorizontalAlignment.RIGHT),
-      new CellParams(howFar.toString(), TableColumns.Col5widthDistance, HorizontalAlignment.RIGHT))
+      new CellParams("Suma", TableColumns.Col1widthPerson, HorizontalAlignment.RIGHT),
+      new CellParams(howLong.asString, TableColumns.Col2widthHours, HorizontalAlignment.RIGHT))
 
   }
 }
