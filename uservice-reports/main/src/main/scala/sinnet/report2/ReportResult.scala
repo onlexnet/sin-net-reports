@@ -178,41 +178,6 @@ object ReportResult {
       new CellParams(howFar.toString(), TableColumns.Col5widthDistance, HorizontalAlignment.RIGHT))
 
   }
-
-  // private def tableSpecial(addValue: (Boolean, CellParams*) => Unit, activities: Seq[ActivityDetails]): Unit = {
-
-  //   val col1 = TableColumns.Col1widthServiceman
-  //   val col2 = TableColumns.Col2widthDay
-  //   val col3 = TableColumns.Col3widthDescription + TableColumns.Col4widthDuration
-  //   val col4 = TableColumns.Col5widthDistance
-
-  //   addValue(false,
-  //       new CellParams("Serwisant", col1, HorizontalAlignment.CENTER),
-  //       new CellParams("Dzień", col2, HorizontalAlignment.CENTER),
-  //       new CellParams("Praca wykonana", col3, HorizontalAlignment.CENTER),
-  //       new CellParams("KM", col4, HorizontalAlignment.RIGHT))
-
-  //   for (item <- activities) {
-  //     val howLong = item.howLongInMins
-  //     var distance = item.howFarInKms
-  //     var who = item.who
-  //     addValue(false,
-  //       new CellParams(who, col1, HorizontalAlignment.LEFT),
-  //       new CellParams(item.when, col2, HorizontalAlignment.LEFT),
-  //       new CellParams(item.description, col3, HorizontalAlignment.LEFT),
-  //       new CellParams(distance.toString(), col4, HorizontalAlignment.RIGHT))
-  //   }
-
-  //   val initialAcc = Kilometers(0)
-  //   val howFar = activities.foldLeft(initialAcc)((acc, v) => (acc + v.howFarInKms))
-
-  //   addValue(true,
-  //     new CellParams(null, col1, HorizontalAlignment.LEFT),
-  //     new CellParams(null, col2, HorizontalAlignment.LEFT),
-  //     new CellParams("Suma", col3, HorizontalAlignment.RIGHT),
-  //     new CellParams(howFar.toString(), col4, HorizontalAlignment.RIGHT))
-
-  // }
 }
 
 case class ReportModel()
