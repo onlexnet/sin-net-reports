@@ -27,7 +27,7 @@ import sinnet.reports.ReportsGrpc;
 
 @RestController
 @RequestMapping(path = "/api/raporty")
-class ReportController implements ActionProjector {
+class Report1Controller implements ActionProjector {
 
   @Autowired
   private ActionProjector.Provider projection;
