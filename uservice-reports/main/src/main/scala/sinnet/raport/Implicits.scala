@@ -3,7 +3,7 @@ package sinnet.reports
 import java.time.LocalDate
 import scala.collection.JavaConverters._
 import scala.util.Try
-import sinnet.reports.{Date => DateDTO, YearMonth => YearMonthDTO}
+import sinnet.reports.grpc.{Date => DateDTO, YearMonth => YearMonthDTO}
 
 /** Converts ReportRequest (DTO) to its local model. */
 trait Implicits {

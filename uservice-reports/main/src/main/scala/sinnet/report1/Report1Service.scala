@@ -4,10 +4,12 @@ import scala.collection.JavaConversions._
 
 import scala.language.implicitConversions
 import javax.inject.Singleton;
-import sinnet.reports.report1.ReportsGrpc
 import io.grpc.stub.StreamObserver
-import sinnet.reports.report1.{ReportRequest => ReportRequestDTO, ReportRequests => ReportRequestsDTO}
-import sinnet.reports.Response
+import sinnet.report1.grpc.{
+  ReportRequest => ReportRequestDTO,
+  ReportRequests => ReportRequestsDTO,
+  ReportsGrpc}
+import sinnet.reports.grpc.Response
 import scala.util.Try
 
 import java.time.LocalDate

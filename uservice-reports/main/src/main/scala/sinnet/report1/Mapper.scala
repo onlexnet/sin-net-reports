@@ -1,9 +1,10 @@
 package sinnet.report1
 
-import sinnet.reports.report1.{
+import sinnet.report1.grpc.{
   ReportRequest => Report1RequestDTO,
   ReportRequests => Report1RequestsDTO,
-  ActivityDetails => ActivityDetailsDTO}
+  ActivityDetails => ActivityDetailsDTO,
+  CustomerDetails => CustomerDetailsDTO}
 import java.time.LocalDate
 import scala.collection.JavaConverters._
 import scala.util.Try
@@ -14,7 +15,7 @@ import sinnet.reports._
 object Mapper {
   private implicit def toActivityDetails(x: ActivityDetailsDTO) =
     ActivityDetails(x.getDescription(), x.getWho(), x.getWhen(), Minutes(x.getHowLongInMins()), Kilometers(x.getHowFarInKms()))
-  private implicit def toCustomerDetails(x: sinnet.reports.report1.CustomerDetails) =
+  private implicit def toCustomerDetails(x: CustomerDetailsDTO) =
     CustomerDetails(x.getCustomerName(), x.getCustomerCity(), x.getCustomerAddress())
 
   implicit def apply(dto: Report1RequestDTO): ReportRequest = {

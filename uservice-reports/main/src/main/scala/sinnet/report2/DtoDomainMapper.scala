@@ -1,6 +1,8 @@
 package sinnet.report2
 
-import sinnet.reports.report2.{ReportRequest => ReportRequestDTO, ActivityDetails => ActivityDetailsDto}
+import sinnet.report2.grpc.{
+  ReportRequest => ReportRequestDTO,
+  ActivityDetails => ActivityDetailsDto}
 import java.time.LocalDate
 import scala.collection.JavaConverters._
 import scala.util.Try

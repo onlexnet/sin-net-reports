@@ -1,14 +1,14 @@
 syntax = "proto3";
+package reports2;
 
 import "reports.proto";
 
 option java_multiple_files = true;
-option java_outer_classname = "Reports2Proto";
+option java_package = "sinnet.report2.grpc";
 
-package sinnet.reports.report2;
 
 service Reports {
-    rpc Produce (ReportRequest) returns (Response) { }
+    rpc Produce (ReportRequest) returns (reports.Response) { }
 }
 
 message ReportRequest {
@@ -16,7 +16,7 @@ message ReportRequest {
 }
 
 message ActivityDetails {
-    YearMonth yearMonth = 1;
+    reports.YearMonth yearMonth = 1;
     string personName = 2;
     int32 howLongInMins = 3;
 }

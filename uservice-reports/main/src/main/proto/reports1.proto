@@ -1,15 +1,16 @@
 syntax = "proto3";
 
+
 import "reports.proto";
 
+package reports1;
 option java_multiple_files = true;
-option java_outer_classname = "Reports1Proto";
+option java_package = "sinnet.report1.grpc";
 
-package sinnet.reports.report1;
-
+   
 service Reports {
-    rpc Produce (ReportRequest) returns (Response) { }
-    rpc ProducePack (ReportRequests) returns (Response) { }
+    rpc Produce (ReportRequest) returns (reports.Response) { }
+    rpc ProducePack (ReportRequests) returns (reports.Response) { }
 }
 
 message ReportRequest {
@@ -31,7 +32,7 @@ message CustomerDetails {
 message ActivityDetails {
     string description = 1; // description of the activity
     string who = 2; // main person engaged in the activity
-    Date when = 3;
+    reports.Date when = 3;
     int32 howLongInMins = 4;
     int32 howFarInKms = 5;
 }

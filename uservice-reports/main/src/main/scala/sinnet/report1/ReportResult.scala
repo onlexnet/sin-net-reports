@@ -2,7 +2,7 @@ package sinnet.report1
 
 import scala.language.implicitConversions
 import javax.inject.Singleton;
-import sinnet.reports.report1.ReportsGrpc
+import sinnet.report1.grpc.ReportsGrpc
 import io.grpc.stub.StreamObserver
 import scala.util.Try
 

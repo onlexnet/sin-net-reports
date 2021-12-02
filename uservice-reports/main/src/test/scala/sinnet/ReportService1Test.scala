@@ -8,11 +8,12 @@ import io.quarkus.example.GreeterGrpc;
 import io.quarkus.example.HelloRequest;
 import javax.inject.Inject
 import scala.annotation.meta.field
-import sinnet.reports.report1.{ ReportRequest => ReportRequestDTO,
-        ReportRequests => ReportRequestsDTO,
-        CustomerDetails => CustomerDetailsDTO,
-        ActivityDetails => ActivityDetailsDTO}
-import sinnet.reports.report1.ReportsGrpc
+import sinnet.report1.grpc.{
+    ReportRequest => ReportRequestDTO,
+    ReportRequests => ReportRequestsDTO,
+    CustomerDetails => CustomerDetailsDTO,
+    ActivityDetails => ActivityDetailsDTO,
+    ReportsGrpc}
 import org.assertj.core.api.Assertions
 import java.util.zip.ZipInputStream
 import java.io.ByteArrayInputStream

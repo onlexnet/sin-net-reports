@@ -1,10 +1,8 @@
 syntax = "proto3";
 
+package reports;
+option java_package = "sinnet.reports.grpc";
 option java_multiple_files = true;
-option java_package = "sinnet.reports";
-option java_outer_classname = "ReportsProto";
-
-package sinnet.reports;
 
 
 // The response message containing the greetings
