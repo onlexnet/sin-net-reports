@@ -17,7 +17,7 @@ trigger:
       - uservice-customers
 
 pr:
-  batch: true
+  batch: false
   branches:
     include:
       - master
