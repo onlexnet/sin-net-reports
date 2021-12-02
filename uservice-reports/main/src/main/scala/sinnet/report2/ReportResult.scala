@@ -33,33 +33,12 @@ import scala.util.Failure
 import com.lowagie.text.FontFactory
 import javax.inject.Inject
 import sinnet.reports._
+import sinnet.config.Fonts
 
 object ReportResult {
 
-  {
-    // without the initialization font discovery (method: FontFactory.getFont) does not find proper fonts
-    // and all fonts in the report will stay with some default font
-    FontFactory.registerDirectories()
-  }
-
-  val myFont = {
-    // Fonts should be available because they are part of the project and they are included in proper
-    // location in target docker image.
-    val fontSize = 10
-    val baseFont = FontFactory.getFont("OpenSans")
-    baseFont.setSize(fontSize)
-    baseFont
-  }
-
-  val myFontBold = {
-    // Fonts should be available because they are part of the project and they are included in proper
-    // location in target docker image.
-    val fontSize = 10
-    val baseFont = FontFactory.getFont("OpenSans", 10, Font.BOLD)
-    baseFont.setSize(fontSize)
-    baseFont
-  }
-
+  val myFont = Fonts.base
+  val myFontBold = Fonts.bold
 
   def apply(request: ReportRequest): ReportResult = {
     val d = managed(new ByteArrayOutputStream()) map { os =>
