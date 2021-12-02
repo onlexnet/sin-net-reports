@@ -59,12 +59,12 @@ const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
     const [entityId, setEntityId] = useState(propsEntityId);
     useEffect(() => {
         setEntityId(propsEntityId);
-    }, versionedProps);
+    }, [propsEntityId, propsEntityVersion, propsProjectId]);
 
     const [entityVersion, setEntityVersion] = useState(propsEntityVersion);
     useEffect(() => {
         setEntityVersion(propsEntityVersion);
-    }, versionedProps);
+    }, [propsEntityId, propsEntityVersion, propsProjectId]);
 
     const defaultServicemanName = item?.servicemanName;
     const [servicemanName, setServicemanName] = useState(defaultServicemanName);
@@ -80,7 +80,7 @@ const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
     const [actionDate, setActionDate] = useState(initialValue);
     useEffect(() => {
         setActionDate(initialValue);
-    }, versionedProps);
+    }, [initialValue, propsEntityId, propsEntityVersion, propsProjectId]);
     const onChangeDate = useCallback(
         (newValue: LocalDate) => {
             setActionDate(newValue);
