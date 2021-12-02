@@ -22,6 +22,16 @@ trigger:
       - /webapi/
       - /webapi/api.graphql/
 
+pr:
+  branches:
+    include:
+      - master
+  paths:
+    include:
+      # the same folders as for trigger
+      - /webapi/
+      - /webapi/api.graphql/
+
 jobs:
   - job: CICD
     displayName: Webapi CI/CD build

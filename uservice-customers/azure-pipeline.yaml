@@ -16,6 +16,14 @@ trigger:
     include:
       - uservice-customers
 
+pr:
+  branches:
+    include:
+      - master
+  paths:
+    include:
+      - uservice-customers
+
 jobs:
   - job: CICD
     displayName: CI/CD build
