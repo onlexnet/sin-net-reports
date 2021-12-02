@@ -9,5 +9,5 @@ import java.time.YearMonth
 /** Converts ReportRequest (DTO) to its local models. */
 trait Implicits {
   implicit def toLocalDate(x: DateDTO): Option[LocalDate] = Try(LocalDate.of(x.getYear(), x.getMonth(), x.getDayOfTheMonth())).toOption
-  implicit def toYearMonth(x: YearMonthDTO) = YearMonth.of(x.getYear(), x.getMonth());
+  implicit def toYearMonth(x: YearMonthDTO) = YearMonth.of(x.getYear(), x.getMonth())
 }
