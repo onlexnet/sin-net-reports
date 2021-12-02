@@ -29,11 +29,17 @@ const MainView: React.FC<MainProps> = (props) => {
       root: { width: "100%", height: "100%" }
     }}>
       <Stack.Item>
-        <ServiceCommandBar getCustomerRaport={() => {
-          var projectId = props.appState.projectId;
-          var dateFrom = props.viewContext.period.getValue().dateFrom;
-          openInNewTab(addressProvider().host + `/api/raporty/klienci/${projectId}/${dateFrom.year}/${dateFrom.month}`);
-        }} />
+        <ServiceCommandBar
+          getCustomerRaport={() => {
+            var projectId = props.appState.projectId;
+            var dateFrom = props.viewContext.period.getValue().dateFrom;
+            openInNewTab(addressProvider().host + `/api/raporty/klienci/${projectId}/${dateFrom.year}/${dateFrom.month}`);
+          }}
+          getReport2={() => {
+            var projectId = props.appState.projectId;
+            var dateFrom = props.viewContext.period.getValue().dateFrom;
+            openInNewTab(addressProvider().host + `/api/raporty/2/${projectId}/${dateFrom.year}/${dateFrom.month}`);
+          }} />
       </Stack.Item>
       <Stack.Item  >
         <div style={{ padding: "10px" }}>

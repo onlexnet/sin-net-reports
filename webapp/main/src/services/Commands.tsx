@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { CommandBar, ICommandBarItemProps, IButtonProps } from "@fluentui/react";
+import { CommandBar, ICommandBarItemProps, IButtonProps, IContextualMenuItemProps, ContextualMenuItem, IContextualMenuStyles, getTheme, IContextualMenuItemStyles } from "@fluentui/react";
 import { Dispatch } from 'redux';
 import { connect, ConnectedProps } from 'react-redux';
 import { RootState } from '../store/reducers';
@@ -51,6 +51,7 @@ interface ServiceCommandBarProps extends PropsFromRedux {
   onPreviousMonthRequested: () => void;
   onNextMonthRequested: () => void;
   getCustomerRaport: () => void;
+  getReport2: () => void
 }
 
 enum WaitingState {
@@ -103,6 +104,30 @@ const ServiceCommandBarView: React.FC<ServiceCommandBarProps> = (props) => {
       props.actionUpdated(createdEntityId);
     })
   }
+
+
+  const theme = getTheme();
+  // Styles for both command bar and overflow/menu items
+  const itemStyles: Partial<IContextualMenuItemStyles> = {
+    label: { fontSize: 18 },
+    icon: { color: theme.palette.red },
+    iconHovered: { color: theme.palette.redDark },
+  };
+  // For passing the styles through to the context menus
+  const menuStyles: Partial<IContextualMenuStyles> = {
+    subComponentStyles: { menuItem: itemStyles, callout: {} },
+  };
+
+  // Custom renderer for menu items (these must have a separate custom renderer because it's unlikely
+  // that the same component could be rendered properly as both a command bar item and menu item).
+  // It's also okay to custom render only the command bar items without changing the menu items.
+  const CustomMenuItem: React.FunctionComponent<IContextualMenuItemProps> = props => {
+    // Due to ContextualMenu implementation quirks, passing styles or onClick here doesn't work.
+    // The onClick handler must be on the ICommandBarItemProps item instead (_overflowItems in this example).
+    return <ContextualMenuItem {...props} />;
+  };
+
+
   const _items: ICommandBarItemProps[] = [
     {
       key: 'newService',
@@ -126,12 +151,22 @@ const ServiceCommandBarView: React.FC<ServiceCommandBarProps> = (props) => {
       onClick: props.onNextMonthRequested
     },
     {
-      key: 'getPdf',
-      text: 'Raport miesięczny',
+      key: 'getPdfs',
+      text: 'Raporty',
       split: true,
       iconProps: { iconName: 'ZipFolder' },
-      onClick: props.getCustomerRaport
+      subMenuProps: {
+        // Must specify the menu item type for submenus too!
+        contextualMenuItemAs: CustomMenuItem,
+        // Styles are passed through to menu items here
+        styles: menuStyles,
+        items: [
+          { key: 'getPdf1', text: 'Raport miesięczny', iconProps: { iconName: 'ZipFolder' }, onClick: props.getCustomerRaport },
+          { key: 'getPdf1', text: 'Zestawienie sumaryczne', iconProps: { iconName: 'ZipFolder' }, onClick: props.getReport2 },
+        ],
+      },
     },
+
   ];
 
   return (
