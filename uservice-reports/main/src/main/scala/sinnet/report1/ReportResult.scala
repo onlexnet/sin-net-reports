@@ -1,8 +1,8 @@
-package sinnet
+package sinnet.report1
 
 import scala.language.implicitConversions
 import javax.inject.Singleton;
-import sinnet.reports.ReportsGrpc
+import sinnet.report1.grpc.ReportsGrpc
 import io.grpc.stub.StreamObserver
 import scala.util.Try
 
@@ -33,32 +33,13 @@ import scala.util.Failure
 import com.lowagie.text.FontFactory
 import javax.inject.Inject
 
+import sinnet.reports._
+import sinnet.config.Fonts
+
 object ReportResult {
 
-  {
-    // without the initialization font discovery (method: FontFactory.getFont) does not find proper fonts
-    // and all fonts in the report will stay with some default font
-    FontFactory.registerDirectories()
-  }
-
-  val myFont = {
-    // Fonts should be available because they are part of the project and they are included in proper
-    // location in target docker image.
-    val fontSize = 10
-    val baseFont = FontFactory.getFont("OpenSans")
-    baseFont.setSize(fontSize)
-    baseFont
-  }
-
-  val myFontBold = {
-    // Fonts should be available because they are part of the project and they are included in proper
-    // location in target docker image.
-    val fontSize = 10
-    val baseFont = FontFactory.getFont("OpenSans", 10, Font.BOLD)
-    baseFont.setSize(fontSize)
-    baseFont
-  }
-
+  val myFont = Fonts.base
+  val myFontBold = Fonts.bold
 
   def apply(request: ReportRequest): ReportResult = {
     val customer = request.customer
@@ -177,7 +158,7 @@ object ReportResult {
         new CellParams(who, TableColumns.Col1widthServiceman, HorizontalAlignment.LEFT),
         new CellParams(item.when, TableColumns.Col2widthDay, HorizontalAlignment.LEFT),
         new CellParams(item.description, TableColumns.Col3widthDescription, HorizontalAlignment.LEFT),
-        new CellParams(howLong.toString(), TableColumns.Col4widthDuration, HorizontalAlignment.RIGHT),
+        new CellParams(howLong.asString, TableColumns.Col4widthDuration, HorizontalAlignment.RIGHT),
         new CellParams(distance.toString(), TableColumns.Col5widthDistance, HorizontalAlignment.RIGHT))
     }
 
@@ -188,7 +169,7 @@ object ReportResult {
       new CellParams(null, TableColumns.Col1widthServiceman, HorizontalAlignment.LEFT),
       new CellParams(null, TableColumns.Col2widthDay, HorizontalAlignment.LEFT),
       new CellParams("Suma", TableColumns.Col3widthDescription, HorizontalAlignment.RIGHT),
-      new CellParams(howLong.toString(), TableColumns.Col4widthDuration, HorizontalAlignment.RIGHT),
+      new CellParams(howLong.asString, TableColumns.Col4widthDuration, HorizontalAlignment.RIGHT),
       new CellParams(howFar.toString(), TableColumns.Col5widthDistance, HorizontalAlignment.RIGHT))
 
   }

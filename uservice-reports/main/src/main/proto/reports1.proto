@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+
+import "reports.proto";
+
+package reports1;
+option java_multiple_files = true;
+option java_package = "sinnet.report1.grpc";
+
+   
+service Reports {
+    rpc Produce (ReportRequest) returns (reports.Response) { }
+    rpc ProducePack (ReportRequests) returns (reports.Response) { }
+}
+
+message ReportRequest {
+    CustomerDetails customer = 1;
+    repeated ActivityDetails details = 2;
+}
+
+message ReportRequests {
+    repeated ReportRequest items = 1;
+}
+
+message CustomerDetails {
+    string customerId = 1;
+    string customerName = 2;
+    string customerCity = 3;
+    string customerAddress = 4;
+}
+
+message ActivityDetails {
+    string description = 1; // description of the activity
+    string who = 2; // main person engaged in the activity
+    reports.Date when = 3;
+    int32 howLongInMins = 4;
+    int32 howFarInKms = 5;
+}

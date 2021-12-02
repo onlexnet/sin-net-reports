@@ -4,33 +4,34 @@ import io.quarkus.test.junit.QuarkusTest
 import io.restassured.RestAssured.given
 import org.hamcrest.CoreMatchers.`is`
 import org.junit.jupiter.api.Test
-import io.quarkus.grpc.runtime.annotations.GrpcService;
 import io.quarkus.example.GreeterGrpc;
 import io.quarkus.example.HelloRequest;
 import javax.inject.Inject
 import scala.annotation.meta.field
-import sinnet.reports.{ ReportRequest => ReportRequestDTO,
-        ReportRequests => ReportRequestsDTO,
-        CustomerDetails => CustomerDetailsDTO,
-        ActivityDetails => ActivityDetailsDTO}
-import sinnet.reports.ReportsGrpc
+import sinnet.report1.grpc.{
+    ReportRequest => ReportRequestDTO,
+    ReportRequests => ReportRequestsDTO,
+    CustomerDetails => CustomerDetailsDTO,
+    ActivityDetails => ActivityDetailsDTO,
+    ReportsGrpc}
 import org.assertj.core.api.Assertions
 import java.util.zip.ZipInputStream
 import java.io.ByteArrayInputStream
+import io.quarkus.grpc.GrpcClient
 
 @QuarkusTest
-class ReportServiceTest {
+class ReportService1Test {
     
     @Inject
-    @GrpcService("self")
-    var client: ReportsGrpc.ReportsBlockingStub = _
+    @GrpcClient
+    var self: ReportsGrpc.ReportsBlockingStub = _
 
     @Test
     def produceReportWithMinDataCase1(): Unit = {
         val customer = CustomerDetailsDTO.newBuilder().build()
         val activity = ActivityDetailsDTO.newBuilder().build();
         val request = ReportRequestDTO.newBuilder().build()
-        val res = client.produce(request)
+        val res = self.produce(request)
         var data = res.getData().toByteArray()
         Assertions.assertThat(data).isNotEmpty()
     }
@@ -52,14 +53,14 @@ class ReportServiceTest {
                 .setHowFarInKms(34)
                 .build())
             .build()
-        val res = client.produce(request)
+        val res = self.produce(request)
         var data = res.getData().toByteArray()
         
         // uncomment block of lines below to produce a local example raport file
-        // import java.io.File
-        // import java.nio.file.Files
-        // import java.nio.file.Paths
-        // Files.write(Paths.get("temp_raport_from_test.pdf"), data)
+        import java.io.File
+        import java.nio.file.Files
+        import java.nio.file.Paths
+        Files.write(Paths.get("temp_raport1_from_test.pdf"), data)
 
         Assertions.assertThat(data).isNotEmpty()
     }
@@ -71,7 +72,7 @@ class ReportServiceTest {
             .addItems(request)
             .addItems(request)
             .build()
-        val res = client.producePack(pack)
+        val res = self.producePack(pack)
 
         var data = res.getData().toByteArray()
         val byteStream = new ByteArrayInputStream(data)

@@ -2,11 +2,18 @@ package sinnet
 
 import org.junit.jupiter.api.Test
 import org.assertj.core.api.Assertions
-import sinnet.reports.{ReportRequest => ReportRequestDTO,
+import sinnet.report1.grpc.{
+  ReportRequest => ReportRequestDTO,
   ActivityDetails => ActivityDetailsDTO,
-  CustomerDetails => CustomerDetailsDTO,
-  Date}
+  CustomerDetails => CustomerDetailsDTO}
+import sinnet.reports.grpc.Date
 import java.time.LocalDate
+import sinnet.report1.Mapper
+import sinnet.report1.ReportRequest
+import sinnet.report1.CustomerDetails
+import sinnet.report1.ActivityDetails
+import sinnet.reports.Kilometers
+import sinnet.reports.Minutes
 
 class MapperTests {
 

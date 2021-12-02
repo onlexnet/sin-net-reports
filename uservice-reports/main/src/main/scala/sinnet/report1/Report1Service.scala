@@ -1,12 +1,15 @@
-package sinnet
+package sinnet.report1
 
 import scala.collection.JavaConversions._
 
 import scala.language.implicitConversions
 import javax.inject.Singleton;
-import sinnet.reports.ReportsGrpc
 import io.grpc.stub.StreamObserver
-import sinnet.reports.{ReportRequest => ReportRequestDTO, ReportRequests => ReportRequestsDTO, Response}
+import sinnet.report1.grpc.{
+  ReportRequest => ReportRequestDTO,
+  ReportRequests => ReportRequestsDTO,
+  ReportsGrpc}
+import sinnet.reports.grpc.Response
 import scala.util.Try
 
 import java.time.LocalDate
@@ -30,10 +33,11 @@ import java.util.UUID
 import java.util.zip.ZipEntry
 import com.lowagie.text.pdf.PdfTable
 import java.time.format.DateTimeFormatter
+import io.quarkus.grpc.GrpcService
 
 /** Exposes gRPC endpoints to allow produce PDF report based on requested data. */
-@Singleton
-class ReportService extends ReportsGrpc.ReportsImplBase {
+@GrpcService
+class Report1Service extends ReportsGrpc.ReportsImplBase {
 
   override def produce(request: ReportRequestDTO, responseObserver: StreamObserver[Response]): Unit = {
     var requestModel = Mapper(request)

@@ -8,8 +8,9 @@ import io.quarkus.example.HelloRequest;
 import javax.inject.Singleton;
 import io.grpc.Context
 import java.util.concurrent.TimeUnit
+import io.quarkus.grpc.GrpcService
 
-@Singleton
+@GrpcService
 class HelloService extends GreeterGrpc.GreeterImplBase {
 
     override def sayHello(request: HelloRequest, responseObserver: StreamObserver[HelloReply]) {
