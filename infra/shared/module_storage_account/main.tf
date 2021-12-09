@@ -6,8 +6,9 @@ resource "azurerm_storage_account" "default" {
   account_replication_type = "LRS"
 }
 
-resource "azurerm_storage_container" "short-living" {
-  name                  = "short-living"
+# Reports should be deleted ASAP - in Azure min is 1 day
+resource "azurerm_storage_container" "reports" {
+  name                  = "reports"
   storage_account_name  = azurerm_storage_account.default.name
   container_access_type = "private"
 }
@@ -16,15 +17,11 @@ resource "azurerm_storage_management_policy" "short-living" {
   storage_account_id = azurerm_storage_account.default.id
 
   rule {
-    name    = "delete-after-1-day"
+    name    = "delete-reports-after-1-day"
     enabled = true
     filters {
+      prefix_match = [azurerm_storage_container.reports.name]
       blob_types = ["blockBlob"]
-      match_blob_index_tag {
-        name      = "DELETE_AFTER_DAYS"
-        operation = "=="
-        value     = "1"
-      }
     }
     actions {
       base_blob {
