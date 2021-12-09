@@ -1,11 +1,11 @@
-variable application_name {
+variable "application_name" {
 }
 
-variable environment_name {
+variable "environment_name" {
 }
 
-variable resourcegroup {
+variable "resourcegroup" {
 }
 
-variable appinsight_connection_string {
+variable "appinsight_connection_string" {
 }

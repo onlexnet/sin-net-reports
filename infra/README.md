@@ -53,9 +53,11 @@ export TF_VAR_onlexnet_sinnet_prd01_subscription_id= ... onlexnet-sinnet-app-prd
 * **ssh -L 5432:localhost:5432 -L 16443:localhost:16443 <USERNAME>@raport.sin.net.pl** open session to unmanaged resources required by providers 
   * get access to remote secured database   because database is (by design) secured on remote VM, and remote microk8s is also secured we assume port 5432 is already redirected from database VM, and 16443 from microk8s
 * **. ~/onlex-sinnet-init.sh** set env variables 
-* **terraform apply** apply changes on selected env manually
-
-**terraform plan** to see plan of changes for your current desired infrastructure
+* apply changes on selected env manually
+  ```bash
+  cd environments/dev01
+  terraform apply
+  ```
 
 ### Used articles
 - [How to add Docker registry secret to k8s](https://kubernetes.io/docs/concepts/configuration/secret/)

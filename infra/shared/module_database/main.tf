@@ -17,7 +17,7 @@ provider "postgresql" {
 }
 
 resource "random_id" "id" {
-	  byte_length = 8
+  byte_length = 8
 }
 
 resource "postgresql_role" "uservice_customers" {
@@ -36,7 +36,7 @@ resource "postgresql_database" "customers" {
 }
 
 resource "random_id" "services_owner" {
-	  byte_length = 8
+  byte_length = 8
 }
 
 resource "postgresql_role" "services_owner" {
