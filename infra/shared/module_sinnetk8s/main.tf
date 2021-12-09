@@ -49,10 +49,12 @@ resource "kubernetes_secret" "default" {
 
 resource "kubernetes_config_map" "default" {
   metadata {
-    name      = "my-configuration"
+    name      = "app-configuration"
     namespace = local.namespace_name
   }
   data = {
+    reports_storage_address = var.config_reports_storage_address
+    reports_container_name  = var.config_reports_container_name
   }
 
   depends_on = [

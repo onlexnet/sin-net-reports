@@ -8,6 +8,8 @@ variable "secret_appinsight_connection_string" {
 variable "config_services_database_name" {}
 variable "config_services_database_username" {}
 variable "config_services_database_password" {}
+variable "config_reports_storage_address" {}
+variable "config_reports_container_name" {}
 
 variable "environment_name" {
   type = string

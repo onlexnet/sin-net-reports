@@ -31,6 +31,8 @@ module "sinnetk8s" {
   config_services_database_name       = module.database.services_database_name
   config_services_database_username   = module.database.services_database_username
   config_services_database_password   = module.database.services_database_password
+  config_reports_storage_address      = module.storage_account.reports_storage_address
+  config_reports_container_name       = module.storage_account.reports_container_name
   environment_name                    = var.environment_name
   docker_registry_username            = data.azurerm_container_registry.sinnet.admin_username
   docker_registry_password            = data.azurerm_container_registry.sinnet.admin_password
