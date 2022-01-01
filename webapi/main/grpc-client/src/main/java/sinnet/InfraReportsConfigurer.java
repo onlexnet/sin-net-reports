@@ -8,8 +8,8 @@ import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.quarkus.example.GreeterGrpc;
 import io.quarkus.example.GreeterGrpc.GreeterFutureStub;
-import sinnet.reports.ReportsGrpc;
-import sinnet.reports.ReportsGrpc.ReportsFutureStub;
+import sinnet.report1.grpc.ReportsGrpc;
+import sinnet.report1.grpc.ReportsGrpc.ReportsFutureStub;
 
 @Configuration
 class InfraReportsConfigurer {
