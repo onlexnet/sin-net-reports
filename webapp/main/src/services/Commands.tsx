@@ -51,7 +51,8 @@ interface ServiceCommandBarProps extends PropsFromRedux {
   onPreviousMonthRequested: () => void;
   onNextMonthRequested: () => void;
   getCustomerRaport: () => void;
-  getReport2: () => void
+  getReport2: () => void;
+  onReportsViewRequested: () => void;
 }
 
 enum WaitingState {
@@ -165,6 +166,13 @@ const ServiceCommandBarView: React.FC<ServiceCommandBarProps> = (props) => {
           { key: 'getPdf1', text: 'Zestawienie sumaryczne', iconProps: { iconName: 'ZipFolder' }, onClick: props.getReport2 },
         ],
       },
+    },
+    {
+      key: 'navigateToReports',
+      text: 'Raporty',
+      split: true,
+      iconProps: { iconName: 'ZipFolder' },
+      onClick: props.onReportsViewRequested
     },
 
   ];

@@ -40,7 +40,7 @@ interface ActionViewEditProps extends PropsFromRedux {
  * @param props
  * @returns 
  */
-const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
+export const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
     const appInsights = useAppInsightsContext();
     const trackComponent = useTrackMetric(appInsights, "ActionViewEditLocal");
 

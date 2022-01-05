@@ -4,7 +4,7 @@ export const routing = {
     customers: "/customers",
     newCustomer: "/new-customer",
     editCustomer: "/customers/:projectId/:entityId/:entityVersion",
-    reports: "/reports",
+    reports: "/reports/:year/:month",
     login: "/login",
     debug: "/debug"
 }

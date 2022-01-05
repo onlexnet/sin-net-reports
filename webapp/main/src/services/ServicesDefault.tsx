@@ -1,8 +1,10 @@
 import { Label, Stack } from "@fluentui/react";
 import React from "react";
 import { connect, ConnectedProps } from "react-redux";
+import { RouteComponentProps } from "react-router-dom";
 import { Dispatch } from "redux";
 import { addressProvider } from "../addressProvider";
+import { routing } from "../Routing";
 import { RootState } from "../store/reducers";
 import { Content } from "./ActionList";
 import { ServiceCommandBar } from "./Commands";
@@ -15,7 +17,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({});
 const connector = connect(mapStateToProps, mapDispatchToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-interface MainProps extends PropsFromRedux {
+interface MainProps extends PropsFromRedux, RouteComponentProps {
 }
 
 const MainView: React.FC<MainProps> = (props) => {
@@ -39,7 +41,15 @@ const MainView: React.FC<MainProps> = (props) => {
             var projectId = props.appState.projectId;
             var dateFrom = props.viewContext.period.getValue().dateFrom;
             openInNewTab(addressProvider().host + `/api/raporty/2/${projectId}/${dateFrom.year}/${dateFrom.month}`);
-          }} />
+          }}
+          onReportsViewRequested={() => {
+            const { dateFrom } = props.viewContext.period.getValue();
+            const { year, month } = dateFrom;
+            const url = routing.reports.replace(":year", year.toString()).replace(":month", month.toString());
+            alert(url);
+            props.history.push(url);
+          }}
+           />
       </Stack.Item>
       <Stack.Item  >
         <div style={{ padding: "10px" }}>
