@@ -50,8 +50,6 @@ type PropsFromRedux = ConnectedProps<typeof connector>
 interface ServiceCommandBarProps extends PropsFromRedux {
   onPreviousMonthRequested: () => void;
   onNextMonthRequested: () => void;
-  getCustomerRaport: () => void;
-  getReport2: () => void;
   onReportsViewRequested: () => void;
 }
 
@@ -150,22 +148,6 @@ const ServiceCommandBarView: React.FC<ServiceCommandBarProps> = (props) => {
       split: true,
       iconProps: { iconName: 'Next' },
       onClick: props.onNextMonthRequested
-    },
-    {
-      key: 'getPdfs',
-      text: 'Raporty',
-      split: true,
-      iconProps: { iconName: 'ZipFolder' },
-      subMenuProps: {
-        // Must specify the menu item type for submenus too!
-        contextualMenuItemAs: CustomMenuItem,
-        // Styles are passed through to menu items here
-        styles: menuStyles,
-        items: [
-          { key: 'getPdf1', text: 'Raport miesięczny', iconProps: { iconName: 'ZipFolder' }, onClick: props.getCustomerRaport },
-          { key: 'getPdf1', text: 'Zestawienie sumaryczne', iconProps: { iconName: 'ZipFolder' }, onClick: props.getReport2 },
-        ],
-      },
     },
     {
       key: 'navigateToReports',

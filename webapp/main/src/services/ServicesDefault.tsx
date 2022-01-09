@@ -32,21 +32,8 @@ const MainView: React.FC<MainProps> = (props) => {
     }}>
       <Stack.Item>
         <ServiceCommandBar
-          getCustomerRaport={() => {
-            var projectId = props.appState.projectId;
-            var dateFrom = props.viewContext.period.getValue().dateFrom;
-            openInNewTab(addressProvider().host + `/api/raporty/klienci/${projectId}/${dateFrom.year}/${dateFrom.month}`);
-          }}
-          getReport2={() => {
-            var projectId = props.appState.projectId;
-            var dateFrom = props.viewContext.period.getValue().dateFrom;
-            openInNewTab(addressProvider().host + `/api/raporty/2/${projectId}/${dateFrom.year}/${dateFrom.month}`);
-          }}
           onReportsViewRequested={() => {
-            const { dateFrom } = props.viewContext.period.getValue();
-            const { year, month } = dateFrom;
-            const url = routing.reports.replace(":year", year.toString()).replace(":month", month.toString());
-            alert(url);
+            const url = routing.reports;
             props.history.push(url);
           }}
            />

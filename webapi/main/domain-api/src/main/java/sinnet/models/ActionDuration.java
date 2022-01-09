@@ -26,4 +26,8 @@ public final class ActionDuration {
   public static ActionDuration empty() {
     return EMPTY;
   }
+
+  public static ActionDuration add(ActionDuration v1, ActionDuration v2) {
+    return ActionDuration.of(v1.value + v2.value);
+  }
 }
