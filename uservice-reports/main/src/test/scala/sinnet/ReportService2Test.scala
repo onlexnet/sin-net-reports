@@ -53,6 +53,7 @@ class ReportService2Test {
                 .setPersonName("Ola")
                 .setYearMonth(period)
                 .setHowLongInMins(123)
+                .setHowFarInKms(4)
                 .build())
             .build()
         val res = self.produce(request)

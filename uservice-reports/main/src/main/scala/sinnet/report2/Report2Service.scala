@@ -56,26 +56,4 @@ class Report2Service extends ReportsGrpc.ReportsImplBase {
       .setData(dtoData)
       .build()
   }
-
-  //     for ((itemDto, index) <- request.getItemsList().asScala.zip(Stream from 1)) {
-  //       val item = DtoDomainMapper(itemDto)
-  //       var model = ReportResult(item)
-  //       val report = model.content
-  //     }
-
-  //     zos.close()
-
-  //     val binaryData = baos.toByteArray()
-  //     val dtoData = ByteString.copyFrom(binaryData)
-  //     var response = Response
-  //       .newBuilder()
-  //       .setData(dtoData)
-  //       .build()
-
-  //     responseObserver.onNext(response)
-  //     responseObserver.onCompleted()
-  //   }
-  // }
-  // }
-  // }
 }
