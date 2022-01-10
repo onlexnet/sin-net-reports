@@ -3,7 +3,7 @@ ARG REVISION
 #----------
 # more images see https://hub.docker.com/_/microsoft-java-jdk
 # If you are considering to use newest image, update runtime platform and local java version as well
-FROM mcr.microsoft.com/java/jdk:11u11-zulu-ubuntu as build
+FROM mcr.microsoft.com/java/jdk:11u13-zulu-alpine as build
 ARG REVISION
 
 WORKDIR /app
