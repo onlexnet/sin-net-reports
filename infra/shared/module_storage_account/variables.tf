@@ -1,11 +1,8 @@
 variable "environment_name" {
 }
 
-variable "environment_location" {
+variable "resource_group" {
 }
 
 variable "application_name" {
-}
-
-variable "subscription_id" {
 }

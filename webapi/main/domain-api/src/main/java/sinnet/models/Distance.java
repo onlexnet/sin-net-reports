@@ -28,4 +28,8 @@ public final class Distance {
     return empty;
   }
 
+  public static Distance add(Distance v1, Distance v2) {
+    return Distance.of(v1.value + v2.value);
+  }
+
 }

@@ -8,8 +8,6 @@ import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.quarkus.example.GreeterGrpc;
 import io.quarkus.example.GreeterGrpc.GreeterFutureStub;
-import sinnet.reports.ReportsGrpc;
-import sinnet.reports.ReportsGrpc.ReportsFutureStub;
 
 @Configuration
 class InfraReportsConfigurer {
@@ -30,7 +28,12 @@ class InfraReportsConfigurer {
   }
 
   @Bean
-  public ReportsFutureStub infraReportsFutureStub(ManagedChannel infraReportsChannel) {
-    return ReportsGrpc.newFutureStub(infraReportsChannel);
+  public sinnet.report1.grpc.ReportsGrpc.ReportsFutureStub infraReport1FutureStub(ManagedChannel infraReportsChannel) {
+    return sinnet.report1.grpc.ReportsGrpc.newFutureStub(infraReportsChannel);
+  }
+
+  @Bean
+  public sinnet.report2.grpc.ReportsGrpc.ReportsFutureStub infraReport2FutureStub(ManagedChannel infraReportsChannel) {
+    return sinnet.report2.grpc.ReportsGrpc.newFutureStub(infraReportsChannel);
   }
 }

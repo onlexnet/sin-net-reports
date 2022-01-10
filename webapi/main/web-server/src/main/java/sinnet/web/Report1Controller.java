@@ -18,16 +18,16 @@ import io.vavr.collection.Array;
 import io.vavr.control.Option;
 import sinnet.FutureExecutor;
 import sinnet.read.ActionProjector;
-import sinnet.reports.ActivityDetails;
-import sinnet.reports.CustomerDetails;
-import sinnet.reports.Date;
-import sinnet.reports.ReportRequest;
-import sinnet.reports.ReportRequests;
-import sinnet.reports.ReportsGrpc;
+import sinnet.report1.grpc.ActivityDetails;
+import sinnet.report1.grpc.CustomerDetails;
+import sinnet.report1.grpc.ReportRequest;
+import sinnet.report1.grpc.ReportRequests;
+import sinnet.report1.grpc.ReportsGrpc;
+import sinnet.reports.grpc.Date;
 
 @RestController
 @RequestMapping(path = "/api/raporty")
-class ReportController implements ActionProjector {
+class Report1Controller implements ActionProjector {
 
   @Autowired
   private ActionProjector.Provider projection;

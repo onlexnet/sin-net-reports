@@ -3,11 +3,11 @@
 # https://github.com/terraform-providers/terraform-provider-azurerm/issues/10635
 
 provider "kubernetes" {
-  
+
   host = var.k8s_host
 
-  client_certificate     = "${file("~/onlex_infra.crt")}"
-  client_key             = "${file("~/onlex_infra.key")}"
+  client_certificate = file("~/onlex_infra.crt")
+  client_key         = file("~/onlex_infra.key")
   # cluster_ca_certificate = "${file("~/.kube/cluster-ca-cert.pem")}"}
   insecure = true
 }
@@ -24,7 +24,7 @@ resource "kubernetes_namespace" "default" {
 
 resource "kubernetes_secret" "example" {
   metadata {
-    name = "webapp-config"
+    name      = "webapp-config"
     namespace = local.namespace_name
   }
 
@@ -35,7 +35,7 @@ resource "kubernetes_secret" "example" {
 
 resource "kubernetes_secret" "default" {
   metadata {
-    name = "app-secrets"
+    name      = "app-secrets"
     namespace = local.namespace_name
   }
 
@@ -49,10 +49,12 @@ resource "kubernetes_secret" "default" {
 
 resource "kubernetes_config_map" "default" {
   metadata {
-    name = "my-configuration"
+    name      = "app-configuration"
     namespace = local.namespace_name
   }
   data = {
+    reports_storage_address = var.config_reports_storage_address
+    reports_container_name  = var.config_reports_container_name
   }
 
   depends_on = [

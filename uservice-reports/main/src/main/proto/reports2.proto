@@ -19,4 +19,5 @@ message ActivityDetails {
     reports.YearMonth yearMonth = 1;
     string personName = 2;
     int32 howLongInMins = 3;
+    int32 howFarInKms = 4;
 }

@@ -9,6 +9,13 @@ repositories {
 }
 
 dependencies {
+    // Load bill of materials (BOM) for Azure SDK.
+    // The dependencies in the BOM will be
+    // dependency constraints in our build.
+    // https://docs.microsoft.com/en-us/azure/developer/java/sdk/troubleshooting-dependency-version-conflict#use-azure-sdk-bom
+    implementation(platform('com.azure:azure-sdk-bom:1.0.6'))
+    implementation('com.azure:azure-storage-blob')
+    
     implementation 'io.quarkus:quarkus-container-image-docker'
     implementation enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}")
     implementation 'io.quarkus:quarkus-grpc'

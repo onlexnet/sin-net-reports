@@ -16,12 +16,13 @@ import io.quarkus.example.GreeterGrpc;
 import io.quarkus.example.HelloRequest;
 import lombok.extern.slf4j.Slf4j;
 import sinnet.FutureExecutor;
-import sinnet.reports.ActivityDetails;
-import sinnet.reports.CustomerDetails;
-import sinnet.reports.Date;
-import sinnet.reports.ReportRequest;
-import sinnet.reports.ReportRequests;
-import sinnet.reports.ReportsGrpc;
+import sinnet.report1.grpc.ActivityDetails;
+import sinnet.report1.grpc.CustomerDetails;
+import sinnet.report1.grpc.ReportRequest;
+import sinnet.report1.grpc.ReportRequests;
+import sinnet.report1.grpc.Reports1;
+import sinnet.report1.grpc.ReportsGrpc.ReportsFutureStub;
+import sinnet.reports.grpc.Date;
 
 /**
  * Test controller to test calls endpoint -> webapi -> backend service using gRPC api.
@@ -39,7 +40,7 @@ class DebugController {
   private GreeterGrpc.GreeterFutureStub client;
 
   @Autowired
-  private ReportsGrpc.ReportsFutureStub reportsClient;
+  private ReportsFutureStub reportsClient;
 
   @Autowired
   private FutureExecutor executor;

@@ -11,7 +11,7 @@ import sinnet.reports._
 /** Converts ReportRequest (DTO) to its local model. */
 object DtoDomainMapper {
 
-  implicit def toActivityDetails(x: ActivityDetailsDto) = ActivityDetails(x.getYearMonth(), x.getPersonName(), Kilometers(0), Minutes(x.getHowLongInMins()));
+  implicit def toActivityDetails(x: ActivityDetailsDto) = ActivityDetails(x.getYearMonth(), x.getPersonName(), Kilometers(x.getHowFarInKms()), Minutes(x.getHowLongInMins()));
     
   implicit def apply(dto: ReportRequestDTO): ReportRequest = {
     ReportRequest(dto.getDetailsList.asScala.map(toActivityDetails _))

@@ -90,10 +90,14 @@ object ReportResult {
     def +(that: TableColumn) = new TableColumn(this.width + that.width)
   }
   object TableColumns {
-    def Col1widthPerson = new TableColumn(10)
-    def Col2widthHours = new TableColumn(2)
-    def width = Col1widthPerson.width +
-                Col2widthHours.width
+    def Col1widthPeriod = new TableColumn(2)
+    def Col2widthPerson = new TableColumn(10)
+    def Col3widthHours = new TableColumn(2)
+    def Col4widthKms = new TableColumn(2)
+    def width = Col1widthPeriod.width +
+      Col2widthPerson.width +
+      Col3widthHours.width +
+      Col4widthKms.width
   }
 
   case class CellParams(text: String, width: TableColumn, alignment: HorizontalAlignment)
@@ -116,23 +120,31 @@ object ReportResult {
   private def asTable(addValue: (Boolean, CellParams*) => Unit, activities: Seq[ActivityDetails]): Unit = {
 
     addValue(false,
-      new CellParams("Opis", TableColumns.Col1widthPerson, HorizontalAlignment.CENTER),
-      new CellParams("Godziny", TableColumns.Col2widthHours, HorizontalAlignment.CENTER))
+      new CellParams("Kiedy", TableColumns.Col1widthPeriod, HorizontalAlignment.CENTER),
+      new CellParams("Opis", TableColumns.Col2widthPerson, HorizontalAlignment.CENTER),
+      new CellParams("Czas", TableColumns.Col3widthHours, HorizontalAlignment.CENTER),
+      new CellParams("Km", TableColumns.Col4widthKms, HorizontalAlignment.CENTER))
 
     for (item <- activities) {
+      val period = item.period;
       val description = item.personName;
       val minutes = item.minutes;
+      val kilometers = item.kilometers; 
       addValue(false,
-        new CellParams(description.toString, TableColumns.Col1widthPerson, HorizontalAlignment.LEFT),
-        new CellParams(minutes.asString, TableColumns.Col2widthHours, HorizontalAlignment.RIGHT))
+        new CellParams(period.toString, TableColumns.Col1widthPeriod, HorizontalAlignment.LEFT),
+        new CellParams(description.toString, TableColumns.Col2widthPerson, HorizontalAlignment.LEFT),
+        new CellParams(minutes.asString, TableColumns.Col3widthHours, HorizontalAlignment.RIGHT),
+        new CellParams(kilometers.toString(), TableColumns.Col4widthKms, HorizontalAlignment.RIGHT))
     }
 
     val initialAcc = (Kilometers(0), Minutes(0))
     val (howFar, howLong) = activities.foldLeft(initialAcc)((acc, v) => (acc._1 + v.kilometers, acc._2 + v.minutes))
 
     addValue(true,
-      new CellParams("Suma", TableColumns.Col1widthPerson, HorizontalAlignment.RIGHT),
-      new CellParams(howLong.asString, TableColumns.Col2widthHours, HorizontalAlignment.RIGHT))
+      new CellParams("", TableColumns.Col1widthPeriod, HorizontalAlignment.LEFT),
+      new CellParams("Suma", TableColumns.Col2widthPerson, HorizontalAlignment.LEFT),
+      new CellParams(howLong.asString, TableColumns.Col3widthHours, HorizontalAlignment.RIGHT),
+      new CellParams(howFar.toString, TableColumns.Col4widthKms, HorizontalAlignment.RIGHT))
 
   }
 }

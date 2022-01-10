@@ -1,5 +1,5 @@
-variable environment_name {
+variable "environment_name" {
 }
 
-variable application_name {
+variable "application_name" {
 }
