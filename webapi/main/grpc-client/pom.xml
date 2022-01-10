@@ -15,6 +15,7 @@
 
   <properties>
     <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/../${aggregate.report.dir}</sonar.coverage.jacoco.xmlReportPaths>
+    <grpc.version>1.43.2</grpc.version>
   </properties>
 
   <dependencies>
@@ -30,17 +31,17 @@
     <dependency>
       <groupId>io.grpc</groupId>
       <artifactId>grpc-netty-shaded</artifactId>
-      <version>1.37.1</version>
+      <version>${grpc.version}</version>
     </dependency>
     <dependency>
       <groupId>io.grpc</groupId>
       <artifactId>grpc-protobuf</artifactId>
-      <version>1.37.1</version>
+      <version>${grpc.version}</version>
     </dependency>
     <dependency>
       <groupId>io.grpc</groupId>
       <artifactId>grpc-stub</artifactId>
-      <version>1.37.1</version>
+      <version>${grpc.version}</version>
     </dependency>
     <dependency> <!-- necessary for Java 9+ -->
       <groupId>org.apache.tomcat</groupId>
