@@ -16,7 +16,7 @@ RUN ./mvnw clean install -Drevision=$REVISION -DskipTests -Dcheckstyle.skip -B -
 #----------
 # list of images is located @ https://hub.docker.com/_/microsoft-java-jre-headless
 # If you are considering to use newest image, update compilation platform and local java version as well
-FROM mcr.microsoft.com/java/jre-headless:11u13-zulu-alpine
+FROM mcr.microsoft.com/java/jre-headless:11u13-zulu-ubuntu
 ARG REVISION
 
 # The application needs some configuration
