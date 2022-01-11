@@ -42,7 +42,8 @@ export TF_VAR_onlexnet_sinnet_dev01_subscription_id= ... onlexnet-sinnet-app-dev
 export TF_VAR_onlexnet_sinnet_stg01_subscription_id= ... onlexnet-sinnet-app-stg01 subscription ID
 export TF_VAR_onlexnet_sinnet_prd01_subscription_id= ... onlexnet-sinnet-app-prd01 subscription ID
 
-
+export TF_VAR_onlex_sinnet_azdo_personal_token="personal token"
+export TF_VAR_onlex_sinnet_azdo_service_url="https://dev.azure.com/onlex"
 ```
 
 
