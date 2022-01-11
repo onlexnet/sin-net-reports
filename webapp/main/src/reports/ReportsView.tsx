@@ -41,7 +41,7 @@ export const ReportsView: React.FC<ReportsViewProps> = props => {
 
 
           <Link onClick={() => {
-            openInNewTab(addressProvider().host + `/api/raporty/2/${projectId}/${fromYear}/${fromMonth}`);
+            openInNewTab(addressProvider().host + `/api/raporty/2/${projectId}?yearFrom=${fromYear}&monthFrom=${fromMonth}&yearTo=${toYear}&monthTo=${toMonth}`);
           }}>
             Zestawienie sumaryczne (na okres OD - DO)
           </Link>

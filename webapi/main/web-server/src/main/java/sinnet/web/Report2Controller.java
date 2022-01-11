@@ -6,7 +6,6 @@ import static sinnet.reports.grpc.YearMonth.newBuilder;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletionStage;
 
@@ -17,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.vavr.Function1;
@@ -45,17 +45,18 @@ class Report2Controller implements ActionProjector {
   @Autowired
   private FutureExecutor executor;
 
-  @RequestMapping(value = "/2/{projectId}/{year}/{month}", method = RequestMethod.GET, produces = "application/pdf")
+  @RequestMapping(value = "/2/{projectId}", method = RequestMethod.GET, produces = "application/pdf")
   public CompletionStage<ResponseEntity<byte[]>> downloadPdfFile(@PathVariable UUID projectId,
-                                                                 @PathVariable int year, @PathVariable int month) {
+                                @RequestParam int yearFrom, @RequestParam int monthFrom,
+                                @RequestParam int yearTo, @RequestParam int monthTo) {
 
     var headers = new HttpHeaders();
     headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
-    headers.add("Content-Disposition", "inline; filename=report 2 " + year + "-" + month + ".pdf");
+    headers.add("Content-Disposition", "inline; filename=report 2 " + yearFrom + "-" + monthFrom + ".pdf");
     headers.add("Expires", "0");
 
-    var dateFrom = LocalDate.of(year, month, 1);
-    var dateTo = LocalDate.of(year, month, 1).plusMonths(1).minusDays(1);
+    var dateFrom = LocalDate.of(yearFrom, monthFrom, 1);
+    var dateTo = LocalDate.of(yearTo, monthTo, 1).plusMonths(1).minusDays(1);
     return projection
         .find(projectId, dateFrom, dateTo)
         .toCompletionStage()
@@ -95,6 +96,7 @@ class Report2Controller implements ActionProjector {
           .setPersonName(k._1 + "")
           .setYearMonth(newBuilder().setYear(k._2.getYear()).setMonth(k._2.getMonthValue()))
           .setHowLongInMins(v._1.getValue())
+          .setHowFarInKms(v._2.getValue())
           .build());
       return requestBuilder.build();
     }
