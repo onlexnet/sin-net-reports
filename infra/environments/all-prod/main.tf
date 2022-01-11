@@ -5,6 +5,6 @@ resource "kubernetes_namespace" "default" {
 }
 
 resource "azuredevops_project" "project" {
-  name       = "Test Project To Delete"
+  name       = "Test Project To Delete using Terraform"
   description        = "Test Project Description"
 }
