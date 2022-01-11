@@ -15,6 +15,7 @@
 
   <properties>
     <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/../${aggregate.report.dir}</sonar.coverage.jacoco.xmlReportPaths>
+    <grpc.version>1.43.2</grpc.version>
   </properties>
 
   <dependencies>

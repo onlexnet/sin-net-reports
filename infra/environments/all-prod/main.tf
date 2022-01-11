@@ -3,3 +3,7 @@ resource "kubernetes_namespace" "default" {
     name = local.namespace_name
   }
 }
+
+module "azdo" {
+  source = "./module_azdo"
+}

@@ -53,7 +53,7 @@ stages:
                 - task: HelmDeploy@0
                   displayName: Helm install
                   inputs:
-                    kubernetesServiceEndpoint: STG01-onlex-sinnet-stg01-1637108826557 
+                    kubernetesServiceEndpoint: onlex-sinnet-stg01
                     command: upgrade
                     install: true
                     chartName: $(Pipeline.Workspace)/helm_CI/chart/$(var_chart_file_name)
