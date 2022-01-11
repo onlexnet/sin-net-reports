@@ -9,5 +9,5 @@ provider "kubernetes" {
 
 provider "azuredevops" {
   personal_access_token = var.onlex_sinnet_azdo_personal_token
-  org_service_url = var.onlex_sinnet_azdo_service_url
+  org_service_url       = var.onlex_sinnet_azdo_service_url
 }
