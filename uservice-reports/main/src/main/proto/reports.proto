@@ -10,6 +10,11 @@ message Response {
     bytes data = 1;
 }
 
+message FileResponse {
+  bytes data = 1;
+  string fileName = 2;
+}
+
 message Date {
   int32 year = 1;
   /** Month from 1 to 12 */
