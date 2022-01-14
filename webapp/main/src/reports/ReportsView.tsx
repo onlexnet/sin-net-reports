@@ -46,6 +46,13 @@ export const ReportsView: React.FC<ReportsViewProps> = props => {
             Zestawienie sumaryczne (na okres OD - DO)
           </Link>
 
+          <Link onClick={() => {
+            openInNewTab(addressProvider().host + `/api/raporty/3/${projectId}`);
+          }}>
+            Lista klientów wg przypisania do operatorów
+          </Link>
+
+
         </Stack>
       </Stack.Item>
     </Stack>);

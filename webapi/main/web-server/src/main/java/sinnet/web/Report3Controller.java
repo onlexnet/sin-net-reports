@@ -78,7 +78,7 @@ class Report3Controller implements ActionProjector {
   }
 
 
-  ReportRequest asReportRequest(Array<CustomerProjection.CustomerModel> items) {
+  ReportRequest asReportRequest(List<CustomerProjection.CustomerModel> items) {
     return items
       .filter(it -> StringUtils.isNotBlank(it.getValue().getOperatorEmail()))
       .map(it -> Tuple.of(
