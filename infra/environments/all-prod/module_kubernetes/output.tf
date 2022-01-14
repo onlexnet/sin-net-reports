@@ -1,6 +1,5 @@
 output "devops-cluster-svc-token" {
-  # sensitive = true
-  value     = lookup(data.kubernetes_secret.devops-cluster-svc.data, "token")
+  value = lookup(data.kubernetes_secret.devops-cluster-svc.data, "token")
 }
 
 output "ca-cert" {
