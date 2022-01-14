@@ -36,4 +36,9 @@ class InfraReportsConfigurer {
   public sinnet.report2.grpc.ReportsGrpc.ReportsFutureStub infraReport2FutureStub(ManagedChannel infraReportsChannel) {
     return sinnet.report2.grpc.ReportsGrpc.newFutureStub(infraReportsChannel);
   }
+
+  @Bean
+  public sinnet.report3.grpc.ReportsGrpc.ReportsFutureStub infraReport3FutureStub(ManagedChannel infraReportsChannel) {
+    return sinnet.report3.grpc.ReportsGrpc.newFutureStub(infraReportsChannel);
+  }
 }
