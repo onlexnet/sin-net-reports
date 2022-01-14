@@ -51,7 +51,7 @@ resource "kubernetes_cluster_role_binding" "devops-cluster-svc-binding" {
 
 data "kubernetes_secret" "devops-cluster-svc" {
   metadata {
-    name = kubernetes_service_account.devops-cluster-svc.default_secret_name
+    name      = kubernetes_service_account.devops-cluster-svc.default_secret_name
     namespace = var.namespace_name
   }
 }
