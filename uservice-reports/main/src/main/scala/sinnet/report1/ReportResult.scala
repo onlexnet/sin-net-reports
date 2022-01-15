@@ -185,6 +185,10 @@ object ReportResult {
     val col3 = TableColumns.Col3widthDescription
     val col4 = TableColumns.Col4widthDuration
     val col5 = TableColumns.Col5widthDistance
+    val cols = col1 + col2 + col3 + col4 + col5
+
+    addValue(true,
+        new CellParams("USŁUGI DODATKOWE", cols, HorizontalAlignment.LEFT))
 
     addValue(false,
         new CellParams("Serwisant", col1, HorizontalAlignment.CENTER),
@@ -201,7 +205,7 @@ object ReportResult {
         new CellParams(who, col1, HorizontalAlignment.LEFT, servicemanNameSizeAdjustment),
         new CellParams(item.when, col2, HorizontalAlignment.LEFT),
         new CellParams(item.description, col3, HorizontalAlignment.LEFT),
-        new CellParams("0:00", col4, HorizontalAlignment.CENTER),
+        new CellParams("0:00", col4, HorizontalAlignment.RIGHT),
         new CellParams(distance.toString(), col5, HorizontalAlignment.RIGHT))
     }
 
