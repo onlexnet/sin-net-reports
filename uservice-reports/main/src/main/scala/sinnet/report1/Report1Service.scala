@@ -63,9 +63,9 @@ class Report1Service extends ReportsGrpc.ReportsImplBase {
         val item = Mapper(itemDto)
         var model = ReportResult(item)
         val report = model.content
-        val entry = new ZipEntry(
-          s"$index-${item.customer.customerName}.pdf"
-        )
+        val fileName = f"$index%03d-${item.customer.customerName}.pdf";
+        val normalizedFileName = fileName.replace("/","_")
+        val entry = new ZipEntry(normalizedFileName)
         zos.putNextEntry(entry)
         zos.write(report)
         zos.closeEntry()
