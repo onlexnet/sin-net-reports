@@ -42,7 +42,12 @@ class ReportService1Test {
 
     @Test
     def produceReportWithMinDataCase2(): Unit = {
-        val customer = CustomerDetailsDTO.newBuilder().build()
+        val customer = CustomerDetailsDTO.newBuilder()
+            .setCustomerName("Customer name")
+            .setCustomerId("Customer ID")
+            .setCustomerAddress("Customer Address")
+            .setCustomerCity("Customer City")
+            .build()
         val who = "PERSON WITH LONG NAME 1 LINE";
         val when = Date.newBuilder().setYear(2001).setMonth(2).setDayOfTheMonth(3).build()
         val request = ReportRequestDTO.newBuilder()

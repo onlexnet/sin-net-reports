@@ -35,6 +35,8 @@ import javax.inject.Inject
 
 import sinnet.reports._
 import sinnet.config.Fonts
+import com.lowagie.text.Phrase
+import com.lowagie.text.Chunk
 
 object ReportResult {
 
@@ -53,11 +55,13 @@ object ReportResult {
 
       document.open()
 
-      val header = s"$customerName, $customerCity ul. $customerAddress"
-      val headParam = new Paragraph(header, myFont)
+      val headParam = new Paragraph();
+      headParam.add(new Chunk(customerName, myFontBold))
+      val header = s", $customerCity ul. $customerAddress"
+      headParam.add(new Chunk(header, myFont))
+      document.add(headParam)
 
       val newLineParagraph = new Paragraph("\n")
-      document.add(headParam)
       document.add(newLineParagraph)
 
       def addLine(table: PdfPTable)(footerOrHeader: Boolean, v: CellParams*): Unit = {
