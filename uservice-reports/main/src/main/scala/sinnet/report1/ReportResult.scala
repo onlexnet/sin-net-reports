@@ -142,6 +142,9 @@ object ReportResult {
       case None       => "-"
     }
 
+  // Serviceman has sometimes too long name to fit to one line, so minimizing font fits to todays data
+  val servicemanNameSizeAdjustment = Some(-4)
+
   private def asTable(addValue: (Boolean, CellParams*) => Unit, activities: Seq[ActivityDetails]): Unit = {
 
     addValue(false,
@@ -156,8 +159,7 @@ object ReportResult {
       var distance = item.howFarInKms
       var who = item.who
       addValue(false,
-        // Serviceman has sometimes too long name to fit to one line, so minimizing font fits to todays data
-        new CellParams(who, TableColumns.Col1widthServiceman, HorizontalAlignment.LEFT, Some(-4)),
+        new CellParams(who, TableColumns.Col1widthServiceman, HorizontalAlignment.LEFT, servicemanNameSizeAdjustment),
         new CellParams(item.when, TableColumns.Col2widthDay, HorizontalAlignment.LEFT),
         new CellParams(item.description, TableColumns.Col3widthDescription, HorizontalAlignment.LEFT),
         new CellParams(howLong.asString, TableColumns.Col4widthDuration, HorizontalAlignment.RIGHT),
@@ -180,24 +182,27 @@ object ReportResult {
 
     val col1 = TableColumns.Col1widthServiceman
     val col2 = TableColumns.Col2widthDay
-    val col3 = TableColumns.Col3widthDescription + TableColumns.Col4widthDuration
-    val col4 = TableColumns.Col5widthDistance
+    val col3 = TableColumns.Col3widthDescription
+    val col4 = TableColumns.Col4widthDuration
+    val col5 = TableColumns.Col5widthDistance
 
     addValue(false,
         new CellParams("Serwisant", col1, HorizontalAlignment.CENTER),
         new CellParams("Dzień", col2, HorizontalAlignment.CENTER),
         new CellParams("Praca wykonana", col3, HorizontalAlignment.CENTER),
-        new CellParams("KM", col4, HorizontalAlignment.RIGHT))
+        new CellParams("Czas", col4, HorizontalAlignment.CENTER),
+        new CellParams("KM", col5, HorizontalAlignment.RIGHT))
 
     for (item <- activities) {
       val howLong = item.howLongInMins
       var distance = item.howFarInKms
       var who = item.who
       addValue(false,
-        new CellParams(who, col1, HorizontalAlignment.LEFT),
+        new CellParams(who, col1, HorizontalAlignment.LEFT, servicemanNameSizeAdjustment),
         new CellParams(item.when, col2, HorizontalAlignment.LEFT),
         new CellParams(item.description, col3, HorizontalAlignment.LEFT),
-        new CellParams(distance.toString(), col4, HorizontalAlignment.RIGHT))
+        new CellParams("0:00", col4, HorizontalAlignment.CENTER),
+        new CellParams(distance.toString(), col5, HorizontalAlignment.RIGHT))
     }
 
     val initialAcc = Kilometers(0)
@@ -207,7 +212,8 @@ object ReportResult {
       new CellParams(null, col1, HorizontalAlignment.LEFT),
       new CellParams(null, col2, HorizontalAlignment.LEFT),
       new CellParams("Suma", col3, HorizontalAlignment.RIGHT),
-      new CellParams(howFar.toString(), col4, HorizontalAlignment.RIGHT))
+      new CellParams("0:00", col4, HorizontalAlignment.RIGHT),
+      new CellParams(howFar.toString(), col5, HorizontalAlignment.RIGHT))
 
   }
 }
