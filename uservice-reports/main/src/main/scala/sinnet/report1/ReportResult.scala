@@ -160,8 +160,8 @@ object ReportResult {
       var who = item.who
       addValue(false,
         new CellParams(who, TableColumns.Col1widthServiceman, HorizontalAlignment.LEFT, servicemanNameSizeAdjustment),
-        new CellParams(item.when, TableColumns.Col2widthDay, HorizontalAlignment.LEFT),
-        new CellParams(item.description, TableColumns.Col3widthDescription, HorizontalAlignment.LEFT),
+        new CellParams(item.when, TableColumns.Col2widthDay, HorizontalAlignment.CENTER),
+        new CellParams(item.description, TableColumns.Col3widthDescription, HorizontalAlignment.CENTER),
         new CellParams(howLong.asString, TableColumns.Col4widthDuration, HorizontalAlignment.RIGHT),
         new CellParams(distance.toString(), TableColumns.Col5widthDistance, HorizontalAlignment.RIGHT))
     }
@@ -203,8 +203,8 @@ object ReportResult {
       var who = item.who
       addValue(false,
         new CellParams(who, col1, HorizontalAlignment.LEFT, servicemanNameSizeAdjustment),
-        new CellParams(item.when, col2, HorizontalAlignment.LEFT),
-        new CellParams(item.description, col3, HorizontalAlignment.LEFT),
+        new CellParams(item.when, col2, HorizontalAlignment.CENTER),
+        new CellParams(item.description, col3, HorizontalAlignment.CENTER),
         new CellParams("0:00", col4, HorizontalAlignment.RIGHT),
         new CellParams(distance.toString(), col5, HorizontalAlignment.RIGHT))
     }
