@@ -26,6 +26,16 @@ trigger:
       - /webapp/
       - /webapi/api.graphql/
 
+pr:
+  branches:
+    include:
+      - master
+  paths:
+    include:
+      # We have to include all folders where source files are located
+      - /webapp/
+      - /webapi/api.graphql/
+      
 jobs:
   - job: CD
     displayName: CI build

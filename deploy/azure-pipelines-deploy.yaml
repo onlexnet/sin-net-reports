@@ -27,7 +27,7 @@ trigger:
 pr:
   branches:
     exclude:
-    - '*'
+      - '*'
 
 
 stages:
