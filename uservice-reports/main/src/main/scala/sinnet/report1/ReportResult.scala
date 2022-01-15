@@ -60,13 +60,14 @@ object ReportResult {
       document.add(headParam)
       document.add(newLineParagraph)
 
-      def addLine(table: PdfPTable)(isFooter: Boolean, v: CellParams*): Unit = {
+      def addLine(table: PdfPTable)(footerOrHeader: Boolean, v: CellParams*): Unit = {
         for (it <- v) {
-          val font = if (!isFooter) myFont else myFontBold
+          val font = (if (!footerOrHeader) myFont else myFontBold)
+          var adjustedFont = Fonts.adjust(font, it.sizeAdjustment)
+          val p = new Paragraph(it.text, adjustedFont)
           
-          val p = new Paragraph(it.text, font)
           var cell = new PdfPCell(p)
-          if (isFooter) {
+          if (footerOrHeader) {
             cell.setBorderWidth(0)
           }
           cell.setHorizontalAlignment(it.alignment.getId())
@@ -112,11 +113,11 @@ object ReportResult {
     def +(that: TableColumn) = new TableColumn(this.width + that.width)
   }
   object TableColumns {
-    def Col1widthServiceman = new TableColumn(3)
-    def Col2widthDay = new TableColumn(3)
-    def Col3widthDescription = new TableColumn(12)
-    def Col4widthDuration = new TableColumn(2)
-    def Col5widthDistance = new TableColumn(2)
+    def Col1widthServiceman = new TableColumn(50)
+    def Col2widthDay = new TableColumn(25)
+    def Col3widthDescription = new TableColumn(120)
+    def Col4widthDuration = new TableColumn(15)
+    def Col5widthDistance = new TableColumn(15)
     def width = Col1widthServiceman.width +
                 Col2widthDay.width +
                 Col3widthDescription.width +
@@ -124,7 +125,7 @@ object ReportResult {
                 Col5widthDistance.width
   }
 
-  case class CellParams(text: String, width: TableColumn, alignment: HorizontalAlignment)
+  case class CellParams(text: String, width: TableColumn, alignment: HorizontalAlignment, sizeAdjustment: Option[Int] = None)
 
   private def newTable(): PdfPTable = {
     val table = new PdfPTable(TableColumns.width)
@@ -155,7 +156,8 @@ object ReportResult {
       var distance = item.howFarInKms
       var who = item.who
       addValue(false,
-        new CellParams(who, TableColumns.Col1widthServiceman, HorizontalAlignment.LEFT),
+        // Serviceman has sometimes too long name to fit to one line, so minimizing font fits to todays data
+        new CellParams(who, TableColumns.Col1widthServiceman, HorizontalAlignment.LEFT, Some(-4)),
         new CellParams(item.when, TableColumns.Col2widthDay, HorizontalAlignment.LEFT),
         new CellParams(item.description, TableColumns.Col3widthDescription, HorizontalAlignment.LEFT),
         new CellParams(howLong.asString, TableColumns.Col4widthDuration, HorizontalAlignment.RIGHT),
