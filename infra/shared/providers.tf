@@ -1,3 +1,12 @@
+terraform {
+  required_providers {
+    azuredevops = {
+      source  = "microsoft/azuredevops"
+      version = ">=0.1.0"
+    }
+  }
+}
+
 provider "azuread" {
 }
 
@@ -19,4 +28,9 @@ provider "azurerm" {
   alias           = "shared"
   subscription_id = var.shared_subscription_id
   features {}
+}
+
+provider "azuredevops" {
+  personal_access_token = var.onlex_sinnet_azdo_personal_token
+  org_service_url       = var.onlex_sinnet_azdo_service_url
 }

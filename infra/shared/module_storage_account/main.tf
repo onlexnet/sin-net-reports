@@ -21,7 +21,7 @@ resource "azurerm_storage_management_policy" "short-living" {
     enabled = true
     filters {
       prefix_match = [azurerm_storage_container.reports.name]
-      blob_types = ["blockBlob"]
+      blob_types   = ["blockBlob"]
     }
     actions {
       base_blob {

@@ -52,3 +52,5 @@ variable "shared_subscription_id" {
 variable "sinnet_k8s_host" {}
 variable "sinnet_k8s_token" {}
 
+variable "onlex_sinnet_azdo_service_url" {}
+variable "onlex_sinnet_azdo_personal_token" {}

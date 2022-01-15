@@ -37,6 +37,7 @@ module "sinnetk8s" {
   docker_registry_username            = data.azurerm_container_registry.sinnet.admin_username
   docker_registry_password            = data.azurerm_container_registry.sinnet.admin_password
   docker_registry_server              = data.azurerm_container_registry.sinnet.login_server
+  namespace_name_system = "onlex-sinnet-prod"
 }
 
 module "keyvault" {
@@ -57,8 +58,15 @@ module "database" {
 }
 
 module "storage_account" {
-  source               = "./module_storage_account"
-  environment_name     = var.environment_name
-  resource_group       = module.resourcegroup.resourcegroup
-  application_name     = var.application_name
+  source           = "./module_storage_account"
+  environment_name = var.environment_name
+  resource_group   = module.resourcegroup.resourcegroup
+  application_name = var.application_name
+}
+
+module "azdo" {
+  source         = "./module_azdo"
+  namespace_name_system = "onlex-sinnet-prod"
+  namespace_name = module.sinnetk8s.namespace_name
+  devops-cluster-svc-data = module.sinnetk8s.devops-cluster-svc-data
 }

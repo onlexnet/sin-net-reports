@@ -19,4 +19,6 @@ variable "docker_registry_username" {}
 variable "docker_registry_password" {}
 variable "docker_registry_server" {}
 
+variable "namespace_name_system" {}
+
 
