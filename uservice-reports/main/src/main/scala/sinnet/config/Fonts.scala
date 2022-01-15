@@ -28,4 +28,9 @@ object Fonts {
     baseFont.setSize(fontSize)
     baseFont
   }
+
+  def adjust(base: Font, sizeAdjustment: Option[Int]) = sizeAdjustment match {
+    case Some(delta) => new Font(base.getBaseFont(), base.getSize() + delta)
+    case None => base
+  }
 }

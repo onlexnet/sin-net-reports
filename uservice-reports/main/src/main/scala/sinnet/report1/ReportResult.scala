@@ -35,6 +35,8 @@ import javax.inject.Inject
 
 import sinnet.reports._
 import sinnet.config.Fonts
+import com.lowagie.text.Phrase
+import com.lowagie.text.Chunk
 
 object ReportResult {
 
@@ -53,20 +55,23 @@ object ReportResult {
 
       document.open()
 
-      val header = s"$customerName, $customerCity ul. $customerAddress"
-      val headParam = new Paragraph(header, myFont)
+      val headParam = new Paragraph();
+      headParam.add(new Chunk(customerName, myFontBold))
+      val header = s", $customerCity ul. $customerAddress"
+      headParam.add(new Chunk(header, myFont))
+      document.add(headParam)
 
       val newLineParagraph = new Paragraph("\n")
-      document.add(headParam)
       document.add(newLineParagraph)
 
-      def addLine(table: PdfPTable)(isFooter: Boolean, v: CellParams*): Unit = {
+      def addLine(table: PdfPTable)(footerOrHeader: Boolean, v: CellParams*): Unit = {
         for (it <- v) {
-          val font = if (!isFooter) myFont else myFontBold
+          val font = (if (!footerOrHeader) myFont else myFontBold)
+          var adjustedFont = Fonts.adjust(font, it.sizeAdjustment)
+          val p = new Paragraph(it.text, adjustedFont)
           
-          val p = new Paragraph(it.text, font)
           var cell = new PdfPCell(p)
-          if (isFooter) {
+          if (footerOrHeader) {
             cell.setBorderWidth(0)
           }
           cell.setHorizontalAlignment(it.alignment.getId())
@@ -112,11 +117,11 @@ object ReportResult {
     def +(that: TableColumn) = new TableColumn(this.width + that.width)
   }
   object TableColumns {
-    def Col1widthServiceman = new TableColumn(3)
-    def Col2widthDay = new TableColumn(3)
-    def Col3widthDescription = new TableColumn(12)
-    def Col4widthDuration = new TableColumn(2)
-    def Col5widthDistance = new TableColumn(2)
+    def Col1widthServiceman = new TableColumn(50)
+    def Col2widthDay = new TableColumn(25)
+    def Col3widthDescription = new TableColumn(120)
+    def Col4widthDuration = new TableColumn(15)
+    def Col5widthDistance = new TableColumn(15)
     def width = Col1widthServiceman.width +
                 Col2widthDay.width +
                 Col3widthDescription.width +
@@ -124,7 +129,7 @@ object ReportResult {
                 Col5widthDistance.width
   }
 
-  case class CellParams(text: String, width: TableColumn, alignment: HorizontalAlignment)
+  case class CellParams(text: String, width: TableColumn, alignment: HorizontalAlignment, sizeAdjustment: Option[Int] = None)
 
   private def newTable(): PdfPTable = {
     val table = new PdfPTable(TableColumns.width)
@@ -141,6 +146,9 @@ object ReportResult {
       case None       => "-"
     }
 
+  // Serviceman has sometimes too long name to fit to one line, so minimizing font fits to todays data
+  val servicemanNameSizeAdjustment = Some(-4)
+
   private def asTable(addValue: (Boolean, CellParams*) => Unit, activities: Seq[ActivityDetails]): Unit = {
 
     addValue(false,
@@ -155,9 +163,9 @@ object ReportResult {
       var distance = item.howFarInKms
       var who = item.who
       addValue(false,
-        new CellParams(who, TableColumns.Col1widthServiceman, HorizontalAlignment.LEFT),
-        new CellParams(item.when, TableColumns.Col2widthDay, HorizontalAlignment.LEFT),
-        new CellParams(item.description, TableColumns.Col3widthDescription, HorizontalAlignment.LEFT),
+        new CellParams(who, TableColumns.Col1widthServiceman, HorizontalAlignment.LEFT, servicemanNameSizeAdjustment),
+        new CellParams(item.when, TableColumns.Col2widthDay, HorizontalAlignment.CENTER),
+        new CellParams(item.description, TableColumns.Col3widthDescription, HorizontalAlignment.CENTER),
         new CellParams(howLong.asString, TableColumns.Col4widthDuration, HorizontalAlignment.RIGHT),
         new CellParams(distance.toString(), TableColumns.Col5widthDistance, HorizontalAlignment.RIGHT))
     }
@@ -178,24 +186,31 @@ object ReportResult {
 
     val col1 = TableColumns.Col1widthServiceman
     val col2 = TableColumns.Col2widthDay
-    val col3 = TableColumns.Col3widthDescription + TableColumns.Col4widthDuration
-    val col4 = TableColumns.Col5widthDistance
+    val col3 = TableColumns.Col3widthDescription
+    val col4 = TableColumns.Col4widthDuration
+    val col5 = TableColumns.Col5widthDistance
+    val cols = col1 + col2 + col3 + col4 + col5
+
+    addValue(true,
+        new CellParams("USŁUGI DODATKOWE", cols, HorizontalAlignment.LEFT))
 
     addValue(false,
         new CellParams("Serwisant", col1, HorizontalAlignment.CENTER),
         new CellParams("Dzień", col2, HorizontalAlignment.CENTER),
         new CellParams("Praca wykonana", col3, HorizontalAlignment.CENTER),
-        new CellParams("KM", col4, HorizontalAlignment.RIGHT))
+        new CellParams("Czas", col4, HorizontalAlignment.CENTER),
+        new CellParams("KM", col5, HorizontalAlignment.RIGHT))
 
     for (item <- activities) {
       val howLong = item.howLongInMins
       var distance = item.howFarInKms
       var who = item.who
       addValue(false,
-        new CellParams(who, col1, HorizontalAlignment.LEFT),
-        new CellParams(item.when, col2, HorizontalAlignment.LEFT),
-        new CellParams(item.description, col3, HorizontalAlignment.LEFT),
-        new CellParams(distance.toString(), col4, HorizontalAlignment.RIGHT))
+        new CellParams(who, col1, HorizontalAlignment.LEFT, servicemanNameSizeAdjustment),
+        new CellParams(item.when, col2, HorizontalAlignment.CENTER),
+        new CellParams(item.description, col3, HorizontalAlignment.CENTER),
+        new CellParams("0:00", col4, HorizontalAlignment.RIGHT),
+        new CellParams(distance.toString(), col5, HorizontalAlignment.RIGHT))
     }
 
     val initialAcc = Kilometers(0)
@@ -205,7 +220,8 @@ object ReportResult {
       new CellParams(null, col1, HorizontalAlignment.LEFT),
       new CellParams(null, col2, HorizontalAlignment.LEFT),
       new CellParams("Suma", col3, HorizontalAlignment.RIGHT),
-      new CellParams(howFar.toString(), col4, HorizontalAlignment.RIGHT))
+      new CellParams("0:00", col4, HorizontalAlignment.RIGHT),
+      new CellParams(howFar.toString(), col5, HorizontalAlignment.RIGHT))
 
   }
 }
