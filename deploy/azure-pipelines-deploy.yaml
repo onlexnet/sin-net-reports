@@ -84,9 +84,9 @@ stages:
                   displayName: Helm install
                   inputs:
                     kubernetesServiceEndpoint: onlex-sinnet-prd01
+                    namespace: onlex-sinnet-prd01
                     command: upgrade
                     install: true
                     chartName: $(Pipeline.Workspace)/helm_CI/chart/$(var_chart_file_name)
                     arguments: -f $(Pipeline.Workspace)/helm_CI/chart/config.yaml
                     releaseName: sinnet-reports
-                    namespace: onlex-sinnet-prd01

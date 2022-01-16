@@ -8,3 +8,5 @@ variable "sinnet_k8s_token" {}
 variable "sinnet_prod_subscription_id" {}
 variable "onlexnet_sinnet_prd01_subscription_id" {}
 
+variable "onlex_sinnet_azdo_personal_token" {}
+variable "onlex_sinnet_azdo_service_url" {}
