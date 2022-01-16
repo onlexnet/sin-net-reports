@@ -24,11 +24,7 @@ interface Props extends PropsFromRedux {
 
 const ViewLocal: React.FC<Props> = (props) => {
 
-  useEffect(() => {
-
-  }, []);
-
-  var client = apolloClientFactory(props.idToken);
+  const client = apolloClientFactory(props.idToken);
 
   return (
     <ApolloProvider client={client}>

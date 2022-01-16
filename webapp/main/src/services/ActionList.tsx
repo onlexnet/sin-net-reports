@@ -159,7 +159,7 @@ const ConnectedContent: React.FC<PropsFromRedux> = props => {
     refetch();
   }
 
-  const [onlyMyData, setOnlyMyData] = useState(false);
+  const [onlyMyData, setOnlyMyData] = useState(true);
   const filterByOnlyMyData = (item: ServiceListModel): boolean => {
     if (!onlyMyData) return true;
     if (item.servicemanName === props.currentEmail) return true;
@@ -240,14 +240,14 @@ const ConnectedContent: React.FC<PropsFromRedux> = props => {
             <Toggle
               label="Tylko moje dane"
               checked={onlyMyData}
-              onChange={(e, v) => setOnlyMyData(v ?? false)}
+              onChange={(e, v) => setOnlyMyData(v ?? true)}
               onText="Tylko moje"
               offText="Wszystkie"
               styles={controlStyles}
             />
             <TextField label="Tylko dzień:" value={onlyDay} onChange={(e, v) => setOnlyDay(v)} styles={controlStyles} />
             <TextField label="Kontrahent:" styles={controlStyles} value={onlyCustomer} onChange={(e, v) => setOnlyCustomer(v)} />
-            <TextField disabled label="Suma godzin" value={totalTime()} />
+            <TextField readOnly label="Suma godzin" value={totalTime()} />
         </Stack>
       </Stack.Item>
       <Stack.Item verticalFill>
