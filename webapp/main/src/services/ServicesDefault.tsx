@@ -22,10 +22,6 @@ interface MainProps extends PropsFromRedux, RouteComponentProps {
 
 const MainView: React.FC<MainProps> = (props) => {
 
-  const openInNewTab = (url: string) => {
-    window.open(url, '_blank');
-  }
-
   return (
     <Stack styles={{
       root: { width: "100%", height: "100%" }

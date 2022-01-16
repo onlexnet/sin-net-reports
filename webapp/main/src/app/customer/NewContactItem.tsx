@@ -27,14 +27,16 @@ export const NewContactItem: React.FC<NewContactItemProps> = props => {
         }
     }
     
+    const extendedWidth = { minWidth: "300px" }
+
     return (<div className="ms-Grid-row">
         <div className="ms-Grid-col ms-smPush1">
             <Stack tokens={stackTokens}>
                 <Stack horizontal tokens={stackTokens}>
-                    <TextField placeholder="Imię" value={firstName} onChange={handler((m, v) => m.firstName = v)} />
-                    <TextField placeholder="Nazwisko" value={lastName} onChange={handler((m, v) => m.lastName = v)} />
-                    <TextField placeholder="Nr telefonu" value={phoneNo} onChange={handler((m, v) => m.phoneNo = v)} />
-                    <TextField placeholder="email" value={email} onChange={handler((m, v) => m.email = v)} />
+                    <TextField style={extendedWidth} placeholder="Imię" value={firstName} onChange={handler((m, v) => m.firstName = v)} />
+                    <TextField style={extendedWidth} placeholder="Nazwisko" value={lastName} onChange={handler((m, v) => m.lastName = v)} />
+                    <TextField style={extendedWidth} placeholder="Nr telefonu" value={phoneNo} onChange={handler((m, v) => m.phoneNo = v)} />
+                    <TextField style={extendedWidth} placeholder="email" value={email} onChange={handler((m, v) => m.email = v)} />
                     <DefaultButton text="Usuń" onClick={() => props.onRemove(localKey)} />
                 </Stack>
             </Stack>
