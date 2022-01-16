@@ -247,7 +247,7 @@ const ConnectedContent: React.FC<PropsFromRedux> = props => {
             />
             <TextField label="Tylko dzień:" value={onlyDay} onChange={(e, v) => setOnlyDay(v)} styles={controlStyles} />
             <TextField label="Kontrahent:" styles={controlStyles} value={onlyCustomer} onChange={(e, v) => setOnlyCustomer(v)} />
-            <TextField disabled label="Suma godzin" value={totalTime()} />
+            <TextField readOnly label="Suma godzin" value={totalTime()} />
         </Stack>
       </Stack.Item>
       <Stack.Item verticalFill>
