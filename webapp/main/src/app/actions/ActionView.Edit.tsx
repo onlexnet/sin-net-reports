@@ -91,7 +91,6 @@ export const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
     const defaultCustomerId = item?.customer?.id.entityId;
     const [customerId, setCustomerId] = useState(defaultCustomerId);
     const onChangeCustomerId = (id: string | undefined) => {
-        console.log('onChangeCustomerId ' + Date())
         setCustomerId(id);
     };
 
@@ -276,10 +275,9 @@ export const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
                         <div className="ms-Grid-row">
                             <div className="ms-Grid-col ms-sm12">
                                 <Stack horizontal tokens={stackTokens}>
-                                    <PrimaryButton disabled={updateActionInProgress} text="Aktualizuj"
+                                    <PrimaryButton disabled={updateActionInProgress || (customerId === undefined)} text="Aktualizuj"
                                         onClick={() => {
                                             updateAction();
-                                            // cancelEdit();
                                         }} />
                                     <DefaultButton onClick={() => cancelEdit()} text="Wyjdź" />
                                     <DefaultButton text="Usuń i wyjdź" disabled={updateActionInProgress || removeConfirmed} styles={btnStyles} onClick={removeAndExit1} />
