@@ -36,20 +36,20 @@ export const ReportsView: React.FC<ReportsViewProps> = props => {
             disabled={fromYear == null || fromMonth == null}
             onClick={() => { openInNewTab(addressProvider().host + `/api/raporty/klienci/${projectId}/${fromYear}/${fromMonth}`); }}
           >
-            Raport miesięczny (na datę OD)
+            Raport miesięczny - załączniki do faktur
           </Link>
 
 
           <Link onClick={() => {
             openInNewTab(addressProvider().host + `/api/raporty/2/${projectId}?yearFrom=${fromYear}&monthFrom=${fromMonth}&yearTo=${toYear}&monthTo=${toMonth}`);
           }}>
-            Zestawienie sumaryczne (na okres OD - DO)
+            Zestawienie sumaryczne godzin
           </Link>
 
           <Link onClick={() => {
             openInNewTab(addressProvider().host + `/api/raporty/3/${projectId}`);
           }}>
-            Lista klientów wg przypisania do operatorów
+            Lista klientów przypisanych do operatorów
           </Link>
 
 

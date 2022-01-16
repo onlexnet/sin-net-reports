@@ -33,14 +33,16 @@ export const UserPasswordItem: React.FC<UserPasswordItemProps> = props => {
         }
     }
 
+    const extendedWidth = { minWidth: "300px" }
+
     return (
         <div className="ms-Grid-row">
             <div className="ms-Grid-col ms-smPush1">
                 <Separator alignContent="start">{sectionName}</Separator>
                 <Stack tokens={stackTokens}>
                     <Stack horizontal tokens={stackTokens}>
-                        <TextField placeholder="Użytkownik" value={username} onChange={handler((m, v) => m.username = v)} />
-                        <TextField placeholder="Hasło" value={password} onChange={handler((m, v) => m.password = v)} />
+                        <TextField style={extendedWidth} placeholder="Użytkownik" value={username} onChange={handler((m, v) => m.username = v)} />
+                        <TextField style={extendedWidth} placeholder="Hasło" value={password} onChange={handler((m, v) => m.password = v)} />
                         <DefaultButton text="Usuń" onClick={() => props.onRemove(props.model.localKey)} />
                     </Stack>
                     <Stack horizontal tokens={stackTokens}>
