@@ -100,6 +100,9 @@ type PropsFromRedux = ConnectedProps<typeof connector>
 
 const ConnectedContent: React.FC<PropsFromRedux> = props => {
 
+  const [dateSorted, setDateSorted] = useState(true);
+  const [dateSortedDescending, setDateSortedDescending] = useState(true);
+
   const initialColumns: TypedColumn[] = [
     {
       key: "column4", name: "Pracownik", fieldName: "servicemanName", minWidth: 70, maxWidth: 90, isResizable: true, isCollapsible: true, data: "string",
@@ -111,6 +114,9 @@ const ConnectedContent: React.FC<PropsFromRedux> = props => {
     {
       key: "column3", name: "Data", fieldName: "when", minWidth: 70, maxWidth: 90, isResizable: true,
       data: "date",
+      isSorted: dateSorted,
+      isSortedDescending: dateSortedDescending,
+      onColumnClick: () => { setDateSortedDescending(!dateSortedDescending) },
       onRender: (item: IDocument) => {
         return <LocalDateView item={item.when} />
       },
@@ -136,8 +142,6 @@ const ConnectedContent: React.FC<PropsFromRedux> = props => {
       }
     }
   ];
-
-  const announcedMessage = "";
 
   const [lastTouchedActionId, setlastTouchedActionId] = useState(props.lastTouchedActionId);
 
@@ -181,15 +185,17 @@ const ConnectedContent: React.FC<PropsFromRedux> = props => {
     return false;
   }
 
-  var itemsOrderBy: (keyof IDocument)[] = ['servicemanName', 'when', 'entityId'];
   var items: ServiceListModel[] = _.chain(data?.Actions.search.items)
     .map(it => toActionModel(it))
     .map(it => toLocalModel(it))
     .filter(it => filterByOnlyMyData(it))
     .filter(it => filterByOnlyDay(it))
     .filter(it => filterByOnlyCustomer(it))
-    .orderBy(itemsOrderBy)
     .value();
+  items.sort((i1, i2) => ('' + i1.customerName).localeCompare('' + i2.customerName));
+  if (!dateSortedDescending) items.sort((i1, i2) => i1.when.day - i2.when.day);
+  if (dateSortedDescending) items.sort((i1, i2) => i2.when.day - i1.when.day);
+
   const fold = (reducer: (acc: number, it: number) => number, init: number, xs: number[]) => {
     let acc = init;
     for (const x of xs) {
