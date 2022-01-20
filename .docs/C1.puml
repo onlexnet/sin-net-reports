@@ -3,10 +3,16 @@
 
 Person(doerAlias, "Doer", "Person who evidence already done activities.")
 System(systemAlias, "SinNet Reports", "https://raport.sin.net.pl")
+System(devopsAlias, "Azure DevOps")
+System(githubAlias, "GitHub")
 Rel(doerAlias, systemAlias, "Evidence activities")
 
-' Container(containerAlias, "Label", "Technology", "Optional Description")
-' Container(WebApp, "WebApp", "React,Docker", "Default UI for application functionality")
+Container(ReportContainer, "Reports uservice", "Quarkus, Docker, PDF creation, gRpc")
+Container(WebAppContainer, "WebApp uservice", "React,Docker", "Default UI for application functionality")
+Container(DevOpsCI, "CI", "React,Docker", "Default UI for application functionality")
+Container(DevOpsCD, "CD", "React,Docker", "Default UI for application functionality")
+
 
 
 @enduml
+
