@@ -1,8 +1,11 @@
 package sinnet;
 
+import org.eclipse.microprofile.graphql.Input;
+
 import lombok.Data;
 
 @Data
+@Input("CustomerInput")
 public class CustomerInput {
   private String operatorEmail;
   private String billingModel;

@@ -1,7 +1,11 @@
 type ActionsMutation {
+  newAction(
+    "ISO-8601"
+    whenProvided: Date!
+  ): SomeEntity!
   projectId: String
   remove(entityId: ID!, entityVersion: Int!): Boolean!
-  update(contant: ServiceEntryInput, entityId: ID!, entityVersion: Int!): Boolean!
+  update(content: ServiceEntryInput, entityId: ID!, entityVersion: Int!): Boolean!
 }
 
 type ActionsQuery {
@@ -75,7 +79,7 @@ type CustomerSecretEx {
 type CustomersMutation {
   remove(id: MyEntity!): Boolean
   reserve: SomeEntity!
-  save(contacts: [CustomerContactInputInput!]!, entry: CustomerInputInput!, id: MyEntity!, secrets: [CustomerSecretInputInput!]!, secretsEx: [CustomerSecretExInputInput!]!): SomeEntity
+  save(contacts: [CustomerContactInput!]!, entry: CustomerInput!, id: MyEntity!, secrets: [CustomerSecretInput!]!, secretsEx: [CustomerSecretExInput!]!): SomeEntity
 }
 
 type CustomersQuery {
@@ -100,11 +104,11 @@ type ProjectEntity {
 
 "Query root"
 type Query {
+  Actions(projectId: ID!): ActionsQuery!
+  Customers(projectId: ID!): CustomersQuery!
   Users(projectId: ID!): Users
-  actions(projectId: ID!): ActionsQuery!
   availableProjects: [ProjectEntity!]!
-  customers(projectId: ID!): CustomersQuery!
-  principal: PrincipalModel!
+  getPrincipal: PrincipalModel!
 }
 
 type ServiceModel {
@@ -140,14 +144,14 @@ type Users {
   search: [User!]!
 }
 
-input CustomerContactInputInput {
+input CustomerContactInput {
   email: String
   firstName: String
   lastName: String
   phoneNo: String
 }
 
-input CustomerInputInput {
+input CustomerInput {
   billingModel: String
   customerAddress: String
   customerCityName: String
@@ -177,7 +181,7 @@ input CustomerInputInput {
   supportStatus: String
 }
 
-input CustomerSecretExInputInput {
+input CustomerSecretExInput {
   entityCode: String
   entityName: String
   location: String!
@@ -185,7 +189,7 @@ input CustomerSecretExInputInput {
   username: String
 }
 
-input CustomerSecretInputInput {
+input CustomerSecretInput {
   location: String!
   password: String
   username: String

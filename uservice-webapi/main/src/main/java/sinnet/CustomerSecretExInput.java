@@ -1,10 +1,12 @@
 package sinnet;
 
+import org.eclipse.microprofile.graphql.Input;
 import org.eclipse.microprofile.graphql.NonNull;
 
 import lombok.Data;
 
 @Data
+@Input("CustomerSecretExInput")
 public class CustomerSecretExInput {
   private @NonNull String location;
   private String username;

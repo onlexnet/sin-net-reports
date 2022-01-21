@@ -15,7 +15,7 @@ public class ActionsMutationUpdate {
   public boolean update(@Source ActionsMutation self,
                         @NonNull @Id UUID entityId,
                         int entityVersion,
-                        ServiceEntry contant) {
+                        ServiceEntry content) {
     return false;
   }
 }

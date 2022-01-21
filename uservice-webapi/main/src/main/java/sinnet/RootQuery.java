@@ -13,7 +13,7 @@ import org.eclipse.microprofile.graphql.Query;
 @GraphQLApi
 public class RootQuery {
 
-  @Query
+  @Query("getPrincipal")
   public @NonNull PrincipalModel getPrincipal() {
     return new PrincipalModel();
   }
@@ -23,12 +23,12 @@ public class RootQuery {
     return new ProjectEntity[0];
   }
 
-  @Query
+  @Query("Customers")
   public @NonNull CustomersQuery customers(@NonNull @Id UUID projectId) {
     return new CustomersQuery(projectId);
   }
 
-  @Query
+  @Query("Actions")
   public @NonNull ActionsQuery actions(@NonNull @Id UUID projectId) {
     return new ActionsQuery(projectId);
   }

@@ -6,11 +6,12 @@ import javax.enterprise.context.ApplicationScoped;
 
 import org.eclipse.microprofile.graphql.GraphQLApi;
 import org.eclipse.microprofile.graphql.NonNull;
+import org.eclipse.microprofile.graphql.Source;
 
 @GraphQLApi
 @ApplicationScoped
 public class ActionsMutationNewAction {
-  public @NonNull Entity newAction(@NonNull LocalDate whenProvided) {
+  public @NonNull Entity newAction(@Source ActionsMutation self, @NonNull LocalDate whenProvided) {
     return null;
   }
 }
