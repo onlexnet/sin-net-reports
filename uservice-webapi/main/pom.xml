@@ -1,6 +1,5 @@
 <?xml version="1.0"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <groupId>onlex</groupId>
   <artifactId>sinnet</artifactId>
@@ -72,6 +71,27 @@
   </dependencies>
   <build>
     <plugins>
+      <plugin>
+        <!-- https://www.baeldung.com/maven-copy-files#using-the-maven-antrun-plugin -->
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>3.0.0</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <configuration>
+              <target>
+                <mkdir  dir="${basedir}/../api.graphql"/>
+                <copy todir="${basedir}/../api.graphql">
+                  <fileset dir="${basedir}/target/generated" includes="*.*" />
+                </copy>
+              </target>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
       <plugin>
         <groupId>io.smallrye</groupId>
         <artifactId>smallrye-graphql-maven-plugin</artifactId>
