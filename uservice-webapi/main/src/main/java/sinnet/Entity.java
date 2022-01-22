@@ -15,5 +15,5 @@ import lombok.Data;
 public class Entity {
   private @NonNull @Id UUID projectId;
   private @NonNull @Id UUID entityId;
-  private @NonNull @Id int entityVersion;
+  private @NonNull int entityVersion;
 }

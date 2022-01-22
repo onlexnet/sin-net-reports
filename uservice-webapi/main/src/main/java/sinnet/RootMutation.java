@@ -16,13 +16,13 @@ public class RootMutation {
 
   @Name("Customers")
   @Mutation
-  public CustomersMutation customers(@NonNull @Id UUID projectId) {
+  public @NonNull CustomersMutation customers(@NonNull @Id UUID projectId) {
     return new CustomersMutation(projectId);
   }
 
   @Name("Actions")
   @Mutation
-  public ActionsMutation actions(@NonNull @Id UUID projectId) {
+  public @NonNull ActionsMutation actions(@NonNull @Id UUID projectId) {
     return new ActionsMutation(projectId);
   }
 }

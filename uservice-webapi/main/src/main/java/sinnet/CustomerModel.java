@@ -1,5 +1,7 @@
 package sinnet;
 
+import org.eclipse.microprofile.graphql.NonNull;
+
 import lombok.Data;
 
 @Data
@@ -8,7 +10,7 @@ public class CustomerModel {
   private String billingModel;
   private String supportStatus;
   private Integer distance;
-  private String customerName;
+  private @NonNull String customerName;
   private String customerCityName;
   private String customerAddress;
   private Boolean nfzUmowa;

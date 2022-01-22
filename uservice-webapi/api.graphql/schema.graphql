@@ -32,7 +32,7 @@ type CustomerModel {
   billingModel: String
   customerAddress: String
   customerCityName: String
-  customerName: String
+  customerName: String!
   daneTechniczne: String
   distance: Int
   komercjaJest: Boolean
@@ -89,8 +89,8 @@ type CustomersQuery {
 
 "Mutation root"
 type Mutation {
-  Actions(projectId: ID!): ActionsMutation
-  Customers(projectId: ID!): CustomersMutation
+  Actions(projectId: ID!): ActionsMutation!
+  Customers(projectId: ID!): CustomersMutation!
 }
 
 type PrincipalModel {
@@ -131,7 +131,7 @@ type ServicesSearchResult {
 
 type SomeEntity {
   entityId: ID!
-  entityVersion: ID!
+  entityVersion: Int!
   projectId: ID!
 }
 
@@ -197,7 +197,7 @@ input CustomerSecretInput {
 
 input MyEntity {
   entityId: ID!
-  entityVersion: ID!
+  entityVersion: Int!
   projectId: ID!
 }
 
