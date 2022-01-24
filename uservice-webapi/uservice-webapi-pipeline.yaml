@@ -13,6 +13,7 @@ variables:
   imageName: uservice-webapi
   # Working directore for the uservice
   workingDirectory: ${{ variables.imageName }}
+  dockerTag1: abc
 
 trigger:
   batch: true
@@ -30,8 +31,8 @@ jobs:
     pool:
       vmImage: ubuntu-latest
     variables:
-      dockerTag1: $(Build.SourceBranchName)-$(Build.BuildNumber)
-      dockerImageName: $(containerRegistry)/$(imageName)
+      # dockerTag1: $(Build.SourceBranchName)-$(Build.BuildNumber)
+      dockerTag1: bcd
 
     steps:
       - bash: |
@@ -66,7 +67,7 @@ jobs:
           publishJUnitResults: false
           options: |
             -Dquarkus.container-image.build=true
-            -Dquarkus.container-image.name=$(dockerImageName)
+            -Dquarkus.container-image.name=$(imageName)
             -Dquarkus.container-image.tag=$(dockerTag1)
 
       - task: Docker@2
@@ -75,7 +76,7 @@ jobs:
         inputs:
           command: push
           containerRegistry: $(dockerRegistryServiceConnection)
-          repository: $(dockerImageName)
+          repository: $(imageName)
           tags: |
             $(dockerTag1)
 
