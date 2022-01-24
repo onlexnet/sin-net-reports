@@ -9,6 +9,7 @@ variables:
   # in Docker world, it is also part of image name (prefix)
   containerRegistry: "sinnetapps.azurecr.io"
   # image name (without tags) used to build final image
+  # also root name of the folder in the monorepo
   imageName: uservice-webapi
   # Working directore for the uservice
   workingDirectory: ${{ variables.imageName }}
@@ -24,7 +25,7 @@ trigger:
       - $[variables.workingDirectory]
 
 jobs:
-  - job: CICD
+  - job: CI
     displayName: Webapi CI/CD build
     pool:
       vmImage: ubuntu-latest
@@ -51,18 +52,22 @@ jobs:
           sqMavenPluginVersionChoice: 'latest' # Required when sonarQubeRunAnalysis == True# Options: latest, pom
           checkStyleRunAnalysis: true # We use checkstyle in coding, so let's use it with Maven as well
 
-      # - task: Docker@2
-      #   displayName: Build webapi image
-      #   inputs:
-      #     command: build
-      #     dockerfile: webapi/Dockerfile
-      #     containerRegistry: $(dockerRegistryServiceConnection)
-      #     repository: webapi
-      #     # to use inside docker variable do use version with build
-      #     # lets put them from just obtained value from .version file
-      #     arguments: --build-arg REVISION=$(my_version)
-      #     tags: |
-      #       $(Build.SourceBranchName)-$(Build.BuildNumber)
+      - task: Docker@2
+        displayName: Build uService image
+        inputs:
+          command: package
+          dockerfile: webapi/Dockerfile
+          containerRegistry: $(dockerRegistryServiceConnection)
+          repository: webapi
+          # to use inside docker variable do use version with build
+          # lets put them from just obtained value from .version file
+          arguments: |
+            -Dquarkus.container-image.build=true
+            -Dquarkus.container-image.name=$(uservice-webapi)
+            -Dquarkus.container-image.tag=$(my_version)
+
+          tags: |
+            $(Build.SourceBranchName)-$(Build.BuildNumber)
 
       # - task: Docker@2
       #   displayName: Push webapi image to docker ACR
