@@ -14,6 +14,9 @@ variables:
   # Working directore for the uservice
   workingDirectory: ${{ variables.imageName }}
   dockerTag1: abc
+  # https://docs.microsoft.com/en-us/azure/devops/pipelines/release/caching?view=azure-devops#maven
+  MAVEN_CACHE_FOLDER: $(Pipeline.Workspace)/.m2/repository
+  MAVEN_OPTS: '-Dmaven.repo.local=$(MAVEN_CACHE_FOLDER)'
 
 trigger:
   batch: true
@@ -35,6 +38,15 @@ jobs:
       dockerTag1: bcd
 
     steps:
+      - task: Cache@2
+        inputs:
+          key: 'maven | "$(Agent.OS)" | **/pom.xml'
+          restoreKeys: |
+            maven | "$(Agent.OS)"
+            maven
+          path: $(MAVEN_CACHE_FOLDER)
+        displayName: Cache Maven local repo
+
       - bash: |
           echo "##vso[task.setvariable variable=my_version]$(cat .version)"
         workingDirectory: $(workingDirectory)
@@ -51,7 +63,11 @@ jobs:
           publishJUnitResults: false
           # options:
           #  - disable log entries (a lot of entries) related to artifacts downloaded by maven
-          options: -B --no-transfer-progress
+          options: |
+            -B
+            --no-transfer-progress
+            -Xmx3072m
+            $(MAVEN_OPTS)
           sonarQubeRunAnalysis: false
           sqMavenPluginVersionChoice: 'latest' # Required when sonarQubeRunAnalysis == True# Options: latest, pom
           checkStyleRunAnalysis: true # We use checkstyle in coding, so let's use it with Maven as well
@@ -65,7 +81,7 @@ jobs:
           jdkVersionOption: '1.11'
           jdkArchitectureOption: 'x64'
           publishJUnitResults: false
-          options: |
+          options:  >-
             -Dquarkus.container-image.build=true
             -Dquarkus.container-image.name=$(imageName)
             -Dquarkus.container-image.tag=$(dockerTag1)
