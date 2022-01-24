@@ -21,7 +21,7 @@ trigger:
   paths:
     include:
       # We have to include all folders where source files are located
-      - ${{ variables.workingDirectory }}
+      - $[variables.workingDirectory]
 
 jobs:
   - job: CICD
