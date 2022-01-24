@@ -61,9 +61,7 @@ jobs:
           jdkVersionOption: '1.11'
           jdkArchitectureOption: 'x64'
           publishJUnitResults: false
-          # options:
-          #  - disable log entries (a lot of entries) related to artifacts downloaded by maven
-          options: |
+          options: >-
             -B
             --no-transfer-progress
             -Xmx3072m
@@ -81,7 +79,7 @@ jobs:
           jdkVersionOption: '1.11'
           jdkArchitectureOption: 'x64'
           publishJUnitResults: false
-          options:  >-
+          options: >-
             -Dquarkus.container-image.build=true
             -Dquarkus.container-image.name=$(imageName)
             -Dquarkus.container-image.tag=$(dockerTag1)
