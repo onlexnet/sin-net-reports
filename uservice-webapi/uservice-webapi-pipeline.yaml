@@ -31,6 +31,7 @@ jobs:
       vmImage: ubuntu-latest
     variables:
       dockerTag1: $(Build.SourceBranchName)-$(Build.BuildNumber)
+      dockerImageName: $(containerRegistry)/$(imageName)
 
     steps:
       - bash: |
@@ -65,7 +66,7 @@ jobs:
           publishJUnitResults: false
           options: |
             -Dquarkus.container-image.build=true
-            -Dquarkus.container-image.name=$(imageName)
+            -Dquarkus.container-image.name=$(dockerImageName)
             -Dquarkus.container-image.tag=$(dockerTag1)
 
       - task: Docker@2
@@ -74,7 +75,7 @@ jobs:
         inputs:
           command: push
           containerRegistry: $(dockerRegistryServiceConnection)
-          repository: $(imageName)
+          repository: $(dockerImageName)
           tags: |
             $(dockerTag1)
 
