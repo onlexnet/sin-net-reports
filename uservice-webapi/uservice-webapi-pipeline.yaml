@@ -56,7 +56,7 @@ jobs:
         displayName: 'Project compilation with Maven'
         inputs:
           mavenPomFile: '$(workingDirectory)/main/pom.xml'
-          goals: 'verify'
+          goals: 'package'
           javaHomeOption: 'JDKVersion'
           jdkVersionOption: '1.11'
           jdkArchitectureOption: 'x64'
