@@ -112,8 +112,8 @@ jobs:
         # condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
         inputs:
           command: push
-          repository: "sparta0"
+          repository: 'sparta0'
           containerRegistry: $(dockerRegistryServiceConnection)
           tags: |
-            "sparta1"
-            "sparta2"
+            'sparta1'
+            'sparta2'
