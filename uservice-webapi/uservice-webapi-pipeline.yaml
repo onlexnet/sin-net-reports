@@ -105,6 +105,32 @@ jobs:
           options: $(MAVEN_OPTS) -DskipTests -Dquarkus.container-image.build=true -Dquarkus.container-image.image=$(imageName):$(dockerTag1)
 
 
+      - task: Maven@3
+        displayName: Build uService image
+        inputs:
+          mavenPomFile: '$(workingDirectory)/main/pom.xml'
+          goals: package
+          javaHomeOption: JDKVersion
+          jdkVersionOption: '1.11'
+          jdkArchitectureOption: 'x64'
+          publishJUnitResults: false
+          # options: -Dquarkus.container-image.build=true -Dquarkus.container-image.group=$(containerRegistry) -Dquarkus.container-image.name=$(imageName) -Dquarkus.container-image.tag=$(dockerTag1)
+          # options: $(MAVEN_OPTS) -Dquarkus.container-image.build=true -Dquarkus.container-image.image=$(imageName):$(dockerTag1)
+          options: $(MAVEN_OPTS) -DskipTests -Dquarkus.container-image.build=true -Dquarkus.container-image.image=$(imageName)
+
+      - task: Maven@3
+        displayName: Build uService image
+        inputs:
+          mavenPomFile: '$(workingDirectory)/main/pom.xml'
+          goals: package
+          javaHomeOption: JDKVersion
+          jdkVersionOption: '1.11'
+          jdkArchitectureOption: 'x64'
+          publishJUnitResults: false
+          # options: -Dquarkus.container-image.build=true -Dquarkus.container-image.group=$(containerRegistry) -Dquarkus.container-image.name=$(imageName) -Dquarkus.container-image.tag=$(dockerTag1)
+          # options: $(MAVEN_OPTS) -Dquarkus.container-image.build=true -Dquarkus.container-image.image=$(imageName):$(dockerTag1)
+          options: $(MAVEN_OPTS) -DskipTests -Dquarkus.container-image.build=true -Dquarkus.container-image.image=$(imageName):$(imageName)
+
       # - task: Docker@2
       #   displayName: Push webapi image to docker ACR
       #   # condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
