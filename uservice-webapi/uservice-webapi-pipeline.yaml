@@ -52,14 +52,14 @@ jobs:
       - task: Cache@2
         displayName: Docker cache task
         inputs:
-          key: 'docker | $(Agent.OS) | $(dockerCacheName)'
+          key: 'docker | $(Agent.OS) | "$(dockerCacheName)"'
           path: $(Pipeline.Workspace)/docker
           #Variable to set to 'true' when the cache is restored
           cacheHitVar: CACHE_RESTORED
 
       - script: |
           docker load -i $(Pipeline.Workspace)/docker/cache.tar
-        displayName: Restore Docker cache step 2
+        displayName: Restore Docker cache
         condition: and(not(canceled()), eq(variables.CACHE_RESTORED, 'true'))
 
       - bash: |
@@ -104,7 +104,7 @@ jobs:
 
       - task: Docker@2
         displayName: Push webapi image to docker ACR
-        # condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
+        # condition: and(eq(variables['Build.SourceBranch'], 'refs/heads/master'),eq(variables['Build.Reason'], 'PullRequest'))
         inputs:
           command: push
           repository: $(imageName)
