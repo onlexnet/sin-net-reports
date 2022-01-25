@@ -47,6 +47,13 @@ jobs:
           path: $(MAVEN_CACHE_FOLDER)
         displayName: Cache Maven local repo
 
+      - task: Cache@2
+         isplayName: Restore Docker cache
+         inputs:
+          key: 'docker | "$(Agent.OS)" | cache'
+          path: $(Pipeline.Workspace)/docker
+          cacheHitVar: CACHE_RESTORED                #Variable to set to 'true' when the cache is restored
+
       - bash: |
           echo "##vso[task.setvariable variable=my_version]$(cat .version)"
         workingDirectory: $(workingDirectory)
@@ -83,6 +90,5 @@ jobs:
           command: push
           containerRegistry: $(dockerRegistryServiceConnection)
           repository: $(imageName)
-          tags: >-
-            $(dockerTag1)
+          tags: $(dockerTag1)
 
