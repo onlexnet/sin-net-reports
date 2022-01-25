@@ -104,7 +104,9 @@ jobs:
 
       - task: Docker@2
         displayName: Push webapi image to docker ACR
-        # condition: and(eq(variables['Build.SourceBranch'], 'refs/heads/master'),eq(variables['Build.Reason'], 'PullRequest'))
+        # https://docs.microsoft.com/en-us/azure/devops/pipelines/process/expressions?view=azure-devops
+        # https://docs.microsoft.com/en-us/azure/devops/pipelines/build/variables?view=azure-devops&tabs=yaml#build-variables-devops-services
+        condition: and(eq(variables['Build.SourceBranch'], 'refs/heads/master'), ne(variables['Build.Reason'], 'PullRequest'))
         inputs:
           command: push
           repository: $(imageName)
