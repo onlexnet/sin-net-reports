@@ -115,7 +115,6 @@ jobs:
         inputs:
           command: push
           containerRegistry: $(dockerRegistryServiceConnection)
-
           repository: $(imageName)
           tags: |
             $(dockerTag1)
