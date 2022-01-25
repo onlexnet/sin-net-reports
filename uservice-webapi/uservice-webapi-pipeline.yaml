@@ -35,8 +35,7 @@ jobs:
     pool:
       vmImage: ubuntu-latest
     variables:
-      # dockerTag1: $(Build.SourceBranchName)-$(Build.BuildNumber)
-      dockerTag1: $(Build.BuildNumber)
+      dockerTag1: $(Build.SourceBranchName)-$(Build.BuildNumber)
 
     steps:
       - task: Cache@2
@@ -111,6 +110,7 @@ jobs:
           containerRegistry: $(dockerRegistryServiceConnection)
           repository: $(imageName)
           tags: |
+            latest
             $(dockerTag1)
 
       - script: |
