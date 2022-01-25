@@ -111,6 +111,7 @@ jobs:
           repository: $(imageName)
           tags: |
             $(dockerTag1)
+            $(imageName)
 
       - script: |
           mkdir -p $(Pipeline.Workspace)/docker
