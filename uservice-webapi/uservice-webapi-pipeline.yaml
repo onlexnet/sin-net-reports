@@ -35,7 +35,8 @@ jobs:
     pool:
       vmImage: ubuntu-latest
     variables:
-      dockerTag1: $(Build.SourceBranchName)-$(Build.BuildNumber)
+      dockerTag0: $(Build.SourceBranchName)-$(Build.BuildNumber)
+      dockerTag1: latest
 
     steps:
       - task: Cache@2
@@ -92,7 +93,14 @@ jobs:
           # options: $(MAVEN_OPTS) -DskipTests -Dquarkus.container-image.build=true -Dquarkus.container-image.image=$(containerRegistry)/$(imageName):$(dockerTag1)
           # options: $(MAVEN_OPTS) -DskipTests -Dquarkus.container-image.build=true -Dquarkus.container-image.image=$(containerRegistry)/$(imageName)
           # options: $(MAVEN_OPTS) -DskipTests -Dquarkus.container-image.build=true -Dquarkus.container-image.image=$(containerRegistry)/$(imageName):$(imageName)
-          options: $(MAVEN_OPTS) -DskipTests -Dquarkus.container-image.build=true -Dquarkus.container-image.image=$(containerRegistry)/$(imageName):$(dockerTag1)
+          options: >-
+            $(MAVEN_OPTS)
+            -DskipTests
+            quarkus.container-image.build=true
+            -Dquarkus.container-image.group=$(containerRegistry)
+            -Dquarkus.container-image.name=$(imageName)
+            -Dquarkus.container-image.tag=$(dockerTag0)
+            -Dquarkus.container-image.additional-tags=$(dockerTag1)
 
       - task: Docker@2
         displayName: Push webapi image to docker ACR
