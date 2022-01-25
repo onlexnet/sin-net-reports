@@ -48,7 +48,7 @@ jobs:
         displayName: Cache Maven local repo
 
       - task: Cache@2
-        isplayName: Restore Docker cache
+        displayName: Restore Docker cache
         inputs:
           key: 'docker | "$(Agent.OS)" | cache'
           path: $(Pipeline.Workspace)/docker
