@@ -110,4 +110,3 @@ jobs:
           command: push
           arguments: $(containerRegistry)/$(imageName):$(dockerTag1)
           containerRegistry: $(dockerRegistryServiceConnection)
-          repository: $(imageName)
