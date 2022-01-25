@@ -89,7 +89,8 @@ jobs:
           jdkArchitectureOption: 'x64'
           publishJUnitResults: false
           # options: -Dquarkus.container-image.build=true -Dquarkus.container-image.group=$(containerRegistry) -Dquarkus.container-image.name=$(imageName) -Dquarkus.container-image.tag=$(dockerTag1)
-          options: $(MAVEN_OPTS) -Dquarkus.container-image.build=true -Dquarkus.container-image.image=$(imageName):$(dockerTag1)
+          # options: $(MAVEN_OPTS) -Dquarkus.container-image.build=true -Dquarkus.container-image.image=$(imageName):$(dockerTag1)
+          options: $(MAVEN_OPTS) -Dquarkus.container-image.build=true -Dquarkus.container-image.image=$(imageName):$(imageName)
 
       # - task: Docker@2
       #   displayName: Push webapi image to docker ACR
@@ -111,7 +112,6 @@ jobs:
           repository: $(imageName)
           tags: |
             $(dockerTag1)
-            $(imageName)
 
       - script: |
           mkdir -p $(Pipeline.Workspace)/docker
