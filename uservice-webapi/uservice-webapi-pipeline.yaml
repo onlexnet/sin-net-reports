@@ -102,7 +102,7 @@ jobs:
           publishJUnitResults: false
           # options: -Dquarkus.container-image.build=true -Dquarkus.container-image.group=$(containerRegistry) -Dquarkus.container-image.name=$(imageName) -Dquarkus.container-image.tag=$(dockerTag1)
           # options: $(MAVEN_OPTS) -Dquarkus.container-image.build=true -Dquarkus.container-image.image=$(imageName):$(dockerTag1)
-          options: $(MAVEN_OPTS) -DskipTests -Dquarkus.container-image.build=true -Dquarkus.container-image.image=$(imageName):$(dockerTag1)
+          options: $(MAVEN_OPTS) -DskipTests -Dquarkus.container-image.build=true -Dquarkus.container-image.image=$(containerRegistry)/$(imageName):$(dockerTag1)
 
 
       - task: Maven@3
@@ -116,7 +116,7 @@ jobs:
           publishJUnitResults: false
           # options: -Dquarkus.container-image.build=true -Dquarkus.container-image.group=$(containerRegistry) -Dquarkus.container-image.name=$(imageName) -Dquarkus.container-image.tag=$(dockerTag1)
           # options: $(MAVEN_OPTS) -Dquarkus.container-image.build=true -Dquarkus.container-image.image=$(imageName):$(dockerTag1)
-          options: $(MAVEN_OPTS) -DskipTests -Dquarkus.container-image.build=true -Dquarkus.container-image.image=$(imageName)
+          options: $(MAVEN_OPTS) -DskipTests -Dquarkus.container-image.build=true -Dquarkus.container-image.image=$(containerRegistry)/$(imageName)
 
       - task: Maven@3
         displayName: Build uService image
