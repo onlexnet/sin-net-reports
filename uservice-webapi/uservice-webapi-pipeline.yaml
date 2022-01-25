@@ -107,7 +107,8 @@ jobs:
         # condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
         inputs:
           command: push
-          arguments: $(imageName):$(dockerTag1)
+          repository: $(imageName) 
+          tags: $(dockerTag1)
           containerRegistry: $(dockerRegistryServiceConnection)
 
       - script: |
