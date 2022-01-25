@@ -7,7 +7,7 @@ variables:
   dockerRegistryServiceConnection: "sinnet-acr"
   # name of the registry where the image is hosted on.
   # in Docker world, it is also part of image name (prefix)
-  containerRegistry: "sinnet.azurecr.io"
+  containerRegistryName: "sinnet.azurecr.io"
   # image name (without tags) used to build final image
   # also root name of the folder in the monorepo
   imageName: uservice-webapi
@@ -52,7 +52,7 @@ jobs:
       - task: Cache@2
         displayName: Docker cache task
         inputs:
-          key: 'docker | "$(Agent.OS)" | "$(dockerCacheName)"'
+          key: 'docker | $(Agent.OS) | $(dockerCacheName)'
           path: $(Pipeline.Workspace)/docker
           #Variable to set to 'true' when the cache is restored
           cacheHitVar: CACHE_RESTORED
@@ -76,7 +76,11 @@ jobs:
           jdkVersionOption: '1.11'
           jdkArchitectureOption: 'x64'
           publishJUnitResults: false
-          options: -B --no-transfer-progress $(MAVEN_OPTS)
+          options: >
+            $(MAVEN_OPTS)
+            -B
+            --no-transfer-progress
+            -Drevision=$(my_version)
           sonarQubeRunAnalysis: false
           checkStyleRunAnalysis: true # We use checkstyle in coding, so let's use it with Maven as well
 
@@ -89,16 +93,11 @@ jobs:
           jdkVersionOption: '1.11'
           jdkArchitectureOption: 'x64'
           publishJUnitResults: false
-          # options: -Dquarkus.container-image.build=true -Dquarkus.container-image.group=$(containerRegistry) -Dquarkus.container-image.name=$(imageName) -Dquarkus.container-image.tag=$(dockerTag1)
-          # options: $(MAVEN_OPTS) -Dquarkus.container-image.build=true -Dquarkus.container-image.image=$(imageName):$(dockerTag1)
-          # options: $(MAVEN_OPTS) -DskipTests -Dquarkus.container-image.build=true -Dquarkus.container-image.image=$(containerRegistry)/$(imageName):$(dockerTag1)
-          # options: $(MAVEN_OPTS) -DskipTests -Dquarkus.container-image.build=true -Dquarkus.container-image.image=$(containerRegistry)/$(imageName)
-          # options: $(MAVEN_OPTS) -DskipTests -Dquarkus.container-image.build=true -Dquarkus.container-image.image=$(containerRegistry)/$(imageName):$(imageName)
           options: >
             $(MAVEN_OPTS)
             -DskipTests
             -Dquarkus.container-image.build=true
-            -Dquarkus.container-image.group=$(containerRegistry)
+            -Dquarkus.container-image.group=$(containerRegistryName)
             -Dquarkus.container-image.name=$(imageName)
             -Dquarkus.container-image.tag=$(dockerTag0)
             -Dquarkus.container-image.additional-tags=$(dockerTag1)
@@ -116,7 +115,7 @@ jobs:
 
       - script: |
           mkdir -p $(Pipeline.Workspace)/docker
-          docker save -o $(Pipeline.Workspace)/docker/cache.tar $(containerRegistry)/$(imageName):$(dockerTag0)
+          docker save -o $(Pipeline.Workspace)/docker/cache.tar $(containerRegistryName)/$(imageName):$(dockerTag0)
         displayName: Docker save
         # condition: and(not(canceled()), or(failed(), ne(variables.CACHE_RESTORED, 'true')))
         condition: and(not(canceled()), not(failed()))
