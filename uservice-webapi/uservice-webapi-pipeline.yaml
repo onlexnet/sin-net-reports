@@ -87,7 +87,8 @@ jobs:
           jdkVersionOption: '1.11'
           jdkArchitectureOption: 'x64'
           publishJUnitResults: false
-          options: -Dquarkus.container-image.build=true -Dquarkus.container-image.group=$(containerRegistry) -Dquarkus.container-image.name=$(imageName) -Dquarkus.container-image.tag=$(dockerTag1)
+          # options: -Dquarkus.container-image.build=true -Dquarkus.container-image.group=$(containerRegistry) -Dquarkus.container-image.name=$(imageName) -Dquarkus.container-image.tag=$(dockerTag1)
+          options: -Dquarkus.container-image.build=true -Dquarkus.container-image.name=$(imageName) -Dquarkus.container-image.tag=$(dockerTag1)
 
       - script: |
           mkdir -p $(Pipeline.Workspace)/docker
@@ -114,6 +115,7 @@ jobs:
         inputs:
           command: push
           containerRegistry: $(dockerRegistryServiceConnection)
+
           repository: $(imageName)
           tags: |
             $(dockerTag1)
