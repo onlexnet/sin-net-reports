@@ -107,11 +107,8 @@ jobs:
         # condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
         inputs:
           command: push
+          arguments: $(imageName)/$(dockerTag1)
           containerRegistry: $(dockerRegistryServiceConnection)
-          repository: $(imageName)
-          tags: |
-            latest
-            $(dockerTag1)
 
       - script: |
           mkdir -p $(Pipeline.Workspace)/docker
