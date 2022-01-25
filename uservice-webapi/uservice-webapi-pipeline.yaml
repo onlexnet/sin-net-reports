@@ -89,7 +89,7 @@ jobs:
 
       - script: |
           mkdir -p $(Pipeline.Workspace)/docker
-          docker save -o $(Pipeline.Workspace)/docker/cache.tar cache
+          docker save -o $(Pipeline.Workspace)/docker/cache.tar $(imageName)
         displayName: Docker save
         condition: and(not(canceled()), or(failed(), ne(variables.CACHE_RESTORED, 'true')))
 
