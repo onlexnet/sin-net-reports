@@ -103,3 +103,18 @@ jobs:
           repository: $(imageName)
           tags: $(dockerTag1)
 
+
+      - task: Docker@2
+        displayName: D1
+        inputs:
+          command: push
+          containerRegistry: $(dockerRegistryServiceConnection)
+          repository: $(containerRegistry)/$(imageName)
+          tags: $(dockerTag1)
+
+      - task: Docker@2
+        displayName: D2
+        inputs:
+          command: push
+          containerRegistry: $(dockerRegistryServiceConnection)
+          repository: $(containerRegistry)/$(imageName):$(dockerTag1)
