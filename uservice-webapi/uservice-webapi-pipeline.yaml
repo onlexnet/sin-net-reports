@@ -35,8 +35,7 @@ jobs:
     pool:
       vmImage: ubuntu-latest
     variables:
-      # dockerTag1: $(Build.SourceBranchName)-$(Build.BuildNumber)
-      dockerTag1: bcd
+      dockerTag1: $(Build.SourceBranchName)-$(Build.BuildNumber)
 
     steps:
       - task: Cache@2
@@ -64,7 +63,6 @@ jobs:
           publishJUnitResults: false
           options: -B --no-transfer-progress $(MAVEN_OPTS)
           sonarQubeRunAnalysis: false
-          sqMavenPluginVersionChoice: 'latest' # Required when sonarQubeRunAnalysis == True# Options: latest, pom
           checkStyleRunAnalysis: true # We use checkstyle in coding, so let's use it with Maven as well
 
       - task: Maven@3
@@ -85,6 +83,6 @@ jobs:
           command: push
           containerRegistry: $(dockerRegistryServiceConnection)
           repository: $(imageName)
-          tags: |
+          tags: >-
             $(dockerTag1)
 
