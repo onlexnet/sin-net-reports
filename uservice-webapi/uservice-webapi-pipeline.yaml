@@ -13,7 +13,6 @@ variables:
   imageName: uservice-webapi
   # Working directore for the uservice
   workingDirectory: ${{ variables.imageName }}
-  dockerTag1: abc
   # https://docs.microsoft.com/en-us/azure/devops/pipelines/release/caching?view=azure-devops#maven
   MAVEN_CACHE_FOLDER: $(Pipeline.Workspace)/.m2/repository
   MAVEN_OPTS: '-Dmaven.repo.local=$(MAVEN_CACHE_FOLDER)'
@@ -49,11 +48,13 @@ jobs:
         displayName: Cache Maven local repo
 
       - task: Cache@2
-        displayName: Restore Docker cache step 1
+        displayName: Docker cache task
         inputs:
           key: 'docker | "$(Agent.OS)" | "$(dockerCacheName)"'
           path: $(Pipeline.Workspace)/docker
-          cacheHitVar: CACHE_RESTORED                #Variable to set to 'true' when the cache is restored
+          #Variable to set to 'true' when the cache is restored
+          cacheHitVar: CACHE_RESTORED
+
       - script: |
           docker load -i $(Pipeline.Workspace)/docker/cache.tar
         displayName: Restore Docker cache step 2
@@ -100,5 +101,8 @@ jobs:
         # condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
         inputs:
           command: push
-          arguments: $(containerRegistry)/$(imageName)
+          repository: $(containerRegistry)/$(imageName)
           containerRegistry: $(dockerRegistryServiceConnection)
+          tags: |
+            $(dockerTag1)
+
