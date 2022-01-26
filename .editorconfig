@@ -1,3 +1,7 @@
 [*.java]
 indent_style = space
 indent_size = 2
+
+[*.puml]
+indent_style = space
+indent_size = 2

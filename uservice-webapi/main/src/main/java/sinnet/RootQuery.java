@@ -2,8 +2,8 @@ package sinnet;
 
 import java.util.UUID;
 
-import javax.annotation.security.PermitAll;
-import javax.annotation.security.RolesAllowed;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.SecurityContext;
 
 import org.eclipse.microprofile.graphql.GraphQLApi;
 import org.eclipse.microprofile.graphql.Id;
@@ -16,6 +16,16 @@ public class RootQuery {
   @Query("getPrincipal")
   public @NonNull PrincipalModel getPrincipal() {
     return new PrincipalModel();
+  }
+
+  @Context SecurityContext ctx;
+  
+  @Query("test")
+  public @NonNull PrincipalModel test() {
+    var debugName = ctx.getAuthenticationScheme();
+    var result = new PrincipalModel();
+    result.setName(debugName);
+    return result;
   }
 
   @Query
