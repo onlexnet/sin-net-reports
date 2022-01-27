@@ -77,29 +77,14 @@
   <build>
     <plugins>
       <plugin>
-        <artifactId>maven-antrun-plugin</artifactId>
-        <version>3.0.0</version>
-        <executions>
-          <execution>
-            <phase>package</phase>
-            <goals>
-              <goal>run</goal>
-            </goals>
-            <configuration>
-              <target>
-                <mkdir dir="${basedir}/../api.graphql" />
-                <copy todir="${basedir}/../api.graphql">
-                  <fileset includes="*.*" dir="${basedir}/target/generated" />
-                </copy>
-              </target>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
         <groupId>io.smallrye</groupId>
         <artifactId>smallrye-graphql-maven-plugin</artifactId>
-        <version>1.1.2</version>
+        <version>1.4.2</version>
+        <!-- https://smallrye.io/smallrye-graphql/1.4.2/maven-plugin/ -->
+        <configuration>
+          <destination>../../api.graphql/schema.graphqls</destination>
+          <includeScalars>true</includeScalars>
+        </configuration>
         <executions>
           <execution>
             <goals>

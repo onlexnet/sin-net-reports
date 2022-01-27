@@ -109,6 +109,7 @@ type Query {
   Users(projectId: ID!): Users
   availableProjects: [ProjectEntity!]!
   getPrincipal: PrincipalModel!
+  test: PrincipalModel!
 }
 
 type ServiceModel {
@@ -143,6 +144,9 @@ type User {
 type Users {
   search: [User!]!
 }
+
+"Scalar for Date"
+scalar Date
 
 input CustomerContactInput {
   email: String
