@@ -10,7 +10,10 @@ import org.eclipse.microprofile.graphql.Id;
 import org.eclipse.microprofile.graphql.NonNull;
 import org.eclipse.microprofile.graphql.Query;
 
+import lombok.extern.slf4j.Slf4j;
+
 @GraphQLApi
+@Slf4j
 public class RootQuery {
 
   @Query("getPrincipal")
@@ -39,7 +42,8 @@ public class RootQuery {
   }
 
   @Query("Actions")
-  public @NonNull ActionsQuery actions(@NonNull @Id UUID projectId) {
+  public @NonNull ActionsQuery actions(@NonNull UUID projectId) {
+    log.info("Test");
     return new ActionsQuery(projectId);
   }
 
