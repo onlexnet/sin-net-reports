@@ -1,0 +1,13 @@
+@startuml C4_Elements
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+Person(userManager, "User Manager", "Person who may create accounts for new users.")
+
+System_Boundary(azureCloud, "Azure Cloud") {
+  Container(sinnetB2C, "sinnetapps", "Azure B2C", "Identity catalog")
+}
+
+Rel(userManager, sinnetB2C, "Manage B2C accounts")
+
+@enduml
+

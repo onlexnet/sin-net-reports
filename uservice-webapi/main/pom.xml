@@ -1,6 +1,5 @@
 <?xml version="1.0"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <groupId>onlex</groupId>
   <artifactId>sinnet</artifactId>
@@ -38,6 +37,11 @@
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
       <version>3.12.0</version>
+    </dependency>
+    <dependency>
+      <groupId>io.vavr</groupId>
+      <artifactId>vavr</artifactId>
+      <version>0.10.4</version>
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
@@ -80,6 +84,27 @@
   </dependencies>
   <build>
     <plugins>
+      <plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>3.0.0</version>
+        <executions>
+          <execution>
+            <phase>initialize</phase>
+            <configuration>
+                <target>
+                  <delete dir="${basedir}/src/main/proto/uservice-activities"/>
+                  <mkdir dir="${basedir}/src/main/proto/uservice-activities" />
+                  <copy todir="${basedir}/src/main/proto/uservice-activities">
+                    <fileset dir="${basedir}/../.links/uservice-activities" />
+                  </copy>
+                </target>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
       <plugin>
         <groupId>io.smallrye</groupId>
         <artifactId>smallrye-graphql-maven-plugin</artifactId>

@@ -18,6 +18,13 @@
     <grpc.version>1.43.2</grpc.version>
   </properties>
 
+  <dependencies>
+    <dependency>
+      <groupId>net.siudek</groupId>
+      <artifactId>grpc-common</artifactId>
+    </dependency>
+  </dependencies>
+
   <build>
     <plugins>
       <plugin>
@@ -29,7 +36,7 @@
             <id>add-source</id>
             <phase>generate-sources</phase>
             <goals>
-                <goal>add-source</goal>
+              <goal>add-source</goal>
             </goals>
             <configuration>
               <sources>

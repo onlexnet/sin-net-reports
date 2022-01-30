@@ -1,11 +1,14 @@
 package sinnet;
 
+import java.util.List;
+
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import io.grpc.BindableService;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import lombok.SneakyThrows;
@@ -14,9 +17,10 @@ import lombok.SneakyThrows;
 public class GrpcServer {
 
     @Autowired
-    MyService myService;
+    List<BindableService> services;
 
-    @Value("${grpc.server.port}") int port;
+    @Value("${grpc.server.port}")
+    int port;
 
     private Server server;
 
@@ -24,7 +28,10 @@ public class GrpcServer {
     @SneakyThrows
     public void start() {
         var builder = ServerBuilder.forPort(port);
-        server = builder.addService(myService).build();
+        for (BindableService bindableService : services) {
+            builder.addService(bindableService);
+        }
+        server = builder.build();
 
         server.start();
     }

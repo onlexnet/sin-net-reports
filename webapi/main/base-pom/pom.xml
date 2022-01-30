@@ -114,6 +114,13 @@
       
       <dependency>
         <groupId>net.siudek</groupId>
+        <artifactId>grpc-common</artifactId>
+        <version>${project.version}</version>
+        <scope>compile</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>net.siudek</groupId>
         <artifactId>grpc-client</artifactId>
         <version>${project.version}</version>
         <scope>compile</scope>

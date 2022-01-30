@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+option java_package = "sinnet.grpc.projects";
+option java_outer_classname = "ProjectsProto";
+option java_multiple_files = true;
+
+package projects;
+
+service Projects {
+  rpc availableProjects(AvailableProjectsRequest) returns (AvailableProjectsReply) {}
+}
+
+message AvailableProjectsRequest {
+  string requestorToken = 1;
+}
+
+message AvailableProjectsReply {
+  repeated AvailableProject projects = 1;
+}
+
+message AvailableProject {
+  string id = 1;
+  string name = 2;
+}

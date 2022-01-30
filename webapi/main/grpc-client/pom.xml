@@ -13,6 +13,13 @@
 
   <name>grpc-client</name>
 
+  <dependencies>
+    <dependency>
+      <groupId>net.siudek</groupId>
+      <artifactId>grpc-common</artifactId>
+    </dependency>
+  </dependencies>
+
   <build>
     <plugins>
       <plugin>

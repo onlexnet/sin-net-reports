@@ -1,0 +1,1 @@
+For some reasone nmon-existing sec/main/resources is reported as build error

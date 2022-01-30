@@ -1,7 +1,6 @@
 package sinnet.gql.actions;
 
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
 import org.springframework.beans.factory.annotation.Autowired;
