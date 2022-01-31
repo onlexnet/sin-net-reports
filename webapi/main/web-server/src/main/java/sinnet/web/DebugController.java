@@ -20,7 +20,6 @@ import sinnet.report1.grpc.ActivityDetails;
 import sinnet.report1.grpc.CustomerDetails;
 import sinnet.report1.grpc.ReportRequest;
 import sinnet.report1.grpc.ReportRequests;
-import sinnet.report1.grpc.Reports1;
 import sinnet.report1.grpc.ReportsGrpc.ReportsFutureStub;
 import sinnet.reports.grpc.Date;
 

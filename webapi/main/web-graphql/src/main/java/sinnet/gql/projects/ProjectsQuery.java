@@ -14,8 +14,6 @@ import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 import sinnet.IdentityProvider;
 import sinnet.gql.Handlers;
-import sinnet.grpc.PropsBuilder;
-import sinnet.grpc.projects.AvailableProject;
 import sinnet.grpc.projects.AvailableProjectsReply;
 import sinnet.grpc.projects.AvailableProjectsRequest;
 import sinnet.grpc.projects.ProjectsGrpc.ProjectsImplBase;
@@ -30,18 +28,15 @@ public interface ProjectsQuery {
   class ProjectsProvider extends ProjectsImplBase {
     @Autowired
     private ProjectProjector.Provider projectProjector;
+
     @Override
     public void availableProjects(AvailableProjectsRequest request, StreamObserver<AvailableProjectsReply> responseObserver) {
         var invoker = request.getRequestorToken();
         projectProjector
           .findByServiceman(Email.of(invoker))
-          .map(it -> it.foldLeft(
-            AvailableProjectsReply.newBuilder(),
-            (acc, o) -> acc.addProjects(PropsBuilder.build(AvailableProject.newBuilder())
-              .tset(o.getId().getId().toString(), b -> b::setId)
-              .tset(o.getName(), b -> b::setName)
-              .done())))
-          .map(it -> it.build())
+          .map(it -> AvailableProjectsReply.newBuilder()
+            .addAllProjects(Mapper.map(it))
+            .build())
           .onComplete(Handlers.logged(log, (AvailableProjectsReply it) -> {
             responseObserver.onNext(it);
             responseObserver.onCompleted();
