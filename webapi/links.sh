@@ -7,3 +7,5 @@ rm -rf .links
 mkdir .links
 
 ln -s $(realpath ../uservice-reports/main/src/main/proto) .links/uservice-reports-proto
+
+ln -s $(realpath api.grpc) main/grpc-server/src/main/proto

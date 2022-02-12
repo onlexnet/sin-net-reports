@@ -11,7 +11,7 @@ service Projects {
 }
 
 message AvailableProjectsRequest {
-  string requestorToken = 1;
+  string emailOfRequestor = 1;
 }
 
 message AvailableProjectsReply {

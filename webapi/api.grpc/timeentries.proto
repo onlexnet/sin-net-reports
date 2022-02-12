@@ -1,0 +1,56 @@
+syntax = "proto3";
+
+option java_package = "sinnet.grpc.timeentries";
+option java_multiple_files = true;
+
+import "common.proto";
+import "customers.proto";
+
+package timeentries;
+
+service TimeEntries {
+  rpc search(SearchQuery) returns (SearchReply);
+  rpc get(GetQuery) returns (GetReply);
+  rpc reserve(ReserveCommand) returns (ReserveResult);
+}
+
+message SearchQuery {
+  string projectId = 1;
+  LocalDate from = 2;
+  LocalDate to = 3;
+}
+message SearchReply {
+  repeated TimeEntryModel activities = 1;
+}
+
+message GetQuery {
+  string projectId = 1;
+  string timeentryId = 2;
+}
+
+message GetReply {
+  TimeEntryModel item = 1;
+}
+
+message ReserveCommand {
+  common.UserToken invoker = 1;
+  LocalDate when = 2;
+}
+message ReserveResult {
+  common.EntityId entityId = 1;
+}
+
+message TimeEntryModel {
+  common.EntityId entityId = 1;
+  string servicemanName = 2;
+  LocalDate whenProvided = 3;
+  string description = 4;
+  int32 duration = 5;
+  int32 distance = 6;
+}
+
+message LocalDate {
+  int32 year = 1;
+  int32 month = 2;
+  int32 day = 3;
+}
