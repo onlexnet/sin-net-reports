@@ -23,6 +23,7 @@ import lombok.experimental.UtilityClass;
 import sinnet.Api;
 import sinnet.AppTestContext;
 import sinnet.Sync;
+import sinnet.TestUsers;
 import sinnet.bus.commands.ChangeCustomerData;
 import sinnet.bus.query.FindCustomers;
 import sinnet.models.CustomerContact;
@@ -32,6 +33,7 @@ import sinnet.models.CustomerValue;
 import sinnet.models.Email;
 import sinnet.models.EntityId;
 import sinnet.models.Name;
+import sinnet.models.UserToken;
 import sinnet.read.CustomerProjection;
 
 @SpringBootTest(webEnvironment = WebEnvironment.NONE)
@@ -50,7 +52,7 @@ public class CustomerRepositoryTests {
   @Test
   void initialiListOfCustomersIsEmpty() {
     var projectId = api.createNewProject();
-    var actual = api.queryCustomers(projectId);
+    var actual = api.queryCustomers(projectId, TestUsers.SYSTEM);
     Assertions.assertThat(actual).isEmpty();
   }
 
@@ -76,7 +78,7 @@ public class CustomerRepositoryTests {
     var projectId = api.createNewProject();
     var id1 = api.defineCustomer(EntityId.anyNew(projectId));
     var id2 = api.defineCustomer(EntityId.anyNew(projectId));
-    var list = api.queryCustomers(projectId);
+    var list = api.queryCustomers(projectId, TestUsers.SYSTEM);
 
     var actual = List.of(list).map(it -> it.getEntityId());
     assertThat(actual).contains(id1.getId(), id2.getId());
@@ -95,7 +97,7 @@ public class CustomerRepositoryTests {
         .entityVersion(eidV2.getVersion())
         .value(validModel)
         .build();
-    var list = api.queryCustomers(projectId);
+    var list = api.queryCustomers(projectId, TestUsers.SYSTEM);
     Assertions
         .assertThat(list)
         .containsOnly(expected);
@@ -117,7 +119,7 @@ public class CustomerRepositoryTests {
         .value(validModel)
         .entityVersion(eid.getVersion())
         .build();
-    var list = api.queryCustomers(projectId);
+    var list = api.queryCustomers(projectId, TestUsers.SYSTEM);
     Assertions
         .assertThat(list).containsOnly(expected);
 
@@ -142,7 +144,7 @@ public class CustomerRepositoryTests {
         .entityVersion(eid.getVersion())
         .value(value)
         .build();
-    var list = api.queryCustomers(projectId);
+    var list = api.queryCustomers(projectId, TestUsers.SYSTEM);
     Assertions
         .assertThat(list).containsOnly(expected);
   }

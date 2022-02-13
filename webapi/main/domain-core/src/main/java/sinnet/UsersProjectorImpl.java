@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import io.vavr.collection.Stream;
+import io.vertx.core.Future;
+import io.vertx.core.Promise;
 import io.vertx.pgclient.PgPool;
 import io.vertx.sqlclient.PreparedQuery;
 import io.vertx.sqlclient.Row;
@@ -34,20 +36,20 @@ public class UsersProjectorImpl implements UsersProjector {
   }
 
   @Override
-  public Mono<Stream<UserModel>> search(UUID projectId, Email serviceMan) {
-    return Mono.create(consumer -> {
-      this.searchQuery
+  public Future<Stream<UserModel>> search(UUID projectId, Email serviceMan) {
+    var promise = Promise.<Stream<UserModel>>promise();
+    this.searchQuery
           .execute(Tuple.of(projectId), ar -> {
             if (!ar.succeeded()) {
-              consumer.error(ar.cause());
+              promise.fail(ar.cause());
               return;
             }
             var result = Stream.ofAll(ar.result())
                 .map(it -> UserModel.builder()
                             .email(Email.of(it.getString("email")))
                             .build());
-            consumer.success(result);
+            promise.complete(result);
           });
-    });
+    return promise.future();
   }
 }
