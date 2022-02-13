@@ -12,6 +12,12 @@ import org.eclipse.microprofile.graphql.Source;
 @ApplicationScoped
 public class ActionsMutationNewAction {
   public @NonNull Entity newAction(@Source ActionsMutation self, @NonNull LocalDate whenProvided) {
+
+        //     var maybeRequestor = identityProvider.getCurrent();
+        // if (!maybeRequestor.isPresent()) {
+        //   throw new GraphQLException("Access denied");
+        // }
+
     return null;
   }
 }

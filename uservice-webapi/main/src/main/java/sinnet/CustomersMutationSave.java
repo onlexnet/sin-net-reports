@@ -16,6 +16,16 @@ public class CustomersMutationSave {
                          @NonNull CustomerSecretInput[] secrets,
                          @NonNull CustomerSecretExInput[] secretsEx,
                          @NonNull CustomerContactInput[] contacts) {
+    
+    // var maybeRequestor = identityProvider.getCurrent();
+    // if (!maybeRequestor.isPresent()) {
+    //   throw new GraphQLException("Access denied");
+    // }
+
+    // if (!Objects.equals(id.getProjectId(), gcontext.getProjectId())) {
+    //   throw new GraphQLException("Invalid project id");
+    // }
+
     return null;
   }
     

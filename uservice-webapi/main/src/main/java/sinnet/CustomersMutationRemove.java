@@ -11,6 +11,10 @@ import org.eclipse.microprofile.graphql.Source;
 public class CustomersMutationRemove {
 
   public Boolean remove(@Source CustomersMutation self, @NonNull Entity id) {
+    //     if (!Objects.equals(id.getProjectId(), gcontext.getProjectId())) {
+    //   throw new GraphQLException("Invalid project id");
+    // }
+
     return false;
   }
 }

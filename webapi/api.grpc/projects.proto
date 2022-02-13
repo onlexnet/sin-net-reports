@@ -7,14 +7,14 @@ option java_multiple_files = true;
 package projects;
 
 service Projects {
-  rpc availableProjects(AvailableProjectsRequest) returns (AvailableProjectsReply) {}
+  rpc list(ListRequest) returns (ListReply) {}
 }
 
-message AvailableProjectsRequest {
+message ListRequest {
   string emailOfRequestor = 1;
 }
 
-message AvailableProjectsReply {
+message ListReply {
   repeated AvailableProject projects = 1;
 }
 

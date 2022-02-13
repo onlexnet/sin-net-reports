@@ -46,29 +46,6 @@
           </execution>
         </executions>
       </plugin>
-
-      <plugin>
-        <artifactId>maven-antrun-plugin</artifactId>
-        <version>3.0.0</version>
-        <executions>
-          <execution>
-            <phase>initialize</phase>
-            <configuration>
-                <target>
-                  <delete dir="${basedir}/src/main/proto"/>
-                  <mkdir dir="${basedir}/src/main/proto" />
-                  <copy todir="${basedir}/src/main/proto">
-                    <fileset dir="${basedir}/../../api.grpc" />
-                  </copy>
-                </target>
-            </configuration>
-            <goals>
-              <goal>run</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-
     </plugins>
   </build>
 </project>

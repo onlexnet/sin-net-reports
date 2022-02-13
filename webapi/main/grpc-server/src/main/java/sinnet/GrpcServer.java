@@ -24,15 +24,15 @@ public class GrpcServer {
 
     private Server server;
 
-    @PostConstruct
-    @SneakyThrows
-    public void start() {
-        var builder = ServerBuilder.forPort(port);
-        for (BindableService bindableService : services) {
-            builder.addService(bindableService);
-        }
-        server = builder.build();
-
-        server.start();
+  @PostConstruct
+  @SneakyThrows
+  public void start() {
+    var builder = ServerBuilder.forPort(port);
+    for (BindableService bindableService : services) {
+      builder.addService(bindableService);
     }
+    server = builder.build();
+
+    server.start();
+  }
 }
