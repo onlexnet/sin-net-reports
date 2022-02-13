@@ -52,7 +52,7 @@ public class TimeEntriesRpcSearch implements ActionProjector, Mapper {
 
     private TimeEntryModel map(ListItem item) {
         return PropsBuilder.build(TimeEntryModel.newBuilder())
-            .set(item.getEid(), o -> toDto(o), b -> b::setEntityId)
+            .set(item.getEid(), this::toDto, b -> b::setEntityId)
             .set(item.getValue(), o -> o.getWho().getValue(), b -> b::setServicemanName)
             .set(item.getValue(), o -> o.getWhen(), o -> toDto(o), b -> b::setWhenProvided)
             .set(item.getValue(), o -> o.getWhat(), b -> b::setDescription)
