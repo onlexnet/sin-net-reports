@@ -46,8 +46,6 @@ public class ActionRepositoryTests {
     var projectId = projectEid.getId();
 
     var now = Dates.gen().head();
-    Sync.of(() -> projection.find(projectId, now, now));
-
     Sync.of(() -> projection.find(projectId, now, now))
         .checkpoint(actual -> Assumptions.assumeThat(actual).isEmpty());
 

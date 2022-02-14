@@ -9,7 +9,6 @@ import com.tngtech.archunit.lang.CompositeArchRule;
 import com.tngtech.archunit.library.DependencyRules;
 import com.tngtech.archunit.library.GeneralCodingRules;
 
-import org.junit.jupiter.api.Test;
 import org.springframework.web.bind.annotation.RestController;
 
 /** Architectural tests. */

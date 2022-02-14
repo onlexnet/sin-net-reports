@@ -107,7 +107,7 @@ final class SyncBus {
     var askTemplate = new AskTemplate<TREQ, TRES>(address, resClass, eventBus) {
       public final TRES request(TREQ request) {
         var asFuture = super.ask(request);
-        return asFuture.result();
+        return asFuture.toCompletionStage().toCompletableFuture().join();
       }
     };
     return askTemplate.request(request);

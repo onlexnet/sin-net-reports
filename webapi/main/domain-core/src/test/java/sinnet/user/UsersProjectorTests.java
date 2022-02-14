@@ -48,7 +48,7 @@ public final class UsersProjectorTests implements ProjectProjector {
   @Test
   public void myTest() {
     var actual = sut.search(UUID.fromString("00000000-0000-0000-0001-000000000001"), Email.of("user1@project1"))
-        .result()
+        .toCompletionStage().toCompletableFuture().join()
         .map(it -> it.getEmail().getValue());
 
     Assertions.assertThat(actual).containsExactlyInAnyOrder(
