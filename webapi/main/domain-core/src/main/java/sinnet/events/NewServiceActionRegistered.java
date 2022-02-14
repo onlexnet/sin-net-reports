@@ -14,15 +14,15 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class NewServiceActionRegistered {
-    /** Unique Service ID. */
-    private UUID id;
+  /** Unique Service ID. */
+  private UUID id;
 
-    /** Name of the serviceman. */
-    private String servicemanName;
-    /** Name of the customer. */
-    private String customerName;
-    /** Date when the service has been provided. */
-    private LocalDate when;
-    /** What has been done as the service - tekstual description. */
-    private String description;
+  /** Name of the serviceman. */
+  private String servicemanName;
+  /** Name of the customer. */
+  private String customerName;
+  /** Date when the service has been provided. */
+  private LocalDate when;
+  /** What has been done as the service - tekstual description. */
+  private String description;
 }

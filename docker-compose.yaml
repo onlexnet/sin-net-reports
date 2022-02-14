@@ -1,4 +1,6 @@
-# https://hub.docker.com/_/postgres/
+# Starts all systems excluding WebApp sos that
+# 1) all E2E tests can be started (in docker image as well in HELM installation)
+# 2) WebApp may refer to application to do some smoke tests
 
 version: '3.8'
 services:

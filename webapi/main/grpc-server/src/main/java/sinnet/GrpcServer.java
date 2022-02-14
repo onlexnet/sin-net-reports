@@ -1,7 +1,5 @@
 package sinnet;
 
-import java.util.List;
-
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +15,7 @@ import lombok.SneakyThrows;
 public class GrpcServer {
 
     @Autowired
-    List<BindableService> services;
+    BindableService[] services;
 
     @Value("${grpc.server.port}")
     int port;

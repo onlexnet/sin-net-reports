@@ -31,7 +31,7 @@ public class PropsBuilder {
 
     /** Try set. Run setter only if value is not null. */
     public <U1, U2> PropSet<T> set(U1 maybeValue, Function1<U1, U2> map1, Function1<T, Consumer<U2>> setter) {
-      return tset(Optional.ofNullable(maybeValue).map(map1) , setter);
+      return tset(Optional.ofNullable(maybeValue).map(map1), setter);
     }
 
     public <U1, U2, U3> PropSet<T> set(U1 maybeValue, Function1<U1, U2> map1, Function1<U2, U3> map2, Function1<T, Consumer<U3>> setter) {
@@ -43,7 +43,7 @@ public class PropsBuilder {
       if (maybeValue.isEmpty()) return this;
       var value = maybeValue.get();
       setter.apply(builder).accept(value);
-      return this ;
+      return this;
     }
 
     public T done() {

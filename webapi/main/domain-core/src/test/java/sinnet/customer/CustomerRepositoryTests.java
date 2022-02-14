@@ -33,7 +33,6 @@ import sinnet.models.CustomerValue;
 import sinnet.models.Email;
 import sinnet.models.EntityId;
 import sinnet.models.Name;
-import sinnet.models.UserToken;
 import sinnet.read.CustomerProjection;
 
 @SpringBootTest(webEnvironment = WebEnvironment.NONE)
