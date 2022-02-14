@@ -5,17 +5,17 @@ import java.util.concurrent.ExecutionException;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Component;
 
 import io.vavr.Function1;
+import lombok.RequiredArgsConstructor;
 
 @Component
+@RequiredArgsConstructor
 public class FutureExecutor {
 
-  @Autowired
-  private TaskExecutor taskExecutor;
+  private final TaskExecutor taskExecutor;
 
   public <T, U> CompletableFuture<U> asFuture(ListenableFuture<T> future, Function1<T, U> mapper) {
     var result = new CompletableFuture<U>();
