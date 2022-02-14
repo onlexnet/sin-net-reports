@@ -72,9 +72,9 @@ class Report3Controller implements ActionProjector {
       .map(it -> Tuple.of(
         it.getValue().getOperatorEmail(),
           PropsBuilder.build(CustomerDetails.newBuilder())
-            .tset(it.getValue().getCustomerName().getValue(), b -> b::setName)
-            .tset(it.getValue().getCustomerAddress(), b -> b::setAddress)
-            .tset(it.getValue().getCustomerCityName().getValue(), b -> b::setCity)
+            .set(it.getValue().getCustomerName().getValue(), b -> b::setName)
+            .set(it.getValue().getCustomerAddress(), b -> b::setAddress)
+            .set(it.getValue().getCustomerCityName().getValue(), b -> b::setCity)
             .done().build()))
       .foldLeft(
         HashMap.<String, List<CustomerDetails>>empty(),

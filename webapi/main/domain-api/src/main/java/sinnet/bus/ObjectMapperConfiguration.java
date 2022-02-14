@@ -7,9 +7,8 @@ import javax.annotation.PostConstruct;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
 import io.vavr.jackson.datatype.VavrModule;
 import io.vertx.core.json.jackson.DatabindCodec;
@@ -18,7 +17,7 @@ import lombok.Singular;
 import lombok.Value;
 
 /** TBD. */
-@Configuration
+@Component
 public class ObjectMapperConfiguration {
   
   @PostConstruct
