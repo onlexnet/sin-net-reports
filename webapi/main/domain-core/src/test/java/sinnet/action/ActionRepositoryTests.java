@@ -11,7 +11,6 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 
-import sinnet.ActionRepository;
 import sinnet.Api;
 import sinnet.AppTestContext;
 import sinnet.Dates;
@@ -22,6 +21,7 @@ import sinnet.models.Distance;
 import sinnet.models.Email;
 import sinnet.models.EntityId;
 import sinnet.read.ActionProjector;
+import sinnet.write.ActionRepository;
 
 @SpringBootTest(webEnvironment = WebEnvironment.NONE)
 @ContextConfiguration(classes = AppTestContext.class)
@@ -34,7 +34,10 @@ public class ActionRepositoryTests {
   private Api api;
 
   @Autowired
-  private ActionRepository sut;
+  private ActionRepository sutWrite;
+
+  @Autowired
+  private ActionProjector.Provider sutRead;
 
   @Autowired
   private ActionProjector.Provider projection;
@@ -55,9 +58,9 @@ public class ActionRepositoryTests {
           .whom(customerId.getId())
           .build();
 
-      Sync.of(() -> sut.save(EntityId.anyNew(projectId), newEntity))
-          .and(it -> sut.save(EntityId.anyNew(projectId), newEntity))
-          .and(it -> sut.save(EntityId.anyNew(projectId), newEntity))
+      Sync.of(() -> sutWrite.save(EntityId.anyNew(projectId), newEntity))
+          .and(it -> sutWrite.save(EntityId.anyNew(projectId), newEntity))
+          .and(it -> sutWrite.save(EntityId.anyNew(projectId), newEntity))
           .and(it -> projection.find(projectId, now, now))
           .checkpoint(actualItems -> {
               Assertions.assertThat(actualItems).hasSize(3);
@@ -88,7 +91,7 @@ public class ActionRepositoryTests {
         .build();
 
     Sync
-        .of(() -> sut.save(EntityId.anyNew(projectId), newEntity))
+        .of(() -> sutWrite.save(EntityId.anyNew(projectId), newEntity))
         .checkpoint(actual -> assertThat(actual).isTrue())
         .and(it -> projection.find(projectId, now, now))
         .checkpoint(actual -> {
@@ -125,9 +128,9 @@ public class ActionRepositoryTests {
 
         var entityId = EntityId.anyNew(projectId);
         Sync
-            .of(() -> sut.save(entityId, newEntity))
+            .of(() -> sutWrite.save(entityId, newEntity))
             .checkpoint(it -> assertThat(it).isTrue())
-            .and(it -> sut.update(entityId, updateEntity))
+            .and(it -> sutWrite.update(entityId, updateEntity))
             .and(it -> projection.find(projectId, now, now))
             .checkpoint(actual -> {
                 var expected = ActionValue.builder()
@@ -154,9 +157,9 @@ public class ActionRepositoryTests {
 
         var entityId = EntityId.anyNew(projectId);
         Sync
-            .of(() -> sut.save(entityId, newEntity))
+            .of(() -> sutWrite.save(entityId, newEntity))
             .checkpoint(it -> assertThat(it).isTrue())
-            .and(it -> sut.find(projectId, entityId.getId()))
+            .and(it -> sutRead.find(projectId, entityId.getId()))
             .checkpoint(actual -> {
                 var expected = ActionValue.builder()
                 .when(now)

@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 import io.vavr.Function1;
 import io.vavr.collection.Array;
 import io.vavr.control.Option;
-import sinnet.FutureExecutor;
 import sinnet.read.ActionProjector;
 import sinnet.report1.grpc.ActivityDetails;
 import sinnet.report1.grpc.CustomerDetails;
@@ -24,6 +23,7 @@ import sinnet.report1.grpc.ReportRequest;
 import sinnet.report1.grpc.ReportRequests;
 import sinnet.report1.grpc.ReportsGrpc;
 import sinnet.reports.grpc.Date;
+import sinnet.utils.FutureExecutor;
 
 @RestController
 @RequestMapping(path = "/api/raporty")

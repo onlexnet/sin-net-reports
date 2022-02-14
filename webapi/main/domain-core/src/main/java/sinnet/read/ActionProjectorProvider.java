@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import io.vavr.Tuple2;
 import io.vavr.collection.Array;
+import io.vavr.collection.Stream;
 import io.vertx.core.CompositeFuture;
 import io.vertx.core.Future;
 import io.vertx.core.Promise;
@@ -18,6 +19,7 @@ import sinnet.models.ActionDuration;
 import sinnet.models.ActionValue;
 import sinnet.models.Distance;
 import sinnet.models.Email;
+import sinnet.models.Entity;
 import sinnet.models.EntityId;
 
 @Component
@@ -27,50 +29,39 @@ public class ActionProjectorProvider implements ActionProjector.Provider, Action
   private PgPool pgClient;
 
   private static final String VIEW_SELECT = "SELECT a.project_id, a.entity_id, a.entity_version, "
-            + "a.serviceman_email, a.distance, a.duration, a.date, a.description, a.serviceman_name, "
-            + "a.customer_id, "
-            + "c.customer_name, c.customer_city_name, c.customer_address "
-            + "FROM actions a LEFT JOIN customers c on a.customer_id = c.entity_id ";
+      + "a.serviceman_email, a.distance, a.duration, a.date, a.description, a.serviceman_name, "
+      + "a.customer_id, "
+      + "c.customer_name, c.customer_city_name, c.customer_address "
+      + "FROM actions a LEFT JOIN customers c on a.customer_id = c.entity_id ";
 
   @Override
   public Future<Array<ListItem>> find(UUID projectId, LocalDate from, LocalDate to) {
     var promise = Promise.<Array<ListItem>>promise();
 
     var findDataQuery = this.pgClient
-            .preparedQuery(VIEW_SELECT + " WHERE a.project_id=$1 AND a.date >= $2 AND a.date <= $3");
+        .preparedQuery(VIEW_SELECT + " WHERE a.project_id=$1 AND a.date >= $2 AND a.date <= $3");
     var findServicemanQuery = this.pgClient
-            .preparedQuery("SELECT email, custom_name from serviceman t WHERE t.project_entity_id=$1");
+        .preparedQuery("SELECT email, custom_name from serviceman t WHERE t.project_entity_id=$1");
 
     var f1 = findDataQuery.execute(Tuple.of(projectId, from, to));
     var f2 = findServicemanQuery.execute(Tuple.of(projectId));
 
     CompositeFuture.all(f1, f2)
-      .onSuccess(ignored -> {
-        var items = Array.ofAll(f1.result()).map(this::mapItem);
-        var users = Array.ofAll(f2.result()).map(this::mapServiceman)
-            .toMap(it -> it._1, it -> it._2);
-        var mappedItems = items.map(item -> {
-          var servicemanEmail = item.build().getValue().getWho().getValue();
-          var servicemanCustomName = users.get(servicemanEmail).getOrElse((String)null);
-          return item.servicemanName(servicemanCustomName).build();
-        });
-        promise.complete(mappedItems);
-      })
-      .onFailure(ex -> promise.fail(ex));
-
-    //   .onSuccess(rows -> Array.ofAll(rows)
-    // , ar -> {
-    //   if (ar.succeeded()) {
-    //     var rows = ar.result();
-    //     var value = Array.ofAll(rows).map(this::map);
-    //     promise.complete(value);
-    //   } else {
-    //     promise.fail(ar.cause());
-    //   }
-    // });
+        .onSuccess(ignored -> {
+          var items = Array.ofAll(f1.result()).map(this::mapItem);
+          var users = Array.ofAll(f2.result()).map(this::mapServiceman)
+              .toMap(it -> it._1, it -> it._2);
+          var mappedItems = items.map(item -> {
+            var servicemanEmail = item.build().getValue().getWho().getValue();
+            var servicemanCustomName = users.get(servicemanEmail).getOrElse((String) null);
+            return item.servicemanName(servicemanCustomName).build();
+          });
+          promise.complete(mappedItems);
+        })
+        .onFailure(ex -> promise.fail(ex));
 
     return promise
-      .future();
+        .future();
   }
 
   ListItem.ListItemBuilder mapItem(Row row) {
@@ -102,4 +93,33 @@ public class ActionProjectorProvider implements ActionProjector.Provider, Action
     var customName = row.getString(1);
     return new Tuple2<>(email, customName);
   }
+
+  private static final String SOURCE = "SELECT project_id, entity_id, entity_version, "
+      + "serviceman_email, distance, duration, date, customer_id, description, serviceman_name "
+      + "FROM actions it ";
+
+  @Override
+  public Future<Entity<ActionValue>> find(UUID projectId, UUID entityId) {
+    var promise = Promise.<Entity<ActionValue>>promise();
+    var findQuery = this.pgClient
+        .preparedQuery(SOURCE + " WHERE it.project_id=$1 AND it.entity_id=$2");
+    findQuery.execute(Tuple.of(projectId, entityId), ar -> {
+      if (ar.succeeded()) {
+        var rows = ar.result();
+        var maybeValue = Stream
+            .ofAll(rows)
+            .map(Mapper::map)
+            .headOption();
+        if (maybeValue.isDefined()) {
+          promise.complete(maybeValue.get());
+        } else {
+          promise.complete();
+        }
+      } else {
+        promise.fail(ar.cause());
+      }
+    });
+    return promise.future();
+  }
+
 }

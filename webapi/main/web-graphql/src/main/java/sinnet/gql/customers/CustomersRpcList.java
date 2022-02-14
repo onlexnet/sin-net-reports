@@ -11,7 +11,6 @@ import io.vertx.core.eventbus.EventBus;
 import lombok.extern.slf4j.Slf4j;
 import sinnet.bus.AskTemplate;
 import sinnet.bus.query.FindCustomers;
-import sinnet.gql.Handlers;
 
 import static sinnet.grpc.PropsBuilder.ofNullable;
 
@@ -20,6 +19,7 @@ import sinnet.grpc.common.EntityId;
 import sinnet.grpc.customers.CustomerModel;
 import sinnet.grpc.customers.ListReply;
 import sinnet.grpc.customers.ListRequest;
+import sinnet.vertx.Handlers;
 
 @Component
 @Slf4j

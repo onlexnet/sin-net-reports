@@ -5,10 +5,10 @@ import org.springframework.stereotype.Component;
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import sinnet.ActionRepository;
-import sinnet.gql.Handlers;
 import sinnet.grpc.timeentries.RemoveCommand;
 import sinnet.grpc.timeentries.RemoveResult;
+import sinnet.vertx.Handlers;
+import sinnet.write.ActionRepository;
 
 @Component
 @RequiredArgsConstructor

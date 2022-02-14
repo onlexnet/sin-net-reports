@@ -15,12 +15,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import sinnet.gql.Handlers;
 import sinnet.grpc.PropsBuilder;
 import sinnet.grpc.timeentries.SearchQuery;
 import sinnet.grpc.timeentries.SearchReply;
 import sinnet.grpc.timeentries.TimeEntryModel;
 import sinnet.read.ActionProjector;
+import sinnet.vertx.Handlers;
 
 @Component
 @RequiredArgsConstructor

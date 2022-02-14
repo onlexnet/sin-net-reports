@@ -17,7 +17,6 @@ import io.vavr.Function1;
 import io.vavr.Tuple;
 import io.vavr.collection.HashMap;
 import io.vavr.collection.List;
-import sinnet.FutureExecutor;
 import sinnet.grpc.PropsBuilder;
 import sinnet.read.ActionProjector;
 import sinnet.read.CustomerProjection;
@@ -25,6 +24,7 @@ import sinnet.report3.grpc.CustomerDetails;
 import sinnet.report3.grpc.GroupDetails;
 import sinnet.report3.grpc.ReportRequest;
 import sinnet.report3.grpc.ReportsGrpc;
+import sinnet.utils.FutureExecutor;
 
 @RestController
 @RequestMapping(path = "/api/raporty/3")

@@ -1,4 +1,4 @@
-package sinnet;
+package sinnet.vertx;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;

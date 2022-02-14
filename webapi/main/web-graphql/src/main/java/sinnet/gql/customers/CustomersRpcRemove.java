@@ -9,10 +9,10 @@ import io.vertx.core.eventbus.EventBus;
 import lombok.extern.slf4j.Slf4j;
 import sinnet.bus.AskTemplate;
 import sinnet.bus.commands.RemoveCustomer;
-import sinnet.gql.Handlers;
 import sinnet.grpc.customers.RemoveReply;
 import sinnet.grpc.customers.RemoveRequest;
 import sinnet.models.EntityId;
+import sinnet.vertx.Handlers;
 
 @Component
 @Slf4j

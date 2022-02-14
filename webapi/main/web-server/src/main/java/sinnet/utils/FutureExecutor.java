@@ -1,4 +1,4 @@
-package sinnet;
+package sinnet.utils;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;

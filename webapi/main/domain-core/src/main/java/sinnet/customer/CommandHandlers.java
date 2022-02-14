@@ -15,8 +15,6 @@ import io.vavr.collection.List;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
 import io.vertx.core.Promise;
-import sinnet.TopLevelVerticle;
-import sinnet.CommandHandlerBase;
 import sinnet.bus.commands.ChangeCustomerData;
 import sinnet.bus.commands.RemoveCustomer;
 import sinnet.bus.query.FindCustomer;
@@ -30,6 +28,8 @@ import sinnet.models.CustomerSecretEx;
 import sinnet.models.Email;
 import sinnet.models.EntityId;
 import sinnet.read.CustomerProjection.CustomerModel;
+import sinnet.vertx.CommandHandlerBase;
+import sinnet.vertx.TopLevelVerticle;
 
 @Component
 public class CommandHandlers extends AbstractVerticle implements TopLevelVerticle {
@@ -111,7 +111,7 @@ public class CommandHandlers extends AbstractVerticle implements TopLevelVerticl
                                                             v.getSecretsEx(),
                                                             v.getContacts()))
                             .map(v -> Future.succeededFuture(v))
-                            .getOrElse(Future.failedFuture(new Exception("No data"))));
+                            .getOrElse(Future.failedFuture("No data")));
     }
   }
 

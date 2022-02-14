@@ -1,4 +1,4 @@
-package sinnet;
+package sinnet.read;
 
 import lombok.Builder;
 import lombok.Value;

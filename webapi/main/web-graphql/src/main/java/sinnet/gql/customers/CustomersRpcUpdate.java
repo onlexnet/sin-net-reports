@@ -7,13 +7,13 @@ import io.vertx.core.eventbus.EventBus;
 import lombok.extern.slf4j.Slf4j;
 import sinnet.bus.AskTemplate;
 import sinnet.bus.commands.ChangeCustomerData;
-import sinnet.gql.Handlers;
 import sinnet.grpc.customers.UpdateCommand;
 import sinnet.grpc.customers.UpdateResult;
 import sinnet.models.CustomerValue;
 import sinnet.models.Email;
 import sinnet.models.EntityId;
 import sinnet.models.Name;
+import sinnet.vertx.Handlers;
 
 @Component
 @Slf4j

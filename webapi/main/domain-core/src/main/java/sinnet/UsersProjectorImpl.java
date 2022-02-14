@@ -17,6 +17,8 @@ import io.vertx.sqlclient.RowSet;
 import io.vertx.sqlclient.Tuple;
 import reactor.core.publisher.Mono;
 import sinnet.models.Email;
+import sinnet.read.UserModel;
+import sinnet.read.UsersProjector;
 
 /** Projections implementation using VertX async db client. */
 @Service

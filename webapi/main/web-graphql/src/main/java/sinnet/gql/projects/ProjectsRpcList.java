@@ -5,11 +5,11 @@ import org.springframework.stereotype.Component;
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import sinnet.gql.Handlers;
 import sinnet.grpc.projects.ListReply;
 import sinnet.grpc.projects.ListRequest;
 import sinnet.models.Email;
 import sinnet.read.ProjectProjector;
+import sinnet.vertx.Handlers;
 
 @Slf4j
 @Component

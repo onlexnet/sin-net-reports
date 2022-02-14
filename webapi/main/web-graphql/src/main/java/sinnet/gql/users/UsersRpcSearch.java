@@ -9,13 +9,13 @@ import org.springframework.stereotype.Component;
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import sinnet.UsersProjector;
-import sinnet.gql.Handlers;
 import sinnet.grpc.PropsBuilder;
 import sinnet.grpc.users.SearchReply;
 import sinnet.grpc.users.SearchRequest;
 import sinnet.grpc.users.UsersSearchModel;
 import sinnet.models.Email;
+import sinnet.read.UsersProjector;
+import sinnet.vertx.Handlers;
 
 
 @Component

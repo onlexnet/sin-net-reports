@@ -8,10 +8,10 @@ import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
 import io.vertx.core.Promise;
 import io.vertx.pgclient.PgPool;
-import sinnet.CommandHandlerBase;
-import sinnet.TopLevelVerticle;
 import sinnet.bus.commands.IncludeServicemanInProject;
 import sinnet.models.EntityId;
+import sinnet.vertx.CommandHandlerBase;
+import sinnet.vertx.TopLevelVerticle;
 
 @Component
 public class ServicemanCommandHandlers extends AbstractVerticle implements TopLevelVerticle {

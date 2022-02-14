@@ -7,8 +7,6 @@ import org.springframework.stereotype.Component;
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import sinnet.ActionRepository;
-import sinnet.gql.Handlers;
 import sinnet.grpc.timeentries.UpdateCommand;
 import sinnet.grpc.timeentries.UpdateResult;
 import sinnet.models.ActionDuration;
@@ -16,6 +14,8 @@ import sinnet.models.ActionValue;
 import sinnet.models.Distance;
 import sinnet.models.Email;
 import sinnet.read.CustomerProjection;
+import sinnet.vertx.Handlers;
+import sinnet.write.ActionRepository;
 
 /** Fixme. */
 @Component

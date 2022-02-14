@@ -1,4 +1,4 @@
-package sinnet.action;
+package sinnet.read;
 
 import io.vertx.sqlclient.Row;
 import sinnet.models.ActionDuration;

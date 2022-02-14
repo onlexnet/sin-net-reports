@@ -12,5 +12,5 @@ import org.springframework.context.annotation.PropertySources;
         value = "classpath:grpc-server-${spring.profiles.active:default}.properties",
         ignoreResourceNotFound = true)
 })
-public class GrpcServerProperties {
+public class GrpcServerModuleProperties {
 }

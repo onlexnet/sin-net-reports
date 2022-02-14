@@ -1,4 +1,4 @@
-package sinnet.gql;
+package sinnet.vertx;
 
 import java.util.function.Consumer;
 

@@ -8,7 +8,8 @@ import sinnet.models.CustomerValue;
 import sinnet.models.EntityId;
 import sinnet.read.CustomerProjection;
 
-interface CustomerRepository extends CustomerProjection {
+interface 
+CustomerRepository extends CustomerProjection {
 
   /**
    * Saves a new version of Entity identified by given eid.
