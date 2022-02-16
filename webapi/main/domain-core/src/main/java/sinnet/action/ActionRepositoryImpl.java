@@ -1,11 +1,8 @@
 package sinnet.action;
 
-import java.util.UUID;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import io.vavr.collection.Stream;
 import io.vertx.core.Future;
 import io.vertx.core.Promise;
 import io.vertx.core.json.JsonObject;
@@ -14,7 +11,6 @@ import io.vertx.sqlclient.Tuple;
 import io.vertx.sqlclient.templates.SqlTemplate;
 import io.vertx.sqlclient.templates.TupleMapper;
 import sinnet.models.ActionValue;
-import sinnet.models.Entity;
 import sinnet.models.EntityId;
 import sinnet.write.ActionRepository;
 
