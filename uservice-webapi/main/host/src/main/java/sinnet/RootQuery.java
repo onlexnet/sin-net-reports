@@ -16,7 +16,7 @@ import org.eclipse.microprofile.jwt.JsonWebToken;
 import io.quarkus.grpc.GrpcClient;
 import io.smallrye.mutiny.Uni;
 import io.vavr.collection.Iterator;
-import sinnet.grpc.projects.AvailableProjectsRequest;
+import sinnet.grpc.projects.ListRequest;
 import sinnet.grpc.projects.Projects;
 
 @GraphQLApi
@@ -47,10 +47,10 @@ public class RootQuery {
   public @NonNull Uni<ProjectEntity[]> availableProjects() {
     var emails = (JsonArray) jwt.claim("emails").get();
     var email = emails.getString(0);
-    var request = AvailableProjectsRequest.newBuilder()
-      .setRequestorToken(email)
+    var request = ListRequest.newBuilder()
+      .setEmailOfRequestor(email)
       .build();
-    return projectsGrpc.availableProjects(request)
+    return projectsGrpc.list(request)
       .map(it -> Iterator
           .ofAll(it.getProjectsList())
           .map(o -> {

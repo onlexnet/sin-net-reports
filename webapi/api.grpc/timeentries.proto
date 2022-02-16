@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 option java_package = "sinnet.grpc.timeentries";
+option java_outer_classname = "TimeentriesProto";
 option java_multiple_files = true;
 
 import "common.proto";

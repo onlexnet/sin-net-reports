@@ -16,21 +16,39 @@ import lombok.Setter;
 
 @Configuration
 @Profile({ "prod", "dev" })
-public class DbConnectionConfigurer implements DbConnectionConfig {
+public class DbConnectionConfigurer {
 
-  @Setter
   private String datasourceUrl;
-  @Setter
   private String dbHost;
-
-  @Setter
   private String dbName;
-
-  @Setter
   private String username;
-
-  @Setter
   private String password;
+
+  @Value("${spring.datasource.url}")
+  void setDatasourceUrl(String value) {
+    datasourceUrl = value;
+  }
+
+  @Value("${app.db.host}")
+  void setDbHost(String value) {
+    dbHost = value;
+  }
+
+  @Value("${app.db.name}")
+  void setDbName(String value) {
+    dbName = value;
+  }
+
+  @Value("${spring.datasource.username}")
+  void setUsername(String value) {
+    username = value;
+  }
+
+  @Value("${spring.datasource.password}")
+  void setPassword(String value) {
+    password = value;
+  }
+
 
   @Bean
   PgPool pgClient() {

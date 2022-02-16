@@ -7,7 +7,6 @@ import javax.annotation.PostConstruct;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
-import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
 import io.vavr.jackson.datatype.VavrModule;

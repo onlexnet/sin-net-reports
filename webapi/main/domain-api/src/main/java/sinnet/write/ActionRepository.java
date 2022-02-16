@@ -1,7 +1,5 @@
 package sinnet.write;
 
-import java.util.UUID;
-
 import io.vertx.core.Future;
 import sinnet.models.ActionValue;
 import sinnet.models.EntityId;
