@@ -71,8 +71,9 @@
     </dependency>
 
     <dependency>
-        <groupId>com.typesafe.akka</groupId>
-        <artifactId>akka-actor-typed_2.13</artifactId>
+      <groupId>com.typesafe.akka</groupId>
+      <artifactId>akka-actor-typed_2.13</artifactId>
+      <version>2.6.18</version>
     </dependency>
 
   </dependencies>

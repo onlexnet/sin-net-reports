@@ -1,19 +1,17 @@
 package sinnet.gql.customers;
 
+import static sinnet.grpc.PropsBuilder.ofNullable;
+
 import java.util.UUID;
 
 import org.springframework.stereotype.Component;
 
 import io.grpc.stub.StreamObserver;
 import io.vavr.collection.List;
-import io.vertx.core.Future;
 import io.vertx.core.eventbus.EventBus;
 import lombok.extern.slf4j.Slf4j;
 import sinnet.bus.AskTemplate;
 import sinnet.bus.query.FindCustomers;
-
-import static sinnet.grpc.PropsBuilder.ofNullable;
-
 import sinnet.grpc.PropsBuilder;
 import sinnet.grpc.common.EntityId;
 import sinnet.grpc.customers.CustomerModel;

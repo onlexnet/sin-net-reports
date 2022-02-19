@@ -1,18 +1,10 @@
 package sinnet.gql.actions;
 
-import java.time.LocalDate;
-import java.util.Collections;
-import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.CompletionStage;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import io.grpc.stub.StreamObserver;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import sinnet.grpc.PropsBuilder;
@@ -29,13 +21,6 @@ public class TimeEntriesRpcSearch implements ActionProjector, Mapper {
 
     private final ActionProjector.Provider projection;
 
-    /**
-     * FixMe.
-     *
-     * @param gcontext ignored
-     * @param filter fixme.
-     * @return fixme
-     */
     public void query(SearchQuery query, StreamObserver<SearchReply> observer) {
         var projectId = UUID.fromString(query.getProjectId());
         var from = fromDto(query.getFrom());

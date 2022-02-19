@@ -11,7 +11,6 @@ import sinnet.grpc.timeentries.GetQuery;
 import sinnet.grpc.timeentries.GetReply;
 import sinnet.read.ActionProjector;
 import sinnet.vertx.Handlers;
-import sinnet.write.ActionRepository;
 
 @Component
 @RequiredArgsConstructor
