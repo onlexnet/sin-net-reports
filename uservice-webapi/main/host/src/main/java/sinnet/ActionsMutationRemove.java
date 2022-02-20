@@ -12,7 +12,7 @@ import org.eclipse.microprofile.graphql.Source;
 @GraphQLApi
 @ApplicationScoped
 public class ActionsMutationRemove {
-  public boolean remove(@Source ActionsMutation self, @NonNull @Id UUID entityId, int entityVersion) {
+  public boolean remove(@Source ActionsMutation self, @NonNull @Id String entityId, int entityVersion) {
     return false;
   }
 }

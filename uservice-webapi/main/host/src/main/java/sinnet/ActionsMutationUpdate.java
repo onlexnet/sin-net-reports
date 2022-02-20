@@ -13,7 +13,7 @@ import org.eclipse.microprofile.graphql.Source;
 @ApplicationScoped
 public class ActionsMutationUpdate {
   public boolean update(@Source ActionsMutation self,
-                        @NonNull @Id UUID entityId,
+                        @NonNull @Id String entityId,
                         int entityVersion,
                         ServiceEntry content) {
     return false;

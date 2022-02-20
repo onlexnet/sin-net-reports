@@ -17,7 +17,6 @@ public class ActionsMutationNewAction {
         // if (!maybeRequestor.isPresent()) {
         //   throw new GraphQLException("Access denied");
         // }
-
     return null;
   }
 }

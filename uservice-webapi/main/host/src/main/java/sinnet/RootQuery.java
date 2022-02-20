@@ -9,6 +9,7 @@ import javax.ws.rs.core.SecurityContext;
 
 import org.eclipse.microprofile.graphql.GraphQLApi;
 import org.eclipse.microprofile.graphql.Id;
+import org.eclipse.microprofile.graphql.Name;
 import org.eclipse.microprofile.graphql.NonNull;
 import org.eclipse.microprofile.graphql.Query;
 import org.eclipse.microprofile.jwt.JsonWebToken;
@@ -61,17 +62,20 @@ public class RootQuery {
   }
 
   @Query("Customers")
-  public @NonNull CustomersQuery customers(@NonNull @Id UUID projectId) {
+  public @NonNull CustomersQuery customers(@NonNull @Id @Name("projectId") String projectIdAsString) {
+    var projectId = UUID.fromString(projectIdAsString);
     return new CustomersQuery(projectId);
   }
 
   @Query("Actions")
-  public @NonNull ActionsQuery actions(@NonNull @Id UUID projectId) {
+  public @NonNull ActionsQuery actions(@NonNull @Id @Name("projectId") String projectIdAsString) {
+    var projectId = UUID.fromString(projectIdAsString);
     return new ActionsQuery(projectId);
   }
 
   @Query
-  public Users Users(@NonNull @Id UUID projectId) {
+  public Users Users(@NonNull @Id @Name("projectId") String projectIdAsString) {
+    var projectId = UUID.fromString(projectIdAsString);
     return new Users(projectId);
   }
 

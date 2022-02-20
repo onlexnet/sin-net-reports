@@ -11,7 +11,7 @@ import org.eclipse.microprofile.graphql.Source;
 @GraphQLApi
 @ApplicationScoped
 public class ActionsQueryGet {
-  public ServiceModel get(@Source ActionsQuery self, @Id UUID actionId) {
+  public ServiceModel get(@Source ActionsQuery self, @Id String actionId) {
     return null;
   }
 }

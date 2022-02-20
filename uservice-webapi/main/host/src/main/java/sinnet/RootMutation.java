@@ -16,13 +16,15 @@ public class RootMutation {
 
   @Name("Customers")
   @Mutation
-  public @NonNull CustomersMutation customers(@NonNull @Id UUID projectId) {
+  public @NonNull CustomersMutation customers(@NonNull @Id @Name("projectId") String projectIdAsString) {
+    var projectId = UUID.fromString(projectIdAsString);
     return new CustomersMutation(projectId);
   }
 
   @Name("Actions")
   @Mutation
-  public @NonNull ActionsMutation actions(@NonNull @Id UUID projectId) {
-    return new ActionsMutation(projectId);
+  public @NonNull ActionsMutation actions(@NonNull @Id String projectId) {
+    var typedProjectId = UUID.fromString(projectId);
+    return new ActionsMutation(typedProjectId);
   }
 }

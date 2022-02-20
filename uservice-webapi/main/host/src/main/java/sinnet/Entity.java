@@ -1,7 +1,5 @@
 package sinnet;
 
-import java.util.UUID;
-
 import org.eclipse.microprofile.graphql.Id;
 import org.eclipse.microprofile.graphql.Input;
 import org.eclipse.microprofile.graphql.NonNull;
@@ -13,7 +11,7 @@ import lombok.Data;
 @Input("MyEntity")
 @Data
 public class Entity {
-  private @NonNull @Id UUID projectId;
-  private @NonNull @Id UUID entityId;
+  private @NonNull @Id String projectId;
+  private @NonNull @Id String entityId;
   private @NonNull int entityVersion;
 }

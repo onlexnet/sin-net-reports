@@ -20,7 +20,7 @@ public class CustomersQueryGet {
   // reason: https://github.com/onlexnet/sin-net-reports/issues/59
   // private static DateTimeFormatter timestampFormatter = DateTimeFormatter.ISO_DATE_TIME;
   // .set(Option.of(value.getChangedWhen()).map(v -> timestampFormatter.format(v)).getOrElse("?"), b -> b::setChangedWhen)
-  public CustomerEntity get(@Source CustomersQuery self, @Id UUID entityId) {
+  public CustomerEntity get(@Source CustomersQuery self, @Id String entityId) {
     return null;
   }
 
