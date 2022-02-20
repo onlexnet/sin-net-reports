@@ -87,7 +87,7 @@
           </execution>
         </executions>
         <configuration>
-          <destination>../../api.graphql/schema.graphqls</destination>
+          <destination>../api.graphql/schema.graphqls</destination>
           <includeScalars>true</includeScalars>
         </configuration>
       </plugin>

@@ -1,4 +1,4 @@
-schema: ../../uservice-webapi/api.graphql/**/*.graphql
+schema: ../../uservice-webapi/api.graphql/**/*.graphqls
 documents: 'src/**/*.graphql'
 generates:
   src/Components/.generated/components.tsx:

@@ -44,7 +44,7 @@ public class RootQuery {
   }
 
   @Query
-  public @NonNull Uni<ProjectEntity[]> availableProjects() {
+  public @NonNull Uni<@NonNull ProjectEntity[]> availableProjects() {
     var emails = (JsonArray) jwt.claim("emails").get();
     var email = emails.getString(0);
     var request = ListRequest.newBuilder()
@@ -66,7 +66,7 @@ public class RootQuery {
   }
 
   @Query("Actions")
-  public @NonNull ActionsQuery actions(@NonNull UUID projectId) {
+  public @NonNull ActionsQuery actions(@NonNull @Id UUID projectId) {
     return new ActionsQuery(projectId);
   }
 

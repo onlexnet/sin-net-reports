@@ -47,7 +47,7 @@ class VerticleRegistrar {
 
     CompositeFuture.all((List) startedDeployments)
         .onSuccess(it -> syncGuard.complete(null))
-        .onFailure(ex -> syncGuard.completeExceptionally(ex));
+        .onFailure(syncGuard::completeExceptionally);
 
     syncGuard.join();
 
