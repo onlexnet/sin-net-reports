@@ -21,6 +21,7 @@ public class CustomersRpc extends CustomersImplBase {
     private final CustomersRpcList list;
     private final CustomersRpcRemove remove;
     private final CustomersRpcGet get;
+    private final CustomersRpcReserve reserve;
 
     @Override
     public void list(ListRequest request, StreamObserver<ListReply> responseObserver) {
@@ -39,8 +40,7 @@ public class CustomersRpc extends CustomersImplBase {
 
     @Override
     public void reserve(ReserveRequest request, StreamObserver<ReserveReply> responseObserver) {
-        // TODO Auto-generated method stub
-        super.reserve(request, responseObserver);
+        reserve.command(request, responseObserver);
     }
 
 }

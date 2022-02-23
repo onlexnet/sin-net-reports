@@ -17,7 +17,7 @@ message SearchRequest {
 }
 
 message SearchReply {
-  repeated UsersSearchModel projects = 1;
+  repeated UsersSearchModel items = 1;
 }
 
 message UsersSearchModel {

@@ -10,6 +10,7 @@ type ActionsMutation {
 
 type ActionsQuery {
   get(actionId: ID): ServiceModel
+  projectId: String
   search(filter: ServiceFilterInput): ServicesSearchResult!
 }
 
@@ -77,6 +78,7 @@ type CustomerSecretEx {
 }
 
 type CustomersMutation {
+  projectId: String
   remove(id: MyEntity!): Boolean
   reserve: SomeEntity!
   save(contacts: [CustomerContactInput!]!, entry: CustomerInput!, id: MyEntity!, secrets: [CustomerSecretInput!]!, secretsEx: [CustomerSecretExInput!]!): SomeEntity
@@ -106,7 +108,7 @@ type ProjectEntity {
 type Query {
   Actions(projectId: ID!): ActionsQuery!
   Customers(projectId: ID!): CustomersQuery!
-  Users(projectId: ID!): Users
+  Users(projectId: ID!): UsersQuery!
   availableProjects: [ProjectEntity!]!
   getPrincipal: PrincipalModel!
   test: PrincipalModel!
@@ -141,7 +143,8 @@ type User {
   entityId: ID!
 }
 
-type Users {
+type UsersQuery {
+  projectId: String
   search: [User!]!
 }
 

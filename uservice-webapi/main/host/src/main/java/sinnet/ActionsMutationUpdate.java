@@ -1,7 +1,5 @@
 package sinnet;
 
-import java.util.UUID;
-
 import javax.enterprise.context.ApplicationScoped;
 
 import org.eclipse.microprofile.graphql.GraphQLApi;

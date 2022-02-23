@@ -14,12 +14,12 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public final class Handlers {
 
-    public static <T, U> Handler<AsyncResult<T>> logged(Logger logger, StreamObserver<U> responseObserver, Function1<T, U> handler) {
-        return new LoggedHandlerResponse<>(logger, responseObserver, handler);
+    public static <T, U> Handler<AsyncResult<T>> logged(Logger log, StreamObserver<U> responseObserver, Function1<T, U> handler) {
+        return new LoggedHandlerResponse<>(log, responseObserver, handler);
     }
 
-    public static <T, U> Handler<AsyncResult<T>> logged(Logger logger, Function1<T, U> handler) {
-        return new LoggedHandler<>(logger, handler);
+    public static <T, U> Handler<AsyncResult<T>> logged(Logger log, Function1<T, U> handler) {
+        return new LoggedHandler<>(log, handler);
     }
 
     private static final class LoggedHandlerResponse<T, U> extends LoggedHandlerBase<T, U>  {

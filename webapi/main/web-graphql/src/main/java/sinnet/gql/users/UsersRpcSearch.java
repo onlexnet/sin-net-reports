@@ -34,9 +34,9 @@ public class UsersRpcSearch {
         .search(projectId, email)
         .onComplete(Handlers.logged(log, responseObserver, it -> it.foldLeft(
             SearchReply.newBuilder(),
-            (acc, o) -> acc.addProjects(PropsBuilder.build(UsersSearchModel.newBuilder())
+            (acc, o) -> acc.addItems(PropsBuilder.build(UsersSearchModel.newBuilder())
                 .tset(ofNullable(o.getEmail().getValue()), b -> b::setEmail)
-                .set(UUID.randomUUID().toString(), b -> b::setEmail)
+                .set(UUID.randomUUID().toString(), b -> b::setEntityId)
                 .done().build()))
             .build()));
   }

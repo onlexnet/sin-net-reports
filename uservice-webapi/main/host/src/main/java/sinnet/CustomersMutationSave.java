@@ -6,6 +6,8 @@ import org.eclipse.microprofile.graphql.GraphQLApi;
 import org.eclipse.microprofile.graphql.NonNull;
 import org.eclipse.microprofile.graphql.Source;
 
+import sinnet.gql.CustomersMutation;
+
 @GraphQLApi
 @ApplicationScoped
 public class CustomersMutationSave {

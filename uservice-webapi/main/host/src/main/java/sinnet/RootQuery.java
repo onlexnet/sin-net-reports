@@ -17,8 +17,10 @@ import org.eclipse.microprofile.jwt.JsonWebToken;
 import io.quarkus.grpc.GrpcClient;
 import io.smallrye.mutiny.Uni;
 import io.vavr.collection.Iterator;
+import sinnet.gql.api.UsersQuery;
 import sinnet.grpc.projects.ListRequest;
 import sinnet.grpc.projects.Projects;
+import sinnet.security.AccessProvider;
 
 @GraphQLApi
 public class RootQuery {
@@ -26,6 +28,9 @@ public class RootQuery {
   @Inject
   JsonWebToken jwt;
   
+  @Inject
+  AccessProvider accessProvider;
+
   @GrpcClient("activities")
   Projects projectsGrpc;
 
@@ -68,15 +73,15 @@ public class RootQuery {
   }
 
   @Query("Actions")
-  public @NonNull ActionsQuery actions(@NonNull @Id @Name("projectId") String projectIdAsString) {
-    var projectId = UUID.fromString(projectIdAsString);
-    return new ActionsQuery(projectId);
+  public @NonNull Uni<ActionsQuery> actions(@NonNull @Id  String projectId) {
+    return accessProvider.with(projectId)
+        .map(it -> new ActionsQuery(projectId, it.getUserToken()));
   }
 
-  @Query
-  public Users Users(@NonNull @Id @Name("projectId") String projectIdAsString) {
-    var projectId = UUID.fromString(projectIdAsString);
-    return new Users(projectId);
+  @Query("Users")
+  public @NonNull Uni<sinnet.gql.api.UsersQuery> users(@NonNull @Id String projectId) {
+    return accessProvider.with(projectId)
+        .map(it -> new UsersQuery(projectId, it.getUserToken()));
   }
 
 

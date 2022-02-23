@@ -83,7 +83,6 @@
         <version>0.6.1</version>
         <executions>
           <execution>
-            <phase>generate-sources</phase>
             <goals>
               <goal>compile</goal>
               <goal>compile-custom</goal>
