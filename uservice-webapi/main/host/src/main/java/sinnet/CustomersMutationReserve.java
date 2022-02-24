@@ -20,7 +20,7 @@ public class CustomersMutationReserve implements CommonMapper{
   @GrpcClient("activities")
   Customers service;
 
-  public @NonNull Uni<@NonNull Entity> reserve(@Source CustomersMutation self) {
+  public @NonNull Uni<sinnet.gql.models.Entity> reserve(@Source CustomersMutation self) {
     var request = ReserveRequest.newBuilder()
         .setProjectId(self.getProjectId())
         .build();

@@ -12,7 +12,6 @@ import io.vertx.jdbcclient.JDBCPool;
 import io.vertx.pgclient.PgConnectOptions;
 import io.vertx.pgclient.PgPool;
 import io.vertx.sqlclient.PoolOptions;
-import lombok.Setter;
 
 @Configuration
 @Profile({ "prod", "dev" })

@@ -11,8 +11,8 @@ import org.eclipse.microprofile.graphql.NonNull;
 import io.quarkus.grpc.GrpcClient;
 import io.smallrye.mutiny.Uni;
 import sinnet.gql.CustomersMutation;
+import sinnet.gql.security.AccessProvider;
 import sinnet.grpc.roles.Rbac;
-import sinnet.security.AccessProvider;
 
 @GraphQLApi
 public class RootMutation {

@@ -1,4 +1,4 @@
-package sinnet.security;
+package sinnet.gql.security;
 
 import io.smallrye.mutiny.Uni;
 import lombok.Value;

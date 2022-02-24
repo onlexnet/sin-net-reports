@@ -7,6 +7,7 @@ import org.eclipse.microprofile.graphql.NonNull;
 import org.eclipse.microprofile.graphql.Source;
 
 import sinnet.gql.CustomersMutation;
+import sinnet.gql.models.Entity;
 
 @GraphQLApi
 @ApplicationScoped

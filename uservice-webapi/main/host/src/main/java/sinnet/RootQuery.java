@@ -18,9 +18,9 @@ import io.quarkus.grpc.GrpcClient;
 import io.smallrye.mutiny.Uni;
 import io.vavr.collection.Iterator;
 import sinnet.gql.api.UsersQuery;
+import sinnet.gql.security.AccessProvider;
 import sinnet.grpc.projects.ListRequest;
 import sinnet.grpc.projects.Projects;
-import sinnet.security.AccessProvider;
 
 @GraphQLApi
 public class RootQuery {
@@ -67,9 +67,9 @@ public class RootQuery {
   }
 
   @Query("Customers")
-  public @NonNull CustomersQuery customers(@NonNull @Id @Name("projectId") String projectIdAsString) {
-    var projectId = UUID.fromString(projectIdAsString);
-    return new CustomersQuery(projectId);
+  public @NonNull Uni<@NonNull CustomersQuery> customers(@NonNull @Id String projectId) {
+    return accessProvider.with(projectId)
+        .map(it -> new CustomersQuery(projectId, it.getUserToken()));
   }
 
   @Query("Actions")

@@ -2,13 +2,15 @@ package sinnet.gql;
 
 import javax.enterprise.context.ApplicationScoped;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.microprofile.graphql.GraphQLApi;
 import org.eclipse.microprofile.graphql.Source;
 
 import io.quarkus.grpc.GrpcClient;
 import io.smallrye.mutiny.Uni;
 import lombok.extern.slf4j.Slf4j;
-import sinnet.CustomerEntity;
+import sinnet.gql.api.CustomerMapper;
+import sinnet.gql.models.CustomerEntity;
 import sinnet.grpc.common.EntityId;
 import sinnet.grpc.customers.Customers;
 import sinnet.grpc.customers.GetRequest;
@@ -22,19 +24,22 @@ public class ActionsQueryGetServiceModel implements CustomerMapper {
   Customers service;
 
   public Uni<CustomerEntity> getCustomer(@Source ServiceModel self) {
+    
+    var customerId = self.getCustomerId();
+    if (StringUtils.isEmpty(customerId)) return Uni.createFrom().nullItem();
+
     var entity = EntityId.newBuilder()
         .setProjectId(self.getProjectId())
-        .setEntityId(self.getCustomerId())
+        .setEntityId(customerId)
         .setEntityVersion(0);
 
     var request = GetRequest.newBuilder()
         .setEntityId(entity)
         .setUserToken(self.getUserToken())
         .build();
-    return service.get(request)
+
+        return service.get(request)
         .onItemOrFailure()
-        .transform(Transform.logged(log, it -> {
-          return toGql(it);
-        }));
+        .transform(Transform.logged(log, it -> toGql(it)));
   }
 }

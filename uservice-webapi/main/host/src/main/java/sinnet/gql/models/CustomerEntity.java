@@ -1,8 +1,11 @@
-package sinnet;
+package sinnet.gql.models;
 
 import org.eclipse.microprofile.graphql.NonNull;
 
 import lombok.Data;
+import sinnet.CustomerContact;
+import sinnet.CustomerModel;
+import sinnet.CustomerSecretEx;
 
 @Data
 public class CustomerEntity {

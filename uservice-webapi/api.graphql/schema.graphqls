@@ -81,12 +81,13 @@ type CustomersMutation {
   projectId: String
   remove(id: MyEntity!): Boolean
   reserve: SomeEntity!
-  save(contacts: [CustomerContactInput!]!, entry: CustomerInput!, id: MyEntity!, secrets: [CustomerSecretInput!]!, secretsEx: [CustomerSecretExInput!]!): SomeEntity
+  save(contacts: [CustomerContactInput!]!, entry: CustomerInput!, id: MyEntity!, secrets: [CustomerSecretInput!]!, secretsEx: [CustomerSecretExInput!]!): SomeEntity!
 }
 
 type CustomersQuery {
   get(entityId: ID): CustomerEntity
   list: [CustomerEntity!]!
+  projectId: String
 }
 
 "Mutation root"

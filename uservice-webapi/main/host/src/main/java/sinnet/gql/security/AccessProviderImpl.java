@@ -1,4 +1,4 @@
-package sinnet.security;
+package sinnet.gql.security;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;

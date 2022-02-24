@@ -9,7 +9,7 @@ import org.eclipse.microprofile.graphql.Source;
 import io.quarkus.grpc.GrpcClient;
 import io.smallrye.mutiny.Uni;
 import sinnet.ActionsMutation;
-import sinnet.Entity;
+import sinnet.gql.models.Entity;
 import sinnet.grpc.timeentries.ReserveCommand;
 import sinnet.grpc.timeentries.TimeEntries;
 

@@ -35,6 +35,7 @@ public interface Mapper {
       default CustomerModel toDto(FindCustomers.CustomerData it) {
         return CustomerModel.newBuilder()
             .setId(PropsBuilder.build(EntityId.newBuilder())
+                .set(it.getProjectId().toString(), b -> b::setProjectId)
                 .set(it.getEntityId().toString(), b -> b::setEntityId)
                 .set(it.getEntityVersion(), b -> b::setEntityVersion)
                 .done().build())
