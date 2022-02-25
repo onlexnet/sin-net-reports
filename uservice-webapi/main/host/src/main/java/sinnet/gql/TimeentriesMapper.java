@@ -26,7 +26,7 @@ public interface TimeentriesMapper extends Mapper {
         return it;
     }
 
-    default TimeEntryModel toGrpc(EntityId eid,  ServiceEntry it) {
+    default TimeEntryModel toGrpc(EntityId eid, ServiceEntry it) {
         if (it == null) return null;
         return PropsBuilder.build(TimeEntryModel.newBuilder())
             .set(b -> b::setEntityId, eid)

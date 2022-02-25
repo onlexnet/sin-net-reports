@@ -24,7 +24,6 @@ public class ActionsMutationUpdate implements TimeentriesMapper {
 
   @GrpcClient("activities")
   TimeEntries service;
-
   public Uni<@NonNull Boolean> update(@Source ActionsMutation self,
                         @NonNull @Id String entityId,
                         int entityVersion,
@@ -43,6 +42,5 @@ public class ActionsMutationUpdate implements TimeentriesMapper {
         .transform(Transform.logged(log, it -> {
           return it.getSuccess();
         }));
-        
   }
 }
