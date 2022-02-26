@@ -21,7 +21,7 @@
   <dependencies>
     <dependency>
       <groupId>onlexnet.sinnet</groupId>
-      <artifactId>timeentries-grpc-client</artifactId>
+      <artifactId>sinnet-webapi-grpc-client-timeentries</artifactId>
     </dependency>
     <dependency>
       <groupId>org.projectlombok</groupId>

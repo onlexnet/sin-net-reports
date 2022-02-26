@@ -5,8 +5,11 @@
   <artifactId>sinnet-webapi-parent</artifactId>
   <version>${revision}</version>
   <packaging>pom</packaging>
+
   <modules>
-    <module>timeentries-grpc-client</module>
+    <module>grpc-client-parent</module>
+    <module>grpc-client-timeentries</module>
+    <module>grpc-client-reports</module>
     <module>host</module>
   </modules>
 
@@ -20,7 +23,7 @@
     <dependencies>
       <dependency>
         <groupId>onlexnet.sinnet</groupId>
-        <artifactId>timeentries-grpc-client</artifactId>
+        <artifactId>sinnet-webapi-grpc-client-timeentries</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
