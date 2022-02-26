@@ -130,7 +130,6 @@ type ServiceModel {
 
 type ServicesSearchResult {
   items: [ServiceModel!]!
-  totalDistance: Int!
 }
 
 type SomeEntity {

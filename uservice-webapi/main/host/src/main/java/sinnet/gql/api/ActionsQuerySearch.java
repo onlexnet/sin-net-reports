@@ -24,7 +24,7 @@ public class ActionsQuerySearch implements TimeentriesMapper {
   @GrpcClient("activities")
   TimeEntries service;
 
-  public Uni<sinnet.gql.models.ServicesSearchResult> search(@Source ActionsQuery self, ServiceFilter filter) {
+  public @NonNull Uni<@NonNull ServicesSearchResult> search(@Source ActionsQuery self, ServiceFilter filter) {
     var query = SearchQuery.newBuilder()
         .setProjectId(self.getProjectId())
         .setFrom(toGrpc(filter.getFrom()))
@@ -48,10 +48,8 @@ public class ActionsQuerySearch implements TimeentriesMapper {
         }).toJavaArray(ServiceModel[]::new)
       ))
       .map(it -> {
-          var distance = 10;
           var result = new ServicesSearchResult();
           result.setItems(it);
-          result.setTotalDistance(distance);
           return result;
       });
   }

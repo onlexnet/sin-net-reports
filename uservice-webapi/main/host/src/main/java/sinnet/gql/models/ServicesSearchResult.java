@@ -9,5 +9,4 @@ import sinnet.gql.ServiceModel;
 @Data
 public class ServicesSearchResult {
   private @NonNull ServiceModel[] items = ArrayUtils.toArray();
-  private int totalDistance;
 }

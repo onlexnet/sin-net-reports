@@ -1,4 +1,4 @@
-package sinnet.gql.models;
+package sinnet.gql.api;
 
 import java.util.UUID;
 
@@ -16,7 +16,10 @@ import org.eclipse.microprofile.jwt.JsonWebToken;
 import io.quarkus.grpc.GrpcClient;
 import io.smallrye.mutiny.Uni;
 import io.vavr.collection.Iterator;
-import sinnet.gql.api.UsersQuery;
+import sinnet.gql.models.ActionsQuery;
+import sinnet.gql.models.CustomersQuery;
+import sinnet.gql.models.PrincipalModel;
+import sinnet.gql.models.ProjectEntity;
 import sinnet.gql.security.AccessProvider;
 import sinnet.grpc.projects.ListRequest;
 import sinnet.grpc.projects.Projects;
@@ -49,7 +52,7 @@ public class RootQuery {
   }
 
   @Query
-  public @NonNull Uni<sinnet.gql.models.ProjectEntity[]> availableProjects() {
+  public @NonNull Uni<@NonNull ProjectEntity[]> availableProjects() {
     var emails = (JsonArray) jwt.claim("emails").get();
     var email = emails.getString(0);
     var request = ListRequest.newBuilder()
@@ -58,10 +61,7 @@ public class RootQuery {
     return projectsGrpc.list(request)
       .map(it -> Iterator
           .ofAll(it.getProjectsList())
-          .map(o -> {
-            var a = ProjectEntity.builder().id(o.getId()).name(o.getName()).build();
-            return a;
-          })
+          .map(o -> ProjectEntity.builder().id(o.getId()).name(o.getName()).build())
           .toJavaArray(ProjectEntity[]::new));
   }
 

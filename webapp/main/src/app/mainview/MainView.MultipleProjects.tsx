@@ -1,7 +1,6 @@
 import React from "react";
-import { ChoiceGroup, IChoiceGroupOption } from "@fluentui/react";
+import { ChoiceGroup, IChoiceGroupOption, DefaultButton, Stack } from "@fluentui/react";
 import _ from "lodash";
-import { DefaultButton, Stack } from "@fluentui/react";
 
 interface MainViewMultipleProjectsProps {
     projects: { id: string, name: string }[]

@@ -20,7 +20,7 @@ public class UsersQuerySearch {
   @GrpcClient("activities")
   Users service;
 
-  public @NonNull Uni<@NonNullsinnet.gql.models.User[]> search(@Source UsersQuery self) {
+  public @NonNull Uni<@NonNull User[]> search(@Source UsersQuery self) {
     var request = SearchRequest.newBuilder()
         .setUserToken(self.getUserToken())
         .build();
