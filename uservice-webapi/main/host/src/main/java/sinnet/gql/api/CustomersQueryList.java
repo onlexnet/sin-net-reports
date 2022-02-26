@@ -8,9 +8,9 @@ import io.quarkus.grpc.GrpcClient;
 import io.smallrye.mutiny.Uni;
 import io.vavr.collection.Iterator;
 import lombok.extern.slf4j.Slf4j;
-import sinnet.CustomersQuery;
 import sinnet.gql.Transform;
 import sinnet.gql.models.CustomerEntity;
+import sinnet.gql.models.CustomersQuery;
 import sinnet.grpc.customers.Customers;
 import sinnet.grpc.customers.ListRequest;
 

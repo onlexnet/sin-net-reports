@@ -1,4 +1,4 @@
-package sinnet;
+package sinnet.gql.models;
 
 import java.util.UUID;
 
@@ -9,7 +9,6 @@ import javax.ws.rs.core.SecurityContext;
 
 import org.eclipse.microprofile.graphql.GraphQLApi;
 import org.eclipse.microprofile.graphql.Id;
-import org.eclipse.microprofile.graphql.Name;
 import org.eclipse.microprofile.graphql.NonNull;
 import org.eclipse.microprofile.graphql.Query;
 import org.eclipse.microprofile.jwt.JsonWebToken;
@@ -50,7 +49,7 @@ public class RootQuery {
   }
 
   @Query
-  public @NonNull Uni<@NonNull ProjectEntity[]> availableProjects() {
+  public @NonNull Uni<sinnet.gql.models.ProjectEntity[]> availableProjects() {
     var emails = (JsonArray) jwt.claim("emails").get();
     var email = emails.getString(0);
     var request = ListRequest.newBuilder()
@@ -67,7 +66,7 @@ public class RootQuery {
   }
 
   @Query("Customers")
-  public @NonNull Uni<@NonNull CustomersQuery> customers(@NonNull @Id String projectId) {
+  public @NonNull Uni<sinnet.gql.models.CustomersQuery> customers(@NonNull @Id String projectId) {
     return accessProvider.with(projectId)
         .map(it -> new CustomersQuery(projectId, it.getUserToken()));
   }

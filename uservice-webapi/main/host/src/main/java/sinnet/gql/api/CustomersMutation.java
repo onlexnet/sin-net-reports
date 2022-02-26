@@ -1,5 +1,4 @@
-package sinnet;
-
+package sinnet.gql.api;
 
 import org.eclipse.microprofile.graphql.Ignore;
 
@@ -7,7 +6,7 @@ import lombok.Value;
 import sinnet.grpc.common.UserToken;
 
 @Value
-public final class ActionsQuery {
+public class CustomersMutation {
   private String projectId;
   @Ignore
   private UserToken userToken;

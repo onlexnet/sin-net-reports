@@ -1,4 +1,4 @@
-package sinnet;
+package sinnet.ws;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

@@ -1,6 +1,7 @@
 package sinnet.gql;
 
-import sinnet.ServiceEntry;
+import sinnet.gql.models.Mapper;
+import sinnet.gql.models.ServiceEntry;
 import sinnet.gql.utils.PropsBuilder;
 import sinnet.grpc.common.EntityId;
 import sinnet.grpc.common.UserToken;

@@ -1,4 +1,4 @@
-package sinnet;
+package sinnet.gql.models;
 
 import org.eclipse.microprofile.graphql.Id;
 import org.eclipse.microprofile.graphql.NonNull;

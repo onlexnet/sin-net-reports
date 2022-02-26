@@ -1,8 +1,6 @@
-package sinnet.gql;
+package sinnet.gql.models;
 
 import java.time.LocalDate;
-
-import sinnet.gql.models.Entity;
 
 public interface Mapper {
     default sinnet.grpc.timeentries.LocalDate toGrpc(LocalDate value) {

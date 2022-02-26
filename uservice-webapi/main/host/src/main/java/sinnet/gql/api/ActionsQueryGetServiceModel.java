@@ -1,4 +1,4 @@
-package sinnet.gql;
+package sinnet.gql.api;
 
 import javax.enterprise.context.ApplicationScoped;
 
@@ -9,7 +9,8 @@ import org.eclipse.microprofile.graphql.Source;
 import io.quarkus.grpc.GrpcClient;
 import io.smallrye.mutiny.Uni;
 import lombok.extern.slf4j.Slf4j;
-import sinnet.gql.api.CustomerMapper;
+import sinnet.gql.ServiceModel;
+import sinnet.gql.Transform;
 import sinnet.gql.models.CustomerEntity;
 import sinnet.grpc.common.EntityId;
 import sinnet.grpc.customers.Customers;

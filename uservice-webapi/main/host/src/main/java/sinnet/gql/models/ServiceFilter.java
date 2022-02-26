@@ -1,4 +1,4 @@
-package sinnet;
+package sinnet.gql.models;
 
 import java.time.LocalDate;
 

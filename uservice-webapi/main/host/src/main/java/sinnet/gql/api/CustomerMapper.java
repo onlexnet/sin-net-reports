@@ -5,17 +5,17 @@ import java.time.format.DateTimeFormatter;
 
 import io.vavr.collection.Iterator;
 import io.vavr.control.Option;
-import sinnet.CustomerContact;
-import sinnet.CustomerContactInput;
-import sinnet.CustomerInput;
-import sinnet.CustomerModel;
-import sinnet.CustomerSecretEx;
-import sinnet.CustomerSecretExInput;
-import sinnet.CustomerSecretInput;
-import sinnet.gql.CommonMapper;
-import sinnet.gql.Mapper;
+import sinnet.gql.models.CommonMapper;
+import sinnet.gql.models.CustomerContact;
+import sinnet.gql.models.CustomerContactInput;
 import sinnet.gql.models.CustomerEntity;
+import sinnet.gql.models.CustomerInput;
+import sinnet.gql.models.CustomerModel;
 import sinnet.gql.models.CustomerSecret;
+import sinnet.gql.models.CustomerSecretEx;
+import sinnet.gql.models.CustomerSecretExInput;
+import sinnet.gql.models.CustomerSecretInput;
+import sinnet.gql.models.Mapper;
 import sinnet.gql.utils.PropsBuilder;
 import sinnet.grpc.customers.GetReply;
 

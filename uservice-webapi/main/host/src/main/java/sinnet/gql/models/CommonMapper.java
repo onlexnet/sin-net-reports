@@ -1,6 +1,5 @@
-package sinnet.gql;
+package sinnet.gql.models;
 
-import sinnet.gql.models.Entity;
 import sinnet.gql.utils.PropsBuilder;
 import sinnet.grpc.common.EntityId;
 

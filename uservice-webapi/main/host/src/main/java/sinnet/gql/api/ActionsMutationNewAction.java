@@ -1,4 +1,4 @@
-package sinnet.gql;
+package sinnet.gql.api;
 
 import java.time.LocalDate;
 
@@ -8,8 +8,9 @@ import org.eclipse.microprofile.graphql.Source;
 
 import io.quarkus.grpc.GrpcClient;
 import io.smallrye.mutiny.Uni;
-import sinnet.ActionsMutation;
+import sinnet.gql.models.ActionsMutation;
 import sinnet.gql.models.Entity;
+import sinnet.gql.models.Mapper;
 import sinnet.grpc.timeentries.ReserveCommand;
 import sinnet.grpc.timeentries.TimeEntries;
 

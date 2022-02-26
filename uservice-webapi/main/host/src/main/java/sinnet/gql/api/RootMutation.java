@@ -1,4 +1,4 @@
-package sinnet;
+package sinnet.gql.api;
 
 import javax.inject.Inject;
 
@@ -10,7 +10,7 @@ import org.eclipse.microprofile.graphql.NonNull;
 
 import io.quarkus.grpc.GrpcClient;
 import io.smallrye.mutiny.Uni;
-import sinnet.gql.CustomersMutation;
+import sinnet.gql.models.ActionsMutation;
 import sinnet.gql.security.AccessProvider;
 import sinnet.grpc.roles.Rbac;
 
@@ -25,14 +25,14 @@ public class RootMutation {
 
   @Name("Customers")
   @Mutation
-  public @NonNull Uni<sinnet.gql.CustomersMutation> customers(@NonNull @Id String projectId) {
+  public @NonNull Uni<sinnet.gql.api.CustomersMutation> customers(@NonNull @Id String projectId) {
     return accessProvider.with(projectId)
         .map(it -> new CustomersMutation(projectId, it.getUserToken()));
   }
 
   @Name("Actions")
   @Mutation
-  public @NonNull Uni<@NonNull ActionsMutation> actions(@NonNull @Id String projectId) {
+  public @NonNull Uni<sinnet.gql.models.ActionsMutation> actions(@NonNull @Id String projectId) {
     return accessProvider.with(projectId)
         .map(it -> new ActionsMutation(projectId, it.getUserToken()));
   }

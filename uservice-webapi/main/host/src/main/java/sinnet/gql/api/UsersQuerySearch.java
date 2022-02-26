@@ -8,8 +8,8 @@ import io.quarkus.grpc.GrpcClient;
 import io.smallrye.mutiny.Uni;
 import io.vavr.collection.Iterator;
 import lombok.extern.slf4j.Slf4j;
-import sinnet.User;
 import sinnet.gql.Transform;
+import sinnet.gql.models.User;
 import sinnet.grpc.users.SearchRequest;
 import sinnet.grpc.users.Users;
 
@@ -20,7 +20,7 @@ public class UsersQuerySearch {
   @GrpcClient("activities")
   Users service;
 
-  public @NonNull Uni<@NonNull User[]> search(@Source UsersQuery self) {
+  public @NonNull Uni<@NonNullsinnet.gql.models.User[]> search(@Source UsersQuery self) {
     var request = SearchRequest.newBuilder()
         .setUserToken(self.getUserToken())
         .build();

@@ -221,7 +221,7 @@ input ServiceEntryInput {
 
 input ServiceFilterInput {
   "ISO-8601"
-  from: Date
+  from: Date!
   "ISO-8601"
-  to: Date
+  to: Date!
 }

@@ -1,4 +1,4 @@
-package sinnet;
+package sinnet.gql.models;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.microprofile.graphql.NonNull;

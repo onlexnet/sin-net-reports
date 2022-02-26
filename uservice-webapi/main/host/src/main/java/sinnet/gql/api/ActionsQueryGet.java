@@ -1,4 +1,4 @@
-package sinnet.gql;
+package sinnet.gql.api;
 
 import javax.enterprise.context.ApplicationScoped;
 
@@ -9,7 +9,10 @@ import org.eclipse.microprofile.graphql.Source;
 import io.quarkus.grpc.GrpcClient;
 import io.smallrye.mutiny.Uni;
 import lombok.extern.slf4j.Slf4j;
-import sinnet.ActionsQuery;
+import sinnet.gql.ServiceModel;
+import sinnet.gql.TimeentriesMapper;
+import sinnet.gql.Transform;
+import sinnet.gql.models.ActionsQuery;
 import sinnet.grpc.timeentries.GetQuery;
 import sinnet.grpc.timeentries.TimeEntries;
 

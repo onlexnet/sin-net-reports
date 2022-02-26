@@ -8,12 +8,12 @@ import io.quarkus.grpc.GrpcClient;
 import io.smallrye.mutiny.Uni;
 import io.vavr.collection.List;
 import lombok.extern.slf4j.Slf4j;
-import sinnet.ActionsQuery;
-import sinnet.ServiceFilter;
-import sinnet.ServicesSearchResult;
 import sinnet.gql.ServiceModel;
 import sinnet.gql.TimeentriesMapper;
 import sinnet.gql.Transform;
+import sinnet.gql.models.ActionsQuery;
+import sinnet.gql.models.ServiceFilter;
+import sinnet.gql.models.ServicesSearchResult;
 import sinnet.grpc.timeentries.SearchQuery;
 import sinnet.grpc.timeentries.TimeEntries;
 
@@ -24,7 +24,7 @@ public class ActionsQuerySearch implements TimeentriesMapper {
   @GrpcClient("activities")
   TimeEntries service;
 
-  public Uni<@NonNull ServicesSearchResult> search(@Source ActionsQuery self, ServiceFilter filter) {
+  public Uni<sinnet.gql.models.ServicesSearchResult> search(@Source ActionsQuery self, ServiceFilter filter) {
     var query = SearchQuery.newBuilder()
         .setProjectId(self.getProjectId())
         .setFrom(toGrpc(filter.getFrom()))
