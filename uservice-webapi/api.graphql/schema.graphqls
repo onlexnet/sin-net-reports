@@ -79,7 +79,7 @@ type CustomerSecretEx {
 
 type CustomersMutation {
   projectId: String
-  remove(id: MyEntity!): Boolean
+  remove(id: MyEntity!): Boolean!
   reserve: SomeEntity!
   save(contacts: [CustomerContactInput!]!, entry: CustomerInput!, id: MyEntity!, secrets: [CustomerSecretInput!]!, secretsEx: [CustomerSecretExInput!]!): SomeEntity!
 }
