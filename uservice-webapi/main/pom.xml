@@ -27,6 +27,11 @@
         <version>${project.version}</version>
       </dependency>
       <dependency>
+        <groupId>onlexnet.sinnet</groupId>
+        <artifactId>sinnet-webapi-grpc-client-reports</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
         <groupId>${quarkus.platform.group-id}</groupId>
         <artifactId>${quarkus.platform.artifact-id}</artifactId>
         <version>${quarkus.platform.version}</version>

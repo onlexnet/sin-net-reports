@@ -71,17 +71,33 @@
 
     <pluginManagement>
       <plugins>
+
+        <!-- <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-clean-plugin</artifactId>
+          <version>3.1.0</version>
+          <configuration>
+            <filesets>
+              <fileset>
+                <directory>${basedir}/src/main/proto</directory>
+                <includes>
+                  <include>**/*.proto</include>
+                </includes>
+                <followSymlinks>false</followSymlinks>
+              </fileset>
+            </filesets>
+          </configuration>
+        </plugin> -->
+
         <plugin>
           <artifactId>maven-antrun-plugin</artifactId>
           <version>3.0.0</version>
           <executions>
             <execution>
-              <phase>initialize</phase>
+              <id>copy-proto-files</id>
+              <phase>clean</phase>
               <configuration>
                 <target>
-                  <delete>
-                    <fileset dir="${basedir}/src/main/proto" />
-                  </delete>
                   <copy todir="${basedir}/src/main/proto">
                     <fileset dir="${basedir}/../../.links/${links-folder-name}" />
                   </copy>
@@ -93,12 +109,11 @@
             </execution>
           </executions>
         </plugin>
- 
+
       </plugins>
     </pluginManagement>
 
     <plugins>
-
 
       <plugin>
         <groupId>org.xolstice.maven.plugins</groupId>
@@ -125,6 +140,7 @@
         </configuration>
         <executions>
           <execution>
+            <phase>process-sources</phase>
             <goals>
               <goal>compile</goal>
               <goal>compile-custom</goal>
@@ -132,7 +148,6 @@
           </execution>
         </executions>
       </plugin>
-
 
       <plugin>
         <groupId>org.jboss.jandex</groupId>

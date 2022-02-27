@@ -8,6 +8,7 @@
     <relativePath>../pom.xml</relativePath>
   </parent>
   <artifactId>sinnet-webapi</artifactId>
+  <name>sinnet-webapi-host</name>
   <version>${revision}</version>
   <properties>
     <compiler-plugin.version>3.8.1</compiler-plugin.version>
@@ -22,6 +23,10 @@
     <dependency>
       <groupId>onlexnet.sinnet</groupId>
       <artifactId>sinnet-webapi-grpc-client-timeentries</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>onlexnet.sinnet</groupId>
+      <artifactId>sinnet-webapi-grpc-client-reports</artifactId>
     </dependency>
     <dependency>
       <groupId>org.projectlombok</groupId>
