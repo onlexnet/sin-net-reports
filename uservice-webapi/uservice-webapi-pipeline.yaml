@@ -67,6 +67,12 @@ jobs:
         workingDirectory: $(workingDirectory)
         displayName: Read version from .semversion file
 
+      - bash: |
+          ./links.sh
+          cp -Lr .links .links-COPY && rm -r .links && mv .links-COPY .links
+        workingDirectory: webapi
+        displayName: Create local copy of used external resources
+
       - task: Maven@3
         displayName: 'Project compilation with Maven'
         inputs:
