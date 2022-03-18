@@ -2,33 +2,47 @@
 <project>
   <modelVersion>4.0.0</modelVersion>
   <groupId>onlexnet.sinnet</groupId>
-  <artifactId>sinnet-webapi-parent</artifactId>
+  <artifactId>webapi-parent</artifactId>
   <version>${revision}</version>
   <packaging>pom</packaging>
 
   <modules>
-    <module>grpc-client-parent</module>
-    <module>grpc-client-timeentries</module>
-    <module>grpc-client-reports</module>
+    <module>grpc-parent-proto</module>
+    <module>grpc-parent-client</module>
+    <module>grpc-timeentries-proto</module>
+    <module>grpc-timeentries-client</module>
+    <module>grpc-reports-proto</module>
+    <module>grpc-reports-client</module>
     <module>host</module>
   </modules>
 
   <properties>
     <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
     <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
-    <quarkus.platform.version>2.6.2.Final</quarkus.platform.version>
+    <quarkus.platform.version>2.7.5.Final</quarkus.platform.version>
+    <compiler-plugin.version>3.8.1</compiler-plugin.version>
   </properties>
   
   <dependencyManagement>
     <dependencies>
       <dependency>
         <groupId>onlexnet.sinnet</groupId>
-        <artifactId>sinnet-webapi-grpc-client-timeentries</artifactId>
+        <artifactId>webapi-grpc-timeentries-proto</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>onlexnet.sinnet</groupId>
-        <artifactId>sinnet-webapi-grpc-client-reports</artifactId>
+        <artifactId>webapi-grpc-reports-proto</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>onlexnet.sinnet</groupId>
+        <artifactId>webapi-grpc-timeentries-client</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>onlexnet.sinnet</groupId>
+        <artifactId>webapi-grpc-reports-client</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -70,4 +84,5 @@
       </plugin>
     </plugins>
   </build>
+
 </project>

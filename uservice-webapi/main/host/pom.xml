@@ -3,15 +3,14 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>onlexnet.sinnet</groupId>
-    <artifactId>sinnet-webapi-parent</artifactId>
+    <artifactId>webapi-parent</artifactId>
     <version>${revision}</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
   <artifactId>sinnet-webapi</artifactId>
   <name>sinnet-webapi-host</name>
-  <version>${revision}</version>
+  
   <properties>
-    <compiler-plugin.version>3.8.1</compiler-plugin.version>
     <maven.compiler.parameters>true</maven.compiler.parameters>
     <maven.compiler.source>11</maven.compiler.source>
     <maven.compiler.target>11</maven.compiler.target>
@@ -22,11 +21,11 @@
   <dependencies>
     <dependency>
       <groupId>onlexnet.sinnet</groupId>
-      <artifactId>sinnet-webapi-grpc-client-timeentries</artifactId>
+      <artifactId>webapi-grpc-timeentries-client</artifactId>
     </dependency>
     <dependency>
       <groupId>onlexnet.sinnet</groupId>
-      <artifactId>sinnet-webapi-grpc-client-reports</artifactId>
+      <artifactId>webapi-grpc-reports-proto</artifactId>
     </dependency>
     <dependency>
       <groupId>org.projectlombok</groupId>

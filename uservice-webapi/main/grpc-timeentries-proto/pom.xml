@@ -3,15 +3,14 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>onlexnet.sinnet</groupId>
-    <artifactId>sinnet-webapi-grpc-client-parent</artifactId>
+    <artifactId>webapi-grpc-parent-proto</artifactId>
     <version>${revision}</version>
-    <relativePath>../grpc-client-parent/pom.xml</relativePath>
+    <relativePath>../grpc-parent-proto/pom.xml</relativePath>
   </parent>
-  <artifactId>sinnet-webapi-grpc-client-reports</artifactId>
-  <version>${revision}</version>
+  <artifactId>webapi-grpc-timeentries-proto</artifactId>
 
   <properties>
-    <links-folder-name>uservice-reports-proto</links-folder-name>
+    <links-folder-name>uservice-timeentries-proto</links-folder-name>
   </properties>
 
   <build>
@@ -21,6 +20,9 @@
       </plugin>
       <plugin>
         <artifactId>maven-antrun-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
       </plugin>
     </plugins>
   </build>
