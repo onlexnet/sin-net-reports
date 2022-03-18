@@ -17,6 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 
+import io.vavr.collection.Array;
 import io.vavr.collection.List;
 import io.vavr.control.Try;
 import lombok.experimental.UtilityClass;
@@ -188,6 +189,40 @@ public class CustomerRepositoryTests {
         //         .checkpoint(it -> assertThat(it.get().getSecrets()).isEmpty());
         // }
     }
+
+    @Nested
+    public class ShouldSupportSecretsEx {
+  
+      @Test
+      void write() {
+        var projectId = api.createNewProject();
+  
+        var someId1 = EntityId.anyNew(projectId);
+        var someId2 = EntityId.anyNew(projectId);
+        var model = Given.minValidModel();
+        var randomPart = UUID.randomUUID();
+        var secretEntry = ChangeCustomerData.SecretEx.builder()
+            .location("My location " + randomPart)
+            .username("My username " + randomPart)
+            .password("My password " + randomPart)
+            .entityCode("code " + randomPart)
+            .entityName("name " + randomPart)
+            .build();
+        api.defineCustomer(someId1, model, ArrayUtils.toArray(), ArrayUtils.toArray(secretEntry), ArrayUtils.toArray());
+        api.defineCustomer(someId2, model, ArrayUtils.toArray(), ArrayUtils.toArray(secretEntry), ArrayUtils.toArray());
+        var customers = Sync.of(customerProjection.list(projectId.getId())).get().flatMap(it -> Array.of(it.getSecretsEx()));
+        assertThat(customers)
+          .hasSize(2)
+          .allSatisfy(it -> {
+            Assertions.assertThat(it.getLocation()).isEqualTo(secretEntry.getLocation());
+            Assertions.assertThat(it.getUsername()).isEqualTo(secretEntry.getUsername());
+            Assertions.assertThat(it.getPassword()).isEqualTo(secretEntry.getPassword());
+            Assertions.assertThat(it.getEntityCode()).isEqualTo(secretEntry.getEntityCode());
+            Assertions.assertThat(it.getEntityName()).isEqualTo(secretEntry.getEntityName());
+        });
+      }
+  
+  }
 }
 
 @UtilityClass
