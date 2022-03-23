@@ -23,6 +23,7 @@ import io.vertx.sqlclient.templates.TupleMapper;
 import lombok.Builder;
 import lombok.Value;
 import lombok.experimental.FieldNameConstants;
+import sinnet.RowSetEx;
 import sinnet.models.CustomerContact;
 import sinnet.models.CustomerSecret;
 import sinnet.models.CustomerSecretEx;
@@ -388,22 +389,19 @@ public class CustomerRepositoryImpl implements CustomerRepository {
                         .forQuery(client, "SELECT customer_id, location, username, password, changed_who, changed_when "
                                           + "FROM secret WHERE customer_id=#{cid}")
                         .executeBatch(ids)
-                        .map(rows -> List
-                            .ofAll(rows)
+                        .map(rows -> RowSetEx.flat(rows)
                             .map(row -> toCustomerSecret(row)));
                     var secretsEx = SqlTemplate
                         .forQuery(client, "SELECT customer_id, location, username, password, entity_name, entity_code, changed_who, changed_when "
                                           + "FROM secret_ex WHERE customer_id=#{cid}")
                         .executeBatch(ids)
-                        .map(rows -> List
-                            .ofAll(rows)
+                        .map(rows -> RowSetEx.flat(rows)
                             .map(row -> toCustomerSecretEx(row)));
                     var contacts = SqlTemplate
                         .forQuery(client, "SELECT customer_id, first_name, last_name, phone_no, email "
                                           + "FROM contact WHERE customer_id=#{cid}")
                         .executeBatch(ids)
-                        .map(rows -> List
-                            .ofAll(rows)
+                        .map(rows -> RowSetEx.flat(rows)
                             .map(row -> toCustomerContact(row)));
 
                     return CompositeFuture
