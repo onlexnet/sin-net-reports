@@ -57,13 +57,6 @@ jobs:
         workingDirectory: webapi
         displayName: Create local copy of used external resources
 
-      - bash: |
-           ls main/grpc-server/src
-           ls main/grpc-server/src/main
-           ls main/grpc-server/src/main/proto
-        workingDirectory: webapi
-        displayName: DEBUG list files
-
       - task: Maven@3
         env:
           # pom.xml uses SONAR_TOKEN env variable to communicate with sonarcloud.
