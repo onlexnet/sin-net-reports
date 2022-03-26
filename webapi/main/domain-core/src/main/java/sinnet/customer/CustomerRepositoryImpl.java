@@ -23,7 +23,6 @@ import io.vertx.sqlclient.templates.TupleMapper;
 import lombok.Builder;
 import lombok.Value;
 import lombok.experimental.FieldNameConstants;
-import sinnet.RowSetEx;
 import sinnet.models.CustomerContact;
 import sinnet.models.CustomerSecret;
 import sinnet.models.CustomerSecretEx;
@@ -32,6 +31,7 @@ import sinnet.models.Email;
 import sinnet.models.Entity;
 import sinnet.models.EntityId;
 import sinnet.models.Name;
+import sinnet.vertx.RowSetEx;
 
 @Component
 public class CustomerRepositoryImpl implements CustomerRepository {
