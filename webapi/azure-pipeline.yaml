@@ -58,7 +58,9 @@ jobs:
         displayName: Create local copy of used external resources
 
       - bash: |
-           ls grpc-server/src/main/proto
+           ls main/grpc-server/src
+           ls main/grpc-server/src/main
+           ls main/grpc-server/src/main/proto
         workingDirectory: webapi
         displayName: DEBUG list files
 
