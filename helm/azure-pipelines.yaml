@@ -20,7 +20,7 @@ resources:
   pipelines:
   - pipeline: uservice_webapi_CI
     project: sinnet
-    source: onlex-sinnet-uservice_webapi
+    source: onlex-sinnet-uservice-webapi
     trigger: "true"
   - pipeline: webapp_CI
     project: sinnet
