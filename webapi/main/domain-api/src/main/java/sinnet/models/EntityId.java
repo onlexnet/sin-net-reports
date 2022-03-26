@@ -18,6 +18,10 @@ public final class EntityId {
     return new EntityId(projectId, id, version);
   }
 
+  public static EntityId of(Entity<?> entity) {
+    return new EntityId(entity.getProjectId(), entity.getEntityId(), entity.getVersion());
+  }
+
   public static EntityId anyNew(UUID projectId) {
     return new EntityId(projectId, UUID.randomUUID(), 0);
   }

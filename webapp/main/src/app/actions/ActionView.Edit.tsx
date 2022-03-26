@@ -13,6 +13,7 @@ import { dates } from "../../api/DtoMapper";
 import CustomerView from "./ActionView.Edit.CustomerView"
 import { CustomerComboBox } from "./CustomerComboBox";
 import { useAppInsightsContext, useTrackMetric } from "@microsoft/applicationinsights-react-js";
+import { asDtoDate, asDtoDates } from "../../api/Mapper";
 
 const mapStateToProps = (state: RootState) => {
     if (state.appState.empty) {
@@ -200,7 +201,7 @@ export const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
     }
 
     const updateAction = () => {
-        const dtoDate = dates(actionDate).slashed;
+        const dtoDate = asDtoDate(actionDate);
         updateActionMutation({
             variables: {
                 projectId,

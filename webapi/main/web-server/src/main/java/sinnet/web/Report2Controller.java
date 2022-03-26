@@ -25,12 +25,12 @@ import io.vavr.Tuple2;
 import io.vavr.collection.Array;
 import io.vavr.collection.HashMap;
 import io.vavr.control.Option;
-import sinnet.FutureExecutor;
 import sinnet.models.ActionDuration;
 import sinnet.models.Distance;
 import sinnet.read.ActionProjector;
 import sinnet.report2.grpc.ReportRequest;
 import sinnet.report2.grpc.ReportsGrpc;
+import sinnet.utils.FutureExecutor;
 
 @RestController
 @RequestMapping(path = "/api/raporty")

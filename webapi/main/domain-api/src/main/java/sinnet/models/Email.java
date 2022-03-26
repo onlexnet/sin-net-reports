@@ -1,5 +1,7 @@
 package sinnet.models;
 
+import org.apache.commons.lang3.StringUtils;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Value;
@@ -16,6 +18,7 @@ public final class Email {
   private String value;
 
   public static Email of(String value) {
+    if (StringUtils.isBlank(value)) return EMPTY;
     return new Email(value);
   }
 

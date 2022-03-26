@@ -1,11 +1,8 @@
 package sinnet.action;
 
-import java.util.UUID;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import io.vavr.collection.Stream;
 import io.vertx.core.Future;
 import io.vertx.core.Promise;
 import io.vertx.core.json.JsonObject;
@@ -13,10 +10,9 @@ import io.vertx.pgclient.PgPool;
 import io.vertx.sqlclient.Tuple;
 import io.vertx.sqlclient.templates.SqlTemplate;
 import io.vertx.sqlclient.templates.TupleMapper;
-import sinnet.ActionRepository;
 import sinnet.models.ActionValue;
-import sinnet.models.Entity;
 import sinnet.models.EntityId;
+import sinnet.write.ActionRepository;
 
 @Service
 public class ActionRepositoryImpl implements ActionRepository {
@@ -24,9 +20,6 @@ public class ActionRepositoryImpl implements ActionRepository {
   @Autowired
   private PgPool pgClient;
 
-  private static final String SOURCE = "SELECT project_id, entity_id, entity_version, "
-                                      + "serviceman_email, distance, duration, date, customer_id, description, serviceman_name "
-                                      + "FROM actions it ";
   @Override
   public Future<Boolean> save(EntityId entityId, ActionValue entity) {
     var promise = Promise.<Boolean>promise();
@@ -54,30 +47,6 @@ public class ActionRepositoryImpl implements ActionRepository {
     return promise.future();
   }
 
-
-  @Override
-  public Future<Entity<ActionValue>> find(UUID projectId, UUID entityId) {
-    var promise = Promise.<Entity<ActionValue>>promise();
-    var findQuery = this.pgClient
-        .preparedQuery(SOURCE + " WHERE it.project_id=$1 AND it.entity_id=$2");
-    findQuery.execute(Tuple.of(projectId, entityId), ar -> {
-      if (ar.succeeded()) {
-        var rows = ar.result();
-        var maybeValue = Stream
-            .ofAll(rows)
-            .map(Mapper::map)
-            .headOption();
-        if (maybeValue.isDefined()) {
-          promise.complete(maybeValue.get());
-        } else {
-          promise.complete();
-        }
-      } else {
-        promise.fail(ar.cause());
-      }
-    });
-    return promise.future();
-  }
 
   @Override
   public Future<EntityId> update(EntityId id, ActionValue entity) {

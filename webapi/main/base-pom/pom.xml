@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
@@ -8,7 +8,7 @@
   <packaging>pom</packaging>
 
   <name>parent-pom</name>
-  
+
   <properties>
     <spring-boot-azure.version>2.3.2</spring-boot-azure.version>
     <spring-boot.version>2.4.3</spring-boot.version>
@@ -38,7 +38,8 @@
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
       <version>30.1.1-jre</version>
-    </dependency>  </dependencies>
+    </dependency>
+  </dependencies>
 
   <dependencyManagement>
     <dependencies>
@@ -70,28 +71,36 @@
       <dependency>
         <groupId>org.testcontainers</groupId>
         <artifactId>junit-jupiter</artifactId>
-				<version>1.15.2</version>
+        <version>1.15.2</version>
         <scope>test</scope>
       </dependency>
-			<dependency>
-				<groupId>org.testcontainers</groupId>
-				<artifactId>testcontainers-bom</artifactId>
-				<version>1.15.2</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
+      <dependency>
+        <groupId>org.testcontainers</groupId>
+        <artifactId>testcontainers-bom</artifactId>
+        <version>1.15.2</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
 
       <dependency>
-          <groupId>org.assertj</groupId>
-          <artifactId>assertj-core</artifactId>
-          <scope>test</scope>
-          <version>3.14.0</version>
+        <groupId>io.quarkus</groupId>
+        <artifactId>quarkus-bom</artifactId>
+        <version>2.7.0.Final</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.assertj</groupId>
+        <artifactId>assertj-core</artifactId>
+        <scope>test</scope>
+        <version>3.14.0</version>
       </dependency>
 
       <dependency>
         <groupId>org.projectlombok</groupId>
         <artifactId>lombok</artifactId>
-        <version>1.18.18</version>
+        <version>1.18.22</version>
         <scope>provided</scope>
       </dependency>
 
@@ -105,13 +114,14 @@
         <artifactId>vavr-jackson</artifactId>
         <version>0.10.3</version>
       </dependency>
-  
-   		<dependency>
-      		<groupId>com.typesafe.akka</groupId>
-      		<artifactId>akka-actor-typed_2.13</artifactId>
-      		<version>2.6.10</version>
-    	</dependency>
-      
+
+      <dependency>
+        <groupId>net.siudek</groupId>
+        <artifactId>grpc-common</artifactId>
+        <version>${project.version}</version>
+        <scope>compile</scope>
+      </dependency>
+
       <dependency>
         <groupId>net.siudek</groupId>
         <artifactId>grpc-client</artifactId>
@@ -155,6 +165,13 @@
       </dependency>
 
       <dependency>
+        <groupId>net.siudek</groupId>
+        <artifactId>grpc-server</artifactId>
+        <version>${project.version}</version>
+        <scope>compile</scope>
+      </dependency>
+
+      <dependency>
         <groupId>io.vertx</groupId>
         <artifactId>vertx-stack-depchain</artifactId>
         <version>4.1.1</version>
@@ -164,17 +181,17 @@
 
 
       <dependency>
-          <groupId>org.springframework.boot</groupId>
-          <artifactId>spring-boot-dependencies</artifactId>
-          <version>${spring-boot.version}</version>
-          <type>pom</type>
-          <scope>import</scope>
-          <exclusions>
-            <exclusion>
-              <groupId>org.junit.vintage</groupId>
-              <artifactId>junit-vintage-engine</artifactId>
-            </exclusion>
-          </exclusions>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-dependencies</artifactId>
+        <version>${spring-boot.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+        <exclusions>
+          <exclusion>
+            <groupId>org.junit.vintage</groupId>
+            <artifactId>junit-vintage-engine</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
 
     </dependencies>
@@ -182,6 +199,32 @@
 
   <build>
     <plugins>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>flatten-maven-plugin</artifactId>
+				<version>1.2.7</version>
+				<configuration>
+					<updatePomFile>true</updatePomFile>
+					<flattenMode>resolveCiFriendliesOnly</flattenMode>
+				</configuration>
+				<executions>
+					<execution>
+						<id>flatten</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>flatten</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>flatten.clean</id>
+						<phase>clean</phase>
+						<goals>
+							<goal>clean</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 
       <!-- Use java 11 at compilation -->
       <plugin>
@@ -325,7 +368,7 @@
           </dependencies>
 
           <configuration>
-            <configLocation>../.checkstyle/checkstyle.xml</configLocation> 
+            <configLocation>../.checkstyle/checkstyle.xml</configLocation>
             <encoding>UTF-8</encoding>
             <consoleOutput>true</consoleOutput>
             <failsOnError>true</failsOnError>

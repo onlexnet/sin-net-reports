@@ -41,3 +41,9 @@ In scope:
 - https://github.com/OfficeDev/office-ui-fabric-react/wiki/Ngrok
 - https://codewithhugo.com/docker-compose-local-https/
 - https://itnext.io/cluster-recipe-external-proxy-for-kubernetes-ingress-or-docker-compose-ingress-with-haproxy-on-f81e3adee5ef
+
+## Run locally the whole stack
+```bash
+docker-compose \
+-f service-postgres/dc.yaml up --build
+```

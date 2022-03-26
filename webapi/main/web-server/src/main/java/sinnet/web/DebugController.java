@@ -14,15 +14,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.quarkus.example.GreeterGrpc;
 import io.quarkus.example.HelloRequest;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import sinnet.FutureExecutor;
 import sinnet.report1.grpc.ActivityDetails;
 import sinnet.report1.grpc.CustomerDetails;
 import sinnet.report1.grpc.ReportRequest;
 import sinnet.report1.grpc.ReportRequests;
-import sinnet.report1.grpc.Reports1;
 import sinnet.report1.grpc.ReportsGrpc.ReportsFutureStub;
 import sinnet.reports.grpc.Date;
+import sinnet.utils.FutureExecutor;
 
 /**
  * Test controller to test calls endpoint -> webapi -> backend service using gRPC api.
@@ -34,16 +34,12 @@ import sinnet.reports.grpc.Date;
 @RestController
 @RequestMapping("/api/debug")
 @Slf4j
+@RequiredArgsConstructor
 class DebugController {
 
-  @Autowired
-  private GreeterGrpc.GreeterFutureStub client;
-
-  @Autowired
-  private ReportsFutureStub reportsClient;
-
-  @Autowired
-  private FutureExecutor executor;
+  private final GreeterGrpc.GreeterFutureStub client;
+  private final ReportsFutureStub reportsClient;
+  private final FutureExecutor executor;
 
   @RequestMapping(value = "/hello-by-service", method = RequestMethod.GET)
   @ResponseBody

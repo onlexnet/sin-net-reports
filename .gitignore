@@ -5,3 +5,6 @@ azagent
 .classpath
 .factorypath
 .settings
+
+# used to keep refs to remove folders in modules
+.links

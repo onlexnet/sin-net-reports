@@ -12,16 +12,16 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 
 import lombok.SneakyThrows;
-import sinnet.ActionRepository;
 import sinnet.Api;
 import sinnet.AppTestContext;
 import sinnet.Sync;
-import sinnet.UsersProjector;
 import sinnet.models.ActionValue;
 import sinnet.models.Email;
 import sinnet.models.EntityId;
 import sinnet.read.ActionProjector;
 import sinnet.read.ProjectProjector;
+import sinnet.read.UsersProjector;
+import sinnet.write.ActionRepository;
 
 @SpringBootTest(webEnvironment = WebEnvironment.NONE)
 @ContextConfiguration(classes = AppTestContext.class)
@@ -48,7 +48,7 @@ public final class UsersProjectorTests implements ProjectProjector {
   @Test
   public void myTest() {
     var actual = sut.search(UUID.fromString("00000000-0000-0000-0001-000000000001"), Email.of("user1@project1"))
-        .block()
+        .toCompletionStage().toCompletableFuture().join()
         .map(it -> it.getEmail().getValue());
 
     Assertions.assertThat(actual).containsExactlyInAnyOrder(

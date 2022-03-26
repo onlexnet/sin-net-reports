@@ -8,12 +8,14 @@ import io.vertx.core.Future;
 import lombok.Builder;
 import lombok.Value;
 import sinnet.models.ActionValue;
+import sinnet.models.Entity;
 import sinnet.models.EntityId;
 
 public interface ActionProjector {
 
   interface Provider {
     Future<Array<ListItem>> find(UUID projectId, LocalDate from, LocalDate to);
+    Future<Entity<ActionValue>> find(UUID projectId, UUID entityId);
   }
 
   @Value

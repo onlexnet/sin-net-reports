@@ -13,6 +13,7 @@ import sinnet.models.CustomerSecret;
 import sinnet.models.CustomerSecretEx;
 import sinnet.models.CustomerContact;
 import sinnet.models.CustomerValue;
+import sinnet.models.UserToken;
 
 public interface FindCustomers {
 
@@ -23,6 +24,7 @@ public interface FindCustomers {
     /** Address used to send the query to it's handler. */
     public static final String ADDRESS = "query.FindCustomers";
     private UUID projectId;
+    private UserToken invoker;
   }
 
   

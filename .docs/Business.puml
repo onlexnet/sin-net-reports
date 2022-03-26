@@ -1,0 +1,34 @@
+@startuml C4_Elements
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+Person(doerAlias, "Doer", "Person who evidence already done activities.")
+System(systemAlias, "SinNet Reports", "https://raport.sin.net.pl")
+System(devopsAlias, "Azure DevOps")
+System(githubAlias, "GitHub")
+Rel(doerAlias, systemAlias, "Evidence activities")
+
+System_Boundary(sinnetK8sProd, "sinnet k8s prod") {
+  Container(ReportContainer, "Reports uservice", "Quarkus, Docker, PDF creation, gRpc")
+  Container(WebAppContainer, "WebApp uservice", "React,Docker", "Default UI for application functionality")
+  Container(webApiLegacyContainer, "WebApi legacy", "graphql")
+}
+
+System_Boundary(sinnetDatacenter, "sinnet datacenter") {
+  Container(postgresql, "PostgreSQL")
+}
+
+System_Boundary(azureDevops, "Azure DevOps") {
+  Container(DevOpsCI, "CI", "React,Docker", "Default UI for application functionality")
+  Container(DevOpsCD, "CD", "React,Docker", "Default UI for application functionality")
+}
+
+System_Boundary(azureCloud, "Azure Cloud") {
+  Container(sinnetB2C, "sinnetapps", "Azure B2C", "Identity catalog")
+}
+
+Rel(doerAlias, sinnetB2C, "Evidence activities")
+Rel(WebAppContainer, sinnetB2C, "Identify")
+Rel(webApiLegacyContainer, postgresql, "uses")
+
+@enduml
+

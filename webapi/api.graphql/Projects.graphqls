@@ -1,9 +1,0 @@
-extend type Query {
-    availableProjects: [ProjectEntity!]!
-}
-
-type ProjectEntity {
-    id: ID!
-    name: String!
-}
-

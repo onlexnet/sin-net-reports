@@ -1,10 +1,10 @@
 package sinnet.serviceman;
 
 import io.vertx.core.Future;
-import sinnet.CommandHandlerBase;
 import sinnet.bus.commands.IncludeServicemanInProject;
 import sinnet.bus.commands.IncludeServicemanInProject.Command;
 import sinnet.models.EntityId;
+import sinnet.vertx.CommandHandlerBase;
 
 public class IncludeServicemanInProjectCommandHandler
        extends CommandHandlerBase<IncludeServicemanInProject.Command, EntityId> {

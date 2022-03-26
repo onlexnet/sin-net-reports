@@ -15,7 +15,6 @@
 
   <properties>
     <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/../${aggregate.report.dir}</sonar.coverage.jacoco.xmlReportPaths>
-    <graphql-java-kickstart.version>8.0.0</graphql-java-kickstart.version>
   </properties>
 
   <dependencies>
@@ -26,6 +25,10 @@
     <dependency>
       <groupId>net.siudek</groupId>
       <artifactId>web-security</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>net.siudek</groupId>
+      <artifactId>grpc-server</artifactId>
     </dependency>
     
     <dependency>
@@ -68,72 +71,14 @@
     </dependency>
 
     <dependency>
-      <groupId>com.graphql-java-kickstart</groupId>
-      <artifactId>graphql-spring-boot-starter</artifactId>
-      <version>${graphql-java-kickstart.version}</version>
-    </dependency>
-
-    <dependency>
-        <groupId>com.typesafe.akka</groupId>
-        <artifactId>akka-actor-typed_2.13</artifactId>
-    </dependency>
-
-    <!-- to embed Altair tool -->
-    <dependency>
-        <groupId>com.graphql-java-kickstart</groupId>
-        <artifactId>altair-spring-boot-starter</artifactId>
-        <version>${graphql-java-kickstart.version}</version>
-        <scope>runtime</scope>
-    </dependency>
-
-    <!-- to embed GraphiQL tool -->
-    <dependency>
-        <groupId>com.graphql-java-kickstart</groupId>
-        <artifactId>graphiql-spring-boot-starter</artifactId>
-        <version>${graphql-java-kickstart.version}</version>
-        <scope>runtime</scope>
-    </dependency>
-
-    <!-- to embed Voyager tool -->
-    <dependency>
-        <groupId>com.graphql-java-kickstart</groupId>
-        <artifactId>voyager-spring-boot-starter</artifactId>
-        <version>${graphql-java-kickstart.version}</version>
-        <scope>runtime</scope>
-    </dependency>
-
-    <!-- testing facilities -->
-    <dependency>
-        <groupId>com.graphql-java-kickstart</groupId>
-        <artifactId>graphql-spring-boot-starter-test</artifactId>
-        <version>${graphql-java-kickstart.version}</version>
-        <scope>test</scope>
+      <groupId>com.typesafe.akka</groupId>
+      <artifactId>akka-actor-typed_2.12</artifactId>
+      <version>2.6.18</version>
     </dependency>
 
   </dependencies>
 
   <build>
-
-    <resources>
-      <resource>
-        <!--
-          Imports GQL schema contract.
-          GraphQL schema files is located outside the project because it is shared with api consumers.
-          In the same time schema has to be imported to resources because having schema in resources is required
-          by java graphql kickstart dependency.
-         -->
-        <directory>../../api.graphql/</directory>
-      </resource>
-    </resources>
-
-    <!-- https://grpc.io/docs/languages/java/generated-code/#codegen -->
-    <extensions>
-      <extension>
-        <groupId>kr.motd.maven</groupId>
-        <artifactId>os-maven-plugin</artifactId>
-        <version>1.4.1.Final</version>
-      </extension>
-    </extensions>
 
     <plugins>
 

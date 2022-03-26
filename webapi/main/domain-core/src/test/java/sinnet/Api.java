@@ -16,6 +16,7 @@ import sinnet.models.CustomerValue;
 import sinnet.models.Email;
 import sinnet.models.EntityId;
 import sinnet.models.ProjectId;
+import sinnet.models.UserToken;
 import sinnet.models.Name;
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -86,9 +87,9 @@ public class Api {
     return sync.ask(address, request, ListServicemen.Ask.class, ListServicemen.Response.class).getItems();
   }
 
-  public FindCustomers.CustomerData[] queryCustomers(ProjectId projectId) {
+  public FindCustomers.CustomerData[] queryCustomers(ProjectId projectId, UserToken invoker) {
     var address = FindCustomers.Ask.ADDRESS;
-    var request = new FindCustomers.Ask(projectId.getId());
+    var request = new FindCustomers.Ask(projectId.getId(), invoker);
     return sync.ask(address, request, FindCustomers.Ask.class, FindCustomers.Reply.class).getData();
   }
 }
@@ -106,7 +107,7 @@ final class SyncBus {
     var askTemplate = new AskTemplate<TREQ, TRES>(address, resClass, eventBus) {
       public final TRES request(TREQ request) {
         var asFuture = super.ask(request);
-        return asFuture.join();
+        return asFuture.toCompletionStage().toCompletableFuture().join();
       }
     };
     return askTemplate.request(request);

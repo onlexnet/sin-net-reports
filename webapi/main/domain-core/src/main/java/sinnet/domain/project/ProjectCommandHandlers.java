@@ -10,10 +10,10 @@ import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
 import io.vertx.core.Promise;
 import io.vertx.jdbcclient.JDBCPool;
-import sinnet.CommandHandlerBase;
-import sinnet.TopLevelVerticle;
 import sinnet.bus.commands.CreateNewProject;
 import sinnet.models.ProjectId;
+import sinnet.vertx.CommandHandlerBase;
+import sinnet.vertx.TopLevelVerticle;
 
 @Component
 public class ProjectCommandHandlers extends AbstractVerticle 

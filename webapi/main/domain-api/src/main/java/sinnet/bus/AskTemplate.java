@@ -1,9 +1,6 @@
 package sinnet.bus;
 
-import java.util.concurrent.CompletableFuture;
-
-import org.springframework.remoting.RemoteAccessException;
-
+import io.vertx.core.Future;
 import io.vertx.core.eventbus.DeliveryOptions;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.json.JsonObject;
@@ -22,18 +19,15 @@ public abstract class AskTemplate<ASK, REPLY> {
     this.eventBus = eventBus;
   }
 
-  protected final CompletableFuture<REPLY> ask(ASK ask) {
-    var result = new CompletableFuture<REPLY>();
+  protected final Future<REPLY> ask(ASK ask) {
     var query = JsonObject.mapFrom(ask);
     var options = new DeliveryOptions().setTracingPolicy(TracingPolicy.ALWAYS);
-    eventBus
+    return eventBus
         .request(address, query, options)
-        .onFailure(it -> result.completeExceptionally(new RemoteAccessException(it.getMessage())))
-        .onSuccess(it -> {
+        .map(it -> {
           var body = it.body();
           var reply = JsonObject.mapFrom(body).mapTo(replyClass);
-          result.completeAsync(() -> reply);
+          return reply;
         });
-    return result;
   }
 }
