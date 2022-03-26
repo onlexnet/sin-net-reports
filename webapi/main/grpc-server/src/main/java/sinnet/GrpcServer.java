@@ -10,6 +10,9 @@ import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import lombok.SneakyThrows;
 
+import sinnet.grpc.timeentries.GetQuery;
+
+
 /** Registers all discoverable gRpc services to allow them be reachable. */
 @Component
 public class GrpcServer {
