@@ -69,7 +69,7 @@ jobs:
         displayName: 'Project compilation with Maven'
         inputs:
           mavenPomFile: 'webapi/main/pom.xml'
-          goals: 'verify'
+          goals: 'install'
           javaHomeOption: 'JDKVersion'
           jdkVersionOption: '1.11'
           jdkArchitectureOption: 'x64'

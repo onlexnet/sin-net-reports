@@ -2,7 +2,7 @@
 Infrastructre as code: creates environments and configure them
 
 # Manual preparation
-Because DNS is not automated by Terraform, so DNS prefixes are added manually:
+Because DNS is not automated by Terraform, so DNS prefixes are added manually to base address *.raport.sin.net.pl*:
 dev01 - for dev env
 stg01 and beta - for staging environment
 prd01 - for production. also prd01 will be exposed as root DNS name
