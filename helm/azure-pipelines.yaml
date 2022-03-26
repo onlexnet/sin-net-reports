@@ -18,19 +18,29 @@ pool:
 
 resources:
   pipelines:
+  - pipeline: uservice_webapi_CI
+    project: sinnet
+    source: onlex-sinnet-uservice_webapi
+    trigger: "true"
   - pipeline: webapp_CI
     project: sinnet
     source: onlex-sinnet-webapp
-    trigger: true
+    trigger: "true"
   - pipeline: webapi_CI
     project: sinnet
     source: onlex-sinnet-webapi
-    trigger: true
+    trigger: "true"
   - pipeline: report_CI
     project: sinnet
     source: onlex-sinnet-reports
-    trigger: true
+    trigger: "true"
   containers:
+    - container: uservice_webapi
+      type: ACR  
+      azureSubscription: sinnet-default-manual-arm
+      resourceGroup: sinnet-default-manual
+      registry: sinnet
+      repository: uservice_webapi
     - container: webapp
       type: ACR  
       azureSubscription: sinnet-default-manual-arm
@@ -68,6 +78,7 @@ stages:
             chartPath: helm/main
             azureContainerRegistry: $(dockerRegistryServiceConnection)
         - bash: |
+              echo "##vso[task.setvariable variable=USERVICE_WEBAPI_IMAGE_TAG]$(resources.container.uservice_webapi.tag)"
               echo "##vso[task.setvariable variable=WEBAPP_IMAGE_TAG]$(resources.container.webapp.tag)"
               echo "##vso[task.setvariable variable=WEBAPI_IMAGE_TAG]$(resources.container.webapi.tag)"
               echo "##vso[task.setvariable variable=REPORTS_IMAGE_TAG]$(resources.container.reports.tag)"
