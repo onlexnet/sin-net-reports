@@ -28,7 +28,9 @@ trigger:
   paths:
     include:
       # We have to include all folders where source files are located
-      - $[variables.workingDirectory1]
+      - uservice-webapi
+      - uservice-reports/main/src/main/proto
+      - webapi/api.grpc
 
 jobs:
   - job: CI
@@ -43,7 +45,7 @@ jobs:
       - bash: |
           ./links.sh
           cp -Lr .links .links-COPY && rm -r .links && mv .links-COPY .links
-        workingDirectory: webapi
+        workingDirectory: uservice-webapi
         displayName: Create local copy of used external resources
 
       - task: Cache@2
