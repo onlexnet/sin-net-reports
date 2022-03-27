@@ -89,6 +89,10 @@ stages:
               echo "##vso[task.setvariable variable=REPORTS_IMAGE_TAG]$(resources.container.reports.tag)"
           displayName: Store all used image tags in variables for future use.
         - bash: |
+              echo $USERVICE_WEBAPI_IMAGE_TAG
+              echo $WEBAPI_IMAGE_TAG
+          displayName: DEBUG test
+        - bash: |
               ./helm/main/makeconfig.sh
           displayName: Generate config.yaml
         - task: HelmDeploy@0
