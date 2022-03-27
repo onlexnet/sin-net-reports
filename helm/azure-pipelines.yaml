@@ -40,7 +40,7 @@ resources:
     source: onlex-sinnet-reports
     trigger: "true"
   containers:
-    - container: uservice_webapi_container
+    - container: uservice-webapi-container
       type: ACR  
       azureSubscription: sinnet-default-manual-arm
       resourceGroup: sinnet-default-manual
@@ -83,7 +83,7 @@ stages:
             chartPath: helm/main
             azureContainerRegistry: $(dockerRegistryServiceConnection)
         - bash: |
-              echo "##vso[task.setvariable variable=USERVICE_WEBAPI_IMAGE_TAG]$(resources.container.webapp.tag)"
+              echo "##vso[task.setvariable variable=USERVICE_WEBAPI_IMAGE_TAG]$(resources.container.uservice-webapi-container1.tag)"
               echo "##vso[task.setvariable variable=WEBAPP_IMAGE_TAG]$(resources.container.webapp.tag)"
               echo "##vso[task.setvariable variable=WEBAPI_IMAGE_TAG]$(resources.container.webapi.tag)"
               echo "##vso[task.setvariable variable=REPORTS_IMAGE_TAG]$(resources.container.reports.tag)"
