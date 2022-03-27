@@ -8,5 +8,6 @@ spec:
   type: NodePort
   ports:
   - port: 8080
+  - port: 9000
   selector:
     app: webapi

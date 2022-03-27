@@ -26,7 +26,6 @@ public class AccessProviderImpl implements AccessProvider {
   
     @Override
     public Uni<WithResult> with(String projectId) {
-        log.info("SPARTAAAAAAAAAAAA");
         var emailsAsObject = jwt.getClaim("emails");
         var emails = (JsonArray) emailsAsObject;
         var firstEmail = emails.getString(0);
