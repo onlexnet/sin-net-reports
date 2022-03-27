@@ -14,7 +14,14 @@ spec:
   - host: {{ include "ingress.host" . }}
     http:
       paths:
-        - path: /q/graphql-ui/
+        - path: /hello
+          pathType: Prefix
+          backend:
+            service:
+              name: uservice-webapi-svc
+              port:
+                number: 8080
+        - path: /q/graphql-ui
           pathType: Prefix
           backend:
             service:
@@ -29,34 +36,6 @@ spec:
               port:
                 number: 8080
         - path: /api
-          pathType: Prefix
-          backend:
-            service:
-              name: uservice-webapi-svc
-              port:
-                number: 8080
-        - path: /voyager
-          pathType: Prefix
-          backend:
-            service:
-              name: uservice-webapi-svc
-              port:
-                number: 8080
-        - path: /altair
-          pathType: Prefix
-          backend:
-            service:
-              name: uservice-webapi-svc
-              port:
-                number: 8080
-        - path: /vendor
-          pathType: Prefix
-          backend:
-            service:
-              name: uservice-webapi-svc
-              port:
-                number: 8080
-        - path: /actuator
           pathType: Prefix
           backend:
             service:
