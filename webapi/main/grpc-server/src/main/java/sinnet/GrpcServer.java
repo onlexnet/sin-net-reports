@@ -10,7 +10,6 @@ import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import lombok.SneakyThrows;
 
-
 /** Registers all discoverable gRpc services to allow them be reachable. */
 @Component
 public class GrpcServer {
