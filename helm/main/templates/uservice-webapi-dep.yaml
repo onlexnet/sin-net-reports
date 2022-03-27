@@ -20,7 +20,7 @@ spec:
         - name: regcred
       containers:
         - name: uservice-webapi
-          image: sinnet.azurecr.io/uservice-webapi:{{ required "Tag of uservice-webapi image has to be provided" .Values.imageUserviceWebapiTag }}
+          image: sinnet.azurecr.io/uservice-webapi:{{ required "Tag of uservice-webapi image has to be provided" .Values.imageUserviceWebApiTag }}
           imagePullPolicy: Always
           ports:
           - containerPort: 8080
