@@ -2,6 +2,7 @@
 
 To configure some dynamic properties on CI pipeline, you may use locally something as script below:
 ```bash
+export USERVICE_WEBAPI_IMAGE_TAG=latest
 export WEBAPP_IMAGE_TAG=latest
 export WEBAPI_IMAGE_TAG=latest
 export REPORTS_IMAGE_TAG=latest
