@@ -13,6 +13,11 @@ trigger:
   paths:
     include:
       - helm
+pr:
+  branches:
+    exclude:
+      - '*'
+      
 pool:
   vmImage: 'ubuntu-latest'
 
