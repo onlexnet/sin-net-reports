@@ -13,10 +13,8 @@ trigger:
   paths:
     include:
       - helm
-pr:
-  branches:
-    exclude:
-      - '*'
+
+pr: none # Disable pull request triggers.
       
 pool:
   vmImage: 'ubuntu-latest'

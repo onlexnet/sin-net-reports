@@ -24,11 +24,8 @@ trigger:
   paths:
     include:
       - /deploy/
-pr:
-  branches:
-    exclude:
-      - '*'
 
+pr: none # Disable pull request triggers.
 
 stages:
 
