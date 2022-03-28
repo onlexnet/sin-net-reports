@@ -19,27 +19,30 @@ import sinnet.vertx.Handlers;
 @Slf4j
 public class TimeEntriesRpcSearch implements ActionProjector, Mapper {
 
-    private final ActionProjector.Provider projection;
+  private final ActionProjector.Provider projection;
 
-    public void query(SearchQuery query, StreamObserver<SearchReply> observer) {
-        var projectId = UUID.fromString(query.getProjectId());
-        var from = fromDto(query.getFrom());
-        var to = fromDto(query.getTo());
-        projection
-            .find(projectId, from, to)
-            .onComplete(Handlers.logged(log, observer, it -> {
-                var result = it.map(this::map);
-                return SearchReply.newBuilder()
-                    .addAllActivities(result)
-                    .build();
-            }));
-    }
+  public void query(SearchQuery query, StreamObserver<SearchReply> observer) {
+    var projectId = UUID.fromString(query.getProjectId());
+    var from = fromDto(query.getFrom());
+    var to = fromDto(query.getTo());
+    projection
+        .find(projectId, from, to)
+        .onComplete(Handlers.logged(log, observer, it -> {
+            var result = it.map(this::map);
+            return SearchReply.newBuilder()
+                .addAllActivities(result)
+                .build();
+        }));
+  }
 
     private TimeEntryModel map(ListItem item) {
         return PropsBuilder.build(TimeEntryModel.newBuilder())
             .set(item.getEid(), this::toDto, b -> b::setEntityId)
             .set(item.getValue(), o -> o.getWhom(), o -> o.toString(), b -> b::setCustomerId)
+            // first try: use email as username
             .set(item.getValue(), o -> o.getWho().getValue(), b -> b::setServicemanName)
+            // override with full name, if available
+            .set(item.getCustomerName(), b -> b::setServicemanName)
             .set(item.getValue(), o -> o.getWhen(), o -> toDto(o), b -> b::setWhenProvided)
             .set(item.getValue(), o -> o.getWhat(), b -> b::setDescription)
             .set(item.getValue(), o -> o.getHowLong().getValue(), b -> b::setDuration)
