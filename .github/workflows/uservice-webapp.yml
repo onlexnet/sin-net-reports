@@ -6,7 +6,7 @@ name: Java CI with Maven
 on:
   push:
     branches: [ master ]
-    paths: [ uservice-webapi ]
+    paths: [ uservice-webapi/**, .github/workflows/uservice-webapp.yml ]
   pull_request:
     branches: [ master ]
 
