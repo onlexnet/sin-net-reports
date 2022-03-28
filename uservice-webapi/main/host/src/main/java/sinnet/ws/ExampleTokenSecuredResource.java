@@ -11,7 +11,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
 
 import org.eclipse.microprofile.jwt.JsonWebToken;
-import org.jboss.resteasy.spi.InternalServerErrorException;
 
 import io.quarkus.security.Authenticated;
 import io.smallrye.jwt.auth.principal.DefaultJWTCallerPrincipal;
@@ -60,7 +59,7 @@ public class ExampleTokenSecuredResource {
         if (ctx.getUserPrincipal() == null) {
             name = "anonymous";
         } else if (!ctx.getUserPrincipal().getName().equals(jwt.getName())) {
-            throw new InternalServerErrorException("Principal and JsonWebToken names do not match");
+            throw new IllegalStateException("Principal and JsonWebToken names do not match");
         } else {
             name = ctx.getUserPrincipal().getName();
         }
