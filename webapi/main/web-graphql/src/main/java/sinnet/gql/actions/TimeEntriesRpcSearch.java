@@ -42,7 +42,7 @@ public class TimeEntriesRpcSearch implements ActionProjector, Mapper {
             // first try: use email as username
             .set(item.getValue(), o -> o.getWho().getValue(), b -> b::setServicemanName)
             // override with full name, if available
-            .set(item.getCustomerName(), b -> b::setServicemanName)
+            .set(item.getServicemanName(), b -> b::setServicemanName)
             .set(item.getValue(), o -> o.getWhen(), o -> toDto(o), b -> b::setWhenProvided)
             .set(item.getValue(), o -> o.getWhat(), b -> b::setDescription)
             .set(item.getValue(), o -> o.getHowLong().getValue(), b -> b::setDuration)
