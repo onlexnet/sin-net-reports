@@ -44,6 +44,8 @@ public class ActionsQuerySearch implements TimeentriesMapper {
           item.setDescription(o.getDescription());
           item.setDistance(o.getDistance());
           item.setDuration(o.getDuration());
+          item.setCustomerId(o.getCustomerId());
+          item.setUserToken(self.getUserToken());
           return item;
         }).toJavaArray(ServiceModel[]::new)
       ))
