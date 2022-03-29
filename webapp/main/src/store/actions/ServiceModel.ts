@@ -1,7 +1,7 @@
 import { LocalDate } from "../viewcontext/TimePeriod";
-import { v4 as uuid } from 'uuid';
 
 export interface ServiceAppModel extends EntityId {
+  servicemanEmail: string | undefined,
   servicemanName: string | undefined,
   description: string | undefined,
   when: LocalDate,

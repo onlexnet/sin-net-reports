@@ -18,6 +18,13 @@
   <dependencies>
 
     <dependency>
+      <groupId>io.cucumber</groupId>
+      <artifactId>cucumber-junit-platform-engine</artifactId>
+      <version>7.2.3</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
       <groupId>net.siudek</groupId>
       <artifactId>web-server</artifactId>
     </dependency>

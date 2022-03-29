@@ -105,9 +105,9 @@ const ConnectedContent: React.FC<PropsFromRedux> = props => {
 
   const initialColumns: TypedColumn[] = [
     {
-      key: "column4", name: "Pracownik", fieldName: "servicemanName", minWidth: 70, maxWidth: 90, isResizable: true, isCollapsible: true, data: "string",
+      key: "column4", name: "Pracownik", fieldName: "servicemanEmail", minWidth: 70, maxWidth: 90, isResizable: true, isCollapsible: true, data: "string",
       onRender: (item: IDocument) => {
-        return <Link to={`/actions/${item.projectId}/${item.entityId}/${item.entityVersion}`}>{item.servicemanName}</Link>;
+        return <Link to={`/actions/${item.projectId}/${item.entityId}/${item.entityVersion}`}>{item.servicemanEmail}</Link>;
       },
       isPadded: true
     },
@@ -166,7 +166,7 @@ const ConnectedContent: React.FC<PropsFromRedux> = props => {
   const [onlyMyData, setOnlyMyData] = useState(true);
   const filterByOnlyMyData = (item: ServiceListModel): boolean => {
     if (!onlyMyData) return true;
-    if (item.servicemanName === props.currentEmail) return true;
+    if (item.servicemanEmail === props.currentEmail) return true;
     return false;
   }
 
@@ -284,7 +284,7 @@ const toLocalModel = (it: ServiceAppModel): ServiceListModel => {
     projectId: it.projectId,
     entityId: it.entityId,
     entityVersion: it.entityVersion,
-    servicemanName: it.servicemanName,
+    servicemanEmail: it.servicemanEmail,
     description: it.description,
     when: it.when,
     duration: it.duration,

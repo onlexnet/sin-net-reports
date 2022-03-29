@@ -20,6 +20,7 @@ export const toActionModel = (dto: ServiceItemFragment): ServiceAppModel => {
         entityVersion: dto.entityVersion,
         description: dto.description ?? undefined,
         servicemanName: dto.servicemanName ?? undefined,
+        servicemanEmail: dto.servicemanEmail ?? undefined,
         customerName: dto.customer?.data.customerName ?? undefined,
         when: toModel(dto.whenProvided),
         distance: dto.distance ?? undefined,

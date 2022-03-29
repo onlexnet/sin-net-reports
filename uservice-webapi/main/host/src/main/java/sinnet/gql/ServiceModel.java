@@ -14,6 +14,7 @@ public class ServiceModel {
   private @NonNull @Id String projectId;
   private @NonNull @Id String entityId;
   private @NonNull int entityVersion;
+  private String servicemanEmail;
   private String servicemanName;
   private @NonNull LocalDate whenProvided;
   private String description;

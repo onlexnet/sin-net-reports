@@ -14,8 +14,11 @@ import sinnet.models.EntityId;
 public interface ActionProjector {
 
   interface Provider {
+
     Future<Array<ListItem>> find(UUID projectId, LocalDate from, LocalDate to);
+
     Future<Entity<ActionValue>> find(UUID projectId, UUID entityId);
+    
   }
 
   @Value

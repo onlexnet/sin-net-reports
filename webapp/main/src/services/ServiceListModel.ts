@@ -2,7 +2,7 @@ import { EntityId } from "../store/actions/ServiceModel";
 import { LocalDate } from "../store/viewcontext/TimePeriod";
 
 export interface ServiceListModel extends EntityId {
-  servicemanName: string | undefined,
+  servicemanEmail: string | undefined,
   description: string | undefined,
   when: LocalDate,
   duration: number | undefined,

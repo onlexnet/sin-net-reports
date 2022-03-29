@@ -19,6 +19,7 @@ public interface TimeentriesMapper extends Mapper {
     it.setProjectId(item.getEntityId().getProjectId());
     it.setEntityId(item.getEntityId().getEntityId());
     it.setEntityVersion(item.getEntityId().getEntityVersion());
+    it.setServicemanEmail(item.getServicemanEmail());
     it.setServicemanName(item.getServicemanName());
     it.setWhenProvided(toGql(item.getWhenProvided()));
     it.setDescription(item.getDescription());
