@@ -63,7 +63,7 @@ public class Report2Controller implements TimeentriesMapper {
          var result = it.getData().toByteArray();
          return Response.ok(result)
           .header("Cache-Control", "no-cache, no-store, must-revalidate")
-          .header("Content-Disposition", "inline; filename=report " + yearFrom + "-" + monthFrom + ".zip")
+          .header("Content-Disposition", "inline; filename=report " + yearFrom + "-" + monthFrom + ".pdf")
           .header("Expires", "0")
           .header(HttpHeaders.CONTENT_LENGTH, result.length)
           .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_OCTET_STREAM)
