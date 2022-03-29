@@ -3,6 +3,7 @@ fragment ServiceItem on ServiceModel {
   entityId
   entityVersion
   whenProvided
+  servicemanEmail
   servicemanName
   customer {
     id {

@@ -47,6 +47,12 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <version>3.0.0-M4</version>
         <configuration>
+          <properties>
+            <configurationParameters>
+                <!-- https://github.com/cucumber/cucumber-jvm/tree/main/junit-platform-engine#maven -->
+                cucumber.junit-platform.naming-strategy=long
+            </configurationParameters>
+          </properties>
           <includes>
             <include>*Spec.java</include>
             <include>*Tests.java</include>

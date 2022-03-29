@@ -67,6 +67,7 @@ message TimeEntryModel {
   string description = 5;
   int32 duration = 6;
   int32 distance = 7;
+  string servicemanEmail = 8;
 }
 
 message LocalDate {

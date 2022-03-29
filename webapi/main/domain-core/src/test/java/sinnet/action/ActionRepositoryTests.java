@@ -107,42 +107,42 @@ public class ActionRepositoryTests {
         });
   }
 
-    @Test
-    public void shouldUpdateFullModel() {
-        var now = Dates.gen().head();
-        var projectEid = api.createNewProject();
-        var customerId = api.defineCustomer(EntityId.anyNew(projectEid));
-        var projectId = projectEid.getId();
-    
-        var newEntity = ActionValue.builder()
-            .when(Dates.gen().head())
-            .build();
-        var updateEntity = ActionValue.builder()
-            .who(Email.of("some person"))
-            .howFar(Distance.of(1))
-            .howLong(ActionDuration.of(2))
-            .what("some action")
-            .when(now)
-            .whom(customerId.getId())
-            .build();
+  @Test
+  public void shouldUpdateFullModel() {
+    var now = Dates.gen().head();
+    var projectEid = api.createNewProject();
+    var customerId = api.defineCustomer(EntityId.anyNew(projectEid));
+    var projectId = projectEid.getId();
 
-        var entityId = EntityId.anyNew(projectId);
-        Sync
-            .of(() -> sutWrite.save(entityId, newEntity))
-            .checkpoint(it -> assertThat(it).isTrue())
-            .and(it -> sutWrite.update(entityId, updateEntity))
-            .and(it -> projection.find(projectId, now, now))
-            .checkpoint(actual -> {
-                var expected = ActionValue.builder()
-                    .who(Email.of("some person"))
-                    .howFar(Distance.of(1))
-                    .howLong(ActionDuration.of(2))
-                    .what("some action")
-                    .when(now)
-                    .whom(customerId.getId())
-                    .build();
-                assertThat(actual.head().getValue()).isEqualTo(expected);
-            });
+    var newEntity = ActionValue.builder()
+        .when(Dates.gen().head())
+        .build();
+    var updateEntity = ActionValue.builder()
+        .who(Email.of("some person"))
+        .howFar(Distance.of(1))
+        .howLong(ActionDuration.of(2))
+        .what("some action")
+        .when(now)
+        .whom(customerId.getId())
+        .build();
+
+    var entityId = EntityId.anyNew(projectId);
+    Sync
+        .of(() -> sutWrite.save(entityId, newEntity))
+        .checkpoint(it -> assertThat(it).isTrue())
+        .and(it -> sutWrite.update(entityId, updateEntity))
+        .and(it -> projection.find(projectId, now, now))
+        .checkpoint(actual -> {
+          var expected = ActionValue.builder()
+              .who(Email.of("some person"))
+              .howFar(Distance.of(1))
+              .howLong(ActionDuration.of(2))
+              .what("some action")
+              .when(now)
+              .whom(customerId.getId())
+              .build();
+          assertThat(actual.head().getValue()).isEqualTo(expected);
+        });
     }
 
     @Test

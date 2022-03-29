@@ -123,6 +123,7 @@ type ServiceModel {
   entityId: ID!
   entityVersion: Int!
   projectId: ID!
+  servicemanEmail: String
   servicemanName: String
   "ISO-8601"
   whenProvided: Date!

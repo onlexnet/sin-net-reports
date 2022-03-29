@@ -9,11 +9,10 @@ import { AppDatePicker } from "../../services/ActionList.DatePicker";
 import { LocalDate } from "../../store/viewcontext/TimePeriod";
 import { useGetUsers } from "../../api/useGetUsers";
 import { useRemoveActionMutation, useUpdateActionMutation } from "../../Components/.generated/components";
-import { dates } from "../../api/DtoMapper";
 import CustomerView from "./ActionView.Edit.CustomerView"
 import { CustomerComboBox } from "./CustomerComboBox";
 import { useAppInsightsContext, useTrackMetric } from "@microsoft/applicationinsights-react-js";
-import { asDtoDate, asDtoDates } from "../../api/Mapper";
+import { asDtoDate } from "../../api/Mapper";
 
 const mapStateToProps = (state: RootState) => {
     if (state.appState.empty) {

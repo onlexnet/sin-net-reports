@@ -39,6 +39,7 @@ public class ActionsQuerySearch implements TimeentriesMapper {
           item.setProjectId(o.getEntityId().getProjectId());
           item.setEntityId(o.getEntityId().getEntityId());
           item.setEntityVersion(o.getEntityId().getEntityVersion());
+          item.setServicemanEmail(o.getServicemanEmail());
           item.setServicemanName(o.getServicemanName());
           item.setWhenProvided(toGql(o.getWhenProvided()));
           item.setDescription(o.getDescription());
