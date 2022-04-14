@@ -1,3 +1,8 @@
+data "azuread_group" "support" {
+  display_name     = var.support_security_group_name
+  security_enabled = true
+}
+
 resource "random_id" "id" {
   byte_length = 8
 }
@@ -12,24 +17,26 @@ resource "azurerm_key_vault" "example" {
   tenant_id                  = data.azurerm_client_config.current.tenant_id
   sku_name                   = "standard"
   soft_delete_retention_days = 7
+}
 
-  access_policy {
-    tenant_id = data.azurerm_client_config.current.tenant_id
-    object_id = data.azurerm_client_config.current.object_id
+resource "azurerm_key_vault_access_policy" "support" {
+  key_vault_id = azurerm_key_vault.example.id
+  tenant_id    = data.azurerm_client_config.current.tenant_id
+  object_id    = data.azuread_group.support.object_id
 
-    key_permissions = [
-      "Create",
-      "Get"
-    ]
+  secret_permissions = [
+    "Get", "Set", "List", "Delete"
+  ]
+}
 
-    secret_permissions = [
-      "Set",
-      "Get",
-      "Delete",
-      "Purge",
-      "Recover"
-    ]
-  }
+resource "azurerm_key_vault_access_policy" "infra" {
+  key_vault_id = azurerm_key_vault.example.id
+  tenant_id    = data.azurerm_client_config.current.tenant_id
+  object_id    = data.azurerm_client_config.current.object_id
+
+  secret_permissions = [
+    "Get", "Set", "List", "Delete"
+  ]
 }
 
 resource "azurerm_key_vault_secret" "appinsight_connection_string" {

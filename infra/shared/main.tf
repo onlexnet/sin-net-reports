@@ -47,6 +47,7 @@ module "keyvault" {
   resourcegroup    = module.resourcegroup.resourcegroup
 
   appinsight_connection_string = module.appinsights.connection_string
+  support_security_group_name  = var.support_security_group
 }
 
 module "database" {
