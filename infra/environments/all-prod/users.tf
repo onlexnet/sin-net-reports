@@ -8,10 +8,17 @@ provider "azuread" {
   tenant_id = data.azurerm_aadb2c_directory.example.tenant_id
 }
 
-# Not possible yet as https://github.com/hashicorp/terraform-provider-azuread/issues/175 is open
-# data "azuread_user" "example" {
-#   provider            = azuread.sinnetapp
-#   user_principal_name = "test-operator-1@sinnetapp.onmicrosoft.com"
+# Not possible yet 
+# Try when new version of the provider is created
+# resource "azuread_user" "example" {
+#   provider                    = azuread.sinnetapp
+#   user_principal_name         = "test-operator-10@sinnetapp.onmicrosoft.com"
+
+#   disable_password_expiration = true
+#   # user_principal_name = "jdoe@hashicorp.com"
+#   display_name  = "J. Doe"
+#   mail_nickname = "jdoe"
+#   password      = "SecretP@sswd99!"
 # }
 
 # Access to development
