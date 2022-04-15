@@ -1,4 +1,4 @@
-package net.onlex;
+package net.onlex.belly;
 
 import org.junit.platform.suite.api.ConfigurationParameter;
 import org.junit.platform.suite.api.IncludeEngines;
