@@ -31,10 +31,12 @@ stages:
 
 
   - stage: deployToDev01
-    extends: 
-      template: deploy-to-env.yaml
-      parameters:
-        
+    displayName: Deploy HELM Chart to ${{ parameters.envName }}
+    jobs:
+      - template: deploy-to-env.yaml
+        parameters:
+          envName: DEV01
+
 
   - stage: deployToStg
     displayName: Deploy HELM Chart to STG

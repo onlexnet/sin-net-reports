@@ -6,8 +6,6 @@ parameters:
 variables:
    envNameLower: ${{ lower(parameters.envName) }}
 
-stage: deployToDev01
-displayName: Deploy HELM Chart to ${{ parameters.envName }}
 jobs:
   - deployment: deployToStg
     displayName: Deploy to ${{ parameters.envName }}
