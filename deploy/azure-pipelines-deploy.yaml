@@ -32,8 +32,8 @@ stages:
 
   - stage: deployToDev01
     template: deploy-to-env.yaml
-      parameters:
-        envName: DEV01
+    parameters:
+      envName: DEV01
 
 
   - stage: deployToStg
