@@ -31,7 +31,7 @@ stages:
 
 
   - stage: deployToDev01
-    displayName: Deploy HELM Chart to ${{ parameters.envName }}
+    displayName: Deploy HELM Chart to DEV01
     jobs:
       - template: deploy-to-env.yaml
         parameters:
