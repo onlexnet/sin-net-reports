@@ -54,3 +54,5 @@ variable "sinnet_k8s_token" {}
 
 variable "onlex_sinnet_azdo_service_url" {}
 variable "onlex_sinnet_azdo_personal_token" {}
+
+variable "support_security_group" {}

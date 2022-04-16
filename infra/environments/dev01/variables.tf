@@ -1,3 +1,7 @@
+variable "support_security_group" {
+  default = "SinNet Developer" # "SinNet Support"
+}
+
 # shared names reused across environments
 variable "psql_infrauser_name" {}
 variable "psql_infrauser_password" {}

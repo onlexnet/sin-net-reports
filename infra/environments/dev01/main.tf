@@ -10,4 +10,5 @@ module "shared" {
   env_subscription_id              = var.onlexnet_sinnet_dev01_subscription_id
   onlex_sinnet_azdo_service_url    = var.onlex_sinnet_azdo_service_url
   onlex_sinnet_azdo_personal_token = var.onlex_sinnet_azdo_personal_token
+  support_security_group           = var.support_security_group
 }
