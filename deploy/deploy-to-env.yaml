@@ -3,14 +3,16 @@ parameters:
   type: string # data type of the parameter; required
   default: false
 
-variables:
-   envNameLower: ${{ lower(parameters.envName) }}
+# variables:
+#    envNameLower: ${{ lower(parameters.envName) }}
 
+stage: deployToDev01
+displayName: Deploy HELM Chart to DEV01
 jobs:
   - deployment: deployToStg
-    displayName: Deploy to ${{ parameters.envName }}
+    displayName: Deploy to DEV01
     environment:
-      name: ${{ parameters.envName }}
+      name: DEV01
       resourceType: Kubernetes
     strategy:                  
       runOnce:
@@ -26,10 +28,10 @@ jobs:
             - task: HelmDeploy@0
               displayName: Helm install
               inputs:
-                kubernetesServiceEndpoint: onlex-sinnet-$(envNameLower)
+                kubernetesServiceEndpoint: onlex-sinnet-dev01
                 command: upgrade
                 install: true
                 chartName: $(Pipeline.Workspace)/helm_CI/chart/$(var_chart_file_name)
                 arguments: -f $(Pipeline.Workspace)/helm_CI/chart/config.yaml
                 releaseName: sinnet-reports
-                namespace: onlex-sinnet-$(envNameLower)
+                namespace: onlex-sinnet-dev01

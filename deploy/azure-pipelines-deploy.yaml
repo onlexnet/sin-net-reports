@@ -31,11 +31,9 @@ stages:
 
 
   - stage: deployToDev01
-    displayName: Deploy HELM Chart to DEV01
-    jobs:
-      - template: deploy-to-env.yaml
-        parameters:
-          envName: DEV01
+    template: deploy-to-env.yaml
+      parameters:
+        envName: DEV01
 
 
   - stage: deployToStg
