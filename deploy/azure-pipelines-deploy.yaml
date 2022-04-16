@@ -29,6 +29,13 @@ pr: none # Disable pull request triggers.
 
 stages:
 
+
+  - stage: deployToDev01
+    extends: 
+      template: deploy-to-env.yaml
+      parameters:
+        
+
   - stage: deployToStg
     displayName: Deploy HELM Chart to STG
     jobs:
