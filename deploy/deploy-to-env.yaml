@@ -7,9 +7,10 @@ stages:
 - stage: deployToEnvironment
   variables:
     envNameLower: ${{ lower(parameters.envName) }}
+    envNameUpper: ${{ upper(parameters.envName) }}
   displayName: Deploy HELM Chart to DEV01
   jobs:
-    - deployment: deployToStg
+    - deployment: deployTo${{ parameters.envName }}
       displayName: Deploy to DEV01
       environment:
         name: DEV01
