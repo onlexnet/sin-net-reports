@@ -29,9 +29,11 @@ pr: none # Disable pull request triggers.
 
 stages:
 
-  - stage: downloadHelm
+  - stage: DownloadHelm
     displayName: Download HELM definition
-    steps:
+    jobs:
+    - job: DownloadHelm
+      steps:
       - checkout: none
       - download: helm_CI
         artifact: chart
