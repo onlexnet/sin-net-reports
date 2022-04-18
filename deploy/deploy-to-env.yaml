@@ -10,10 +10,10 @@ stages:
     envNameUpper: ${{ upper(parameters.envName) }}
   displayName: Deploy HELM Chart to DEV01
   jobs:
-    - deployment: deployTo${{ parameters.envName }}
-      displayName: Deploy to DEV01
+    - deployment: deployTo
+      displayName: Deploy to DEV01 ${{ variables.envNameUpper }}
       environment:
-        name: DEV01
+        name: ${{ variables.envNameUpper }}
         # Below commented as we can't point Kubernetes as it is not created using Terraform scripts yed
         # The closes issue about resources in environment mentioned here https://github.com/microsoft/terraform-provider-azuredevops/issues/143
         # resourceType: Kubernetes
