@@ -3,13 +3,6 @@ parameters:
   type: string # data type of the parameter; required
   default: false
 
-resources:
-  pipelines:
-  - pipeline: helm_CI
-    project: sinnet
-    source: onlex-sinnet-helm
-    trigger: true
-
 stages:
 - stage: deployToEnvironment
   variables:
