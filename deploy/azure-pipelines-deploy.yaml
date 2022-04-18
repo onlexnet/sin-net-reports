@@ -13,7 +13,7 @@ resources:
   - pipeline: helm_CI
     project: sinnet
     source: onlex-sinnet-helm
-    trigger: true
+    # trigger: true
 
 
 trigger:
@@ -39,6 +39,7 @@ stages:
         artifact: chart
       - bash: |
           echo "##vso[task.setvariable variable=var_chart_file_name]$(cat $(Pipeline.Workspace)/helm_CI/chart/chart.config | jq '.chartFileName')"
+
       - bash: |
           echo $(Pipeline.Workspace)/helm_CI/chart/$(var_chart_file_name)
 
