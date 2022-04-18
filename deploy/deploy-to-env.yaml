@@ -3,11 +3,10 @@ parameters:
   type: string # data type of the parameter; required
   default: false
 
-variables:
-   envNameLower: ${{ lower(parameters.envName) }}
-
 stages:
 - stage: deployToDev01
+  variables:
+    envNameLower: ${{ lower(parameters.envName) }}
   displayName: Deploy HELM Chart to DEV01
   jobs:
     - deployment: deployToStg
