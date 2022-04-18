@@ -4,7 +4,7 @@ parameters:
   default: false
 
 stages:
-- stage: deployToDev01
+- stage: deployToEnvironment
   variables:
     envNameLower: ${{ lower(parameters.envName) }}
   displayName: Deploy HELM Chart to DEV01
@@ -13,7 +13,9 @@ stages:
       displayName: Deploy to DEV01
       environment:
         name: DEV01
-        resourceType: Kubernetes
+        # Below commented as we can't point Kubernetes as it is not created using Terraform scripts yed
+        # The closes issue about resources in environment mentioned here https://github.com/microsoft/terraform-provider-azuredevops/issues/143
+        # resourceType: Kubernetes
       strategy:                  
         runOnce:
           deploy:
