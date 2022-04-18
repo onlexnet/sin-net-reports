@@ -29,6 +29,17 @@ pr: none # Disable pull request triggers.
 
 stages:
 
+  - stage: downloadHelm
+    displayName: Download HELM definition
+    steps:
+      - checkout: none
+      - download: helm_CI
+        artifact: chart
+      - bash: |
+          echo "##vso[task.setvariable variable=var_chart_file_name]$(cat $(Pipeline.Workspace)/helm_CI/chart/chart.config | jq '.chartFileName')"
+      - bash: |
+          echo $(Pipeline.Workspace)/helm_CI/chart/$(var_chart_file_name)
+
   - template: deploy-to-env.yaml
     parameters:
       envName: DEV01
