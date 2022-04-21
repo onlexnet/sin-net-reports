@@ -20,7 +20,7 @@ trigger:
       - uservice-reports
 
 stages:
-  - stage: build
+  - stage: buildDockerImage
     displayName: Build docker image
     jobs:
       - job: ci_build

@@ -39,8 +39,12 @@ resources:
   - pipeline: report_CI
     project: sinnet
     source: onlex-sinnet-reports
-    trigger: "true"
-    branch: master
+    trigger:
+      branches:
+        include:
+        - master
+      stages:
+        - buildDockerImage
   containers:
     - container: uservice-webapi-container
       type: ACR  
