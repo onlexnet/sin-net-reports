@@ -13,8 +13,8 @@ resources:
   - pipeline: helm_CI
     project: sinnet
     source: onlex-sinnet-helm
-    # trigger: true
-    # some comment
+    trigger: true
+    branch: master
 
 
 trigger:

@@ -24,19 +24,23 @@ resources:
   - pipeline: uservice_webapi_CI
     project: sinnet
     source: onlex-sinnet-uservice-webapi
+    branch: master
     trigger: "true"
   - pipeline: webapp_CI
     project: sinnet
     source: onlex-sinnet-webapp
     trigger: "true"
+    branch: master
   - pipeline: webapi_CI
     project: sinnet
     source: onlex-sinnet-webapi
     trigger: "true"
+    branch: master
   - pipeline: report_CI
     project: sinnet
     source: onlex-sinnet-reports
     trigger: "true"
+    branch: master
   containers:
     - container: uservice-webapi-container
       type: ACR  
