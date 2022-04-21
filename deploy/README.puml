@@ -1,0 +1,11 @@
+@startmindmap
+* Deployment
+** DEV01
+** UAT01
+** PRO01
+* HELM
+** WebApi
+** WebApp
+** WebApi Legacy
+** Reports
+@endmindmap
