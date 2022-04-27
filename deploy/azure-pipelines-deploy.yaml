@@ -41,7 +41,7 @@ stages:
       - bash: |
           # variable: var_chart_file_name is used to keep name of latests char name build on latest version of images
           # isoutput=true is required to make variable visible in invoked templates
-          echo "##vso[task.setvariable variable=var_chart_file_name]$(cat $(Pipeline.Workspace)/helm_CI/chart/chart.config | jq -r '.chartFileName')"
+          echo "##vso[task.setvariable variable=var_chart_file_name;isoutput=true]$(cat $(Pipeline.Workspace)/helm_CI/chart/chart.config | jq -r '.chartFileName')"
         displayName: Extract Chart filename
       - bash: |
           echo !!!!! $(var_chart_file_name) !!!!!
@@ -50,7 +50,7 @@ stages:
   - template: deploy-to-env.yaml
     parameters:
       envName: DEV01
-      chartFileName: $(var_chart_file_name)
+      chartFileName: $(setOutput.var_chart_file_name)
 
 
 
