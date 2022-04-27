@@ -32,7 +32,7 @@ stages:
           deploy:
             steps:
               - bash: |
-                  echo $(Pipeline.Workspace)/helm_CI/chart/$(var_chart_file_name)
+                  echo $(Pipeline.Workspace)/helm_CI/chart/$(var_chart_file_name1)
                 displayName: Display fill chart filename (2)
               - task: HelmDeploy@0
                 displayName: Helm install
@@ -40,7 +40,7 @@ stages:
                   kubernetesServiceEndpoint: onlex-sinnet-dev01
                   command: upgrade
                   install: true
-                  chartName: $(Pipeline.Workspace)/helm_CI/chart/$(var_chart_file_name)
+                  chartName: $(Pipeline.Workspace)/helm_CI/chart/$(var_chart_file_name1)
                   arguments: -f $(Pipeline.Workspace)/helm_CI/chart/config.yaml
                   releaseName: sinnet-reports
                   namespace: onlex-sinnet-dev01

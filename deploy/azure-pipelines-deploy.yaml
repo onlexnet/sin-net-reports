@@ -44,7 +44,7 @@ stages:
           echo "##vso[task.setvariable variable=var_chart_file_name,isoutput=true]$(cat $(Pipeline.Workspace)/helm_CI/chart/chart.config | jq '.chartFileName')"
         displayName: Extract Chart filename
       - bash: |
-          echo $(var_chart_file_name)
+          echo !!!!! $(var_chart_file_name) !!!!!
         displayName: DEBUG Display name of the chart
 
   - template: deploy-to-env.yaml
