@@ -50,12 +50,7 @@ stages:
   - template: deploy-to-env.yaml
     parameters:
       envName: DEV01
-      chartFileName: "aaaaaaaaaaa"
-
-  # - template: deploy-to-env.yaml
-  #   parameters:
-  #     envName: DEV01
-  #     chartFileName: $(var_chart_file_name)
+      chartFileName: $(var_chart_file_name)
 
 
 
