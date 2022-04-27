@@ -17,7 +17,7 @@ stages:
     # we use uppercase for Azure DevOps environment name
     envNameUpper: ${{ upper(parameters.envName) }}
 
-    var_chart_file_name: ${{ parameters.chartFileName }}
+    var_chart_file_name1: ${{ parameters.chartFileName }}
   displayName: Deploy HELM Chart to DEV01
   jobs:
     - deployment: deployTo
