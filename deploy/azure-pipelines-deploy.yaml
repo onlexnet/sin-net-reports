@@ -40,10 +40,10 @@ stages:
         artifact: chart
       - bash: |
           echo "##vso[task.setvariable variable=var_chart_file_name]$(cat $(Pipeline.Workspace)/helm_CI/chart/chart.config | jq '.chartFileName')"
-          displayName: Extract Chart filename
+        displayName: Extract Chart filename
       - bash: |
           echo $(Pipeline.Workspace)/helm_CI/chart/$(var_chart_file_name)
-          displayName: Display fill chart filename
+        displayName: Display fill chart filename
 
   - template: deploy-to-env.yaml
     parameters:

@@ -13,7 +13,7 @@ stages:
   displayName: Deploy HELM Chart to DEV01
   jobs:
     - deployment: deployTo
-      displayName: Deploy to DEV01 ${{ variables.envNameUpper }}
+      displayName: Deploy to ${{ variables.envNameUpper }}
       environment:
         name: ${{ variables.envNameUpper }}
         # Below commented as we can't point Kubernetes as it is not created using Terraform scripts yed
@@ -25,7 +25,7 @@ stages:
             steps:
               - bash: |
                   echo $(Pipeline.Workspace)/helm_CI/chart/$(var_chart_file_name)
-                  displayName: Display fill chart filename (2)
+                displayName: Display fill chart filename (2)
               - task: HelmDeploy@0
                 displayName: Helm install
                 inputs:
