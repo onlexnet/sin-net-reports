@@ -23,6 +23,9 @@ stages:
         runOnce:
           deploy:
             steps:
+              - bash: |
+                  echo $(Pipeline.Workspace)/helm_CI/chart/$(var_chart_file_name)
+                  displayName: Display fill chart filename (2)
               - task: HelmDeploy@0
                 displayName: Helm install
                 inputs:
