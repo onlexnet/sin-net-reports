@@ -19,7 +19,7 @@ stages:
     envNameUpper: ${{ upper(parameters.envName) }}
 
     var_chart_file_name1: $[stageDependencies.DownloadHelmStage.DownloadHelmJob.outputs['ExtractChartFilenameStep.var_chart_file_name'] ]
-    var_chart_file_name2: ${{ (parameters.chartFileName }}
+    var_chart_file_name2: ${{ parameters.chartFileName }}
   displayName: Deploy HELM Chart to DEV01
   jobs:
     - deployment: deployTo
