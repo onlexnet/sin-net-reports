@@ -32,11 +32,8 @@ stages:
         runOnce:
           deploy:
             steps:
-              - bash: |
-                  echo $(Pipeline.Workspace)/helm_CI/chart/$(var_chart_file_name)
-                displayName: DEBUG Display fill chart filename (1)
               - task: HelmDeploy@0
-                displayName: Helm install 2
+                displayName: Helm install
                 inputs:
                   kubernetesServiceEndpoint: onlex-sinnet-${{ variables.envNameLower }}
                   command: upgrade
