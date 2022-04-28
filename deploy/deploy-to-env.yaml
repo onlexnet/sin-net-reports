@@ -11,14 +11,14 @@ parameters:
 
 stages:
 - stage: deployToEnvironment
-  dependsOn: DownloadHelm
+  dependsOn: DownloadHelmStage
   variables:
     # we use lowercase for namings like kubernetes environment
     envNameLower: ${{ lower(parameters.envName) }}
     # we use uppercase for Azure DevOps environment name
     envNameUpper: ${{ upper(parameters.envName) }}
 
-    var_chart_file_name1: ${{ parameters.chartFileName }}
+    var_chart_file_name1: $[ stageDependencies.DownloadHelmStage.DownloadHelmJob.outputs['var_chart_file_name'] ]
   displayName: Deploy HELM Chart to DEV01
   jobs:
     - deployment: deployTo
