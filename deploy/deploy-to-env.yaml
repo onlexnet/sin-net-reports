@@ -1,25 +1,25 @@
 parameters:
 - name: envName # name of the environment (DEV01, STG01, PRD01)
   type: string # data type of the parameter; required
-  default: DEV01
   values:
   - DEV01
   - STG01
   - PRD01
-- name: chartFileName
-  type: string
 
 stages:
-- stage: deployToEnvironment
+- stage: deployToEnvironment${{ parameters.envName }}
   dependsOn: DownloadHelmStage
   variables:
-    # we use lowercase for namings like kubernetes environment
+    # we use lowercase name of the environment as part of kubernetes namespace
     envNameLower: ${{ lower(parameters.envName) }}
     # we use uppercase for Azure DevOps environment name
+    # Currently the same as parameter (all allowed env names in parameters are capitalized), but it makes us independent of
+    # env name capitalization in parameters
     envNameUpper: ${{ upper(parameters.envName) }}
 
-    var_chart_file_name1: $[stageDependencies.DownloadHelmStage.DownloadHelmJob.outputs['ExtractChartFilenameStep.var_chart_file_name'] ]
-  displayName: Deploy HELM Chart to DEV01
+    varChartFileName: $[ stageDependencies.DownloadHelmStage.DownloadHelmJob.outputs['ExtractChartFilenameStep.var_chart_file_name'] ]
+
+  displayName: Deploy HELM Chart to ${{ variables.envNameUpper }}
   jobs:
     - deployment: deployTo
       displayName: Deploy to ${{ variables.envNameUpper }}
@@ -33,15 +33,15 @@ stages:
           deploy:
             steps:
               - bash: |
-                  echo $(Pipeline.Workspace)/helm_CI/chart/$(var_chart_file_name1)
-                displayName: DEBUG Display fill chart filename (2)
+                  echo $(Pipeline.Workspace)/helm_CI/chart/$(varChartFileName)
+                displayName: DEBUG Display fill chart filename (1)
               - task: HelmDeploy@0
                 displayName: Helm install 2
                 inputs:
-                  kubernetesServiceEndpoint: onlex-sinnet-dev01
+                  kubernetesServiceEndpoint: onlex-sinnet-${{ variables.envNameLower }}
                   command: upgrade
                   install: true
-                  chartName: $(Pipeline.Workspace)/helm_CI/chart/$(var_chart_file_name1)
+                  chartName: $(Pipeline.Workspace)/helm_CI/chart/$(varChartFileName)
                   arguments: -f $(Pipeline.Workspace)/helm_CI/chart/config.yaml
                   releaseName: sinnet-reports
-                  namespace: onlex-sinnet-dev01
+                  namespace: onlex-sinnet-${{ variables.envNameLower }}
