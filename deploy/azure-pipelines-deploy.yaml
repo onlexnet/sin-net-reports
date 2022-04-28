@@ -53,10 +53,10 @@ stages:
       envName: DEV01
       chartFileName: $[ stageDependencies.DownloadHelmStage.DownloadHelmJob.outputs['ExtractChartFilenameStep.var_chart_file_name'] ]
 
-  # - template: deploy-to-env.yaml
-  #   parameters:
-  #     envName: STG01
-  #     chartFileName: $(ExtractChartFilenameStep.var_chart_file_name)
+  - template: deploy-to-env.yaml
+    parameters:
+      envName: STG01
+      chartFileName: $[ stageDependencies.DownloadHelmStage.DownloadHelmJob.outputs['ExtractChartFilenameStep.var_chart_file_name'] ]
 
 
   # - stage: deployToStg

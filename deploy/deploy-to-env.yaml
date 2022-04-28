@@ -10,7 +10,6 @@ parameters:
 
 stages:
 - stage: deployToEnvironment${{ parameters.envName }}
-  # dependsOn: DownloadHelmStage
   variables:
     # we use lowercase name of the environment as part of kubernetes namespace
     envNameLower: ${{ lower(parameters.envName) }}
@@ -36,9 +35,6 @@ stages:
               - bash: |
                   echo $(Pipeline.Workspace)/helm_CI/chart/$(var_chart_file_name)
                 displayName: DEBUG Display fill chart filename (1)
-              - bash: |
-                  echo $(Pipeline.Workspace)/helm_CI/chart/$(var_chart_file_name2)
-                displayName: DEBUG Display fill chart filename (2)
               - task: HelmDeploy@0
                 displayName: Helm install 2
                 inputs:
