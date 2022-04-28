@@ -48,7 +48,6 @@ stages:
 
 
   - template: deploy-to-env.yaml
-    displayName: "Test display"
     parameters:
       envName: DEV01
       chartFileName: $(setOutput.var_chart_file_name)
