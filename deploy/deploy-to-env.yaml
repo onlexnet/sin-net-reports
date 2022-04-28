@@ -19,8 +19,7 @@ stages:
     # env name capitalization in parameters
     envNameUpper: ${{ upper(parameters.envName) }}
 
-    var_chart_file_name1: $[stageDependencies.DownloadHelmStage.DownloadHelmJob.outputs['ExtractChartFilenameStep.var_chart_file_name'] ]
-    var_chart_file_name2: ${{ parameters.chartFileName }}
+    var_chart_file_name: ${{ parameters.chartFileName }}
   displayName: Deploy HELM Chart to ${{ variables.envNameUpper }}
   jobs:
     - deployment: deployTo
@@ -35,7 +34,7 @@ stages:
           deploy:
             steps:
               - bash: |
-                  echo $(Pipeline.Workspace)/helm_CI/chart/$(var_chart_file_name1)
+                  echo $(Pipeline.Workspace)/helm_CI/chart/$(var_chart_file_name)
                 displayName: DEBUG Display fill chart filename (1)
               - bash: |
                   echo $(Pipeline.Workspace)/helm_CI/chart/$(var_chart_file_name2)
@@ -46,7 +45,7 @@ stages:
                   kubernetesServiceEndpoint: onlex-sinnet-${{ variables.envNameLower }}
                   command: upgrade
                   install: true
-                  chartName: $(Pipeline.Workspace)/helm_CI/chart/$(var_chart_file_name1)
+                  chartName: $(Pipeline.Workspace)/helm_CI/chart/$(var_chart_file_name)
                   arguments: -f $(Pipeline.Workspace)/helm_CI/chart/config.yaml
                   releaseName: sinnet-reports
                   namespace: onlex-sinnet-${{ variables.envNameLower }}
