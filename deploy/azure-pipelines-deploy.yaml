@@ -52,7 +52,7 @@ stages:
   - template: deploy-to-env.yaml
     parameters:
       envName: DEV01
-      chartFileName: $(ExtractChartFilenameStep.var_chart_file_name)
+      chartFileName: $(DownloadHelmStage.DownloadHelmJob.ExtractChartFilenameStep.var_chart_file_name)
 
   - template: deploy-to-env.yaml
     parameters:

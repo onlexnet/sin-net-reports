@@ -13,8 +13,6 @@ stages:
   dependsOn: DownloadHelmStage
   variables:
     # we use lowercase name of the environment as part of kubernetes namespace
-    # Currently name of kubernetes namespace is not the part of deployment as we can't create kubernetes definition in environment
-    # using terraform provider for DevOps. Will be used in the future
     envNameLower: ${{ lower(parameters.envName) }}
     # we use uppercase for Azure DevOps environment name
     # Currently the same as parameter (all allowed env names in parameters are capitalized), but it makes us independent of
@@ -23,7 +21,7 @@ stages:
 
     var_chart_file_name1: $[stageDependencies.DownloadHelmStage.DownloadHelmJob.outputs['ExtractChartFilenameStep.var_chart_file_name'] ]
     var_chart_file_name2: ${{ parameters.chartFileName }}
-  displayName: Deploy HELM Chart to DEV01
+  displayName: Deploy HELM Chart to ${{ variables.envNameUpper }}
   jobs:
     - deployment: deployTo
       displayName: Deploy to ${{ variables.envNameUpper }}
@@ -45,10 +43,10 @@ stages:
               - task: HelmDeploy@0
                 displayName: Helm install 2
                 inputs:
-                  kubernetesServiceEndpoint: onlex-sinnet-dev01
+                  kubernetesServiceEndpoint: onlex-sinnet-${{ variables.envNameLower }}
                   command: upgrade
                   install: true
                   chartName: $(Pipeline.Workspace)/helm_CI/chart/$(var_chart_file_name1)
                   arguments: -f $(Pipeline.Workspace)/helm_CI/chart/config.yaml
                   releaseName: sinnet-reports
-                  namespace: onlex-sinnet-dev01
+                  namespace: onlex-sinnet-${{ variables.envNameLower }}
