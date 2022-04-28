@@ -56,7 +56,7 @@ stages:
 
   - template: deploy-to-env.yaml
     parameters:
-      envName: STG0101
+      envName: STG01
       chartFileName: $(ExtractChartFilenameStep.var_chart_file_name)
 
 
