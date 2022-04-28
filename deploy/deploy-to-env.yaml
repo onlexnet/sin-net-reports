@@ -19,6 +19,7 @@ stages:
     envNameUpper: ${{ upper(parameters.envName) }}
 
     var_chart_file_name1: $[stageDependencies.DownloadHelmStage.DownloadHelmJob.outputs['ExtractChartFilenameStep.var_chart_file_name'] ]
+    var_chart_file_name2: ${{ (parameters.chartFileName }}
   displayName: Deploy HELM Chart to DEV01
   jobs:
     - deployment: deployTo
@@ -34,6 +35,9 @@ stages:
             steps:
               - bash: |
                   echo $(Pipeline.Workspace)/helm_CI/chart/$(var_chart_file_name1)
+                displayName: DEBUG Display fill chart filename (1)
+              - bash: |
+                  echo $(Pipeline.Workspace)/helm_CI/chart/$(var_chart_file_name2)
                 displayName: DEBUG Display fill chart filename (2)
               - task: HelmDeploy@0
                 displayName: Helm install 2
