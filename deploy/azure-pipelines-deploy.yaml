@@ -49,6 +49,7 @@ stages:
         displayName: DEBUG Display name of the chart
 
   - stage: Echo
+    dependsOn: DownloadHelmStage
     displayName: Echo
     jobs:
     - job: Echo
@@ -56,6 +57,8 @@ stages:
       - checkout: none
       - bash: |
           echo DEBUG $(DownloadHelmStage.DownloadHelmJob.ExtractChartFilenameStep.var_chart_file_name)
+      - bash: |
+          echo DEBUG $(stageDependencies.DownloadHelmStage.DownloadHelmJob.ExtractChartFilenameStep.var_chart_file_name)
         displayName: DEBUG Display name of the chart
 
   # - template: deploy-to-env.yaml
