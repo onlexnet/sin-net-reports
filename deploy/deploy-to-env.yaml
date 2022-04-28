@@ -12,6 +12,13 @@ stages:
 - stage: deployToEnvironment${{ parameters.envName }}
   dependsOn: DownloadHelmStage
   variables:
+    # we use lowercase name of the environment as part of kubernetes namespace
+    # Currently name of kubernetes namespace is not the part of deployment as we can't create kubernetes definition in environment
+    # using terraform provider for DevOps. Will be used in the future
+    envNameLower: ${{ lower(parameters.envName) }}
+    # we use uppercase for Azure DevOps environment name
+    envNameUpper: ${{ upper(parameters.envName) }}
+
     var_chart_file_name1: $[stageDependencies.DownloadHelmStage.DownloadHelmJob.outputs['ExtractChartFilenameStep.var_chart_file_name'] ]
     var_chart_file_name2: ${{ parameters.chartFileName }}
   displayName: Deploy HELM Chart to DEV01
