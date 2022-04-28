@@ -17,6 +17,8 @@ stages:
     # using terraform provider for DevOps. Will be used in the future
     envNameLower: ${{ lower(parameters.envName) }}
     # we use uppercase for Azure DevOps environment name
+    # Currently the same as parameter (all allowed env names in parameters are capitalized), but it makes us independent of
+    # env name capitalization in parameters
     envNameUpper: ${{ upper(parameters.envName) }}
 
     var_chart_file_name1: $[stageDependencies.DownloadHelmStage.DownloadHelmJob.outputs['ExtractChartFilenameStep.var_chart_file_name'] ]
