@@ -1,7 +1,6 @@
 parameters:
 - name: envName # name of the environment (DEV01, STG01, PRD01)
   type: string # data type of the parameter; required
-  default: DEV01
   values:
   - DEV01
   - STG01
