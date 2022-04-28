@@ -44,14 +44,14 @@ stages:
         name: ExtractChartFilenameStep
         displayName: Extract Chart filename
       - bash: |
-          echo !!!!! $(var_chart_file_name) !!!!!
+          echo !!!!! $(ExtractChartFilenameStep.var_chart_file_name) !!!!!
         displayName: DEBUG Display name of the chart
 
 
   - template: deploy-to-env.yaml
     parameters:
       envName: DEV01
-      chartFileName: $(setOutput.var_chart_file_name)
+      chartFileName: $(ExtractChartFilenameStep.var_chart_file_name)
 
 
 
