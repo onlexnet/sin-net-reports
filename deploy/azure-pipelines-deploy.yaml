@@ -48,23 +48,10 @@ stages:
           echo DEBUG $(ExtractChartFilenameStep.var_chart_file_name)
         displayName: DEBUG Display name of the chart
 
-  - stage: Echo
-    dependsOn: DownloadHelmStage
-    displayName: Echo
-    jobs:
-    - job: Echo
-      steps:
-      - checkout: none
-      - bash: |
-          echo DEBUG $($[ stageDependencies.DownloadHelmStage.DownloadHelmJob.outputs['ExtractChartFilenameStep.var_chart_file_name']])
-      - bash: |
-          echo DEBUG $(stageDependencies.DownloadHelmStage.DownloadHelmJob.ExtractChartFilenameStep.outputs[var_chart_file_name])
-        displayName: DEBUG Display name of the chart
-
-  # - template: deploy-to-env.yaml
-  #   parameters:
-  #     envName: DEV01
-  #     chartFileName: $(DownloadHelmStage.DownloadHelmJob.ExtractChartFilenameStep.var_chart_file_name)
+  - template: deploy-to-env.yaml
+    parameters:
+      envName: DEV01
+      chartFileName: $[ stageDependencies.DownloadHelmStage.DownloadHelmJob.outputs['ExtractChartFilenameStep.var_chart_file_name'] ]
 
   # - template: deploy-to-env.yaml
   #   parameters:
