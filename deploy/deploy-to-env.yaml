@@ -11,6 +11,7 @@ parameters:
 
 stages:
 - stage: deployToEnvironment
+  dependsOn: DownloadHelm1
   variables:
     # we use lowercase for namings like kubernetes environment
     envNameLower: ${{ lower(parameters.envName) }}
