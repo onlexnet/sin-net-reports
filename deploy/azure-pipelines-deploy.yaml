@@ -56,7 +56,7 @@ stages:
       steps:
       - checkout: none
       - bash: |
-          echo DEBUG $[ stageDependencies.DownloadHelmStage.DownloadHelmJob.outputs['ExtractChartFilenameStep.var_chart_file_name'] ]
+          echo DEBUG $($[ stageDependencies.DownloadHelmStage.DownloadHelmJob.outputs['ExtractChartFilenameStep.var_chart_file_name']])
       - bash: |
           echo DEBUG $(stageDependencies.DownloadHelmStage.DownloadHelmJob.ExtractChartFilenameStep.outputs[var_chart_file_name])
         displayName: DEBUG Display name of the chart
