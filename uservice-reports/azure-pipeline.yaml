@@ -17,7 +17,15 @@ trigger:
       - master
   paths:
     include:
-      - uservice-reports
+      - /uservice-reports/
+
+pr:
+  branches:
+    include:
+      - master
+  paths:
+    include:
+      - /uservice-reports/
 
 stages:
   - stage: buildDockerImage

@@ -1,0 +1,47 @@
+parameters:
+- name: envName # name of the environment (DEV01, STG01, PRD01)
+  type: string # data type of the parameter; required
+  default: DEV01
+  values:
+  - DEV01
+  - STG01
+  - PRD01
+- name: chartFileName
+  type: string
+
+stages:
+- stage: deployToEnvironment
+  dependsOn: DownloadHelmStage
+  variables:
+    # we use lowercase for namings like kubernetes environment
+    envNameLower: ${{ lower(parameters.envName) }}
+    # we use uppercase for Azure DevOps environment name
+    envNameUpper: ${{ upper(parameters.envName) }}
+
+    var_chart_file_name1: $[stageDependencies.DownloadHelmStage.DownloadHelmJob.outputs['ExtractChartFilenameStep.var_chart_file_name'] ]
+  displayName: Deploy HELM Chart to DEV01
+  jobs:
+    - deployment: deployTo
+      displayName: Deploy to ${{ variables.envNameUpper }}
+      environment:
+        name: ${{ variables.envNameUpper }}
+        # Below commented as we can't point Kubernetes as it is not created using Terraform scripts yed
+        # The closest issue about resources in environment mentioned here https://github.com/microsoft/terraform-provider-azuredevops/issues/143
+        # resourceType: Kubernetes
+      strategy:                  
+        runOnce:
+          deploy:
+            steps:
+              - bash: |
+                  echo $(Pipeline.Workspace)/helm_CI/chart/$(var_chart_file_name1)
+                displayName: DEBUG Display fill chart filename (2)
+              - task: HelmDeploy@0
+                displayName: Helm install 2
+                inputs:
+                  kubernetesServiceEndpoint: onlex-sinnet-dev01
+                  command: upgrade
+                  install: true
+                  chartName: $(Pipeline.Workspace)/helm_CI/chart/$(var_chart_file_name1)
+                  arguments: -f $(Pipeline.Workspace)/helm_CI/chart/config.yaml
+                  releaseName: sinnet-reports
+                  namespace: onlex-sinnet-dev01

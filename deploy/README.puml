@@ -4,7 +4,9 @@
 ** UAT01
 ** PRO01
 * HELM
-** WebApi
+**:WebApi
+GraphQL endpoint and JWT validation
+Quarkus / Java;
 ** WebApp
 ** WebApi Legacy
 ** Reports

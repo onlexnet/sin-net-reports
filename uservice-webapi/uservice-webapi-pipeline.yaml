@@ -23,8 +23,18 @@ trigger:
   batch: true
   branches:
     include:
-      # - master
-      - '*'
+      - master
+  paths:
+    include:
+      # We have to include all folders where source files are located
+      - uservice-webapi
+      - uservice-reports/main/src/main/proto
+      - webapi/api.grpc
+
+pr:
+  branches:
+    include:
+      - master
   paths:
     include:
       # We have to include all folders where source files are located
