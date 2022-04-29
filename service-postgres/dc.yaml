@@ -18,10 +18,10 @@ services:
   #   ports:
   #     - "3000:3000"
   #   depends_on:
-  #     - webapi
-  #   webapi:
+  #     - uservice-timeentries
+  #   uservice-timeentries:
   #     build:
-  #       context: webapi/main
+  #       context: uservice-timeentries/main
   #       dockerfile: Dockerfile.dev
   #     ports:
   #       - "8080:8080"  

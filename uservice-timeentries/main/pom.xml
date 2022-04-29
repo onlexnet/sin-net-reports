@@ -28,8 +28,8 @@
   <properties>
     <!-- sonar properties -> https://docs.sonarqube.org/latest/analysis/analysis-parameters/ -->
     <sonar.organization>on-lex-net</sonar.organization>
-    <sonar.projectKey>sin-net-reports-webapi</sonar.projectKey>
-    <sonar.projectName>SinNet Reports WebApi</sonar.projectName>
+    <sonar.projectKey>sin-net-reports-timeentries</sonar.projectKey>
+    <sonar.projectName>SinNet Reports TimeEntries</sonar.projectName>
     <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     <!-- Environment variable is already defined in CIDD as SONAR_TOKEN -->
     <sonar.login>${env.SONAR_TOKEN}</sonar.login>

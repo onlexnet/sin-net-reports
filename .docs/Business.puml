@@ -10,7 +10,7 @@ Rel(doerAlias, systemAlias, "Evidence activities")
 System_Boundary(sinnetK8sProd, "sinnet k8s prod") {
   Container(ReportContainer, "Reports uservice", "Quarkus, Docker, PDF creation, gRpc")
   Container(WebAppContainer, "WebApp uservice", "React,Docker", "Default UI for application functionality")
-  Container(webApiLegacyContainer, "WebApi legacy", "graphql")
+  Container(TimeEntries, "TimeEntries", "graphql")
 }
 
 System_Boundary(sinnetDatacenter, "sinnet datacenter") {
@@ -28,7 +28,7 @@ System_Boundary(azureCloud, "Azure Cloud") {
 
 Rel(doerAlias, sinnetB2C, "Evidence activities")
 Rel(WebAppContainer, sinnetB2C, "Identify")
-Rel(webApiLegacyContainer, postgresql, "uses")
+Rel(TimeEntries, postgresql, "uses")
 
 @enduml
 

@@ -9,5 +9,22 @@
   - Hint: all users (and their passwords) are created manually as today we can't create them using Terraform with Azure B2C
 - passwords for all users are defined and kept in Azure Vault and available for the test as it is run in context of test service principal
 
+## Start work locally
+``` bash
+sudo service docker start # to run docker locally - required just of docker is not yet started
+```
+
+``` bash
+. start-stack.sh # to run application services
+docker-compose up # to run services
+```
+
+and, in new shell
+``` bash
+. init-vars.sh # to create env variables based on KeyVault secrets
+mvn clean test # to run tests
+```
+
 ## useful links
 - [https://github.com/cucumber/cucumber-jvm](https://github.com/cucumber/cucumber-jvm)
+

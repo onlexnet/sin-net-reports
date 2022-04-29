@@ -4,7 +4,7 @@ To configure some dynamic properties on CI pipeline, you may use locally somethi
 ```bash
 export USERVICE_WEBAPI_IMAGE_TAG=latest
 export WEBAPP_IMAGE_TAG=latest
-export WEBAPI_IMAGE_TAG=latest
+export USERVICE_TIMEENTRIES_IMAGE_TAG=latest
 export REPORTS_IMAGE_TAG=latest
 ./makeconfig.sh
 ```

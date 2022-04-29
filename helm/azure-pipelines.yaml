@@ -31,9 +31,9 @@ resources:
     source: onlex-sinnet-webapp
     trigger: "true"
     branch: master
-  - pipeline: webapi_CI
+  - pipeline: timeentries_CI
     project: sinnet
-    source: onlex-sinnet-webapi
+    source: onlex-sinnet-timeentries
     trigger: "true"
     branch: master
   - pipeline: report_CI
@@ -58,12 +58,12 @@ resources:
       resourceGroup: sinnet-default-manual
       registry: sinnet
       repository: webapp
-    - container: webapi
+    - container: uservice-timeentries-container
       type: ACR  
       azureSubscription: sinnet-default-manual-arm
       resourceGroup: sinnet-default-manual
       registry: sinnet
-      repository: webapi
+      repository: uservice-timeentries
     - container: reports
       type: ACR  
       azureSubscription: sinnet-default-manual-arm
@@ -91,13 +91,9 @@ stages:
         - bash: |
               echo "##vso[task.setvariable variable=USERVICE_WEBAPI_IMAGE_TAG]$(resources.container.uservice-webapi-container.tag)"
               echo "##vso[task.setvariable variable=WEBAPP_IMAGE_TAG]$(resources.container.webapp.tag)"
-              echo "##vso[task.setvariable variable=WEBAPI_IMAGE_TAG]$(resources.container.webapi.tag)"
+              echo "##vso[task.setvariable variable=USERVICE_TIMEENTRIES_IMAGE_TAG]$(resources.container.uservice-timeentries-container.tag)"
               echo "##vso[task.setvariable variable=REPORTS_IMAGE_TAG]$(resources.container.reports.tag)"
           displayName: Store all used image tags in variables for future use.
-        - bash: |
-              echo $USERVICE_WEBAPI_IMAGE_TAG
-              echo $WEBAPI_IMAGE_TAG
-          displayName: DEBUG test
         - bash: |
               ./helm/main/makeconfig.sh
           displayName: Generate config.yaml

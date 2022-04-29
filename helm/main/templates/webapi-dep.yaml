@@ -1,26 +1,26 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: webapi-dep
+  name: uservice-timeentries-dep
   labels:
-    app: webapi
+    app: uservice-timeentries
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: webapi
+      app: uservice-timeentries
   
   template:
     metadata:
       labels:
-        app: webapi
+        app: uservice-timeentries
     
     spec:
       imagePullSecrets:
         - name: regcred
       containers:
-        - name: webapi
-          image: sinnet.azurecr.io/webapi:{{ required "Tag of WebApi image has to be provided" .Values.imageWebApiTag }}
+        - name: uservice-timeentries
+          image: sinnet.azurecr.io/uservice-timeentries:{{ required "Tag of uservice-timeentries image has to be provided" .Values.imageUserviceTimeEntriesTag }}
           imagePullPolicy: Always
           ports:
           - containerPort: 8080
