@@ -5,8 +5,6 @@ variables:
   # connection, defined manually.
   # The connection used in pipeline allows to access to ACR sinnet.azurecr.io
   dockerRegistryServiceConnection: "sinnet-acr"
-  # image name (without tags) used to build final image
-  imageName: "services-webapi"
   # name of the registry where the image is hosted on.
   # in Docker world, it is also part of image name (prefix)
   containerRegistry: "sinnetapps.azurecr.io"
@@ -19,8 +17,8 @@ trigger:
   paths:
     include:
       # We have to include all folders where source files are located
-      - /webapi/
-      - /webapi/api.graphql/
+      - /uservice-timeentries/
+      - /uservice-timeentries/api.graphql/
 
 pr:
   branches:
@@ -29,12 +27,12 @@ pr:
   paths:
     include:
       # the same folders as for trigger
-      - /webapi/
-      - /webapi/api.graphql/
+      - /uservice-timeentries/
+      - /uservice-timeentries/api.graphql/
 
 jobs:
   - job: CICD
-    displayName: Webapi CI/CD build
+    displayName: TimeEntries CI/CD build
     pool:
       vmImage: ubuntu-latest
 
@@ -43,18 +41,17 @@ jobs:
       # There are some differences between a normal build and the build triggered by a PR though:
       # The build triggered from a PR do not push the docker images to any docker registry.
       buildImageOnMaster: $[ eq(variables['build.sourceBranch'], 'refs/heads/master') ]
-      buildImageAndPush: $[ startsWith(variables['build.sourceBranch'], 'refs/heads/release/webapi/') ]
 
     
     steps:
       - bash: |
-          echo "##vso[task.setvariable variable=my_version]$(cat webapi/.version)"
-        displayName: Read version from webapi .version file
+          echo "##vso[task.setvariable variable=my_version]$(cat uservice-timeentries/.version)"
+        displayName: Read version from local .version file
 
       - bash: |
           ./links.sh
           cp -Lr .links .links-COPY && rm -r .links && mv .links-COPY .links
-        workingDirectory: webapi
+        workingDirectory: uservice-timeentries
         displayName: Create local copy of used external resources
 
       - task: Maven@3
@@ -68,7 +65,7 @@ jobs:
         # https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/build/maven
         displayName: 'Project compilation with Maven'
         inputs:
-          mavenPomFile: 'webapi/main/pom.xml'
+          mavenPomFile: 'uservice-timeentries/main/pom.xml'
           goals: 'verify'
           javaHomeOption: 'JDKVersion'
           jdkVersionOption: '1.11'
@@ -82,12 +79,12 @@ jobs:
           checkStyleRunAnalysis: true # We use checkstyle in coding, so let's use it with Maven as well
 
       - task: Docker@2
-        displayName: Build webapi image
+        displayName: Build uservice image
         inputs:
           command: build
-          dockerfile: webapi/Dockerfile
+          dockerfile: uservice-timeentries/Dockerfile
           containerRegistry: $(dockerRegistryServiceConnection)
-          repository: webapi
+          repository: uservice-timeentries
           # to use inside docker variable do use version with build
           # lets put them from just obtained value from .version file
           arguments: --build-arg REVISION=$(my_version)
@@ -96,12 +93,12 @@ jobs:
             $(Build.SourceBranchName)-$(Build.BuildNumber)
 
       - task: Docker@2
-        displayName: Push webapi image to docker ACR
+        displayName: Push uservice image to docker ACR
         condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
         inputs:
           command: push
           containerRegistry: $(dockerRegistryServiceConnection)
-          repository: webapi
+          repository: uservice-timeentries
           tags: |
             latest
             $(Build.SourceBranchName)-$(Build.BuildNumber)
