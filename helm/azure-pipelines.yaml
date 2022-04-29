@@ -24,18 +24,24 @@ resources:
   - pipeline: uservice_webapi_CI
     project: sinnet
     source: onlex-sinnet-uservice-webapi
-    branch: master
-    trigger: "true"
+    trigger:
+      branches: 
+        include:
+          - master
   - pipeline: webapp_CI
     project: sinnet
     source: onlex-sinnet-webapp
-    trigger: "true"
-    branch: master
-  - pipeline: timeentries_CI
+    trigger:
+      branches: 
+        include:
+          - master
+  - pipeline: uservice_timeentries_CI
     project: sinnet
     source: onlex-sinnet-timeentries
-    trigger: "true"
-    branch: master
+    trigger:
+      branches: 
+        include:
+          - master
   - pipeline: report_CI
     project: sinnet
     source: onlex-sinnet-reports
