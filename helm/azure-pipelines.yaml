@@ -37,7 +37,7 @@ resources:
           - master
   - pipeline: uservice_timeentries_CI
     project: sinnet
-    source: onlex-sinnet-timeentries
+    source: onlex-sinnet-uservice-timeentries
     trigger:
       branches: 
         include:
