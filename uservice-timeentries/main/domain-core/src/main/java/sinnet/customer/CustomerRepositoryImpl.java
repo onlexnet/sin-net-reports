@@ -33,6 +33,9 @@ import sinnet.models.EntityId;
 import sinnet.models.Name;
 import sinnet.vertx.RowSetEx;
 
+/**
+ * Reactive implementation of {@link CustomerRepository}.
+ */
 @Component
 public class CustomerRepositoryImpl implements CustomerRepository {
 
@@ -353,68 +356,70 @@ public class CustomerRepositoryImpl implements CustomerRepository {
         .flatMap(it -> it);
   }
 
-    @Override
-    public Future<List<CustomerModel>> list(UUID projectId) {
-        return get("project_id=$1", Tuple.of(projectId))
-            .map(it -> it);
+  @Override
+  public Future<List<CustomerModel>> list(UUID projectId) {
+    return get("project_id=$1", Tuple.of(projectId))
+        .map(it -> it);
 
-    }
+  }
 
-    /** Reusable method to map database to domain model. */
-    private Future<List<CustomerModel>> get(String whereClause, Tuple values) {
-        return pgClient.withTransaction(client ->
-            client.preparedQuery("SELECT "
-                + "project_id, entity_id, entity_version, "
-                + "customer_name, customer_city_name, customer_address, "
-                + "operator_email, billing_model, support_status, distance, "
-                + "nfz_umowa, nfz_ma_filie, nfz_lekarz, nfz_polozna, "
-                + "nfz_pielegniarka_srodowiskowa, nfz_medycyna_szkolna, nfz_transport_sanitarny, nfz_nocna_pomoc_lekarska, "
-                + "nfz_ambulatoryjna_opieka_specjalistyczna, nfz_rehabilitacja, nfz_stomatologia, nfz_psychiatria, "
-                + "nfz_szpitalnictwo, nfz_programy_profilaktyczne, nfz_zaopatrzenie_ortopedyczne, nfz_opieka_dlugoterminowa, "
-                + "nfz_notatki, "
-                + "komercja_jest, komercja_notatki, dane_techniczne "
-                + "FROM customers c "
-                + "WHERE " + whereClause)
-                .execute(values)
-                .flatMap(ar -> {
-                    var customers = List.ofAll(ar)
-                        .map(row -> toCustomerEntity(row));
-                    var ids = customers
-                        .map(it -> it.getEntityId())
-                        .map(it -> Collections.singletonMap("cid", (Object) it))
-                        .toJavaList();
-                    if (ids.isEmpty()) return Future.succeededFuture(List.empty());
+  /** Reusable method to map database to domain model. */
+  private Future<List<CustomerModel>> get(String whereClause, Tuple values) {
+    return pgClient.withTransaction(client ->
+        client.preparedQuery("SELECT "
+            + "project_id, entity_id, entity_version, "
+            + "customer_name, customer_city_name, customer_address, "
+            + "operator_email, billing_model, support_status, distance, "
+            + "nfz_umowa, nfz_ma_filie, nfz_lekarz, nfz_polozna, "
+            + "nfz_pielegniarka_srodowiskowa, nfz_medycyna_szkolna, nfz_transport_sanitarny, nfz_nocna_pomoc_lekarska, "
+            + "nfz_ambulatoryjna_opieka_specjalistyczna, nfz_rehabilitacja, nfz_stomatologia, nfz_psychiatria, "
+            + "nfz_szpitalnictwo, nfz_programy_profilaktyczne, nfz_zaopatrzenie_ortopedyczne, nfz_opieka_dlugoterminowa, "
+            + "nfz_notatki, "
+            + "komercja_jest, komercja_notatki, dane_techniczne "
+            + "FROM customers c "
+            + "WHERE " + whereClause)
+            .execute(values)
+            .flatMap(ar -> {
+              var customers = List.ofAll(ar)
+                  .map(row -> toCustomerEntity(row));
+              var ids = customers
+                  .map(it -> it.getEntityId())
+                  .map(it -> Collections.singletonMap("cid", (Object) it))
+                  .toJavaList();
+              if (ids.isEmpty()) {
+                return Future.succeededFuture(List.empty());
+              }
 
-                    var secrets = SqlTemplate
-                        .forQuery(client, "SELECT customer_id, location, username, password, changed_who, changed_when "
-                                          + "FROM secret WHERE customer_id=#{cid}")
-                        .executeBatch(ids)
-                        .map(rows -> RowSetEx.flat(rows)
-                            .map(row -> toCustomerSecret(row)));
-                    var secretsEx = SqlTemplate
-                        .forQuery(client, "SELECT customer_id, location, username, password, entity_name, entity_code, changed_who, changed_when "
-                                          + "FROM secret_ex WHERE customer_id=#{cid}")
-                        .executeBatch(ids)
-                        .map(rows -> RowSetEx.flat(rows)
-                            .map(row -> toCustomerSecretEx(row)));
-                    var contacts = SqlTemplate
-                        .forQuery(client, "SELECT customer_id, first_name, last_name, phone_no, email "
-                                          + "FROM contact WHERE customer_id=#{cid}")
-                        .executeBatch(ids)
-                        .map(rows -> RowSetEx.flat(rows)
-                            .map(row -> toCustomerContact(row)));
+              var secrets = SqlTemplate
+                  .forQuery(client, "SELECT customer_id, location, username, password, changed_who, changed_when "
+                                    + "FROM secret WHERE customer_id=#{cid}")
+                  .executeBatch(ids)
+                  .map(rows -> RowSetEx.flat(rows)
+                      .map(row -> toCustomerSecret(row)));
+              var secretsEx = SqlTemplate
+                  .forQuery(client, "SELECT customer_id, location, username, password, entity_name, entity_code, changed_who, changed_when "
+                                    + "FROM secret_ex WHERE customer_id=#{cid}")
+                  .executeBatch(ids)
+                  .map(rows -> RowSetEx.flat(rows)
+                      .map(row -> toCustomerSecretEx(row)));
+              var contacts = SqlTemplate
+                  .forQuery(client, "SELECT customer_id, first_name, last_name, phone_no, email "
+                                    + "FROM contact WHERE customer_id=#{cid}")
+                  .executeBatch(ids)
+                  .map(rows -> RowSetEx.flat(rows)
+                      .map(row -> toCustomerContact(row)));
 
-                    return CompositeFuture
-                        .all(secrets, secretsEx, contacts)
-                        .map(v -> {
-                            List<Tuple2<UUID, CustomerSecret>> v1 = v.resultAt(0);
-                            List<Tuple2<UUID, CustomerSecretEx>> v2 = v.resultAt(1);
-                            List<Tuple2<UUID, CustomerContact>> v3 = v.resultAt(2);
-                            return finalMapping(customers, v1, v2, v3);
-                        });
-                })
-        );
-    }
+              return CompositeFuture
+                  .all(secrets, secretsEx, contacts)
+                  .map(v -> {
+                    List<Tuple2<UUID, CustomerSecret>> v1 = v.resultAt(0);
+                    List<Tuple2<UUID, CustomerSecretEx>> v2 = v.resultAt(1);
+                    List<Tuple2<UUID, CustomerContact>> v3 = v.resultAt(2);
+                    return finalMapping(customers, v1, v2, v3);
+                  });
+            })
+    );
+  }
 
     static List<CustomerModel> finalMapping(List<Entity<CustomerValue>> customers,
                                             List<Tuple2<UUID, CustomerSecret>> secrets,
