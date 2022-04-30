@@ -9,6 +9,12 @@ export interface CustomersComboBox {
   onSelected: (id?: string) => void,
 }
 
+
+/**
+ * Allows to find customer based on part of name of value from secret 'Portal świadczeniodawcy'
+ * @param props 
+ * @returns 
+ */
 export const CustomerComboBox: React.FC<CustomersComboBox> = props => {
 
   type OptionType = { key: string, text: string }
@@ -23,14 +29,22 @@ export const CustomerComboBox: React.FC<CustomersComboBox> = props => {
 
   const filteredElements = (partName: string) => {
     return _.chain(items)
-      .map(it => ({ key: it.id.entityId, text: it.data.customerName }))
+      .map(it => ({ key: it.id.entityId, text: it.data.customerName, secretsEx: it.secretsEx }))
       .filter(it => {
         if (!partName) return true;
-        var optionText = it.text;
-        return optionText.toUpperCase().indexOf(partName.toUpperCase()) !== -1;
+
+        var customerName = it.text;
+        if (customerName.toUpperCase().indexOf(partName.toUpperCase()) !== -1) return true;
+
+        const specialAuth = _.chain(it.secretsEx).filter(o => o.location === 'Portal świadczeniodawcy').first().value();
+        if (specialAuth && specialAuth.entityCode?.toUpperCase().indexOf(partName.toUpperCase()) !== -1) return true;
+
+        return false;
       })
+      .map(it => it as OptionType)
       .value()
   }
+
 
   const renderAfterLostLoad = useRef(0);
   if (renderAfterLostLoad.current === 0 && data) {
@@ -43,8 +57,13 @@ export const CustomerComboBox: React.FC<CustomersComboBox> = props => {
     renderAfterLostLoad.current = 0;
   }
 
+
   const onPendingValueChanged = (value: string) => {
-    setFilteredCustomers(filteredElements(value));
+    // we have rerender issue, so let change value only of different from current value
+    const filtered = filteredElements(value);
+    if (_.isEqual(filtered, filteredCustomers)) return;
+
+    setFilteredCustomers(filtered);
   }
 
 
