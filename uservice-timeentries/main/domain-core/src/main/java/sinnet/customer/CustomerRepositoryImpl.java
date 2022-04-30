@@ -421,74 +421,73 @@ public class CustomerRepositoryImpl implements CustomerRepository {
     );
   }
 
-    static List<CustomerModel> finalMapping(List<Entity<CustomerValue>> customers,
-                                            List<Tuple2<UUID, CustomerSecret>> secrets,
-                                            List<Tuple2<UUID, CustomerSecretEx>> secretsEx,
-                                            List<Tuple2<UUID, CustomerContact>> contacts) {
-        var groupedSecrets = secrets.groupBy(it -> it._1);
-        var groupedSecretsEx = secretsEx.groupBy(it -> it._1);
-        var groupedContacts = contacts.groupBy(it -> it._1);
-        return customers.map(it -> {
-            var customerId = it.getEntityId();
-            var value = it.getValue();
-            var customerSecrets = groupedSecrets.get(customerId)
-                .getOrElse(List.empty())
-                .map(v -> v._2)
-                .toJavaArray(CustomerSecret[]::new);
-            var customerSecretsEx = groupedSecretsEx.get(customerId)
-                .getOrElse(List.empty())
-                .map(v -> v._2)
-                .toJavaArray(CustomerSecretEx[]::new);
-            var customerContacts = groupedContacts.get(customerId)
-                .getOrElse(List.empty())
-                .map(v -> v._2())
-                .toJavaArray(CustomerContact[]::new);
-            return new CustomerModel(
-                EntityId.of(it.getProjectId(), it.getEntityId(), it.getVersion()),
-                value,
-                customerSecrets,
-                customerSecretsEx,
-                customerContacts);
-        }).toList();
-    }
+  static List<CustomerModel> finalMapping(List<Entity<CustomerValue>> customers,
+                                          List<Tuple2<UUID, CustomerSecret>> secrets,
+                                          List<Tuple2<UUID, CustomerSecretEx>> secretsEx,
+                                          List<Tuple2<UUID, CustomerContact>> contacts) {
+    var groupedSecrets = secrets.groupBy(it -> it._1);
+    var groupedSecretsEx = secretsEx.groupBy(it -> it._1);
+    var groupedContacts = contacts.groupBy(it -> it._1);
+    return customers.map(it -> {
+      var customerId = it.getEntityId();
+      var value = it.getValue();
+      var customerSecrets = groupedSecrets.get(customerId)
+          .getOrElse(List.empty())
+          .map(v -> v._2)
+          .toJavaArray(CustomerSecret[]::new);
+      var customerSecretsEx = groupedSecretsEx.get(customerId)
+          .getOrElse(List.empty())
+          .map(v -> v._2)
+          .toJavaArray(CustomerSecretEx[]::new);
+      var customerContacts = groupedContacts.get(customerId)
+          .getOrElse(List.empty())
+          .map(v -> v._2())
+          .toJavaArray(CustomerContact[]::new);
+      return new CustomerModel(
+          EntityId.of(it.getProjectId(), it.getEntityId(), it.getVersion()),
+          value,
+          customerSecrets,
+          customerSecretsEx,
+          customerContacts);
+    }).toList();
+  }
 
+  static Tuple2<UUID, CustomerSecret> toCustomerSecret(Row row) {
+    var key = row.getUUID("customer_id");
+    var result = CustomerSecret.builder()
+        .location(row.getString("location"))
+        .username(row.getString("username"))
+        .password(row.getString("password"))
+        .changedWho(Email.of(row.getString("changed_who")))
+        .changedWhen(row.getLocalDateTime("changed_when"))
+        .build();
+    return new Tuple2<>(key, result);
+  }
 
-    static Tuple2<UUID, CustomerSecret> toCustomerSecret(Row row) {
-        var key = row.getUUID("customer_id");
-        var result = CustomerSecret.builder()
-            .location(row.getString("location"))
-            .username(row.getString("username"))
-            .password(row.getString("password"))
-            .changedWho(Email.of(row.getString("changed_who")))
-            .changedWhen(row.getLocalDateTime("changed_when"))
-            .build();
-        return new Tuple2<>(key, result);
-    }
+  static Tuple2<UUID, CustomerSecretEx> toCustomerSecretEx(Row row) {
+    var key = row.getUUID("customer_id");
+    var result = CustomerSecretEx.builder()
+        .location(row.getString("location"))
+        .username(row.getString("username"))
+        .password(row.getString("password"))
+        .entityName(row.getString("entity_name"))
+        .entityCode(row.getString("entity_code"))
+        .changedWho(Email.of(row.getString("changed_who")))
+        .changedWhen(row.getLocalDateTime("changed_when"))
+        .build();
+    return new Tuple2<>(key, result);
+  }
 
-    static Tuple2<UUID, CustomerSecretEx> toCustomerSecretEx(Row row) {
-        var key = row.getUUID("customer_id");
-        var result = CustomerSecretEx.builder()
-            .location(row.getString("location"))
-            .username(row.getString("username"))
-            .password(row.getString("password"))
-            .entityName(row.getString("entity_name"))
-            .entityCode(row.getString("entity_code"))
-            .changedWho(Email.of(row.getString("changed_who")))
-            .changedWhen(row.getLocalDateTime("changed_when"))
-            .build();
-        return new Tuple2<>(key, result);
-    }
-
-    static Tuple2<UUID, CustomerContact> toCustomerContact(Row row) {
-        var key = row.getUUID("customer_id");
-        var result = CustomerContact.builder()
-            .firstName(row.getString("first_name"))
-            .lastName(row.getString("last_name"))
-            .phoneNo(row.getString("phone_no"))
-            .email(row.getString("email"))
-            .build();
-        return new Tuple2<>(key, result);
-    }
+  static Tuple2<UUID, CustomerContact> toCustomerContact(Row row) {
+    var key = row.getUUID("customer_id");
+    var result = CustomerContact.builder()
+        .firstName(row.getString("first_name"))
+        .lastName(row.getString("last_name"))
+        .phoneNo(row.getString("phone_no"))
+        .email(row.getString("email"))
+        .build();
+    return new Tuple2<>(key, result);
+  }
 
   static Entity<CustomerValue> toCustomerEntity(Row row) {
     var value = CustomerValue.builder()

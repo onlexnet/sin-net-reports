@@ -1,4 +1,4 @@
-import { Label, Stack, TextField } from "@fluentui/react";
+import { Stack, TextField } from "@fluentui/react";
 import React, { useState } from "react";
 
 interface PeriodSelectorProps {
