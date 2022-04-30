@@ -3,7 +3,7 @@ import React, { useRef, useState } from "react"
 import { useListCustomersQuery } from "../../Components/.generated/components"
 import { FilteredComboBox } from "./FilteredComboBox"
 
-export interface CustomersComboBox {
+export interface CustomerComboBoxProps {
   projectId: string,
   customerId: string | undefined,
   onSelected: (id?: string) => void,
@@ -15,7 +15,7 @@ export interface CustomersComboBox {
  * @param props 
  * @returns 
  */
-export const CustomerComboBox: React.FC<CustomersComboBox> = props => {
+export const CustomerComboBox: React.FC<CustomerComboBoxProps> = props => {
 
   type OptionType = { key: string, text: string }
   const [filteredCustomers, setFilteredCustomers] = useState<OptionType[]>([])

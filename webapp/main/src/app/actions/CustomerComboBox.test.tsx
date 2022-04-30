@@ -1,11 +1,10 @@
+// https://www.robinwieruch.de/react-testing-library/
+import tl from '@testing-library/react';
+import { CustomerComboBox } from './CustomerComboBox';
 
+describe('CustomerComboBox', () => {
 
-describe('true is truthy and false is falsy', () => {
-  test('true is truthy', () => {
-    expect(true).toBe(true);
-  });
-
-  test('false is falsy', () => {
-    expect(false).toBe(false);
+  test.skip('renders', () => {
+    tl.render(<CustomerComboBox projectId='my id' customerId='my customerId' onSelected={id => { }}  />)
   });
 });
