@@ -23,7 +23,7 @@ trigger:
   paths:
     include:
       # We have to include all folders where source files are located
-      - /uservice-webapi/
+      - /webapp/
       - /uservice-webapi/api.graphql/
 
 pr:
@@ -33,8 +33,8 @@ pr:
   paths:
     include:
       # We have to include all folders where source files are located
-      - /uservice-timeentries/
-      - /uservice-timeentries/api.graphql/
+      - /webapp/
+      - /uservice-webapi/api.graphql/
       
 jobs:
   - job: CD
