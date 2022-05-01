@@ -13,6 +13,7 @@ import CustomerView from "./ActionView.Edit.CustomerView"
 import { CustomerComboBox } from "./CustomerComboBox";
 import { useAppInsightsContext, useTrackMetric } from "@microsoft/applicationinsights-react-js";
 import { asDtoDate } from "../../api/Mapper";
+import { useListCustomersQuery } from "../../Components/.generated/components"
 
 const mapStateToProps = (state: RootState) => {
     if (state.appState.empty) {
@@ -254,7 +255,9 @@ export const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
                                 <CustomerComboBox
                                     projectId={projectId}
                                     customerId={customerId}
-                                    onSelected={onChangeCustomerId} />
+                                    onSelected={onChangeCustomerId}
+                                    useListCustomersQuery={useListCustomersQuery}
+                                     />
                             </div>
                             <div className="ms-Grid-col ms-sm6">
                                 <TextField label="Usługa" multiline={true} value={description} errorMessage={descriptionError} onChange={onChangeDescription}

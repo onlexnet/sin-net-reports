@@ -36,7 +36,7 @@ export const FilteredComboBox: React.FC<FilteredComboBoxProps> = props => {
       selectedKey={selectedKey}
       options={items}
       autoComplete="on"
-      allowFreeform
+      allowFreeform      
       openOnKeyboardFocus
       onChange={onChangeLocal}
       onPendingValueChanged={onPendingValueChangedLocal}

@@ -7,6 +7,7 @@ export interface CustomerComboBoxProps {
   projectId: string,
   customerId: string | undefined,
   onSelected: (id?: string) => void,
+  useListCustomersQuery: typeof useListCustomersQuery
 }
 
 
@@ -18,9 +19,12 @@ export interface CustomerComboBoxProps {
 export const CustomerComboBox: React.FC<CustomerComboBoxProps> = props => {
 
   type OptionType = { key: string, text: string }
+  const { useListCustomersQuery: listCustomers } = props;
+
   const [filteredCustomers, setFilteredCustomers] = useState<OptionType[]>([])
 
-  const { data } = useListCustomersQuery({
+
+  const { data } = listCustomers({
     variables: {
         projectId: props.projectId
     }

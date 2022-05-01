@@ -1,10 +1,20 @@
 // https://www.robinwieruch.de/react-testing-library/
-import tl from '@testing-library/react';
+import { QueryResult } from '@apollo/client';
+import { render } from '@testing-library/react';
+import { useListCustomersQuery } from '../../Components/.generated/components';
 import { CustomerComboBox } from './CustomerComboBox';
 
 describe('CustomerComboBox', () => {
 
-  test.skip('renders', () => {
-    tl.render(<CustomerComboBox projectId='my id' customerId='my customerId' onSelected={id => { }}  />)
+  test('renders', () => {
+    const items = {
+      data: {
+        Customers: {
+          list: []
+        }
+      }
+    }
+    const dataResponse: typeof useListCustomersQuery = baseOptions => { return items as QueryResult };
+    render(<CustomerComboBox projectId='my id' customerId='my customerId' onSelected={id => { }} useListCustomersQuery={dataResponse} />);
   });
 });
