@@ -20,6 +20,7 @@ import sinnet.gql.models.ActionsQuery;
 import sinnet.gql.models.CustomersQuery;
 import sinnet.gql.models.PrincipalModel;
 import sinnet.gql.models.ProjectEntity;
+import sinnet.gql.models.ProjectsQuery;
 import sinnet.gql.security.AccessProvider;
 import sinnet.grpc.projects.ListRequest;
 import sinnet.grpc.projects.Projects;
@@ -65,6 +66,11 @@ public class RootQuery {
           .toJavaArray(ProjectEntity[]::new));
   }
 
+  @Query("Projects")
+  public @NonNull sinnet.gql.models.ProjectsQuery projects() {
+    return new ProjectsQuery(null, null);
+  }
+
   @Query("Customers")
   public @NonNull Uni<sinnet.gql.models.CustomersQuery> customers(@NonNull @Id String projectId) {
     return accessProvider.with(projectId)
@@ -72,7 +78,7 @@ public class RootQuery {
   }
 
   @Query("Actions")
-  public @NonNull Uni<ActionsQuery> actions(@NonNull @Id  String projectId) {
+  public @NonNull Uni<ActionsQuery> actions(@NonNull @Id String projectId) {
     return accessProvider.with(projectId)
         .map(it -> new ActionsQuery(projectId, it.getUserToken()));
   }

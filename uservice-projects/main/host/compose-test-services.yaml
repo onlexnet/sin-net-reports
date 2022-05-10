@@ -1,0 +1,26 @@
+version: '3.8'
+services:
+  db:
+    build:
+      context: ../../../service-postgres/
+      dockerfile: Dockerfile.dev
+    environment:
+      - POSTGRES_USER=devlocaldb
+      - POSTGRES_PASSWORD=devlocaldb
+    ports:
+      - 5432:5432
+  init-db:
+    build:
+      context: ../
+      dockerfile: ./init-db/Dockerfile.e2e
+    environment:
+      - DATABASE_USERNAME=uservice_dbuser
+      - DATABASE_PASSWORD=uservice_dbuser
+      - DATABASE_SCHEMA=uservice_projects
+      - DATABASE_JDBC=jdbc:postgresql://db:5432/devlocaldb
+    volumes:
+      - ~/.m2/:/.m2
+      - ../:/uservice_src
+    depends_on:
+       db:
+         condition: service_started

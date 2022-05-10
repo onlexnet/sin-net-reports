@@ -1,0 +1,31 @@
+databaseChangeLog:
+  - changeSet:  
+      id: 20220507-1
+      author: siudeks
+      changes:  
+        - tagDatabase:
+            tag: v0
+  - changeSet:  
+      id: 20220507-2
+      author: siudeks
+      changes:  
+        - createTable:
+            tableName: projects
+            columns:
+            - column:
+                name: ENTITY_ID
+                type: UUID
+                constraints:
+                  primaryKey: true
+                  primaryKeyName: PROJECTS_PK
+                  nullable: false
+            - column:
+                name: NAME
+                type: VARCHAR(50)
+                constraints:
+                  nullable: false
+            - column:
+                name: EMAIL_OF_OWNER
+                type: VARCHAR(50)
+                constraints:
+                  nullable: false

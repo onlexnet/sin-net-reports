@@ -1,0 +1,6 @@
+FROM mcr.microsoft.com/java/jdk:11u11-zulu-alpine as build
+WORKDIR /uservice_src
+
+# First invocation may take time as /m2 repo is moounted by docker-compose so first time may be empty
+# Even more, with invalid mountin or no mounting, .m2 folder may be empty each time
+ENTRYPOINT ["./mvnw", "-Dmaven.repo.local=/.m2", "quarkus:dev", "-pl", "init-db"]

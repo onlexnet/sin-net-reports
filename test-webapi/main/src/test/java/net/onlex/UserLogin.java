@@ -8,7 +8,6 @@ import javax.inject.Inject;
 
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import io.quarkus.logging.Log;
 import io.smallrye.mutiny.Uni;
 import lombok.experimental.ExtensionMethod;
 

@@ -105,10 +105,15 @@ type ProjectEntity {
   name: String!
 }
 
+type ProjectsQuery {
+  ignored: String
+}
+
 "Query root"
 type Query {
   Actions(projectId: ID!): ActionsQuery!
   Customers(projectId: ID!): CustomersQuery!
+  Projects: ProjectsQuery!
   Users(projectId: ID!): UsersQuery!
   availableProjects: [ProjectEntity!]!
   getPrincipal: PrincipalModel!
