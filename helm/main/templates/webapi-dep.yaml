@@ -29,7 +29,7 @@ spec:
             value: "prod"
           - name: APP_DB_HOST
             value: {{ .Values.databaseHost }}
-          - name: APP_DB_NAME
+          - name: DATABASE_NAME
             valueFrom:
               secretKeyRef:
                 name: app-secrets

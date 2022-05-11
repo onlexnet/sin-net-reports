@@ -14,8 +14,13 @@ import lombok.extern.slf4j.Slf4j;
 
 @ApplicationScoped
 @Slf4j
-public class MyService {
+public class AzureAD {
 
+  /**
+   * 
+   * @param props
+   * @return idToken
+   */
   @SneakyThrows
   public Uni<String> signIn(UserLoginProps props) {
     // https://docs.microsoft.com/en-us/azure/active-directory-b2c/b2clogin

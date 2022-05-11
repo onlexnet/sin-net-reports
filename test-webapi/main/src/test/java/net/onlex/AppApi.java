@@ -14,9 +14,23 @@ public interface AppApi {
 
   List<ProjectInfo> availableProjects(@Header(name = "Authorization") String authorizationHeaderValue);
 
+  ProjectsQuery projects(@Header(name = "Authorization") String authorizationHeaderValue);
+
   @Data
   class ProjectInfo {
     private String id;
     private String name;
   }
+
+  interface ProjectsQuery {
+    Entity save(String name);
+  }
+
+  @Data
+  class Entity {
+    String projectId;
+    String entityId;
+    int entityVersion;
+  }
+
 }
