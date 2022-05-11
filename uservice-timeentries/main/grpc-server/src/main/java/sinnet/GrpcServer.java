@@ -1,6 +1,7 @@
 package sinnet;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -12,7 +13,7 @@ import lombok.SneakyThrows;
 
 /** Registers all discoverable gRpc services to allow them be reachable. */
 @Component
-public class GrpcServer {
+public class GrpcServer implements AutoCloseable {
 
   private final BindableService[] services;
   private final int port;
@@ -35,5 +36,10 @@ public class GrpcServer {
     server = builder.build();
 
     server.start();
+  }
+
+  @Override
+  public void close() throws Exception {
+    server.shutdownNow();
   }
 }

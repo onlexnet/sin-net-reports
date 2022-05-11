@@ -16,7 +16,7 @@ sudo service docker start # to run docker locally - required just if docker is n
 
 ``` bash
 docker-compose up # to run services
-. start-stack.sh # to run application services
+./start-stack.sh # to run application services
 ```
 
 and, in new shell

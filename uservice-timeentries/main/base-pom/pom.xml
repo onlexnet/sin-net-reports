@@ -12,7 +12,6 @@
   <properties>
     <spring-boot-azure.version>2.3.2</spring-boot-azure.version>
     <spring-boot.version>2.4.3</spring-boot.version>
-    <jacoco.version>0.8.5</jacoco.version>
 
     <aggregate.report.dir>report-aggregate/target/site/jacoco-aggregate/jacoco.xml</aggregate.report.dir>
 
@@ -340,7 +339,7 @@
         <plugin>
           <groupId>org.jacoco</groupId>
           <artifactId>jacoco-maven-plugin</artifactId>
-          <version>0.8.4</version>
+          <version>0.8.8</version>
         </plugin>
         <!--
           Checking for Violations as Part of the Build
