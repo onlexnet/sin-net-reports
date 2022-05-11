@@ -9,7 +9,7 @@ import io.cucumber.java.en.When;
 import lombok.experimental.ExtensionMethod;
 
 @ExtensionMethod({UniExtensions.class})
-public class UserLogin {
+public class ReadAvailableProjectsSteps {
 
   @Inject
   AzureAD azureAd;
