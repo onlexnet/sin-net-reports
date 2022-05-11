@@ -106,7 +106,7 @@ type ProjectEntity {
 }
 
 type ProjectsQuery {
-  ignored: String
+  save(name: String!): SomeEntity!
 }
 
 "Query root"

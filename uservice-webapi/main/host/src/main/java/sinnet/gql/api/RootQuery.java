@@ -68,7 +68,7 @@ public class RootQuery {
 
   @Query("Projects")
   public @NonNull sinnet.gql.models.ProjectsQuery projects() {
-    return new ProjectsQuery(null, null);
+    return new ProjectsQuery(null);
   }
 
   @Query("Customers")
