@@ -11,7 +11,7 @@
 
 ## Start work locally
 ``` bash
-sudo service docker start # to run docker locally - required just of docker is not yet started
+sudo service docker start # to run docker locally - required just if docker is not yet started
 ```
 
 ``` bash
