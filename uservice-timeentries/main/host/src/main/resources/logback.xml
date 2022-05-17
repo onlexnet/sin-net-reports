@@ -6,41 +6,11 @@
         </encoder>
     </appender>
 
-    <logger name="org.springframework" level="INFO" additivity="false">
-        <appender-ref ref="CONSOLE" />
-    </logger>
-    <logger name="io.netty" level="INFO" additivity="false">
-        <appender-ref ref="CONSOLE" />
-    </logger>
-    <logger name="org.hibernate" level="INFO" additivity="false">
-        <appender-ref ref="CONSOLE" />
-    </logger>
-    <logger name="org.eclipse" level="INFO" additivity="false">
-        <appender-ref ref="CONSOLE" />
-    </logger>
-    <logger name="jndi" level="INFO" additivity="false">
-        <appender-ref ref="CONSOLE" />
-    </logger>
-    <logger name="org.apache.http.wire" level="INFO" additivity="false">
-        <appender-ref ref="CONSOLE" />
-    </logger>
-    <logger name="com.zaxxer.hikari" level="INFO" additivity="false">
-        <appender-ref ref="CONSOLE" />
-    </logger>
-    <logger name="ch.qos.logback" level="INFO" additivity="false">
-        <appender-ref ref="CONSOLE" />
-    </logger>
-    <logger name="org.apache.tomcat" level="INFO" additivity="false">
-        <appender-ref ref="CONSOLE" />
-    </logger>
-    <logger name="org.apache.catalina" level="INFO" additivity="false">
-        <appender-ref ref="CONSOLE" />
-    </logger>
-    <logger name="liquibase" level="INFO" additivity="false">
+    <logger name="sinnet" level="DEBUG" additivity="false">
         <appender-ref ref="CONSOLE" />
     </logger>
 
-    <root level="${LOG_LEVEL:DEBUG}">
+    <root level="${LOG_LEVEL:-INFO}">
         <appender-ref ref="CONSOLE" />
     </root>
 </configuration>

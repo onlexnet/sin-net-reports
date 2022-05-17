@@ -3,7 +3,3 @@ management:
         binders:
             jvm:
                 enabled: true      
-
-graphql:
-    servlet:
-        corsEnabled: true
