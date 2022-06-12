@@ -7,5 +7,5 @@ import javax.enterprise.context.ApplicationScoped;
 import io.quarkus.hibernate.reactive.panache.PanacheRepositoryBase;
 
 @ApplicationScoped
-public class ProjectsRepository implements PanacheRepositoryBase<ProjectsDbo, UUID> {
+public class ProjectRepository implements PanacheRepositoryBase<ProjectDbo, UUID> {
 }

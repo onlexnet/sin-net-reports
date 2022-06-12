@@ -1,4 +1,7 @@
+# Thos dickerfile is used in order to run in 
+# - tests of host module, where the current one is run to initiate database structure
 FROM mcr.microsoft.com/java/jdk:11u11-zulu-alpine as build
+# known location as the dockerfile is part of compose-test-services.yaml where such folder is mounted
 WORKDIR /uservice_src
 
 # First invocation may take time as /m2 repo is moounted by docker-compose so first time may be empty

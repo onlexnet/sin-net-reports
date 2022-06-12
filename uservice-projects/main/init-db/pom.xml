@@ -6,8 +6,10 @@
     <groupId>onlexnet.sinnet</groupId>
     <artifactId>projects-parent</artifactId>
     <version>${revision}</version>
+    <relativePath>..</relativePath>
   </parent>
   <artifactId>uservice-projects-init-db</artifactId>
+  <name>projects-init-db</name>
   <properties>
     <maven.compiler.parameters>true</maven.compiler.parameters>
   </properties>

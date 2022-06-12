@@ -23,8 +23,8 @@ public class ProjectsService implements Projects {
   private final ProjectsUpdate projectsUpdate;
 
   @Inject
-  @Delegate(types=ProjectsList.class)
-  private final ProjectsList projectsList;
+  @Delegate(types=ProjectList.class)
+  private final ProjectList projectsList;
 
   @Override
   public Uni<RemoveReply> remove(RemoveRequest request) {

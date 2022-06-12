@@ -1,0 +1,8 @@
+{
+    "java.configuration.updateBuildConfiguration": "automatic",
+    "java.test.config": {
+        "vmArgs": [
+            "-Drevision=0.0.0-LOCAL"
+        ]
+    }
+}

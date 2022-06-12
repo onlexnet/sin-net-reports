@@ -20,6 +20,11 @@ databaseChangeLog:
                   primaryKeyName: PROJECTS_PK
                   nullable: false
             - column:
+                name: ENTITY_VERSION
+                type: BIGINT
+                constraints:
+                  nullable: false
+            - column:
                 name: NAME
                 type: VARCHAR(50)
                 constraints:

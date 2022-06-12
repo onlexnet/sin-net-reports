@@ -27,10 +27,11 @@ message ReserveReply {
   ProjectId entityId = 1;
 }
 
+/* Test comment. */
 message UpdateCommand {
   ProjectId entityId = 1;
-  string name = 2;
-  string emailOfOwner = 3;
+  string name = 3;
+  string emailOfOwner = 4;
 }
 message UpdateResult {
   ProjectId entityId = 1;
@@ -40,17 +41,21 @@ message ListRequest {
   string emailOfRequestor = 1;
 }
 message ListReply {
-  repeated AvailableProject projects = 1;
+  repeated Project projects = 1;
 }
 
-message AvailableProject {
-  string id = 1;
-  string name = 2;
+message Project {
+  ProjectId id = 1;
+  ProjectModel model = 2;
 }
 
 message ProjectId {
-  string projectId = 1;
-  int32 entityVersion = 2;
+  string eId = 1;
+  int64 eTag = 2;
+}
+
+message ProjectModel {
+  string name = 1;
 }
 
 message UserToken {
@@ -58,8 +63,3 @@ message UserToken {
   string requestorEmail = 2;
 }
 
-message EntityId {
-  string projectId = 1;
-  string entityId = 2;
-  int32 entityVersion = 3;
-}

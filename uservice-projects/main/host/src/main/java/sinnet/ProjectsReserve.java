@@ -19,8 +19,8 @@ class ProjectsReserveImpl implements ProjectsReserve {
   public Uni<ReserveReply> reserve(ReserveRequest request) {
     var reply = ReserveReply.newBuilder()
         .setEntityId(ProjectId.newBuilder()
-            .setProjectId(UUID.randomUUID().toString())
-            .setEntityVersion(0))
+            .setEId(UUID.randomUUID().toString())
+            .setETag(0))
         .build();
     return Uni.createFrom().item(reply);
   }
