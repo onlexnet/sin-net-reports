@@ -12,6 +12,15 @@
             "hostName": "localhost",
             "name": "Debug Quarkus application (host)",
             "port": 5005
+        },
+        {
+            "preLaunchTask": "daprd-debug",
+            "type": "java",
+            "request": "attach",
+            "hostName": "localhost",
+            "name": "Debug Quarkus application (host) with Dapr",
+            "port": 5005,
+            "postDebugTask": "daprd-down"
         }
     ]
 }

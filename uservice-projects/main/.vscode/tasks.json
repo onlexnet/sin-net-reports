@@ -28,7 +28,21 @@
 			"command": "mvn quarkus:dev -pl host -DDATABASE_NAME=devlocaldb -DDATABASE_SCHEMA=uservice_projects",
 			"windows": {
 				"command": "mvn quarkus:dev -pl host"
-			},
+			}
 		},
+		{
+			"appId": "projects",
+			"appPort": 11031,
+			"appProtocol": "grpc",
+			"componentsPath": "../../.components",
+			"label": "daprd-debug",
+			"type": "dapr",
+			"dependsOn": "quarkus:dev (host)"
+		},
+		{
+			"appId": "projects",
+			"label": "daprd-down",
+			"type": "daprd-down"
+		}
 	]
 }

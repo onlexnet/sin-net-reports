@@ -94,6 +94,7 @@ type CustomersQuery {
 type Mutation {
   Actions(projectId: ID!): ActionsMutation!
   Customers(projectId: ID!): CustomersMutation!
+  Projects: ProjectsMutation!
 }
 
 type PrincipalModel {
@@ -101,12 +102,18 @@ type PrincipalModel {
 }
 
 type ProjectEntity {
-  id: ID!
+  entity: SomeEntity
   name: String!
 }
 
+type ProjectsMutation {
+  remove(projectId: ProjectIdInput!): Boolean!
+  save(name: String!): ProjectEntity!
+}
+
 type ProjectsQuery {
-  save(name: String!): SomeEntity!
+  list(name: String!): [ProjectEntity]!
+  numberOfProjects: Int!
 }
 
 "Query root"
@@ -115,7 +122,6 @@ type Query {
   Customers(projectId: ID!): CustomersQuery!
   Projects: ProjectsQuery!
   Users(projectId: ID!): UsersQuery!
-  availableProjects: [ProjectEntity!]!
   getPrincipal: PrincipalModel!
   test: PrincipalModel!
 }
@@ -126,7 +132,7 @@ type ServiceModel {
   distance: Int
   duration: Int
   entityId: ID!
-  entityVersion: Int!
+  entityVersion: BigInteger!
   projectId: ID!
   servicemanEmail: String
   servicemanName: String
@@ -140,7 +146,7 @@ type ServicesSearchResult {
 
 type SomeEntity {
   entityId: ID!
-  entityVersion: Int!
+  entityVersion: BigInteger!
   projectId: ID!
 }
 
@@ -153,6 +159,9 @@ type UsersQuery {
   projectId: String
   search: [User!]!
 }
+
+"Scalar for BigInteger"
+scalar BigInteger
 
 "Scalar for Date"
 scalar Date
@@ -210,8 +219,13 @@ input CustomerSecretInput {
 
 input MyEntity {
   entityId: ID!
-  entityVersion: Int!
+  entityVersion: BigInteger!
   projectId: ID!
+}
+
+input ProjectIdInput {
+  id: ID!
+  tag: BigInteger!
 }
 
 input ServiceEntryInput {

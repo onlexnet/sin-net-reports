@@ -1,44 +1,36 @@
-# Starts all systems excluding WebApp sos that
-# 1) all E2E tests can be started (in docker image as well in HELM installation)
-# 2) WebApp may refer to application to do some smoke tests
+# Starts equivalent of 'external services' as much as we can. 
+# If something is not dockerizable, we should refer to DEV instances.
 
 version: '3.8'
 services:
   postgres:
     build:
       context: service-postgres
+      # specially prepared dockerfile to init database schemas per application
+      # in the same way how the expect in local stack
+      # and run init-db parts of all uservices
       dockerfile: Dockerfile.dev
     environment:
       - POSTGRES_USER=devlocaldb
       - POSTGRES_PASSWORD=devlocaldb
     ports:
       - 5432:5432
-  
-  # webapp:
-  #   # https://dev.to/igmrrf/docker-react-exited-with-code-0-398n
-  #   build:
-  #     context: webapp/main
-  #     dockerfile: Dockerfile.dev
-  #   ports:
-  #     - "3000:3000"
-  #   depends_on:
-  #     - uservice-timeentries
-  #   uservice-timeentries:
-  #     build:
-  #       context: uservice-timeentries/main
-  #       dockerfile: Dockerfile.dev
-  #     ports:
-  #       - "8080:8080"  
-  #     environments:
-  #       - "POSTGRES_URL=db"
-  #       - ...
-  #     depends_on:
-  #       - pgsql
-  #   pgsql:
-  #     image: postgres:10-alpine
-  #     environment:
-  #       - "POSTGRES_PASSWORD=asdsadas"
-  #     ports:
-  #       - "5432:5432"
 
-    
+  init-db-projects:
+    build:
+      context: uservice-projects/main
+      dockerfile: ./init-db/Dockerfile.e2e
+    environment:
+      # well-known properties defined by init scripts of our postgresql
+      - DATABASE_USERNAME=uservice_dbuser
+      - DATABASE_PASSWORD=uservice_dbuser
+      - DATABASE_SCHEMA=uservice_projects
+      - DATABASE_JDBC=jdbc:postgresql://postgres:5432/devlocaldb
+    volumes:
+      # Map local maven repo to speed up build by avoiding downloading maven dependencies each time to new docker image
+      - ~/.m2/:/.m2
+      # Map local source files to allow run init-db module from sources
+      - ./uservice-projects/main/:/uservice_src
+    depends_on:
+       postgres:
+         condition: service_started

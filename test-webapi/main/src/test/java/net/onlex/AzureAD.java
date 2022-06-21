@@ -10,10 +10,8 @@ import com.microsoft.aad.msal4j.UserNamePasswordParameters;
 
 import io.smallrye.mutiny.Uni;
 import lombok.SneakyThrows;
-import lombok.extern.slf4j.Slf4j;
 
 @ApplicationScoped
-@Slf4j
 public class AzureAD {
 
   /**
@@ -40,7 +38,7 @@ public class AzureAD {
     var params = UserNamePasswordParameters
         // adding below "openid", "profile" implicitly is not necessary
         // as they are added automatically by msal
-        // but I wanterd to make list of scopess less confusing as list with just applicationId (mandatowy and I still
+        // but I wanted to make list of scopess less confusing as list with just applicationId (mandatory and I still
         // don't know why) would be unclear
         .builder(Stream.of("openid", "profile", props.applicationId()).collect(Collectors.toSet()),
           props.operator1Name(),

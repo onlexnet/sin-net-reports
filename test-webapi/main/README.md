@@ -28,4 +28,3 @@ mvn clean test # to run tests
 ## useful links
 - [https://github.com/cucumber/cucumber-jvm](https://github.com/cucumber/cucumber-jvm)
 - [GraphQL client](https://hantsy.github.io/blog/2021/consuming-graphql-apis-with-quarkus/)
-- [Local zipkin](http://localhost:9411/zipkin/)

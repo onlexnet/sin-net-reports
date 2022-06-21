@@ -8,3 +8,4 @@ mkdir .links
 
 ln -s $(realpath ../uservice-reports/main/src/main/proto) .links/uservice-reports-proto
 ln -s $(realpath ../uservice-timeentries/api.grpc) .links/uservice-timeentries-proto
+ln -s $(realpath ../uservice-projects/api.grpc) .links/uservice-projects-proto

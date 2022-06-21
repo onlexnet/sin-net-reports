@@ -14,5 +14,5 @@ message UserToken {
 message EntityId {
   string projectId = 1;
   string entityId = 2;
-  int32 entityVersion = 3;
+  int64 entityVersion = 3;
 }

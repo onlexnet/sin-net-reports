@@ -4,5 +4,7 @@
         "vmArgs": [
             "-Drevision=0.0.0-LOCAL"
         ]
-    }
+    },
+    "java.checkstyle.configuration": "${workspaceFolder}/build-tools/src/main/resources/build-checkstyle/google_checks_customized.xml",
+    "java.checkstyle.version": "10.3"
 }

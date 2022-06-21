@@ -11,7 +11,6 @@ import io.smallrye.mutiny.Uni;
 import io.vavr.collection.Array;
 import lombok.extern.slf4j.Slf4j;
 import sinnet.gql.Transform;
-import sinnet.gql.models.CommonMapper;
 import sinnet.gql.models.CustomerContactInput;
 import sinnet.gql.models.CustomerInput;
 import sinnet.gql.models.CustomerSecretExInput;
@@ -23,7 +22,7 @@ import sinnet.grpc.customers.UpdateCommand;
 
 @GraphQLApi
 @Slf4j
-public class CustomersMutationSave implements CustomerMapper, CommonMapper {
+public class CustomersMutationSave implements CustomerMapper {
 
   @GrpcClient("activities")
   Customers service;

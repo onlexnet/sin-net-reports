@@ -7,30 +7,34 @@ option java_multiple_files = true;
 package projects;
 
 service Projects {
-  rpc remove(RemoveRequest) returns (RemoveReply);
+  rpc remove(RemoveCommand) returns (RemoveResult);
   rpc reserve(ReserveRequest) returns (ReserveReply);
   rpc update(UpdateCommand) returns (UpdateResult);
-  rpc list(ListRequest) returns (ListReply) {}
+  rpc list(ListRequest) returns (ListReply);
+  rpc userStats(UserStatsRequest) returns (UserStatsReply);
 }
 
-message RemoveRequest {
+message RemoveCommand {
   UserToken userToken = 1;
   ProjectId projectId = 2;
 }
-message RemoveReply {
+message RemoveResult {
   bool success = 1;
 }
 
+/** Empty request just to create Reply. */
 message ReserveRequest {
 }
+
+/** ProjectId which you may use to create new project. */
 message ReserveReply {
   ProjectId entityId = 1;
 }
 
+/* Test comment. */
 message UpdateCommand {
   ProjectId entityId = 1;
-  string name = 2;
-  string emailOfOwner = 3;
+  ProjectModel model = 2;
 }
 message UpdateResult {
   ProjectId entityId = 1;
@@ -40,26 +44,32 @@ message ListRequest {
   string emailOfRequestor = 1;
 }
 message ListReply {
-  repeated AvailableProject projects = 1;
+  repeated Project projects = 1;
 }
 
-message AvailableProject {
-  string id = 1;
-  string name = 2;
+message UserStatsRequest {
+  string emailOfRequestor = 1;
+}
+message UserStatsReply {
+  int32 numberOfProjects = 1;
+}
+
+message Project {
+  ProjectId id = 1;
+  ProjectModel model = 2;
 }
 
 message ProjectId {
-  string projectId = 1;
-  int32 entityVersion = 2;
+  string eId = 1;
+  int64 eTag = 2;
 }
 
+message ProjectModel {
+  string name = 1;
+  string emailOfOwner = 2;
+}
+
+/** About the requestor */
 message UserToken {
-  string projectId = 1;
-  string requestorEmail = 2;
-}
-
-message EntityId {
-  string projectId = 1;
-  string entityId = 2;
-  int32 entityVersion = 3;
+  string requestorEmail = 1;
 }

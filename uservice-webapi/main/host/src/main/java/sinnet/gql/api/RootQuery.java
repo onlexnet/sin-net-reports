@@ -1,7 +1,5 @@
 package sinnet.gql.api;
 
-import java.util.UUID;
-
 import javax.inject.Inject;
 import javax.json.JsonArray;
 import javax.ws.rs.core.Context;
@@ -13,17 +11,13 @@ import org.eclipse.microprofile.graphql.NonNull;
 import org.eclipse.microprofile.graphql.Query;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 
-import io.quarkus.grpc.GrpcClient;
 import io.smallrye.mutiny.Uni;
-import io.vavr.collection.Iterator;
 import sinnet.gql.models.ActionsQuery;
 import sinnet.gql.models.CustomersQuery;
 import sinnet.gql.models.PrincipalModel;
-import sinnet.gql.models.ProjectEntity;
 import sinnet.gql.models.ProjectsQuery;
 import sinnet.gql.security.AccessProvider;
-import sinnet.grpc.projects.ListRequest;
-import sinnet.grpc.projects.Projects;
+import sinnet.grpc.common.UserToken;
 
 @GraphQLApi
 public class RootQuery {
@@ -33,9 +27,6 @@ public class RootQuery {
   
   @Inject
   AccessProvider accessProvider;
-
-  @GrpcClient("activities")
-  Projects projectsGrpc;
 
   @Query("getPrincipal")
   public @NonNull PrincipalModel getPrincipal() {
@@ -52,23 +43,18 @@ public class RootQuery {
     return result;
   }
 
-  @Query
-  public @NonNull Uni<@NonNull ProjectEntity[]> availableProjects() {
-    var emails = (JsonArray) jwt.claim("emails").get();
-    var email = emails.getString(0);
-    var request = ListRequest.newBuilder()
-      .setEmailOfRequestor(email)
-      .build();
-    return projectsGrpc.list(request)
-      .map(it -> Iterator
-          .ofAll(it.getProjectsList())
-          .map(o -> ProjectEntity.builder().id(o.getId()).name(o.getName()).build())
-          .toJavaArray(ProjectEntity[]::new));
-  }
-
   @Query("Projects")
   public @NonNull sinnet.gql.models.ProjectsQuery projects() {
-    return new ProjectsQuery(null);
+    var emailsAsObject = jwt.getClaim("emails");
+    var emails = (JsonArray) emailsAsObject;
+    var firstEmail = emails.getString(0);
+    
+    var userToken = UserToken.newBuilder()
+        // .setProjectId(null)
+        .setRequestorEmail(firstEmail)
+        .build();
+
+    return new ProjectsQuery(userToken);
   }
 
   @Query("Customers")

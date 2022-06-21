@@ -24,8 +24,10 @@ import sinnet.grpc.projects.Project;
 import sinnet.grpc.projects.ProjectId;
 import sinnet.grpc.projects.ProjectModel;
 import sinnet.grpc.projects.ProjectsGrpc;
+import sinnet.grpc.projects.RemoveCommand;
 import sinnet.grpc.projects.ReserveRequest;
 import sinnet.grpc.projects.UpdateCommand;
+import sinnet.grpc.projects.UserToken;
 
 @QuarkusTest
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
@@ -65,23 +67,31 @@ class ProjectsITest {
   }
 
   @Test
+  void should_remove() {
+    var projectId = reserve();
+    var ownerName = generateOwnerEmail();
+  
+    update(projectId, "my name", ownerName);
+    remove(projectId, ownerName);
+
+    var projectsOfOwner = listOfProjects(ownerName, Function1.identity());
+    assertThat(projectsOfOwner)
+      .as("List of projects does not contain just deleted project")
+      .isEmpty();
+  }
+
+  @Test
   public void should_update() {
     var reserveCmd = ReserveRequest.newBuilder().build();
     var reserveResult = self.reserve(reserveCmd);
 
     var ownerEmail = generateOwnerEmail();
-    var updateCmd = UpdateCommand.newBuilder()
-        .setEntityId(reserveResult.getEntityId())
-        .setName("my name")
-        .setEmailOfOwner(ownerEmail);
-    var updateResult = self.update(updateCmd.build());
+    var updateCmd = newUpdateCommand(reserveResult.getEntityId(), "my name", ownerEmail);
+    var updateResult = self.update(updateCmd);
 
     var newOwnerEmail = generateOwnerEmail();
-    updateCmd
-        .setEntityId(updateResult.getEntityId())
-        .setName("my new name")
-        .setEmailOfOwner(newOwnerEmail);
-    self.update(updateCmd.build());
+    updateCmd = newUpdateCommand(updateResult.getEntityId(), "my new name", newOwnerEmail);
+    self.update(updateCmd);
 
     var projectsOfOwner = listOfProjects(ownerEmail, mapProjectToName);
     assertThat(projectsOfOwner).isEmpty();
@@ -96,18 +106,13 @@ class ProjectsITest {
     var reserveResult = self.reserve(reserveCmd);
 
     var ownerEmail = generateOwnerEmail();
-    var updateCmdBuilder = UpdateCommand.newBuilder()
-        .setEntityId(reserveResult.getEntityId())
-        .setName("my name")
-        .setEmailOfOwner(ownerEmail);
-    self.update(updateCmdBuilder.build());
+    var updateCmdBuilder = newUpdateCommand(reserveResult.getEntityId(), "my name", ownerEmail);
+    self.update(updateCmdBuilder);
 
     var newOwnerEmail = generateOwnerEmail();
-    updateCmdBuilder
-        .setName("my new name")
-        .setEmailOfOwner(newOwnerEmail);
+    var updateCmdBuilder2 = newUpdateCommand(reserveResult.getEntityId(), "my new name", newOwnerEmail);
 
-    assertThatCode(() -> self.update(updateCmdBuilder.build()))
+    assertThatCode(() -> self.update(updateCmdBuilder2))
       .isInstanceOfSatisfying(StatusRuntimeException.class, ex -> assertThat(ex.getStatus().getCode()).isEqualTo(Status.FAILED_PRECONDITION.getCode()));
 
     var actual = listOfProjects(ownerEmail, mapProjectToName);
@@ -124,14 +129,34 @@ class ProjectsITest {
     return reserveResult.getEntityId();
   }
 
-  private ProjectId update(ProjectId projectId, String name, String emailOfOwner) {
-    var updateCmd = UpdateCommand.newBuilder()
+  private static UpdateCommand newUpdateCommand(ProjectId projectId, String name, String emailOfOwner) {
+    return UpdateCommand.newBuilder()
         .setEntityId(projectId)
-        .setName(name)
-        .setEmailOfOwner(emailOfOwner)
+        .setModel(ProjectModel.newBuilder()
+          .setName(name)
+          .setEmailOfOwner(emailOfOwner))
         .build();
+  }
+
+  private static RemoveCommand newRemoveCommand(ProjectId projectId, String emailOfOwner) {
+    return RemoveCommand.newBuilder()
+        .setProjectId(projectId)
+        .setUserToken(UserToken.newBuilder()
+          .setRequestorEmail(emailOfOwner)
+          .build())
+        .build();
+  }
+
+  private ProjectId update(ProjectId projectId, String name, String emailOfOwner) {
+    var updateCmd = newUpdateCommand(projectId, name, emailOfOwner);
     var result = self.update(updateCmd);
     return result.getEntityId();
+  }
+
+  private boolean remove(ProjectId projectId, String emailOfOwner) {
+    var cmd = newRemoveCommand(projectId, emailOfOwner);
+    var result = self.remove(cmd);
+    return result.getSuccess();
   }
 
   private <T> List<T> listOfProjects(String emailOfOwner, Function<Project, T> map) {

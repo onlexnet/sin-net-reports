@@ -58,27 +58,13 @@ class ProjectsUpdateImpl implements ProjectsUpdate {
           .flatMap(this::guardVersion)
 
           // apply requested changes
-          .invoke(it -> applyCommand(it, eTag, request))
+          .invoke(it -> applyCommand(it, request))
 
-          // flush to get stored updated instance with new version field
+          // flush to get back updated instance with new version field
           .call(session::flush)
 
           .map(this::getVersion)
           .map(it -> UpdateResult.newBuilder().setEntityId(it).build()));
-
-
-
-
-    //  projectsRepo.findById(eId, LockModeType.OPTIMISTIC_FORCE_INCREMENT)
-    //   .map(Optional::ofNullable)
-    //   .map(it -> it.map(this.guardVersion(eTag)).orElse(Either.right(newEntityTemplate)))
-    //   .flatMap(this::guardVersion)
-    //   .invoke(it -> logInfo(it, "SIUDEKK after (optional) load {}"))
-    //   .invoke(it -> applyCommand(it, request))
-    //   .flatMap(projectsRepo::persistAndFlush)
-    //   .invoke(it -> logInfo(it, "SIUDEKK after persist {}"))
-    //   .map(this::incrementedVersion)
-    //   .map(it -> UpdateResult.newBuilder().setEntityId(it).build());
   }
 
   /**
@@ -104,9 +90,9 @@ class ProjectsUpdateImpl implements ProjectsUpdate {
       .build();
   }
 
-  private void applyCommand(ProjectDbo dbEntity, long expectedVersion, UpdateCommand cmd) {
-    dbEntity.setName(cmd.getName());
-    dbEntity.setEmailOfOwner(cmd.getEmailOfOwner());
+  private void applyCommand(ProjectDbo dbEntity, UpdateCommand cmd) {
+    dbEntity.setName(cmd.getModel().getName());
+    dbEntity.setEmailOfOwner(cmd.getModel().getEmailOfOwner());
   }
 
 }
