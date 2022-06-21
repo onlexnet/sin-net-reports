@@ -9,6 +9,7 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.RandomStringUtils;
 
+import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.smallrye.graphql.client.typesafe.api.TypesafeGraphQLClientBuilder;
@@ -41,6 +42,11 @@ public class ProjectManagement {
     Integer knownNumberOfProjects;
   }
 
+  @Given("a person named {userName}")
+  public void a_person_named_user2(UserEmail email) {
+    session.given(email);
+  }
+  
   @Then("I may delete just created project")
   public void i_may_delete_just_created_project() {
     // Write code here that turns the phrase above into concrete actions
@@ -90,27 +96,27 @@ final class Sessions {
   private HashMap<UserEmail, UserContext> users = HashMap.empty();
 
   public UserContext active;
-  public UserContext get(UserEmail userEmail) {
-    if (users.containsKey(userEmail)) {
-      var active = users.get(userEmail).get();
-      activeUser = active;
-    } else {
-      var secret = "my super secret key to sign my dev JWT token";
-      var keyBytes = new String(Base64.getEncoder().encode(secret.getBytes()));
-      var builder = Jwt.claims();
-      var token = builder
-          .issuer("https://issuer.org")
-          .claim("emails", List.of(userEmail.getEmail()))
-          .signWithSecret(keyBytes);
-      var bearer = String.format("Bearer %s", token);
-      var appApi = TypesafeGraphQLClientBuilder.newBuilder()
-          .header("Authorization", bearer)
-          .build(AppApi.class);
-      var active = new UserContext(appApi, null, 0);
-      users = users.put(userEmail, active);
-      activeUser = active;
-    }
 
+  public void given(UserEmail userEmail) {
+    var secret = "my super secret key to sign my dev JWT token";
+    var keyBytes = new String(Base64.getEncoder().encode(secret.getBytes()));
+    var builder = Jwt.claims();
+    var token = builder
+        .issuer("https://issuer.org")
+        .claim("emails", List.of(userEmail.getEmail()))
+        .signWithSecret(keyBytes);
+    var bearer = String.format("Bearer %s", token);
+    var appApi = TypesafeGraphQLClientBuilder.newBuilder()
+        .header("Authorization", bearer)
+        .build(AppApi.class);
+    var active = new UserContext(appApi, null, 0);
+    users = users.put(userEmail, active);
+    activeUser = active;
+  }
+
+  public UserContext get(UserEmail userEmail) {
+    var active = users.get(userEmail).get();
+    activeUser = active;
     return activeUser;
   }
 }

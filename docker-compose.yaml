@@ -19,7 +19,7 @@ services:
   init-db-projects:
     build:
       context: uservice-projects/main
-      dockerfile: ./init-db/Dockerfile.e2e
+      dockerfile: ./init-db/Dockerfile.local
     environment:
       # well-known properties defined by init scripts of our postgresql
       - DATABASE_USERNAME=uservice_dbuser
