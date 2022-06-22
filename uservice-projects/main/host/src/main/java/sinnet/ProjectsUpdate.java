@@ -1,19 +1,21 @@
 package sinnet;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Function;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import org.hibernate.reactive.mutiny.Mutiny;
-
-import com.google.common.base.Objects;
+import org.hibernate.reactive.mutiny.Mutiny.Session;
 
 import io.grpc.Status;
 import io.smallrye.mutiny.Uni;
 import io.vavr.Function1;
 import io.vavr.control.Either;
+import lombok.val;
 import lombok.extern.slf4j.Slf4j;
 import sinnet.grpc.projects.ProjectId;
 import sinnet.grpc.projects.UpdateCommand;
@@ -35,26 +37,31 @@ class ProjectsUpdateImpl implements ProjectsUpdate {
   
   @Override
   public Uni<UpdateResult> update(UpdateCommand request) {
-    var eIdAsString = request.getEntityId().getEId();
-    var eId = UUID.fromString(eIdAsString);
-    var eTag = request.getEntityId().getETag();
+    var eidAsString = request.getEntityId().getEId();
+    var eid = UUID.fromString(eidAsString);
+    var etag = request.getEntityId().getETag();
+    var emailOfOwner = request.getModel().getEmailOfOwner();
     var newEntityTemplate = new ProjectDbo()
-        .setEntityId(eId)
-        .setVersion(eTag)
+        .setEntityId(eid)
+        .setVersion(etag)
         .setName("-")
-        .setEmailOfOwner("-")
-        .setTemp(true);
+        .setEmailOfOwner("-");
 
     return factory.withTransaction(
-      (session, tx) -> // load to memory a managed instance so that merge may be done with preloaded instance with given locking type
-        session.find(ProjectDbo.class, eId)
+      (session, tx) -> // load to memory a managed instance so that update may be done with preloaded instance with given locking type
+        session.find(ProjectDbo.class, eid)
           // if no existing instance, lets continue on a new one
           .map(Optional::ofNullable)
           .map(it -> it.orElse(newEntityTemplate))
+          
+          // if it is new entity, lets check if creating it may increase number of free projects more that allowed
+          // TODO: it is naive implementation as multiple threads in parallel may create projects above the limit
+          .flatMap(guardLimits(3, newEntityTemplate, session, emailOfOwner))
+
           .call(session::persist)
 
-          // verify if the version, requested by client, is still valid
-          .map(guardVersion(eTag))
+          // avoid starting update with stale version:
+          .map(guardVersion(etag))
           .flatMap(this::guardVersion)
 
           // apply requested changes
@@ -67,12 +74,29 @@ class ProjectsUpdateImpl implements ProjectsUpdate {
           .map(it -> UpdateResult.newBuilder().setEntityId(it).build()));
   }
 
+  private <T> Function<? super T, Uni<? extends T>> guardLimits(long limit, T detachedEntity, Session session, String emailOfOwner) {
+    return dbo -> {
+      if (dbo != detachedEntity) {
+        return Uni.createFrom().item(dbo);
+      } else {
+        val query = "SELECT count(*) from ProjectDbo T where T.emailOfOwner=:emailOfOwner";
+        return session.createQuery(query, Long.class)
+          .setParameter("emailOfOwner", emailOfOwner)
+          .getSingleResult()
+          .map(Long::intValue)
+          .flatMap(count -> count >= 3
+            ? Uni.createFrom().failure(Status.RESOURCE_EXHAUSTED.withDescription("Too many projects").asException())
+            : Uni.createFrom().item(detachedEntity));
+      }
+    };
+  }
+
   /**
    * Currently Panache does not protect stale updates throwing OptimisticLockException, so we need to protect version manually
    * Should be reviewed when closed https://github.com/quarkusio/quarkus/issues/7193
    */
   private Function1<ProjectDbo, Either<Exception, ProjectDbo>> guardVersion(long expectedETag) {
-    return dbo -> Objects.equal(dbo.getVersion(), expectedETag)
+    return dbo -> Objects.equals(dbo.getVersion(), expectedETag)
       ? Either.right(dbo)
       : Either.left(Status.FAILED_PRECONDITION.withDescription("Invalid version").asException());
   }

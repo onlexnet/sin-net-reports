@@ -31,8 +31,6 @@ class ProjectDbo {
 
   @Column(name = "NAME")
   private String name;
-  
-  /** to delete - used right now just to test if it is uncontrolled entity. */
-  @Transient
-  private boolean temp = false;
 }
+
+

@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
@@ -64,6 +65,20 @@ class ProjectsITest {
         .setModel(expected0model)
         .build();
     assertThat(projectsOfOwner).contains(expected);
+  }
+
+  @Test
+  void should_limit_number_of_free_projects() {
+    var ownerName = generateOwnerEmail();
+  
+    // lets create 3 free projects
+    update(reserve(), "my name", ownerName);
+    update(reserve(), "my name", ownerName);
+    update(reserve(), "my name", ownerName);
+
+    Assertions
+      .assertThatCode(() -> update(reserve(), "my name", ownerName))
+      .isInstanceOfSatisfying(StatusRuntimeException.class, ex -> assertThat(ex.getStatus().getCode()).isEqualTo(Status.RESOURCE_EXHAUSTED.getCode()));
   }
 
   @Test

@@ -8,16 +8,20 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.assertj.core.api.Assertions;
 
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import io.smallrye.graphql.client.GraphQLClientException;
 import io.smallrye.graphql.client.typesafe.api.TypesafeGraphQLClientBuilder;
 import io.smallrye.jwt.build.Jwt;
 import io.vavr.collection.HashMap;
+import io.vavr.collection.Stream;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
+import lombok.val;
 import lombok.experimental.ExtensionMethod;
 import net.onlex.AppApi.ProjectEntity;
 import net.onlex.ProjectManagement.UserContext;
@@ -85,6 +89,23 @@ public class ProjectManagement {
     ctx.appApi.removeProject(projectId);
   }
 
+  @When("{userName} creates maximum of free projects")
+  public void user1_creates_maximum_of_free_projects(UserEmail userEmail) {
+      val maximumOfProjects = 3; // business decision, undocumented
+      var ctx = session.get(userEmail);
+      Stream.rangeClosed(1, maximumOfProjects).forEach(projectNo -> {
+        ctx.appApi.saveProject("new Project " + projectNo);
+      });
+  }
+  
+  @Then("The user can't create more projects")
+  public void the_user_can_t_create_more_projects() {
+    var ctx = session.getActiveUser();
+    var randomProjectName = RandomStringUtils.randomAlphanumeric(6);
+    Assertions
+      .assertThatCode(() -> ctx.appApi.saveProject("New Extra Project " + randomProjectName))
+      .isInstanceOf(GraphQLClientException.class);
+  }
 }
 
 final class Sessions {
