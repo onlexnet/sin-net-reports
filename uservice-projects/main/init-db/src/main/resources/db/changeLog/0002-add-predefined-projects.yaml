@@ -1,0 +1,40 @@
+databaseChangeLog:
+  - changeSet:  
+      id: 20220622-1
+      author: siudeks
+      changes:
+        - insert:
+            tableName: projects
+            columns:
+              - column:
+                  name: ENTITY_ID
+                  value: 00000000-0000-0000-0001-000000000001
+              - column:
+                  name: ENTITY_VERSION
+                  value: 1
+              - column:
+                  name: NAME
+                  value: Siudek Test project
+              - column:
+                  name: EMAIL_OF_OWNER
+                  value: siudeks@gmail.com
+        - insert:
+            tableName: projects
+            columns:
+              - column:
+                  name: ENTITY_ID
+                  value: 00000000-0000-0000-0001-000000000003
+              - column:
+                  name: ENTITY_VERSION
+                  value: 1
+              - column:
+                  name: NAME
+                  value: SinNet Production
+              - column:
+                  name: EMAIL_OF_OWNER
+                  value: siudeks@gmail.com
+
+      rollback:
+        - delete:
+            tableName: projects
+            where: ENTITY_ID in ('00000000-0000-0000-0001-000000000001','00000000-0000-0000-0001-000000000003')
