@@ -1,4 +1,4 @@
-package sinnet;
+package sinnet.rpc;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -15,7 +15,7 @@ interface ProjectUserStats {
 }
 
 @ApplicationScoped
-class ProjectUserStatsImpl implements ProjectUserStats {
+final class ProjectUserStatsImpl implements ProjectUserStats {
 
   @Inject
   Mutiny.SessionFactory factory;

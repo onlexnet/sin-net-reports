@@ -1,4 +1,4 @@
-package sinnet;
+package sinnet.rpc;
 
 import io.quarkus.grpc.GrpcService;
 import lombok.RequiredArgsConstructor;
@@ -7,10 +7,10 @@ import sinnet.grpc.projects.Projects;
 
 @GrpcService
 @RequiredArgsConstructor
-public class ProjectsService implements Projects {
+class ProjectsService implements Projects {
 
-  @Delegate(types = ProjectsReserve.class)
-  private final ProjectsReserve projectsReserve;
+  @Delegate
+  private final ProjectsCreate projectsCreate;
 
   @Delegate(types = ProjectsUpdate.class)
   private final ProjectsUpdate projectsUpdate;

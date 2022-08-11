@@ -12,7 +12,7 @@ export DAPR_PORT_GRPC=50001
 cd ../../uservice-webapi/main
 dapr --app-id webapi \
 --components-path ../../.components run \
---dapr-http-port $DAPR_PORT_HTTP --dapr-grpc-port $DAPR_PORT_HTTP \
+--dapr-http-port $DAPR_PORT_HTTP --dapr-grpc-port $DAPR_PORT_GRPC \
 --app-port 11010 \
 -- \
 mvn quarkus:dev -pl host &

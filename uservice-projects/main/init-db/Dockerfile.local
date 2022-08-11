@@ -1,7 +1,7 @@
 # Thos dickerfile is used in order to run in 
 # - local stack to allow for developers run application locally
 # - BDD tests
-FROM mcr.microsoft.com/java/jdk:11u11-zulu-alpine as build
+FROM mcr.microsoft.com/java/jdk:17u1-zulu-alpine as build
 # As we do not copy source files. we have to mount files directly from local copy.
 # name of the location is hardcoded in docker-compose where the whole stack is run
 WORKDIR /uservice_src

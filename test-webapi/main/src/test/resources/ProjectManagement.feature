@@ -28,8 +28,3 @@ Feature: Project Management
     Scenario: Limit number of projects
       When user1 creates maximum of free projects
       Then The user can't create more projects
-  
-    @todo
-    Scenario: Predefined projects are available
-      When user1 creates maximum of free projects
-      Then The user can't create more projects

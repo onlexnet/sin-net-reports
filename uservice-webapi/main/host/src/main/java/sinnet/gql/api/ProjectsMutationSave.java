@@ -13,11 +13,13 @@ import sinnet.gql.models.Entity;
 import sinnet.gql.models.ProjectEntity;
 import sinnet.gql.models.ProjectsMutation;
 import sinnet.grpc.GrpcProjects;
+import sinnet.grpc.customers.ReserveReply;
+import sinnet.grpc.projects.CreateReply;
+import sinnet.grpc.projects.CreateRequest;
 import sinnet.grpc.projects.ProjectModel;
-import sinnet.grpc.projects.ReserveReply;
-import sinnet.grpc.projects.ReserveRequest;
 import sinnet.grpc.projects.UpdateCommand;
 import sinnet.grpc.projects.UpdateResult;
+import sinnet.grpc.projects.UserToken;
 
 @GraphQLApi
 public class ProjectsMutationSave implements ProjectMapper {
@@ -26,14 +28,18 @@ public class ProjectsMutationSave implements ProjectMapper {
   GrpcProjects service;
 
   public @NonNull Uni<@NonNull ProjectEntity> save(@Source ProjectsMutation self, @NonNull String name) {
-    var reserveReq = ReserveRequest.newBuilder().build();
-    return service.reserve(reserveReq)
-        .map(ReserveReply::getEntityId)
+    var userToken = self.getUserToken();
+    var createReq = CreateRequest.newBuilder()
+        .setUserToken(userToken)
+        .build();
+    return service.create(createReq)
+        .map(CreateReply::getEntityId)
         .map(it -> UpdateCommand.newBuilder()
           .setEntityId(it)
           .setModel(ProjectModel.newBuilder()
             .setEmailOfOwner(self.getUserToken().getRequestorEmail())
             .setName(name))
+          .setUserToken(userToken)
           .build())
         .flatMap(service::update)
         .map(UpdateResult::getEntityId)

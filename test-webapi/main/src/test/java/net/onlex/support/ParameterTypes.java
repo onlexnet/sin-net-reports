@@ -9,10 +9,15 @@ import io.cucumber.java.ParameterType;
 @ApplicationScoped
 public class ParameterTypes {
 
-  @ParameterType("user1|user2")
+  @ParameterType("user[1-9]|operator[1-9]")
   public UserEmail userName(String name) {
     var randomPart = RandomStringUtils.randomAlphabetic(6);
     var randomEmail = name + "@" + randomPart + ".example";
     return new UserEmail(name, randomEmail);
+  }
+
+  @ParameterType("project[1-9]")
+  public Project projectName(String name) {
+    return new Project(name);
   }
 }

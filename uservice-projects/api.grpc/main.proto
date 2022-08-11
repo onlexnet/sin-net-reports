@@ -7,9 +7,9 @@ option java_multiple_files = true;
 package projects;
 
 service Projects {
-  rpc remove(RemoveCommand) returns (RemoveResult);
-  rpc reserve(ReserveRequest) returns (ReserveReply);
+  rpc create(CreateRequest) returns (CreateReply);
   rpc update(UpdateCommand) returns (UpdateResult);
+  rpc remove(RemoveCommand) returns (RemoveResult);
   rpc list(ListRequest) returns (ListReply);
   rpc userStats(UserStatsRequest) returns (UserStatsReply);
 }
@@ -22,19 +22,21 @@ message RemoveResult {
   bool success = 1;
 }
 
-/** Empty request just to create Reply. */
-message ReserveRequest {
+/** Empty request just to initiate creation of a new project. */
+message CreateRequest {
+  UserToken userToken = 1;
 }
 
-/** ProjectId which you may use to create new project. */
-message ReserveReply {
+/** ProjectId of just created project. */
+message CreateReply {
   ProjectId entityId = 1;
 }
 
 /* Test comment. */
 message UpdateCommand {
-  ProjectId entityId = 1;
-  ProjectModel model = 2;
+  UserToken userToken = 1;
+  ProjectId entityId = 2;
+  ProjectModel model = 3;
 }
 message UpdateResult {
   ProjectId entityId = 1;

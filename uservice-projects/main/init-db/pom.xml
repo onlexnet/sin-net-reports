@@ -10,9 +10,6 @@
   </parent>
   <artifactId>uservice-projects-init-db</artifactId>
   <name>projects-init-db</name>
-  <properties>
-    <maven.compiler.parameters>true</maven.compiler.parameters>
-  </properties>
   <dependencies>
     <dependency>
       <groupId>org.testcontainers</groupId>
@@ -73,13 +70,6 @@
             </goals>
           </execution>
         </executions>
-      </plugin>
-      <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>${compiler-plugin.version}</version>
-        <configuration>
-          <parameters>${maven.compiler.parameters}</parameters>
-        </configuration>
       </plugin>
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>

@@ -1,4 +1,4 @@
-package sinnet;
+package sinnet.dbo;
 
 import java.util.UUID;
 
@@ -6,8 +6,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import javax.persistence.Version;
+import javax.validation.constraints.Size;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -27,6 +27,7 @@ class ProjectDbo {
   private Long version;
 
   @Column(name = "EMAIL_OF_OWNER")
+  @Size(max = 50)
   private String emailOfOwner;
 
   @Column(name = "NAME")

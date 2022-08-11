@@ -10,9 +10,7 @@
 - passwords for all users are defined and kept in Azure Vault and available for the test as it is run in context of test service principal
 
 ## Start work locally
-``` bash
-sudo service docker start # to run docker locally - required just if docker is not yet started
-```
+*Run docker* - it depends what you have installed (e.g. Docker desktop, Rancher Desktop etc.)
 
 ``` bash
 docker-compose up # to run services
@@ -24,6 +22,8 @@ and, in new shell
 . init-vars.sh # to create env variables based on KeyVault secrets
 mvn clean test # to run tests
 ```
+
+And, finally, find results of the test located *target/cucumber-reports.html*
 
 ## useful links
 - [https://github.com/cucumber/cucumber-jvm](https://github.com/cucumber/cucumber-jvm)
