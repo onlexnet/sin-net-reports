@@ -9,13 +9,15 @@ import sinnet.models.UserToken;
 
 public interface Mapper {
     
-    default EntityId fromDto(sinnet.grpc.common.EntityId it) {
-        if (it == null) return null;
-        var projectId = UUID.fromString(it.getProjectId());
-        var entityId = UUID.fromString(it.getEntityId());
-        var entityVersion = it.getEntityVersion();
-        return EntityId.of(projectId, entityId, entityVersion);
+  default EntityId fromDto(sinnet.grpc.common.EntityId it) {
+    if (it == null) {
+      return null;
     }
+    var projectId = UUID.fromString(it.getProjectId());
+    var entityId = UUID.fromString(it.getEntityId());
+    var entityVersion = it.getEntityVersion();
+    return EntityId.of(projectId, entityId, entityVersion);
+  }
 
     default UserToken fromDto(sinnet.grpc.common.UserToken dtoModel){
         var emailAsString = dtoModel.getRequestorEmail();

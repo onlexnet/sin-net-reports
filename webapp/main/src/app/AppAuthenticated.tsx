@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 
 import { ApolloProvider } from "@apollo/react-hooks";
 import { apolloClientFactory } from "../api";

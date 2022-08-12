@@ -4,7 +4,7 @@ import java.util.UUID;
 
 public interface EntityValue<T> {
 
-  default Entity<T> withId(UUID projectId, UUID entityId, int version) {
+  default Entity<T> withId(UUID projectId, UUID entityId, long version) {
     return new Entity<>(projectId, entityId, version, (T) this);
   }
 

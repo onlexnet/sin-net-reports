@@ -21,7 +21,7 @@ public class ServicemanRepository {
   @FieldNameConstants
   static class DboEntry {
     private UUID entityId;
-    private int entityVersion;
+    private long entityVersion;
     private UUID projectEntityId;
     private String email;
     private String customName;

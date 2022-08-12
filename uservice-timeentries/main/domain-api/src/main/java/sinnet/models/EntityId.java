@@ -12,9 +12,9 @@ import lombok.extern.jackson.Jacksonized;
 public final class EntityId {
   private UUID projectId;
   private UUID id;
-  private int version;
+  private long version;
 
-  public static EntityId of(UUID projectId, UUID id, int version) {
+  public static EntityId of(UUID projectId, UUID id, long version) {
     return new EntityId(projectId, id, version);
   }
 

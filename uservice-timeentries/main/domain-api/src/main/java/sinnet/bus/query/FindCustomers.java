@@ -42,7 +42,7 @@ public interface FindCustomers {
   class CustomerData {
     private UUID projectId;
     private UUID entityId;
-    private int entityVersion;
+    private long entityVersion;
     private CustomerValue value;
     @Default
     private CustomerSecret[] secrets = new CustomerSecret[0];

@@ -5,6 +5,6 @@ export const addressProvider = (): { host: string } => {
         host: origin,
       }
     : {
-        host: "http://localhost:8080",
+        host: "http://localhost:11010",
       };
   }

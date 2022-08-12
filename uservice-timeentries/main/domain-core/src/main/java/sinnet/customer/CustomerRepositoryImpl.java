@@ -52,7 +52,7 @@ public class CustomerRepositoryImpl implements CustomerRepository {
   static class SaveEntry {
     private UUID projectId;
     private UUID entityId;
-    private int entityVersion;
+    private long entityVersion;
     private String operatorEmail;
     private String billingModel;
     private String supportStatus;

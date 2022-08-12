@@ -1,21 +1,6 @@
 #  Not sure if th config should be placed locally, or in shared part of DAPR
 
-# apiVersion: dapr.io/v1alpha1
-# kind: Configuration
-# metadata:
-#   name: daprConfig
-#   namespace: default
-# spec:
-#   tracing:
-#     samplingRate: "1"
-#     zipkin:
-#       endpointAddress: "http://localhost:9411/api/v2/spans"
-#   metrics:
-#     enabled: true
-
----
-
-# https://docs.dapr.io/operations/monitoring/tracing/supported-tracing-backends/jaeger/
+# https://docs.dapr.io/operations/monitoring/tracing/supported-tracing-backends/zipkin/
 
 apiVersion: dapr.io/v1alpha1
 kind: Configuration
@@ -29,3 +14,20 @@ spec:
       endpointAddress: "http://localhost:9411/api/v2/spans"
   metrics:
     enabled: true
+
+---
+
+# https://docs.dapr.io/operations/monitoring/tracing/supported-tracing-backends/jaeger/
+
+# apiVersion: dapr.io/v1alpha1
+# kind: Configuration
+# metadata:
+#   name: daprConfig
+#   namespace: default
+# spec:
+#   tracing:
+#     samplingRate: "1"
+#     zipkin:
+#       endpointAddress: "http://localhost:9411/api/v2/spans"
+#   metrics:
+#     enabled: true

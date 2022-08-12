@@ -3,7 +3,6 @@ import React from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { RouteComponentProps } from "react-router-dom";
 import { Dispatch } from "redux";
-import { addressProvider } from "../addressProvider";
 import { routing } from "../Routing";
 import { RootState } from "../store/reducers";
 import { Content } from "./ActionList";

@@ -50,4 +50,3 @@ export const apolloClientFactory = (jwtToken: string) => {
 
 export const graphQlClient = new GraphQLClient(graphqlUrl);
 export const apolloClient = apolloClientFactory("");
-  //export const sdk = getSdk(graphQlClient);

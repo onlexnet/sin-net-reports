@@ -28,7 +28,7 @@ public interface FindCustomer {
   @NoArgsConstructor
   class Reply {
     private UUID entityId;
-    private int entityVersion;
+    private long entityVersion;
     private CustomerValue value;
     private CustomerSecret[] secrets;
     private CustomerSecretEx[] secretsEx;

@@ -1,4 +1,5 @@
 import { Spinner, Stack } from "@fluentui/react";
+import _ from "lodash";
 import React from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { HashRouter as Router, Route } from "react-router-dom";
@@ -56,7 +57,12 @@ const LocalView: React.FC<Props> = (props) => {
             </Stack>);
     }
 
-    const { availableProjects } = data;
+    const { list } = data.Projects;
+
+    const availableProjects = _.chain(list)
+        .map(it => ({ name: it?.name ?? "default id", id: it?.entity?.entityId  ?? "default id"}))
+        .value();
+
     if (availableProjects.length === 0) {
         return <MainViewNoProjects />;
     }
