@@ -14,7 +14,7 @@ databaseChangeLog:
             columns:
             - column:
                 name: ENTITY_ID
-                type: INT
+                type: UUID
                 constraints:
                   primaryKey: true
                   primaryKeyName: PROJECTS_PK
