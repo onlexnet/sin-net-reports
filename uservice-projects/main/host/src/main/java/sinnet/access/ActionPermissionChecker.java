@@ -1,7 +1,7 @@
 package sinnet.access;
 
 import io.vavr.collection.Array;
-import sinnet.model.ProjectIdHolder;
+import sinnet.model.ValProjectId;
 
 /**
  * Designed to be:
@@ -15,10 +15,10 @@ import sinnet.model.ProjectIdHolder;
 interface ActionPermissionChecker {
 
   /** Returns true if the current action can be performed by and Owner. */
-  ValidationResult onOwnerRole(Array<ProjectIdHolder> projectsId);
+  ValidationResult onOwnerRole(Array<ValProjectId> projectsId);
 
   /** Returns true if the current action can be performed by an Operator. */
-  ValidationResult onOperatorRole(Array<ProjectIdHolder> projectsId);
+  ValidationResult onOperatorRole(Array<ValProjectId> projectsId);
 
   enum ValidationResult {
     PERMITTED,

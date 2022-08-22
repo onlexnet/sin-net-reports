@@ -1,24 +1,17 @@
 package sinnet.dbo;
 
 import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Alternative;
 
 import org.hibernate.reactive.mutiny.Mutiny;
-import org.hibernate.reactive.mutiny.Mutiny.Session;
 
 import io.grpc.Status;
 import io.smallrye.mutiny.Uni;
 import io.vavr.Function1;
 import io.vavr.control.Either;
 import lombok.RequiredArgsConstructor;
-import lombok.val;
-import sinnet.grpc.projects.ProjectId;
-import sinnet.grpc.projects.UpdateCommand;
-import sinnet.grpc.projects.UpdateResult;
+import sinnet.model.ProjectVid;
 
 @ApplicationScoped
 @RequiredArgsConstructor
@@ -27,10 +20,9 @@ class DboUpdateImpl implements DboUpdate {
   private final Mutiny.SessionFactory factory;
   
   @Override
-  public Uni<UpdateResult> update(UpdateCommand request) {
-    var eidAsString = request.getEntityId().getEId();
-    var eid = UUID.fromString(eidAsString);
-    var etag = request.getEntityId().getETag();
+  public Uni<ProjectVid> updateCommand(ProjectVid vid, UpdateCommandContent content) {
+    var eid = vid.id();
+    var etag = vid.tag();
 
     return factory.withTransaction(
       (session, tx) -> // load to memory a managed instance so that update may be done with preloaded instance with given locking type
@@ -41,13 +33,12 @@ class DboUpdateImpl implements DboUpdate {
           .flatMap(this::guardVersion)
 
           // apply requested changes
-          .invoke(it -> applyCommand(it, request))
+          .invoke(it -> applyCommand(it, content))
 
           // flush to get back updated instance with new version field
           .call(session::flush)
 
-          .map(this::getVersion)
-          .map(it -> UpdateResult.newBuilder().setEntityId(it).build()));
+          .map(this::getVersion));
   }
 
   /**
@@ -66,16 +57,13 @@ class DboUpdateImpl implements DboUpdate {
       : Uni.createFrom().failure(it.getLeft());
   }
 
-  private ProjectId getVersion(ProjectDbo it) {
-    return ProjectId.newBuilder()
-      .setEId(it.getEntityId().toString())
-      .setETag(it.getVersion())
-      .build();
+  private ProjectVid getVersion(ProjectDbo it) {
+    return ProjectVid.of(it.getEntityId(), it.getVersion());
   }
 
-  private void applyCommand(ProjectDbo dbEntity, UpdateCommand cmd) {
-    dbEntity.setName(cmd.getModel().getName());
-    dbEntity.setEmailOfOwner(cmd.getModel().getEmailOfOwner());
+  private void applyCommand(ProjectDbo dbEntity, UpdateCommandContent cmd) {
+    dbEntity.setName(cmd.name());
+    dbEntity.setEmailOfOwner(cmd.newOwner().value());
   }
 
 }

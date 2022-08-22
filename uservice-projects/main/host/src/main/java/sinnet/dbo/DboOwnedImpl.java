@@ -10,8 +10,8 @@ import lombok.RequiredArgsConstructor;
 import sinnet.grpc.projects.Project;
 import sinnet.grpc.projects.ProjectId;
 import sinnet.grpc.projects.ProjectModel;
-import sinnet.model.Email;
-import sinnet.model.ProjectIdHolder;
+import sinnet.model.ValEmail;
+import sinnet.model.ValProjectId;
 
 @ApplicationScoped
 @RequiredArgsConstructor
@@ -19,8 +19,8 @@ final class DboOwnedImpl implements DboOwned {
 
   private final ProjectRepository projectRepository;
 
-  private ProjectIdHolder mapToIdHolder(ProjectDbo dbo) {
-    return ProjectIdHolder.of(dbo.getEntityId());
+  private ValProjectId mapToIdHolder(ProjectDbo dbo) {
+    return ValProjectId.of(dbo.getEntityId());
   }
 
   private ProjectId mapToId(ProjectDbo dbo) {
@@ -45,16 +45,17 @@ final class DboOwnedImpl implements DboOwned {
   }
 
   @Override
-  public Uni<Array<Project>> ownedAsProject(Email ownerEmail) {
+  public Uni<Array<Project>> ownedAsProject(ValEmail ownerEmail) {
     return ownedAndMap(ownerEmail, this::mapToEntity);
   }
 
   @Override
-  public Uni<Array<ProjectIdHolder>> ownedAsId(Email ownerEmail) {
+  public Uni<Array<ValProjectId>> ownedAsId(ValEmail ownerEmail) {
     return ownedAndMap(ownerEmail, this::mapToIdHolder);
   }
 
-  private <T> Uni<Array<T>> ownedAndMap(Email emailOfOwner, Function1<ProjectDbo, T> mapper) {
+  private <T> Uni<Array<T>> ownedAndMap(ValEmail emailOfOwner, Function1<ProjectDbo, T> mapper) {
+
     return projectRepository.list("select t from ProjectDbo t where t.emailOfOwner = ?1", emailOfOwner.value())
       .map(it -> Array.ofAll(it).map(mapper));
   }

@@ -5,9 +5,9 @@ import java.util.function.Predicate;
 
 import io.smallrye.mutiny.Uni;
 import sinnet.grpc.projects.UserToken;
-import sinnet.model.ProjectIdHolder;
+import sinnet.model.ValProjectId;
 
 public interface AccessFacade {
  
-  Uni<ProjectIdHolder> guardAccess(UserToken requestor, ProjectIdHolder eid, Function<RoleContext, Predicate<ProjectIdHolder>> methodExtractor);
+  Uni<ValProjectId> guardAccess(UserToken requestor, ValProjectId eid, Function<RoleContext, Predicate<ValProjectId>> methodExtractor);
 }

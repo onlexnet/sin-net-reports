@@ -11,7 +11,7 @@ import sinnet.access.AccessFacade;
 import sinnet.dbo.DboUpdate;
 import sinnet.grpc.projects.UpdateCommand;
 import sinnet.grpc.projects.UpdateResult;
-import sinnet.model.ProjectIdHolder;
+import sinnet.model.ValProjectId;
 
 @ApplicationScoped
 @RequiredArgsConstructor
@@ -25,11 +25,12 @@ class ProjectsUpdateImpl implements ProjectsUpdate {
   public Uni<UpdateResult> update(UpdateCommand request) {
     var eidAsString = request.getEntityId().getEId();
     var eid = UUID.fromString(eidAsString);
-    var idHolder = ProjectIdHolder.of(eid);
+    var idHolder = ValProjectId.of(eid);
 
     var requestor = request.getUserToken();
 
     return accessFacade.guardAccess(requestor, idHolder, roleContext -> roleContext::canUpdateProject)
-      .chain(id -> dboUpdate.update(request));  
+      .chain(id -> dboUpdate.
+      update(request));  
   }
 }

@@ -8,7 +8,7 @@ import io.smallrye.mutiny.Uni;
 import sinnet.dbo.DboFacade;
 import sinnet.grpc.projects.ListReply;
 import sinnet.grpc.projects.ListRequest;
-import sinnet.model.Email;
+import sinnet.model.ValEmail;
 
 @ApplicationScoped
 class ProjectsListImpl implements ProjectList {
@@ -19,7 +19,7 @@ class ProjectsListImpl implements ProjectList {
   @Override
   @ReactiveTransactional
   public Uni<ListReply> list(ListRequest request) {
-    var emailOfRequestor = Email.of(request.getEmailOfRequestor());
+    var emailOfRequestor = ValEmail.of(request.getEmailOfRequestor());
     return dbo.ownedAsProject(emailOfRequestor)
       .map(it -> ListReply.newBuilder().addAllProjects(it).build());
   }

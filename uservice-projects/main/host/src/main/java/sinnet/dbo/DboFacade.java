@@ -20,4 +20,10 @@ public final class DboFacade {
 
   @Delegate
   private final DboCreate dboCreate;
+
+  @Delegate
+  private final DboInput dboInput;
+
+  @Delegate
+  private final DboSession dboSession;
 }

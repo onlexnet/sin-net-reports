@@ -5,15 +5,12 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
@@ -25,14 +22,15 @@ import io.grpc.StatusRuntimeException;
 import io.quarkus.grpc.GrpcClient;
 import io.quarkus.test.junit.QuarkusTest;
 import io.vavr.Function1;
+import lombok.SneakyThrows;
 import lombok.val;
+import sinnet.grpc.projects.CreateRequest;
 import sinnet.grpc.projects.ListRequest;
 import sinnet.grpc.projects.Project;
 import sinnet.grpc.projects.ProjectId;
 import sinnet.grpc.projects.ProjectModel;
 import sinnet.grpc.projects.ProjectsGrpc;
 import sinnet.grpc.projects.RemoveCommand;
-import sinnet.grpc.projects.CreateRequest;
 import sinnet.grpc.projects.UpdateCommand;
 import sinnet.grpc.projects.UserToken;
 
@@ -162,6 +160,16 @@ class ProjectsITest {
 
     var actual = listOfProjects(ownerEmail, mapProjectToName);
     assertThat(actual).containsExactly("my name");
+  }
+
+  @Test
+  @SneakyThrows
+  void should_initialize_predefined_projects() {
+    val knownOwnerOfPredefinedProjects = "siudeks@gmail.com";
+    var reply = self.list(ListRequest.newBuilder().setEmailOfRequestor(knownOwnerOfPredefinedProjects).build());
+    var actual = reply.getProjectsList();
+    assertThat(actual).size().isNotZero();
+
   }
 
   private String generateOwnerEmail() {

@@ -1,38 +1,50 @@
 databaseChangeLog:
-  - changeSet:  
-      id: 20220813-1
-      author: siudeks
-      changes:  
-        - createTable:
-            tableName: inbox-projects
-            columns:
-            - column:
-                name: BATCH_ID
-                type: INT
-                constraints:
-                  nullable: false
-            - column:
-                name: NAME
-                type: VARCHAR(50)
-                constraints:
-                  nullable: false
-            - column:
-                name: EMAIL_OF_OWNER
-                type: VARCHAR(50)
-                constraints:
-                  nullable: false
-  - changeSet:
-      id: 20220813-2
-      author: siudeks
-      changes:
-        - loadData:
-            tableName: inbox-projects
-            file: 0002-create-projects-inbox.csv
-            commentLineStartsWith: //
-            encoding: UTF-8
-            relativeToChangelogFile: true
-            usePreparedStatements: true
-      rollback:
-        - delete:
-            tableName: inbox-projects
-            where: BATCH_ID = 1
+- changeSet:  
+    id: 20220813-1
+    author: siudeks
+    changes:  
+    - createTable:
+        tableName: inbox-projects
+        columns:
+        # Force elements to be ordered as inserted using clustered primary key. For that purpose, PK is clustered
+        - column:
+            name: AUTO_ROW_ID
+            type: bigint
+            autoIncrement: true
+            constraints:
+              primaryKey: true
+              clustered: true
+              nullable: false
+        - column:
+            name: BATCH_ID
+            type: INT
+            constraints:
+              nullable: false
+        - column:
+            name: NAME
+            type: VARCHAR(50)
+            constraints:
+              nullable: false
+        - column:
+            name: EMAIL_OF_OWNER
+            type: VARCHAR(50)
+            constraints:
+              nullable: false
+        
+          
+- changeSet:
+    id: 20220813-2
+    author: siudeks
+    changes:
+    - loadData:
+        tableName: inbox-projects
+        file: 0002-create-projects-inbox.csv
+        commentLineStartsWith: //
+        encoding: UTF-8
+        relativeToChangelogFile: true
+        usePreparedStatements: true
+    rollback:
+    - delete:
+        tableName: inbox-projects
+        # as we see in 0002-create-projects-inbox.csv, all inserted elements have BATCH_ID=1
+        where: BATCH_ID = 1

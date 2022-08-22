@@ -3,19 +3,18 @@ package sinnet.rpc;
 import java.util.UUID;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.validation.Validator;
 
 import io.grpc.Status;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
-import sinnet.grpc.projects.ProjectId;
-import sinnet.model.Email;
-import sinnet.model.ProjectIdHolder;
 import sinnet.access.AccessFacade;
 import sinnet.dbo.DboCreate;
 import sinnet.dbo.DboFacade;
 import sinnet.grpc.projects.CreateReply;
 import sinnet.grpc.projects.CreateRequest;
+import sinnet.grpc.projects.ProjectId;
+import sinnet.model.ValProjectId;
+import sinnet.model.ValEmail;
 
 @ApplicationScoped
 @RequiredArgsConstructor
@@ -27,10 +26,10 @@ class ProjectsCreateImpl implements ProjectsCreate {
   public Uni<CreateReply> create(CreateRequest request) {
     var requestor = request.getUserToken();
 
-    var idHolder = ProjectIdHolder.of(UUID.randomUUID());
-    var emailOfRequestor = Email.of(requestor.getRequestorEmail());
+    var idHolder = ValProjectId.of(UUID.randomUUID());
+    var emailOfRequestor = ValEmail.of(requestor.getRequestorEmail());
     return accessFacade.guardAccess(requestor, idHolder, roleContext -> roleContext::canCreateProject)
-      .chain(id -> dboFacade.create(idHolder, emailOfRequestor))
+      .chain(id -> dboFacade.create(new DboCreate.CreateContent(idHolder, emailOfRequestor)))
       .map(it -> {
         if (it instanceof DboCreate.Success x) {
           return CreateReply.newBuilder()

@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 import io.grpc.StatusException;
 import io.quarkus.test.junit.QuarkusTest;
 import sinnet.grpc.projects.UserToken;
-import sinnet.model.ProjectIdHolder;
+import sinnet.model.ValProjectId;
 
 @QuarkusTest
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
@@ -26,7 +26,7 @@ public class AccessFacadeTest {
     var requestor = UserToken.newBuilder()
         .setRequestorEmail("my@email")
         .build();
-    var eid = ProjectIdHolder.of(UUID.randomUUID());
+    var eid = ValProjectId.of(UUID.randomUUID());
 
     Assertions
       .assertThatCode(() -> accessFacade.guardAccess(requestor, eid, a -> a::canDeleteProject).await().indefinitely())

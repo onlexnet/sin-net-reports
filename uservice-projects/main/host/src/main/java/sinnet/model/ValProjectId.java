@@ -1,10 +1,12 @@
 package sinnet.model;
 
+import java.util.UUID;
+
 import lombok.Value;
 import lombok.experimental.Accessors;
 
 @Value(staticConstructor = "of")
 @Accessors(fluent = true)
-public class Email {
-  private final String value;
+public class ValProjectId {
+  private final UUID value;
 }

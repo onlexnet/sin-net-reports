@@ -14,7 +14,7 @@ import io.vavr.collection.Stream;
 import io.vavr.control.Either;
 import lombok.RequiredArgsConstructor;
 import sinnet.grpc.projects.UserToken;
-import sinnet.model.ProjectIdHolder;
+import sinnet.model.ValProjectId;
 
 /** Entry to check if the user has access to requested action. */
 @ApplicationScoped
@@ -33,7 +33,7 @@ class UserAccess implements AccessFacade {
   }
 
   @Override
-  public Uni<ProjectIdHolder> guardAccess(UserToken requestor, ProjectIdHolder eid, Function<RoleContext, Predicate<ProjectIdHolder>> methodExtractor) {
+  public Uni<ValProjectId> guardAccess(UserToken requestor, ValProjectId eid, Function<RoleContext, Predicate<ValProjectId>> methodExtractor) {
     return this.from(requestor)
       .map(methodExtractor::apply)
       .map(this::guardRole)
@@ -41,13 +41,13 @@ class UserAccess implements AccessFacade {
       .chain(this::eitherMap);
   }
 
-  private Function1<ProjectIdHolder, Either<Exception, ProjectIdHolder>> guardRole(Predicate<ProjectIdHolder> canContinue) {
+  private Function1<ValProjectId, Either<Exception, ValProjectId>> guardRole(Predicate<ValProjectId> canContinue) {
     return id -> canContinue.test(id) 
       ? Either.right(id)
       : Either.left(Status.FAILED_PRECONDITION.withDescription("Illegal owner").asException());
   }
 
-  private Uni<ProjectIdHolder> eitherMap(Either<Exception, ProjectIdHolder> it) {
+  private Uni<ValProjectId> eitherMap(Either<Exception, ValProjectId> it) {
     return it.isRight()
       ? Uni.createFrom().item(it.get())
       : Uni.createFrom().failure(it.getLeft());

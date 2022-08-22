@@ -3,8 +3,8 @@ package sinnet.dbo;
 import io.smallrye.mutiny.Uni;
 import io.vavr.collection.Array;
 import sinnet.grpc.projects.Project;
-import sinnet.model.Email;
-import sinnet.model.ProjectIdHolder;
+import sinnet.model.ValEmail;
+import sinnet.model.ValProjectId;
 
 /**
  * IDs of all projects owned by a given user.
@@ -13,7 +13,7 @@ import sinnet.model.ProjectIdHolder;
  */
 interface DboOwned {
 
-  Uni<Array<Project>> ownedAsProject(Email ownerEmail);
+  Uni<Array<Project>> ownedAsProject(ValEmail ownerEmail);
   
-  Uni<Array<ProjectIdHolder>> ownedAsId(Email ownerEmail);
+  Uni<Array<ValProjectId>> ownedAsId(ValEmail ownerEmail);
 }

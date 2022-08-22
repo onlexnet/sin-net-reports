@@ -7,7 +7,7 @@ import io.vavr.collection.Array;
 import lombok.RequiredArgsConstructor;
 import sinnet.dbo.DboFacade;
 import sinnet.grpc.projects.UserToken;
-import sinnet.model.Email;
+import sinnet.model.ValEmail;
 
 /** Calculates for given {@code UserToken} what are  */
 interface AccessAs<T extends RoleContextSet> {
@@ -23,7 +23,7 @@ final class AccessAsOwner implements AccessAs<RoleContextSet.OwnerRoleContext> {
 
   @Override
   public Uni<RoleContextSet.OwnerRoleContext> calculate(UserToken userToken) {
-    var ownerEmail = Email.of(userToken.getRequestorEmail());
+    var ownerEmail = ValEmail.of(userToken.getRequestorEmail());
     return dbo.ownedAsId(ownerEmail)
       .map(RoleContextSet.OwnerRoleContext::new);
   }

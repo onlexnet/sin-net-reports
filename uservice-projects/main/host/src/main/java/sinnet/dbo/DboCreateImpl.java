@@ -10,8 +10,7 @@ import io.grpc.Status;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
-import sinnet.model.Email;
-import sinnet.model.ProjectIdHolder;
+import sinnet.model.ProjectVid;
 
 @ApplicationScoped
 @RequiredArgsConstructor
@@ -21,18 +20,21 @@ class DboCreateImpl implements DboCreate {
   private final Validator validator;
   
   @Override
-  public Uni<CreateResult> create(ProjectIdHolder requestedId, Email emailOfOwner) {
-    var emailAsString = emailOfOwner.value();
+  public Uni<CreateResult> create(CreateContent entry) {
+    var requestedId = entry.getRequestedId();
+    var initialEtag = 1L;
+    var result = ProjectVid.of(requestedId, initialEtag);
+    var emailAsString = entry.getEmailOfOwner().value();
     var newEntityTemplate = new ProjectDbo()
         .setEntityId(requestedId.value())
-        .setVersion(1L)
+        .setVersion(initialEtag)
         .setName("-")
         .setEmailOfOwner(emailAsString);
 
     var violations = validator.validate(newEntityTemplate);
     if (!violations.isEmpty()) {
-      var result = new ValidationFailed("Validation error");
-      return Uni.createFrom().item(result);
+      var errorResult = new ValidationFailed("Validation error");
+      return Uni.createFrom().item(errorResult);
     }
     
     return factory.withTransaction(
@@ -43,7 +45,7 @@ class DboCreateImpl implements DboCreate {
           guardLimits(3, session, newEntityTemplate)
 
           .call(session::persist)
-          .map(it -> requestedId)
+          .map(ignoredAndReplaced -> result)
           .map(it -> (CreateResult) new Success(it)));
 
   }

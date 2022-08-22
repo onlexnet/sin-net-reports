@@ -4,7 +4,7 @@ import io.vavr.collection.Array;
 import lombok.Value;
 import lombok.experimental.Accessors;
 import sinnet.access.ActionPermissionChecker.ValidationResult;
-import sinnet.model.ProjectIdHolder;
+import sinnet.model.ValProjectId;
 
 /** 
  * Marker interface for all known user roles set.
@@ -20,7 +20,7 @@ public sealed interface RoleContextSet {
   @Value
   @Accessors(fluent = true)
   class OwnerRoleContext implements RoleContextSet {
-    private final Array<ProjectIdHolder> projectsIds;
+    private final Array<ValProjectId> projectsIds;
 
     @Override
     public ValidationResult processPermission(ActionPermissionChecker validator) {
@@ -32,7 +32,7 @@ public sealed interface RoleContextSet {
   @Value
   @Accessors(fluent = true)
   class OperatorRoleContext implements RoleContextSet {
-    private final Array<ProjectIdHolder> projectsId;
+    private final Array<ValProjectId> projectsId;
 
     @Override
     public ValidationResult processPermission(ActionPermissionChecker validator) {

@@ -10,7 +10,7 @@ import sinnet.access.AccessFacade;
 import sinnet.dbo.DboRemove;
 import sinnet.grpc.projects.RemoveCommand;
 import sinnet.grpc.projects.RemoveResult;
-import sinnet.model.ProjectIdHolder;
+import sinnet.model.ValProjectId;
 
 @ApplicationScoped
 @RequiredArgsConstructor
@@ -23,7 +23,7 @@ final class ProjectsRemoveImpl implements ProjectsRemove {
   public Uni<RemoveResult> remove(RemoveCommand request) {
     var eidAsString = request.getProjectId().getEId();
     var eid = UUID.fromString(eidAsString);
-    var idHolder = ProjectIdHolder.of(eid);
+    var idHolder = ValProjectId.of(eid);
 
     var requestor = request.getUserToken();
 

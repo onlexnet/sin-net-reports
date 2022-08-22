@@ -1,15 +1,12 @@
 package sinnet.access;
 
-import java.util.stream.Collectors;
-
 import io.vavr.collection.Array;
 import io.vavr.collection.HashSet;
 import io.vavr.collection.Set;
-import io.vavr.control.Validation;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
 import sinnet.access.ActionPermissionChecker.ValidationResult;
-import sinnet.model.ProjectIdHolder;
+import sinnet.model.ValProjectId;
 
 /** Holder for all user context sets. When created keeps roles of an User. */
 @Value
@@ -17,17 +14,17 @@ import sinnet.model.ProjectIdHolder;
 public class RoleContext {
   private final Array<RoleContextSet> contextSets;
 
-  public Boolean canCreateProject(ProjectIdHolder projectId) {
+  public Boolean canCreateProject(ValProjectId projectId) {
     var validator = new ActionCreatePermissionChecker(projectId);
     return collect(validator, contextSets);
   }
 
-  public Boolean canDeleteProject(ProjectIdHolder projectId) {
+  public Boolean canDeleteProject(ValProjectId projectId) {
     var validator = new ActionDeletePermissionChecker(projectId);
     return collect(validator, contextSets);
   }
 
-  public Boolean canUpdateProject(ProjectIdHolder projectId) {
+  public Boolean canUpdateProject(ValProjectId projectId) {
     var validator = new ActionUpdatePermissionChecker(projectId);
     return collect(validator, contextSets);
   }
