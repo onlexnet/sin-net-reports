@@ -55,7 +55,7 @@ class ProjectInputService extends AbstractVerticle {
         }
         
       });
-    return result;
+    return result.replaceWithVoid();
   }
 
   private Uni<ProjectVid> createProject(DboInput.ProjectInput entry) {

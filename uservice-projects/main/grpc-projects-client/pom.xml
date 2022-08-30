@@ -32,7 +32,7 @@
       <plugin>
         <groupId>io.quarkus</groupId>
         <artifactId>quarkus-maven-plugin</artifactId>
-        <version>2.7.4.Final</version>
+        <version>${quarkus.platform.version}</version>
         <extensions>true</extensions>
         <executions>
           <execution>
@@ -53,7 +53,7 @@
         <dependency>
             <groupId>io.quarkus.platform</groupId>
             <artifactId>quarkus-bom</artifactId>
-            <version>2.7.4.Final</version>
+            <version>${quarkus.platform.version}</version>
             <type>pom</type>
             <scope>import</scope>
         </dependency>
