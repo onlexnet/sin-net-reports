@@ -1,15 +1,11 @@
 package sinnet.input;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.context.Dependent;
+import javax.enterprise.context.control.ActivateRequestContext;
 
-import io.quarkus.hibernate.reactive.panache.common.runtime.ReactiveTransactional;
-import io.smallrye.common.annotation.NonBlocking;
 import io.smallrye.mutiny.Uni;
 import io.smallrye.mutiny.subscription.UniSubscriber;
 import io.smallrye.mutiny.subscription.UniSubscription;
-import io.smallrye.mutiny.vertx.core.AbstractVerticle;
-import io.vavr.collection.Array;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import sinnet.dbo.DboCreate;
@@ -18,15 +14,15 @@ import sinnet.dbo.DboInput;
 import sinnet.dbo.DboUpdate;
 import sinnet.model.ProjectVid;
 
+@ApplicationScoped
 @RequiredArgsConstructor
 @Slf4j
-class ProjectInputService extends AbstractVerticle {
+@ActivateRequestContext
+final class ProjectInputService {
 
   private final DboFacade dboFacade;
 
-
-  @Override
-  public Uni<Void> asyncStart() {
+  public Uni<Void> run() {
     var flow = dboFacade.withTransaction();
     var result = dboFacade.readAndDelete(flow)
       .call(it -> {

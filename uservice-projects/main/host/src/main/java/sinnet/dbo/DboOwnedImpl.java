@@ -2,7 +2,6 @@ package sinnet.dbo;
 
 import javax.enterprise.context.ApplicationScoped;
 
-import io.quarkus.logging.Log;
 import io.smallrye.mutiny.Uni;
 import io.vavr.Function1;
 import io.vavr.collection.Array;

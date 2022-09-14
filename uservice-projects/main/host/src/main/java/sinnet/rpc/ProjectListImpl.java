@@ -3,7 +3,6 @@ package sinnet.rpc;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import io.quarkus.hibernate.reactive.panache.common.runtime.ReactiveTransactional;
 import io.smallrye.mutiny.Uni;
 import sinnet.dbo.DboFacade;
 import sinnet.grpc.projects.ListReply;
@@ -17,7 +16,6 @@ class ProjectsListImpl implements ProjectList {
   DboFacade dbo;
 
   @Override
-  @ReactiveTransactional
   public Uni<ListReply> list(ListRequest request) {
     var emailOfRequestor = ValEmail.of(request.getEmailOfRequestor());
     return dbo.ownedAsProject(emailOfRequestor)
