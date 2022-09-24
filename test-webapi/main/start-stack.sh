@@ -22,6 +22,10 @@ P1=$!
 # http: 11020
 # grpc: 11021
 cd ../../uservice-timeentries/main
+
+# rebuild dependant modules before starting spring boot
+mvn -Dmaven.test.skip=true install -pl host -am
+
 export APP_DB_HOST=localhost && export SPRING_PROFILES_ACTIVE=dev && \
 dapr --app-id timeentries \
 --components-path ../../.components run \
