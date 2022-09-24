@@ -12,6 +12,7 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.assertj.core.api.Assertions;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Nested;
@@ -33,6 +34,8 @@ import sinnet.grpc.projects.ProjectsGrpc;
 import sinnet.grpc.projects.RemoveCommand;
 import sinnet.grpc.projects.UpdateCommand;
 import sinnet.grpc.projects.UserToken;
+
+import static io.restassured.RestAssured.given;
 
 @QuarkusTest
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
@@ -170,6 +173,25 @@ class ProjectsITest {
     var actual = reply.getProjectsList();
     assertThat(actual).size().isNotZero();
 
+  }
+
+
+  @Test
+  public void getHealth() {
+      given()
+              .when().get("/q/health")
+              .then()
+              .statusCode(200)
+              .body("status", Matchers.equalTo("UP"));
+  }
+
+  @Test
+  public void getDatasourceHealth() {
+      given()
+              .when().get("/q/health/ready")
+              .then()
+              .statusCode(200)
+              .body("status", Matchers.equalTo("UP"));
   }
 
   private String generateOwnerEmail() {

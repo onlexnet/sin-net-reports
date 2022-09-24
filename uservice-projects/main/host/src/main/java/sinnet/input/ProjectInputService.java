@@ -24,7 +24,7 @@ final class ProjectInputService {
 
   public Uni<Void> run() {
     var flow = dboFacade.withTransaction();
-    var result = dboFacade.readAndDelete(flow)
+    return dboFacade.readAndDelete(flow)
       .call(it -> {
         var builder = Uni.join().<ProjectVid>builder();
         for (var item : it) {
@@ -32,26 +32,7 @@ final class ProjectInputService {
           builder.add(createdItem);
         }
         return builder.joinAll().andCollectFailures();
-      });
-      result.subscribe().withSubscriber(new UniSubscriber<Object>() {
-
-        @Override
-        public void onSubscribe(UniSubscription subscription) {
-          log.info("1");
-        }
-
-        @Override
-        public void onItem(Object item) {
-          log.info("2");
-        }
-
-        @Override
-        public void onFailure(Throwable failure) {
-          log.info("3");
-        }
-        
-      });
-    return result.replaceWithVoid();
+      }).replaceWithVoid();
   }
 
   private Uni<ProjectVid> createProject(DboInput.ProjectInput entry) {

@@ -37,7 +37,7 @@ public class AuthenticationConverter implements Converter<Jwt, AbstractAuthentic
         return Try
             .of(() -> source.getClaimAsStringList("emails").get(0))
             .map(email -> new AppAuthenticationToken(accountId, email, name, newUser, scopes))
-            .getOrElseThrow(() -> new IllegalArgumentException("JWT shoulw contain 'emails' claim, required by the application."));
+            .getOrElseThrow(() -> new IllegalArgumentException("JWT should contain 'emails' claim, required by the application."));
     }
 
 }

@@ -26,9 +26,9 @@ class DboInputImpl implements DboInput {
 
   private Uni<Array<ProjectInput>> readAndDelete(Session session, Transaction tx) {
     return repository.listAll()
-    .map(Array::ofAll)
-    .chain(this::delete)
-    .map(it -> it.map(DboInputImpl::toResultModel));
+      .map(Array::ofAll)
+      .chain(this::delete)
+      .map(it -> it.map(DboInputImpl::toResultModel));
   }
 
   private static ProjectInput toResultModel(ProjectInputDbo dbo) {
@@ -43,7 +43,9 @@ class DboInputImpl implements DboInput {
       var singleDelete = repository.delete(item);
       builder.add(singleDelete);
     }
-    return builder.joinAll().andFailFast().map(ignored -> items);
+    return builder.joinAll().andFailFast()
+      .call(ignored -> repository.flush())
+      .map(ignored -> items);
   }
 
 
