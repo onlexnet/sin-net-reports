@@ -14,7 +14,6 @@ Feature: Timesheet Operations
       Then operation is rejected
       And number of timesheets in project 1 is zero
 
-    @todo
     Scenario: Create new timesheet by a project operator
       When User user1 creates new project
       Then Number of projects is 1

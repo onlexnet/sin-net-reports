@@ -21,6 +21,7 @@ and, in new shell
 ``` bash
 . init-vars.sh # to create env variables based on KeyVault secrets
 mvn clean test # to run tests
+dapr dashboard # to view list of working services
 ```
 
 And, finally, find results of the test located *target/cucumber-reports.html*
