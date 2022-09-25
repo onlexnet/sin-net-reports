@@ -12,10 +12,10 @@ Feature: Timesheet Operations
     Scenario: Reject creation of a timesheet by unpermitted person
       When operator1 creates timeentry for project1
       Then operation is rejected
-      And number of timesheets in project 1 is zero
+      And number of timesheets in project1 is zero
 
     Scenario: Create new timesheet by a project operator
-      When User user1 creates new project
-      Then Number of projects is 1
-      And the project is visible on the list of projects
+      When User user1 assigns operator1 to project1
+      And operator1 creates timeentry for project1
+      Then number of timesheets in project1 is zero
 
