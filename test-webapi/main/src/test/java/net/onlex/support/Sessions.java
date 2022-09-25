@@ -45,7 +45,7 @@ public final class Sessions {
     return activeUser;
   }
 
-  public UserContext get(UserEmail userEmail) {
+  public UserContext getOrCreate(UserEmail userEmail) {
     var active = users.get(userEmail).getOrElse(() -> {
       given(userEmail);
       return users.get(userEmail).get();

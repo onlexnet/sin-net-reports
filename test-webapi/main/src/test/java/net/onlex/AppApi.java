@@ -1,7 +1,9 @@
 package net.onlex;
 
+import java.time.LocalDate;
 import java.util.List;
 
+import org.eclipse.microprofile.graphql.Id;
 import org.eclipse.microprofile.graphql.Mutation;
 import org.eclipse.microprofile.graphql.NonNull;
 import org.eclipse.microprofile.graphql.Query;
@@ -28,6 +30,21 @@ public interface AppApi {
 
   @Query("Projects")
   ProjectsQuery3 projectsCount();
+
+  @Mutation("Actions")
+  NewActionResult newAction(@NonNull @Id String projectId, @NestedParameter("newAction") @NonNull LocalDate whenProvided);
+
+  @Data
+  class NewActionResult {
+    NewActionResultNewAction newAction;
+  }
+  @Data
+  class NewActionResultNewAction {
+    String entityId;
+    Long entityVersion;
+    String projectId;
+  }
+
 
   @Data
   class ProjectInfo {

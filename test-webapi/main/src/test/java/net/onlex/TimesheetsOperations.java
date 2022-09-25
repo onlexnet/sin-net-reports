@@ -1,5 +1,7 @@
 package net.onlex;
 
+import java.time.LocalDate;
+
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -13,7 +15,7 @@ public class TimesheetsOperations {
 
   @Given("a project called {projectName} created by {userName}")
   public void a_project_called_term1_created_by_term2(Project project, UserEmail owner) {
-    var ctx = sessions.get(owner);
+    var ctx = sessions.getOrCreate(owner);
     var saveProjectResult = ctx.appApi.saveProject(project.getName());
     // ??? Why is success
   }
@@ -36,10 +38,12 @@ public class TimesheetsOperations {
       throw new io.cucumber.java.PendingException("number of timesheets in project {projectName} is zero");
   }
 
-  @When("User user1 assigns operator1 to project1")
-  public void user_user1_assigns_operator1_to_project1() {
-      // Write code here that turns the phrase above into concrete actions
-      throw new io.cucumber.java.PendingException("User user1 assigns operator1 to project1");
+  @When("User {userName} assigns {userName} to {projectName}")
+  public void owner_assigns_operator_to_project(UserEmail owner, UserEmail operator, Project project) {
+    var ownerSession = sessions.getOrCreate(owner);
+    var projectData = ownerSession.appApi.projectList(project.getName());
+    var projectId = projectData.getList().get(0).getEntity().entityId;
+    var result = ownerSession.appApi.newAction(projectId, LocalDate.now());
   }
 
 }
