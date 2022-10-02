@@ -18,10 +18,12 @@ public class TimesheetsOperations {
     var ctx = sessions.getOrCreate(owner);
     var saveProjectResult = ctx.appApi.saveProject(project.getName());
     // ??? Why is success
+    throw new io.cucumber.java.PendingException("a project called {projectName} created by {userName}");
   }
 
   @When("{userName} creates timeentry for {projectName}")
   public void user_creates_timeentry_for_project(UserEmail user, Project project) {
+    throw new io.cucumber.java.PendingException("{userName} creates timeentry for {projectName}");
     // var ctx = sessions.getOrCreate(user);
     // var projectId = projectId(ctx.appApi, project);
     // ctx.appApi.newAction(projectId, whenProvided)
