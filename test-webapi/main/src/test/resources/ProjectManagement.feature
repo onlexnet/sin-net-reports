@@ -7,7 +7,7 @@ Feature: Project Management
   
   Rules:
   * User may create and delete its projects
-  * Number of free accounts is limited to 3 projects
+  * Number of free accounts is limited to 10 projects
   * Well-known list of predefined projects are created
 
   Background:

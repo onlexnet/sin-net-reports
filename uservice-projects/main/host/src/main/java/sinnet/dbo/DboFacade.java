@@ -13,7 +13,7 @@ public final class DboFacade {
   private final DboRemove dboRemove;
 
   @Delegate
-  private final DboOwned dboOwned;
+  private final DboGet dboOwned;
 
   @Delegate
   private final DboUpdate dboUpdate;

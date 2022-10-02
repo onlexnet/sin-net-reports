@@ -18,6 +18,9 @@ class ProjectsService implements Projects {
   @Delegate(types = ProjectList.class)
   private final ProjectList projectsList;
 
+  @Delegate(types = ProjectGet.class)
+  private final ProjectGet projectsGet;
+
   @Delegate(types = ProjectsRemove.class)
   private final ProjectsRemove projectsRemove;
 

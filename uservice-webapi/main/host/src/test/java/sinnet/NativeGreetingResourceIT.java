@@ -2,9 +2,9 @@ package sinnet;
 
 import org.junit.jupiter.api.Disabled;
 
-import io.quarkus.test.junit.NativeImageTest;
+import io.quarkus.test.junit.QuarkusIntegrationTest;
 
-@NativeImageTest
+@QuarkusIntegrationTest
 @Disabled
 public class NativeGreetingResourceIT extends GreetingResourceTest {
 

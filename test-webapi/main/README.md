@@ -13,15 +13,21 @@
 *Run docker* - it depends what you have installed (e.g. Docker desktop, Rancher Desktop etc.)
 
 ``` bash
-docker-compose up # to run services
-./start-stack.sh # to run application services
-```
+# Run services # to run services
+docker-compose up
 
-and, in new shell
-``` bash
-. init-vars.sh # to create env variables based on KeyVault secrets
+# Run dapr so default ports 3500 (http) and 50001 (grpc) are initialized by DEPR dashboard
+# and microservices, whoci used such default porets, may copmmunicate with each other
+dapr dashboard
+
+
+# run all µservices as script (or run them individually in new shells) ...
+./start-stack.sh # to run application services
+
+ # to create env variables based on KeyVault secrets
+. init-vars.sh
 mvn clean test # to run tests
-dapr dashboard # to view list of working services
+
 ```
 
 And, finally, find results of the test located *target/cucumber-reports.html*

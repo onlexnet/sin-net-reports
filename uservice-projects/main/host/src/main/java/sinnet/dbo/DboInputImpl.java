@@ -38,6 +38,9 @@ class DboInputImpl implements DboInput {
   }
 
   private Uni<Array<ProjectInputDbo>> delete(Array<ProjectInputDbo> items) {
+    if (items.isEmpty()) {
+      return Uni.createFrom().item(Array.empty());
+    }
     var builder = Uni.join().<Void>builder();
     for (var item : items) {
       var singleDelete = repository.delete(item);
@@ -47,6 +50,5 @@ class DboInputImpl implements DboInput {
       .call(ignored -> repository.flush())
       .map(ignored -> items);
   }
-
 
 }

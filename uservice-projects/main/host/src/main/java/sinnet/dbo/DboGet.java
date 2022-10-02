@@ -11,9 +11,11 @@ import sinnet.model.ValProjectId;
  *
  * @param ownerEmail email ow the give user
  */
-interface DboOwned {
+interface DboGet {
 
   Uni<Array<Project>> ownedAsProject(ValEmail ownerEmail);
   
   Uni<Array<ValProjectId>> ownedAsId(ValEmail ownerEmail);
+
+  Uni<Project> get(ValProjectId projectId);
 }

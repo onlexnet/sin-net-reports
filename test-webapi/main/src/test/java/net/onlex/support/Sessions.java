@@ -45,6 +45,11 @@ public final class Sessions {
     return activeUser;
   }
 
+  /**
+   * Gets API context created with JWT token for given user, or create it if not exists.
+   * @param userEmail
+   * @return
+   */
   public UserContext getOrCreate(UserEmail userEmail) {
     var active = users.get(userEmail).getOrElse(() -> {
       given(userEmail);

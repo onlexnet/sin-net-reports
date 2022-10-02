@@ -42,7 +42,7 @@ class DboCreateImpl implements DboCreate {
           // if it is new entity, lets check if creating it may increase number of free projects more that allowed
           // TODO: it is naive implementation as multiple threads in parallel may create projects above the limit
           
-          guardLimits(3, session, newEntityTemplate)
+          guardLimits(10, session, newEntityTemplate)
 
           .call(session::persist)
           .map(ignoredAndReplaced -> result)
@@ -58,7 +58,9 @@ class DboCreateImpl implements DboCreate {
       .getSingleResult()
       .map(Long::intValue)
       .flatMap(count -> count >= limit
-        ? Uni.createFrom().failure(Status.RESOURCE_EXHAUSTED.withDescription("Too many projects").asException())
+        ? Uni.createFrom().failure(
+          Status.RESOURCE_EXHAUSTED.withDescription(String.format("Too many projects: Current: %s, Limit:%s, user: %s", count, limit, emailOfOwner))
+          .asException())
         : Uni.createFrom().item(detachedEntity));
   }
 

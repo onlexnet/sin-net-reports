@@ -3,7 +3,6 @@ package sinnet.model;
 import javax.annotation.Nullable;
 
 import lombok.EqualsAndHashCode;
-import lombok.Value;
 
 /** Holds text no longer than 50 chars. */
 @EqualsAndHashCode

@@ -9,6 +9,7 @@ import sinnet.grpc.projects.UpdateResult;
 import sinnet.model.ProjectVid;
 import sinnet.model.ValEmail;
 
+/** Support for update commands. */
 public interface DboUpdate {
 
   /** Same as {@link #updateCommand(ProjectVid, UpdateCommandContent)} but using Dto types. */
@@ -17,9 +18,12 @@ public interface DboUpdate {
     var eidAsUuid = UUID.fromString(eidAsString);
     var etag = request.getEntityId().getETag();
     var vid = ProjectVid.of(eidAsUuid, etag);
-    var content = new UpdateCommandContent(
-        request.getModel().getName(),
-        ValEmail.of(request.getModel().getEmailOfOwner()));
+
+    var desired = request.getDesired();
+    var name = desired.getName();
+    var emailOfOwner = ValEmail.of(desired.getEmailOfOwner());
+    var operators = desired.getEmailOfOperatorList().stream().map(ValEmail::of).toArray(ValEmail[]::new);
+    var content = new UpdateCommandContent(name, emailOfOwner, operators);
 
     return this.updateCommand(vid, content)
         .map(it -> UpdateResult.newBuilder()
@@ -32,5 +36,5 @@ public interface DboUpdate {
   Uni<ProjectVid> updateCommand(ProjectVid vid, UpdateCommandContent content);
 
   /** Container for data used to update Project entity. */
-  record UpdateCommandContent(String name, ValEmail newOwner) {}
+  record UpdateCommandContent(String name, ValEmail newOwner, ValEmail... operators) {}
 }

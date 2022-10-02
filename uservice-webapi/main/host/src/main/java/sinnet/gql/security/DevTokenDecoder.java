@@ -16,7 +16,6 @@ import io.smallrye.jwt.auth.principal.JWTAuthContextInfo;
 import io.smallrye.jwt.auth.principal.JWTCallerPrincipal;
 import io.smallrye.jwt.auth.principal.JWTCallerPrincipalFactory;
 import io.smallrye.jwt.auth.principal.ParseException;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * JWI decoder to extract Principal for dummy JWT. Used only on dev so that in tests we may use any handcrafted JWT token in requests
@@ -26,7 +25,6 @@ import lombok.extern.slf4j.Slf4j;
 @Alternative
 @Priority(1)
 @IfBuildProfile("dev")
-@Slf4j
 public class DevTokenDecoder extends JWTCallerPrincipalFactory {
 
   @Override

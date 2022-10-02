@@ -26,6 +26,9 @@ final class ProjectInputService {
     var flow = dboFacade.withTransaction();
     return dboFacade.readAndDelete(flow)
       .call(it -> {
+        if (it.isEmpty()) {
+          return Uni.createFrom().nullItem();
+        }
         var builder = Uni.join().<ProjectVid>builder();
         for (var item : it) {
           var createdItem = createProject(item);

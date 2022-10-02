@@ -4,7 +4,7 @@ databaseChangeLog:
     author: siudeks
     changes:  
     - createTable:
-        tableName: inbox_projects
+        tableName: inbox_project
         columns:
         # Force elements to be ordered as inserted using clustered primary key. For that purpose, PK is clustered
         - column:
@@ -37,14 +37,14 @@ databaseChangeLog:
     author: siudeks
     changes:
     - loadData:
-        tableName: inbox_projects
-        file: 0002-create-projects-inbox.csv
+        tableName: inbox_project
+        file: 0002-create-project-inbox.csv
         commentLineStartsWith: //
         encoding: UTF-8
         relativeToChangelogFile: true
         usePreparedStatements: true
     rollback:
     - delete:
-        tableName: inbox_projects
-        # as we see in 0002-create-projects-inbox.csv, all inserted elements have BATCH_ID=1
+        tableName: inbox_project
+        # as we see in 0002-create-project-inbox.csv, all inserted elements have BATCH_ID=1
         where: BATCH_ID = 1

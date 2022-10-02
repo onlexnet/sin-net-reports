@@ -6,7 +6,6 @@ import javax.enterprise.context.ApplicationScoped;
 
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import sinnet.access.AccessFacade;
 import sinnet.dbo.DboUpdate;
 import sinnet.grpc.projects.UpdateCommand;
@@ -15,7 +14,6 @@ import sinnet.model.ValProjectId;
 
 @ApplicationScoped
 @RequiredArgsConstructor
-@Slf4j
 class ProjectsUpdateImpl implements ProjectsUpdate {
   
   private final AccessFacade accessFacade;
@@ -30,7 +28,6 @@ class ProjectsUpdateImpl implements ProjectsUpdate {
     var requestor = request.getUserToken();
 
     return accessFacade.guardAccess(requestor, idHolder, roleContext -> roleContext::canUpdateProject)
-      .chain(id -> dboUpdate.
-      update(request));  
+      .chain(id -> dboUpdate.update(request));  
   }
 }

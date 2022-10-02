@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -26,6 +27,7 @@ import io.vavr.Function1;
 import lombok.SneakyThrows;
 import lombok.val;
 import sinnet.grpc.projects.CreateRequest;
+import sinnet.grpc.projects.GetRequest;
 import sinnet.grpc.projects.ListRequest;
 import sinnet.grpc.projects.Project;
 import sinnet.grpc.projects.ProjectId;
@@ -58,17 +60,17 @@ class ProjectsITest {
     void too_long_name() {
       var tooLongEmail = RandomStringUtils.randomAlphanumeric(maximumSizeOfUserEmail + 1);
       Assertions
-        .assertThatCode(() -> ProjectsITest.this.create(tooLongEmail))
-        .isInstanceOfSatisfying(StatusRuntimeException.class,
-          ex -> assertThat(ex.getStatus().getCode()).isEqualTo(Status.FAILED_PRECONDITION.getCode()));
+          .assertThatCode(() -> ProjectsITest.this.create(tooLongEmail))
+          .isInstanceOfSatisfying(StatusRuntimeException.class,
+            ex -> assertThat(ex.getStatus().getCode()).isEqualTo(Status.FAILED_PRECONDITION.getCode()));
     }
 
     @Test
     void maximum_name() {
       var longEmail = RandomStringUtils.randomAlphanumeric(maximumSizeOfUserEmail);
       Assertions
-        .assertThatCode(() -> ProjectsITest.this.create(longEmail))
-        .doesNotThrowAnyException();
+          .assertThatCode(() -> ProjectsITest.this.create(longEmail))
+          .doesNotThrowAnyException();
     }
   }
   
@@ -101,10 +103,12 @@ class ProjectsITest {
   void should_limit_number_of_free_projects() {
     var ownerName = generateOwnerEmail();
 
-    // lets create 3 free projects
-    update(create(ownerName), "my name", ownerName);
-    update(create(ownerName), "my name", ownerName);
-    update(create(ownerName), "my name", ownerName);
+    // lets create 10 free projects
+    val limit_of_free_projects = 10;
+    for (int i = 0; i < limit_of_free_projects; i++) {
+      update(create(ownerName), "my name", ownerName);
+    }
+
 
     Assertions
         .assertThatCode(() -> update(create(ownerName), "my name", ownerName))
@@ -175,25 +179,44 @@ class ProjectsITest {
 
   }
 
+  @Test
+  void should_add_operator() {
+    var ownerEmail = generateOwnerEmail();
+    var projectId = create(ownerEmail);
+    var model = get(projectId);
+    var operatorEmail = generateUserEmail();
+    model = model.toBuilder().addEmailOfOperator(operatorEmail).build();
+    this.update(ownerEmail, projectId, model);
+
+    var updatedModel = get(projectId);
+    Assertions.assertThat(updatedModel.getEmailOfOperatorCount()).isEqualTo(1);
+    Assertions.assertThat(updatedModel.getEmailOfOperator(0)).isEqualTo(operatorEmail);
+  }
+
 
   @Test
   public void getHealth() {
-      given()
-              .when().get("/q/health")
-              .then()
-              .statusCode(200)
-              .body("status", Matchers.equalTo("UP"));
+    given()
+        .when().get("/q/health")
+        .then()
+        .statusCode(200)
+        .body("status", Matchers.equalTo("UP"));
   }
 
   @Test
   public void getDatasourceHealth() {
-      given()
-              .when().get("/q/health/ready")
-              .then()
-              .statusCode(200)
-              .body("status", Matchers.equalTo("UP"));
+    given()
+        .when().get("/q/health/ready")
+        .then()
+        .statusCode(200)
+        .body("status", Matchers.equalTo("UP"));
   }
 
+  private String generateUserEmail() {
+    return generateOwnerEmail();
+  }
+
+  @Deprecated
   private String generateOwnerEmail() {
     // %tT - time format hhmmss    
     var randomPart = RandomStringUtils.randomAlphabetic(6);
@@ -209,12 +232,21 @@ class ProjectsITest {
     return reserveResult.getEntityId();
   }
 
-  private static UpdateCommand newUpdateCommand(ProjectId projectId, String name, String newOwner, String currentOwner) {
+  private ProjectModel get(ProjectId id) {
+    var request = GetRequest.newBuilder()
+        .setProjectId(id)
+        .build();
+    var getReply = self.get(request);
+    return getReply.getModel();
+  }
+
+  private static UpdateCommand newUpdateCommand(ProjectId projectId, String name, String newOwner, String currentOwner, String... operators) {
     return UpdateCommand.newBuilder()
         .setEntityId(projectId)
-        .setModel(ProjectModel.newBuilder()
+        .setDesired(ProjectModel.newBuilder()
             .setName(name)
-            .setEmailOfOwner(newOwner))
+            .setEmailOfOwner(newOwner)
+            .addAllEmailOfOperator(Arrays.asList(operators)))
         .setUserToken(UserToken.newBuilder()
             .setRequestorEmail(currentOwner))
         .build();
@@ -236,6 +268,17 @@ class ProjectsITest {
   private ProjectId update(ProjectId projectId, String name, String emailOfOwner, String newOwner) {
     var updateCmd = newUpdateCommand(projectId, name, emailOfOwner, newOwner);
     var result = self.update(updateCmd);
+    return result.getEntityId();
+  }
+
+  private ProjectId update(String currentOwner, ProjectId projectId, ProjectModel projectModel) {
+    var cmd = UpdateCommand.newBuilder()
+        .setEntityId(projectId)
+        .setDesired(projectModel)
+        .setUserToken(UserToken.newBuilder()
+            .setRequestorEmail(currentOwner))
+        .build();
+    var result = self.update(cmd);
     return result.getEntityId();
   }
 

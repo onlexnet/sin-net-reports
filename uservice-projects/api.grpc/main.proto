@@ -11,6 +11,7 @@ service Projects {
   rpc update(UpdateCommand) returns (UpdateResult);
   rpc remove(RemoveCommand) returns (RemoveResult);
   rpc list(ListRequest) returns (ListReply);
+  rpc get(GetRequest) returns (GetReply);
   rpc userStats(UserStatsRequest) returns (UserStatsReply);
 }
 
@@ -36,7 +37,7 @@ message CreateReply {
 message UpdateCommand {
   UserToken userToken = 1;
   ProjectId entityId = 2;
-  ProjectModel model = 3;
+  ProjectModel desired = 3;
 }
 message UpdateResult {
   ProjectId entityId = 1;
@@ -47,6 +48,13 @@ message ListRequest {
 }
 message ListReply {
   repeated Project projects = 1;
+}
+
+message GetRequest {
+  ProjectId projectId = 1;
+}
+message GetReply {
+  ProjectModel model = 1;
 }
 
 message UserStatsRequest {
@@ -69,6 +77,7 @@ message ProjectId {
 message ProjectModel {
   string name = 1;
   string emailOfOwner = 2;
+  repeated string emailOfOperator = 3;
 }
 
 /** About the requestor */

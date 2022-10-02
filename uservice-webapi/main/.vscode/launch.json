@@ -6,14 +6,6 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "preLaunchTask": "quarkus:dev (host)",
-            "type": "java",
-            "request": "attach",
-            "hostName": "localhost",
-            "name": "Debug Quarkus application (host)",
-            "port": 11012
-        },
-        {
             "preLaunchTask": "daprd-debug",
             "type": "java",
             "request": "attach",

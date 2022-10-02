@@ -6,20 +6,16 @@ import org.eclipse.microprofile.graphql.GraphQLApi;
 import org.eclipse.microprofile.graphql.NonNull;
 import org.eclipse.microprofile.graphql.Source;
 
-import io.smallrye.common.constraint.NotNull;
 import io.smallrye.mutiny.Uni;
-import sinnet.gql.models.CommonMapper;
 import sinnet.gql.models.Entity;
 import sinnet.gql.models.ProjectEntity;
 import sinnet.gql.models.ProjectsMutation;
 import sinnet.grpc.GrpcProjects;
-import sinnet.grpc.customers.ReserveReply;
 import sinnet.grpc.projects.CreateReply;
 import sinnet.grpc.projects.CreateRequest;
 import sinnet.grpc.projects.ProjectModel;
 import sinnet.grpc.projects.UpdateCommand;
 import sinnet.grpc.projects.UpdateResult;
-import sinnet.grpc.projects.UserToken;
 
 @GraphQLApi
 public class ProjectsMutationSave implements ProjectMapper {
@@ -36,7 +32,7 @@ public class ProjectsMutationSave implements ProjectMapper {
         .map(CreateReply::getEntityId)
         .map(it -> UpdateCommand.newBuilder()
           .setEntityId(it)
-          .setModel(ProjectModel.newBuilder()
+          .setDesired(ProjectModel.newBuilder()
             .setEmailOfOwner(self.getUserToken().getRequestorEmail())
             .setName(name))
           .setUserToken(userToken)

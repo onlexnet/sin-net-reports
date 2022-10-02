@@ -10,14 +10,14 @@ databaseChangeLog:
       author: siudeks
       changes:  
         - createTable:
-            tableName: projects
+            tableName: PROJECT
             columns:
             - column:
                 name: ENTITY_ID
                 type: UUID
                 constraints:
                   primaryKey: true
-                  primaryKeyName: PROJECTS_PK
+                  primaryKeyName: PROJECT_PK
                   nullable: false
             - column:
                 name: ENTITY_VERSION
@@ -31,6 +31,21 @@ databaseChangeLog:
                   nullable: false
             - column:
                 name: EMAIL_OF_OWNER
+                type: VARCHAR(50)
+                constraints:
+                  nullable: false
+        - createTable:
+            tableName: PROJECT_OPERATOR
+            columns:
+            - column:
+                name: PROJECT_ID
+                type: UUID
+                constraints:
+                  nullable: false
+                  foreignKeyName: PROJECT_OPERATOR_FK1
+                  references: project(ENTITY_ID)
+            - column:
+                name: EMAIL
                 type: VARCHAR(50)
                 constraints:
                   nullable: false

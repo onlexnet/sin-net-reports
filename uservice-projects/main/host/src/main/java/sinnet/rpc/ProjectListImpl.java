@@ -10,7 +10,7 @@ import sinnet.grpc.projects.ListRequest;
 import sinnet.model.ValEmail;
 
 @ApplicationScoped
-class ProjectsListImpl implements ProjectList {
+class ProjectListImpl implements ProjectList {
 
   @Inject
   DboFacade dbo;

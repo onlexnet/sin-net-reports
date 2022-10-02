@@ -1,6 +1,9 @@
 package sinnet.dbo;
 
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.enterprise.context.ApplicationScoped;
 
@@ -12,6 +15,7 @@ import io.vavr.Function1;
 import io.vavr.control.Either;
 import lombok.RequiredArgsConstructor;
 import sinnet.model.ProjectVid;
+import sinnet.model.ValEmail;
 
 @ApplicationScoped
 @RequiredArgsConstructor
@@ -62,8 +66,10 @@ class DboUpdateImpl implements DboUpdate {
   }
 
   private void applyCommand(ProjectDbo dbEntity, UpdateCommandContent cmd) {
+    var operators = Stream.of(cmd.operators()).map(ValEmail::value).collect(Collectors.toSet());
     dbEntity.setName(cmd.name());
     dbEntity.setEmailOfOwner(cmd.newOwner().value());
+    dbEntity.setOperators(operators);
   }
 
 }

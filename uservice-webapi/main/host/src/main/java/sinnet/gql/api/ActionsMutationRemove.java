@@ -14,7 +14,6 @@ import sinnet.grpc.common.EntityId;
 import sinnet.grpc.timeentries.RemoveCommand;
 import sinnet.grpc.timeentries.RemoveResult;
 import sinnet.grpc.timeentries.TimeEntries;
-import sinnet.grpc.timeentries.TimeEntriesGrpc;
 
 @GraphQLApi
 @Slf4j

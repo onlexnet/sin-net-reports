@@ -3,14 +3,9 @@ package sinnet.input;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
 
-import org.eclipse.microprofile.health.HealthCheckResponse;
-import org.eclipse.microprofile.health.Readiness;
-
 import io.quarkus.runtime.StartupEvent;
 import io.quarkus.vertx.core.runtime.context.VertxContextSafetyToggle;
 import io.smallrye.common.vertx.VertxContext;
-import io.smallrye.health.api.AsyncHealthCheck;
-import io.smallrye.mutiny.Uni;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import lombok.RequiredArgsConstructor;

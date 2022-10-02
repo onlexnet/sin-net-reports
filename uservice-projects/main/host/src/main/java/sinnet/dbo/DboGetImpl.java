@@ -2,6 +2,8 @@ package sinnet.dbo;
 
 import javax.enterprise.context.ApplicationScoped;
 
+import org.hibernate.reactive.mutiny.Mutiny;
+
 import io.smallrye.mutiny.Uni;
 import io.vavr.Function1;
 import io.vavr.collection.Array;
@@ -14,7 +16,7 @@ import sinnet.model.ValProjectId;
 
 @ApplicationScoped
 @RequiredArgsConstructor
-final class DboOwnedImpl implements DboOwned {
+final class DboGetImpl implements DboGet {
 
   private final ProjectRepository projectRepository;
 
@@ -33,6 +35,7 @@ final class DboOwnedImpl implements DboOwned {
     return ProjectModel.newBuilder()
       .setEmailOfOwner(dbo.getEmailOfOwner())
       .setName(dbo.getName())
+      .addAllEmailOfOperator(dbo.getOperators())
       .build();
   }
 
@@ -53,9 +56,17 @@ final class DboOwnedImpl implements DboOwned {
     return ownedAndMap(ownerEmail, this::mapToIdHolder);
   }
 
-  private <T> Uni<Array<T>> ownedAndMap(ValEmail emailOfOwner, Function1<ProjectDbo, T> mapper) {
+  @Override
+  public Uni<Project> get(ValProjectId projectId) {
+    var id = projectId.value();
+    return projectRepository
+      .findById(id)
+      .map(this::mapToEntity);
+  }
 
-    return projectRepository.list("select t from ProjectDbo t where t.emailOfOwner = ?1", emailOfOwner.value())
+  private <T> Uni<Array<T>> ownedAndMap(ValEmail emailOfOwner, Function1<ProjectDbo, T> mapper) {
+    return projectRepository
+      .list("select t from ProjectDbo t where t.emailOfOwner = ?1", emailOfOwner.value())
       .map(it -> Array.ofAll(it).map(mapper));
   }
 

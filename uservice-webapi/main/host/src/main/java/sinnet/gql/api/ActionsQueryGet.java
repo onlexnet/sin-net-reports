@@ -1,7 +1,5 @@
 package sinnet.gql.api;
 
-import javax.enterprise.context.ApplicationScoped;
-
 import org.eclipse.microprofile.graphql.GraphQLApi;
 import org.eclipse.microprofile.graphql.Id;
 import org.eclipse.microprofile.graphql.Source;

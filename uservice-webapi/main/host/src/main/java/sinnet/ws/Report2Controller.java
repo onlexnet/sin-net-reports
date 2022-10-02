@@ -4,7 +4,6 @@ import static sinnet.reports.grpc.YearMonth.newBuilder;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
-import java.util.Objects;
 import java.util.UUID;
 
 import javax.ws.rs.GET;
@@ -17,20 +16,15 @@ import javax.ws.rs.core.Response;
 
 import io.quarkus.grpc.GrpcClient;
 import io.smallrye.mutiny.Uni;
-import io.vavr.Function1;
 import io.vavr.Tuple;
 import io.vavr.Tuple2;
 import io.vavr.collection.HashMap;
 import io.vavr.collection.List;
-import io.vavr.control.Option;
 import lombok.Value;
 import sinnet.gql.TimeentriesMapper;
-import sinnet.grpc.customers.Customers;
 import sinnet.grpc.timeentries.TimeEntries;
-import sinnet.report2.grpc.ActivityDetails;
 import sinnet.report2.grpc.ReportRequest;
 import sinnet.report2.grpc.Reports;
-import sinnet.reports.grpc.Date;
 
 @Path("/api/raporty")
 public class Report2Controller implements TimeentriesMapper {

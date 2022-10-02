@@ -1,0 +1,16 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"appId": "timeentries",
+			"appPort": 11021,
+			"label": "dapr-debug",
+			"type": "dapr"
+		},
+		{
+			"appId": "timeentries",
+			"label": "daprd-down",
+			"type": "daprd-down"
+		}
+	]
+}

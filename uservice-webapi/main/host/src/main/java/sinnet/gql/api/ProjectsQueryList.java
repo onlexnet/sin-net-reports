@@ -1,6 +1,7 @@
 package sinnet.gql.api;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -49,13 +50,16 @@ public class ProjectsQueryList implements ProjectMapper {
 interface ProjectMapper extends CommonMapper {
 
   default @Nonnull ProjectEntity toDto(@Nonnull Project grpc) {
-    return new ProjectEntity()
+    var result = new ProjectEntity()
         .setEntity(Entity.builder()
             .entityId(grpc.getId().getEId())
             .projectId(grpc.getId().getEId())
             .entityVersion(grpc.getId().getETag())
             .build())
         .setName(grpc.getModel().getName());
+    // the check below is stupid, but removing it creates interesting warning in java related to nullability
+    Objects.requireNonNull(result);
+    return result;
   }
 
   default @Nonnull sinnet.grpc.projects.ProjectId toGrpc(@Nonnull ProjectId grpc) {
@@ -64,6 +68,13 @@ interface ProjectMapper extends CommonMapper {
     return sinnet.grpc.projects.ProjectId.newBuilder()
         .setEId(eId.toString())
         .setETag(eTag)
+        .build();
+  }
+
+  default @Nonnull ProjectId toGql(@Nonnull sinnet.grpc.projects.ProjectId grpc) {
+    return ProjectId.builder()
+        .id(grpc.getEId())
+        .tag(grpc.getETag())
         .build();
   }
 }

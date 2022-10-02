@@ -106,7 +106,17 @@ type ProjectEntity {
   name: String!
 }
 
+type ProjectIdModel {
+  id: ID!
+  tag: BigInteger!
+}
+
+type ProjectMutation {
+  withOperator(operatorEmail: String!): ProjectIdModel!
+}
+
 type ProjectsMutation {
+  project(eid: ID!, etag: ID!): ProjectMutation!
   remove(projectId: ProjectIdInput!): Boolean!
   save(name: String!): ProjectEntity!
 }

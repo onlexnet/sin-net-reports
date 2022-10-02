@@ -67,7 +67,7 @@ public class ProjectManagement {
 
   @When("{userName} creates maximum of free projects")
   public void user1_creates_maximum_of_free_projects(UserEmail userEmail) {
-      val maximumOfProjects = 3; // business decision, undocumented
+      val maximumOfProjects = 10; // business decision, undocumented
       var ctx = session.tryGet(userEmail);
       Stream.rangeClosed(1, maximumOfProjects).forEach(projectNo -> {
         ctx.appApi.saveProject("new Project " + projectNo);

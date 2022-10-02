@@ -9,7 +9,7 @@ import lombok.Data;
 
 @Entity
 @Data
-@Table(name = "inbox_projects")
+@Table(name = "INBOX_PROJECT")
 class ProjectInputDbo {
 
   @Id

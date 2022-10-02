@@ -21,9 +21,12 @@ public class TimesheetsOperations {
   }
 
   @When("{userName} creates timeentry for {projectName}")
-  public void operator1_creates_timeentry_for_project1(UserEmail operator, Project project) {
-      // Write code here that turns the phrase above into concrete actions
-      throw new io.cucumber.java.PendingException("{userName} creates timeentry for {projectName}");
+  public void user_creates_timeentry_for_project(UserEmail user, Project project) {
+    // var ctx = sessions.getOrCreate(user);
+    // var projectId = projectId(ctx.appApi, project);
+    // ctx.appApi.newAction(projectId, whenProvided)
+    //   // Write code here that turns the phrase above into concrete actions
+    //   throw new io.cucumber.java.PendingException("{userName} creates timeentry for {projectName}");
   }
 
   @Then("operation is rejected")
@@ -40,10 +43,15 @@ public class TimesheetsOperations {
 
   @When("User {userName} assigns {userName} to {projectName}")
   public void owner_assigns_operator_to_project(UserEmail owner, UserEmail operator, Project project) {
-    var ownerSession = sessions.getOrCreate(owner);
-    var projectData = ownerSession.appApi.projectList(project.getName());
-    var projectId = projectData.getList().get(0).getEntity().entityId;
-    var result = ownerSession.appApi.newAction(projectId, LocalDate.now());
+    var ctx = sessions.getOrCreate(owner);
+    var projectId = projectId(ctx.appApi, project);
+    // var result = ctx.appApi. .newAction(projectId, LocalDate.now());
   }
 
+  private String projectId(AppApi api, Project project) {
+    var projectName = project.getName();
+    var projectData = api.projectList(projectName);
+    var projectId = projectData.getList().get(0).getEntity().entityId;
+    return projectId;
+  }
 }
