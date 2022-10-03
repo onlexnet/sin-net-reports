@@ -16,10 +16,8 @@
 # Run services # to run services
 docker-compose up
 
-# Run dapr so default ports 3500 (http) and 50001 (grpc) are initialized by DEPR dashboard
-# and microservices, whoci used such default porets, may copmmunicate with each other
+# To see µservices
 dapr dashboard
-
 
 # run all µservices as script (or run them individually in new shells) ...
 ./start-stack.sh # to run application services

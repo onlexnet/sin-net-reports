@@ -1,7 +1,5 @@
 package net.onlex;
 
-import java.util.function.IntPredicate;
-
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

@@ -25,10 +25,7 @@
 			],
 			"group": "build",
 			"label": "quarkus:dev (host)",
-			"command": "mvn quarkus:dev -pl host -DDATABASE_NAME=devlocaldb -DDATABASE_SCHEMA=uservice_projects",
-			"windows": {
-				"command": "mvn quarkus:dev -pl host"
-			}
+			"command": "mvn quarkus:dev -pl host -DDATABASE_NAME=devlocaldb -DDATABASE_SCHEMA=uservice_projects -Ddebug=11032",
 		},
 		{
 			"appId": "projects",
