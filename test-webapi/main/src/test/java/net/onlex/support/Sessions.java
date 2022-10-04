@@ -9,7 +9,7 @@ import net.onlex.api.SessionState;
 
 public final class Sessions {
 
-  /** Context of the user, wh lastly did some external operation  */
+  /** Context of the user, wh lastly did some external operation. You may recognise such user as they are mentioned (...) as [username] (...)  */
   @Getter
   private UserContext activeUser = null;
 

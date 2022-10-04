@@ -44,8 +44,8 @@ public class ProjectManagement {
   @Then("the project is visible on the list of projects")
   public void the_project_is_visible_on_the_list_of_projects() {
     var ctx = session.getActiveUser();
-    var projectName = ctx.state.getLastCreatedProject();
-    var expectedName = projectName.alias();
+    var project = ctx.state.getLastCreatedProject();
+    var expectedName = project.entity().getName();
     var projects = ctx.appApi.projectList(expectedName);
     assertThat(projects.getList().stream().map(it -> it.getName())).contains(expectedName);
   }
