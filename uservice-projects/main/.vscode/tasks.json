@@ -25,7 +25,7 @@
 			],
 			"group": "build",
 			"label": "quarkus:dev (host)",
-			"command": "mvn quarkus:dev -pl host -DDATABASE_NAME=devlocaldb -DDATABASE_SCHEMA=uservice_projects -Ddebug=11032",
+			"command": "mvn quarkus:dev -pl host -DDATABASE_NAME=devlocaldb -DDATABASE_SCHEMA=uservice_projects -Ddebug=11039",
 		},
 		{
 			"appId": "projects",
@@ -39,7 +39,7 @@
 		{
 			"appId": "projects",
 			"label": "daprd-down",
-			"type": "daprd-down"
+			"type": "daprd-down",
 		}
 	]
 }

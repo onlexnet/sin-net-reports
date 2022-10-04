@@ -1,25 +1,23 @@
 package net.onlex;
 
-import java.time.LocalDate;
-
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import net.onlex.support.UserEmail;
+import io.cucumber.java8.PendingException;
 import net.onlex.support.Project;
 import net.onlex.support.Sessions;
+import net.onlex.support.UserEmail;
 
-public class TimesheetsOperations {
+public final class TimesheetsOperations {
 
   private Sessions sessions = new Sessions();
 
   @Given("a project called {projectName} created by {userName}")
   public void a_project_called_term1_created_by_term2(Project project, UserEmail owner) {
     var ctx = sessions.getOrCreate(owner);
-    var saveProjectResult = ctx.appApi.saveProject(project.getName());
-    // ??? Why is success
-    throw new io.cucumber.java.PendingException("a project called {projectName} created by {userName}");
+    ctx.appApi.createProject(project.getAlias());
   }
+
 
   @When("{userName} creates timeentry for {projectName}")
   public void user_creates_timeentry_for_project(UserEmail user, Project project) {
@@ -40,20 +38,14 @@ public class TimesheetsOperations {
   @Then("number of timesheets in {projectName} is zero")
   public void number_of_timesheets_in_project_is_zero(Project project) {
       // Write code here that turns the phrase above into concrete actions
-      throw new io.cucumber.java.PendingException("number of timesheets in project {projectName} is zero");
+      throw new PendingException("number of timesheets in project {projectName} is zero");
   }
 
   @When("User {userName} assigns {userName} to {projectName}")
   public void owner_assigns_operator_to_project(UserEmail owner, UserEmail operator, Project project) {
     var ctx = sessions.getOrCreate(owner);
-    var projectId = projectId(ctx.appApi, project);
+    var projectAlias = project.getAlias();
+    var projectId = ctx.getState().getProjectByAlias(projectAlias);
     // var result = ctx.appApi. .newAction(projectId, LocalDate.now());
-  }
-
-  private String projectId(AppApi api, Project project) {
-    var projectName = project.getName();
-    var projectData = api.projectList(projectName);
-    var projectId = projectData.getList().get(0).getEntity().entityId;
-    return projectId;
   }
 }

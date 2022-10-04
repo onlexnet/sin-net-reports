@@ -14,6 +14,7 @@ import io.smallrye.graphql.client.GraphQLClientException;
 import io.vavr.collection.Stream;
 import lombok.val;
 import lombok.experimental.ExtensionMethod;
+import net.onlex.api.AppApi;
 import net.onlex.support.Sessions;
 import net.onlex.support.UserEmail;
 
@@ -43,25 +44,24 @@ public class ProjectManagement {
   @Then("the project is visible on the list of projects")
   public void the_project_is_visible_on_the_list_of_projects() {
     var ctx = session.getActiveUser();
-    var projectName = ctx.lastProject;
-    var expectedName = projectName.getName();
+    var projectName = ctx.state.getLastCreatedProject();
+    var expectedName = projectName.alias();
     var projects = ctx.appApi.projectList(expectedName);
     assertThat(projects.getList().stream().map(it -> it.getName())).contains(expectedName);
   }
 
   @When("User {userName} creates new project")
   public void user_creates_new_project(UserEmail email) {
-    var projectName = "My new project [" + RandomStringUtils.randomAlphabetic(4) + "]";
+    var projectAlias = "My new project";
     var ctx = session.tryGet(email);
-    var projectEntity = ctx.appApi.saveProject(projectName).getSave();
-    ctx.lastProject = projectEntity;
+    ctx.appApi.createProject(projectAlias);
   }
 
   @When("User {userName} deletes lastly created project")
   public void user_deletes_lastly_create_project(UserEmail email) {
     var ctx = session.tryGet(email);
-    var id = ctx.lastProject;
-    var projectId = new AppApi.ProjectId(id.getEntity().getEntityId(), 0);
+    var id = ctx.state.getLastCreatedProject();
+    var projectId = new AppApi.ProjectId(id.entity().getEntity().getEntityId(), 0);
     ctx.appApi.removeProject(projectId);
   }
 
@@ -70,7 +70,7 @@ public class ProjectManagement {
       val maximumOfProjects = 10; // business decision, undocumented
       var ctx = session.tryGet(userEmail);
       Stream.rangeClosed(1, maximumOfProjects).forEach(projectNo -> {
-        ctx.appApi.saveProject("new Project " + projectNo);
+        ctx.appApi.createProject("new Project " + projectNo);
       });
   }
   
@@ -79,7 +79,7 @@ public class ProjectManagement {
     var ctx = session.getActiveUser();
     var randomProjectName = RandomStringUtils.randomAlphanumeric(6);
     Assertions
-      .assertThatCode(() -> ctx.appApi.saveProject("New Extra Project " + randomProjectName))
+      .assertThatCode(() -> ctx.appApi.createProject("New Extra Project " + randomProjectName))
       .isInstanceOf(GraphQLClientException.class);
   }
 }

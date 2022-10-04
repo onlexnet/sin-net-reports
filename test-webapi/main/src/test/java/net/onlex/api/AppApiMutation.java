@@ -1,35 +1,22 @@
-package net.onlex;
+package net.onlex.api;
 
 import java.time.LocalDate;
-import java.util.List;
 
 import org.eclipse.microprofile.graphql.Id;
 import org.eclipse.microprofile.graphql.Mutation;
 import org.eclipse.microprofile.graphql.NonNull;
-import org.eclipse.microprofile.graphql.Query;
 
-import io.smallrye.graphql.client.typesafe.api.GraphQLClientApi;
 import io.smallrye.graphql.client.typesafe.api.NestedParameter;
 import lombok.Data;
 import lombok.Value;
 
-// headers: https://smallrye.io/smallrye-graphql/1.4.2/typesafe-client-headers/
-
-// @GraphQLClientApi(configKey = "beta-sinnetapp") // - in case of testing remove env
-@GraphQLClientApi(configKey = "local-sinnetapp") // - in case of testing local stack
-public interface AppApi {
+public interface AppApiMutation {
 
   @Mutation("Projects")
-  SaveProjectQuery saveProject(@NestedParameter("save") @NonNull String name);
+  SaveProjectResult saveProject(@NestedParameter("save") @NonNull String name);
 
   @Mutation("Projects")
   RemoveProjectQuery removeProject(@NestedParameter("remove") @NonNull ProjectId projectId);
-
-  @Query("Projects")
-  ProjectListQuery projectList(@NestedParameter("list") @NonNull String name);
-
-  @Query("Projects")
-  ProjectsQuery3 projectsCount();
 
   @Mutation("Actions")
   NewActionResult newAction(@NonNull @Id String projectId, @NestedParameter("newAction") @NonNull LocalDate whenProvided);
@@ -54,7 +41,7 @@ public interface AppApi {
 
 
   @Data
-  class SaveProjectQuery {
+  class SaveProjectResult {
     ProjectEntity save;
   }
 
@@ -62,18 +49,9 @@ public interface AppApi {
   class RemoveProjectQuery {
     Boolean remove;
   }
-  @Data
-  class ProjectListQuery {
-    private List<ProjectEntity> list;
-  }
 
   @Data
-  class ProjectsQuery3 {
-    private int numberOfProjects;
-  }
-
-  @Data
-  class Entity {
+  class EntityInput {
     String projectId;
     String entityId;
     int entityVersion;
@@ -81,7 +59,7 @@ public interface AppApi {
 
   @Data
   class ProjectEntity {
-    private @NonNull Entity entity;
+    private @NonNull EntityInput entity;
     private @NonNull String name;
   }
 

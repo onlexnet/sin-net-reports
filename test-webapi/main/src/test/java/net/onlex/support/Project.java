@@ -1,16 +1,13 @@
 package net.onlex.support;
 
-import org.apache.commons.lang3.RandomStringUtils;
-
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class Project {
 
-  private final String named;
-  private final String randomSuffix = RandomStringUtils.randomAlphabetic(6);
+  /** In gherkin we use just an alias to name projects, but - fot sake of database constraints - used name should be unique so that we may avoid duplication of project names. */
+  @Getter
+  private final String alias;
 
-  public String getName() {
-    return named + " [" + randomSuffix + "]";
-  }
 }

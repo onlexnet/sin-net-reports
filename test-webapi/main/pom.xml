@@ -133,6 +133,7 @@
           <compilerArgs>
             <arg>-parameters</arg>
           </compilerArgs>
+          <release>17</release>
         </configuration>
       </plugin>
       <plugin>

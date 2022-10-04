@@ -44,14 +44,14 @@ P2=$!
 # Base dev ports:
 # http: 11030
 # grpc: 11031
-# debug: 11032
+# debug: 11039
 cd ../../uservice-projects/main
-export DATABASE_NAME=devlocaldb && export DATABASE_SCHEMA=uservice_projects && \
+export DATABASE_NAME=devlocaldb && export DATABASE_SCHEMA=uservice_projects &&  \
 dapr --app-id projects \
 --components-path ../../.components run \
 --app-port 11031 --app-protocol grpc \
 -- \
-mvn quarkus:dev -pl host &
+mvn quarkus:dev -pl host -Ddebug=11039 &
 P3=$!
 
 

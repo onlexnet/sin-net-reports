@@ -1,16 +1,11 @@
 package net.onlex.support;
 
-import java.util.Base64;
-import java.util.List;
-
-import io.smallrye.graphql.client.typesafe.api.TypesafeGraphQLClientBuilder;
-import io.smallrye.jwt.build.Jwt;
 import io.vavr.collection.HashMap;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
-import net.onlex.AppApi;
-import net.onlex.AppApi.ProjectEntity;
+import net.onlex.api.AppApiStateful;
+import net.onlex.api.SessionState;
 
 public final class Sessions {
 
@@ -23,22 +18,14 @@ public final class Sessions {
   public UserContext active;
 
   public void given(UserEmail userEmail) {
-    var secret = "my super secret key to sign my dev JWT token";
-    var keyBytes = new String(Base64.getEncoder().encode(secret.getBytes()));
-    var builder = Jwt.claims();
-    var token = builder
-        .issuer("https://issuer.org")
-        .claim("emails", List.of(userEmail.getEmail()))
-        .signWithSecret(keyBytes);
-    var bearer = String.format("Bearer %s", token);
-    var appApi = TypesafeGraphQLClientBuilder.newBuilder()
-        .header("Authorization", bearer)
-        .build(AppApi.class);
-    var active = new UserContext(appApi, null, 0);
+    var state = new SessionState(userEmail.getEmail());
+    var statefulAppApi = new AppApiStateful(state);
+    var active = new UserContext(state, statefulAppApi);
     users = users.put(userEmail, active);
     activeUser = active;
   }
 
+  /** Return context of already defined user, otherwise throws a exception */
   public UserContext tryGet(UserEmail userEmail) {
     var active = users.get(userEmail).get();
     activeUser = active;
@@ -62,9 +49,8 @@ public final class Sessions {
   @Data
   @AllArgsConstructor
   public static class UserContext {
-    public AppApi appApi;
-    public ProjectEntity lastProject;
-    public Integer knownNumberOfProjects;
+    public SessionState state;
+    public AppApiStateful appApi;
   }
 
 }
