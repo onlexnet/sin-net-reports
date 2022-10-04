@@ -19,14 +19,16 @@ public final class TimesheetsOperations {
   }
 
 
-  @When("{userName} creates timeentry for {projectName}")
-  public void user_creates_timeentry_for_project(UserEmail user, Project project) {
-    throw new io.cucumber.java.PendingException("{userName} creates timeentry for {projectName}");
-    // var ctx = sessions.getOrCreate(user);
-    // var projectId = projectId(ctx.appApi, project);
-    // ctx.appApi.newAction(projectId, whenProvided)
-    //   // Write code here that turns the phrase above into concrete actions
-    //   throw new io.cucumber.java.PendingException("{userName} creates timeentry for {projectName}");
+  @When("{userName} creates timeentry for {projectName} owned by {userName}")
+  public void user_creates_timeentry_for_project(UserEmail operator, Project project, UserEmail projectOwner) {
+    var projectAlias = project.getAlias();
+    var ownerCtx = sessions.getOrCreate(projectOwner);
+    var maybeProject = ownerCtx.getState().getProjectByAlias(projectAlias);
+    var ctx = sessions.getOrCreate(operator);
+    var projectId = maybeProject.orElseThrow().entity().getEntity().getEntityId();
+    ctx.appApi.createTimeentry(projectId);
+    // !!! No assertion yet
+    throw new io.cucumber.java.PendingException("{userName} creates timeentry for {projectName} owned by {userName}");
   }
 
   @Then("operation is rejected")
@@ -45,7 +47,8 @@ public final class TimesheetsOperations {
   public void owner_assigns_operator_to_project(UserEmail owner, UserEmail operator, Project project) {
     var ctx = sessions.getOrCreate(owner);
     var projectAlias = project.getAlias();
-    var projectId = ctx.getState().getProjectByAlias(projectAlias);
-    // var result = ctx.appApi. .newAction(projectId, LocalDate.now());
+    var projectId = ctx.getState().getProjectByAlias(projectAlias).get();
+    var operatorEmail = operator.getName();
+    ctx.appApi.assignOperator(projectId, operatorEmail);
   }
 }

@@ -1,24 +1,24 @@
 package sinnet.gql.api;
 
+import javax.inject.Inject;
+
 import org.eclipse.microprofile.graphql.GraphQLApi;
 import org.eclipse.microprofile.graphql.NonNull;
 import org.eclipse.microprofile.graphql.Source;
 
-import io.quarkus.grpc.GrpcClient;
 import io.smallrye.mutiny.Uni;
 import io.vavr.collection.Iterator;
 import lombok.extern.slf4j.Slf4j;
 import sinnet.gql.Transform;
 import sinnet.gql.models.User;
+import sinnet.grpc.GrpcUsers;
 import sinnet.grpc.users.SearchRequest;
-import sinnet.grpc.users.Users;
 
 @GraphQLApi
 @Slf4j
 public class UsersQuerySearch {
 
-  @GrpcClient("activities")
-  Users service;
+  @Inject GrpcUsers service;
 
   public @NonNull Uni<@NonNull User[]> search(@Source UsersQuery self) {
     var request = SearchRequest.newBuilder()

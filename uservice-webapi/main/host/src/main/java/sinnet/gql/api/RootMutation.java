@@ -10,19 +10,17 @@ import org.eclipse.microprofile.graphql.Name;
 import org.eclipse.microprofile.graphql.NonNull;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 
-import io.quarkus.grpc.GrpcClient;
 import io.smallrye.mutiny.Uni;
 import sinnet.gql.models.ActionsMutation;
 import sinnet.gql.models.ProjectsMutation;
 import sinnet.gql.security.AccessProvider;
+import sinnet.grpc.GrpcRbac;
 import sinnet.grpc.projects.UserToken;
-import sinnet.grpc.roles.Rbac;
 
 @GraphQLApi
 public class RootMutation {
 
-  @GrpcClient("activities")
-  Rbac projectsGrpc;
+  @Inject GrpcRbac projectsGrpc;
 
   @Inject
   AccessProvider accessProvider;

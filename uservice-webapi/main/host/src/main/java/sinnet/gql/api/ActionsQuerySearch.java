@@ -1,10 +1,11 @@
 package sinnet.gql.api;
 
+import javax.inject.Inject;
+
 import org.eclipse.microprofile.graphql.GraphQLApi;
 import org.eclipse.microprofile.graphql.NonNull;
 import org.eclipse.microprofile.graphql.Source;
 
-import io.quarkus.grpc.GrpcClient;
 import io.smallrye.mutiny.Uni;
 import io.vavr.collection.List;
 import lombok.extern.slf4j.Slf4j;
@@ -14,15 +15,14 @@ import sinnet.gql.Transform;
 import sinnet.gql.models.ActionsQuery;
 import sinnet.gql.models.ServiceFilter;
 import sinnet.gql.models.ServicesSearchResult;
+import sinnet.grpc.GrpcTimeEntries;
 import sinnet.grpc.timeentries.SearchQuery;
-import sinnet.grpc.timeentries.TimeEntries;
 
 @GraphQLApi
 @Slf4j
 public class ActionsQuerySearch implements TimeentriesMapper {
 
-  @GrpcClient("activities")
-  TimeEntries service;
+  @Inject GrpcTimeEntries service;
 
   public @NonNull Uni<@NonNull ServicesSearchResult> search(@Source ActionsQuery self, ServiceFilter filter) {
     var query = SearchQuery.newBuilder()

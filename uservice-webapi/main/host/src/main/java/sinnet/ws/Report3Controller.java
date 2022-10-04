@@ -2,6 +2,7 @@ package sinnet.ws;
 
 import java.util.UUID;
 
+import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -18,7 +19,7 @@ import io.vavr.collection.HashMap;
 import io.vavr.collection.List;
 import sinnet.gql.TimeentriesMapper;
 import sinnet.gql.utils.PropsBuilder;
-import sinnet.grpc.customers.Customers;
+import sinnet.grpc.GrpcCustomers;
 import sinnet.grpc.customers.ListReply;
 import sinnet.grpc.customers.ListRequest;
 import sinnet.report3.grpc.CustomerDetails;
@@ -29,8 +30,7 @@ import sinnet.report3.grpc.Reports;
 @Path("/api/raporty")
 public class Report3Controller implements TimeentriesMapper {
 
-  @GrpcClient("activities")
-  Customers customera;
+  @Inject GrpcCustomers customera;
 
   @GrpcClient("uservice-reports")
   Reports reportsClient;

@@ -9,13 +9,15 @@ Feature: Timesheet Operations
     
   Rule:
 
+    @todo
     Scenario: Reject creation of a timesheet by unpermitted person
-      When operator1 creates timeentry for project1
+      When operator1 creates timeentry for project1 owned by user1
       Then operation is rejected
       And number of timesheets in project1 is zero
 
+    @now
     Scenario: Create new timesheet by a project operator
       When User user1 assigns operator1 to project1
-      And operator1 creates timeentry for project1
+      And operator1 creates timeentry for project1 owned by user1
       Then number of timesheets in project1 is zero
 

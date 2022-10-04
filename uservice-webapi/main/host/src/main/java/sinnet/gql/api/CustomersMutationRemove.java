@@ -1,16 +1,17 @@
 package sinnet.gql.api;
 
 
+import javax.inject.Inject;
+
 import org.eclipse.microprofile.graphql.GraphQLApi;
 import org.eclipse.microprofile.graphql.NonNull;
 import org.eclipse.microprofile.graphql.Source;
 
-import io.quarkus.grpc.GrpcClient;
 import io.smallrye.mutiny.Uni;
 import lombok.extern.slf4j.Slf4j;
 import sinnet.gql.Transform;
 import sinnet.gql.models.Entity;
-import sinnet.grpc.customers.Customers;
+import sinnet.grpc.GrpcCustomers;
 import sinnet.grpc.customers.RemoveReply;
 import sinnet.grpc.customers.RemoveRequest;
 
@@ -18,8 +19,7 @@ import sinnet.grpc.customers.RemoveRequest;
 @Slf4j
 public class CustomersMutationRemove implements CustomerMapper {
 
-  @GrpcClient("activities")
-  Customers service;
+  @Inject GrpcCustomers service;
 
   public @NonNull Uni<@NonNull Boolean> remove(@Source CustomersMutation self, @NonNull Entity id) {
     var cmd = RemoveRequest.newBuilder()

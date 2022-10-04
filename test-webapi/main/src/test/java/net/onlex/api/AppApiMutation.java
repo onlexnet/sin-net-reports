@@ -21,6 +21,20 @@ public interface AppApiMutation {
   @Mutation("Actions")
   NewActionResult newAction(@NonNull @Id String projectId, @NestedParameter("newAction") @NonNull LocalDate whenProvided);
 
+  @Mutation("Projects")
+  WithOperatorResult assignOperator(@NestedParameter("project") @NonNull @Id String eid,
+      @NestedParameter("project") @NonNull @Id long etag,
+      @NestedParameter("project.withOperator") @NonNull String operatorEmail);
+
+  @Data
+  class WithOperatorResult {
+    WithOperatorResult2 project;
+  }
+  @Data
+  class WithOperatorResult2 {
+    ProjectIdModel withOperator;
+  }
+
   @Data
   class NewActionResult {
     NewActionResultNewAction newAction;
@@ -65,6 +79,12 @@ public interface AppApiMutation {
 
   @Value
   class ProjectId {
+    private String id;
+    private long tag;
+  }
+
+  @Data
+  class ProjectIdModel {
     private String id;
     private long tag;
   }

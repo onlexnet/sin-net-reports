@@ -11,7 +11,7 @@
             "request": "attach",
             "hostName": "localhost",
             "name": "Debug Quarkus application (host) with Dapr",
-            "port": 11012,
+            "port": 11019,
             "postDebugTask": "daprd-down"
         }
     ]

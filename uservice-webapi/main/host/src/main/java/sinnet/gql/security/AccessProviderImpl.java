@@ -6,20 +6,18 @@ import javax.json.JsonArray;
 
 import org.eclipse.microprofile.jwt.JsonWebToken;
 
-import io.quarkus.grpc.GrpcClient;
 import io.smallrye.mutiny.Uni;
 import lombok.extern.slf4j.Slf4j;
 import sinnet.gql.Transform;
+import sinnet.grpc.GrpcRbac;
 import sinnet.grpc.common.UserToken;
 import sinnet.grpc.roles.GetRequest;
-import sinnet.grpc.roles.Rbac;
 
 @ApplicationScoped
 @Slf4j
 public class AccessProviderImpl implements AccessProvider {
 
-    @GrpcClient("activities")
-    Rbac projectsGrpc;
+    @Inject GrpcRbac projectsGrpc;
   
     @Inject
     JsonWebToken jwt;

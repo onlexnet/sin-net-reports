@@ -14,6 +14,12 @@ public class SessionState {
     private final String userEmail;
     private final Collection<ProjectModel> createdProjects = new LinkedList<>();
 
+    void on(OperatorAssigned event) {
+    }
+
+    void on(TimeentryCreated event) {
+    }
+
     void on(ProjectCreated event) {
         var entity = event.entity();
         var projectAlias = event.projectAlias();
@@ -48,4 +54,6 @@ sealed interface AppEvent { }
 
 record ProjectCreated (ProjectEntity entity, String projectAlias) implements AppEvent { }
 record ProjectRemoved (ProjectId entity) implements AppEvent { }
+record TimeentryCreated () implements AppEvent { }
+record OperatorAssigned () implements AppEvent { }
 
