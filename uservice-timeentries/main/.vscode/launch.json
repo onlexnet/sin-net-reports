@@ -7,14 +7,20 @@
         {
             "type": "java",
             "name": "Launch Program with Dapr",
-            "request": "launch",
-            "mainClass": "sinnet.Program",
+            "request": "attach",
             "projectName": "host",
-            "env": {
-                "SPRING_PROFILES_ACTIVE": "dev",
-                "APP_DB_HOST": "localhost",
-                "DATABASE_NAME": "devlocaldb"
-            },
+            "hostName": "localhost",
+            "port": 11029,
+            "preLaunchTask": "dapr-debug",
+            "postDebugTask": "dapr-down"
+        },
+        {
+            "type": "java",
+            "name": "Launch Program with Dapr with Dapr",
+            "request": "attach",
+            "projectName": "host",
+            "hostName": "localhost",
+            "port": 11019,
             "preLaunchTask": "dapr-debug",
             "postDebugTask": "daprd-down"
         }

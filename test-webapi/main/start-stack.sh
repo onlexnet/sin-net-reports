@@ -27,7 +27,7 @@ P1=$!
 # Base dev ports:
 # http: 11020
 # grpc: 11021
-# debug: 11022
+# debug: 11029
 cd ../../uservice-timeentries/main
 
 # rebuild dependant modules before starting spring boot
