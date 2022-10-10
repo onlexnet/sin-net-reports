@@ -1,89 +1,48 @@
 package sinnet;
 
+import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
 import javax.inject.Inject;
 
-import org.apache.commons.lang3.RandomStringUtils;
 import org.assertj.core.api.Assertions;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
-import io.quarkus.grpc.GrpcClient;
 import io.quarkus.test.junit.QuarkusTest;
 import io.vavr.Function1;
 import lombok.SneakyThrows;
 import lombok.val;
-import sinnet.grpc.projects.CreateRequest;
-import sinnet.grpc.projects.GetRequest;
-import sinnet.grpc.projects.ListRequest;
 import sinnet.grpc.projects.Project;
-import sinnet.grpc.projects.ProjectId;
 import sinnet.grpc.projects.ProjectModel;
-import sinnet.grpc.projects.ProjectsGrpc;
-import sinnet.grpc.projects.RemoveCommand;
-import sinnet.grpc.projects.UpdateCommand;
-import sinnet.grpc.projects.UserToken;
-
-import static io.restassured.RestAssured.given;
 
 @QuarkusTest
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class ProjectsITest {
 
   @Inject
-  @GrpcClient
-  ProjectsGrpc.ProjectsBlockingStub self;
+  AppOperations operations;
 
   private static Function1<Project, String> mapProjectToName = Function1.of(Project::getModel)
       .andThen(ProjectModel::getName);
 
   
-  @Nested
-  class ShouldValidate {
-
-    final int maximumSizeOfUserEmail = 50;
-
-    @Test
-    void too_long_name() {
-      var tooLongEmail = RandomStringUtils.randomAlphanumeric(maximumSizeOfUserEmail + 1);
-      Assertions
-          .assertThatCode(() -> ProjectsITest.this.create(tooLongEmail))
-          .isInstanceOfSatisfying(StatusRuntimeException.class,
-            ex -> assertThat(ex.getStatus().getCode()).isEqualTo(Status.FAILED_PRECONDITION.getCode()));
-    }
-
-    @Test
-    void maximum_name() {
-      var longEmail = RandomStringUtils.randomAlphanumeric(maximumSizeOfUserEmail);
-      Assertions
-          .assertThatCode(() -> ProjectsITest.this.create(longEmail))
-          .doesNotThrowAnyException();
-    }
-  }
   
   @Test
   void should_create() {
-    var ownerName = generateOwnerEmail();
-    var projectId = create(ownerName);
+    var ownerName = operations.generateOwnerEmail();
+    var projectId = operations.create(ownerName);
 
-    var updatedId = update(projectId, "my name", ownerName);
+    var updatedId = operations.update(projectId, "my name", ownerName);
     assertThat(updatedId.getEId()).isEqualTo(projectId.getEId());
     assertThat(updatedId.getETag()).isEqualTo(projectId.getETag() + 1);
 
-    var projectsOfOwner = listOfProjects(ownerName, Function1.identity());
+    var projectsOfOwner = operations.listOfProjects(ownerName, Function1.identity());
     assertThat(projectsOfOwner)
         .as("List of projects contains just created entry")
         .isNotEmpty();
@@ -101,30 +60,30 @@ class ProjectsITest {
 
   @Test
   void should_limit_number_of_free_projects() {
-    var ownerName = generateOwnerEmail();
+    var ownerName = operations.generateOwnerEmail();
 
     // lets create 10 free projects
     val limit_of_free_projects = 10;
     for (int i = 0; i < limit_of_free_projects; i++) {
-      update(create(ownerName), "my name", ownerName);
+      operations.update(operations.create(ownerName), "my name", ownerName);
     }
 
 
     Assertions
-        .assertThatCode(() -> update(create(ownerName), "my name", ownerName))
+        .assertThatCode(() -> operations.update(operations.create(ownerName), "my name", ownerName))
         .isInstanceOfSatisfying(StatusRuntimeException.class,
             ex -> assertThat(ex.getStatus().getCode()).isEqualTo(Status.RESOURCE_EXHAUSTED.getCode()));
   }
 
   @Test
   void should_remove() {
-    var ownerName = generateOwnerEmail();
-    var projectId = create(ownerName);
+    var ownerName = operations.generateOwnerEmail();
+    var projectId = operations.create(ownerName);
 
-    update(projectId, "my name", ownerName);
-    remove(projectId, ownerName);
+    operations.update(projectId, "my name", ownerName);
+    operations.remove(projectId, ownerName);
 
-    var projectsOfOwner = listOfProjects(ownerName, Function1.identity());
+    var projectsOfOwner = operations.listOfProjects(ownerName, Function1.identity());
     assertThat(projectsOfOwner)
         .as("List of projects does not contain just deleted project")
         .isEmpty();
@@ -132,40 +91,40 @@ class ProjectsITest {
 
   @Test
   public void should_update() {
-    var ownerEmail = generateOwnerEmail();
+    var ownerEmail = operations.generateOwnerEmail();
     
-    var projectId = create(ownerEmail);
+    var projectId = operations.create(ownerEmail);
 
-    var updateCmd = newUpdateCommand(projectId, "my name", ownerEmail, ownerEmail);
-    var updateResult = self.update(updateCmd);
+    var updateCmd = operations.newUpdateCommand(projectId, "my name", ownerEmail, ownerEmail);
+    var updateResult = operations.update(updateCmd);
 
-    var newOwnerEmail = generateOwnerEmail();
-    updateCmd = newUpdateCommand(updateResult.getEntityId(), "my new name", newOwnerEmail, ownerEmail);
-    self.update(updateCmd);
+    var newOwnerEmail = operations.generateOwnerEmail();
+    updateCmd = operations.newUpdateCommand(updateResult.getEntityId(), "my new name", newOwnerEmail, ownerEmail);
+    operations.update(updateCmd);
 
-    var projectsOfOwner = listOfProjects(ownerEmail, mapProjectToName);
+    var projectsOfOwner = operations.listOfProjects(ownerEmail, mapProjectToName);
     assertThat(projectsOfOwner).isEmpty();
 
-    var projectsOfNewOwner = listOfProjects(newOwnerEmail, mapProjectToName);
+    var projectsOfNewOwner = operations.listOfProjects(newOwnerEmail, mapProjectToName);
     assertThat(projectsOfNewOwner).containsExactly("my new name");
   }
 
   @Test
   void should_reject_stale_updates_for_entity() {
-    var ownerEmail = generateOwnerEmail();
-    var projectId = create(ownerEmail);
+    var ownerEmail = operations.generateOwnerEmail();
+    var projectId = operations.create(ownerEmail);
 
-    var updateCmdBuilder = newUpdateCommand(projectId, "my name", ownerEmail, ownerEmail);
-    self.update(updateCmdBuilder);
+    var updateCmdBuilder = operations.newUpdateCommand(projectId, "my name", ownerEmail, ownerEmail);
+    operations.update(updateCmdBuilder);
 
-    var newOwnerEmail = generateOwnerEmail();
-    var updateCmdBuilder2 = newUpdateCommand(projectId, "my new name", ownerEmail, newOwnerEmail);
+    var newOwnerEmail = operations.generateOwnerEmail();
+    var updateCmdBuilder2 = operations.newUpdateCommand(projectId, "my new name", ownerEmail, newOwnerEmail);
 
-    assertThatCode(() -> self.update(updateCmdBuilder2))
+    assertThatCode(() -> operations.update(updateCmdBuilder2))
         .isInstanceOfSatisfying(StatusRuntimeException.class,
             ex -> assertThat(ex.getStatus().getCode()).isEqualTo(Status.FAILED_PRECONDITION.getCode()));
 
-    var actual = listOfProjects(ownerEmail, mapProjectToName);
+    var actual = operations.listOfProjects(ownerEmail, mapProjectToName);
     assertThat(actual).containsExactly("my name");
   }
 
@@ -173,26 +132,9 @@ class ProjectsITest {
   @SneakyThrows
   void should_initialize_predefined_projects() {
     val knownOwnerOfPredefinedProjects = "siudeks@gmail.com";
-    var reply = self.list(ListRequest.newBuilder().setEmailOfRequestor(knownOwnerOfPredefinedProjects).build());
-    var actual = reply.getProjectsList();
+    var actual = operations.listOfProjects(knownOwnerOfPredefinedProjects, Function1.identity());
     assertThat(actual).size().isNotZero();
-
   }
-
-  @Test
-  void should_add_operator() {
-    var ownerEmail = generateOwnerEmail();
-    var projectId = create(ownerEmail);
-    var model = get(projectId);
-    var operatorEmail = generateUserEmail();
-    model = model.toBuilder().addEmailOfOperator(operatorEmail).build();
-    this.update(ownerEmail, projectId, model);
-
-    var updatedModel = get(projectId);
-    Assertions.assertThat(updatedModel.getEmailOfOperatorCount()).isEqualTo(1);
-    Assertions.assertThat(updatedModel.getEmailOfOperator(0)).isEqualTo(operatorEmail);
-  }
-
 
   @Test
   public void getHealth() {
@@ -210,90 +152,6 @@ class ProjectsITest {
         .then()
         .statusCode(200)
         .body("status", Matchers.equalTo("UP"));
-  }
-
-  private String generateUserEmail() {
-    return generateOwnerEmail();
-  }
-
-  @Deprecated
-  private String generateOwnerEmail() {
-    // %tT - time format hhmmss    
-    var randomPart = RandomStringUtils.randomAlphabetic(6);
-    return String.format("%tT-%s@example.com", LocalDateTime.now(), randomPart);
-  }
-
-  private ProjectId create(String emailOfUser) {
-    var reserveCmd = CreateRequest.newBuilder()
-        .setUserToken(UserToken.newBuilder()
-            .setRequestorEmail(emailOfUser))
-        .build();
-    var reserveResult = self.create(reserveCmd);
-    return reserveResult.getEntityId();
-  }
-
-  private ProjectModel get(ProjectId id) {
-    var request = GetRequest.newBuilder()
-        .setProjectId(id)
-        .build();
-    var getReply = self.get(request);
-    return getReply.getModel();
-  }
-
-  private static UpdateCommand newUpdateCommand(ProjectId projectId, String name, String newOwner, String currentOwner, String... operators) {
-    return UpdateCommand.newBuilder()
-        .setEntityId(projectId)
-        .setDesired(ProjectModel.newBuilder()
-            .setName(name)
-            .setEmailOfOwner(newOwner)
-            .addAllEmailOfOperator(Arrays.asList(operators)))
-        .setUserToken(UserToken.newBuilder()
-            .setRequestorEmail(currentOwner))
-        .build();
-  }
-
-  private static RemoveCommand newRemoveCommand(ProjectId projectId, String emailOfOwner) {
-    return RemoveCommand.newBuilder()
-        .setProjectId(projectId)
-        .setUserToken(UserToken.newBuilder()
-            .setRequestorEmail(emailOfOwner)
-            .build())
-        .build();
-  }
-
-  private ProjectId update(ProjectId projectId, String name, String emailOfOwner) {
-    return this.update(projectId, name, emailOfOwner, emailOfOwner);
-  }
-
-  private ProjectId update(ProjectId projectId, String name, String emailOfOwner, String newOwner) {
-    var updateCmd = newUpdateCommand(projectId, name, emailOfOwner, newOwner);
-    var result = self.update(updateCmd);
-    return result.getEntityId();
-  }
-
-  private ProjectId update(String currentOwner, ProjectId projectId, ProjectModel projectModel) {
-    var cmd = UpdateCommand.newBuilder()
-        .setEntityId(projectId)
-        .setDesired(projectModel)
-        .setUserToken(UserToken.newBuilder()
-            .setRequestorEmail(currentOwner))
-        .build();
-    var result = self.update(cmd);
-    return result.getEntityId();
-  }
-
-  private boolean remove(ProjectId projectId, String emailOfOwner) {
-    var cmd = newRemoveCommand(projectId, emailOfOwner);
-    var result = self.remove(cmd);
-    return result.getSuccess();
-  }
-
-  private <T> List<T> listOfProjects(String emailOfOwner, Function<Project, T> map) {
-    var listQuery = ListRequest.newBuilder()
-        .setEmailOfRequestor(emailOfOwner)
-        .build();
-    var listResponse = self.list(listQuery);
-    return listResponse.getProjectsList().stream().map(map).collect(Collectors.toList());
   }
 
 }

@@ -14,8 +14,7 @@ import sinnet.grpc.timeentries.TimeEntries;
 @RequiredArgsConstructor
 public class GrpcTimeEntries{
 
- 
-  private final @GrpcClient("activities") TimeEntries service;
+  private final @GrpcClient("uservice-activities-config") TimeEntries service;
 
   @Delegate
   private TimeEntries interceptedService;

@@ -5,6 +5,7 @@ import java.util.function.BiFunction;
 import org.slf4j.Logger;
 
 import io.vavr.Function1;
+import lombok.val;
 import lombok.experimental.UtilityClass;
 import sinnet.gql.exceptions.InternalException;
 import sinnet.grpc.roles.GetReply;
@@ -15,12 +16,14 @@ public class Transform {
     public static <T> BiFunction<GetReply, Throwable, T> secured(Logger log, Function1<GetReply, T> handler) {
         return (it, ex) -> {
             if (ex != null) {
-                log.error("Internal error", ex);
-                throw new InternalException();
+                val errorMessage = "Internal error";
+                log.error(errorMessage, ex);
+                throw new InternalException(errorMessage, ex);
             }
             if (it.getRole() == Role.NONE) {
-                log.error("Permission denied");
-                throw new InternalException();
+                val errorMesage = "Permission denied";
+                log.error(errorMesage);
+                throw new InternalException(errorMesage);
             }
             return handler.apply(it);
         };

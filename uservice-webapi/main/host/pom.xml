@@ -6,7 +6,6 @@
     <groupId>onlexnet.sinnet</groupId>
     <artifactId>webapi-parent</artifactId>
     <version>${revision}</version>
-    <relativePath>../pom.xml</relativePath>
   </parent>
   <artifactId>sinnet-webapi</artifactId>
   <name>sinnet-webapi-host</name>
@@ -70,6 +69,10 @@
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-smallrye-openapi</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-smallrye-context-propagation</artifactId>
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>

@@ -34,8 +34,9 @@ cd ../../uservice-timeentries/main
 mvn -Dmaven.test.skip=true install -pl host -am
 
 export APP_DB_HOST=localhost && export SPRING_PROFILES_ACTIVE=dev && \
-dapr --app-id timeentries \
+dapr --app-id activities \
 --components-path ../../.components run \
+--app-port 11021 --app-protocol grpc \
 -- \
 mvn spring-boot:run -pl host &
 P2=$!

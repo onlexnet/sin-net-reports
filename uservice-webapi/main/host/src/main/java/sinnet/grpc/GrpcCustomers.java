@@ -14,7 +14,7 @@ import sinnet.grpc.customers.Customers;
 @RequiredArgsConstructor
 public class GrpcCustomers{
 
-  private final @GrpcClient("activities") Customers service;
+  private final @GrpcClient("uservice-activities-config") Customers service;
 
   @Delegate
   private Customers interceptedService;

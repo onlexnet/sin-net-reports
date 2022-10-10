@@ -15,7 +15,7 @@ import sinnet.grpc.users.Users;
 public class GrpcUsers{
 
  
-  private final @GrpcClient("activities") Users service;
+  private final @GrpcClient("uservice-activities-config") Users service;
 
   @Delegate
   private Users interceptedService;

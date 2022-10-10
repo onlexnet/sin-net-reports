@@ -15,7 +15,7 @@ import sinnet.grpc.roles.Rbac;
 public class GrpcRbac{
 
  
-  private final @GrpcClient("activities") Rbac service;
+  private final @GrpcClient("uservice-activities-config") Rbac service;
 
   @Delegate
   private Rbac interceptedService;
