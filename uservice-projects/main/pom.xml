@@ -11,6 +11,7 @@
     <module>grpc-projects-proto</module>
     <module>grpc-parent-client</module>
     <module>grpc-projects-client</module>
+    <module>projects-api-events-client</module>
     <module>host</module>
     <module>init-db</module>
     <module>build-tools</module>
@@ -36,11 +37,22 @@
   
   <dependencyManagement>
     <dependencies>
+
       <dependency>
         <groupId>io.dapr</groupId>
         <artifactId>dapr-sdk</artifactId>
-        <version>1.5.0</version>
+        <version>1.6.0</version>
       </dependency>
+      <!--
+        DAPR requires also extra dependency to solve runtime startup issue
+        https://github.com/dapr/java-sdk/issues/515#issuecomment-800435671
+      -->
+      <dependency>
+        <groupId>com.squareup.okhttp3</groupId>
+        <artifactId>okhttp</artifactId>
+        <version>4.10.0</version>
+      </dependency>
+
       <dependency>
           <groupId>com.tngtech.archunit</groupId>
           <artifactId>archunit-junit5</artifactId>
@@ -76,6 +88,11 @@
           <artifactId>assertj-core</artifactId>
           <version>3.22.0</version>
           <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>onlexnet.sinnet</groupId>
+        <version>${project.version}</version>
+        <artifactId>projects-api-events-client</artifactId>
       </dependency>
     </dependencies>
   </dependencyManagement>

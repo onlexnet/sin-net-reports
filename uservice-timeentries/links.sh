@@ -5,3 +5,5 @@
 
 rm -rf .links
 mkdir .links
+
+ln -s $(realpath ../uservice-projects/api.grpc/) .links/uservice-projects-api

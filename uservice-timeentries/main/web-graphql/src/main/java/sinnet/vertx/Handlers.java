@@ -14,6 +14,7 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public final class Handlers {
 
+    /** Use handler to produce a response and send to given stream, otherwise logs exception. */
     public static <T, U> Handler<AsyncResult<T>> logged(Logger log, StreamObserver<U> responseObserver, Function1<T, U> handler) {
         return new LoggedHandlerResponse<>(log, responseObserver, handler);
     }

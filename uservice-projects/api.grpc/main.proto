@@ -1,10 +1,11 @@
 syntax = "proto3";
 
+package projects;
+import "common.proto";
+
 option java_package = "sinnet.grpc.projects";
 option java_outer_classname = "ProjectsProto";
 option java_multiple_files = true;
-
-package projects;
 
 service Projects {
   rpc create(CreateRequest) returns (CreateReply);
@@ -17,7 +18,7 @@ service Projects {
 
 message RemoveCommand {
   UserToken userToken = 1;
-  ProjectId projectId = 2;
+  common.ProjectId projectId = 2;
 }
 message RemoveResult {
   bool success = 1;
@@ -30,17 +31,17 @@ message CreateRequest {
 
 /** ProjectId of just created project. */
 message CreateReply {
-  ProjectId entityId = 1;
+  common.ProjectId entityId = 1;
 }
 
 /* Test comment. */
 message UpdateCommand {
   UserToken userToken = 1;
-  ProjectId entityId = 2;
+  common.ProjectId entityId = 2;
   ProjectModel desired = 3;
 }
 message UpdateResult {
-  ProjectId entityId = 1;
+  common.ProjectId entityId = 1;
 }
 
 message ListRequest {
@@ -51,7 +52,7 @@ message ListReply {
 }
 
 message GetRequest {
-  ProjectId projectId = 1;
+  common.ProjectId projectId = 1;
 }
 message GetReply {
   ProjectModel model = 1;
@@ -65,13 +66,8 @@ message UserStatsReply {
 }
 
 message Project {
-  ProjectId id = 1;
+  common.ProjectId id = 1;
   ProjectModel model = 2;
-}
-
-message ProjectId {
-  string eId = 1;
-  int64 eTag = 2;
 }
 
 message ProjectModel {

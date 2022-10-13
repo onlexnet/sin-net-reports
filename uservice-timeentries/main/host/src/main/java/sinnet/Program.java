@@ -7,7 +7,6 @@ import org.springframework.boot.SpringApplication;
 public final class Program {
 
   public static void main(final String[] args) {
-    System.out.println("siudek");
     // https://vertx.io/docs/vertx-sql-client-templates/java/#_java_datetime_api_mapping
     var mapper = io.vertx.core.json.jackson.DatabindCodec.mapper();
     mapper.registerModule(new JavaTimeModule());

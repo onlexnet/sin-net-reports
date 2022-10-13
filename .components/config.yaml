@@ -31,3 +31,18 @@ spec:
 #       endpointAddress: "http://localhost:9411/api/v2/spans"
 #   metrics:
 #     enabled: true
+
+---
+
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: pubsub
+spec:
+  type: pubsub.redis
+  version: v1
+  metadata:
+  - name: redisHost
+    value: localhost:6379
+  - name: redisPassword
+    value: ""

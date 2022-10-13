@@ -2,8 +2,9 @@ package sinnet.read.dailyreport;
 
 import java.time.LocalDate;
 
+import javax.persistence.Table;
+
 import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Table;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,7 +12,7 @@ import lombok.NoArgsConstructor;
 /** FixMe. */
 @NoArgsConstructor
 @Data
-@Table(Const.PROJECTION_NAME)
+@Table(name =  Const.PROJECTION_NAME)
 public class DailyReportEntry {
 
     /** Unique id of th record. */

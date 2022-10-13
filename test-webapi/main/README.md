@@ -30,6 +30,9 @@ mvn clean test # to run tests
 
 And, finally, find results of the test located *target/cucumber-reports.html*
 
+## Some examples
+- **mvn clean test -Dcucumber.filter.tags="@"** to run tests marked with tag *@only*
+
 ## useful links
 - [https://github.com/cucumber/cucumber-jvm](https://github.com/cucumber/cucumber-jvm)
 - [GraphQL client](https://hantsy.github.io/blog/2021/consuming-graphql-apis-with-quarkus/)

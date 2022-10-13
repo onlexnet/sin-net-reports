@@ -18,15 +18,6 @@
     <dependencies>
 
         <dependency>
-            <groupId>org.jmolecules</groupId>
-            <artifactId>jmolecules-cqrs-architecture</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jmolecules</groupId>
-            <artifactId>jmolecules-ddd</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>io.projectreactor</groupId>
             <artifactId>reactor-core</artifactId>
         </dependency>
@@ -60,7 +51,7 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jdbc</artifactId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
 
         <dependency>

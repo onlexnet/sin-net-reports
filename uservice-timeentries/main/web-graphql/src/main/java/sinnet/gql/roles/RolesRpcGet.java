@@ -11,7 +11,6 @@ import sinnet.grpc.roles.GetReply;
 import sinnet.grpc.roles.GetRequest;
 import sinnet.models.Email;
 import sinnet.read.RolesProjector;
-import sinnet.vertx.Handlers;
 
 @Component
 @Slf4j
@@ -25,10 +24,11 @@ public class RolesRpcGet implements Mapper {
       var email = Email.of(emailAsString);
       var projectIdAsString = userToken.getProjectId();
       var projectId = UUID.fromString(projectIdAsString);
-      rolesProjector.find(email, projectId)
-        .onComplete(Handlers.logged(log, responseObserver, it -> GetReply
-            .newBuilder()
-            .setRole(toDto(it))
-            .build()));
+      var result = rolesProjector.find(email, projectId);
+      var reply = GetReply.newBuilder()
+          .setRole(toDto(result))
+          .build();
+      responseObserver.onNext(reply);
+      responseObserver.onCompleted();
     }
 }

@@ -15,7 +15,7 @@ Feature: Timesheet Operations
       Then operation is rejected
       And number of timesheets in project1 is zero
 
-    @now
+    @only
     Scenario: Create new timesheet by a project operator
       When User user1 assigns operator1 to project1
       And operator1 creates timeentry for project1 owned by user1

@@ -10,6 +10,25 @@
   <artifactId>uservice-projects</artifactId>
   <name>projects-host</name>
   <dependencies>
+
+    <dependency>
+      <groupId>io.dapr</groupId>
+      <artifactId>dapr-sdk</artifactId>
+    </dependency>
+    <!--
+      DAPR requires also extra dependency to solve runtime startup issue
+      https://github.com/dapr/java-sdk/issues/515#issuecomment-800435671
+    -->
+    <dependency>
+      <groupId>com.squareup.okhttp3</groupId>
+      <artifactId>okhttp</artifactId>
+    </dependency>
+
+
+    <dependency>
+      <groupId>onlexnet.sinnet</groupId>
+      <artifactId>projects-api-events-client</artifactId>
+    </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-jacoco</artifactId>

@@ -2,18 +2,18 @@ package sinnet.read;
 
 import java.util.UUID;
 
-import io.vertx.core.Future;
 import sinnet.models.Email;
 
 public interface RolesProjector {
 
   interface Provider {
-
-    Future<Role> find(Email email, UUID projectId);
+    Role find(Email email, UUID projectId);
   }
 
   enum Role {
+    /** Either project is not defined, or user in the project is not defined. */
     NONE,
+    
     USER,
   }
 

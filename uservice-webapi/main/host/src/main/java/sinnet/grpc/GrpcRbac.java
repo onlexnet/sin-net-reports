@@ -24,7 +24,7 @@ public class GrpcRbac{
   void init() {
     var extraHeaders = new Metadata();
     var key = Metadata.Key.of("dapr-app-id", Metadata.ASCII_STRING_MARSHALLER);
-    extraHeaders.put(key, "activities");
+    extraHeaders.put(key, "activities-app-id");
     
     interceptedService = GrpcClientUtils.attachHeaders(service, extraHeaders);
   }
