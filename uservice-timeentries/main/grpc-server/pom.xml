@@ -22,6 +22,10 @@
   <dependencies>
     <dependency>
       <groupId>net.siudek</groupId>
+      <artifactId>timeentries-client-projects-events</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>net.siudek</groupId>
       <artifactId>grpc-common</artifactId>
     </dependency>
     <dependency>

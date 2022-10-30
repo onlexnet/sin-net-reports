@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>net.siudek</groupId>
+    <artifactId>sinnet</artifactId>
+    <version>${revision}</version>
+    <relativePath>../base-pom/pom.xml</relativePath>
+  </parent>
+  <artifactId>timeentries-client-projects-events</artifactId>
+
+  <properties>
+    <schema-folder-name>uservice-projects-events</schema-folder-name>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.avro</groupId>
+      <artifactId>avro</artifactId>
+      <version>1.11.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+
+  <build>
+    <plugins>
+
+
+      <!-- 
+        Copy files from linked folder to local folder to allow avro-maven-plugin processing them.
+        Such redundant operation  is required as using files from its original location
+        is currently ignored by avro-maven-plugin - see https://issues.apache.org/jira/browse/AVRO-3640
+      -->
+      <plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>3.0.0</version>
+        <executions>
+          <execution>
+            <id>copy-schema-files</id>
+            <phase>generate-resources</phase>
+            <configuration>
+              <target>
+                <copy todir="${project.build.directory}/.links/">
+                  <fileset dir="${basedir}/../../.links/" />
+                </copy>
+              </target>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+
+      <!-- For some reason such plugin can't read files from linked folder, so required schema files are copied in prev step to local folder -->
+      <plugin>
+        <groupId>org.apache.avro</groupId>
+        <artifactId>avro-maven-plugin</artifactId>
+        <version>1.11.1</version>
+        <executions>
+          <execution>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>schema</goal>
+            </goals>
+            <configuration>
+              <sourceDirectory>${project.build.directory}/.links/${schema-folder-name}</sourceDirectory>
+              <outputDirectory>${project.build.directory}/generated-sources/avro/</outputDirectory>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.10.1</version>
+        <configuration>
+          <parameters>true</parameters>
+          <release>17</release>
+        </configuration>
+      </plugin>
+
+    </plugins>
+  </build>
+
+</project>

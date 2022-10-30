@@ -1,5 +1,5 @@
 package sinnet.events;
 
-public final class ProjectCreated {
+public final class ProjectCreated implements AppEvent {
     
 }

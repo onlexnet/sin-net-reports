@@ -7,8 +7,6 @@
   <version>${revision}</version>
   <packaging>pom</packaging>
 
-  <name>parent-pom</name>
-
   <properties>
     <spring-boot-azure.version>2.3.2</spring-boot-azure.version>
     <spring-boot.version>2.4.3</spring-boot.version>
@@ -42,6 +40,11 @@
 
   <dependencyManagement>
     <dependencies>
+      <dependency>
+        <groupId>net.siudek</groupId>
+        <artifactId>timeentries-client-projects-events</artifactId>
+        <version>${revision}</version>
+      </dependency>
       <dependency>
         <groupId>io.dapr</groupId>
         <artifactId>dapr-sdk</artifactId>

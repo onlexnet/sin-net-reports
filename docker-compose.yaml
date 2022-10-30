@@ -1,6 +1,8 @@
 # Starts equivalent of 'external services' as much as we can. 
 # If something is not dockerizable, we should refer to DEV instances.
 
+name: sinnet
+
 version: '3.8'
 services:
   postgres:

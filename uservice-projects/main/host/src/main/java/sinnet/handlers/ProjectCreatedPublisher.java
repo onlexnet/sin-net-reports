@@ -48,6 +48,7 @@ class ProjectCreatedPublisher {
     var asString = new String(data);
 
     var request = new PublishEventRequest("pubsub", "MYTOPICNAME", asString);
+    var result = request.getData();
     client.publishEvent(request).subscribe();
   }
 
