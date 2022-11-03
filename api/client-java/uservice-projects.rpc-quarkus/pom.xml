@@ -1,0 +1,15 @@
+<project>
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>onlexnet.sinnet</groupId>
+    <artifactId>client-java-quarkus-parent</artifactId>
+    <version>${revision}</version>
+    <relativePath>../.parent.rpc-quarkus/pom.xml</relativePath>
+  </parent>
+  <artifactId>uservice-projects.rpc-quarkus</artifactId>
+
+  <properties>
+    <proto.dir>../../schema/uservice-projects.rpc</proto.dir>
+  </properties>
+
+</project>

@@ -9,7 +9,18 @@
   </parent>
   <artifactId>uservice-projects</artifactId>
   <name>projects-host</name>
+
+
   <dependencies>
+
+    <dependency>
+      <groupId>onlexnet.sinnet</groupId>
+      <artifactId>uservice-projects.rpc-quarkus</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>onlexnet.sinnet</groupId>
+      <artifactId>uservice-projects.events</artifactId>
+    </dependency>
 
     <dependency>
       <groupId>io.dapr</groupId>
@@ -25,10 +36,6 @@
     </dependency>
 
 
-    <dependency>
-      <groupId>onlexnet.sinnet</groupId>
-      <artifactId>projects-api-events-client</artifactId>
-    </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-jacoco</artifactId>
@@ -50,10 +57,6 @@
     <dependency>
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>onlexnet.sinnet</groupId>
-      <artifactId>projects-grpc-projects-client</artifactId>
     </dependency>
     <dependency>
       <groupId>org.projectlombok</groupId>

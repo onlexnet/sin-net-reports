@@ -7,20 +7,16 @@
   <packaging>pom</packaging>
 
   <modules>
-    <module>grpc-parent-proto</module>
-    <module>grpc-projects-proto</module>
-    <module>grpc-parent-client</module>
-    <module>grpc-projects-client</module>
-    <module>projects-api-events-client</module>
     <module>host</module>
     <module>init-db</module>
     <module>build-tools</module>
   </modules>
 
   <properties>
+    <api.version>0.1.0-SNAPSHOT</api.version>
     <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
     <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
-    <quarkus.platform.version>2.12.1.Final</quarkus.platform.version>
+    <quarkus.platform.version>2.13.3.Final</quarkus.platform.version>
     <compiler-plugin.version>3.10.1</compiler-plugin.version>
     <surefire-plugin.version>3.0.0-M5</surefire-plugin.version>
     <!-- Enable Reproducible Builds mode for plugins
@@ -37,6 +33,17 @@
   
   <dependencyManagement>
     <dependencies>
+
+      <dependency>
+        <groupId>onlexnet.sinnet</groupId>
+        <artifactId>uservice-projects.rpc-quarkus</artifactId>
+        <version>${api.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>onlexnet.sinnet</groupId>
+        <artifactId>uservice-projects.events</artifactId>
+        <version>${api.version}</version>
+      </dependency>
 
       <dependency>
         <groupId>io.dapr</groupId>
@@ -67,11 +74,6 @@
           <scope>import</scope>
       </dependency>
       <dependency>
-        <groupId>onlexnet.sinnet</groupId>
-        <artifactId>projects-grpc-projects-client</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
         <groupId>org.projectlombok</groupId>
         <artifactId>lombok</artifactId>
         <version>1.18.24</version>
@@ -88,11 +90,6 @@
           <artifactId>assertj-core</artifactId>
           <version>3.22.0</version>
           <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>onlexnet.sinnet</groupId>
-        <version>${project.version}</version>
-        <artifactId>projects-api-events-client</artifactId>
       </dependency>
     </dependencies>
   </dependencyManagement>
