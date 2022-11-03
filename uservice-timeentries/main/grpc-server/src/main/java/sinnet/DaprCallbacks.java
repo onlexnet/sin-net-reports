@@ -1,6 +1,7 @@
 package sinnet;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
@@ -35,7 +36,11 @@ class DaprCallbacks extends AppCallbackGrpc.AppCallbackImplBase {
         var data = request.getData().toStringUtf8();
 
         var event = AvroDeSer.fromJson(ProjectCreatedEvent.class, ProjectCreatedEvent.SCHEMA$, data);
-        var domainAppEvent = new ProjectCreated();
+        var eidAsString = event.getEid().toString();
+        var eid = UUID.fromString(eidAsString);
+        var etag = event.getEtag();
+        var name = "Undefined";
+        var domainAppEvent = ProjectCreated.of(eid, etag, name);
         applicationEventPublisher.publishEvent(domainAppEvent);
 
         var ack = TopicEventResponse.newBuilder()

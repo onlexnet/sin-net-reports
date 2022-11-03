@@ -1,5 +1,12 @@
 package sinnet.events;
 
-public final class ProjectCreated implements AppEvent {
-    
+import java.util.UUID;
+
+import lombok.Value;
+
+@Value(staticConstructor = "of")
+public class ProjectCreated implements AppEvent {
+  private UUID projectId;
+  private Long projectVersion;
+  private String name;
 }
