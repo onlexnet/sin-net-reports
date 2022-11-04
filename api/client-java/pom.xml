@@ -16,6 +16,8 @@
     <module>uservice-projects.events</module>
     <module>uservice-projects.rpc-quarkus</module>
     <module>uservice-projects.rpc-java</module>
+    <module>uservice-reports.rpc-quarkus</module>
+    <module>uservice-reports.rpc-java</module>
     <module>uservice-timeentries.rpc-quarkus</module>
     <module>uservice-timeentries.rpc-java</module>
   </modules>
