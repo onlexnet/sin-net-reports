@@ -94,6 +94,26 @@
         </configuration>
       </plugin>
 
+      <!--
+        Grpc annotations are not discovered by other Quarkus modules without proper jandexing
+        https://www.baeldung.com/quarkus-bean-discovery-index
+      -->
+      <plugin>
+        <!-- https://github.com/wildfly/jandex-maven-plugin -->
+        <groupId>org.jboss.jandex</groupId>
+        <artifactId>jandex-maven-plugin</artifactId>
+        <version>1.2.1</version>
+        <executions>
+            <execution>
+                <id>make-index</id>
+                <goals>
+                    <!-- phase is 'process-classes by default' -->
+                    <goal>jandex</goal>
+                </goals>
+            </execution>
+        </executions>
+    </plugin>
+
     </plugins>
   </build>
 </project>

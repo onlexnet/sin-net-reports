@@ -12,23 +12,21 @@
   <properties>
     <maven.compiler.parameters>true</maven.compiler.parameters>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <surefire-plugin.version>3.0.0-M5</surefire-plugin.version>
   </properties>
   <dependencies>
     <dependency>
       <groupId>onlexnet.sinnet</groupId>
       <artifactId>uservice-projects.rpc-quarkus</artifactId>
-      <version>${api.version}</version>
     </dependency>
     <dependency>
       <groupId>onlexnet.sinnet</groupId>
-      <artifactId>webapi-grpc-timeentries-client</artifactId>
+      <artifactId>uservice-timeentries.rpc-quarkus</artifactId>
     </dependency>
     <dependency>
       <groupId>onlexnet.sinnet</groupId>
-      <artifactId>webapi-grpc-reports-client</artifactId>
-    </dependency>
+      <artifactId>uservice-reports.rpc-quarkus</artifactId>
+  </dependency>
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>

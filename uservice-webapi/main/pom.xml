@@ -7,12 +7,6 @@
   <packaging>pom</packaging>
 
   <modules>
-    <module>grpc-parent-proto</module>
-    <module>grpc-parent-client</module>
-    <module>grpc-timeentries-proto</module>
-    <module>grpc-timeentries-client</module>
-    <module>grpc-reports-proto</module>
-    <module>grpc-reports-client</module>
     <module>host</module>
   </modules>
 
@@ -33,14 +27,20 @@
         <version>${api.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.projectlombok</groupId>
-        <artifactId>lombok</artifactId>
-        <version>1.18.22</version>
+        <groupId>onlexnet.sinnet</groupId>
+        <artifactId>uservice-timeentries.rpc-quarkus</artifactId>
+        <version>${api.version}</version>
       </dependency>
       <dependency>
         <groupId>onlexnet.sinnet</groupId>
-        <artifactId>webapi-grpc-timeentries-proto</artifactId>
-        <version>${project.version}</version>
+        <artifactId>uservice-reports.rpc-quarkus</artifactId>
+        <version>${api.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <version>1.18.22</version>
       </dependency>
       <dependency>
         <groupId>onlexnet.sinnet</groupId>
@@ -50,11 +50,6 @@
       <dependency>
         <groupId>onlexnet.sinnet</groupId>
         <artifactId>webapi-grpc-reports-proto</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>onlexnet.sinnet</groupId>
-        <artifactId>webapi-grpc-reports-client</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
