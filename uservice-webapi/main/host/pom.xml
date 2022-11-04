@@ -7,7 +7,7 @@
     <artifactId>webapi-parent</artifactId>
     <version>${revision}</version>
   </parent>
-  <artifactId>sinnet-webapi</artifactId>
+  <artifactId>uservice-webapi-host</artifactId>
   <name>sinnet-webapi-host</name>
   <properties>
     <maven.compiler.parameters>true</maven.compiler.parameters>
