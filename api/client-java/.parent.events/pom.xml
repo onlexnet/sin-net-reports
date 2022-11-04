@@ -6,7 +6,7 @@
     <version>${revision}</version>
   </parent>
 
-  <artifactId>client-java-parent</artifactId>
+  <artifactId>events-parent</artifactId>
   <packaging>pom</packaging>
 
   <properties>

@@ -2,11 +2,11 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>onlexnet.sinnet</groupId>
-    <artifactId>rpc-quarkus-parent</artifactId>
+    <artifactId>rpc-java-parent</artifactId>
     <version>${revision}</version>
-    <relativePath>../.parent.rpc-quarkus/pom.xml</relativePath>
+    <relativePath>../.parent.rpc-java/pom.xml</relativePath>
   </parent>
-  <artifactId>uservice-projects.rpc-quarkus</artifactId>
+  <artifactId>uservice-projects.rpc</artifactId>
 
   <properties>
     <proto.dir>../../schema/uservice-projects.rpc</proto.dir>

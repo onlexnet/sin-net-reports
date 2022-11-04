@@ -10,10 +10,12 @@
   <version>${revision}</version>
 
   <modules>
-    <module>.parent.rpc-quarkus</module>
     <module>.parent.events</module>
-    <module>uservice-projects.rpc-quarkus</module>
+    <module>.parent.rpc-java</module>
+    <module>.parent.rpc-quarkus</module>
     <module>uservice-projects.events</module>
+    <module>uservice-projects.rpc-quarkus</module>
+    <module>uservice-projects.rpc-java</module>
   </modules>
 
   <properties>

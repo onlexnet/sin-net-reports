@@ -10,7 +10,7 @@
     <artifactId>client-java-build</artifactId>
     <version>${revision}</version>
   </parent>
-  <artifactId>client-java-quarkus-parent</artifactId>
+  <artifactId>rpc-quarkus-parent</artifactId>
   <packaging>pom</packaging>
 
   <dependencies>
