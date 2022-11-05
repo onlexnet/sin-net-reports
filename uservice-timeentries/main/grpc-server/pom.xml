@@ -21,8 +21,8 @@
 
   <dependencies>
     <dependency>
-      <groupId>net.siudek</groupId>
-      <artifactId>timeentries-client-projects-events</artifactId>
+      <groupId>onlexnet.sinnet</groupId>
+      <artifactId>uservice-projects.events</artifactId>
     </dependency>
     <dependency>
       <groupId>net.siudek</groupId>

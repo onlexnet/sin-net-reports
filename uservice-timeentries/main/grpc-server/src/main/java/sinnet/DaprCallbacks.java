@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.protobuf.Empty;
 
 import io.dapr.v1.AppCallbackGrpc;
@@ -16,6 +17,7 @@ import io.dapr.v1.DaprAppCallbackProtos.TopicEventResponse.TopicEventResponseSta
 import io.dapr.v1.DaprAppCallbackProtos.TopicSubscription;
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import sinnet.events.ProjectCreated;
 import sinnet.project.events.AvroDeSer;
 import sinnet.project.events.ProjectCreatedEvent;
@@ -29,13 +31,15 @@ import sinnet.project.events.ProjectCreatedEvent;
 class DaprCallbacks extends AppCallbackGrpc.AppCallbackImplBase {
 
     private final ApplicationEventPublisher applicationEventPublisher;
+    private final ObjectMapper objectMapper;
 
     @Override
+    @SneakyThrows
     public void onTopicEvent(TopicEventRequest request, StreamObserver<TopicEventResponse> responseObserver) {
         var topicName = request.getTopic();
         var data = request.getData().toStringUtf8();
 
-        var event = AvroDeSer.fromJson(ProjectCreatedEvent.class, ProjectCreatedEvent.SCHEMA$, data);
+        var event = objectMapper.readValue(data, ProjectCreatedEvent.class);
         var eidAsString = event.getEid().toString();
         var eid = UUID.fromString(eidAsString);
         var etag = event.getEtag();

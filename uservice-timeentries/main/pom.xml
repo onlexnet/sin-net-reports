@@ -16,7 +16,6 @@
     <module>web-security</module>
     <module>web-server</module>
     <module>web-graphql</module>
-    <module>client-projects-events</module>
     <module>host</module>
     <!--
       report-aggregate should be the last one on the listy of modules so that
