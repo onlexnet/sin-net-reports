@@ -19,7 +19,6 @@ import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import sinnet.events.ProjectCreated;
-import sinnet.project.events.AvroDeSer;
 import sinnet.project.events.ProjectCreatedEvent;
 
 /**

@@ -19,6 +19,15 @@
 
   <dependencies>
     <dependency>
+      <groupId>onlexnet.sinnet</groupId>
+      <artifactId>uservice-projects.events</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>onlexnet.sinnet</groupId>
+      <artifactId>uservice-timeentries.rpc</artifactId>
+    </dependency>
+
+    <dependency>
       <groupId>net.siudek</groupId>
       <artifactId>domain-api</artifactId>
     </dependency>

@@ -41,6 +41,11 @@
     <dependencies>
       <dependency>
         <groupId>onlexnet.sinnet</groupId>
+        <artifactId>uservice-timeentries.rpc</artifactId>
+        <version>${api.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>onlexnet.sinnet</groupId>
         <artifactId>uservice-projects.events</artifactId>
         <version>${api.version}</version>
       </dependency>
