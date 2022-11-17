@@ -12,7 +12,6 @@
 
   <modules>
     <module>host</module>
-    <module>init-db</module>
   </modules>
 
   <properties>

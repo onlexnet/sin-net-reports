@@ -1,0 +1,53 @@
+package sinnet.customer;
+
+import org.jmolecules.architecture.cqrs.annotation.CommandHandler;
+import org.springframework.stereotype.Component;
+
+import lombok.RequiredArgsConstructor;
+import sinnet.models.EntityId;
+
+@Component
+@RequiredArgsConstructor
+public final class SaveCustomerHandler {
+
+  private final CustomerRepository repository;
+
+  @CommandHandler
+  public EntityId onRequest(ChangeCustomerData.Command msg) {
+    var eid = EntityId.of(msg.getId().getProjectId(), msg.getId().getId(), msg.getId().getVersion());
+    var requestor = msg.getRequestor();
+    var newValue = msg.getValue();
+    var requestedSecrets = msg.getSecrets();
+    var requestedSecretsEx = msg.getSecretsEx();
+    var requestedContacts = msg.getContacts();
+    return repository
+        .get(eid)
+        .flatMap(it -> {
+          var actualSecrets = it
+              .map(v -> v.getSecrets())
+              .getOrElse(new CustomerSecret[0]);
+          var newSecrets = CommandHandlers.merge(requestor,
+                                                  LocalDateTime.now(ZoneOffset.UTC),
+                                                  requestedSecrets, actualSecrets);
+          var actualSecretsEx = it
+              .map(v -> v.getSecretsEx())
+              .getOrElse(new CustomerSecretEx[0]);
+          var newSecretsEx = CommandHandlers.merge(requestor,
+                                                    LocalDateTime.now(ZoneOffset.UTC),
+                                                    requestedSecretsEx, actualSecretsEx);
+          var newContacts = Arrays.stream(requestedContacts)
+              .map(v -> CustomerDboContact
+                  .builder()
+                  .firstName(v.getFirstName())
+                  .lastName(v.getLastName())
+                  .phoneNo(v.getPhoneNo())
+                  .email(v.getEmail())
+                  .build())
+              .toArray(CustomerDboContact[]::new);
+
+          return repository
+              .write(eid, newValue, newSecrets, newSecretsEx, newContacts)
+              .map(v1 -> EntityId.of(v1.getProjectId(), v1.getId(), v1.getVersion()));
+        });
+  }
+}

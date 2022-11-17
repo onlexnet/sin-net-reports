@@ -18,40 +18,49 @@
   <dependencies>
 
     <dependency>
-      <groupId>io.cucumber</groupId>
-      <artifactId>cucumber-junit-platform-engine</artifactId>
-      <version>7.2.3</version>
-      <scope>test</scope>
+      <groupId>onlexnet.sinnet</groupId>
+      <artifactId>uservice-timeentries.rpc</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>onlexnet.sinnet</groupId>
+      <artifactId>uservice-projects.events</artifactId>
     </dependency>
 
     <dependency>
-      <groupId>net.siudek</groupId>
-      <artifactId>web-server</artifactId>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>1.18.24</version>
+      <scope>provided</scope>
     </dependency>
-
-    <dependency>
-      <groupId>net.siudek</groupId>
-      <artifactId>web-graphql</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>net.siudek</groupId>
-      <artifactId>domain-core</artifactId>
-    </dependency>
-
     <dependency>
       <groupId>com.tngtech.archunit</groupId>
       <artifactId>archunit-junit5</artifactId>
       <version>0.22.0</version>
     </dependency>
-
-  <dependency>
+    <dependency>
+      <groupId>io.vavr</groupId>
+      <artifactId>vavr</artifactId>
+      <version>0.10.4</version>
+    </dependency>
+    <dependency>
+      <groupId>org.jmolecules</groupId>
+      <artifactId>jmolecules-cqrs-architecture</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter</artifactId>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-data-jpa</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-actuator</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.dapr</groupId>
+      <artifactId>dapr-sdk</artifactId>
     </dependency>
 
   </dependencies>
@@ -59,10 +68,8 @@
   <build>
     <plugins>
       <plugin>
-        <!-- Allows to use spring-boot:run -->
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
-        <version>${spring-boot.version}</version>
         <executions>
           <execution>
             <goals>

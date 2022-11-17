@@ -5,12 +5,12 @@ name: sinnet
 
 version: '3.8'
 services:
-  postgres:
+  service-postgres-dc:
     build:
       context: service-postgres
       # specially prepared dockerfile to init database schemas per application
       # in the same way how the expect in local stack
-      # and run init-db parts of all uservices
+      # and run initdb parts of all uservices
       dockerfile: Dockerfile.dev
     environment:
       - POSTGRES_USER=devlocaldb
@@ -18,21 +18,48 @@ services:
     ports:
       - 5432:5432
 
-  init-db-projects:
+  init-local-sdk:
+    image: local-stack-java-sdk
+    build:
+      context: service-localsdk
+      dockerfile: Dockerfile.local
+
+  projects-initdb:
     build:
       context: uservice-projects/main
-      dockerfile: ./init-db/Dockerfile.local
+      dockerfile: ./initdb/Dockerfile.local
     environment:
       # well-known properties defined by init scripts of our postgresql
       - DATABASE_USERNAME=uservice_dbuser
       - DATABASE_PASSWORD=uservice_dbuser
       - DATABASE_SCHEMA=uservice_projects
-      - DATABASE_JDBC=jdbc:postgresql://postgres:5432/devlocaldb
+      - DATABASE_JDBC=jdbc:postgresql://service-postgres-dc:5432/devlocaldb
     volumes:
       # Map local maven repo to speed up build by avoiding downloading maven dependencies each time to new docker image
       - ~/.m2/:/.m2
-      # Map local source files to allow run init-db module from sources
-      - ./uservice-projects/main/:/uservice_src
+      # Map local source files to allow run initdb module from sources
+      - ./uservice-projects/main/:/uservice-projects_src
     depends_on:
-       postgres:
+      service-postgres-dc:
+        condition: service_started
+      init-local-sdk:
+        condition: service_completed_successfully
+
+  timeentries-initdb:
+    build:
+      context: uservice-timeentries/main
+      dockerfile: ./initdb/Dockerfile.local
+    environment:
+      # well-known properties defined by init scripts of our postgresql
+      - DATABASE_USERNAME=uservice_timeentries_role_name
+      - DATABASE_PASSWORD=uservice_timeentries_role_password
+      - DATABASE_SCHEMA=uservice_timeentries
+      - DATABASE_JDBC=jdbc:postgresql://service-postgres-dc:5432/devlocaldb
+    volumes:
+      # Map local maven repo to speed up build by avoiding downloading maven dependencies each time to new docker image
+      - ~/.m2/:/.m2
+      # Map local source files to allow run initdb module from sources
+      - ./uservice-timeentries/main/:/uservice-timeentries_src
+    depends_on:
+       service-postgres-dc:
          condition: service_started

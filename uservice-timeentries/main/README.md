@@ -1,12 +1,5 @@
 # Dev notes
 
-## To run locally
-- one time poeration when you cloned new repo:
-  - cd ..
-  - ./links.sh
-- **docker-compose up** to run database
-- next, run from VSCode using F5 (assumption: java pack extension installed in VSCode)
-
 ## Profiles
 We support some profiles in backend code to allow run them with different configurations:
 - dev - no security
@@ -26,7 +19,6 @@ https://github.com/SonarSource/sonar-scanning-examples/blob/master/doc/jacoco.md
 - https://www.vinsguru.com/grpc-client-streaming-api-in-java/
 - https://github.com/grpc/grpc-java/blob/master/README.md
 - Integrate [Micrometer](https://developer.ibm.com/technologies/java/tutorials/monitor-spring-boot-microservices/)
-- use [R2DBC in Spring](https://www.2ndquadrant.com/en/blog/building-reactive-postgresql-repositories-for-spring-boot-applications-part-1/)
 - [How to design a good JWT authentication filter](https://stackoverflow.com/questions/41975045/how-to-design-a-good-jwt-authentication-filter)
 
 ## Coding principles

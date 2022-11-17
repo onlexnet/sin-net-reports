@@ -1,0 +1,44 @@
+package sinnet;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+import javax.sql.DataSource;
+
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.jdbc.DataSourceBuilder;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
+import org.testcontainers.containers.PostgreSQLContainer;
+
+import lombok.Getter;
+
+@TestConfiguration
+public class TestDbContainer {
+
+    @Getter
+    private PostgreSQLContainer<?> container;
+
+    @PostConstruct
+    public void init() {
+        container = new PostgreSQLContainer<>();
+        container.start();
+    }
+
+    @PreDestroy
+    public void dispose() {
+        container.stop();
+    }
+
+    @Bean
+    @ConfigurationProperties(prefix = "datasource")
+    public DataSource dataSource() {
+        return DataSourceBuilder.create()
+            .url(container.getJdbcUrl())
+            .username(container.getUsername())
+            .password(container.getPassword())
+            .driverClassName(container.getDriverClassName())
+            .build();
+    }
+
+}

@@ -1,0 +1,49 @@
+package sinnet.bus.commands;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Value;
+import lombok.extern.jackson.Jacksonized;
+import sinnet.models.CustomerValue;
+import sinnet.models.Email;
+import sinnet.models.EntityId;
+
+
+public interface ChangeCustomerData {
+
+  @Value
+  final class Command {
+
+    /** TODO describe */
+    private Email requestor;
+    private EntityId id;
+    private CustomerValue value;
+    private Secret[] secrets;
+    private SecretEx[] secretsEx;
+    private Contact[] contacts;
+  }
+
+  @Value
+  final class Secret {
+    private String location;
+    private String username;
+    private String password;
+  }
+
+  @Value
+  final class SecretEx {
+    private String location;
+    private String entityName;
+    private String entityCode;
+    private String username;
+    private String password;
+  }
+
+  @Value
+  final class Contact {
+    private String firstName;
+    private String lastName;
+    private String phoneNo;
+    private String email;
+  }
+}

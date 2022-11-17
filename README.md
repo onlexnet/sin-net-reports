@@ -44,6 +44,6 @@ In scope:
 
 ## Run locally the whole stack
 ```bash
-docker-compose up --build # (to rebuild used init-db modeules)
+docker-compose up --build # (to rebuild used initdb modeules)
 # docker-compose up to run faster last configuration
 ```
