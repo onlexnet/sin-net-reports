@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import sinnet.grpc.RpcCommandHandler;
 import sinnet.grpc.customers.UpdateCommand;
 import sinnet.grpc.customers.UpdateResult;
+import sinnet.models.CustomerSecret;
 import sinnet.models.CustomerValue;
 import sinnet.models.Email;
 import sinnet.models.ShardedId;
@@ -16,7 +17,7 @@ import sinnet.models.Name;
 @Slf4j
 public class CustomersRpcUpdate implements
                                 RpcCommandHandler<UpdateCommand, UpdateResult>,
-                                sinnet.gql.common.Mapper {
+                                MapperDto {
                                    
 
   @Override
@@ -24,7 +25,7 @@ public class CustomersRpcUpdate implements
     var emailOfRequestor = Email.of(cmd.getUserToken().getRequestorEmail());
     var entry = cmd.getModel().getValue();
     var eid = fromDto(cmd.getModel().getId());
-    var value = new CustomerValue()
+    var model = fromDto(cmd.getModel())
         .operatorEmail(entry.getOperatorEmail())
         .supportStatus(entry.getSupportStatus())
         .billingModel(entry.getBillingModel())
@@ -53,13 +54,12 @@ public class CustomersRpcUpdate implements
         .komercjaNotatki(entry.getKomercjaNotatki())
         .daneTechniczne(entry.getDaneTechniczne());
     var secrets = cmd.getModel().getSecretsList();
-    var mSecrets = secrets.parallelStream()
-        .map(it -> ChangeCustomerData.Secret.builder()
-            .location(it.getLocation())
-            .username(it.getUsername())
-            .password(it.getPassword())
-            .build())
-        .toArray(ChangeCustomerData.Secret[]::new);
+    var mSecrets = secrets.stream()
+        .map(it -> new CustomerSecret()
+            .setLocation(it.getLocation())
+            .setUsername(it.getUsername())
+            .setPassword(it.getPassword()))
+        .toArray(CustomerSecret[]::new);
     var secretsEx = cmd.getModel().getSecretExList();
     var mSecretsEx = secretsEx.stream()
         .map(it -> ChangeCustomerData.SecretEx.builder()

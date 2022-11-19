@@ -10,35 +10,34 @@ import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import sinnet.grpc.PropsBuilder;
+import sinnet.grpc.RpcQueryHandler;
 import sinnet.grpc.users.SearchReply;
 import sinnet.grpc.users.SearchRequest;
 import sinnet.grpc.users.UsersSearchModel;
 import sinnet.models.Email;
-import sinnet.read.UsersProjector;
+import sinnet.read.UsersRepositoryEx;
 
 
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class UsersRpcSearch {
+public class UsersRpcSearch implements RpcQueryHandler<SearchRequest, SearchReply>, MapperDto {
 
-  private final UsersProjector usersProvider;
+  private final UsersRepositoryEx usersProvider;
 
-  public void search(SearchRequest request, StreamObserver<SearchReply> responseObserver) {
+  @Override
+  public SearchReply apply(SearchRequest request) {
     var emailAsString = request.getUserToken().getRequestorEmail();
     var projectIdAsString = request.getUserToken().getProjectId();
     var email = Email.of(emailAsString);
     var projectId = UUID.fromString(projectIdAsString);
-    usersProvider
-        .search(projectId, email)
-        .onComplete(Handlers.logged(log, responseObserver, it -> it.foldLeft(
-            SearchReply.newBuilder(),
-            (acc, o) -> acc.addItems(PropsBuilder.build(UsersSearchModel.newBuilder())
-                .tset(ofNullable(o.getEmail().getValue()), b -> b::setEmail)
-                .set(UUID.randomUUID().toString(), b -> b::setEntityId)
-                .done().build()))
-            .build()));
+    var result = usersProvider.search(projectId, email);
+    var asDto = toDto(result);
+    return SearchReply.newBuilder()
+        .addAllItems(asDto)
+        .build();
   }
+
 }
 
 // private final ServicemanRepository repository;

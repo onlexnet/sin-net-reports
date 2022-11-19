@@ -107,28 +107,28 @@ public interface CustomerRepository extends JpaRepository<CustomerRepository.Cus
     private Boolean nfz_psychiatria;
 
     @Column(name = "nfz_szpitalnictwo")
-    private Boolean nfz_szpitalnictwo;
+    private Boolean nfzSzpitalnictwo;
 
     @Column(name = "nfz_programy_profilaktyczne")
-    private Boolean nfz_programy_profilaktyczne;
+    private Boolean nfzProgramyProfilaktyczne;
 
     @Column(name = "nfz_zaopatrzenie_ortopedyczne")
-    private Boolean nfz_zaopatrzenie_ortopedyczne;
+    private Boolean nfzZaopatrzenieOrtopedyczne;
 
     @Column(name = "nfz_opieka_dlugoterminowa")
-    private Boolean nfz_opieka_dlugoterminowa;
+    private Boolean nfzOpiekaDlugoterminowa;
 
     @Column(name = "nfz_notatki")
-    private String nfz_notatki;
+    private String nfzNotatki;
 
     @Column(name = "komercja_jest")
-    private Boolean komercja_jest;
+    private Boolean komercjaJest;
 
     @Column(name = "komercja_notatki")
-    private String komercja_notatki;
+    private String komercjaNotatki;
 
     @Column(name = "dane_techniczne")
-    private String dane_techniczne;
+    private String daneTechniczne;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "contact", joinColumns = @JoinColumn(name = "customer_id"))

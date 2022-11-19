@@ -70,9 +70,9 @@ public interface MapperDbo {
       .setNfzProgramyProfilaktyczne(dbo.getNfz_programy_profilaktyczne())
       .setNfzZaopatrzenieOrtopedyczne(dbo.getNfz_zaopatrzenie_ortopedyczne())
       .setNfzOpiekaDlugoterminowa(dbo.getNfz_opieka_dlugoterminowa())
-      .setNfzNotatki(dbo.getNfz_notatki())
+      .setNfzNotatki(dbo.getNfzNotatki())
       .setKomercjaJest(dbo.getKomercja_jest())
-      .setKomercjaNotatki(dbo.getNfz_notatki())
+      .setKomercjaNotatki(dbo.getKomercja_notatki())
       .setDaneTechniczne(dbo.getDane_techniczne());
     return new CustomerModel().setId(id).setValue(value).setContacts(contacts).setSecrets(secrets).setSecretsEx(secretsEx);
   }

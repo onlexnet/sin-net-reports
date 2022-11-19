@@ -15,11 +15,11 @@ import sinnet.domain.serviceman.ServicemanDbo;
 import sinnet.domain.serviceman.ServicemanRepository;
 import sinnet.models.Email;
 import sinnet.read.UserModel;
-import sinnet.read.UsersProjector;
+import sinnet.read.UsersRepositoryEx;
 
 @Service
 @RequiredArgsConstructor
-public class UsersProjectorImpl implements UsersProjector {
+public class UsersProjectorImpl implements UsersRepositoryEx {
 
   private final ServicemanRepository repository;
 

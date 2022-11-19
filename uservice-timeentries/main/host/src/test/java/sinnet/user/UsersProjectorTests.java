@@ -20,7 +20,7 @@ import sinnet.models.Email;
 import sinnet.models.ShardedId;
 import sinnet.read.ActionProjector;
 import sinnet.read.ProjectProjector;
-import sinnet.read.UsersProjector;
+import sinnet.read.UsersRepositoryEx;
 import sinnet.write.ActionRepository;
 
 @SpringBootTest(webEnvironment = WebEnvironment.NONE)
@@ -31,7 +31,7 @@ import sinnet.write.ActionRepository;
 public final class UsersProjectorTests implements ProjectProjector {
 
   @Autowired
-  private UsersProjector sut;
+  private UsersRepositoryEx sut;
 
   @Autowired
   private Api api;
