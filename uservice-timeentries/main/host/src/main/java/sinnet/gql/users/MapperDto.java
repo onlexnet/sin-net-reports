@@ -26,13 +26,13 @@ import sinnet.read.UserModel;
  */
 public interface MapperDto extends Mapper {
 
-  default List<sinnet.grpc.users.UsersSearchModel> toDto(Stream<UserModel> model) {
-    return model.map(this::toDto).toList();
+  default List<sinnet.grpc.users.UsersSearchModel> toDto(List<UserModel> model) {
+    return model.stream().map(this::toDto).toList();
   }
 
   default sinnet.grpc.users.UsersSearchModel toDto(UserModel model) {
     return PropsBuilder.build(sinnet.grpc.users.UsersSearchModel.newBuilder())
-        .tset(ofNullable(o.getEmail().getValue()), b -> b::setEmail)
+        .tset(Optional.ofNullable(model.getEmail().getValue()), b -> b::setEmail)
         .set(UUID.randomUUID().toString(), b -> b::setEntityId)
         .done().build();
   }

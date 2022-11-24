@@ -1,8 +1,13 @@
 package sinnet.action;
 
+import java.time.LocalDate;
+import java.util.List;
+import java.util.UUID;
+
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
+import sinnet.action.ActionRepository.ActionDbo;
 import sinnet.models.ActionValue;
 import sinnet.models.Entity;
 import sinnet.models.ShardedId;
@@ -47,5 +52,20 @@ public class ActionRepositoryExImpl implements ActionRepositoryEx, MapperDbo {
     repository.deleteByProjectidEntityidEntityversion(projectId, entityId, version);
     return true;
   }
+
+
+  @Override
+  public List<Entity<ActionValue>> list(UUID projectId, LocalDate from, LocalDate to) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+
+  @Override
+  public Entity<ActionValue> get(UUID projectId, UUID eid) {
+    var dbo = repository.findByProjectidEntityid(projectId, eid);
+    return fromDbo(dbo);
+  }
+
 }
 

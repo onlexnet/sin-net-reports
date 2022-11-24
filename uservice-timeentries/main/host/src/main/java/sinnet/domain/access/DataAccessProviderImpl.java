@@ -21,11 +21,11 @@ public class DataAccessProviderImpl implements DataAccess.Provider {
         // if (Role.DATA_OPS.equals(role)) {
         //     return DataAccess.EffectiveAccess.<T>builder().build();
         // }
-
         var userEmail = invoker.getEmail();
-        var assignments = projectAssignmentRepository
-            .findByServiceman(userEmail)
-            .map(items -> items.map(item -> item.getId()));
+
+        // var assignments = projectAssignmentRepository
+        //     .findByServiceman(userEmail)
+        //     .map(items -> items.map(item -> item.getId()));
         return null;
 
         // if (Role.ADVISOR.equals(role) || Role.UNDERWRITER.equals(role)) {

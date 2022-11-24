@@ -9,8 +9,6 @@ import com.tngtech.archunit.lang.CompositeArchRule;
 import com.tngtech.archunit.library.DependencyRules;
 import com.tngtech.archunit.library.GeneralCodingRules;
 
-import org.springframework.web.bind.annotation.RestController;
-
 /** Architectural tests. */
 @AnalyzeClasses(packages = "sinnet")
 public class ArchTests {
@@ -32,12 +30,12 @@ public class ArchTests {
     .because("These are Voilation of general coding rules");
 
 
-  @ArchTest
-  static final ArchRule noPublicControllers = classes().that()
-      .areAnnotatedWith(RestController.class)
-      .should()
-      .bePackagePrivate()
-      .andShould()
-      .resideInAPackage("sinnet.web");
+  // @ArchTest
+  // static final ArchRule noPublicControllers = classes().that()
+  //     .areAnnotatedWith(RestController.class)
+  //     .should()
+  //     .bePackagePrivate()
+  //     .andShould()
+  //     .resideInAPackage("sinnet.web");
 
 }

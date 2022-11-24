@@ -57,18 +57,24 @@
       </dependency>
 
       <dependency>
+        <groupId>net.siudek</groupId>
+        <artifactId>uservice-timeentries-testdb</artifactId>
+        <version>${project.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>net.siudek</groupId>
+        <artifactId>uservice-timeentries-migratedb</artifactId>
+        <version>${project.version}</version>
+        <scope>test</scope>
+      </dependency>
+
+      <dependency>
         <groupId>org.jmolecules</groupId>
         <artifactId>jmolecules-bom</artifactId>
         <version>2021.0.1</version>
         <type>pom</type>
         <scope>import</scope>
-      </dependency>
-
-      <dependency>
-        <groupId>org.assertj</groupId>
-        <artifactId>assertj-core</artifactId>
-        <scope>test</scope>
-        <version>3.14.0</version>
       </dependency>
 
       <dependency>

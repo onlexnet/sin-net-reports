@@ -10,6 +10,7 @@ import sinnet.models.ActionValue;
 import sinnet.models.Distance;
 import sinnet.models.Email;
 import sinnet.models.Entity;
+import sinnet.models.ShardedId;
 
 public interface MapperDto extends sinnet.gql.common.Mapper {
 
@@ -28,7 +29,7 @@ public interface MapperDto extends sinnet.gql.common.Mapper {
 
     default TimeEntryModel toDto(Entity<ActionValue> it) {
         return PropsBuilder.build(TimeEntryModel.newBuilder())
-            .set(it, o -> EntityId.of(o), this::toDto, b -> b::setEntityId)
+            .set(it, o -> ShardedId.of(o), this::toDto, b -> b::setEntityId)
             .set(it.getValue().getWhom(), UUID::toString, b -> b::setCustomerId)
             .set(it.getValue().getWho().getValue(), b -> b::setServicemanName)
             .set(it.getValue().getWhen(), this::toDto, b -> b::setWhenProvided)

@@ -26,10 +26,6 @@ public interface Mapper {
     return new UserToken(email);
   }
 
-  default sinnet.grpc.common.EntityId toDto(Entity<?> eid) {
-    return this.toDto(eid.getId());
-  }
-
   default sinnet.grpc.common.EntityId toDto(ShardedId eid) {
     if (eid == null)
       return null;

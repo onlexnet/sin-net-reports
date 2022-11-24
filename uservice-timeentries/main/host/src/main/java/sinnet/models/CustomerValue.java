@@ -6,7 +6,7 @@ import lombok.experimental.Accessors;
 @Data
 @Accessors(chain = true, fluent = true)
 public final class CustomerValue {
-  private String operatorEmail;
+  private Email operatorEmail;
   private String billingModel;
   private String supportStatus;
   private Integer distance;

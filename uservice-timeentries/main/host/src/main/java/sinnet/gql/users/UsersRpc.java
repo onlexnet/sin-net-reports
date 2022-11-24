@@ -17,6 +17,6 @@ public class UsersRpc extends UsersImplBase {
 
   @Override
   public void search(SearchRequest request, StreamObserver<SearchReply> responseObserver) {
-    search.search(request, responseObserver);
+    search.query(request, responseObserver);
   }
 }

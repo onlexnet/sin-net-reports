@@ -20,6 +20,7 @@ public interface ActionRepository extends JpaRepository<ActionRepository.ActionD
   
   void deleteByProjectidEntityidEntityversion(UUID projectId, UUID entityId, long version);
   ActionDbo findByProjectidEntityidEntityversion(UUID projectId, UUID entityId, long version);
+  ActionDbo findByProjectidEntityid(UUID projectId, UUID entityId);
 
   @Entity
   @Table(name = "actions")

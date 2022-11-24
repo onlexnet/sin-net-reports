@@ -1,7 +1,10 @@
 package sinnet.action;
 
 import sinnet.action.ActionRepository.ActionDbo;
+import sinnet.models.ActionDuration;
 import sinnet.models.ActionValue;
+import sinnet.models.Distance;
+import sinnet.models.Email;
 import sinnet.models.Entity;
 
 public interface MapperDbo {
@@ -22,4 +25,16 @@ public interface MapperDbo {
       .setCustomerId(value.getWhom());
 
   }
+
+  default Entity<ActionValue> fromDbo(ActionDbo dbo) {
+    return new ActionValue()
+      .setWho(Email.of(dbo.getServicemanEmail()))
+      .setWhen(dbo.getDate())
+      .setWhom(dbo.getCustomerId())
+      .setWhat(dbo.getDescription())
+      .setHowLong(ActionDuration.of(dbo.getDuration()))
+      .setHowFar(Distance.of(dbo.getDistance()))
+      .withId(dbo.getProjectId(), dbo.getEntityId(), dbo.getEntityVersion());
+  }
+
 }

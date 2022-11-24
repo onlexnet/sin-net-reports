@@ -22,6 +22,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
 import sinnet.gql.customers.CustomerRepository.CustomerDbo;
 import sinnet.gql.customers.CustomerRepository.CustomerDboContact;
+import sinnet.gql.customers.CustomerRepository.CustomerDboSecret;
+import sinnet.gql.customers.CustomerRepository.CustomerDboSecretEx;
 import sinnet.models.CustomerContact;
 import sinnet.models.CustomerModel;
 import sinnet.models.CustomerSecret;
@@ -34,7 +36,7 @@ public final class CustomerRepositoryEx implements MapperDbo {
 
   private final CustomerRepository repository;
 
-    /**
+  /**
    * Returns a model pointed by given {@code id} or empty value if the model does
    * not exists.
    *
@@ -47,38 +49,93 @@ public final class CustomerRepositoryEx implements MapperDbo {
     return maybeResult.map(this::fromDbo);
   }
 
-  /**
-   * Returns a latest model pointed by given {@code projectId} {@code id} or empty
-   * value if the model does not exists.
-   *
-   * @param customerId if of the requested model.
-   */
-  Optional<CustomerModel> get(UUID projectId, UUID customerId) {
-  }
+  // /**
+  // * Returns a latest model pointed by given {@code projectId} {@code id} or
+  // empty
+  // * value if the model does not exists.
+  // *
+  // * @param customerId if of the requested model.
+  // */
+  // Optional<CustomerModel> get(UUID projectId, UUID customerId) {
+  // }
 
-  
   /**
    * Saves a new version of Entity identified by given eid.
    *
    * @return new EID for just stored entity.
    */
-  ShardedId write(ShardedId eid,
-      CustomerValue value,
-      CustomerSecret[] secrets,
-      CustomerSecretEx[] secretsEx,
-      CustomerContact[] contacts) {
+  ShardedId write(CustomerModel model) {
+
+    var eid = model.getId();
+    var value = model.getValue();
+    var secrets = model.getSecrets();
+    var secretsEx = model.getSecretsEx();
+    var contacts = model.getContacts();
+    var projectId = eid.getProjectId();
+    var entityId = eid.getId();
+    var version = eid.getVersion();
+    var dbo = repository.findByProjectidEntityid(projectId, entityId);
+    dbo.setVersion(version);
+    dbo.setCustomerName(value.customerName().getValue())
+        .setCustomerCityName(value.customerCityName().getValue())
+        .setCustomerAddress(value.customerAddress())
+        .setOperatorEmail(value.operatorEmail().getValue())
+        .setBillingModel(value.billingModel())
+        .setSupportStatus(value.supportStatus())
+        .setDistance(value.distance())
+        .setNfzUmowa(value.nfzUmowa())
+        .setNfzMaFilie(value.nfzMaFilie())
+        .setNfz_lekarz(value.nfzLekarz())
+        .setNfzPolozna(value.nfzPolozna())
+        .setNfz_pielegniarka_srodowiskowa(value.nfzPielegniarkaSrodowiskowa())
+        .setNfz_medycyna_szkolna(value.nfzMedycynaSzkolna())
+        .setNfz_transport_sanitarny(value.nfzTransportSanitarny())
+        .setNfz_nocna_pomoc_lekarska(value.nfzNocnaPomocLekarska())
+        .setNfz_ambulatoryjna_opieka_specjalistyczna(value.nfzAmbulatoryjnaOpiekaSpecjalistyczna())
+        .setNfz_rehabilitacja(value.nfzRehabilitacja())
+        .setNfz_stomatologia(value.nfzStomatologia())
+        .setNfz_psychiatria(value.nfzPsychiatria())
+        .setNfzSzpitalnictwo(value.nfzSzpitalnictwo())
+        .setNfzProgramyProfilaktyczne(value.nfzProgramyProfilaktyczne())
+        .setNfzZaopatrzenieOrtopedyczne(value.nfzZaopatrzenieOrtopedyczne())
+        .setNfzOpiekaDlugoterminowa(value.nfzOpiekaDlugoterminowa())
+        .setNfzNotatki(value.nfzNotatki())
+        .setKomercjaJest(value.komercjaJest())
+        .setKomercjaNotatki(value.komercjaNotatki())
+        .setDaneTechniczne(value.daneTechniczne())
+        .setContacts(contacts.stream().map(this::toDbo).toList())
+        .setSecrets(secrets.stream().map(this::toDbo).toList())
+        .setSecretsEx(secretsEx.stream().map(this::toDbo).toList());
+    repository.save(dbo);
+    return eid.next();
   }
 
-  CustomerDboContact[] map(CustomerContact[] it) {
-    return Stream.of(it).map(this::map).toArray(CustomerDboContact[]::new);
-  }
-
-  CustomerDboContact map(CustomerContact it) {
+  CustomerDboContact toDbo(CustomerContact it) {
     return new CustomerDboContact()
         .setFirstName(it.getFirstName())
         .setLastName(it.getLastName())
         .setPhoneNo(it.getPhoneNo())
         .setEmail(it.getEmail());
+  }
+
+  CustomerDboSecret toDbo(CustomerSecret it) {
+    return new CustomerDboSecret()
+        .setLocation(it.getLocation())
+        .setPassword(it.getPassword())
+        .setUsername(it.getUsername())
+        .setChangedWhen(it.getChangedWhen())
+        .setChangedWho(it.getChangedWho().getValue());
+  }
+
+  CustomerDboSecretEx toDbo(CustomerSecretEx it) {
+    return new CustomerDboSecretEx()
+        .setLocation(it.getLocation())
+        .setPassword(it.getPassword())
+        .setUsername(it.getUsername())
+        .setEntityCode(it.getEntityCode())
+        .setEntityName(it.getEntityName())
+        .setChangedWhen(it.getChangedWhen())
+        .setChangedWho(it.getChangedWho().getValue());
   }
 
   public Boolean remove(ShardedId id) {
