@@ -1,7 +1,0 @@
-management:
-    metrics:
-        binders:
-            jvm:
-                enabled: true      
-# logging level is warn because we don't need a lot of logs whe application is starting
-logging.level: warn
