@@ -6,7 +6,7 @@
         <version>${revision}</version>
         <relativePath>../base-pom/pom.xml</relativePath>
     </parent>
-    <artifactId>uservice-timeentries-migratedb</artifactId>
+    <artifactId>uservice-timeentries-initdb-migrate</artifactId>
 
     <dependencies>
         <dependency>

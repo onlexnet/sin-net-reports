@@ -58,13 +58,13 @@
 
       <dependency>
         <groupId>net.siudek</groupId>
-        <artifactId>uservice-timeentries-testdb</artifactId>
+        <artifactId>uservice-timeentries-initdb-test</artifactId>
         <version>${project.version}</version>
         <scope>test</scope>
       </dependency>
       <dependency>
         <groupId>net.siudek</groupId>
-        <artifactId>uservice-timeentries-migratedb</artifactId>
+        <artifactId>uservice-timeentries-initdb-migrate</artifactId>
         <version>${project.version}</version>
         <scope>test</scope>
       </dependency>

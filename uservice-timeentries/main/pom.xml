@@ -12,9 +12,9 @@
   <modules>
     <module>base-pom</module>
     <module>host</module>
+    <module>initdb-migrate</module>
+    <module>initdb-test</module>
     <module>initdb</module>
-    <module>testdb</module>
-    <module>migratedb</module>
   </modules>
 
   <properties>
