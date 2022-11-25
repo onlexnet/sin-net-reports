@@ -12,13 +12,16 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 @Repository
 public interface ProjectRepository extends JpaRepository<ProjectRepository.DboTemplate, UUID> {
 
+  
   @Entity
   @Table(name = "projects")
   @Data
+  @Accessors(chain = true)
   static class DboTemplate {
     @Id
     @Column(name = "entity_id")
@@ -26,7 +29,7 @@ public interface ProjectRepository extends JpaRepository<ProjectRepository.DboTe
 
     @Version
     @Column(name = "entity_version")
-    private int entityVersion;
+    private Long entityVersion;
 
     @Column(name = "name")
     private String name;

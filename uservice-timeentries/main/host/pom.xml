@@ -7,7 +7,7 @@
     <relativePath>../base-pom/pom.xml</relativePath>
   </parent>
 
-  <artifactId>host</artifactId>
+  <artifactId>uservice-timeentries-host</artifactId>
 
   <properties>
     <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/../${aggregate.report.dir}</sonar.coverage.jacoco.xmlReportPaths>
