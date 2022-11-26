@@ -10,7 +10,6 @@ import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Embeddable;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Table;
@@ -79,13 +78,13 @@ public interface CustomerRepository extends JpaRepository<CustomerRepository.Cus
     private Boolean nfzMaFilie;
 
     @Column(name = "nfz_lekarz")
-    private Boolean nfz_lekarz;
+    private Boolean nfzLekarz;
 
     @Column(name = "nfz_polozna")
     private Boolean nfzPolozna;
 
     @Column(name = "nfz_pielegniarka_srodowiskowa")
-    private Boolean nfz_pielegniarka_srodowiskowa;
+    private Boolean nfzPielegniarka_srodowiskowa;
 
     @Column(name = "nfz_medycyna_szkolna")
     private Boolean nfz_medycyna_szkolna;

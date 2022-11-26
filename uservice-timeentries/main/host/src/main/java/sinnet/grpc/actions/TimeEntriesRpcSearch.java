@@ -38,7 +38,7 @@ public class TimeEntriesRpcSearch implements RpcQueryHandler<SearchQuery, Search
   private TimeEntryModel map(Entity<ActionValue> item) {
     return PropsBuilder.build(TimeEntryModel.newBuilder())
         .set(item.getId(), this::toDto, b -> b::setEntityId)
-        .set(item.getValue(), ActionValue::getWhom, o -> o.toString(), b -> b::setCustomerId)
+        .set(item.getValue(), ActionValue::getWhom, UUID::toString, b -> b::setCustomerId)
         .set(item.getValue(), o -> o.getWho().getValue(), b -> b::setServicemanEmail)
         .set(item.getValue(), ActionValue::getWho, ValEmail::getValue, b -> b::setServicemanName)
         .set(item.getValue(), o -> o.getWhen(), o -> toDto(o), b -> b::setWhenProvided)
