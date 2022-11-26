@@ -5,8 +5,6 @@ import java.util.UUID;
 import org.springframework.stereotype.Component;
 
 import io.grpc.stub.StreamObserver;
-import sinnet.grpc.customers.ReserveReply;
-import sinnet.grpc.customers.ReserveRequest;
 import sinnet.models.ShardedId;
 
 @Component

@@ -4,16 +4,6 @@ import org.springframework.stereotype.Component;
 
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
-import sinnet.grpc.customers.GetReply;
-import sinnet.grpc.customers.GetRequest;
-import sinnet.grpc.customers.ListReply;
-import sinnet.grpc.customers.ListRequest;
-import sinnet.grpc.customers.RemoveReply;
-import sinnet.grpc.customers.RemoveRequest;
-import sinnet.grpc.customers.ReserveReply;
-import sinnet.grpc.customers.ReserveRequest;
-import sinnet.grpc.customers.UpdateCommand;
-import sinnet.grpc.customers.UpdateResult;
 import sinnet.grpc.customers.CustomersGrpc.CustomersImplBase;
 
 @Component

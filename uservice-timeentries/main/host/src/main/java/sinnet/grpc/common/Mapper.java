@@ -30,8 +30,8 @@ public interface Mapper {
     if (eid == null)
       return null;
     return PropsBuilder.build(sinnet.grpc.common.EntityId.newBuilder())
-        .set(eid.getProjectId(), o -> o.toString(), b -> b::setProjectId)
-        .set(eid.getId(), o -> o.toString(), b -> b::setEntityId)
+        .set(eid.getProjectId(), UUID::toString, b -> b::setProjectId)
+        .set(eid.getId(), UUID::toString, b -> b::setEntityId)
         .set(eid.getVersion(), b -> b::setEntityVersion)
         .done().build();
   }

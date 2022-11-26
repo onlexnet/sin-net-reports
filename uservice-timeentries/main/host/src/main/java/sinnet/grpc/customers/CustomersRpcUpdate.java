@@ -4,8 +4,6 @@ import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import sinnet.grpc.customers.UpdateCommand;
-import sinnet.grpc.customers.UpdateResult;
 import sinnet.grpc.mapping.RpcCommandHandler;
 import sinnet.models.ValEmail;
 

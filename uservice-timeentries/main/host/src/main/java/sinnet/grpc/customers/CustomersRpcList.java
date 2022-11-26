@@ -1,21 +1,12 @@
 package sinnet.grpc.customers;
 
-import static sinnet.grpc.mapping.PropsBuilder.ofNullable;
-
 import java.util.UUID;
 
 import org.springframework.stereotype.Component;
 
-import io.grpc.stub.StreamObserver;
-import io.vavr.collection.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import sinnet.grpc.common.EntityId;
-import sinnet.grpc.customers.ListReply;
-import sinnet.grpc.customers.ListRequest;
-import sinnet.grpc.mapping.PropsBuilder;
 import sinnet.grpc.mapping.RpcQueryHandler;
-import sinnet.models.CustomerModel;
 
 @Component
 @RequiredArgsConstructor
