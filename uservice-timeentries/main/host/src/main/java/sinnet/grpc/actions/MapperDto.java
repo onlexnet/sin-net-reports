@@ -8,7 +8,7 @@ import sinnet.grpc.timeentries.TimeEntryModel;
 import sinnet.models.ActionDuration;
 import sinnet.models.ActionValue;
 import sinnet.models.Distance;
-import sinnet.models.Email;
+import sinnet.models.ValEmail;
 import sinnet.models.Entity;
 import sinnet.models.ShardedId;
 
@@ -48,7 +48,7 @@ public interface MapperDto extends sinnet.grpc.common.Mapper {
       var customerIdAsString = dto.getCustomerId();
       var customerId = UUID.fromString(customerIdAsString);
       var value = new ActionValue()
-          .setWho(Email.of(dto.getServicemanEmail()))
+          .setWho(ValEmail.of(dto.getServicemanEmail()))
           .setWhen(fromDto(dto.getWhenProvided()))
           .setWhom(customerId)
           .setWhat(dto.getDescription())

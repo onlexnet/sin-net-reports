@@ -11,7 +11,7 @@ import sinnet.grpc.mapping.RpcCommandHandler;
 import sinnet.grpc.timeentries.ReserveCommand;
 import sinnet.grpc.timeentries.ReserveResult;
 import sinnet.models.ActionValue;
-import sinnet.models.Email;
+import sinnet.models.ValEmail;
 import sinnet.models.ShardedId;
 import sinnet.write.ActionRepositoryEx;
 
@@ -28,7 +28,7 @@ public class TimeEntriesRpcReserve implements RpcCommandHandler<ReserveCommand, 
     var whenProvided = fromDto(cmd.getWhen());
     var projectId = UUID.fromString(cmd.getInvoker().getProjectId());
     var model = new ActionValue()
-        .setWho(Email.of(emailOfCurrentUser))
+        .setWho(ValEmail.of(emailOfCurrentUser))
         .setWhen(whenProvided);
     var entityId = ShardedId.anyNew(projectId);
     actionService.save(entityId, model);

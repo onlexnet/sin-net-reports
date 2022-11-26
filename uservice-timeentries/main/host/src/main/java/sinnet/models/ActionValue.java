@@ -12,7 +12,7 @@ import lombok.experimental.Accessors;
 public class ActionValue implements EntityValue<ActionValue> {
 
   /** Serviceman who did the service. */
-  private Email who = Email.empty();
+  private ValEmail who = ValEmail.empty();
 
   /** Date when the service has been provided. */
   private LocalDate when;

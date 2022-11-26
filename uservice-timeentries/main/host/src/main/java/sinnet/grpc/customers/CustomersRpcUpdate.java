@@ -7,7 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import sinnet.grpc.customers.UpdateCommand;
 import sinnet.grpc.customers.UpdateResult;
 import sinnet.grpc.mapping.RpcCommandHandler;
-import sinnet.models.Email;
+import sinnet.models.ValEmail;
 
 @Component
 @RequiredArgsConstructor
@@ -20,7 +20,7 @@ public class CustomersRpcUpdate implements
 
   @Override
   public UpdateResult apply(UpdateCommand cmd) {
-    var emailOfRequestor = Email.of(cmd.getUserToken().getRequestorEmail());
+    var emailOfRequestor = ValEmail.of(cmd.getUserToken().getRequestorEmail());
     var model = fromDto(cmd.getModel());
     var newId = repository.write(model);
     return UpdateResult.newBuilder()

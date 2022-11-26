@@ -14,7 +14,7 @@ import sinnet.grpc.timeentries.UpdateResult;
 import sinnet.models.ActionDuration;
 import sinnet.models.ActionValue;
 import sinnet.models.Distance;
-import sinnet.models.Email;
+import sinnet.models.ValEmail;
 import sinnet.models.ShardedId;
 import sinnet.write.ActionRepositoryEx;
 

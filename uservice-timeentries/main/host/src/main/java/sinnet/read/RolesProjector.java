@@ -2,12 +2,12 @@ package sinnet.read;
 
 import java.util.UUID;
 
-import sinnet.models.Email;
+import sinnet.models.ValEmail;
 
 public interface RolesProjector {
 
   interface Provider {
-    Role find(Email email, UUID projectId);
+    Role find(ValEmail email, UUID projectId);
   }
 
   enum Role {

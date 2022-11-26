@@ -11,6 +11,6 @@ public final class CustomerSecret {
   private String location;
   private String username;
   private String password;
-  private Email changedWho = Email.empty();
+  private ValEmail changedWho = ValEmail.empty();
   private LocalDateTime changedWhen;
 }

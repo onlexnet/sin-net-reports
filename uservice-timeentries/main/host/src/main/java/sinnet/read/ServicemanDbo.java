@@ -21,7 +21,7 @@ public class ServicemanDbo {
     @Column(name = "email")
     private String email;
     @Column(name = "project_entity_id")
-    private UUID projectEntityId;
+    private UUID projectId;
     @Column(name = "entity_version")
     private Integer entityVersion;
     @Column(name = "custom_name")

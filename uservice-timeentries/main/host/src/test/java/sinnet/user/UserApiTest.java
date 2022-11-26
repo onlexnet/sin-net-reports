@@ -17,29 +17,50 @@ import sinnet.grpc.common.UserToken;
 import sinnet.grpc.users.SearchReply;
 import sinnet.grpc.users.SearchRequest;
 import sinnet.grpc.users.UsersGrpc;
+import sinnet.grpc.users.UsersGrpc.UsersBlockingStub;
 
 @DisplayNameGeneration(DisplayNameGenerator.IndicativeSentences.class)
 @SpringBootTest(webEnvironment = WebEnvironment.NONE)
 @ExtendWith(PostgresDbExtension.class)
 class UserApiTest {
-  
+
   @Value("${grpc.server.port}")
   private int grpcPort;
 
-  @Test
-  public void readEmptyUsers() {
+  record Context(UsersBlockingStub rpc, UserToken utoken) {
+  }
 
+  Context ctx() {
     var channel = ManagedChannelBuilder.forAddress("localhost", grpcPort)
         .usePlaintext()
         .build();
     var token = UserToken.newBuilder().setProjectId(UUID.randomUUID().toString()).build();
     var service = UsersGrpc.newBlockingStub(channel);
-    var request = SearchRequest.newBuilder().setUserToken(token) .build();
-    
-    var actual = service.search(request);
-    
+    return new Context(service, token);
+  }
+
+  @Test
+  void readEmptyUsers() {
+    var ctx = ctx();
+    var request = SearchRequest.newBuilder().setUserToken(ctx.utoken()).build();
+    var actual = ctx.rpc().search(request);
+
     var expected = SearchReply.newBuilder().build();
 
     Assertions.assertThat(actual).isEqualTo(expected);
   }
+
+  @Test
+  void readEmptyUsers1() {
+    var ctx = ctx();
+    var request = SearchRequest.newBuilder()
+      .setUserToken(ctx.utoken())
+      .build();
+    var actual = ctx.rpc().search(request);
+
+    var expected = SearchReply.newBuilder().build();
+
+    Assertions.assertThat(actual).isEqualTo(expected);
+  }
+
 }

@@ -1,4 +1,4 @@
-package sinnet;
+package sinnet.grpc.infra;
 
 import javax.annotation.PostConstruct;
 
@@ -32,8 +32,9 @@ public class GrpcServer implements AutoCloseable {
     for (var bindableService : services) {
       builder.addService(bindableService);
     }
-    server = builder.build();
-
+    server = builder
+      .intercept(new ExceptionHandler())
+      .build();
     server.start();
   }
 

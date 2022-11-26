@@ -11,7 +11,7 @@ import sinnet.models.CustomerModel;
 import sinnet.models.CustomerSecret;
 import sinnet.models.CustomerSecretEx;
 import sinnet.models.CustomerValue;
-import sinnet.models.Email;
+import sinnet.models.ValEmail;
 import sinnet.models.Name;
 
 /**
@@ -53,7 +53,7 @@ public interface MapperDto extends Mapper {
         .setLocation(item.getLocation())
         .setPassword(item.getPassword())
         .setUsername(item.getUsername())
-        .setChangedWho(Email.of(item.getChangedWho()))
+        .setChangedWho(ValEmail.of(item.getChangedWho()))
         .setChangedWhen(fromDto(item.getChangedWhen()));
   }
 
@@ -64,7 +64,7 @@ public interface MapperDto extends Mapper {
         .setUsername(item.getUsername())
         .setEntityCode(item.getEntityCode())
         .setEntityName(item.getEntityName())
-        .setChangedWho(Email.of(item.getChangedWho()))
+        .setChangedWho(ValEmail.of(item.getChangedWho()))
         .setChangedWhen(fromDto(item.getChangedWhen()));
   }
 
@@ -81,7 +81,7 @@ public interface MapperDto extends Mapper {
     if (dto == null)
       return null;
     return new CustomerValue()
-        .operatorEmail(Email.of(dto.getOperatorEmail()))
+        .operatorEmail(ValEmail.of(dto.getOperatorEmail()))
         .supportStatus(dto.getSupportStatus())
         .billingModel(dto.getBillingModel())
         .distance(dto.getDistance())
@@ -112,7 +112,7 @@ public interface MapperDto extends Mapper {
 
   default sinnet.grpc.customers.CustomerValue toDto(CustomerValue value) {
     return PropsBuilder.build(sinnet.grpc.customers.CustomerValue.newBuilder())
-        .set(value.operatorEmail(), Email::getValue, b -> b::setOperatorEmail)
+        .set(value.operatorEmail(), ValEmail::getValue, b -> b::setOperatorEmail)
         .set(value.billingModel(), b -> b::setBillingModel)
         .set(value.supportStatus(), b -> b::setSupportStatus)
         .set(value.distance(), b -> b::setDistance)

@@ -13,6 +13,6 @@ public final class CustomerSecretEx {
   private String password;
   private String entityName;
   private String entityCode;
-  private Email changedWho = Email.empty();
+  private ValEmail changedWho = ValEmail.empty();
   private LocalDateTime changedWhen;
 }

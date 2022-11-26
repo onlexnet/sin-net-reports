@@ -12,7 +12,7 @@ import sinnet.grpc.timeentries.SearchQuery;
 import sinnet.grpc.timeentries.SearchReply;
 import sinnet.grpc.timeentries.TimeEntryModel;
 import sinnet.models.ActionValue;
-import sinnet.models.Email;
+import sinnet.models.ValEmail;
 import sinnet.models.Entity;
 import sinnet.write.ActionRepositoryEx;
 
@@ -40,7 +40,7 @@ public class TimeEntriesRpcSearch implements RpcQueryHandler<SearchQuery, Search
         .set(item.getId(), this::toDto, b -> b::setEntityId)
         .set(item.getValue(), ActionValue::getWhom, o -> o.toString(), b -> b::setCustomerId)
         .set(item.getValue(), o -> o.getWho().getValue(), b -> b::setServicemanEmail)
-        .set(item.getValue(), ActionValue::getWho, Email::getValue, b -> b::setServicemanName)
+        .set(item.getValue(), ActionValue::getWho, ValEmail::getValue, b -> b::setServicemanName)
         .set(item.getValue(), o -> o.getWhen(), o -> toDto(o), b -> b::setWhenProvided)
         .set(item.getValue(), o -> o.getWhat(), b -> b::setDescription)
         .set(item.getValue(), o -> o.getHowLong().getValue(), b -> b::setDuration)

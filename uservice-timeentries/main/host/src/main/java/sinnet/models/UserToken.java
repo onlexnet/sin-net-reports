@@ -4,5 +4,5 @@ import lombok.Value;
 
 @Value
 public class UserToken {
-    private Email email;
+    private ValEmail email;
 }

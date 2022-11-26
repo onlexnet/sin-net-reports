@@ -4,7 +4,7 @@ import sinnet.action.ActionRepository.ActionDbo;
 import sinnet.models.ActionDuration;
 import sinnet.models.ActionValue;
 import sinnet.models.Distance;
-import sinnet.models.Email;
+import sinnet.models.ValEmail;
 import sinnet.models.Entity;
 
 public interface MapperDbo {
@@ -28,7 +28,7 @@ public interface MapperDbo {
 
   default Entity<ActionValue> fromDbo(ActionDbo dbo) {
     return new ActionValue()
-      .setWho(Email.of(dbo.getServicemanEmail()))
+      .setWho(ValEmail.of(dbo.getServicemanEmail()))
       .setWhen(dbo.getDate())
       .setWhom(dbo.getCustomerId())
       .setWhat(dbo.getDescription())

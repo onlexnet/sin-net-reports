@@ -3,7 +3,7 @@ package sinnet.grpc.common;
 import java.util.UUID;
 
 import sinnet.grpc.mapping.PropsBuilder;
-import sinnet.models.Email;
+import sinnet.models.ValEmail;
 import sinnet.models.Entity;
 import sinnet.models.ShardedId;
 import sinnet.models.UserToken;
@@ -22,7 +22,7 @@ public interface Mapper {
 
   default UserToken fromDto(sinnet.grpc.common.UserToken dtoModel) {
     var emailAsString = dtoModel.getRequestorEmail();
-    var email = Email.of(emailAsString);
+    var email = ValEmail.of(emailAsString);
     return new UserToken(email);
   }
 

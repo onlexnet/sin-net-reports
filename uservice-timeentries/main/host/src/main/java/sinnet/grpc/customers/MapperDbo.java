@@ -8,7 +8,7 @@ import sinnet.models.CustomerSecret;
 import sinnet.models.CustomerSecretEx;
 import sinnet.models.CustomerValue;
 import sinnet.models.Name;
-import sinnet.models.Email;
+import sinnet.models.ValEmail;
 import sinnet.models.ShardedId;
 
 public interface MapperDbo {
@@ -28,7 +28,7 @@ public interface MapperDbo {
       .setLocation(dbo.getLocation())
       .setEntityName(dbo.getEntityName())
       .setEntityCode(dbo.getEntityCode())
-      .setChangedWho(Email.of(dbo.getChangedWho()))
+      .setChangedWho(ValEmail.of(dbo.getChangedWho()))
       .setChangedWhen(dbo.getChangedWhen());
   }
 
@@ -37,7 +37,7 @@ public interface MapperDbo {
       .setUsername(dbo.getUsername())
       .setPassword(dbo.getPassword())
       .setLocation(dbo.getLocation())
-      .setChangedWho(Email.of(dbo.getChangedWho()))
+      .setChangedWho(ValEmail.of(dbo.getChangedWho()))
       .setChangedWhen(dbo.getChangedWhen());
   }
 
@@ -47,7 +47,7 @@ public interface MapperDbo {
     var secrets = dbo.getSecrets().stream().map(this::fromDbo).toList();
     var secretsEx = dbo.getSecretsEx().stream().map(this::fromDbo).toList();
     var value = new CustomerValue()
-      .operatorEmail(Email.of(dbo.getOperatorEmail()))
+      .operatorEmail(ValEmail.of(dbo.getOperatorEmail()))
       .billingModel(dbo.getBillingModel())
       .supportStatus(dbo.getSupportStatus())
       .distance(dbo.getDistance())

@@ -1,9 +1,9 @@
 package sinnet.grpc.users;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import io.vavr.collection.List;
 import sinnet.grpc.common.Mapper;
 import sinnet.grpc.mapping.PropsBuilder;
 import sinnet.read.UserModel;
@@ -13,8 +13,8 @@ import sinnet.read.UserModel;
  */
 public interface MapperDto extends Mapper {
 
-  default List<sinnet.grpc.users.UsersSearchModel> toDto(List<UserModel> model) {
-    return model.stream().map(this::toDto).toList();
+  default java.util.List<sinnet.grpc.users.UsersSearchModel> toDto(List<UserModel> model) {
+    return model.map(this::toDto).toJavaList();
   }
 
   default sinnet.grpc.users.UsersSearchModel toDto(UserModel model) {
