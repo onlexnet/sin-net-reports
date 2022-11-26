@@ -13,6 +13,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Table;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -31,6 +32,7 @@ public interface CustomerRepository extends JpaRepository<CustomerRepository.Cus
   CustomerDbo findByProjectidEntityid(UUID projectId, UUID entityId);
 
   @Entity
+  @Table(name = "customers")
   @Data
   @EqualsAndHashCode(onlyExplicitlyIncluded = true)
   @Accessors(chain = true)
@@ -130,15 +132,15 @@ public interface CustomerRepository extends JpaRepository<CustomerRepository.Cus
     @Column(name = "dane_techniczne")
     private String daneTechniczne;
 
-    @ElementCollection(fetch = FetchType.EAGER)
+    @ElementCollection
     @CollectionTable(name = "contact", joinColumns = @JoinColumn(name = "customer_id"))
     private List<CustomerDboContact> contacts;
 
-    @ElementCollection(fetch = FetchType.EAGER)
+    @ElementCollection
     @CollectionTable(name = "secret", joinColumns = @JoinColumn(name = "customer_id"))
     private List<CustomerDboSecret> secrets;
 
-    @ElementCollection(fetch = FetchType.EAGER)
+    @ElementCollection
     @CollectionTable(name = "secret_ex", joinColumns = @JoinColumn(name = "customer_id"))
     private List<CustomerDboSecretEx> secretsEx;
   }

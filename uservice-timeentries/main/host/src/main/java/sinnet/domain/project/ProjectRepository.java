@@ -6,6 +6,7 @@ import java.util.UUID;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
+import javax.persistence.Embeddable;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -38,13 +39,5 @@ public interface ProjectRepository extends JpaRepository<ProjectRepository.DboTe
     @Column(name = "name")
     private String name;
 
-    @ElementCollection
-    @CollectionTable(name = "project_operator1", joinColumns = @JoinColumn(name = "project_id"))
-    private List<ProjectOperatorDbo> operators = List.of();
-  }
-
-  @Data
-  class ProjectOperatorDbo {
-    String email;
   }
 }
