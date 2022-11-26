@@ -25,7 +25,9 @@ public class UsersProjectorImpl implements UsersRepositoryEx {
 
   @Override
   public List<UserModel> search(UUID projectId, Email serviceMan) {
-    var probe = new ServicemanDbo().setEmail(serviceMan.getValue()).setProjectEntityId(projectId);
+    var probe = new ServicemanDbo()
+        .setEmail(serviceMan.getValue())
+        .setProjectEntityId(projectId);
     var example = Example.of(probe);
     return repository
         .findAll(example)

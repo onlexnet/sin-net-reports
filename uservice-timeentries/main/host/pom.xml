@@ -25,6 +25,18 @@
     </dependency>
 
     <dependency>
+      <groupId>net.siudek</groupId>
+      <artifactId>uservice-timeentries-initdb-migrate</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>net.siudek</groupId>
+      <artifactId>uservice-timeentries-initdb-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+
+    <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
       <scope>test</scope>

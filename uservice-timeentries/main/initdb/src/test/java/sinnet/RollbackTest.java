@@ -16,6 +16,7 @@ import liquibase.integration.spring.SpringLiquibase;
 import liquibase.resource.ClassLoaderResourceAccessor;
 import lombok.Cleanup;
 import lombok.SneakyThrows;
+import sinnet.db.PostgresDbExtension;
 
 @DisplayNameGeneration(DisplayNameGenerator.IndicativeSentences.class)
 @SpringBootTest(webEnvironment = WebEnvironment.NONE)
