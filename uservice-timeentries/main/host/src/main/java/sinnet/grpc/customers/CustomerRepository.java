@@ -25,11 +25,11 @@ import lombok.experimental.Accessors;
 @Repository
 public interface CustomerRepository extends JpaRepository<CustomerRepository.CustomerDbo, UUID> {
 
-  void deleteByProjectidEntityidEntityversion(UUID projectId, UUID entityId, Long version);
+  void deleteByProjectIdAndEntityIdAndEntityVersion(UUID projectId, UUID entityId, Long version);
 
-  Stream<CustomerDbo> findByProjectid(UUID projectId);
+  Stream<CustomerDbo> findByProjectId(UUID projectId);
   
-  CustomerDbo findByProjectidEntityid(UUID projectId, UUID entityId);
+  CustomerDbo findByProjectIdAndEntityId(UUID projectId, UUID entityId);
 
   @Entity
   @Table(name = "customers")
@@ -45,11 +45,11 @@ public interface CustomerRepository extends JpaRepository<CustomerRepository.Cus
     @Column(name = "entity_id")
     @Id
     @EqualsAndHashCode.Include
-    private UUID id;
+    private UUID entityId;
 
     @Column(name = "entity_version")
     @EqualsAndHashCode.Include
-    private Long version;
+    private Long entityVersion;
 
     @Column(name = "customer_name")
     private String customerName;

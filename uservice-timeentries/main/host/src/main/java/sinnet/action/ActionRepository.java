@@ -18,9 +18,9 @@ import lombok.experimental.Accessors;
 @Repository
 public interface ActionRepository extends JpaRepository<ActionRepository.ActionDbo, UUID> {
   
-  void deleteByProjectidEntityidEntityversion(UUID projectId, UUID entityId, long version);
-  ActionDbo findByProjectidEntityidEntityversion(UUID projectId, UUID entityId, long version);
-  ActionDbo findByProjectidEntityid(UUID projectId, UUID entityId);
+  void deleteByProjectIdAndEntityIdAndEntityVersion(UUID projectId, UUID entityId, long version);
+  ActionDbo findByProjectIdAndEntityIdAndEntityVersion(UUID projectId, UUID entityId, long version);
+  ActionDbo findByProjectIdAndEntityId(UUID projectId, UUID entityId);
 
   @Entity
   @Table(name = "actions")

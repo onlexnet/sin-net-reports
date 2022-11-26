@@ -21,7 +21,7 @@ public class CustomersRpcGet implements
     var projectId = UUID.fromString(request.getEntityId().getProjectId());
     var entityId = UUID.fromString(request.getEntityId().getEntityId());
 
-    var dbo = repository.findByProjectidEntityid(projectId, entityId);
+    var dbo = repository.findByProjectIdAndEntityId(projectId, entityId);
     var result = this.fromDbo(dbo);
     var dto = this.toDto(result);
     return GetReply.newBuilder().setModel(dto).build();

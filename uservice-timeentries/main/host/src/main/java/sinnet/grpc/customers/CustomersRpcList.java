@@ -29,7 +29,7 @@ class CustomersRpcList implements RpcQueryHandler<ListRequest, ListReply>,
   @Override
   public ListReply apply(ListRequest request) {
     var projectId = UUID.fromString(request.getProjectId());
-    var result = repository.findByProjectid(projectId).map(this::fromDbo);
+    var result = repository.findByProjectId(projectId).map(this::fromDbo);
     var response = result.map(this::toDto).toList();
 
     return ListReply.newBuilder()

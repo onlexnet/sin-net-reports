@@ -42,7 +42,7 @@ public interface MapperDbo {
   }
 
   default CustomerModel fromDbo(CustomerRepository.CustomerDbo dbo) {
-    var id = ShardedId.of(dbo.getProjectId(), dbo.getId() , dbo.getVersion());
+    var id = ShardedId.of(dbo.getProjectId(), dbo.getEntityId() , dbo.getEntityVersion());
     var contacts = dbo.getContacts().stream().map(this::fromDbo).toList();
     var secrets = dbo.getSecrets().stream().map(this::fromDbo).toList();
     var secretsEx = dbo.getSecretsEx().stream().map(this::fromDbo).toList();

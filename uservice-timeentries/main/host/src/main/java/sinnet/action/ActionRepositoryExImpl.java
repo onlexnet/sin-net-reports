@@ -33,7 +33,7 @@ public class ActionRepositoryExImpl implements ActionRepositoryEx, MapperDbo {
     var desired = entity;
     var template = toDbo(desired);
     var id = entity.getId();
-    var actual = repository.findByProjectidEntityidEntityversion(id.getProjectId(), id.getId(), id.getVersion());
+    var actual = repository.findByProjectIdAndEntityIdAndEntityVersion(id.getProjectId(), id.getId(), id.getVersion());
     actual.setServicemanEmail(template.getServicemanEmail());
     actual.setDescription(template.getDescription());
     actual.setDistance(template.getDistance());
@@ -49,7 +49,7 @@ public class ActionRepositoryExImpl implements ActionRepositoryEx, MapperDbo {
     var projectId = id.getProjectId();
     var entityId = id.getId();
     var version = id.getVersion();
-    repository.deleteByProjectidEntityidEntityversion(projectId, entityId, version);
+    repository.deleteByProjectIdAndEntityIdAndEntityVersion(projectId, entityId, version);
     return true;
   }
 
@@ -63,7 +63,7 @@ public class ActionRepositoryExImpl implements ActionRepositoryEx, MapperDbo {
 
   @Override
   public Entity<ActionValue> get(UUID projectId, UUID eid) {
-    var dbo = repository.findByProjectidEntityid(projectId, eid);
+    var dbo = repository.findByProjectIdAndEntityId(projectId, eid);
     return fromDbo(dbo);
   }
 
