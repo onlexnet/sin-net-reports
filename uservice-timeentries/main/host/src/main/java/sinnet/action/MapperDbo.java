@@ -10,11 +10,12 @@ import sinnet.models.Entity;
 public interface MapperDbo {
 
   default ActionDbo toDbo(Entity<ActionValue> entity) {
+    var id = entity.getId();
     var value = entity.getValue();
     return new ActionDbo()
-      .setProjectId(entity.getProjectId())
-      .setEntityId(entity.getEntityId())
-      .setEntityVersion(entity.getVersion())
+      .setProjectId(id.getProjectId())
+      .setEntityId(id.getId())
+      .setEntityVersion(id.getVersion())
       .setServicemanEmail(value.getWho().getValue())
       .setDescription(value.getWhat())
       .setDistance(value.getHowFar().getValue())

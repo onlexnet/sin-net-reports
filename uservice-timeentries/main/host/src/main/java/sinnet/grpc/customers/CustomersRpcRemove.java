@@ -5,12 +5,10 @@ import java.util.UUID;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import sinnet.grpc.mapping.RpcCommandHandler;
 import sinnet.models.ShardedId;
 
 @Component
-@Slf4j
 @RequiredArgsConstructor
 public class CustomersRpcRemove implements
     RpcCommandHandler<RemoveRequest, RemoveReply> {

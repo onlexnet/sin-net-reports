@@ -2,14 +2,13 @@ package sinnet.read.dailyreport;
 
 import java.time.LocalDate;
 
-import javax.persistence.Table;
+import jakarta.persistence.Table;
 
 import org.springframework.data.annotation.Id;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/** FixMe. */
 @NoArgsConstructor
 @Data
 @Table(name =  Const.PROJECTION_NAME)

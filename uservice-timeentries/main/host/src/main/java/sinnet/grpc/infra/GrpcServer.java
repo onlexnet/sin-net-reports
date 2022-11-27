@@ -1,7 +1,5 @@
 package sinnet.grpc.infra;
 
-import javax.annotation.PostConstruct;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -25,7 +23,7 @@ public class GrpcServer implements AutoCloseable {
 
   private Server server;
 
-  @PostConstruct
+  @jakarta.annotation.PostConstruct
   @SneakyThrows
   public void start() {
     var builder = ServerBuilder.forPort(port);

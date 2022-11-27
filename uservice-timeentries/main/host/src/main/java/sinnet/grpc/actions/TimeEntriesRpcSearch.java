@@ -1,5 +1,6 @@
 package sinnet.grpc.actions;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.stereotype.Component;
@@ -18,7 +19,6 @@ import sinnet.write.ActionRepositoryEx;
 
 @Component
 @RequiredArgsConstructor
-@Slf4j
 public class TimeEntriesRpcSearch implements RpcQueryHandler<SearchQuery, SearchReply>, MapperDto {
 
   private final ActionRepositoryEx repository;
@@ -41,8 +41,8 @@ public class TimeEntriesRpcSearch implements RpcQueryHandler<SearchQuery, Search
         .set(item.getValue(), ActionValue::getWhom, UUID::toString, b -> b::setCustomerId)
         .set(item.getValue(), o -> o.getWho().getValue(), b -> b::setServicemanEmail)
         .set(item.getValue(), ActionValue::getWho, ValEmail::getValue, b -> b::setServicemanName)
-        .set(item.getValue(), o -> o.getWhen(), o -> toDto(o), b -> b::setWhenProvided)
-        .set(item.getValue(), o -> o.getWhat(), b -> b::setDescription)
+        .set(item.getValue(), ActionValue::getWhen, o -> toDto(o), b -> b::setWhenProvided)
+        .set(item.getValue(), ActionValue::getWhat, b -> b::setDescription)
         .set(item.getValue(), o -> o.getHowLong().getValue(), b -> b::setDuration)
         .set(item.getValue(), o -> o.getHowFar().getValue(), b -> b::setDistance)
         .done().build();

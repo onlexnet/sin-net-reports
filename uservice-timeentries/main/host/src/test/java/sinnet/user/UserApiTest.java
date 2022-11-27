@@ -11,13 +11,23 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 
+import com.google.protobuf.ByteString;
+
+import io.dapr.serializer.DefaultObjectSerializer;
+import io.dapr.v1.AppCallbackGrpc;
+import io.dapr.v1.DaprGrpc.DaprBlockingStub;
+import io.dapr.v1.DaprProtos.PublishEventRequest;
+import io.dapr.v1.AppCallbackGrpc.AppCallbackBlockingStub;
+import io.dapr.v1.DaprAppCallbackProtos.TopicEventRequest;
 import io.grpc.ManagedChannelBuilder;
+import lombok.SneakyThrows;
 import sinnet.db.PostgresDbExtension;
 import sinnet.grpc.common.UserToken;
 import sinnet.grpc.users.SearchReply;
 import sinnet.grpc.users.SearchRequest;
 import sinnet.grpc.users.UsersGrpc;
 import sinnet.grpc.users.UsersGrpc.UsersBlockingStub;
+import sinnet.project.events.ProjectCreatedEvent;
 
 @DisplayNameGeneration(DisplayNameGenerator.IndicativeSentences.class)
 @SpringBootTest(webEnvironment = WebEnvironment.NONE)
@@ -27,7 +37,7 @@ class UserApiTest {
   @Value("${grpc.server.port}")
   private int grpcPort;
 
-  record Context(UsersBlockingStub rpc, UserToken utoken) {
+  record Context(AppCallbackBlockingStub dapr, UsersBlockingStub rpc, UserToken utoken) {
   }
 
   Context ctx(UUID projectId, String requestorEmail) {
@@ -40,7 +50,8 @@ class UserApiTest {
         .setRequestorEmail(requestorEmail)
         .build();
     var service = UsersGrpc.newBlockingStub(channel);
-    return new Context(service, token);
+    var daprCallback = AppCallbackGrpc.newBlockingStub(channel);
+    return new Context(daprCallback, service, token);
   }
 
   Context ctx() {
@@ -73,6 +84,22 @@ class UserApiTest {
     var actualUsers = actual.getItemsList().stream().map(it -> it.getEmail()).toList();
 
     Assertions.assertThat(actualUsers).containsOnly(knownUser, "user1@project1", "user2@project1");
+  }
+
+  @Test
+  @SneakyThrows
+  void should_create_event_and_assign_invoker_as_user() {
+    var projectId = UUID.randomUUID();
+    var event = ProjectCreatedEvent.newBuilder()
+        .setEid(projectId.toString())
+        .setEtag(1)
+        .build();
+    var ser = new AvroObjectSerializer();
+    var a = ser.serialize(event);
+    var data = ByteString.copyFrom(a);
+    var ctx = ctx();
+    var te = TopicEventRequest.newBuilder().setData(data).build();
+    ctx.dapr().onTopicEvent(te);
   }
 
 }

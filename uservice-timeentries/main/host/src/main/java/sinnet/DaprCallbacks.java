@@ -34,10 +34,8 @@ class DaprCallbacks extends AppCallbackGrpc.AppCallbackImplBase {
     @Override
     @SneakyThrows
     public void onTopicEvent(TopicEventRequest request, StreamObserver<TopicEventResponse> responseObserver) {
-        var topicName = request.getTopic();
-        var data = request.getData().toStringUtf8();
-
-        var event = objectMapper.readValue(data, ProjectCreatedEvent.class);
+        var data = request.getData().toByteArray() ;
+        var event = ProjectCreatedEvent.getDecoder().decode(data);
         var eidAsString = event.getEid().toString();
         var eid = UUID.fromString(eidAsString);
         var etag = event.getEtag();

@@ -3,14 +3,12 @@ package sinnet.grpc.actions;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import sinnet.grpc.customers.CustomerRepositoryEx;
 import sinnet.grpc.mapping.RpcCommandHandler;
 import sinnet.grpc.timeentries.UpdateCommand;
 import sinnet.grpc.timeentries.UpdateResult;
 import sinnet.write.ActionRepositoryEx;
 
-/** Fixme. */
 @Component
 @RequiredArgsConstructor
 public class TimeEntriesRpcUpdate implements RpcCommandHandler<UpdateCommand, UpdateResult>, MapperDto {

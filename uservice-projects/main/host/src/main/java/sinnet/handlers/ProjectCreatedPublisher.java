@@ -7,13 +7,8 @@ import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
 
-import org.apache.avro.data.Json;
-import org.apache.avro.file.DataFileWriter;
 import org.apache.avro.io.EncoderFactory;
-import org.apache.avro.io.JsonEncoder;
 import org.apache.avro.specific.SpecificDatumWriter;
-
-import com.google.common.io.BaseEncoding;
 
 import io.dapr.client.DaprClient;
 import io.dapr.client.DaprClientBuilder;
@@ -21,7 +16,6 @@ import io.dapr.client.domain.PublishEventRequest;
 import lombok.SneakyThrows;
 import reactor.core.Disposable.Composite;
 import reactor.core.Disposables;
-import sinnet.grpc.projects.ProjectId;
 import sinnet.project.events.ProjectCreatedEvent;
 
 @ApplicationScoped
@@ -33,6 +27,7 @@ class ProjectCreatedPublisher {
   @PostConstruct
   void init() {
     client = new DaprClientBuilder()
+        .withObjectSerializer(null)
         .build();
   }
 
@@ -45,10 +40,8 @@ class ProjectCreatedPublisher {
     wr.write(event, encoder);
     encoder.flush();
     var data = stream.toByteArray();
-    var asString = new String(data);
 
-    var request = new PublishEventRequest("pubsub", "MYTOPICNAME", asString);
-    var result = request.getData();
+    var request = new PublishEventRequest("pubsub", "MYTOPICNAME", data);
     client.publishEvent(request).subscribe();
   }
 

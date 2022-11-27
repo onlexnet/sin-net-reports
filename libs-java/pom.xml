@@ -24,7 +24,6 @@
     <sonar.projectName>SinNet Reports</sonar.projectName>
 
     <spring-boot-azure.version>2.3.2</spring-boot-azure.version>
-    <spring-boot.version>2.4.3</spring-boot.version>
   </properties>
 
 

@@ -4,7 +4,6 @@ import java.util.UUID;
 
 import sinnet.grpc.mapping.PropsBuilder;
 import sinnet.models.ValEmail;
-import sinnet.models.Entity;
 import sinnet.models.ShardedId;
 import sinnet.models.UserToken;
 

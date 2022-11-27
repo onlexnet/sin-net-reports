@@ -4,20 +4,18 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Component;
 
-import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import sinnet.grpc.mapping.RpcCommandHandler;
 import sinnet.grpc.timeentries.ReserveCommand;
 import sinnet.grpc.timeentries.ReserveResult;
 import sinnet.models.ActionValue;
-import sinnet.models.ValEmail;
 import sinnet.models.ShardedId;
+import sinnet.models.ValEmail;
 import sinnet.write.ActionRepositoryEx;
 
 @Component
 @RequiredArgsConstructor
-@Slf4j
 public class TimeEntriesRpcReserve implements RpcCommandHandler<ReserveCommand, ReserveResult>, MapperDto {
 
   private final ActionRepositoryEx actionService;
