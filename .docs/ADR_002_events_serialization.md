@@ -12,3 +12,4 @@ Consequences: Changing serialization later on will no may be wasy as at some poi
 
 Notes:
 - [Serialization in DAP should be customised](https://github.com/dapr/java-sdk/issues/496) so we have our ser/deser  avro-native approach
+- [Avro bs Proto](https://dataforgeeks.com/data-serialisation-avro-vs-protocol-buffers/2015/)
