@@ -1,10 +1,10 @@
 package sinnet;
 
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.BootstrapWith;
 
 import io.cucumber.spring.CucumberContextConfiguration;
 
 @CucumberContextConfiguration
-@ContextConfiguration(classes = DiConfigurer.class)
+@BootstrapWith(SpringBootDbTestContextBootstrapper.class)
 class CucumberSpringConfiguration {
 }

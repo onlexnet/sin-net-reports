@@ -2,32 +2,46 @@ package sinnet.db;
 
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
+import org.junit.jupiter.api.extension.ConditionEvaluationResult;
+import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.testcontainers.containers.PostgreSQLContainer;
+
+import com.google.common.util.concurrent.Runnables;
+
+import io.vavr.Function0;
+import io.vavr.control.Option;
+import io.vavr.control.Try;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Reusable extension to start local PostgreSQL instance for µservices based on
  * its databases.
  */
-public final class PostgresDbExtension implements BeforeAllCallback, AfterAllCallback {
+public final class PostgresDbExtension implements BeforeAllCallback,
+    AfterAllCallback,
+    ExecutionCondition {
 
-  static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:14")
-      .withUsername("testcontainers")
-      .withPassword("testcontainers")
-      .withDatabaseName("testcontainers");
+  private AutoCloseable disposer = Runnables::doNothing;
+  private boolean disabled = false;
 
   @Override
   public void beforeAll(ExtensionContext context) throws Exception {
-    postgres.start();
-    System.setProperty("DATABASE_JDBC", postgres.getJdbcUrl());
-    System.setProperty("DATABASE_USERNAME", postgres.getUsername());
-    System.setProperty("DATABASE_PASSWORD", postgres.getPassword());
-    System.setProperty("DATABASE_SCHEMA", "public");
+    var dbRunner = new PostgresDbRunner();
+    disposer = dbRunner.start();
+    disabled = true;
   }
 
   @Override
   public void afterAll(ExtensionContext context) throws Exception {
-    postgres.stop();
+    disposer.close();
+  }
+
+  @Override
+  public ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext context) {
+    return !disabled
+        ? ConditionEvaluationResult.enabled(null)
+        : ConditionEvaluationResult.disabled("Database initialization issue");
   }
 
 }
