@@ -12,7 +12,7 @@ import sinnet.models.CustomerSecret;
 import sinnet.models.CustomerSecretEx;
 import sinnet.models.CustomerValue;
 import sinnet.models.ValEmail;
-import sinnet.models.Name;
+import sinnet.models.ValName;
 
 /**
  * Doman <-> Dto translations
@@ -85,8 +85,8 @@ public interface MapperDto extends Mapper {
         .supportStatus(dto.getSupportStatus())
         .billingModel(dto.getBillingModel())
         .distance(dto.getDistance())
-        .customerName(Name.of(dto.getCustomerName()))
-        .customerCityName(Name.of(dto.getCustomerCityName()))
+        .customerName(ValName.of(dto.getCustomerName()))
+        .customerCityName(ValName.of(dto.getCustomerCityName()))
         .customerAddress(dto.getCustomerAddress())
         .nfzUmowa(dto.getNfzUmowa())
         .nfzMaFilie(dto.getNfzMaFilie())

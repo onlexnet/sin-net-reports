@@ -10,8 +10,8 @@ public final class CustomerValue {
   private String billingModel;
   private String supportStatus;
   private Integer distance;
-  private Name customerName = Name.empty();
-  private Name customerCityName = Name.empty();
+  private ValName customerName = ValName.empty();
+  private ValName customerCityName = ValName.empty();
   private String customerAddress;
   private boolean nfzUmowa;
   private boolean nfzMaFilie;

@@ -9,22 +9,22 @@ import lombok.ToString;
 @EqualsAndHashCode
 @ToString
 @NoArgsConstructor
-public final class Name {
+public final class ValName {
 
-    private static Name empty = new Name(null);
+    private static ValName empty = new ValName(null);
 
     @Getter
     private String value;
 
-    private Name(String value) {
+    private ValName(String value) {
         this.value = value;
     }
 
-    public static Name of(String value) {
-        return new Name(value);
+    public static ValName of(String value) {
+        return new ValName(value);
     }
 
-    public static Name empty() {
+    public static ValName empty() {
         return empty;
     }
 }

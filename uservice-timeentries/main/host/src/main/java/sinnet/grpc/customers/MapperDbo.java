@@ -7,7 +7,7 @@ import sinnet.models.CustomerModel;
 import sinnet.models.CustomerSecret;
 import sinnet.models.CustomerSecretEx;
 import sinnet.models.CustomerValue;
-import sinnet.models.Name;
+import sinnet.models.ValName;
 import sinnet.models.ValEmail;
 import sinnet.models.ShardedId;
 
@@ -51,8 +51,8 @@ public interface MapperDbo {
       .billingModel(dbo.getBillingModel())
       .supportStatus(dbo.getSupportStatus())
       .distance(dbo.getDistance())
-      .customerName(Name.of(dbo.getCustomerName()))
-      .customerCityName(Name.of(dbo.getCustomerCityName()))
+      .customerName(ValName.of(dbo.getCustomerName()))
+      .customerCityName(ValName.of(dbo.getCustomerCityName()))
       .customerAddress(dbo.getCustomerAddress())
       .nfzUmowa(dbo.getNfzUmowa())
       .nfzMaFilie(dbo.getNfzMaFilie())
