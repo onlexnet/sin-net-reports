@@ -51,6 +51,7 @@
       <groupId>com.tngtech.archunit</groupId>
       <artifactId>archunit-junit5</artifactId>
       <version>0.22.0</version>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>io.vavr</groupId>
