@@ -4,6 +4,7 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import lombok.RequiredArgsConstructor;
+import sinnet.models.ValName;
 
 @RequiredArgsConstructor
 public class TimeentriesStepDefinitions {
@@ -11,16 +12,15 @@ public class TimeentriesStepDefinitions {
   private final TestApi testApi;
   private ClientContext ctx;
 
-  @Given("a new project called {string}")
-  public void a_new_project_called(String projectAlias) {
+  @Given("a new project called {projectName}")
+  public void a_new_project_called(ValName projectAlias) {
     ctx = new ClientContext();
     testApi.notifyNewProject(ctx, projectAlias);
   }
 
-  @Given("an operator called {string} assigned to project called {string}")
-  public void an_operator_called_assigned_to(String operatorAlias, String projectAlias) {
-      // Write code here that turns the phrase above into concrete actions
-      throw new io.cucumber.java.PendingException("222");
+  @Given("an operator called {operatorName} assigned to project called {projectName}")
+  public void an_operator_called_alias1_assigned_toproject_called_alias2(ValName operatorAlias, ValName projectAlias) {
+    testApi.assignOperator(ctx, projectAlias, operatorAlias);
   }
 
   @When("operator called {string} creates new timeentry")

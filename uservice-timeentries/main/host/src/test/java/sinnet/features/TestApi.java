@@ -14,6 +14,8 @@ import io.dapr.v1.DaprAppCallbackProtos.TopicEventRequest;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import sinnet.grpc.users.IncludeOperatorCommand;
+import sinnet.models.ProjectId;
 import sinnet.models.ValEmail;
 import sinnet.models.ValName;
 import sinnet.project.events.ProjectCreatedEvent;
@@ -29,22 +31,31 @@ public class TestApi {
   private final AvroObjectSerializer objectSerializer = new AvroObjectSerializer();
 
   @SneakyThrows
-  void notifyNewProject(ClientContext ctx, String projectAlias) {
-    var projectId = UUID.randomUUID();
+  void notifyNewProject(ClientContext ctx, ValName projectAlias) {
+    var projectId = ProjectId.anyNew();
     var event = ProjectCreatedEvent.newBuilder()
-        .setEid(projectId.toString())
-        .setEtag(1)
+        .setEid(projectId.getId().toString())
+        .setEtag(projectId.getVersion())
         .build();
     var eventSerialized = objectSerializer.serialize(event);
     var data = ByteString.copyFrom(eventSerialized);
     var te = TopicEventRequest.newBuilder().setData(data).build();
     rpcApi.getApiCallback().onTopicEvent(te);
-    ctx.getKnownProjects().put(ValName.of(projectAlias), projectId);
+    ctx.getKnownProjects().put(projectAlias, projectId);
+  }
+
+  void assignOperator(ClientContext ctx, ValName projectAlias, ValName operatorAlias) {
+    var projectId = ctx.getKnownProjects().get(projectAlias);
+    var cmd = IncludeOperatorCommand.newBuilder()
+        .setProjectId(projectId.getId().toString())
+        .addOperatorEmail(operatorAlias.getValue())
+        .build();
+    rpcApi.getUsers().includeOperator(cmd);
   }
 
 }
 
 @Data
 class ClientContext {
-  private Map<ValName, UUID> knownProjects = new HashMap<>();
+  private Map<ValName, ProjectId> knownProjects = new HashMap<>();
 }
