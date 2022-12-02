@@ -20,11 +20,14 @@ public class TimeentriesStepDefinitions {
 
   @Given("an operator called {operatorName} assigned to project called {projectName}")
   public void an_operator_called_alias1_assigned_toproject_called_alias2(ValName operatorAlias, ValName projectAlias) {
-    testApi.assignOperator(ctx, projectAlias, operatorAlias);
+    ctx.getOperatorId(operatorAlias, true);
+    ctx.setProjectId(projectAlias);
+    testApi.assignOperator(ctx);
   }
 
-  @When("operator called {string} creates new timeentry")
-  public void operator_called_creates_new_timeentry(String string) {
+  @When("the operator creates new timeentry")
+  public void operator_called_creates_new_timeentry() {
+    testApi.createEntry(ctx);
     // Write code here that turns the phrase above into concrete actions
     throw new io.cucumber.java.PendingException("333");
   }

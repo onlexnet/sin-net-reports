@@ -37,7 +37,9 @@ message GetReply {
 
 message ReserveCommand {
   common.UserToken invoker = 1;
-  LocalDate when = 2;
+  oneof optional_when {
+    LocalDate when = 2;
+  }
 }
 message ReserveResult {
   common.EntityId entityId = 1;

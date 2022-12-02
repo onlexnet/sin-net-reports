@@ -1,14 +1,15 @@
 package sinnet.grpc.actions;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import sinnet.grpc.mapping.RpcCommandHandler;
 import sinnet.grpc.timeentries.ReserveCommand;
 import sinnet.grpc.timeentries.ReserveResult;
+import sinnet.grpc.timeentries.ReserveCommand.OptionalWhenCase;
 import sinnet.models.ActionValue;
 import sinnet.models.ShardedId;
 import sinnet.models.ValEmail;
@@ -22,8 +23,10 @@ public class TimeEntriesRpcReserve implements RpcCommandHandler<ReserveCommand, 
 
   @Override
   public ReserveResult apply(ReserveCommand cmd) {
+    var whenProvided = cmd.getOptionalWhenCase() == OptionalWhenCase.WHEN
+        ? fromDto(cmd.getWhen())
+        : LocalDate.now();
     var emailOfCurrentUser = cmd.getInvoker().getRequestorEmail();
-    var whenProvided = fromDto(cmd.getWhen());
     var projectId = UUID.fromString(cmd.getInvoker().getProjectId());
     var model = new ActionValue()
         .setWho(ValEmail.of(emailOfCurrentUser))

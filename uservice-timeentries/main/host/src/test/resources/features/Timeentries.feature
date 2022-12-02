@@ -5,5 +5,5 @@ Feature: Manage Timeentries
     And an operator called "operator1" assigned to project called "project1"
 
   Scenario: Create a new Timeentry
-    When operator called "operator1" creates new timeentry
+    When the operator creates new timeentry
     Then operation succeeded

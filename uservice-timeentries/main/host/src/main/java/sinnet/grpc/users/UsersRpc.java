@@ -6,15 +6,20 @@ import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
 import sinnet.grpc.users.UsersGrpc.UsersImplBase;
 
-
 @Component
 @RequiredArgsConstructor
 public class UsersRpc extends UsersImplBase {
 
   private final UsersRpcSearch search;
+  private final UsersRpcIncludeOperator includeOperator;
 
   @Override
   public void search(SearchRequest request, StreamObserver<SearchReply> responseObserver) {
     search.query(request, responseObserver);
+  }
+
+  @Override
+  public void includeOperator(IncludeOperatorCommand request, StreamObserver<IncludeOperatorResult> responseObserver) {
+    includeOperator.command(request, responseObserver);
   }
 }

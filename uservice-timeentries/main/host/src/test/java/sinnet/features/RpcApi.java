@@ -8,6 +8,8 @@ import io.dapr.v1.AppCallbackGrpc.AppCallbackBlockingStub;
 import io.grpc.ManagedChannelBuilder;
 import jakarta.annotation.PostConstruct;
 import lombok.Getter;
+import sinnet.grpc.timeentries.TimeEntriesGrpc;
+import sinnet.grpc.timeentries.TimeEntriesGrpc.TimeEntriesBlockingStub;
 import sinnet.grpc.users.UsersGrpc;
 import sinnet.grpc.users.UsersGrpc.UsersBlockingStub;
 
@@ -16,6 +18,9 @@ public class RpcApi {
   
   @Getter
   private UsersBlockingStub users;
+
+  @Getter
+  private TimeEntriesBlockingStub timeentries;
 
   @Getter
   private AppCallbackBlockingStub apiCallback;
@@ -29,6 +34,7 @@ public class RpcApi {
         .usePlaintext()
         .build();
     users = UsersGrpc.newBlockingStub(channel);
+    timeentries = TimeEntriesGrpc.newBlockingStub(channel);
     apiCallback = AppCallbackGrpc.newBlockingStub(channel);
   }
   

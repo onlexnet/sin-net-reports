@@ -34,8 +34,8 @@ message UsersSearchModel {
 }
 
 message IncludeOperatorCommand {
-  string projectId = 1;
-  repeated string operatorEmail = 2;
+  string project_id = 1;
+  repeated string operator_email = 2;
 }
 
 message IncludeOperatorResult {
