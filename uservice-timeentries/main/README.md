@@ -20,6 +20,7 @@ https://github.com/SonarSource/sonar-scanning-examples/blob/master/doc/jacoco.md
 - https://github.com/grpc/grpc-java/blob/master/README.md
 - Integrate [Micrometer](https://developer.ibm.com/technologies/java/tutorials/monitor-spring-boot-microservices/)
 - [How to design a good JWT authentication filter](https://stackoverflow.com/questions/41975045/how-to-design-a-good-jwt-authentication-filter)
+- https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#jpa.query-methods.query-creation
 
 ## Coding principles
 TBD

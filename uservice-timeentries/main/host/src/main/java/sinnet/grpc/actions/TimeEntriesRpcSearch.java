@@ -1,20 +1,18 @@
 package sinnet.grpc.actions;
 
-import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import sinnet.grpc.mapping.PropsBuilder;
 import sinnet.grpc.mapping.RpcQueryHandler;
 import sinnet.grpc.timeentries.SearchQuery;
 import sinnet.grpc.timeentries.SearchReply;
 import sinnet.grpc.timeentries.TimeEntryModel;
 import sinnet.models.ActionValue;
-import sinnet.models.ValEmail;
 import sinnet.models.Entity;
+import sinnet.models.ValEmail;
 import sinnet.write.ActionRepositoryEx;
 
 @Component

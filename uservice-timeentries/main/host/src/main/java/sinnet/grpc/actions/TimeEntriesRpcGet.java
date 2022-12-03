@@ -4,7 +4,6 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Component;
 
-import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import sinnet.grpc.mapping.RpcQueryHandler;

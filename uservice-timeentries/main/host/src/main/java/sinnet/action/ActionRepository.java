@@ -1,6 +1,7 @@
 package sinnet.action;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 import jakarta.persistence.Column;
@@ -21,6 +22,7 @@ public interface ActionRepository extends JpaRepository<ActionRepository.ActionD
   void deleteByProjectIdAndEntityIdAndEntityVersion(UUID projectId, UUID entityId, long version);
   ActionDbo findByProjectIdAndEntityIdAndEntityVersion(UUID projectId, UUID entityId, long version);
   ActionDbo findByProjectIdAndEntityId(UUID projectId, UUID entityId);
+  List<ActionDbo> findByProjectIdAndDateGreaterThanEqualAndDateLessThanEqual(UUID projectId, LocalDate from, LocalDate to);
 
   @Entity
   @Table(name = "actions")

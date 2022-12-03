@@ -10,10 +10,9 @@ import sinnet.grpc.mapping.RpcQueryHandler;
 
 @Component
 @RequiredArgsConstructor
-@Slf4j
 class CustomersRpcList implements RpcQueryHandler<ListRequest, ListReply>,
                        MapperDto,
-                       sinnet.grpc.common.Mapper, MapperDbo {
+                       MapperDbo {
 
   private final CustomerRepository repository;
 

@@ -6,12 +6,12 @@ import sinnet.models.ValName;
 public class ParameterTypes {
 
   @ParameterType(".+")
-  public ValName projectName(String value) {
+  public ValName projectAlias(String value) {
     return ValName.of(value);
   }
 
   @ParameterType(".+")
-  public ValName operatorName(String value) {
+  public ValName operatorAlias(String value) {
     return ValName.of(value);
   }
 }

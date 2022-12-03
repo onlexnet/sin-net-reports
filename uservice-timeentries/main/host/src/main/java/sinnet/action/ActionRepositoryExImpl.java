@@ -52,13 +52,11 @@ public class ActionRepositoryExImpl implements ActionRepositoryEx, MapperDbo {
     return true;
   }
 
-
   @Override
   public List<Entity<ActionValue>> list(UUID projectId, LocalDate from, LocalDate to) {
-    // TODO Auto-generated method stub
-    return null;
+    var dboResult = repository.findByProjectIdAndDateGreaterThanEqualAndDateLessThanEqual(projectId, from, to);
+    return dboResult.stream().map(this::fromDbo).toList();
   }
-
 
   @Override
   public Entity<ActionValue> get(UUID projectId, UUID eid) {
