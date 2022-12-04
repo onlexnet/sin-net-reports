@@ -23,7 +23,7 @@
     <sonar.projectKey>sin-net-reports-timeentries</sonar.projectKey>
     <sonar.projectName>SinNet Reports TimeEntries</sonar.projectName>
     <sonar.host.url>https://sonarcloud.io</sonar.host.url>
-    <!-- Environment variable is already defined in CIDD as SONAR_TOKEN -->
+    <!-- Environment variable is expected already to be defined in CI/CD as SONAR_TOKEN -->
     <sonar.login>${env.SONAR_TOKEN}</sonar.login>
 
     <aggregate.report.dir>report-aggregate/target/site/jacoco-aggregate/jacoco.xml</aggregate.report.dir>

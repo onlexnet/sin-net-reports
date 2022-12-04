@@ -9,7 +9,7 @@
             "name": "Launch Program with Dapr",
             "request": "launch",
             "mainClass": "sinnet.Program",
-            "projectName": "host",
+            "projectName": "uservice-timeentries-host",
             "env": {
                 "SPRING_PROFILES_ACTIVE": "dev",
                 "APP_DB_HOST": "localhost",
@@ -17,6 +17,6 @@
             },
             "preLaunchTask": "dapr-debug",
             "postDebugTask": "dapr-down"
-        },
+        }
     ]
 }
