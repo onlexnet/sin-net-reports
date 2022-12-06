@@ -12,8 +12,10 @@
             "projectName": "uservice-timeentries-host",
             "env": {
                 "SPRING_PROFILES_ACTIVE": "dev",
-                "APP_DB_HOST": "localhost",
-                "DATABASE_NAME": "devlocaldb"
+                "DATABASE_JDBC": "jdbc:postgresql://localhost:5432/devlocaldb",
+                "DATABASE_USERNAME": "uservice_timeentries_role_name",
+                "DATABASE_PASSWORD": "uservice_timeentries_role_password",
+                "DATABASE_SCHEMA": "uservice_timeentries",
             },
             "preLaunchTask": "dapr-debug",
             "postDebugTask": "dapr-down"

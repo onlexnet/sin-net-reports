@@ -32,8 +32,8 @@
 			"appPort": 11010,
 			"appProtocol": "http",
 			"label": "daprd-debug",
-			"httpPort": 3500,
-			"grpcPort": 50001,
+			// "httpPort": 3500,
+			// "grpcPort": 50001,
 			"componentsPath": "../../.components",
 			"type": "dapr",
 			"dependsOn": "quarkus:dev (host)"

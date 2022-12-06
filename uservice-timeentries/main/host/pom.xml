@@ -27,7 +27,6 @@
     <dependency>
       <groupId>net.siudek</groupId>
       <artifactId>uservice-timeentries-initdb-migrate</artifactId>
-      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>net.siudek</groupId>
@@ -122,6 +121,9 @@
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
+        <configuration>
+          <skip>false</skip>
+        </configuration>
         <executions>
           <execution>
             <goals>

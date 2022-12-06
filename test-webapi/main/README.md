@@ -24,7 +24,7 @@ dapr dashboard
 
  # to create env variables based on KeyVault secrets
 . init-vars.sh
-mvn clean test # to run tests
+dapr run --app-id ac-tests --dapr-http-port 3500 -- mvn clean test # to run tests using local dapr sidecar
 
 ```
 
