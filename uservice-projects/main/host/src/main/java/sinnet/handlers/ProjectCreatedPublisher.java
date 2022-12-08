@@ -27,7 +27,6 @@ class ProjectCreatedPublisher {
   @PostConstruct
   void init() {
     client = new DaprClientBuilder()
-        .withObjectSerializer(null)
         .build();
   }
 
