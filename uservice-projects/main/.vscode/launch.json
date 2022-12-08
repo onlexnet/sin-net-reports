@@ -1,18 +1,24 @@
-// A launch configuration that compiles the extension and then opens it inside a new window
-// Use IntelliSense to learn about possible attributes.
-// Hover to view descriptions of existing attributes.
-// For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
 {
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
         {
-            "preLaunchTask": "daprd-debug",
             "type": "java",
-            "request": "attach",
-            "hostName": "localhost",
-            "name": "Debug Quarkus application (host) with Dapr",
-            "port": 11039,
-            "postDebugTask": "daprd-down"
+            "name": "Launch Program with Dapr",
+            "request": "launch",
+            "mainClass": "sinnet.Program",
+            "projectName": "uservice-projects-host",
+            "env": {
+                "DATABASE_JDBC": "jdbc:postgresql://localhost:5432/devlocaldb",
+                "DATABASE_USERNAME": "uservice_projects_role_name",
+                "DATABASE_PASSWORD": "uservice_projects_role_password",
+                "DATABASE_SCHEMA": "uservice_projects"
+            },
+            "vmArgs": "-Drevision=0.0.0-LOCAL",
+            "preLaunchTask": "dapr-debug",
+            "postDebugTask": "dapr-down"
         }
     ]
 }

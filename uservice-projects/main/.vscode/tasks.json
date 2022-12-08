@@ -1,45 +1,18 @@
-// See https://go.microsoft.com/fwlink/?LinkId=733558
-// for the documentation about the tasks.json format
 {
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"type": "shell",
-			"isBackground": true,
-			"problemMatcher": [
-				{
-					"pattern": [
-						{
-							"regexp": "\\b\\B",
-							"file": 1,
-							"location": 2,
-							"message": 3
-						}
-					],
-					"background": {
-						"activeOnStart": true,
-						"beginsPattern": "^.*Scanning for projects...",
-						"endsPattern": "(^.*Quarkus .* started in .*\\.)|(^.* ERROR .* Failed to start)"
-					}
-				}
-			],
-			"group": "build",
-			"label": "quarkus:dev (host)",
-			"command": "mvn quarkus:dev -pl host -DDATABASE_NAME=devlocaldb -DDATABASE_SCHEMA=uservice_projects -Ddebug=11039",
-		},
-		{
+			"label": "dapr-debug",
+			"type": "dapr",
 			"appId": "projects",
 			"appPort": 11031,
 			"appProtocol": "grpc",
 			"componentsPath": "../../.components",
-			"label": "daprd-debug",
-			"type": "dapr",
-			"dependsOn": "quarkus:dev (host)"
 		},
 		{
-			"appId": "projects",
-			"label": "daprd-down",
+			"label": "dapr-down",
 			"type": "daprd-down",
+			"appId": "projects",
 		}
 	]
 }
