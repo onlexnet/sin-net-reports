@@ -11,6 +11,11 @@
             "mainClass": "sinnet.Program",
             "projectName": "uservice-projects-host",
             "env": {
+                // by design such variable is automatically porvide by DAPR sidecar
+                // but in vscode we run sidecar and app separately so we need to provide it manually
+                // and use the same value in the sidecar
+                // it is used e.g. byt DaprClientBuilder
+                "DAPR_GRPC_PORT": 11019,
                 "DATABASE_JDBC": "jdbc:postgresql://localhost:5432/devlocaldb",
                 "DATABASE_USERNAME": "uservice_projects_role_name",
                 "DATABASE_PASSWORD": "uservice_projects_role_password",

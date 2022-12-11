@@ -6,6 +6,7 @@
 			"type": "dapr",
 			"appId": "projects",
 			"appPort": 11031,
+			"grpcPort": 11039,
 			"appProtocol": "grpc",
 			"componentsPath": "../../.components",
 		},

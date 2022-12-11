@@ -1,4 +1,4 @@
-package sinnet.user;
+package sinnet.events;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -18,6 +18,7 @@ class AvroObjectSerializerTest {
         .build();
     var ser = new AvroObjectSerializer();
     var asByte = ser.serialize(example);
+    var s = new String(asByte);
     var actual = ser.deserialize(asByte, TypeRef.get(ProjectCreatedEvent.class));
     Assertions.assertThat(actual).isEqualTo(example);
   }

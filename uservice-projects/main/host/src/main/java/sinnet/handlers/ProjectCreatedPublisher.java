@@ -32,7 +32,6 @@ class ProjectCreatedPublisher {
 
   @SneakyThrows
   void on(@Observes ProjectCreatedEvent event) {
-
     var wr = new SpecificDatumWriter<>(ProjectCreatedEvent.class);
     var stream = new ByteArrayOutputStream();
     var encoder = EncoderFactory.get().jsonEncoder(ProjectCreatedEvent.SCHEMA$, stream);

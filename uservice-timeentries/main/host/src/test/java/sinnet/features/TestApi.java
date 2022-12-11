@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.val;
 import lombok.experimental.Accessors;
+import sinnet.events.AvroObjectSerializer;
 import sinnet.grpc.common.EntityId;
 import sinnet.grpc.common.UserToken;
 import sinnet.grpc.timeentries.LocalDate;
@@ -27,7 +28,6 @@ import sinnet.models.ProjectId;
 import sinnet.models.ValEmail;
 import sinnet.models.ValName;
 import sinnet.project.events.ProjectCreatedEvent;
-import sinnet.user.AvroObjectSerializer;
 
 @RequiredArgsConstructor
 @Component

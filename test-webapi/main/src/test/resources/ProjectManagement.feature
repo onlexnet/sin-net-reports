@@ -14,6 +14,7 @@ Feature: Project Management
     Given a person named user1
     And a person named user2
     
+  @todo
   Rule:
     Scenario: Create new project
       When User user1 creates new project
