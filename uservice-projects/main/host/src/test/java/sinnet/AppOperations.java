@@ -28,7 +28,7 @@ import sinnet.grpc.projects.UserToken;
 public class AppOperations {
 
   @Inject
-  @GrpcClient
+  @GrpcClient("local")
   ProjectsGrpc.ProjectsBlockingStub self;
 
 

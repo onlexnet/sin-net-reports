@@ -1,7 +1,7 @@
 <project>
-  <!-- 
+  <!--
     Inspiration:
-    https://quarkus.io/guides/grpc-getting-started#generating-java-files-from-proto-with-protobuf-maven-plugin
+  https://quarkus.io/guides/grpc-getting-started#generating-java-files-from-proto-with-protobuf-maven-plugin
   -->
 
   <modelVersion>4.0.0</modelVersion>
@@ -45,9 +45,13 @@
         <version>${protobuf-maven-plugin-version}</version>
         <configuration>
           <!-- Important: location of source proto files is located outside ot the source folder
-          so that it will not be avaiable for Docker build as Docker is limited to the folder where the build happens
-          So, before starting build using Docker proto source files are copied from location protoSourceRoot
-          to folder with the same name but inside docker -->
+          so
+          that it will not be avaiable for Docker build as Docker is limited to the folder where the
+          build happens
+          So, before starting build using Docker proto source files are
+          copied from location protoSourceRoot
+          to folder with the same name but inside
+          docker -->
           <protoSourceRoot>${proto.dir}</protoSourceRoot>
 
           <protocArtifact>com.google.protobuf:protoc:${protoc.version}:exe:${os.detected.classifier}</protocArtifact>
@@ -87,7 +91,7 @@
         <configuration>
           <!--
             Required by Quarkus
-            https://maven.apache.org/plugins/maven-compiler-plugin/compile-mojo.html#parameters
+          https://maven.apache.org/plugins/maven-compiler-plugin/compile-mojo.html#parameters
           -->
           <parameters>true</parameters>
           <release>17</release>
@@ -97,12 +101,15 @@
       <!--
         Grpc annotations are not discovered by other Quarkus modules without proper jandexing
         https://www.baeldung.com/quarkus-bean-discovery-index
+        https://github.com/quarkusio/quarkus/issues/15057
+        https://quarkus.io/guides/cdi-reference#how-to-generate-a-jandex-index
+        https://quarkus.io/guides/grpc-getting-started#grpc-classes-from-dependencies
       -->
       <plugin>
         <!-- https://github.com/wildfly/jandex-maven-plugin -->
         <groupId>org.jboss.jandex</groupId>
         <artifactId>jandex-maven-plugin</artifactId>
-        <version>1.2.1</version>
+        <version>1.2.3</version>
         <executions>
             <execution>
                 <id>make-index</id>
@@ -112,8 +119,7 @@
                 </goals>
             </execution>
         </executions>
-    </plugin>
-
+      </plugin>
     </plugins>
   </build>
 </project>

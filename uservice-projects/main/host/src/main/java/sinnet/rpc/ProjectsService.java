@@ -1,12 +1,17 @@
 package sinnet.rpc;
 
+import javax.inject.Singleton;
+
+import io.quarkus.arc.Unremovable;
 import io.quarkus.grpc.GrpcService;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Delegate;
 import sinnet.grpc.projects.Projects;
 
+@Unremovable
 @GrpcService
 @RequiredArgsConstructor
+@Singleton
 class ProjectsService implements Projects {
 
   @Delegate
