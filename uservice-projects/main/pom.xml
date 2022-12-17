@@ -5,7 +5,7 @@
     <groupId>onlexnet.sinnet</groupId>
     <artifactId>uservice-quarkus-parent</artifactId>
     <version>0.1.0-SNAPSHOT</version>
-    <relativePath/>
+    <relativePath />
   </parent>
   <artifactId>uservice-projects-parent</artifactId>
   <version>${revision}</version>
@@ -14,6 +14,7 @@
   <modules>
     <module>host</module>
     <module>initdb-host</module>
+    <module>initdb-migrate</module>
   </modules>
 
   <properties>
@@ -33,6 +34,11 @@
         <artifactId>uservice-projects.events</artifactId>
         <version>${api.version}</version>
       </dependency>
+      <dependency>
+        <groupId>onlexnet.sinnet</groupId>
+        <version>${project.version}</version>
+        <artifactId>uservice-projects-initdb-migrate</artifactId>
+      </dependency>
 
       <dependency>
         <groupId>io.dapr</groupId>
@@ -41,7 +47,7 @@
       </dependency>
       <!--
         DAPR requires also extra dependency to solve runtime startup issue
-        https://github.com/dapr/java-sdk/issues/515#issuecomment-800435671
+      https://github.com/dapr/java-sdk/issues/515#issuecomment-800435671
       -->
       <dependency>
         <groupId>com.squareup.okhttp3</groupId>

@@ -5,9 +5,13 @@
     <artifactId>uservice-projects-parent</artifactId>
     <version>${revision}</version>
   </parent>
-  <artifactId>uservice-projects-initdb</artifactId>
+  <artifactId>uservice-projects-initdb-host</artifactId>
 
   <dependencies>
+    <dependency>
+      <groupId>onlexnet.sinnet</groupId>
+      <artifactId>uservice-projects-initdb-migrate</artifactId>
+    </dependency>
     <dependency>
       <groupId>org.testcontainers</groupId>
       <artifactId>postgresql</artifactId>
@@ -21,14 +25,6 @@
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-liquibase</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-jdbc-postgresql</artifactId>
     </dependency>
     <dependency>
       <groupId>org.assertj</groupId>
@@ -46,15 +42,6 @@
   </dependencies>
   <build>
     <plugins>
-      <plugin>
-        <groupId>org.liquibase</groupId>
-        <artifactId>liquibase-maven-plugin</artifactId>
-        <version>4.10.0</version>
-        <configuration>
-          <propertyFileWillOverride>true</propertyFileWillOverride>
-          <propertyFile>src/main/resources/db/liquibase.properties</propertyFile>
-        </configuration>
-      </plugin>
       <plugin>
         <groupId>${quarkus.platform.group-id}</groupId>
         <artifactId>quarkus-maven-plugin</artifactId>
