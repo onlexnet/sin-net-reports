@@ -30,8 +30,8 @@ services:
       dockerfile: ./initdb/Dockerfile.local
     environment:
       # well-known properties defined by init scripts of our postgresql
-      - DATABASE_USERNAME=uservice_dbuser
-      - DATABASE_PASSWORD=uservice_dbuser
+      - DATABASE_USERNAME=uservice_projects_role_name
+      - DATABASE_PASSWORD=uservice_projects_role_password
       - DATABASE_SCHEMA=uservice_projects
       - DATABASE_JDBC=jdbc:postgresql://service-postgres-dc:5432/devlocaldb
     volumes:
