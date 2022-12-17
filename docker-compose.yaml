@@ -27,7 +27,7 @@ services:
   projects-initdb:
     build:
       context: uservice-projects/main
-      dockerfile: ./initdb/Dockerfile.local
+      dockerfile: ./initdb-host/Dockerfile.local
     environment:
       # well-known properties defined by init scripts of our postgresql
       - DATABASE_USERNAME=uservice_projects_role_name

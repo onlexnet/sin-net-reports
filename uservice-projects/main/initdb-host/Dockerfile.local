@@ -10,4 +10,4 @@ WORKDIR /uservice-projects_src
 # ... or not empoty, if someone run maven previously.
 # Assumption is the .m2 folder is mounted in the same way as mentioned earlier uservice-projects_src folder.
 # The worst case is if .m2 folder is not mounted properly, all dependencies will be downoaded each time when to image runs
-ENTRYPOINT ./initdb/entrypoint.sh
+ENTRYPOINT ./initdb-host/entrypoint.sh

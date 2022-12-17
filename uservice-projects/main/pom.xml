@@ -13,7 +13,7 @@
 
   <modules>
     <module>host</module>
-    <module>initdb</module>
+    <module>initdb-host</module>
   </modules>
 
   <properties>
