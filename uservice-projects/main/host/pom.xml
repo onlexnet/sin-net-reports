@@ -11,6 +11,12 @@
 
     <dependency>
       <groupId>onlexnet.sinnet</groupId>
+      <artifactId>uservice-projects-initdb-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>onlexnet.sinnet</groupId>
       <artifactId>uservice-projects.rpc-quarkus</artifactId>
     </dependency>
     <dependency>

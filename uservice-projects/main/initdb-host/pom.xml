@@ -15,7 +15,7 @@
     <dependency>
       <groupId>onlexnet.sinnet</groupId>
       <artifactId>uservice-projects-initdb-test</artifactId>
-      </dependency>
+    </dependency>
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
