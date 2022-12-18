@@ -15,6 +15,7 @@
     <module>host</module>
     <module>initdb-host</module>
     <module>initdb-migrate</module>
+    <module>initdb-test</module>
   </modules>
 
   <properties>
@@ -38,6 +39,12 @@
         <groupId>onlexnet.sinnet</groupId>
         <version>${project.version}</version>
         <artifactId>uservice-projects-initdb-migrate</artifactId>
+      </dependency>
+      <dependency>
+        <groupId>onlexnet.sinnet</groupId>
+        <version>${project.version}</version>
+        <artifactId>uservice-projects-initdb-test</artifactId>
+        <scope>test</scope>
       </dependency>
 
       <dependency>

@@ -1,0 +1,5 @@
+package sinnet;
+
+class Ignored {
+    
+}
