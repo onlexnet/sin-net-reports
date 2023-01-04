@@ -1,7 +1,6 @@
 package sinnet.dbo;
 
-import io.smallrye.mutiny.Uni;
-import io.vavr.collection.Array;
+import io.vavr.collection.Seq;
 import sinnet.grpc.projects.Project;
 import sinnet.model.ValEmail;
 import sinnet.model.ValProjectId;
@@ -13,9 +12,17 @@ import sinnet.model.ValProjectId;
  */
 interface DboGet {
 
-  Uni<Array<Project>> ownedAsProject(ValEmail ownerEmail);
+  /** List of all projects where given email is marked as owner. */
+  Seq<Project> ownedAsProject(ValEmail ownerEmail);
   
-  Uni<Array<ValProjectId>> ownedAsId(ValEmail ownerEmail);
+  /** List of all projects where given email is marked as owner. */
+  Seq<ValProjectId> ownedAsId(ValEmail ownerEmail);
 
-  Uni<Project> get(ValProjectId projectId);
+  
+  StatsResult getStats(ValEmail ownerEmail);
+
+  Project get(ValProjectId projectId);
+
+  record StatsResult (int numberOdProjects) {
+  }
 }

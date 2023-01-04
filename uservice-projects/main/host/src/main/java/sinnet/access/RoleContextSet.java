@@ -1,6 +1,7 @@
 package sinnet.access;
 
 import io.vavr.collection.Array;
+import io.vavr.collection.Seq;
 import lombok.Value;
 import lombok.experimental.Accessors;
 import sinnet.access.ActionPermissionChecker.ValidationResult;
@@ -16,11 +17,11 @@ public sealed interface RoleContextSet {
   /** Invokes proper method based on user's role, and returns the result of validation. */
   ValidationResult processPermission(ActionPermissionChecker validator);
 
-  /** List of project where the user has access as the Owner. */
+  /** Allows to check . */
   @Value
   @Accessors(fluent = true)
   class OwnerRoleContext implements RoleContextSet {
-    private final Array<ValProjectId> projectsIds;
+    private final Seq<ValProjectId> projectsIds;
 
     @Override
     public ValidationResult processPermission(ActionPermissionChecker validator) {
@@ -32,7 +33,7 @@ public sealed interface RoleContextSet {
   @Value
   @Accessors(fluent = true)
   class OperatorRoleContext implements RoleContextSet {
-    private final Array<ValProjectId> projectsId;
+    private final Seq<ValProjectId> projectsId;
 
     @Override
     public ValidationResult processPermission(ActionPermissionChecker validator) {

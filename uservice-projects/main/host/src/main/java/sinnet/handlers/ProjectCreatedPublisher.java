@@ -2,23 +2,25 @@ package sinnet.handlers;
 
 import java.io.ByteArrayOutputStream;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.event.Observes;
-
 import org.apache.avro.io.EncoderFactory;
 import org.apache.avro.specific.SpecificDatumWriter;
+import org.springframework.boot.context.event.ApplicationStartedEvent;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.ApplicationStartupAware;
+import org.springframework.context.event.EventListener;
+import org.springframework.stereotype.Component;
 
 import io.dapr.client.DaprClient;
 import io.dapr.client.DaprClientBuilder;
 import io.dapr.client.domain.PublishEventRequest;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 import lombok.SneakyThrows;
 import reactor.core.Disposable.Composite;
-import reactor.core.Disposables;
 import sinnet.project.events.ProjectCreatedEvent;
+import reactor.core.Disposables;
 
-@ApplicationScoped
+@Component
 class ProjectCreatedPublisher {
 
   Composite selfDisposable = Disposables.composite();
@@ -31,7 +33,8 @@ class ProjectCreatedPublisher {
   }
 
   @SneakyThrows
-  void on(@Observes ProjectCreatedEvent event) {
+  @EventListener
+  public void on(ProjectCreatedEvent event) {
     var wr = new SpecificDatumWriter<>(ProjectCreatedEvent.class);
     var stream = new ByteArrayOutputStream();
     var encoder = EncoderFactory.get().jsonEncoder(ProjectCreatedEvent.SCHEMA$, stream);

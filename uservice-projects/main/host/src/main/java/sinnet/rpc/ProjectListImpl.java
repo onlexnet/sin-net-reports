@@ -1,25 +1,24 @@
 package sinnet.rpc;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
+import org.springframework.stereotype.Component;
 
-import io.smallrye.mutiny.Uni;
+import lombok.RequiredArgsConstructor;
 import sinnet.dbo.DboFacade;
 import sinnet.grpc.projects.ListReply;
 import sinnet.grpc.projects.ListRequest;
 import sinnet.model.ValEmail;
 
-@ApplicationScoped
-class ProjectListImpl implements ProjectList {
+@Component
+@RequiredArgsConstructor
+class ProjectListImpl implements RpcQueryHandler<ListRequest, ListReply> {
 
-  @Inject
-  DboFacade dbo;
+  private final DboFacade dbo;
 
   @Override
-  public Uni<ListReply> list(ListRequest request) {
+  public ListReply apply(ListRequest request) {
     var emailOfRequestor = ValEmail.of(request.getEmailOfRequestor());
-    return dbo.ownedAsProject(emailOfRequestor)
-      .map(it -> ListReply.newBuilder().addAllProjects(it).build());
+    var result = dbo.ownedAsProject(emailOfRequestor);
+    return ListReply.newBuilder().addAllProjects(result).build();
   }
 
 }

@@ -1,6 +1,6 @@
 package sinnet.access;
 
-import io.vavr.collection.Array;
+import io.vavr.collection.Seq;
 import lombok.Value;
 import sinnet.model.ValProjectId;
 
@@ -12,13 +12,13 @@ final class ActionCreatePermissionChecker implements ActionPermissionChecker {
 
   /** To avoid creation of inifinitive number of projects, lets create some artificial limit. */
   @Override
-  public ValidationResult onOwnerRole(Array<ValProjectId> projectsId) {
+  public ValidationResult onOwnerRole(Seq<ValProjectId> projectsId) {
     return ValidationResult.PERMITTED;
   }
 
-  /** For creation new project beign OPerator os some other projects doesn't matter. */
+  /** For creation new project beign Operator os some other projects doesn't matter. */
   @Override
-  public ValidationResult onOperatorRole(Array<ValProjectId> projectsId) {
+  public ValidationResult onOperatorRole(Seq<ValProjectId> projectsId) {
     return ValidationResult.IGNORED;
   }
 

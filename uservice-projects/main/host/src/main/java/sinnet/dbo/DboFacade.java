@@ -1,12 +1,12 @@
 package sinnet.dbo;
 
-import javax.enterprise.context.ApplicationScoped;
+import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Delegate;
 
+@Component
 @RequiredArgsConstructor
-@ApplicationScoped
 public final class DboFacade {
 
   @Delegate
@@ -21,9 +21,4 @@ public final class DboFacade {
   @Delegate
   private final DboCreate dboCreate;
 
-  @Delegate
-  private final DboInput dboInput;
-
-  @Delegate
-  private final DboSession dboSession;
 }

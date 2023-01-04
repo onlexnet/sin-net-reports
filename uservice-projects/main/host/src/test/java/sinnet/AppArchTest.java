@@ -2,14 +2,14 @@ package sinnet;
 
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes;
 
-import javax.persistence.Entity;
-
 import com.tngtech.archunit.junit.AnalyzeClasses;
 import com.tngtech.archunit.junit.ArchTest;
 import com.tngtech.archunit.lang.ArchRule;
 import com.tngtech.archunit.lang.CompositeArchRule;
 import com.tngtech.archunit.library.DependencyRules;
 import com.tngtech.archunit.library.GeneralCodingRules;
+
+import jakarta.persistence.Entity;
 
 @AnalyzeClasses(packages = "sinnet")
 public class AppArchTest {

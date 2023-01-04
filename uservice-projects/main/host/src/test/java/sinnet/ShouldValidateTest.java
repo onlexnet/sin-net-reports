@@ -1,24 +1,23 @@
 package sinnet;
 
-import javax.inject.Inject;
-
 import org.apache.commons.lang3.RandomStringUtils;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
-import io.quarkus.test.junit.QuarkusTest;
 
-@QuarkusTest
+@SpringBootTest
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class ValidateNameTest {
 
   final int maximumSizeOfUserEmail = 50;
 
-  @Inject
+  @Autowired
   AppOperations operations;
   
   @Test

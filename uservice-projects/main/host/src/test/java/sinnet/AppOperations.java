@@ -6,12 +6,10 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-
 import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import io.quarkus.grpc.GrpcClient;
 import sinnet.grpc.projects.CreateRequest;
 import sinnet.grpc.projects.GetRequest;
 import sinnet.grpc.projects.ListRequest;
@@ -24,11 +22,10 @@ import sinnet.grpc.projects.UpdateCommand;
 import sinnet.grpc.projects.UpdateResult;
 import sinnet.grpc.projects.UserToken;
 
-@ApplicationScoped
+@Component
 public class AppOperations {
 
-  @Inject
-  @GrpcClient("local")
+  @Autowired
   ProjectsGrpc.ProjectsBlockingStub self;
 
 

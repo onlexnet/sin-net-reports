@@ -1,7 +1,7 @@
 package sinnet.access;
 
-import io.vavr.collection.Array;
 import io.vavr.collection.HashSet;
+import io.vavr.collection.Seq;
 import io.vavr.collection.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
@@ -12,7 +12,8 @@ import sinnet.model.ValProjectId;
 @Value
 @RequiredArgsConstructor
 public class RoleContext {
-  private final Array<RoleContextSet> contextSets;
+
+  private final Seq<RoleContextSet> contextSets;
 
   public Boolean canCreateProject(ValProjectId projectId) {
     var validator = new ActionCreatePermissionChecker(projectId);
@@ -29,7 +30,7 @@ public class RoleContext {
     return collect(validator, contextSets);
   }
 
-  private static Boolean collect(ActionPermissionChecker checker, Array<RoleContextSet> contextSets) {
+  private static Boolean collect(ActionPermissionChecker checker, Seq<RoleContextSet> contextSets) {
     var setOfValidation = contextSets.map(it -> it.processPermission(checker)).collect(HashSet.collector());
     return toBoolean(setOfValidation);
   }

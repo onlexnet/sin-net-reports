@@ -2,9 +2,8 @@ package sinnet.rpc;
 
 import java.util.UUID;
 
-import javax.enterprise.context.ApplicationScoped;
+import org.springframework.stereotype.Component;
 
-import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 import sinnet.access.AccessFacade;
 import sinnet.dbo.DboRemove;
@@ -12,24 +11,24 @@ import sinnet.grpc.projects.RemoveCommand;
 import sinnet.grpc.projects.RemoveResult;
 import sinnet.model.ValProjectId;
 
-@ApplicationScoped
+@Component
 @RequiredArgsConstructor
-final class ProjectsRemoveImpl implements ProjectsRemove {
+final class ProjectsRemoveImpl implements RpcCommandHandler<RemoveCommand, RemoveResult> {
 
   private final AccessFacade accessFacade;
   private final DboRemove dboRemove;
   
   @Override
-  public Uni<RemoveResult> remove(RemoveCommand request) {
-    var eidAsString = request.getProjectId().getEId();
+  public RemoveResult apply(RemoveCommand cmd) {
+    var eidAsString = cmd.getProjectId().getEId();
     var eid = UUID.fromString(eidAsString);
     var idHolder = ValProjectId.of(eid);
 
-    var requestor = request.getUserToken();
+    var requestor = cmd.getUserToken();
 
-    return accessFacade.guardAccess(requestor, idHolder, rc -> rc::canDeleteProject)
-      .chain(dboRemove::remove)
-      .map(it -> RemoveResult.newBuilder().setSuccess(true).build());
+    accessFacade.guardAccess(requestor, idHolder, rc -> rc::canDeleteProject);
+    dboRemove.remove(idHolder);
+    return RemoveResult.newBuilder().setSuccess(true).build();
   }
 
 }

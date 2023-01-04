@@ -2,10 +2,18 @@ package sinnet.dbo;
 
 import java.util.UUID;
 
-import javax.enterprise.context.ApplicationScoped;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
-import io.quarkus.hibernate.reactive.panache.PanacheRepositoryBase;
+import io.vavr.collection.Seq;
 
-@ApplicationScoped
-class InputRepository implements PanacheRepositoryBase<ProjectInputDbo, UUID> {
+@Repository
+interface InputRepository extends CrudRepository<ProjectInputDbo, UUID> {
+
+  	/**
+	 * Returns all instances of the type.
+	 *
+	 * @return all entities
+	 */
+	  Seq<ProjectInputDbo> findAll();
 }

@@ -4,28 +4,27 @@ import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 
-import javax.inject.Inject;
-
 import org.assertj.core.api.Assertions;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
-import io.quarkus.test.junit.QuarkusTest;
 import io.vavr.Function1;
 import lombok.SneakyThrows;
 import lombok.val;
 import sinnet.grpc.projects.Project;
 import sinnet.grpc.projects.ProjectModel;
 
-@QuarkusTest
+@SpringBootTest
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class ProjectsITest {
 
-  @Inject
+  @Autowired
   AppOperations operations;
 
   private static Function1<Project, String> mapProjectToName = Function1.of(Project::getModel)

@@ -1,30 +1,28 @@
 package sinnet.dbo;
 
-import java.time.Duration;
 import java.util.UUID;
-
-import javax.inject.Inject;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
-import io.quarkus.test.junit.QuarkusTest;
 import sinnet.model.ValEmail;
 import sinnet.model.ValProjectId;
 
-@QuarkusTest
+@SpringBootTest
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class DboFacadeTest {
 
-  @Inject
+  @Autowired
   DboFacade dboFacade;
 
   @Test
   public void should_not_fail() {
-    dboFacade.ownedAsId(ValEmail.of("non-existing-email")).await().indefinitely();
+    dboFacade.ownedAsId(ValEmail.of("non-existing-email"));
   }
 
   @Test
@@ -32,8 +30,8 @@ class DboFacadeTest {
   public void should_be_owner_on_created_project() {
     var id = ValProjectId.of(UUID.randomUUID());
     var name = ValEmail.of(UUID.randomUUID().toString());
-    dboFacade.create(new DboCreate.CreateContent(id, name)).await().atMost(Duration.ofSeconds(3));
-    var owned = dboFacade.ownedAsId(name).await().indefinitely();
+    dboFacade.create(new DboCreate.CreateContent(id, name));
+    var owned = dboFacade.ownedAsId(name);
     Assertions.assertThat(owned).isNotEmpty();
   }
 

@@ -5,60 +5,53 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import javax.enterprise.context.ApplicationScoped;
-
-import org.hibernate.reactive.mutiny.Mutiny;
+import org.springframework.stereotype.Component;
 
 import io.grpc.Status;
-import io.smallrye.mutiny.Uni;
 import io.vavr.Function1;
 import io.vavr.control.Either;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import sinnet.model.ProjectVid;
 import sinnet.model.ValEmail;
 
-@ApplicationScoped
-@RequiredArgsConstructor
+@Component
+@AllArgsConstructor
 class DboUpdateImpl implements DboUpdate {
 
-  private final Mutiny.SessionFactory factory;
+  private final ProjectRepository repository;
   
   @Override
-  public Uni<ProjectVid> updateCommand(ProjectVid vid, UpdateCommandContent content) {
+  public ProjectVid updateCommand(ProjectVid vid, UpdateCommandContent content) {
     var eid = vid.id();
     var etag = vid.tag();
 
-    return factory.withTransaction(
-      (session, tx) -> // load to memory a managed instance so that update may be done with preloaded instance with given locking type
-        session.find(ProjectDbo.class, eid)
-          
-          // avoid starting update with stale version:
-          .map(guardVersion(etag))
-          .flatMap(this::guardVersion)
+    // load to memory a managed instance so that update may be done with preloaded instance with given locking type
+    var current = repository.findById(eid)
+        .map(guardVersion(etag))
+        .map(this::guardVersion)
+        .get();
 
-          // apply requested changes
-          .invoke(it -> applyCommand(it, content))
+    // apply requested changes
+    applyCommand(current, content);
 
-          // flush to get back updated instance with new version field
-          .call(session::flush)
-
-          .map(this::getVersion));
+    repository.flush();
+    return getVersion(current);
   }
 
-  /**
-   * Currently Panache does not protect stale updates throwing OptimisticLockException, so we need to protect version manually
-   * Should be reviewed when closed https://github.com/quarkusio/quarkus/issues/7193
-   */
   private Function1<ProjectDbo, Either<Exception, ProjectDbo>> guardVersion(long expectedETag) {
     return dbo -> Objects.equals(dbo.getVersion(), expectedETag)
       ? Either.right(dbo)
       : Either.left(Status.FAILED_PRECONDITION.withDescription("Invalid version").asException());
   }
 
-  private Uni<? extends ProjectDbo> guardVersion(Either<Exception, ProjectDbo> it) {
-    return it.isRight()
-      ? Uni.createFrom().item(it.get())
-      : Uni.createFrom().failure(it.getLeft());
+  @SneakyThrows
+  private ProjectDbo guardVersion(Either<Exception, ProjectDbo> it) {
+    if (it.isLeft()) {
+      throw it.getLeft();
+    }
+    return it.get();
   }
 
   private ProjectVid getVersion(ProjectDbo it) {

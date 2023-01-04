@@ -38,7 +38,7 @@ databaseChangeLog:
     changes:
     - loadData:
         tableName: inbox_project
-        file: 0002-create-project-inbox.csv
+        file: changeLog/0002-create-project-inbox.csv
         commentLineStartsWith: //
         encoding: UTF-8
         relativeToChangelogFile: true

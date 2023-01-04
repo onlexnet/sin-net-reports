@@ -2,7 +2,6 @@ package sinnet.dbo;
 
 import java.util.UUID;
 
-import io.smallrye.mutiny.Uni;
 import lombok.Value;
 import sinnet.model.ProjectVid;
 import sinnet.model.ValEmail;
@@ -15,7 +14,7 @@ public interface DboCreate {
     return ValProjectId.of(UUID.randomUUID());
   }
 
-  Uni<CreateResult> create(CreateContent entry);
+  CreateResult create(CreateContent entry);
 
   @Value
   class CreateContent {
@@ -23,6 +22,7 @@ public interface DboCreate {
     private ValEmail emailOfOwner;
   }
 
+  
   sealed interface CreateResult {
   }
 

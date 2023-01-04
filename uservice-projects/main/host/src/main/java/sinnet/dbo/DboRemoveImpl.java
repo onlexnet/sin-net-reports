@@ -1,29 +1,24 @@
 package sinnet.dbo;
 
-import javax.enterprise.context.ApplicationScoped;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
-import org.hibernate.reactive.mutiny.Mutiny;
-
-import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 import sinnet.model.ValProjectId;
 
-@ApplicationScoped
+@Component
 @RequiredArgsConstructor
+@Transactional(propagation = Propagation.REQUIRED)
 class DboRemoveImpl implements DboRemove {
 
-  private final Mutiny.SessionFactory factory;
+  private final ProjectRepository repository;
 
   @Override
-  public Uni<Void> remove(ValProjectId idHolder) {
+  public void remove(ValProjectId idHolder) {
 
     var eid = idHolder.value();
-
-    return factory.withTransaction(
-      (session, tx) -> session.find(ProjectDbo.class, eid)
-
-        .flatMap(session::remove)
-        .flatMap(it -> session.flush()));
+    repository.deleteById(eid);
   }
   
 }

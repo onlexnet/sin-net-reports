@@ -2,10 +2,14 @@ package sinnet.dbo;
 
 import java.util.UUID;
 
-import javax.enterprise.context.ApplicationScoped;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-import io.quarkus.hibernate.reactive.panache.PanacheRepositoryBase;
+import io.vavr.collection.Seq;
 
-@ApplicationScoped
-class ProjectRepository implements PanacheRepositoryBase<ProjectDbo, UUID> {
+@Repository
+interface ProjectRepository extends JpaRepository<ProjectDbo, UUID> {
+
+  Seq<ProjectDbo> findByEmailOfOwner(String emailOfOwner);
+  long countByEmailOfOwner(String emailOfOwner);
 }

@@ -1,30 +1,60 @@
 package sinnet.rpc;
 
-import io.quarkus.grpc.GrpcService;
+import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Delegate;
-import sinnet.grpc.projects.Projects;
+import sinnet.grpc.projects.CreateReply;
+import sinnet.grpc.projects.CreateRequest;
+import sinnet.grpc.projects.GetReply;
+import sinnet.grpc.projects.GetRequest;
+import sinnet.grpc.projects.ListReply;
+import sinnet.grpc.projects.ListRequest;
+import sinnet.grpc.projects.RemoveCommand;
+import sinnet.grpc.projects.RemoveResult;
+import sinnet.grpc.projects.UpdateCommand;
+import sinnet.grpc.projects.UpdateResult;
+import sinnet.grpc.projects.UserStatsReply;
+import sinnet.grpc.projects.UserStatsRequest;
+import sinnet.grpc.projects.ProjectsGrpc.ProjectsImplBase;
 
-@GrpcService
 @RequiredArgsConstructor
-class ProjectsService implements Projects {
+class ProjectsService extends ProjectsImplBase {
 
-  @Delegate
-  private final ProjectsCreate projectsCreate;
+  private final ProjectsCreateImpl projectsCreate;
+  private final ProjectsUpdateImpl projectsUpdate;
+  private final ProjectListImpl projectsList;
+  private final ProjectGetImpl projectsGet;
+  private final ProjectsRemoveImpl projectsRemove;
+  private final ProjectUserStatsImpl projectUserStats;
 
-  @Delegate(types = ProjectsUpdate.class)
-  private final ProjectsUpdate projectsUpdate;
+  @Override
+  public void create(CreateRequest request, StreamObserver<CreateReply> responseObserver) {
+    projectsCreate.command(request, responseObserver);
+  }
 
-  @Delegate(types = ProjectList.class)
-  private final ProjectList projectsList;
+  @Override
+  public void update(UpdateCommand request, StreamObserver<UpdateResult> responseObserver) {
+    projectsUpdate.command(request, responseObserver);
+  }
 
-  @Delegate(types = ProjectGet.class)
-  private final ProjectGet projectsGet;
+  @Override
+  public void list(ListRequest request, StreamObserver<ListReply> responseObserver) {
+    projectsList.query(request, responseObserver);
+  }  
 
-  @Delegate(types = ProjectsRemove.class)
-  private final ProjectsRemove projectsRemove;
+  @Override
+  public void get(GetRequest request, StreamObserver<GetReply> responseObserver) {
+    projectsGet.query(request, responseObserver);
+  }
 
-  @Delegate(types = ProjectUserStats.class)
-  private final ProjectUserStats projectUserStats;
+  @Override
+  public void remove(RemoveCommand request, StreamObserver<RemoveResult> responseObserver) {
+    projectsRemove.command(request, responseObserver);
+  }
+
+  @Override
+  public void userStats(UserStatsRequest request, StreamObserver<UserStatsReply> responseObserver) {
+    projectUserStats.query(request, responseObserver);
+  }
 
 }

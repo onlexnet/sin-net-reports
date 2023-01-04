@@ -1,12 +1,10 @@
 package sinnet.dbo;
 
-import javax.enterprise.context.ApplicationScoped;
+import org.springframework.stereotype.Component;
 
-import org.hibernate.reactive.mutiny.Mutiny;
-
-import io.smallrye.mutiny.Uni;
 import io.vavr.Function1;
 import io.vavr.collection.Array;
+import io.vavr.collection.Seq;
 import lombok.RequiredArgsConstructor;
 import sinnet.grpc.projects.Project;
 import sinnet.grpc.projects.ProjectId;
@@ -14,7 +12,7 @@ import sinnet.grpc.projects.ProjectModel;
 import sinnet.model.ValEmail;
 import sinnet.model.ValProjectId;
 
-@ApplicationScoped
+@Component
 @RequiredArgsConstructor
 final class DboGetImpl implements DboGet {
 
@@ -47,27 +45,33 @@ final class DboGetImpl implements DboGet {
   }
 
   @Override
-  public Uni<Array<Project>> ownedAsProject(ValEmail ownerEmail) {
+  public Seq<Project> ownedAsProject(ValEmail ownerEmail) {
     return ownedAndMap(ownerEmail, this::mapToEntity);
   }
 
   @Override
-  public Uni<Array<ValProjectId>> ownedAsId(ValEmail ownerEmail) {
+  public Seq<ValProjectId> ownedAsId(ValEmail ownerEmail) {
     return ownedAndMap(ownerEmail, this::mapToIdHolder);
   }
 
   @Override
-  public Uni<Project> get(ValProjectId projectId) {
+  public Project get(ValProjectId projectId) {
     var id = projectId.value();
     return projectRepository
       .findById(id)
-      .map(this::mapToEntity);
+      .map(this::mapToEntity).orElseThrow();
   }
 
-  private <T> Uni<Array<T>> ownedAndMap(ValEmail emailOfOwner, Function1<ProjectDbo, T> mapper) {
-    return projectRepository
-      .list("select t from ProjectDbo t where t.emailOfOwner = ?1", emailOfOwner.value())
-      .map(it -> Array.ofAll(it).map(mapper));
+  private <T> Seq<T> ownedAndMap(ValEmail emailOfOwner, Function1<ProjectDbo, T> mapper) {
+    return projectRepository.findByEmailOfOwner(emailOfOwner.value()).map(mapper);
+  }
+
+  @Override
+  public StatsResult getStats(ValEmail ownerEmail) {
+    // method returns long as it is natural for SQL
+    // but we need to return int as it is natural for expected real number of projects.
+    var numberOfProjects = (int) projectRepository.countByEmailOfOwner(ownerEmail.value());
+    return new StatsResult(numberOfProjects);
   }
 
 }

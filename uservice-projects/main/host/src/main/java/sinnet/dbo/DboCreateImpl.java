@@ -1,28 +1,24 @@
 package sinnet.dbo;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.validation.Validator;
-
-import org.hibernate.reactive.mutiny.Mutiny;
-import org.hibernate.reactive.mutiny.Mutiny.Session;
+import org.springframework.stereotype.Component;
 
 import io.grpc.Status;
-import io.smallrye.mutiny.Uni;
+import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import sinnet.model.ProjectVid;
 
-@ApplicationScoped
+@Component
 @RequiredArgsConstructor
 class DboCreateImpl implements DboCreate {
 
-  private final Mutiny.SessionFactory factory;
   private final Validator validator;
-  
+  private final ProjectRepository repository;
+
   @Override
-  public Uni<CreateResult> create(CreateContent entry) {
+  public CreateResult create(CreateContent entry) {
     var requestedId = entry.getRequestedId();
-    var initialEtag = 1L;
+    var initialEtag = 1L; //well-known ID set by hibernate locking mechanism
     var result = ProjectVid.of(requestedId, initialEtag);
     var emailAsString = entry.getEmailOfOwner().value();
     var newEntityTemplate = new ProjectDbo()
@@ -31,37 +27,25 @@ class DboCreateImpl implements DboCreate {
         .setName("-")
         .setEmailOfOwner(emailAsString);
 
+
     var violations = validator.validate(newEntityTemplate);
     if (!violations.isEmpty()) {
-      var errorResult = new ValidationFailed("Validation error");
-      return Uni.createFrom().item(errorResult);
+      return new ValidationFailed("Validation error");
     }
-    
-    return factory.withTransaction(
-      (session, tx) -> // load to memory a managed instance so that update may be done with preloaded instance with given locking type
-          // if it is new entity, lets check if creating it may increase number of free projects more that allowed
-          // TODO: it is naive implementation as multiple threads in parallel may create projects above the limit
-          
-          guardLimits(10, session, newEntityTemplate)
 
-          .call(session::persist)
-          .map(ignoredAndReplaced -> result)
-          .map(it -> (CreateResult) new Success(it)));
+    // TODO: it is naive implementation as multiple threads in parallel may create projects above the limit
+    var emailOfOwner = newEntityTemplate.getEmailOfOwner();
+    var count = repository.countByEmailOfOwner(emailOfOwner);
+    val limit = 10;
+    if (count >= limit) {
+      var errorDesc = String.format("Too many projects: Current: %s, Limit:%s, user: %s", count, limit, emailOfOwner);
+      return new ValidationFailed(errorDesc);
+    }
 
-  }
+    repository.save(newEntityTemplate);
+    return new Success(result);
 
-  private Uni<ProjectDbo> guardLimits(long limit, Session session, ProjectDbo detachedEntity) {
-    val query = "SELECT count(*) from ProjectDbo T where T.emailOfOwner=:emailOfOwner";
-    var emailOfOwner = detachedEntity.getEmailOfOwner();
-    return session.createQuery(query, Long.class)
-      .setParameter("emailOfOwner", emailOfOwner)
-      .getSingleResult()
-      .map(Long::intValue)
-      .flatMap(count -> count >= limit
-        ? Uni.createFrom().failure(
-          Status.RESOURCE_EXHAUSTED.withDescription(String.format("Too many projects: Current: %s, Limit:%s, user: %s", count, limit, emailOfOwner))
-          .asException())
-        : Uni.createFrom().item(detachedEntity));
   }
 
 }
+

@@ -1,79 +1,40 @@
-<?xml version="1.0"?>
 <project>
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>onlexnet.sinnet</groupId>
-    <artifactId>uservice-quarkus-parent</artifactId>
+    <artifactId>uservice-spring-parent</artifactId>
     <version>0.1.0-SNAPSHOT</version>
-    <relativePath />
   </parent>
   <artifactId>uservice-projects-parent</artifactId>
   <version>${revision}</version>
   <packaging>pom</packaging>
 
   <modules>
-    <module>host</module>
-    <module>initdb-host</module>
+    <module>base-pom</module>
     <module>initdb-migrate</module>
     <module>initdb-test</module>
+    <module>host</module>
+    <module>initdb-host</module>
   </modules>
 
   <properties>
-    <api.version>0.1.0-SNAPSHOT</api.version>
+    <!-- sonar properties -> https://docs.sonarqube.org/latest/analysis/analysis-parameters/ -->
+    <sonar.organization>on-lex-net</sonar.organization>
+    <sonar.projectKey>sin-net-reports-projects</sonar.projectKey>
+    <sonar.projectName>SinNet Reports Projects</sonar.projectName>
+    <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+    <!-- Environment variable is expected already to be defined in CI/CD as SONAR_TOKEN -->
+    <sonar.login>${env.SONAR_TOKEN}</sonar.login>
+
+    <aggregate.report.dir>report-aggregate/target/site/jacoco-aggregate/jacoco.xml</aggregate.report.dir>
+
+    <!-- disable encoding warning http://maven.apache.org/general.html#encoding-warning -->
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
-  <dependencyManagement>
-    <dependencies>
-
-      <dependency>
-        <groupId>onlexnet.sinnet</groupId>
-        <artifactId>uservice-projects.rpc-quarkus</artifactId>
-        <version>${api.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>onlexnet.sinnet</groupId>
-        <artifactId>uservice-projects.events</artifactId>
-        <version>${api.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>onlexnet.sinnet</groupId>
-        <version>${project.version}</version>
-        <artifactId>uservice-projects-initdb-migrate</artifactId>
-      </dependency>
-      <dependency>
-        <groupId>onlexnet.sinnet</groupId>
-        <version>${project.version}</version>
-        <artifactId>uservice-projects-initdb-test</artifactId>
-        <scope>test</scope>
-      </dependency>
-
-      <dependency>
-        <groupId>io.dapr</groupId>
-        <artifactId>dapr-sdk</artifactId>
-        <version>1.6.0</version>
-      </dependency>
-      <!--
-        DAPR requires also extra dependency to solve runtime startup issue
-      https://github.com/dapr/java-sdk/issues/515#issuecomment-800435671
-      -->
-      <dependency>
-        <groupId>com.squareup.okhttp3</groupId>
-        <artifactId>okhttp</artifactId>
-        <version>4.10.0</version>
-      </dependency>
-
-    </dependencies>
-  </dependencyManagement>
 
   <build>
     <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-checkstyle-plugin</artifactId>
-        <configuration>
-          <failOnViolation>false</failOnViolation>
-        </configuration>
-      </plugin>
 
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
