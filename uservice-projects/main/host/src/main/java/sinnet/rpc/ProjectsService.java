@@ -1,22 +1,24 @@
 package sinnet.rpc;
 
+import org.springframework.stereotype.Component;
+
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.Delegate;
 import sinnet.grpc.projects.CreateReply;
 import sinnet.grpc.projects.CreateRequest;
 import sinnet.grpc.projects.GetReply;
 import sinnet.grpc.projects.GetRequest;
 import sinnet.grpc.projects.ListReply;
 import sinnet.grpc.projects.ListRequest;
+import sinnet.grpc.projects.ProjectsGrpc.ProjectsImplBase;
 import sinnet.grpc.projects.RemoveCommand;
 import sinnet.grpc.projects.RemoveResult;
 import sinnet.grpc.projects.UpdateCommand;
 import sinnet.grpc.projects.UpdateResult;
 import sinnet.grpc.projects.UserStatsReply;
 import sinnet.grpc.projects.UserStatsRequest;
-import sinnet.grpc.projects.ProjectsGrpc.ProjectsImplBase;
 
+@Component
 @RequiredArgsConstructor
 class ProjectsService extends ProjectsImplBase {
 

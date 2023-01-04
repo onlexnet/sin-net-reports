@@ -1,6 +1,5 @@
 package sinnet.access;
 
-import io.vavr.collection.Array;
 import io.vavr.collection.Seq;
 import lombok.Value;
 import lombok.experimental.Accessors;

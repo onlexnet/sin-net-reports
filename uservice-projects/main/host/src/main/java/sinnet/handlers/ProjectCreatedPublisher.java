@@ -4,9 +4,6 @@ import java.io.ByteArrayOutputStream;
 
 import org.apache.avro.io.EncoderFactory;
 import org.apache.avro.specific.SpecificDatumWriter;
-import org.springframework.boot.context.event.ApplicationStartedEvent;
-import org.springframework.context.ApplicationListener;
-import org.springframework.context.ApplicationStartupAware;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
@@ -17,8 +14,8 @@ import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import lombok.SneakyThrows;
 import reactor.core.Disposable.Composite;
-import sinnet.project.events.ProjectCreatedEvent;
 import reactor.core.Disposables;
+import sinnet.project.events.ProjectCreatedEvent;
 
 @Component
 class ProjectCreatedPublisher {

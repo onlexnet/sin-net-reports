@@ -3,7 +3,6 @@ package sinnet.dbo;
 import org.springframework.stereotype.Component;
 
 import io.vavr.Function1;
-import io.vavr.collection.Array;
 import io.vavr.collection.Seq;
 import lombok.RequiredArgsConstructor;
 import sinnet.grpc.projects.Project;

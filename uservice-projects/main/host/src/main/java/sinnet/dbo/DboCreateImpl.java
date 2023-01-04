@@ -2,7 +2,6 @@ package sinnet.dbo;
 
 import org.springframework.stereotype.Component;
 
-import io.grpc.Status;
 import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import lombok.val;

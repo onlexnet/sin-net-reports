@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import io.grpc.ManagedChannelBuilder;
@@ -29,9 +30,12 @@ public class AppOperations {
 
   ProjectsGrpc.ProjectsBlockingStub self;
 
+  @Value("${grpc.server.port}")
+  int grpcPort;
+
   @PostConstruct
   void init() {
-    var channel = ManagedChannelBuilder.forAddress("localhost", -1)
+    var channel = ManagedChannelBuilder.forAddress("localhost", grpcPort)
         .usePlaintext()
         .build();
     self = ProjectsGrpc.newBlockingStub(channel);

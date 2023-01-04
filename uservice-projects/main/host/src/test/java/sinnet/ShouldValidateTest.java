@@ -21,7 +21,7 @@ import sinnet.dbo.Profiles;
 @ActiveProfiles(Profiles.TEST)
 @ExtendWith(PostgresDbExtension.class)
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
-class ValidateNameTest {
+class ShouldValidateTest {
 
   final int maximumSizeOfUserEmail = 50;
 
