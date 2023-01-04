@@ -23,11 +23,12 @@ public class AppArchTest {
   // Methods should not throw generic exception
   // For spring classes, there should be any field injection (@Autowired), use constrctor injection
   @ArchTest
-  static final ArchRule implement_general_coding_practices = CompositeArchRule.of(GeneralCodingRules.NO_CLASSES_SHOULD_ACCESS_STANDARD_STREAMS)
+  static final ArchRule implement_general_coding_practices = CompositeArchRule
+      .of(GeneralCodingRules.NO_CLASSES_SHOULD_ACCESS_STANDARD_STREAMS)
       .and(GeneralCodingRules.NO_CLASSES_SHOULD_THROW_GENERIC_EXCEPTIONS)
       .and(GeneralCodingRules.NO_CLASSES_SHOULD_USE_JAVA_UTIL_LOGGING)
       .and(GeneralCodingRules.NO_CLASSES_SHOULD_USE_JODATIME)
-      // .and(GeneralCodingRules.NO_CLASSES_SHOULD_USE_FIELD_INJECTION)
+      .and(GeneralCodingRules.NO_CLASSES_SHOULD_USE_FIELD_INJECTION)
       .because("These are Voilation of general coding rules");
 
 

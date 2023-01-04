@@ -30,7 +30,8 @@ class DboFacadeTest {
 
   @Test
   public void should_not_fail() {
-    dboFacade.ownedAsId(ValEmail.of("non-existing-email"));
+    var actual = dboFacade.ownedAsId(ValEmail.of("non-existing-email-" + UUID.randomUUID()));
+    Assertions.assertThat(actual).isEmpty();
   }
 
   @Test
