@@ -8,22 +8,26 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 
 import com.google.common.util.concurrent.Runnables;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * Reusable extension to start local PostgreSQL instance for µservices based on
  * its databases.
  */
+@Slf4j
 public final class PostgresDbExtension implements BeforeAllCallback,
     AfterAllCallback,
     ExecutionCondition {
 
   private AutoCloseable disposer = Runnables::doNothing;
-  private boolean disabled = false;
+  private boolean initializationFailed = false;
 
   @Override
   public void beforeAll(ExtensionContext context) throws Exception {
+    initializationFailed = true; // just in case unsuccessful initialization
     var dbRunner = new PostgresDbRunner();
     disposer = dbRunner.start();
-    disabled = true;
+    initializationFailed = false;
   }
 
   @Override
@@ -33,7 +37,7 @@ public final class PostgresDbExtension implements BeforeAllCallback,
 
   @Override
   public ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext context) {
-    return !disabled
+    return !initializationFailed
         ? ConditionEvaluationResult.enabled(null)
         : ConditionEvaluationResult.disabled("Database initialization issue");
   }

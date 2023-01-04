@@ -1,26 +1,34 @@
 package sinnet;
 
 import static io.restassured.RestAssured.given;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatCode;
+
+import static  org.assertj.core.api.Assertions.assertThat;
 
 import org.assertj.core.api.Assertions;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
 
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 import io.vavr.Function1;
 import lombok.SneakyThrows;
 import lombok.val;
+import sinnet.db.PostgresDbExtension;
+import sinnet.dbo.Profiles;
 import sinnet.grpc.projects.Project;
 import sinnet.grpc.projects.ProjectModel;
 
 @SpringBootTest
+@ContextConfiguration(classes = { Program.class })
+@ActiveProfiles(Profiles.TEST)
+@ExtendWith(PostgresDbExtension.class)
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class ProjectsITest {
 
@@ -119,7 +127,7 @@ class ProjectsITest {
     var newOwnerEmail = operations.generateOwnerEmail();
     var updateCmdBuilder2 = operations.newUpdateCommand(projectId, "my new name", ownerEmail, newOwnerEmail);
 
-    assertThatCode(() -> operations.update(updateCmdBuilder2))
+    Assertions.assertThatCode(() -> operations.update(updateCmdBuilder2))
         .isInstanceOfSatisfying(StatusRuntimeException.class,
             ex -> assertThat(ex.getStatus().getCode()).isEqualTo(Status.FAILED_PRECONDITION.getCode()));
 

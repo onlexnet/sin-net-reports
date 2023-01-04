@@ -24,7 +24,6 @@ public final class PostgresDbRunner {
         setProperty("DATABASE_USERNAME", postgres.getUsername()),
         setProperty("DATABASE_PASSWORD", postgres.getPassword()),
         setProperty("DATABASE_SCHEMA", "public"));
-    log.error("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
     return () -> items.forEach(SafeAutoCloseable::close);
   }
 

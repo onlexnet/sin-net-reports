@@ -27,6 +27,7 @@
     <dependency>
       <groupId>onlexnet.sinnet</groupId>
       <artifactId>uservice-projects-initdb-migrate</artifactId>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>onlexnet.sinnet</groupId>

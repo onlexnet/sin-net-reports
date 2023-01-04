@@ -30,12 +30,12 @@ class DboFacadeTest {
 
   @Test
   public void should_not_fail() {
-    var actual = dboFacade.ownedAsId(ValEmail.of("non-existing-email-" + UUID.randomUUID()));
+    var nonExistingEmail = ValEmail.of("non-existing-email-" + UUID.randomUUID());
+    var actual = dboFacade.ownedAsId(nonExistingEmail);
     Assertions.assertThat(actual).isEmpty();
   }
 
   @Test
-  @Disabled
   public void should_be_owner_on_created_project() {
     var id = ValProjectId.of(UUID.randomUUID());
     var name = ValEmail.of(UUID.randomUUID().toString());
