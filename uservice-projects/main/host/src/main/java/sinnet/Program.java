@@ -1,4 +1,4 @@
-package sinnet.host;
+package sinnet;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

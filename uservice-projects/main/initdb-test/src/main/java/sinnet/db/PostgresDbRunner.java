@@ -6,6 +6,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 
 import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public final class PostgresDbRunner {
 
   private static final String TESTCONTAINERS = "testcontainers";
@@ -17,10 +18,13 @@ public final class PostgresDbRunner {
   public SafeAutoCloseable start() {
     postgres.start();
     var items = List.of(
-        setProperty("DATABASE_JDBC", postgres.getJdbcUrl()),
+        setProperty("DATABASE_HOST", postgres.getHost()),
+        setProperty("DATABASE_PORT", postgres.getFirstMappedPort().toString()),
+        setProperty("DATABASE_NAME", postgres.getDatabaseName()),
         setProperty("DATABASE_USERNAME", postgres.getUsername()),
         setProperty("DATABASE_PASSWORD", postgres.getPassword()),
         setProperty("DATABASE_SCHEMA", "public"));
+    log.error("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
     return () -> items.forEach(SafeAutoCloseable::close);
   }
 

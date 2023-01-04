@@ -10,6 +10,8 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import io.grpc.ManagedChannelBuilder;
+import jakarta.annotation.PostConstruct;
 import sinnet.grpc.projects.CreateRequest;
 import sinnet.grpc.projects.GetRequest;
 import sinnet.grpc.projects.ListRequest;
@@ -25,8 +27,15 @@ import sinnet.grpc.projects.UserToken;
 @Component
 public class AppOperations {
 
-  @Autowired
   ProjectsGrpc.ProjectsBlockingStub self;
+
+  @PostConstruct
+  void init() {
+    var channel = ManagedChannelBuilder.forAddress("localhost", -1)
+        .usePlaintext()
+        .build();
+    self = ProjectsGrpc.newBlockingStub(channel);
+  }
 
 
   ProjectId create(String emailOfUser) {

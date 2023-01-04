@@ -7,13 +7,21 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
 
+import sinnet.Program;
+import sinnet.db.PostgresDbExtension;
 import sinnet.model.ValEmail;
 import sinnet.model.ValProjectId;
 
 @SpringBootTest
+@ContextConfiguration(classes = { Program.class })
+@ActiveProfiles(Profiles.TEST)
+@ExtendWith(PostgresDbExtension.class)
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class DboFacadeTest {
 
