@@ -24,17 +24,13 @@ class UserAccess implements AccessFacade {
 
   @Override
   @SneakyThrows
-  public void guardAccess(UserToken requestor, ValProjectId eid,
-      Function<RoleContext, Predicate<ValProjectId>> methodExtractor) {
-    var exists = Option.of(this.from(requestor))
-        .map(methodExtractor::apply)
-        .map(this::guardRole)
-        .map(it -> it.apply(eid))
-        .map(this::eitherMap)
-        .isDefined();
-      if (!exists) {
-        throw Status.FAILED_PRECONDITION.withDescription("Illegal owner").asException();
-      }
+  public void guardAccess(UserToken requestor, ValProjectId eid, Function<RoleContext, Predicate<ValProjectId>> methodExtractor) {
+    var roleContext = this.from(requestor);
+    var isAllowed = methodExtractor.apply(roleContext).test(eid);
+    if (isAllowed) {
+        return;
+    }
+    throw Status.PERMISSION_DENIED.asRuntimeException();
   }
 
   /**
@@ -45,12 +41,6 @@ class UserAccess implements AccessFacade {
         .of(accessAs)
         .map(it -> (RoleContextSet) it.calculate(userToken));
     return new RoleContext(sets);
-  }
-
-  private Function1<ValProjectId, Either<Exception, ValProjectId>> guardRole(Predicate<ValProjectId> canContinue) {
-    return id -> canContinue.test(id)
-        ? Either.right(id)
-        : Either.left(Status.FAILED_PRECONDITION.withDescription("Illegal owner").asException());
   }
 
   @SneakyThrows

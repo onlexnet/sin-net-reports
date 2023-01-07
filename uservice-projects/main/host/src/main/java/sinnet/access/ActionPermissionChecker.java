@@ -15,12 +15,13 @@ import sinnet.model.ValProjectId;
  */
 interface ActionPermissionChecker {
 
-  /** Returns true if the current action can be performed by and Owner. */
+  /** Returns true if the current action can be performed by an Owner. */
   ValidationResult onOwnerRole(Seq<ValProjectId> projectsId);
 
   /** Returns true if the current action can be performed by an Operator. */
   ValidationResult onOperatorRole(Seq<ValProjectId> projectsId);
 
+  ValidationResult on
   enum ValidationResult {
     PERMITTED,
     IGNORED,

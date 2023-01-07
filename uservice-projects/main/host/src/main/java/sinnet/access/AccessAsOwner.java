@@ -6,10 +6,10 @@ import io.vavr.collection.Array;
 import sinnet.grpc.projects.UserToken;
 
 @Component
-final class AccessAsOperator implements AccessAs<RoleContextSet.OperatorRoleContext> {
+final class AccessAsOwner implements AccessAs<RoleContextSet.OwnerRoleContext> {
 
   @Override
-  public RoleContextSet.OperatorRoleContext calculate(UserToken userToken) {
-    return new RoleContextSet.OperatorRoleContext(Array.empty());
+  public RoleContextSet.OwnerRoleContext calculate(UserToken userToken) {
+    return new RoleContextSet.OwnerRoleContext(Array.empty());
   }
 }

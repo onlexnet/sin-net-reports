@@ -16,6 +16,16 @@ public sealed interface RoleContextSet {
   /** Invokes proper method based on user's role, and returns the result of validation. */
   ValidationResult processPermission(ActionPermissionChecker validator);
 
+  @Value
+  @Accessors(fluent = true)
+  class NoRoleContext implements RoleContextSet {
+
+    @Override
+    public ValidationResult processPermission(ActionPermissionChecker validator) {
+      return validator.onOwnerRole(projectsIds);
+    }
+  }
+  
   /** Allows to check . */
   @Value
   @Accessors(fluent = true)
