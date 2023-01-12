@@ -6,26 +6,23 @@ import org.springframework.stereotype.Component;
 import io.grpc.BindableService;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import sinnet.host.AppGrpcProperties;
 
 /** Registers all discoverable gRpc services to allow them be reachable. */
 @Component
+@RequiredArgsConstructor
 class GrpcServer implements AutoCloseable {
-
+  private final AppGrpcProperties grpcProperties;
   private final BindableService[] services;
-  private final int port;
-
-  public GrpcServer(BindableService[] services,
-                    @Value("${grpc.server.port}") int port) {
-    this.services = services;
-    this.port = port;
-  }
 
   private Server server;
 
   @jakarta.annotation.PostConstruct
   @SneakyThrows
   public void start() {
+    var port = grpcProperties.getServerPort();
     var builder = ServerBuilder.forPort(port);
     for (var bindableService : services) {
       builder.addService(bindableService);

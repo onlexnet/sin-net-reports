@@ -4,7 +4,7 @@ import io.vavr.collection.Seq;
 import sinnet.model.ValProjectId;
 
 /**
- * Used to chec if the current action can be performed by the user on the set of projects.
+ * Used to check if the current action can be performed by the user on the set of projects.
  * Designed to be:
  * - implemented by action's permission checkers
  * - focused on some implicitly provided 'current' projectId
@@ -21,7 +21,6 @@ interface ActionPermissionChecker {
   /** Returns true if the current action can be performed by an Operator. */
   ValidationResult onOperatorRole(Seq<ValProjectId> projectsId);
 
-  ValidationResult on
   enum ValidationResult {
     PERMITTED,
     IGNORED,

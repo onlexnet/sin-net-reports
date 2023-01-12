@@ -22,7 +22,7 @@ public sealed interface RoleContextSet {
 
     @Override
     public ValidationResult processPermission(ActionPermissionChecker validator) {
-      return validator.onOwnerRole(projectsIds);
+      return ValidationResult.PERMITTED;
     }
   }
   

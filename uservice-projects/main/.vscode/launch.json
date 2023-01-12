@@ -16,10 +16,12 @@
                 // and use the same value in the sidecar
                 // it is used e.g. byt DaprClientBuilder
                 "DAPR_GRPC_PORT": 11019,
-                "DATABASE_JDBC": "jdbc:postgresql://localhost:5432/devlocaldb",
+                "DATABASE_HOST" : "localhost",
+                "DATABASE_PORT" : 5432,
+                "DATABASE_NAME" : "devlocaldb",
+                "DATABASE_SCHEMA": "uservice_projects",
                 "DATABASE_USERNAME": "uservice_projects_role_name",
                 "DATABASE_PASSWORD": "uservice_projects_role_password",
-                "DATABASE_SCHEMA": "uservice_projects"
             },
             "vmArgs": "-Drevision=0.0.0-LOCAL",
             "preLaunchTask": "dapr-debug",

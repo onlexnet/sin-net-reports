@@ -1,22 +1,26 @@
 package sinnet;
 
 import static io.restassured.RestAssured.given;
-
 import static  org.assertj.core.api.Assertions.assertThat;
+
+import java.net.URI;
 
 import org.assertj.core.api.Assertions;
 import org.hamcrest.Matchers;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
+import io.restassured.RestAssured;
 import io.vavr.Function1;
 import lombok.SneakyThrows;
 import lombok.val;
@@ -25,7 +29,7 @@ import sinnet.dbo.Profiles;
 import sinnet.grpc.projects.Project;
 import sinnet.grpc.projects.ProjectModel;
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ContextConfiguration(classes = { Program.class })
 @ActiveProfiles(Profiles.TEST)
 @ExtendWith(PostgresDbExtension.class)
@@ -39,7 +43,34 @@ class ProjectsITest {
       .andThen(ProjectModel::getName);
 
   
+  @Autowired
+  private TestRestTemplate testRestTemplate;
   
+  @BeforeEach
+  public void beforeEach() {
+    var uriAsString = testRestTemplate.getRootUri();
+    var currentPort = URI.create(uriAsString).getPort();
+    RestAssured.port = currentPort;
+  }
+
+  @Test
+  public void getHealth() {
+    given()
+        .when().get("/actuator/health")
+        .then()
+        .statusCode(200)
+        .body("components.livenessState.status", Matchers.equalTo("UP"));
+  }
+
+  @Test
+  public void getDatasourceHealth() {
+    given()
+        .when().get("/actuator/health")
+        .then()
+        .statusCode(200)
+        .body("components.readinessState.status", Matchers.equalTo("UP"));
+  }
+
   @Test
   void should_create() {
     var ownerName = operations.generateOwnerEmail();
@@ -141,24 +172,6 @@ class ProjectsITest {
     val knownOwnerOfPredefinedProjects = "siudeks@gmail.com";
     var actual = operations.listOfProjects(knownOwnerOfPredefinedProjects, Function1.identity());
     assertThat(actual).size().isNotZero();
-  }
-
-  @Test
-  public void getHealth() {
-    given()
-        .when().get("/q/health")
-        .then()
-        .statusCode(200)
-        .body("status", Matchers.equalTo("UP"));
-  }
-
-  @Test
-  public void getDatasourceHealth() {
-    given()
-        .when().get("/q/health/ready")
-        .then()
-        .statusCode(200)
-        .body("status", Matchers.equalTo("UP"));
   }
 
 }

@@ -6,10 +6,8 @@ import java.util.function.Predicate;
 import org.springframework.stereotype.Component;
 
 import io.grpc.Status;
-import io.vavr.Function1;
 import io.vavr.collection.Stream;
 import io.vavr.control.Either;
-import io.vavr.control.Option;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import sinnet.grpc.projects.UserToken;

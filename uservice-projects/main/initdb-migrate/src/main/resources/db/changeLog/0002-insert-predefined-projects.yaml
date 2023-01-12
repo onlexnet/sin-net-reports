@@ -4,7 +4,7 @@ databaseChangeLog:
     author: siudeks
     changes:  
     - createTable:
-        tableName: inbox_project
+        tableName: INBOX_PROJECT
         columns:
         # Force elements to be ordered as inserted using clustered primary key. For that purpose, PK is clustered
         - column:
@@ -37,14 +37,16 @@ databaseChangeLog:
     author: siudeks
     changes:
     - loadData:
-        tableName: inbox_project
-        file: changeLog/0002-create-project-inbox.csv
+        tableName: PROJECT
+        # it does not work when relativeToChangelogFile=false
+        # to check it out, set to true and run tests to see the issue
+        relativeToChangelogFile: false
+        file: db/changeLog/0002-insert-predefined-projects.csv
         commentLineStartsWith: //
         encoding: UTF-8
-        relativeToChangelogFile: true
         usePreparedStatements: true
     rollback:
     - delete:
-        tableName: inbox_project
-        # as we see in 0002-create-project-inbox.csv, all inserted elements have BATCH_ID=1
-        where: BATCH_ID = 1
+        tableName: PROJECT
+        # as we see in 0002-insert-predefined-projects.csv, all records are just inital data so should be rollbacked all in once
+        where: true=true

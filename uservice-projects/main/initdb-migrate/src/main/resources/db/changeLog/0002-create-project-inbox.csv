@@ -1,5 +1,0 @@
-BATCH_ID,NAME,EMAIL_OF_OWNER
-// More:
-// https://docs.liquibase.com/change-types/load-data.html
-1,Siudek Test project,siudeks@gmail.com
-1,SinNet Production,siudeks@gmail.com

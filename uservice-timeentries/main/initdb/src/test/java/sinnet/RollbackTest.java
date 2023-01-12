@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 
 import liquibase.Liquibase;
 import liquibase.database.DatabaseFactory;
@@ -19,9 +18,9 @@ import lombok.SneakyThrows;
 import sinnet.db.PostgresDbExtension;
 
 @DisplayNameGeneration(DisplayNameGenerator.IndicativeSentences.class)
-@SpringBootTest(webEnvironment = WebEnvironment.NONE)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @ExtendWith(PostgresDbExtension.class)
-public class RollbackTest {
+class RollbackTest {
 
 
   @Autowired

@@ -24,16 +24,18 @@ services:
       context: service-localsdk
       dockerfile: Dockerfile.local
 
-  projects-initdb:
+  projects-initdb-host:
     build:
       context: uservice-projects/main
       dockerfile: ./initdb-host/Dockerfile.local
     environment:
       # well-known properties defined by init scripts of our postgresql
+      - DATABASE_HOST=service-postgres-dc
+      - DATABASE_PORT=5432
+      - DATABASE_NAME=devlocaldb
       - DATABASE_USERNAME=uservice_projects_role_name
       - DATABASE_PASSWORD=uservice_projects_role_password
       - DATABASE_SCHEMA=uservice_projects
-      - DATABASE_JDBC=jdbc:postgresql://service-postgres-dc:5432/devlocaldb
     volumes:
       # Map local maven repo to speed up build by avoiding downloading maven dependencies each time to new docker image
       - ~/.m2/:/.m2
@@ -51,6 +53,9 @@ services:
       dockerfile: ./initdb/Dockerfile.local
     environment:
       # well-known properties defined by init scripts of our postgresql
+      - DATABASE_HOST=service-postgres-dc
+      - DATABASE_PORT=5432
+      - DATABASE_NAME=devlocaldb
       - DATABASE_USERNAME=uservice_timeentries_role_name
       - DATABASE_PASSWORD=uservice_timeentries_role_password
       - DATABASE_SCHEMA=uservice_timeentries

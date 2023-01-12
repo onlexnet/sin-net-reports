@@ -36,8 +36,10 @@ public class RollbackTest {
     var dataSource = liquibaseBean.getDataSource();
     var connection = dataSource.getConnection();
     var database = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(new JdbcConnection(connection));
+
+    var resourceAccessor = new ClassLoaderResourceAccessor();
     @Cleanup
-    var liquibase = new Liquibase("db/changelog-master.yaml", new ClassLoaderResourceAccessor(), database);
+    var liquibase = new Liquibase("db/changeLog.yaml", resourceAccessor, database);
     var initialTag = "v0"; // well-known tag in database used for rollback tests
     Assertions
         .assertThatCode(() -> liquibase.rollback(initialTag, (String) null))

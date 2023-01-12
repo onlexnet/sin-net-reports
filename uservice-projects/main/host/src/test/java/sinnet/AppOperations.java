@@ -7,12 +7,12 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.RandomStringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import io.grpc.ManagedChannelBuilder;
 import jakarta.annotation.PostConstruct;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import sinnet.grpc.projects.CreateRequest;
 import sinnet.grpc.projects.GetRequest;
 import sinnet.grpc.projects.ListRequest;
@@ -24,17 +24,19 @@ import sinnet.grpc.projects.RemoveCommand;
 import sinnet.grpc.projects.UpdateCommand;
 import sinnet.grpc.projects.UpdateResult;
 import sinnet.grpc.projects.UserToken;
+import sinnet.host.AppGrpcProperties;
 
 @Component
+@RequiredArgsConstructor
 public class AppOperations {
 
-  ProjectsGrpc.ProjectsBlockingStub self;
+  private final AppGrpcProperties grpcProperties;
 
-  @Value("${grpc.server.port}")
-  int grpcPort;
+  private ProjectsGrpc.ProjectsBlockingStub self;
 
   @PostConstruct
   void init() {
+    var grpcPort = grpcProperties.getServerPort();
     var channel = ManagedChannelBuilder.forAddress("localhost", grpcPort)
         .usePlaintext()
         .build();
