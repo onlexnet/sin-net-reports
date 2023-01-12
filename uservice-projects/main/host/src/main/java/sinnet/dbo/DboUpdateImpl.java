@@ -11,11 +11,13 @@ import io.vavr.Function1;
 import io.vavr.control.Either;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import sinnet.model.ProjectVid;
 import sinnet.model.ValEmail;
 
 @Component
 @AllArgsConstructor
+@Slf4j
 class DboUpdateImpl implements DboUpdate {
 
   private final ProjectRepository repository;
@@ -34,8 +36,8 @@ class DboUpdateImpl implements DboUpdate {
     // apply requested changes
     applyCommand(current, content);
 
-    repository.flush();
-    return getVersion(current);
+    var updated = repository.saveAndFlush(current);
+    return getVersion(updated);
   }
 
   private Function1<ProjectDbo, Either<Exception, ProjectDbo>> guardVersion(long expectedETag) {
