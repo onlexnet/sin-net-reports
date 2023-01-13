@@ -1,5 +1,7 @@
 package sinnet.rpc.conf;
 
+import java.util.OptionalInt;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -9,14 +11,16 @@ import io.grpc.ServerBuilder;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import sinnet.host.AppGrpcProperties;
+import sinnet.rpc.RpcAdapter;
 
 /** Registers all discoverable gRpc services to allow them be reachable. */
 @Component
 @RequiredArgsConstructor
-class GrpcServer implements AutoCloseable {
+class GrpcServer implements RpcAdapter, AutoCloseable {
   private final AppGrpcProperties grpcProperties;
   private final BindableService[] services;
 
+  private OptionalInt serverPort = OptionalInt.empty();
   private Server server;
 
   @jakarta.annotation.PostConstruct
@@ -31,11 +35,17 @@ class GrpcServer implements AutoCloseable {
       .intercept(new ExceptionHandler())
       .build();
     server.start();
+    serverPort = OptionalInt.of(server.getPort());
   }
 
   @Override
   public void close() throws Exception {
     server.shutdownNow();
     server.awaitTermination();
+  }
+
+  @Override
+  public OptionalInt getServerPort() {
+    return serverPort;
   }
 }

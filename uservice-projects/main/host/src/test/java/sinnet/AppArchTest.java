@@ -69,6 +69,9 @@ class DependOnUpperPackagesCondition extends ArchCondition<JavaClass> {
     if (isPackageMarker(target)) {
       return false;
     }
+    if (isPortAdapter(target)) {
+      return false;
+    }
     String originPackageName = origin.getPackageName();
     String targetSubPackagePrefix = target.getPackageName() + ".";
     return originPackageName.startsWith(targetSubPackagePrefix);
@@ -76,6 +79,10 @@ class DependOnUpperPackagesCondition extends ArchCondition<JavaClass> {
 
   private boolean isPackageMarker(JavaClass target) {
     return target.getSimpleName().endsWith("PackageMarker");
+  }
+
+  private boolean isPortAdapter(JavaClass target) {
+    return target.getSimpleName().endsWith("Adapter");
   }
 
 }

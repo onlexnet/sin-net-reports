@@ -16,7 +16,7 @@ import io.grpc.StatusRuntimeException;
 import sinnet.db.PostgresDbExtension;
 import sinnet.dbo.Profiles;
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ContextConfiguration(classes = { Program.class })
 @ActiveProfiles(Profiles.TEST)
 @ExtendWith(PostgresDbExtension.class)

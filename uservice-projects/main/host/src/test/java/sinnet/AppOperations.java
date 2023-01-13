@@ -7,11 +7,13 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
 import io.grpc.ManagedChannelBuilder;
-import jakarta.annotation.PostConstruct;
-import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import sinnet.grpc.projects.CreateRequest;
 import sinnet.grpc.projects.GetRequest;
@@ -24,25 +26,13 @@ import sinnet.grpc.projects.RemoveCommand;
 import sinnet.grpc.projects.UpdateCommand;
 import sinnet.grpc.projects.UpdateResult;
 import sinnet.grpc.projects.UserToken;
-import sinnet.host.AppGrpcProperties;
 
 @Component
 @RequiredArgsConstructor
-public class AppOperations {
-
-  private final AppGrpcProperties grpcProperties;
+public class AppOperations implements ApplicationListener<ApplicationReadyEvent> {
 
   private ProjectsGrpc.ProjectsBlockingStub self;
-
-  @PostConstruct
-  void init() {
-    var grpcPort = grpcProperties.getServerPort();
-    var channel = ManagedChannelBuilder.forAddress("localhost", grpcPort)
-        .usePlaintext()
-        .build();
-    self = ProjectsGrpc.newBlockingStub(channel);
-  }
-
+  private final TestRestTemplate restTemplate;
 
   ProjectId create(String emailOfUser) {
     var reserveCmd = CreateRequest.newBuilder()
@@ -131,5 +121,20 @@ public class AppOperations {
     var listResponse = self.list(listQuery);
     return listResponse.getProjectsList().stream().map(map).collect(Collectors.toList());
   }
-  
+
+  @Data
+  static public class GrpcActuatorModel {
+     private Integer port;
+  }
+
+  @Override
+  public void onApplicationEvent(ApplicationReadyEvent event) {
+    var grpcModel = restTemplate.getForObject("/actuator/grpc", GrpcActuatorModel.class);
+    var grpcPort = grpcModel.getPort();
+
+    var channel = ManagedChannelBuilder.forAddress("localhost", grpcPort)
+        .usePlaintext()
+        .build();
+    self = ProjectsGrpc.newBlockingStub(channel);
+  }
 }

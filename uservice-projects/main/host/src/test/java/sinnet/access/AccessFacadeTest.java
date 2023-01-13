@@ -19,7 +19,7 @@ import sinnet.dbo.Profiles;
 import sinnet.grpc.projects.UserToken;
 import sinnet.model.ValProjectId;
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ContextConfiguration(classes = { Program.class })
 @ActiveProfiles(Profiles.TEST)
 @ExtendWith(PostgresDbExtension.class)
