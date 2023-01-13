@@ -36,5 +36,6 @@ class GrpcServer implements AutoCloseable {
   @Override
   public void close() throws Exception {
     server.shutdownNow();
+    server.awaitTermination();
   }
 }

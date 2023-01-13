@@ -2,15 +2,26 @@ package sinnet.rpc;
 
 import com.google.protobuf.GeneratedMessageV3;
 
+import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
+import io.vavr.control.Either;
 
-public interface RpcCommandHandler<TREQUEST extends GeneratedMessageV3, TRESPONSE extends GeneratedMessageV3> {
+/**
+ * @param <Q> - request type
+ * @param <S> - response type
+ */
+public interface RpcCommandHandler<Q extends GeneratedMessageV3, S extends GeneratedMessageV3> {
 
-  TRESPONSE apply(TREQUEST cmd);
+  Either<Status, S> apply(Q cmd);
 
-  default void command(TREQUEST request, StreamObserver<TRESPONSE> responseStream) {
+  default void command(Q request, StreamObserver<S> responseStream) {
     var result = this.apply(request);
-    responseStream.onNext(result);
+    if (result.isRight()) {
+      responseStream.onNext(result.get());
+    }
+    if (result.isLeft()) {
+      responseStream.onError(result.getLeft().asException());
+    }
     responseStream.onCompleted();
   }
 }

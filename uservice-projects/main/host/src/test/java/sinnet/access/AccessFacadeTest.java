@@ -12,7 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 
-import io.grpc.StatusException;
+import io.grpc.StatusRuntimeException;
 import sinnet.Program;
 import sinnet.db.PostgresDbExtension;
 import sinnet.dbo.Profiles;
@@ -38,7 +38,7 @@ public class AccessFacadeTest {
 
     Assertions
       .assertThatCode(() -> accessFacade.guardAccess(requestor, eid, a -> a::canDeleteProject))
-      .hasCauseInstanceOf(StatusException.class)
-      .hasMessageContaining("FAILED_PRECONDITION");
+      .isExactlyInstanceOf(StatusRuntimeException.class)
+      .hasMessageContaining("PERMISSION_DENIED");
   }
 }

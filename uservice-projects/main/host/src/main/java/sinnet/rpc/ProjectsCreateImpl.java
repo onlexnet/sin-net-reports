@@ -1,11 +1,15 @@
 package sinnet.rpc;
 
+import static io.vavr.control.Either.left;
+import static io.vavr.control.Either.right;
+
 import java.util.UUID;
 
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 import io.grpc.Status;
+import io.vavr.control.Either;
 import lombok.RequiredArgsConstructor;
 import sinnet.access.AccessFacade;
 import sinnet.dbo.DboCreate;
@@ -13,9 +17,9 @@ import sinnet.dbo.DboFacade;
 import sinnet.grpc.projects.CreateReply;
 import sinnet.grpc.projects.CreateRequest;
 import sinnet.grpc.projects.ProjectId;
+import sinnet.model.ValEmail;
 import sinnet.model.ValProjectId;
 import sinnet.project.events.ProjectCreatedEvent;
-import sinnet.model.ValEmail;
 
 @Component
 @RequiredArgsConstructor
@@ -26,7 +30,7 @@ class ProjectsCreateImpl implements RpcCommandHandler<CreateRequest, CreateReply
   private final ApplicationEventPublisher onProjectCreated;
 
   @Override
-  public CreateReply apply(CreateRequest cmd) {
+  public Either<Status, CreateReply> apply(CreateRequest cmd) {
     var requestor = cmd.getUserToken();
 
     var valId = ValProjectId.of(UUID.randomUUID());
@@ -41,16 +45,18 @@ class ProjectsCreateImpl implements RpcCommandHandler<CreateRequest, CreateReply
           .build();
       onProjectCreated.publishEvent(evt);
 
-      return CreateReply.newBuilder()
+      var result = CreateReply.newBuilder()
           .setEntityId(ProjectId.newBuilder()
               .setEId(valId.value().toString())
               .setETag(1))
           .build();
-    } else if (createResult instanceof DboCreate.ValidationFailed x) {
-      throw Status.FAILED_PRECONDITION.withDescription(x.getReason()).asRuntimeException();
-    } else {
-      throw Status.INTERNAL.asRuntimeException();
-    }
+      return right(result);
+    } else if (createResult instanceof DboCreate.InvalidContent x) {
+      return left(Status.FAILED_PRECONDITION.withDescription(x.getReason()));
+    } else if (createResult instanceof DboCreate.AboveLimits x) {
+      return left(Status.RESOURCE_EXHAUSTED.withDescription(x.getReason()));
+    } 
+    return left(Status.INTERNAL);
   }
 
 }

@@ -1,9 +1,14 @@
 package sinnet.rpc;
 
+import static io.vavr.control.Either.right;
+
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.stereotype.Component;
 
+import io.grpc.Status;
+import io.vavr.control.Either;
 import lombok.RequiredArgsConstructor;
 import sinnet.access.AccessFacade;
 import sinnet.dbo.DboUpdate;
@@ -19,7 +24,7 @@ class ProjectsUpdateImpl implements RpcCommandHandler<UpdateCommand, UpdateResul
   private final DboUpdate dboUpdate;
 
   @Override
-  public UpdateResult apply(UpdateCommand cmd) {
+  public Either<Status, UpdateResult> apply(UpdateCommand cmd) {
     var eidAsString = cmd.getEntityId().getEId();
     var eid = UUID.fromString(eidAsString);
     var idHolder = ValProjectId.of(eid);
@@ -28,5 +33,12 @@ class ProjectsUpdateImpl implements RpcCommandHandler<UpdateCommand, UpdateResul
 
     accessFacade.guardAccess(requestor, idHolder, roleContext -> roleContext::canUpdateProject);
     return dboUpdate.update(cmd);
+  }
+
+  static <T> Either<Status, T> asEither(Optional<T> maybeValue) {
+    if (maybeValue.isEmpty()) {
+      return Either.left(Status.NOT_FOUND);
+    }
+    return Either.right(maybeValue.get());
   }
 }

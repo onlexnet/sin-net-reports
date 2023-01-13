@@ -10,7 +10,7 @@ public interface AccessFacade {
 
   /**
    * Checks if given user is entitled to make an action on given project.
-   * @throws IllegalArgumentException if user is not entitled to make an action.
+   * @throws StatusException if user is not entitled to make an action.
    */
   void guardAccess(UserToken requestor, ValProjectId eid, Function<RoleContext, Predicate<ValProjectId>> entitlementSelector);
 }

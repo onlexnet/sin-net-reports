@@ -103,11 +103,11 @@ public class AppOperations {
     return getReply.getModel();
   }
 
-  static UpdateCommand newUpdateCommand(ProjectId projectId, String name, String newOwner, String currentOwner, String... operators) {
+  static UpdateCommand newUpdateCommand(ProjectId projectId, String projectName, String newOwner, String currentOwner, String... operators) {
     return UpdateCommand.newBuilder()
         .setEntityId(projectId)
         .setDesired(ProjectModel.newBuilder()
-            .setName(name)
+            .setName(projectName)
             .setEmailOfOwner(newOwner)
             .addAllEmailOfOperator(Arrays.asList(operators)))
         .setUserToken(UserToken.newBuilder()

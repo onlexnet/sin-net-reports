@@ -12,7 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
-
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -31,9 +31,11 @@ class ProjectDbo {
   private Long version;
 
   @Column(name = "EMAIL_OF_OWNER")
+  @Size(max = 50, message = "ERR:0001")
   private String emailOfOwner;
 
   @Column(name = "NAME")
+  @Size(max = 50, message = "ERR:0002")
   private String name;
 
   @ElementCollection(fetch = FetchType.EAGER)

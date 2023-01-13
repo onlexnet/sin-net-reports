@@ -31,8 +31,15 @@ public interface DboCreate {
     private ProjectVid vid;
   }
 
+  /** Content is not valid (e.g. too long name) */
   @Value
-  final class ValidationFailed implements CreateResult {
+  final class InvalidContent implements CreateResult {
+    private String reason;
+  }
+
+  /** Requested data is above allowed usage of resources (e.g. too many projects). */
+  @Value
+  final class AboveLimits implements CreateResult {
     private String reason;
   }
 

@@ -1,9 +1,13 @@
 package sinnet.rpc;
 
+import static io.vavr.control.Either.right;
+
 import java.util.UUID;
 
 import org.springframework.stereotype.Component;
 
+import io.grpc.Status;
+import io.vavr.control.Either;
 import lombok.RequiredArgsConstructor;
 import sinnet.access.AccessFacade;
 import sinnet.dbo.DboRemove;
@@ -19,7 +23,7 @@ final class ProjectsRemoveImpl implements RpcCommandHandler<RemoveCommand, Remov
   private final DboRemove dboRemove;
   
   @Override
-  public RemoveResult apply(RemoveCommand cmd) {
+  public Either<Status, RemoveResult> apply(RemoveCommand cmd) {
     var eidAsString = cmd.getProjectId().getEId();
     var eid = UUID.fromString(eidAsString);
     var idHolder = ValProjectId.of(eid);
@@ -28,7 +32,8 @@ final class ProjectsRemoveImpl implements RpcCommandHandler<RemoveCommand, Remov
 
     accessFacade.guardAccess(requestor, idHolder, rc -> rc::canDeleteProject);
     dboRemove.remove(idHolder);
-    return RemoveResult.newBuilder().setSuccess(true).build();
+    var result = RemoveResult.newBuilder().setSuccess(true).build();
+    return right(result);
   }
 
 }

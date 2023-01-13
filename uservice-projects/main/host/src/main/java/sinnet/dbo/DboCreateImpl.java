@@ -29,7 +29,7 @@ class DboCreateImpl implements DboCreate {
 
     var violations = validator.validate(newEntityTemplate);
     if (!violations.isEmpty()) {
-      return new ValidationFailed("Validation error");
+      return new InvalidContent("Validation error");
     }
 
     // TODO: it is naive implementation as multiple threads in parallel may create projects above the limit
@@ -38,7 +38,7 @@ class DboCreateImpl implements DboCreate {
     val limit = 10;
     if (count >= limit) {
       var errorDesc = String.format("Too many projects: Current: %s, Limit:%s, user: %s", count, limit, emailOfOwner);
-      return new ValidationFailed(errorDesc);
+      return new AboveLimits(errorDesc);
     }
 
     repository.save(newEntityTemplate);

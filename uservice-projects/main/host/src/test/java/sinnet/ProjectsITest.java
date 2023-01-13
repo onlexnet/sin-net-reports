@@ -73,7 +73,7 @@ class ProjectsITest {
 
   @Test
   void should_create() {
-    var ownerName = operations.generateOwnerEmail();
+    var ownerName = operations.generateUserEmail();
     var projectId = operations.create(ownerName);
 
     var updatedId = operations.update(projectId, "my name", ownerName);
@@ -98,12 +98,13 @@ class ProjectsITest {
 
   @Test
   void should_limit_number_of_free_projects() {
-    var ownerName = operations.generateOwnerEmail();
+    var ownerName = operations.generateUserEmail();
 
     // lets create 10 free projects
     val limit_of_free_projects = 10;
     for (int i = 0; i < limit_of_free_projects; i++) {
-      operations.update(operations.create(ownerName), "my name", ownerName);
+      var created = operations.create(ownerName);
+      operations.update(created, "my name", ownerName);
     }
 
 
@@ -115,7 +116,7 @@ class ProjectsITest {
 
   @Test
   void should_remove() {
-    var ownerName = operations.generateOwnerEmail();
+    var ownerName = operations.generateUserEmail();
     var projectId = operations.create(ownerName);
 
     operations.update(projectId, "my name", ownerName);
@@ -129,15 +130,15 @@ class ProjectsITest {
 
   @Test
   public void should_update() {
-    var ownerEmail = operations.generateOwnerEmail();
+    var ownerEmail = operations.generateUserEmail();
     
     var projectId = operations.create(ownerEmail);
 
-    var updateCmd = operations.newUpdateCommand(projectId, "my name", ownerEmail, ownerEmail);
+    var updateCmd = AppOperations.newUpdateCommand(projectId, "my name", ownerEmail, ownerEmail);
     var updateResult = operations.update(updateCmd);
 
-    var newOwnerEmail = operations.generateOwnerEmail();
-    updateCmd = operations.newUpdateCommand(updateResult.getEntityId(), "my new name", newOwnerEmail, ownerEmail);
+    var newOwnerEmail = operations.generateUserEmail();
+    updateCmd = AppOperations.newUpdateCommand(updateResult.getEntityId(), "my new name", newOwnerEmail, ownerEmail);
     operations.update(updateCmd);
 
     var projectsOfOwner = operations.listOfProjects(ownerEmail, mapProjectToName);
@@ -149,21 +150,21 @@ class ProjectsITest {
 
   @Test
   void should_reject_stale_updates_for_entity() {
-    var ownerEmail = operations.generateOwnerEmail();
+    var ownerEmail = operations.generateUserEmail();
     var projectId = operations.create(ownerEmail);
 
-    var updateCmdBuilder = operations.newUpdateCommand(projectId, "my name", ownerEmail, ownerEmail);
+    var updateCmdBuilder = AppOperations.newUpdateCommand(projectId, "my project name", ownerEmail, ownerEmail);
     operations.update(updateCmdBuilder);
 
-    var newOwnerEmail = operations.generateOwnerEmail();
-    var updateCmdBuilder2 = operations.newUpdateCommand(projectId, "my new name", ownerEmail, newOwnerEmail);
+    var newOwnerEmail = operations.generateUserEmail();
+    var updateCmdBuilder2 = AppOperations.newUpdateCommand(projectId, "my new project name", newOwnerEmail, ownerEmail);
 
     Assertions.assertThatCode(() -> operations.update(updateCmdBuilder2))
         .isInstanceOfSatisfying(StatusRuntimeException.class,
             ex -> assertThat(ex.getStatus().getCode()).isEqualTo(Status.FAILED_PRECONDITION.getCode()));
 
     var actual = operations.listOfProjects(ownerEmail, mapProjectToName);
-    assertThat(actual).containsExactly("my name");
+    assertThat(actual).containsExactly("my project name");
   }
 
   @Test
