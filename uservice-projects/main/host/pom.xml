@@ -10,7 +10,7 @@
   <artifactId>uservice-projects-host</artifactId>
 
   <properties>
-    <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/../${aggregate.report.dir}</sonar.coverage.jacoco.xmlReportPaths>
+    <aggregate.report.dir>report-aggregate/target/site/jacoco-aggregate/jacoco.xml</aggregate.report.dir>
   </properties>
 
   <dependencies>
@@ -138,6 +138,7 @@
 
   <build>
     <plugins>
+
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
