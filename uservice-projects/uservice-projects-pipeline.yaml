@@ -27,6 +27,8 @@ trigger:
   paths:
     include:
       # We have to include all folders where source files are located
+      - libs-java
+      - api
       - uservice-projects
 
 pr:
@@ -36,6 +38,8 @@ pr:
   paths:
     include:
       # We have to include all folders where source files are located
+      - libs-java
+      - api
       - uservice-projects
 
 jobs:
@@ -76,13 +80,45 @@ jobs:
         workingDirectory: $(workingDirectory)
         displayName: Read version from .semversion file
 
-      - task: Maven@3
-        displayName: 'Project compilation with Maven'
+      - task: Maven@4
+        displayName: 'Project compilation with Maven - API'
+        inputs:
+          mavenPomFile: 'api/client-java/pom.xml'
+          goals: install
+          javaHomeOption: 'JDKVersion'
+          jdkVersionOption: '1.17'
+          jdkArchitectureOption: 'x64'
+          publishJUnitResults: false
+          options: >
+            $(MAVEN_OPTS)
+            -B
+            --no-transfer-progress
+          sonarQubeRunAnalysis: false
+          checkStyleRunAnalysis: false
+
+      - task: Maven@4
+        displayName: 'Project compilation with Maven - LIBS'
+        inputs:
+          mavenPomFile: 'libs-java/pom.xml'
+          goals: install
+          javaHomeOption: 'JDKVersion'
+          jdkVersionOption: '1.17'
+          jdkArchitectureOption: 'x64'
+          publishJUnitResults: false
+          options: >
+            $(MAVEN_OPTS)
+            -B
+            --no-transfer-progress
+          sonarQubeRunAnalysis: false
+          checkStyleRunAnalysis: false
+
+      - task: Maven@4
+        displayName: 'Project compilation with Maven - APP'
         inputs:
           mavenPomFile: '$(workingDirectory)/main/pom.xml'
           goals: verify
           javaHomeOption: 'JDKVersion'
-          jdkVersionOption: '1.11'
+          jdkVersionOption: '1.17'
           jdkArchitectureOption: 'x64'
           publishJUnitResults: false
           options: >
