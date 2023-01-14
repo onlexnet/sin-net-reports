@@ -12,10 +12,14 @@ import io.grpc.Status;
  */
 public class ExceptionHandler implements ServerInterceptor {
 
+  /**
+   * {@inheritDoc}
+   * 
+   */
   @Override
-  public <ReqT, RespT> ServerCall.Listener<ReqT> interceptCall(ServerCall<ReqT, RespT> serverCall, Metadata metadata,
-      ServerCallHandler<ReqT, RespT> serverCallHandler) {
-    ServerCall.Listener<ReqT> listener = serverCallHandler.startCall(serverCall, metadata);
+  public <Q, S> ServerCall.Listener<Q> interceptCall(ServerCall<Q, S> serverCall, Metadata metadata,
+      ServerCallHandler<Q, S> serverCallHandler) {
+    ServerCall.Listener<Q> listener = serverCallHandler.startCall(serverCall, metadata);
     return new ExceptionHandlingServerCallListener<>(listener, serverCall, metadata);
   }
 
