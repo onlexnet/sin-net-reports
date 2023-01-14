@@ -6,14 +6,14 @@ import io.grpc.stub.StreamObserver;
 
 /**
  * @param <Q> - query type
- * @param <R> - response type
+ * @param <S> - response type
  */
-public interface RpcQueryHandler<Q extends GeneratedMessageV3, R extends GeneratedMessageV3> {
+public interface RpcQueryHandler<Q extends GeneratedMessageV3, S extends GeneratedMessageV3> {
 
-  R apply(Q request);
+  S apply(Q request);
 
-  default void query(Q request, StreamObserver<R> responseStream) {
-    R result = this.apply(request);
+  default void query(Q request, StreamObserver<S> responseStream) {
+    S result = this.apply(request);
     responseStream.onNext(result);
     responseStream.onCompleted();
   }
