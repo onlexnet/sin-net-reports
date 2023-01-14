@@ -4,12 +4,16 @@ import com.google.protobuf.GeneratedMessageV3;
 
 import io.grpc.stub.StreamObserver;
 
-public interface RpcQueryHandler<TTREQUEST extends GeneratedMessageV3, TRESPONSE extends GeneratedMessageV3> {
+/**
+ * @param <Q> - query type
+ * @param <R> - response type
+ */
+public interface RpcQueryHandler<Q extends GeneratedMessageV3, R extends GeneratedMessageV3> {
 
-  TRESPONSE apply(TTREQUEST request);
+  R apply(Q request);
 
-  default void query(TTREQUEST request, StreamObserver<TRESPONSE> responseStream) {
-    TRESPONSE result = this.apply(request);
+  default void query(Q request, StreamObserver<R> responseStream) {
+    R result = this.apply(request);
     responseStream.onNext(result);
     responseStream.onCompleted();
   }
