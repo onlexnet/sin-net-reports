@@ -1,4 +1,5 @@
 package sinnet.rpc;
+
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;

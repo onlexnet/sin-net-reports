@@ -6,6 +6,7 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
+/** Configuration properties for the application related to grpc functionality. */
 @ConfigurationProperties(prefix = "grpc")
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)

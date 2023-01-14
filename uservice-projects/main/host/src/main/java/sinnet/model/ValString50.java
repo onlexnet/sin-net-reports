@@ -24,6 +24,7 @@ public final class ValString50 {
     this.value = value;
   }
 
+  /** Creates new instance of ValString50. */
   public static ValString50 of(@Nullable String value) {
     return value == null
       ? empty()

@@ -10,10 +10,10 @@ import io.vavr.collection.Seq;
 @Repository
 interface InputRepository extends CrudRepository<ProjectInputDbo, UUID> {
 
-  	/**
-	 * Returns all instances of the type.
-	 *
-	 * @return all entities
-	 */
-	  Seq<ProjectInputDbo> findAll();
+  /**
+   * Returns all instances of the type.
+   *
+   * @return all entities
+   */
+  Seq<ProjectInputDbo> findAll();
 }

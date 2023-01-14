@@ -23,6 +23,6 @@ interface DboGet {
 
   Project get(ValProjectId projectId);
 
-  record StatsResult (int numberOdProjects) {
+  record StatsResult(int numberOdProjects) {
   }
 }

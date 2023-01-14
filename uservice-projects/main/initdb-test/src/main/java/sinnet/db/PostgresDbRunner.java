@@ -6,6 +6,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 
 import lombok.extern.slf4j.Slf4j;
 
+/** Designed to be used to run single instance for all tests in single module. */
 @Slf4j
 public final class PostgresDbRunner {
 
@@ -15,6 +16,11 @@ public final class PostgresDbRunner {
       .withPassword(TESTCONTAINERS)
       .withDatabaseName(TESTCONTAINERS);
 
+  /**
+   * tarts database and sets all exopected environments variables, used to construct propoer jdbc connection.
+   *
+   * @return AutoCloseable that will stop the server and restore all environment variables to their original values.
+   */
   public SafeAutoCloseable start() {
     postgres.start();
     var items = List.of(
@@ -35,6 +41,7 @@ public final class PostgresDbRunner {
         : () -> System.setProperty(propertyName, actual);
   }
 
+  /** AutoCloseable which doesn't be to close with handling exception from close method. */
   @FunctionalInterface
   public interface SafeAutoCloseable extends AutoCloseable {
     void close();

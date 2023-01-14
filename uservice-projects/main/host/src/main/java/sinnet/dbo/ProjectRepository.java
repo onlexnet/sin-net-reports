@@ -11,5 +11,6 @@ import io.vavr.collection.Seq;
 interface ProjectRepository extends JpaRepository<ProjectDbo, UUID> {
 
   Seq<ProjectDbo> findByEmailOfOwner(String emailOfOwner);
+
   long countByEmailOfOwner(String emailOfOwner);
 }

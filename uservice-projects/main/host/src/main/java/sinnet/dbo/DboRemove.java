@@ -2,6 +2,7 @@ package sinnet.dbo;
 
 import sinnet.model.ValProjectId;
 
+/** Set of remove operations from database. */
 public interface DboRemove {
 
   /**

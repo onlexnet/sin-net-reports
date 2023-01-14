@@ -16,22 +16,28 @@ public interface DboCreate {
 
   CreateResult create(CreateContent entry);
 
+  /** 
+   * Data required to create new project.
+   */
   @Value
   class CreateContent {
     private ValProjectId requestedId;
     private ValEmail emailOfOwner;
   }
 
-  
+  /** 
+   * Result of project creation.
+   */  
   sealed interface CreateResult {
   }
 
+  /** Project was created. */
   @Value
   final class Success implements CreateResult {
     private ProjectVid vid;
   }
 
-  /** Content is not valid (e.g. too long name) */
+  /** Content is not valid (e.g. too long name). */
   @Value
   final class InvalidContent implements CreateResult {
     private String reason;

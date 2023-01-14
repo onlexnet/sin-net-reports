@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Delegate;
 
+/** Facade for all DBO operations. */
 @Component
 @RequiredArgsConstructor
 public final class DboFacade {

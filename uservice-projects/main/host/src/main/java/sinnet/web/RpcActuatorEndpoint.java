@@ -17,14 +17,15 @@ class RpcActuatorEndpoint {
   private final RpcAdapter rpcAdapter;
   
   @ReadOperation
-  public MyModel getPort() {
+  public RpcActuatorGetModel getPort() {
     var port = rpcAdapter.getServerPort().orElse(-1);
-    return new MyModel(port);
+    return new RpcActuatorGetModel(port);
   }
-}
 
-@Data
-@AllArgsConstructor
-class MyModel {
-  final int port;
+  @Data
+  @AllArgsConstructor
+  static class RpcActuatorGetModel {
+    final int port;
+  }
+
 }

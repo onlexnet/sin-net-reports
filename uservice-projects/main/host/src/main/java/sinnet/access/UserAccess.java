@@ -26,7 +26,7 @@ class UserAccess implements AccessFacade {
     var roleContext = this.from(requestor);
     var isAllowed = methodExtractor.apply(roleContext).test(eid);
     if (isAllowed) {
-        return;
+      return;
     }
     throw Status.PERMISSION_DENIED.asRuntimeException();
   }
