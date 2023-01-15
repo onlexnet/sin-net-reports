@@ -11,12 +11,12 @@ import io.grpc.ServerBuilder;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import sinnet.host.AppGrpcProperties;
-import sinnet.rpc.RpcAdapter;
+import sinnet.rpc.RpcFacade;
 
 /** Registers all discoverable gRpc services to allow them be reachable. */
 @Component
 @RequiredArgsConstructor
-class GrpcServer implements RpcAdapter, AutoCloseable {
+class GrpcServer implements RpcFacade, AutoCloseable {
   private final AppGrpcProperties grpcProperties;
   private final BindableService[] services;
 

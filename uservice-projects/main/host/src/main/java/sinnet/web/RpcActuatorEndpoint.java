@@ -7,18 +7,18 @@ import org.springframework.stereotype.Component;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import sinnet.rpc.RpcAdapter;
+import sinnet.rpc.RpcFacade;
 
 @Component
 @Endpoint(id = "grpc")
 @RequiredArgsConstructor
 class RpcActuatorEndpoint {
 
-  private final RpcAdapter rpcAdapter;
+  private final RpcFacade rpcFacade;
   
   @ReadOperation
   public RpcActuatorGetModel getPort() {
-    var port = rpcAdapter.getServerPort().orElse(-1);
+    var port = rpcFacade.getServerPort().orElse(-1);
     return new RpcActuatorGetModel(port);
   }
 

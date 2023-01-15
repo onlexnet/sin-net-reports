@@ -82,7 +82,7 @@ class DependOnUpperPackagesCondition extends ArchCondition<JavaClass> {
   }
 
   private boolean isPortAdapter(JavaClass target) {
-    return target.getSimpleName().endsWith("Adapter");
+    return target.getSimpleName().endsWith("Facade");
   }
 
 }
