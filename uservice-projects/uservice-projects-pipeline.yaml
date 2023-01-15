@@ -154,7 +154,7 @@ jobs:
         condition: ne(variables['Build.Reason'], 'PullRequest')
         inputs:
           command: push
-          repository: $(imageName)
+          repository: sinnet/$(imageName)
           containerRegistry: $(dockerRegistryServiceConnection)
           tags: |
             $(dockerTag0)
