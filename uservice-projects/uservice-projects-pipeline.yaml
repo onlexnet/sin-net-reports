@@ -142,6 +142,7 @@ jobs:
             -B
             --no-transfer-progress
             -Drevision=$(SEMVERSION)
+            -Djib.to.image=$(imageName)
             -Djib.to.tags=$(dockerTag0)
 
       - task: Docker@2
