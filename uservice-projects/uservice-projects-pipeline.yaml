@@ -121,6 +121,23 @@ jobs:
           checkStyleRunAnalysis: false
 
       - task: Maven@4
+        displayName: 'Project compilation with Maven - APP'
+        inputs:
+          mavenPomFile: '$(workingDirectory)/main/pom.xml'
+          # install is required to publish locally all modules as the are required in the next satep tp build docker image
+          goals: install
+          javaHomeOption: 'JDKVersion'
+          jdkVersionOption: '1.17'
+          jdkArchitectureOption: 'x64'
+          publishJUnitResults: true
+          mavenOptions: $(MAVEN_OPTS)
+          options: >
+            -B
+            --no-transfer-progress
+            -Drevision=$(SEMVERSION)
+          checkStyleRunAnalysis: true # We use checkstyle in coding, so let's use it with Maven as well
+
+      - task: Maven@4
         env:
           # pom.xml uses SONAR_TOKEN env variable to communicate with sonarcloud.
           # The crrent CI/CD pipeline has secret named SONAR_TOKEN with proper value.
@@ -131,19 +148,17 @@ jobs:
         displayName: 'Project compilation with Maven - APP'
         inputs:
           mavenPomFile: '$(workingDirectory)/main/pom.xml'
-          # install is required to publish locally all modules as the are required in the next satep tp build docker image
-          goals: install
+          # run sonar analysis as using prebuild option in Maven task (sonarQubeRunAnalysis: true) throws an error
+          goals: sonar:sonar
           javaHomeOption: 'JDKVersion'
           jdkVersionOption: '1.17'
           jdkArchitectureOption: 'x64'
-          publishJUnitResults: false
           mavenOptions: $(MAVEN_OPTS)
           options: >
             -B
             --no-transfer-progress
             -Drevision=$(SEMVERSION)
-          sonarQubeRunAnalysis: true
-          checkStyleRunAnalysis: true # We use checkstyle in coding, so let's use it with Maven as well
+          checkStyleRunAnalysis: false # We use checkstyle in coding, so let's use it with Maven as well
 
       - task: Maven@4
         displayName: Build µService docker image
