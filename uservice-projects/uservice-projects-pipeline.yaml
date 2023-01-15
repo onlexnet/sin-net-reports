@@ -122,8 +122,8 @@ jobs:
           jdkVersionOption: '1.17'
           jdkArchitectureOption: 'x64'
           publishJUnitResults: false
+          mavenOptions: $(MAVEN_OPTS)
           options: >
-            $(MAVEN_OPTS)
             -B
             --no-transfer-progress
             -Drevision=$(SEMVERSION)
@@ -133,14 +133,16 @@ jobs:
       - task: Maven@4
         displayName: Build µService docker image
         inputs:
-          mavenOptions: $(MAVEN_OPTS)
           mavenPomFile: '$(workingDirectory)/main/pom.xml'
           goals: 'jib:buildTar'
           javaHomeOption: JDKVersion
           jdkVersionOption: 1.17
-          # options:
-          #  - disable log entries (a lot of entries) related to artifacts downloaded by maven
-          options: -B --no-transfer-progress -Djib.to.tags=latest
+          mavenOptions: $(MAVEN_OPTS)
+          options: >
+            -B
+            --no-transfer-progress
+            -Drevision=$(SEMVERSION)
+            -Djib.to.tags=$(dockerTag0)
 
       - task: Docker@2
         displayName: Push uservice image to docker ACR
