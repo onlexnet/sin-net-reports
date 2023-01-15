@@ -17,7 +17,7 @@ variables:
   # https://docs.microsoft.com/en-us/azure/devops/pipelines/release/caching?view=azure-devops#maven
   MAVEN_CACHE_FOLDER: $(Pipeline.Workspace)/.m2/repository
   MAVEN_OPTS: '-Dmaven.repo.local=$(MAVEN_CACHE_FOLDER)'
-  dockerCacheName: $(Build.DefinitionName)
+  cacheName: $(Build.DefinitionName)
 
 trigger:
   batch: true
@@ -53,19 +53,19 @@ jobs:
 
     steps:
 
-      # - task: Cache@2
-      #   inputs:
-      #     key: 'maven | "$(Agent.OS)" | $(workingDirectory)/**/pom.xml'
-      #     restoreKeys: |
-      #       maven | "$(Agent.OS)"
-      #       maven
-      #     path: $(MAVEN_CACHE_FOLDER)
-      #   displayName: Cache Maven local repo
+      - task: Cache@2
+        inputs:
+          key: 'maven | "$(Agent.OS)" | "${cacheName}"'
+          restoreKeys: |
+            maven | "$(Agent.OS)"
+            maven
+          path: $(MAVEN_CACHE_FOLDER)
+        displayName: Cache Maven local repo
 
       # - task: Cache@2
       #   displayName: Docker cache task
       #   inputs:
-      #     key: 'docker | $(Agent.OS) | "$(dockerCacheName)"'
+      #     key: 'docker | $(Agent.OS) | "$(cacheName)"'
       #     path: $(Pipeline.Workspace)/docker
       #     #Variable to set to 'true' when the cache is restored
       #     cacheHitVar: CACHE_RESTORED
@@ -100,8 +100,8 @@ jobs:
             $(MAVEN_OPTS)
             -B
             --no-transfer-progress
-          sonarQubeRunAnalysis: false
-          checkStyleRunAnalysis: false
+          sonarQubeRunAnalysis: true
+          checkStyleRunAnalysis: true
 
       - task: Maven@4
         displayName: 'Project compilation with Maven - LIBS'
@@ -158,13 +158,22 @@ jobs:
         # https://docs.microsoft.com/en-us/azure/devops/pipelines/build/variables?view=azure-devops&tabs=yaml#build-variables-devops-services
         
         # condition: and(eq(variables['Build.SourceBranch'], 'master'), ne(variables['Build.Reason'], 'PullRequest'))
+
+        # condition: ne(variables['Build.Reason'], 'PullRequest')
+        # inputs:
+        #   command: push
+        #   repository: $(imageName)
+        #   containerRegistry: $(dockerRegistryServiceConnection)
+        #   tags: |
+        #     $(dockerTag0)
+        #     $(dockerTag1)
+
         condition: ne(variables['Build.Reason'], 'PullRequest')
         inputs:
           command: push
-          repository: $(imageName)
+          repository: sinnet\my_test
           containerRegistry: $(dockerRegistryServiceConnection)
-          tags: |
-            $(dockerTag0)
+          tags: abc
 
       # - script: |
       #     mkdir -p $(Pipeline.Workspace)/docker
