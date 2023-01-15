@@ -37,7 +37,11 @@
               <groupId>org.springframework.boot</groupId>
               <artifactId>spring-boot-maven-plugin</artifactId>
               <configuration>
-                  <skip>false</skip>
+                <layers>
+                  <!-- Separated layers to build effective docker image https://www.baeldung.com/spring-boot-docker-images -->
+                  <enabled>true</enabled>
+                </layers>
+                 <skip>false</skip>
               </configuration>
           </plugin>
       </plugins>

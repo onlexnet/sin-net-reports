@@ -76,7 +76,7 @@ jobs:
         condition: and(not(canceled()), eq(variables.CACHE_RESTORED, 'true'))
 
       - bash: |
-          echo "##vso[task.setvariable variable=my_version]$(cat .semversion)"
+          echo "##vso[task.setvariable variable=SEMVERSION]$(cat .semversion)"
         workingDirectory: $(workingDirectory)
         displayName: Read version from .semversion file
 
@@ -125,27 +125,21 @@ jobs:
             $(MAVEN_OPTS)
             -B
             --no-transfer-progress
-            -Drevision=$(my_version)
+            -Drevision=$(SEMVERSION)
           sonarQubeRunAnalysis: false
           checkStyleRunAnalysis: true # We use checkstyle in coding, so let's use it with Maven as well
 
-      - task: Maven@3
-        displayName: Build uService image
+      - task: Maven@4
+        displayName: Build µService docker image
         inputs:
+          mavenOptions: $(MAVEN_OPTS)
           mavenPomFile: '$(workingDirectory)/main/pom.xml'
-          goals: package
+          goals: 'jib:buildTar'
           javaHomeOption: JDKVersion
-          jdkVersionOption: '1.11'
-          jdkArchitectureOption: 'x64'
-          publishJUnitResults: false
-          options: >
-            $(MAVEN_OPTS)
-            -DskipTests
-            -Dquarkus.container-image.build=true
-            -Dquarkus.container-image.group=$(containerRegistryName)
-            -Dquarkus.container-image.name=$(imageName)
-            -Dquarkus.container-image.tag=$(dockerTag1)
-            -Dquarkus.container-image.additional-tags=$(dockerTag0)
+          jdkVersionOption: 1.17
+          # options:
+          #  - disable log entries (a lot of entries) related to artifacts downloaded by maven
+          options: -B --no-transfer-progress -Djib.to.tags=latest
 
       - task: Docker@2
         displayName: Push uservice image to docker ACR
