@@ -165,7 +165,6 @@ jobs:
           containerRegistry: $(dockerRegistryServiceConnection)
           tags: |
             $(dockerTag0)
-            $(dockerTag1)
 
       # - script: |
       #     mkdir -p $(Pipeline.Workspace)/docker
