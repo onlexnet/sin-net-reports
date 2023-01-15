@@ -80,6 +80,13 @@ jobs:
         workingDirectory: $(workingDirectory)
         displayName: Read version from .semversion file
 
+      - bash: |
+          echo Build.DefinitionName: $(Build.DefinitionName)
+        displayName: Siudek1
+      - bash: |
+          echo imageName: $(imageName)
+        displayName: Siudek2
+
       - task: Maven@4
         displayName: 'Project compilation with Maven - API'
         inputs:
@@ -154,7 +161,7 @@ jobs:
         condition: ne(variables['Build.Reason'], 'PullRequest')
         inputs:
           command: push
-          repository: sinnet/$(imageName)
+          repository: $(imageName)
           containerRegistry: $(dockerRegistryServiceConnection)
           tags: |
             $(dockerTag0)
