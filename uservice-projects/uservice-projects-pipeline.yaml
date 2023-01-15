@@ -87,7 +87,7 @@ jobs:
           echo imageName: $(imageName)
         displayName: Siudek2
       - bash: |
-          echo maven | '$(Agent.OS)'' | **/pom.xml: maven | "$(Agent.OS)" | **/pom.xml
+          echo maven | '$(Agent.OS)' | **/pom.xml: maven | "$(Agent.OS)" | **/pom.xml
         displayName: Siudek3
 
 
