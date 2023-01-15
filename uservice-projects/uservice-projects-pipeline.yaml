@@ -86,6 +86,10 @@ jobs:
       - bash: |
           echo imageName: $(imageName)
         displayName: Siudek2
+      - bash: |
+          echo maven | '$(Agent.OS)'' | **/pom.xml: maven | "$(Agent.OS)" | **/pom.xml
+        displayName: Siudek3
+
 
       - task: Maven@4
         displayName: 'Project compilation with Maven - API'
@@ -100,8 +104,8 @@ jobs:
             $(MAVEN_OPTS)
             -B
             --no-transfer-progress
-          sonarQubeRunAnalysis: true
-          checkStyleRunAnalysis: true
+          sonarQubeRunAnalysis: false
+          checkStyleRunAnalysis: false
 
       - task: Maven@4
         displayName: 'Project compilation with Maven - LIBS'
@@ -134,7 +138,7 @@ jobs:
             -B
             --no-transfer-progress
             -Drevision=$(SEMVERSION)
-          sonarQubeRunAnalysis: false
+          sonarQubeRunAnalysis: true
           checkStyleRunAnalysis: true # We use checkstyle in coding, so let's use it with Maven as well
 
       - task: Maven@4
