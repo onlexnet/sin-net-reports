@@ -89,7 +89,7 @@ jobs:
 
 
       - task: Maven@4
-        displayName: 'Project compilation with Maven - API'
+        displayName: Api maven install
         inputs:
           mavenPomFile: 'api/client-java/pom.xml'
           goals: install
@@ -105,7 +105,7 @@ jobs:
           checkStyleRunAnalysis: false
 
       - task: Maven@4
-        displayName: 'Project compilation with Maven - LIBS'
+        displayName: Libs maven install
         inputs:
           mavenPomFile: 'libs-java/pom.xml'
           goals: install
@@ -121,7 +121,14 @@ jobs:
           checkStyleRunAnalysis: false
 
       - task: Maven@4
-        displayName: 'Project compilation with Maven - APP'
+        env:
+          # pom.xml uses SONAR_TOKEN env variable to communicate with sonarcloud.
+          # The crrent CI/CD pipeline has secret named SONAR_TOKEN with proper value.
+          # Problem: Azure pipeline secrets can't be used directly as environment varianbles
+          # https://github.com/Microsoft/azure-pipelines-agent/issues/145
+          # As the result, we have to put CICD secret to build variable
+          SONAR_TOKEN: $(SONAR_TOKEN)
+        displayName: Host maven install
         inputs:
           mavenPomFile: '$(workingDirectory)/main/pom.xml'
           # install is required to publish locally all modules as the are required in the next satep tp build docker image
@@ -135,30 +142,9 @@ jobs:
             -B
             --no-transfer-progress
             -Drevision=$(SEMVERSION)
+          sonarQubeRunAnalysis: true
+          sqMavenPluginVersionChoice: 'pom' # Required when sonarQubeRunAnalysis == True# Options: latest, pom
           checkStyleRunAnalysis: true # We use checkstyle in coding, so let's use it with Maven as well
-
-      - task: Maven@4
-        env:
-          # pom.xml uses SONAR_TOKEN env variable to communicate with sonarcloud.
-          # The crrent CI/CD pipeline has secret named SONAR_TOKEN with proper value.
-          # Problem: Azure pipeline secrets can't be used directly as environment varianbles
-          # https://github.com/Microsoft/azure-pipelines-agent/issues/145
-          # As the result, we have to put CICD secret to build variable
-          SONAR_TOKEN: $(SONAR_TOKEN)
-        displayName: 'Project compilation with Maven - APP'
-        inputs:
-          mavenPomFile: '$(workingDirectory)/main/pom.xml'
-          # run sonar analysis as using prebuild option in Maven task (sonarQubeRunAnalysis: true) throws an error
-          goals: sonar:sonar
-          javaHomeOption: 'JDKVersion'
-          jdkVersionOption: '1.17'
-          jdkArchitectureOption: 'x64'
-          mavenOptions: $(MAVEN_OPTS)
-          options: >
-            -B
-            --no-transfer-progress
-            -Drevision=$(SEMVERSION)
-          checkStyleRunAnalysis: false # We use checkstyle in coding, so let's use it with Maven as well
 
       - task: Maven@4
         displayName: Build µService docker image
@@ -194,7 +180,7 @@ jobs:
         condition: ne(variables['Build.Reason'], 'PullRequest')
         inputs:
           command: push
-          repository: sinnet\my_test
+          repository: sinnet/my_test
           containerRegistry: $(dockerRegistryServiceConnection)
           tags: abc
 
