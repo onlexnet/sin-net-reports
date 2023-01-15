@@ -134,7 +134,7 @@ jobs:
         displayName: Build µService docker image
         inputs:
           mavenPomFile: '$(workingDirectory)/main/pom.xml'
-          goals: 'jib:buildTar -pl host'
+          goals: 'jib:dockerBuild -pl host'
           javaHomeOption: JDKVersion
           jdkVersionOption: 1.17
           mavenOptions: $(MAVEN_OPTS)
