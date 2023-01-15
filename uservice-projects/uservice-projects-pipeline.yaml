@@ -180,9 +180,11 @@ jobs:
         condition: ne(variables['Build.Reason'], 'PullRequest')
         inputs:
           command: push
-          repository: sinnet/my_test
+          repository: $(imageName)
           containerRegistry: $(dockerRegistryServiceConnection)
-          tags: abc
+          tags: |
+            $(dockerTag0)
+            $(dockerTag1)
 
       # - script: |
       #     mkdir -p $(Pipeline.Workspace)/docker
