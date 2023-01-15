@@ -116,7 +116,8 @@ jobs:
         displayName: 'Project compilation with Maven - APP'
         inputs:
           mavenPomFile: '$(workingDirectory)/main/pom.xml'
-          goals: verify
+          # install is required to publish locally all modules as the are required in the next satep tp build docker image
+          goals: install
           javaHomeOption: 'JDKVersion'
           jdkVersionOption: '1.17'
           jdkArchitectureOption: 'x64'
