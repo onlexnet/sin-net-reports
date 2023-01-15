@@ -148,7 +148,9 @@ jobs:
         displayName: Push uservice image to docker ACR
         # https://docs.microsoft.com/en-us/azure/devops/pipelines/process/expressions?view=azure-devops
         # https://docs.microsoft.com/en-us/azure/devops/pipelines/build/variables?view=azure-devops&tabs=yaml#build-variables-devops-services
-        condition: and(eq(variables['Build.SourceBranch'], 'refs/heads/master'), ne(variables['Build.Reason'], 'PullRequest'))
+        
+        # condition: and(eq(variables['Build.SourceBranch'], 'master'), ne(variables['Build.Reason'], 'PullRequest'))
+        condition: ne(variables['Build.Reason'], 'PullRequest')
         inputs:
           command: push
           repository: $(imageName)
@@ -157,9 +159,9 @@ jobs:
             $(dockerTag0)
             $(dockerTag1)
 
-      - script: |
-          mkdir -p $(Pipeline.Workspace)/docker
-          docker save -o $(Pipeline.Workspace)/docker/cache.tar $(containerRegistryName)/$(imageName):$(dockerTag0)
-        displayName: Docker save
-        # condition: and(not(canceled()), or(failed(), ne(variables.CACHE_RESTORED, 'true')))
-        condition: and(not(canceled()), not(failed()))
+      # - script: |
+      #     mkdir -p $(Pipeline.Workspace)/docker
+      #     docker save -o $(Pipeline.Workspace)/docker/cache.tar $(containerRegistryName)/$(imageName):$(dockerTag0)
+      #   displayName: Docker save cache to speed up next runs of the pipeline
+      #   # condition: and(not(canceled()), or(failed(), ne(variables.CACHE_RESTORED, 'true')))
+      #   condition: and(not(canceled()), not(failed()))
