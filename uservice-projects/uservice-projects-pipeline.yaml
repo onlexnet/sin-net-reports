@@ -146,6 +146,21 @@ jobs:
           sqMavenPluginVersionChoice: 'pom' # Required when sonarQubeRunAnalysis == True# Options: latest, pom
           checkStyleRunAnalysis: true # We use checkstyle in coding, so let's use it with Maven as well
 
+      # - task: Maven@4
+      #   displayName: Build µService docker image
+      #   inputs:
+      #     mavenPomFile: '$(workingDirectory)/main/pom.xml'
+      #     goals: 'jib:dockerBuild -pl host'
+      #     javaHomeOption: JDKVersion
+      #     jdkVersionOption: 1.17
+      #     mavenOptions: $(MAVEN_OPTS)
+      #     options: >
+      #       -B
+      #       --no-transfer-progress
+      #       -Drevision=$(SEMVERSION)
+      #       -Djib.to.image=$(imageName)
+      #       -Djib.to.tags=$(dockerTag0)
+
       - task: Maven@4
         displayName: Build µService docker image
         inputs:
@@ -158,8 +173,9 @@ jobs:
             -B
             --no-transfer-progress
             -Drevision=$(SEMVERSION)
-            -Djib.to.image=$(imageName)
-            -Djib.to.tags=$(dockerTag0)
+            -Djib.to.image=aaaaa
+            -Djib.to.tags=bbbbb
+
 
       - task: Docker@2
         displayName: Push uservice image to docker ACR
@@ -180,11 +196,11 @@ jobs:
         condition: ne(variables['Build.Reason'], 'PullRequest')
         inputs:
           command: push
-          repository: $(imageName)
+          repository: aaaaa
           containerRegistry: $(dockerRegistryServiceConnection)
           tags: |
-            $(dockerTag0)
-            $(dockerTag1)
+            bbbbb
+            bbbbb
 
       # - script: |
       #     mkdir -p $(Pipeline.Workspace)/docker
@@ -192,3 +208,33 @@ jobs:
       #   displayName: Docker save cache to speed up next runs of the pipeline
       #   # condition: and(not(canceled()), or(failed(), ne(variables.CACHE_RESTORED, 'true')))
       #   condition: and(not(canceled()), not(failed()))
+
+
+
+
+
+      # - task: Docker@2
+      #   displayName: Build webapi image
+      #   inputs:
+      #     command: build
+      #     dockerfile: webapi/Dockerfile
+      #     containerRegistry: $(dockerRegistryServiceConnection)
+      #     repository: webapi
+      #     # to use inside docker variable do use version with build
+      #     # lets put them from just obtained value from .version file
+      #     arguments: --build-arg REVISION=$(my_version)
+      #     tags: |
+      #       latest
+      #       $(Build.SourceBranchName)-$(Build.BuildNumber)
+
+      # - task: Docker@2
+      #   displayName: Push webapi image to docker ACR
+      #   condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
+      #   inputs:
+      #     command: push
+      #     containerRegistry: $(dockerRegistryServiceConnection)
+      #     repository: webapi
+      #     tags: |
+      #       latest
+      #       $(Build.SourceBranchName)-$(Build.BuildNumber)
+
