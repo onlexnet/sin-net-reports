@@ -161,6 +161,10 @@ jobs:
       #       -Djib.to.image=$(imageName)
       #       -Djib.to.tags=$(dockerTag0)
 
+      - bash: |
+          docker pull busybox
+        displayName: Siudek3
+
       - task: Maven@4
         displayName: Build µService docker image
         inputs:
@@ -176,10 +180,10 @@ jobs:
             -Djib.to.image=aaaaa
             -Djib.to.tags=bbbbb
 
-
       - bash: |
+          docker pull busybox
           docker images list
-        displayName: Siudek3
+        displayName: Siudek4
 
       - task: Docker@2
         displayName: Push uservice image to docker ACR
