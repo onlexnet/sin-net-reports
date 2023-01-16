@@ -196,10 +196,10 @@ jobs:
         condition: ne(variables['Build.Reason'], 'PullRequest')
         inputs:
           command: push
-          repository: aaaaa
+          repository: sinnet/aaaaa
           containerRegistry: $(dockerRegistryServiceConnection)
           tags: |
-            bbbbb
+            latest
             bbbbb
 
       # - script: |
