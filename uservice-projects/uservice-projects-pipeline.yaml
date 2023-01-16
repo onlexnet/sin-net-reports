@@ -23,6 +23,8 @@ trigger:
   branches:
     include:
       - master
+      - siudeks/*
+
   paths:
     include:
       # We have to include all folders where source files are located
@@ -54,20 +56,12 @@ jobs:
 
       - task: Cache@2
         inputs:
-          key: 'maven | "$(Agent.OS)" | "$(cacheName)"'
+          key: 'maven | "$(Agent.OS)" | $(cacheName)'
           restoreKeys: |
             maven | "$(Agent.OS)"
             maven
           path: $(MAVEN_CACHE_FOLDER)
         displayName: Cache Maven local repo
-
-      - task: Cache@2
-        displayName: Docker cache task
-        inputs:
-          key: 'docker | $(Agent.OS) | "$(cacheName)"'
-          path: $(Pipeline.Workspace)/docker
-          #Variable to set to 'true' when the cache is restored
-          cacheHitVar: CACHE_RESTORED
 
       - script: |
           docker load -i $(Pipeline.Workspace)/docker/cache.tar
