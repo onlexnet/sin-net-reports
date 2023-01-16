@@ -144,6 +144,13 @@ jobs:
           sqMavenPluginVersionChoice: 'pom' # Required when sonarQubeRunAnalysis == True# Options: latest, pom
           checkStyleRunAnalysis: true # We use checkstyle in coding, so let's use it with Maven as well
 
+      - task: Docker@2
+        name: dockerLogin
+        displayName: Docker Login
+        inputs:
+          command: login
+          containerRegistry: $(dockerRegistryServiceConnection)
+
       # - task: Maven@4
       #   displayName: Build µService docker image
       #   inputs:
