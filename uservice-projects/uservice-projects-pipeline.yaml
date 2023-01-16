@@ -5,6 +5,8 @@ variables:
   # well-known connection, defined manually.
   # The connection used in pipeline allows to access to ACR sinnet.azurecr.io
   dockerRegistryServiceConnection: "sinnet-acr"
+  # name of the registry where the image should be pushed off
+  dockerRegistry: "sinnet.azurecr.io"
   # image name (without tags) used to build final image
   # also root name of the folder in the monorepo
   imageName: uservice-projects
@@ -156,88 +158,5 @@ jobs:
             -B
             --no-transfer-progress
             -Drevision=$(SEMVERSION)
-            -Djib.to.image=sinnet.azurecr.io/$(imageName)
-            -Djib.to.tags=$(dockerTag0)
-
-      - task: Maven@4
-        displayName: Build µService docker image
-        inputs:
-          mavenPomFile: '$(workingDirectory)/main/pom.xml'
-          goals: 'jib:dockerBuild -pl host'
-          javaHomeOption: JDKVersion
-          jdkVersionOption: 1.17
-          mavenOptions: $(MAVEN_OPTS)
-          options: >
-            -B
-            --no-transfer-progress
-            -Drevision=$(SEMVERSION)
-            -Djib.to.image=aaaaa
-            -Djib.to.tags=bbbbb
-
-      - bash: |
-          docker images list
-        displayName: Siudek4
-
-
-
-
-      - task: Docker@2
-        displayName: Push uservice image to docker ACR
-        # https://docs.microsoft.com/en-us/azure/devops/pipelines/process/expressions?view=azure-devops
-        # https://docs.microsoft.com/en-us/azure/devops/pipelines/build/variables?view=azure-devops&tabs=yaml#build-variables-devops-services
-        
-        # condition: and(eq(variables['Build.SourceBranch'], 'master'), ne(variables['Build.Reason'], 'PullRequest'))
-
-        # condition: ne(variables['Build.Reason'], 'PullRequest')
-        # inputs:
-        #   command: push
-        #   repository: $(imageName)
-        #   containerRegistry: $(dockerRegistryServiceConnection)
-        #   tags: |
-        #     $(dockerTag0)
-        #     $(dockerTag1)
-
-        inputs:
-          command: push
-          repository: aaaaa
-          containerRegistry: $(dockerRegistryServiceConnection)
-          tags: |
-            latest
-            bbbbb
-
-      # - script: |
-      #     mkdir -p $(Pipeline.Workspace)/docker
-      #     docker save -o $(Pipeline.Workspace)/docker/cache.tar $(containerRegistryName)/$(imageName):$(dockerTag0)
-      #   displayName: Docker save cache to speed up next runs of the pipeline
-      #   # condition: and(not(canceled()), or(failed(), ne(variables.CACHE_RESTORED, 'true')))
-      #   condition: and(not(canceled()), not(failed()))
-
-
-
-
-
-      # - task: Docker@2
-      #   displayName: Build webapi image
-      #   inputs:
-      #     command: build
-      #     dockerfile: webapi/Dockerfile
-      #     containerRegistry: $(dockerRegistryServiceConnection)
-      #     repository: webapi
-      #     # to use inside docker variable do use version with build
-      #     # lets put them from just obtained value from .version file
-      #     arguments: --build-arg REVISION=$(my_version)
-      #     tags: |
-      #       latest
-      #       $(Build.SourceBranchName)-$(Build.BuildNumber)
-
-      # - task: Docker@2
-      #   displayName: Push webapi image to docker ACR
-      #   condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
-      #   inputs:
-      #     command: push
-      #     containerRegistry: $(dockerRegistryServiceConnection)
-      #     repository: webapi
-      #     tags: |
-      #       latest
-      #       $(Build.SourceBranchName)-$(Build.BuildNumber)
-
+            -Djib.to.image=$(dockerRegistry)/$(imageName)
+            -Djib.to.tags=$(dockerTag0),$(dockerTag1)
