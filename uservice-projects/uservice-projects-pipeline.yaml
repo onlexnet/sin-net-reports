@@ -163,6 +163,7 @@ jobs:
 
       - bash: |
           docker pull busybox
+          docker images list
         displayName: Siudek3
 
       - task: Maven@4
@@ -183,6 +184,15 @@ jobs:
       - bash: |
           docker images list
         displayName: Siudek4
+
+
+
+      - task: Docker@2
+        displayName: Siudek5
+        inputs:
+          command: images list
+          containerRegistry: $(dockerRegistryServiceConnection)
+
 
       - task: Docker@2
         displayName: Push uservice image to docker ACR
