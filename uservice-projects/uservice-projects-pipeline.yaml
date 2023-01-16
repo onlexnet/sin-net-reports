@@ -178,7 +178,7 @@ jobs:
 
 
       - bash: |
-          echo docker images list
+          docker images list
         displayName: Siudek3
 
       - task: Docker@2
