@@ -4,8 +4,7 @@ resources:
 variables:
   # well-known connection, defined manually.
   # The connection used in pipeline allows to access to ACR sinnet.azurecr.io
-  # dockerRegistryServiceConnection: "sinnet-acr"
-  dockerRegistryServiceConnection: "to-delete"
+  dockerRegistryServiceConnection: "sinnet-acr"
   # image name (without tags) used to build final image
   # also root name of the folder in the monorepo
   imageName: uservice-projects
@@ -87,7 +86,7 @@ jobs:
 
 
       - task: Maven@4
-        displayName: Api maven install
+        displayName: 'Maven install: Api'
         inputs:
           mavenPomFile: 'api/client-java/pom.xml'
           goals: install
@@ -103,7 +102,7 @@ jobs:
           checkStyleRunAnalysis: false
 
       - task: Maven@4
-        displayName: Libs maven install
+        displayName: 'Maven install: Libs'
         inputs:
           mavenPomFile: 'libs-java/pom.xml'
           goals: install
@@ -126,7 +125,7 @@ jobs:
           # https://github.com/Microsoft/azure-pipelines-agent/issues/145
           # As the result, we have to put CICD secret to build variable
           SONAR_TOKEN: $(SONAR_TOKEN)
-        displayName: Host maven install
+        displayName: 'Maven install: App/Host'
         inputs:
           mavenPomFile: '$(workingDirectory)/main/pom.xml'
           # install is required to publish locally all modules as the are required in the next satep tp build docker image
@@ -151,20 +150,22 @@ jobs:
           command: login
           containerRegistry: $(dockerRegistryServiceConnection)
 
-      # - task: Maven@4
-      #   displayName: Build µService docker image
-      #   inputs:
-      #     mavenPomFile: '$(workingDirectory)/main/pom.xml'
-      #     goals: 'jib:dockerBuild -pl host'
-      #     javaHomeOption: JDKVersion
-      #     jdkVersionOption: 1.17
-      #     mavenOptions: $(MAVEN_OPTS)
-      #     options: >
-      #       -B
-      #       --no-transfer-progress
-      #       -Drevision=$(SEMVERSION)
-      #       -Djib.to.image=$(imageName)
-      #       -Djib.to.tags=$(dockerTag0)
+      # JIB Plugin 2.2.0+ will take the DOCKER_CONFIG env variable
+      # from the previous step to deploy image during the build
+      - task: Maven@4
+        displayName: Build µService docker image
+        inputs:
+          mavenPomFile: '$(workingDirectory)/main/pom.xml'
+          goals: 'jib:build -pl host'
+          javaHomeOption: JDKVersion
+          jdkVersionOption: 1.17
+          mavenOptions: $(MAVEN_OPTS)
+          options: >
+            -B
+            --no-transfer-progress
+            -Drevision=$(SEMVERSION)
+            -Djib.to.image=$(imageName)
+            -Djib.to.tags=$(dockerTag0)
 
       - bash: |
           docker pull busybox
