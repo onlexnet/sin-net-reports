@@ -4,10 +4,8 @@ resources:
 variables:
   # well-known connection, defined manually.
   # The connection used in pipeline allows to access to ACR sinnet.azurecr.io
-  dockerRegistryServiceConnection: "sinnet-acr"
-  # name of the registry where the image is hosted on.
-  # in Docker world, it is also part of image name (prefix)
-  containerRegistryName: "sinnet.azurecr.io"
+  # dockerRegistryServiceConnection: "sinnet-acr"
+  dockerRegistryServiceConnection: "to-delete"
   # image name (without tags) used to build final image
   # also root name of the folder in the monorepo
   imageName: uservice-projects
