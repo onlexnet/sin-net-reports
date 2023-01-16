@@ -177,6 +177,10 @@ jobs:
             -Djib.to.tags=bbbbb
 
 
+      - bash: |
+          echo docker images list
+        displayName: Siudek3
+
       - task: Docker@2
         displayName: Push uservice image to docker ACR
         # https://docs.microsoft.com/en-us/azure/devops/pipelines/process/expressions?view=azure-devops
