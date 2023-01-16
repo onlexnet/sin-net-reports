@@ -161,12 +161,6 @@ jobs:
       #       -Djib.to.image=$(imageName)
       #       -Djib.to.tags=$(dockerTag0)
 
-      - task: Docker@2
-        displayName: Docker start
-        inputs:
-          command: start
-
-
       - bash: |
           docker pull busybox
           docker images list
@@ -193,12 +187,6 @@ jobs:
 
 
 
-      - task: Docker@2
-        displayName: Siudek5
-        inputs:
-          command: images list
-          containerRegistry: $(dockerRegistryServiceConnection)
-
 
       - task: Docker@2
         displayName: Push uservice image to docker ACR
@@ -216,10 +204,9 @@ jobs:
         #     $(dockerTag0)
         #     $(dockerTag1)
 
-        condition: ne(variables['Build.Reason'], 'PullRequest')
         inputs:
           command: push
-          repository: sinnet/aaaaa
+          repository: aaaaa
           containerRegistry: $(dockerRegistryServiceConnection)
           tags: |
             latest
