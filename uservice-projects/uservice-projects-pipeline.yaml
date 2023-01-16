@@ -181,7 +181,6 @@ jobs:
             -Djib.to.tags=bbbbb
 
       - bash: |
-          docker pull busybox
           docker images list
         displayName: Siudek4
 
