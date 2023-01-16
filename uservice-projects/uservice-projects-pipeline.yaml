@@ -77,14 +77,6 @@ jobs:
         workingDirectory: $(workingDirectory)
         displayName: Read version from .semversion file
 
-      - bash: |
-          echo Build.DefinitionName: $(Build.DefinitionName)
-        displayName: Siudek1
-      - bash: |
-          echo imageName: $(imageName)
-        displayName: Siudek2
-
-
       - task: Maven@4
         displayName: 'Maven install: Api'
         inputs:
@@ -164,13 +156,8 @@ jobs:
             -B
             --no-transfer-progress
             -Drevision=$(SEMVERSION)
-            -Djib.to.image=$(imageName)
+            -Djib.to.image=sinnet.azurecr.io/$(imageName)
             -Djib.to.tags=$(dockerTag0)
-
-      - bash: |
-          docker pull busybox
-          docker images list
-        displayName: Siudek3
 
       - task: Maven@4
         displayName: Build µService docker image
