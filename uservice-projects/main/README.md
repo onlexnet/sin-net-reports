@@ -13,3 +13,6 @@ Docker:
   # example: build local tar file with image
   mvn clean compile jib:buildTar -pl host
 ```
+
+# Interesting articles:
+- https://medium.com/swlh/part-ii-spring-boot-app-development-with-skaffold-kustomize-and-jib-aa663e133558

@@ -42,12 +42,14 @@ service:
 ingress:
   enabled: true
   # possible values depends on k8s implementation and way how the ingress is installed
-  namespace: ingress
-  # 'public' for microk8s
-  # 'nginx' for minikube addon
-  class: public
+  # 'namespace: ingress' for microk8s
+  # 'namespace: ingress-nginx' for minikube addon
+  namespace: ingress-nginx
+  # 'class: public' for microk8s
+  # 'class: ingress-nginx' for minikube addon
+  # class: ingress-nginx
   # kubernetes.io/tls-acme: "true"
-  baseHost: raport.sin.net.pl
+  baseHost: localhost
   port: 80
   annotations: {}
 
