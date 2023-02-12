@@ -47,7 +47,7 @@ ingress:
   namespace: ingress-nginx
   # 'class: public' for microk8s
   # 'class: ingress-nginx' for minikube addon
-  # class: ingress-nginx
+  class: nginx
   # kubernetes.io/tls-acme: "true"
   baseHost: localhost
   port: 80

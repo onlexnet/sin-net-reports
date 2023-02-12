@@ -18,6 +18,9 @@ spec:
     spec:
       imagePullSecrets:
         - name: regcred
+      initContainers:
+        - name: uservice-timeentries-initdb
+          image: sinnet.azurecr.io/uservice-timeentries-initdb:{{ required "Tag of uservice-timeentries image has to be provided" .Values.imageUserviceTimeEntriesTag }}
       containers:
         - name: uservice-timeentries
           image: sinnet.azurecr.io/uservice-timeentries:{{ required "Tag of uservice-timeentries image has to be provided" .Values.imageUserviceTimeEntriesTag }}
@@ -27,25 +30,25 @@ spec:
           env:
           - name: SPRING_PROFILES_ACTIVE
             value: "prod"
-          - name: APP_DB_HOST
-            value: {{ .Values.databaseHost }}
-          - name: DATABASE_NAME
-            valueFrom:
-              secretKeyRef:
-                name: app-secrets
-                key: services_database_name
-          - name: APP_DB_USERNAME
-            valueFrom:
-              secretKeyRef:
-                name: app-secrets
-                key: services_database_username
-          - name: APP_DB_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: app-secrets
-                key: services_database_password
-          - name: APPLICATIONINSIGHTS_CONNECTION_STRING
-            valueFrom:
-              secretKeyRef:
-                name: app-secrets
-                key: appinsight_connection_string
+          # - name: APP_DB_HOST
+          #   value: {{ .Values.databaseHost }}
+          # - name: DATABASE_NAME
+          #   valueFrom:
+          #     secretKeyRef:
+          #       name: app-secrets
+          #       key: services_database_name
+          # - name: APP_DB_USERNAME
+          #   valueFrom:
+          #     secretKeyRef:
+          #       name: app-secrets
+          #       key: services_database_username
+          # - name: APP_DB_PASSWORD
+          #   valueFrom:
+          #     secretKeyRef:
+          #       name: app-secrets
+          #       key: services_database_password
+          # - name: APPLICATIONINSIGHTS_CONNECTION_STRING
+          #   valueFrom:
+          #     secretKeyRef:
+          #       name: app-secrets
+          #       key: appinsight_connection_string

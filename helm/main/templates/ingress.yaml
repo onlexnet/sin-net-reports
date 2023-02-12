@@ -3,9 +3,9 @@ kind: Ingress
 metadata:
   name: nginx
   annotations:
-    # kubernetes.io/ingress.class: {{ .Values.ingress.class }}
-    cert-manager.io/issuer: {{ include "letsencrypt.instance" . }}
     nginx.ingress.kubernetes.io/rewrite-target: /$1
+    kubernetes.io/ingress.class: {{ .Values.ingress.class }}
+    cert-manager.io/issuer: {{ include "letsencrypt.instance" . }}
 spec:
   tls:
   - hosts:
@@ -44,11 +44,12 @@ spec:
               port:
                 number: 8080
 
-        - path: /
+        # https://stackoverflow.com/questions/60579877/nginx-returns-index-html-content-for-all-angular-files-including-scripts
+        - path: /(.*)
           pathType: Prefix
           backend:
             service:
               name: webapp-svc
               port:
                 number: 80
-                
+
