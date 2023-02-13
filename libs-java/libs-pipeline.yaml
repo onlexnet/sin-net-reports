@@ -30,7 +30,7 @@ pr:
 
 jobs:
   - job: CI
-    displayName: Build and (optionally) depoy shared Libs
+    displayName: Build and (optionally deploy) shared Libs
     pool:
       vmImage: ubuntu-latest
 
