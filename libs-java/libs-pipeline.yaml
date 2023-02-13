@@ -59,6 +59,7 @@ jobs:
           jdkVersionOption: '1.17'
           jdkArchitectureOption: 'x64'
           publishJUnitResults: false
+          mavenAuthenticateFeed: true
           options: >
             $(MAVEN_OPTS)
             -B
