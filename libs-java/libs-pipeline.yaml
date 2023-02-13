@@ -54,7 +54,7 @@ jobs:
       # Provides credentials for Azure Artifacts feeds and external maven repositories.
       - task: MavenAuthenticate@0
         inputs:
-          artifactsFeeds: onlex
+          artifactsFeeds: sinnet
           #mavenServiceConnections: # string. Credentials for repositories outside this organization/collection
 
       - task: Maven@4
