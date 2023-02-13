@@ -30,18 +30,15 @@ pr:
 
 jobs:
   - job: CI
-    displayName: uService CI build
+    displayName: Build and (optionally) depoy shared Libs
     pool:
       vmImage: ubuntu-latest
-    variables:
-      dockerTag0: latest
-      dockerTag1: $(Build.SourceBranchName)-$(Build.BuildNumber)
 
     steps:
 
       - task: Cache@2
         inputs:
-          key: 'maven | "$(Agent.OS)" | $(cacheName)'
+          key: 'maven | "$(Agent.OS)" | "$(cacheName)"'
           restoreKeys: |
             maven | "$(Agent.OS)"
             maven
