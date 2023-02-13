@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: uservice-reports
+  labels:
+    app: uservice-reports
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: uservice-reports
+  
+  template:
+    metadata:
+      labels:
+        app: uservice-reports
+    
+    spec:
+      imagePullSecrets:
+        - name: regcred
+      containers:
+        - name: uservice-reports
+          image: sinnet.azurecr.io/onlex-sinnet-reports:##BUILD_ID##
+          imagePullPolicy: Always
+          ports:
+          - containerPort: 80
+          env:
+          - name: APPLICATIONINSIGHTS_CONNECTION_STRING
+            valueFrom:
+              secretKeyRef:
+                name: webapp-config
+                key: appinsight_connection_string
