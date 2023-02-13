@@ -64,8 +64,8 @@
   </build>
   <distributionManagement>
     <repository>
-      <id>onlex</id>
-      <url>https://pkgs.dev.azure.com/onlexnet/_packaging/onlex/maven/v1</url>
+      <id>sinent</id>
+      <url>https://pkgs.dev.azure.com/onlexnet/_packaging/sinnet/maven/v1</url>
       <releases>
         <enabled>true</enabled>
       </releases>
