@@ -50,6 +50,13 @@ jobs:
         workingDirectory: $(workingDirectory)
         displayName: Read version from .semversion file
 
+      # Maven Authenticate v0
+      # Provides credentials for Azure Artifacts feeds and external maven repositories.
+      - task: MavenAuthenticate@0
+        inputs:
+          artifactsFeeds: onlex
+          #mavenServiceConnections: # string. Credentials for repositories outside this organization/collection
+
       - task: Maven@4
         displayName: 'Maven install: Libs'
         inputs:
