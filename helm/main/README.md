@@ -19,6 +19,7 @@ k create secret docker-registry regcred --docker-server=sinnet.azurecr.io --dock
 To configure expected dynamic properties on CI pipeline, you may use locally script as below:
 ```bash
 export USERVICE_WEBAPI_IMAGE_TAG=latest
+export USERVICE_PROJECTS_IMAGE_TAG=latest
 export WEBAPP_IMAGE_TAG=latest
 export USERVICE_TIMEENTRIES_IMAGE_TAG=latest
 export REPORTS_IMAGE_TAG=latest

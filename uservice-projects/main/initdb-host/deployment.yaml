@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: initdb-host
+  labels:
+    app: initdb-host
+spec:
+  clusterIP: None
+  selector:
+    app: initdb-host
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: initdb-host
+  labels:
+    app: initdb-host
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: initdb-host
+  template:
+    metadata:
+      labels:
+        app: initdb-host
+    spec:
+      containers:
+      - name: initdb-host
+        image: initdb-host

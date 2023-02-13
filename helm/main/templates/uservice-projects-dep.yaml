@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: uservice-projects
+  labels:
+    app: uservice-projects
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: uservice-projects
+  
+  template:
+    metadata:
+      labels:
+        app: uservice-projects
+    
+    spec:
+      imagePullSecrets:
+        - name: regcred
+      containers:
+        - name: uservice-projects
+          # image: sinnet.azurecr.io/uservice-projects-host:{{ required "Tag of onlex-sinnet-projects image has to be provided" .Values.imageProjectsTag }}
+          image: uservice-projects-host:{{ required "Tag of onlex-sinnet-projects image has to be provided" .Values.imageProjectsTag }}
+          # when use local docker image: Never to use locally build image, or Always when working on real k8s environment
+          imagePullPolicy: Never
+          ports:
+          - containerPort: 8080
+          # env:
+          # - name: APPLICATIONINSIGHTS_CONNECTION_STRING
+          #   valueFrom:
+          #     secretKeyRef:
+          #       name: webapp-config
+          #       key: appinsight_connection_string

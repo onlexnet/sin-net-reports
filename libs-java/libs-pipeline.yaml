@@ -69,6 +69,7 @@ jobs:
           mavenAuthenticateFeed: true
           options: >
             $(MAVEN_OPTS)
+            -Drevision=$(SEMVERSION)
             -B
             --no-transfer-progress
           sonarQubeRunAnalysis: false

@@ -160,6 +160,18 @@
           </execution>
         </executions>
       </plugin>
+
+      <plugin>
+        <groupId>com.google.cloud.tools</groupId>
+        <artifactId>jib-maven-plugin</artifactId>
+        <configuration>
+          <to>
+            <!-- Just override image name to expected by HELM installation -->
+            <image>uservice-projects-host</image>
+          </to>
+        </configuration>
+      </plugin>
+
     </plugins>
   </build>
 
