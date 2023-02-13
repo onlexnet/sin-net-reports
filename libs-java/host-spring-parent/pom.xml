@@ -10,7 +10,6 @@
 
   <properties>
     <spring-boot.version>3.0.1</spring-boot.version>
-    <maven.deploy.skip>false</maven.deploy.skip>
   </properties>
 
   <build>

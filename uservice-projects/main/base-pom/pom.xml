@@ -3,7 +3,7 @@
   <parent>
     <groupId>onlexnet.sinnet</groupId>
     <artifactId>uservice-spring-parent</artifactId>
-    <version>0.1.0</version>
+    <version>0.1.2</version>
     <relativePath />
   </parent>
   <artifactId>uservice-projects-base</artifactId>
@@ -36,7 +36,7 @@
       <artifactId>guava</artifactId>
       <version>30.1.1-jre</version>
     </dependency>
-  </dependencies>
+</dependencies>
 
   <dependencyManagement>
     <dependencies>
@@ -64,7 +64,7 @@
       <dependency>
         <groupId>onlexnet.sinnet</groupId>
         <artifactId>uservice-projects-host</artifactId>
-        <version>${project}</version>
+        <version>${project.version}</version>
       </dependency>
         <dependency>
         <groupId>onlexnet.sinnet</groupId>
@@ -202,5 +202,17 @@
       </snapshots>
     </repository>
   </repositories>
+  <pluginRepositories>
+    <pluginRepository>
+      <id>sinnet</id>
+      <url>https://pkgs.dev.azure.com/onlexnet/sinnet/_packaging/sinnet/maven/v1</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </pluginRepository>
+  </pluginRepositories>
 
 </project>
