@@ -25,9 +25,6 @@
     <sonar.projectName>SinNet Reports</sonar.projectName>
 
     <spring-boot-azure.version>2.3.2</spring-boot-azure.version>
-
-    <!-- Skip parent module when deployed -->
-    <maven.deploy.skip>false</maven.deploy.skip>
   </properties>
 
 
