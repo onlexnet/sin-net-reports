@@ -1,7 +1,7 @@
 <project>
-  <!-- 
+  <!--
     Inspiration:
-    https://quarkus.io/guides/grpc-getting-started#generating-java-files-from-proto-with-protobuf-maven-plugin
+  https://quarkus.io/guides/grpc-getting-started#generating-java-files-from-proto-with-protobuf-maven-plugin
   -->
   <modelVersion>4.0.0</modelVersion>
   <groupId>onlexnet.sinnet</groupId>
@@ -24,7 +24,8 @@
 
   <properties>
     <!-- Remove warning:
-      [WARNING] Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+      [WARNING] Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is
+    platform dependent!
     -->
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
@@ -75,4 +76,19 @@
 
     </plugins>
   </build>
+
+  <distributionManagement>
+    <repository>
+      <id>sinnet</id>
+      <url>https://pkgs.dev.azure.com/onlexnet/sinnet/_packaging/sinnet/maven/v1</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
+  </distributionManagement>
+
+
 </project>
