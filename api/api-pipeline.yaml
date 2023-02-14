@@ -2,7 +2,7 @@ resources:
   - repo: self
 
 variables:
-  workingDirectory: api
+  workingDirectory: api/client-java
   # https://docs.microsoft.com/en-us/azure/devops/pipelines/release/caching?view=azure-devops#maven
   MAVEN_CACHE_FOLDER: $(Pipeline.Workspace)/.m2/repository
   MAVEN_OPTS: '-Dmaven.repo.local=$(MAVEN_CACHE_FOLDER)'
