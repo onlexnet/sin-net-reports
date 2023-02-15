@@ -11,7 +11,7 @@
   <packaging>pom</packaging>
 
   <properties>
-    <api.version>0.1.0-SNAPSHOT</api.version>
+    <api.version>0.1.0</api.version>
     <aggregate.report.dir>report-aggregate/target/site/jacoco-aggregate/jacoco.xml</aggregate.report.dir>
     <sonar.projectKey>sin-net-reports:${project.artifactId}</sonar.projectKey>
   </properties>

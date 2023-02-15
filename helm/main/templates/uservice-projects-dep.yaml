@@ -18,17 +18,86 @@ spec:
     spec:
       imagePullSecrets:
         - name: regcred
+      initContainers:
+        - name: initdb
+          image: uservice-projects-initdb:{{ required "Tag of onlex-sinnet-projects image has to be provided" .Values.imageProjectsTag }}
+          imagePullPolicy: Never
+          env:
+          - name: SPRING_PROFILES_ACTIVE
+            value: "prod"
+          - name: DATABASE_HOST
+            valueFrom:
+              secretKeyRef:
+                name: app-secrets
+                key: services_database_host
+          - name: DATABASE_PORT
+            valueFrom:
+              secretKeyRef:
+                name: app-secrets
+                key: services_database_port
+          - name: DATABASE_NAME
+            valueFrom:
+              secretKeyRef:
+                name: app-secrets
+                key: services_database_name
+          - name: DATABASE_SCHEMA
+            valueFrom:
+              secretKeyRef:
+                name: app-secrets
+                key: services_database_schema
+          - name: DATABASE_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: app-secrets
+                key: services_database_username
+          - name: DATABASE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: app-secrets
+                key: services_database_password
       containers:
-        - name: uservice-projects
+        - name: host
           # image: sinnet.azurecr.io/uservice-projects-host:{{ required "Tag of onlex-sinnet-projects image has to be provided" .Values.imageProjectsTag }}
           image: uservice-projects-host:{{ required "Tag of onlex-sinnet-projects image has to be provided" .Values.imageProjectsTag }}
           # when use local docker image: Never to use locally build image, or Always when working on real k8s environment
           imagePullPolicy: Never
           ports:
           - containerPort: 8080
-          # env:
-          # - name: APPLICATIONINSIGHTS_CONNECTION_STRING
-          #   valueFrom:
-          #     secretKeyRef:
-          #       name: webapp-config
-          #       key: appinsight_connection_string
+          env:
+          - name: SPRING_PROFILES_ACTIVE
+            value: "prod"
+          - name: DATABASE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: app-secrets
+                key: services_database_password
+          - name: DATABASE_HOST
+            valueFrom:
+              secretKeyRef:
+                name: app-secrets
+                key: services_database_host
+          - name: DATABASE_PORT
+            valueFrom:
+              secretKeyRef:
+                name: app-secrets
+                key: services_database_port
+          - name: DATABASE_NAME
+            valueFrom:
+              secretKeyRef:
+                name: app-secrets
+                key: services_database_name
+          - name: DATABASE_SCHEMA
+            valueFrom:
+              secretKeyRef:
+                name: app-secrets
+                key: services_database_schema
+          - name: DATABASE_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: app-secrets
+                key: services_database_username
+          - name: DATABASE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: app-secrets
+                key: services_database_password

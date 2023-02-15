@@ -1,3 +1,5 @@
+# Dev hints
+
 Sonar:  
 - https://docs.sonarcloud.io/advanced-setup/ci-based-analysis/sonarscanner-for-maven/
 ```

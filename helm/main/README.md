@@ -46,7 +46,10 @@ h upgrade sinnet-reports . -f config.yaml
 openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout tls.key -out tls.crt -subj "/CN=sinnet.local/O=sinnet.local"
 kubectl create secret tls portal-tls-secret --key tls.key --cert tls.crt -n onlex-sinnet-localhost
 ```
-
+- next, start postgresql database and load secrets to allow application read secrets and connecto to database
+```bash
+k apply -f app-secrets.yaml
+```
 
 ## Used artlcles
 - https://cert-manager.io/docs/installation/helm/

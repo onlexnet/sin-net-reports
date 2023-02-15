@@ -18,53 +18,53 @@ services:
     ports:
       - 5432:5432
 
-  init-local-sdk:
-    image: local-stack-java-sdk
-    build:
-      context: service-localsdk
-      dockerfile: Dockerfile.local
+  # init-local-sdk:
+  #   image: local-stack-java-sdk
+  #   build:
+  #     context: service-localsdk
+  #     dockerfile: Dockerfile.local
 
-  projects-initdb-host:
-    build:
-      context: uservice-projects/main
-      dockerfile: ./initdb-host/Dockerfile.local
-    environment:
-      # well-known properties defined by init scripts of our postgresql
-      - DATABASE_HOST=service-postgres-dc
-      - DATABASE_PORT=5432
-      - DATABASE_NAME=devlocaldb
-      - DATABASE_USERNAME=uservice_projects_role_name
-      - DATABASE_PASSWORD=uservice_projects_role_password
-      - DATABASE_SCHEMA=uservice_projects
-    volumes:
-      # Map local maven repo to speed up build by avoiding downloading maven dependencies each time to new docker image
-      - ~/.m2/:/.m2
-      # Map local source files to allow run initdb module from sources
-      - ./uservice-projects/main/:/uservice-projects_src
-    depends_on:
-      service-postgres-dc:
-        condition: service_started
-      init-local-sdk:
-        condition: service_completed_successfully
+  # projects-initdb-host:
+  #   build:
+  #     context: uservice-projects/main
+  #     dockerfile: ./initdb-host/Dockerfile.local
+  #   environment:
+  #     # well-known properties defined by init scripts of our postgresql
+  #     - DATABASE_HOST=service-postgres-dc
+  #     - DATABASE_PORT=5432
+  #     - DATABASE_NAME=devlocaldb
+  #     - DATABASE_USERNAME=uservice_projects_role_name
+  #     - DATABASE_PASSWORD=uservice_projects_role_password
+  #     - DATABASE_SCHEMA=uservice_projects
+  #   volumes:
+  #     # Map local maven repo to speed up build by avoiding downloading maven dependencies each time to new docker image
+  #     - ~/.m2/:/.m2
+  #     # Map local source files to allow run initdb module from sources
+  #     - ./uservice-projects/main/:/uservice-projects_src
+  #   depends_on:
+  #     service-postgres-dc:
+  #       condition: service_started
+  #     init-local-sdk:
+  #       condition: service_completed_successfully
 
-  timeentries-initdb:
-    build:
-      context: uservice-timeentries/main
-      dockerfile: ./initdb/Dockerfile.local
-    environment:
-      # well-known properties defined by init scripts of our postgresql
-      - DATABASE_HOST=service-postgres-dc
-      - DATABASE_PORT=5432
-      - DATABASE_NAME=devlocaldb
-      - DATABASE_USERNAME=uservice_timeentries_role_name
-      - DATABASE_PASSWORD=uservice_timeentries_role_password
-      - DATABASE_SCHEMA=uservice_timeentries
-      - DATABASE_JDBC=jdbc:postgresql://service-postgres-dc:5432/devlocaldb
-    volumes:
-      # Map local maven repo to speed up build by avoiding downloading maven dependencies each time to new docker image
-      - ~/.m2/:/.m2
-      # Map local source files to allow run initdb module from sources
-      - ./uservice-timeentries/main/:/uservice-timeentries_src
-    depends_on:
-       service-postgres-dc:
-         condition: service_started
+  # timeentries-initdb:
+  #   build:
+  #     context: uservice-timeentries/main
+  #     dockerfile: ./initdb/Dockerfile.local
+  #   environment:
+  #     # well-known properties defined by init scripts of our postgresql
+  #     - DATABASE_HOST=service-postgres-dc
+  #     - DATABASE_PORT=5432
+  #     - DATABASE_NAME=devlocaldb
+  #     - DATABASE_USERNAME=uservice_timeentries_role_name
+  #     - DATABASE_PASSWORD=uservice_timeentries_role_password
+  #     - DATABASE_SCHEMA=uservice_timeentries
+  #     - DATABASE_JDBC=jdbc:postgresql://service-postgres-dc:5432/devlocaldb
+  #   volumes:
+  #     # Map local maven repo to speed up build by avoiding downloading maven dependencies each time to new docker image
+  #     - ~/.m2/:/.m2
+  #     # Map local source files to allow run initdb module from sources
+  #     - ./uservice-timeentries/main/:/uservice-timeentries_src
+    # depends_on:
+    #    service-postgres-dc:
+    #      condition: service_started

@@ -10,7 +10,8 @@
   <artifactId>uservice-projects-report-aggregate</artifactId>
 
   <properties>
-    <!-- The module is just to keep aggregated jacoco reports, so no required to be in included in Sonar reports. -->
+    <!-- The module is just to keep aggregated jacoco reports, so no required to be in included in
+    Sonar reports. -->
     <sonar.skip>true</sonar.skip>
   </properties>
 
@@ -64,6 +65,15 @@
             <phase>verify</phase>
           </execution>
         </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>com.google.cloud.tools</groupId>
+        <artifactId>jib-maven-plugin</artifactId>
+        <configuration>
+          <!-- We don't want jib to execute on this module-->
+          <skip>true</skip>
+        </configuration>
       </plugin>
 
     </plugins>

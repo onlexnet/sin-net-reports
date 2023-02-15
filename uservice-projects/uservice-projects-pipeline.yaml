@@ -74,38 +74,6 @@ jobs:
         displayName: Read version from .semversion file
 
       - task: Maven@4
-        displayName: 'Maven install: Api'
-        inputs:
-          mavenPomFile: 'api/client-java/pom.xml'
-          goals: install
-          javaHomeOption: 'JDKVersion'
-          jdkVersionOption: '1.17'
-          jdkArchitectureOption: 'x64'
-          publishJUnitResults: false
-          options: >
-            $(MAVEN_OPTS)
-            -B
-            --no-transfer-progress
-          sonarQubeRunAnalysis: false
-          checkStyleRunAnalysis: false
-
-      - task: Maven@4
-        displayName: 'Maven install: Libs'
-        inputs:
-          mavenPomFile: 'libs-java/pom.xml'
-          goals: install
-          javaHomeOption: 'JDKVersion'
-          jdkVersionOption: '1.17'
-          jdkArchitectureOption: 'x64'
-          publishJUnitResults: false
-          options: >
-            $(MAVEN_OPTS)
-            -B
-            --no-transfer-progress
-          sonarQubeRunAnalysis: false
-          checkStyleRunAnalysis: false
-
-      - task: Maven@4
         env:
           # pom.xml uses SONAR_TOKEN env variable to communicate with sonarcloud.
           # The crrent CI/CD pipeline has secret named SONAR_TOKEN with proper value.
