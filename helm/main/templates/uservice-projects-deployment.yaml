@@ -14,7 +14,13 @@ spec:
     metadata:
       labels:
         app: uservice-projects
-    
+      annotations:
+        # https://docs.dapr.io/reference/arguments-annotations-overview/
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "uservice-projects-app-id"
+        dapr.io/app-port: "8080"
+        dapr.io/app-protocol: grpc
+
     spec:
       imagePullSecrets:
         - name: regcred
@@ -66,11 +72,6 @@ spec:
           env:
           - name: SPRING_PROFILES_ACTIVE
             value: "prod"
-          - name: DATABASE_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: app-secrets
-                key: services_database_password
           - name: DATABASE_HOST
             valueFrom:
               secretKeyRef:

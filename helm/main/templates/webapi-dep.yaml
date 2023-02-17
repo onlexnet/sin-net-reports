@@ -30,25 +30,3 @@ spec:
           env:
           - name: SPRING_PROFILES_ACTIVE
             value: "prod"
-          # - name: APP_DB_HOST
-          #   value: {{ .Values.databaseHost }}
-          # - name: DATABASE_NAME
-          #   valueFrom:
-          #     secretKeyRef:
-          #       name: app-secrets
-          #       key: services_database_name
-          # - name: APP_DB_USERNAME
-          #   valueFrom:
-          #     secretKeyRef:
-          #       name: app-secrets
-          #       key: services_database_username
-          # - name: APP_DB_PASSWORD
-          #   valueFrom:
-          #     secretKeyRef:
-          #       name: app-secrets
-          #       key: services_database_password
-          # - name: APPLICATIONINSIGHTS_CONNECTION_STRING
-          #   valueFrom:
-          #     secretKeyRef:
-          #       name: app-secrets
-          #       key: appinsight_connection_string

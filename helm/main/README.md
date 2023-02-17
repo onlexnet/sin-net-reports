@@ -28,8 +28,8 @@ export REPORTS_IMAGE_TAG=latest
 And later on apply on e.g. dev01
 ```bash
 . initshell.sh localhost
-# to install application:
-h install sinnet-reports . -f config.yaml
+# to install/upgrade  application:
+h upgrade --install sinnet-reports . -f config.yaml
 # or, to upgrade:
 h upgrade sinnet-reports . -f config.yaml
 
@@ -51,7 +51,25 @@ kubectl create secret tls portal-tls-secret --key tls.key --cert tls.crt -n onle
 k apply -f app-secrets.yaml
 ```
 
+## Upgrade DAPR
+Current version: 1.9.6
+
+- on dev machine
+```bash
+# instal ldapr components in local docker to test without kubernetes
+dapr uninstall
+dapr init --runtime-version 1.9.6
+
+# save updated dapr chart as dependency
+cd charts
+helm pull dapr/dapr --version=1.9.2
+
+```
+
+
 ## Used artlcles
+- https://www.aspecto.io/blog/distributed-tracing-with-opentelemetry-collector-on-kubernetes/
+- https://docs.dapr.io/operations/hosting/kubernetes/kubernetes-deploy/#add-and-install-dapr-helm-chart
 - https://cert-manager.io/docs/installation/helm/
 - https://cert-manager.io/docs/configuration/acme/#creating-a-basic-acme-issuer
 - https://github.com/jetstack/cert-manager/issues/1387

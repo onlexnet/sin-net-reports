@@ -1,4 +1,4 @@
-# Default values for hello-world.
+# Default values for onlex-infra.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
@@ -8,8 +8,9 @@ image:
   repository: nginx
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "1.21"
+  tag: ""
 
+imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
@@ -40,18 +41,17 @@ service:
   port: 80
 
 ingress:
-  enabled: true
-  # possible values depends on k8s implementation and way how the ingress is installed
-  # 'namespace: ingress' for microk8s
-  # 'namespace: ingress-nginx' for minikube addon
-  namespace: ingress-nginx
-  # 'class: public' for microk8s
-  # 'class: ingress-nginx' for minikube addon
-  class: nginx
-  # kubernetes.io/tls-acme: "true"
-  baseHost: localhost
-  port: 80
+  enabled: false
   annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: chart-example.local
+      paths: []
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
@@ -65,16 +65,30 @@ resources: {}
   #   cpu: 100m
   #   memory: 128Mi
 
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
 nodeSelector: {}
 
 tolerations: []
 
 affinity: {}
 
-# raport.sin.net.pl - one of the network interfaces interfaces
-databaseHost: 83.0.169.165
+namespace: onlex-infra1
 
-productionEnvPrefix: prd
-
-
-
+# dapr related settings
+# 1) general way: dashboard may be reached using: minikube service dapr-dashboard --url -n onlex-sinnet-localhost
+# 2) minikube way: allows retrieving the dashboard url by running the command "minikube service list"
+# more: https://github.com/dapr/dapr/blob/master/charts/dapr/README.md#example-of-installing-dapr-on-minikube
+#       https://docs.dapr.io/operations/hosting/kubernetes/kubernetes-deploy/#install-dapr-from-an-official-dapr-helm-chart
+dapr:
+  dapr_dashboard:
+    enabled: true
+  
+  # https://docs.dapr.io/operations/troubleshooting/common_issues/
+  # dapr_sidecar_injector:
+  #   hostNetwork: true
