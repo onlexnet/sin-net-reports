@@ -88,7 +88,3 @@ namespace: onlex-infra1
 dapr:
   dapr_dashboard:
     enabled: true
-  
-  # https://docs.dapr.io/operations/troubleshooting/common_issues/
-  # dapr_sidecar_injector:
-  #   hostNetwork: true

@@ -14,6 +14,12 @@ spec:
     metadata:
       labels:
         app: uservice-webapi
+      annotations:
+        # https://docs.dapr.io/reference/arguments-annotations-overview/
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "uservice-webapi"
+        dapr.io/app-port: "8080"
+        dapr.io/app-protocol: grpc
     
     spec:
       imagePullSecrets:

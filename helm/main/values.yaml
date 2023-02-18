@@ -76,5 +76,7 @@ databaseHost: 83.0.169.165
 
 productionEnvPrefix: prd
 
+uservice-project:
+  dapr-id: uservice-project
 
 

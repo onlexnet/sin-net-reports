@@ -99,10 +99,10 @@ public class Report2Controller implements TimeentriesMapper {
 
   private Uni<List<TimeEntryModel>> getTimeentries(String projectId, LocalDate from, LocalDate to) {
     var request = sinnet.grpc.timeentries.SearchQuery.newBuilder()
-      .setProjectId(projectId)
-      .setFrom(toGrpc(from))
-      .setTo(toGrpc(to))
-      .build();
+        .setProjectId(projectId)
+        .setFrom(toGrpc(from))
+        .setTo(toGrpc(to))
+        .build();
     return timeentries.search(request)
       .map(items -> List.ofAll(items.getActivitiesList().stream()))
       .map(items -> items.map(it -> new TimeEntryModel(it.getCustomerId(),

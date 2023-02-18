@@ -17,7 +17,7 @@ spec:
       annotations:
         # https://docs.dapr.io/reference/arguments-annotations-overview/
         dapr.io/enabled: "true"
-        dapr.io/app-id: "uservice-projects-app-id"
+        dapr.io/app-id: "uservice-projects"
         dapr.io/app-port: "8080"
         dapr.io/app-protocol: grpc
 

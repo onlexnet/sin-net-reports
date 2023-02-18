@@ -12,9 +12,17 @@ import sinnet.grpc.timeentries.TimeEntryModel;
 
 public interface TimeentriesMapper extends Mapper {
 
+  /**
+   * DTO -> GQL translation.
+   * @param dto
+   * @param userToken
+   * @return
+   */
   default ServiceModel toGql(GetReply dto, UserToken userToken) {
     var item = dto.getItem();
-    if (item == null) return null;
+    if (item == null) {
+      return null;
+    }
     var it = new ServiceModel(); 
     it.setProjectId(item.getEntityId().getProjectId());
     it.setEntityId(item.getEntityId().getEntityId());

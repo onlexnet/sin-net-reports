@@ -23,6 +23,11 @@ leafNode {
 <i>shared configuration of local DAPR components</i>;
 ****:test-webapi
 <i>Functional acceptance tests (Gherkin)</i>;
+** Helm
+***:main
+<i>Local helm charts</i>;
+***:infra
+<i>Local helm charts for infrastructure</i>;
 
 legend right
   Explanation of structure of folders

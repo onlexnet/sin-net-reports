@@ -56,8 +56,8 @@ public class Report1Controller implements TimeentriesMapper {
         return reportsClient.producePack(reportRequest);
       })
       .map(it -> {
-         var result = it.getData().toByteArray();
-         return Response.ok(result)
+        var result = it.getData().toByteArray();
+        return Response.ok(result)
           .header("Cache-Control", "no-cache, no-store, must-revalidate")
           .header("Content-Disposition", "inline; filename=report " + year + "-" + month + ".zip")
           .header("Expires", "0")
@@ -79,10 +79,10 @@ public class Report1Controller implements TimeentriesMapper {
 
   private Uni<List<TimeEntryModel>> getTimeentries(String projectId, LocalDate from, LocalDate to) {
     var request = sinnet.grpc.timeentries.SearchQuery.newBuilder()
-      .setProjectId(projectId)
-      .setFrom(toGrpc(from))
-      .setTo(toGrpc(to))
-      .build();
+        .setProjectId(projectId)
+        .setFrom(toGrpc(from))
+        .setTo(toGrpc(to))
+        .build();
     return timeentries.search(request)
       .map(items -> List.ofAll(items.getActivitiesList().stream()))
       .map(items -> items.map(it -> new TimeEntryModel(it.getCustomerId(),

@@ -28,8 +28,6 @@ trigger:
     include:
       # We have to include all folders where source files are located
       - uservice-webapi
-      - uservice-reports/main/src/main/proto
-      - webapi/api.grpc
 
 pr:
   branches:
@@ -39,8 +37,6 @@ pr:
     include:
       # We have to include all folders where source files are located
       - uservice-webapi
-      - uservice-reports/main/src/main/proto
-      - webapi/api.grpc
 
 jobs:
   - job: CI
@@ -52,11 +48,6 @@ jobs:
       dockerTag1: $(Build.SourceBranchName)-$(Build.BuildNumber)
 
     steps:
-      - bash: |
-          ./links.sh
-          cp -Lr .links .links-COPY && rm -r .links && mv .links-COPY .links
-        workingDirectory: uservice-webapi
-        displayName: Create local copy of used external resources
 
       - task: Cache@2
         inputs:
@@ -66,19 +57,6 @@ jobs:
             maven
           path: $(MAVEN_CACHE_FOLDER)
         displayName: Cache Maven local repo
-
-      - task: Cache@2
-        displayName: Docker cache task
-        inputs:
-          key: 'docker | $(Agent.OS) | "$(dockerCacheName)"'
-          path: $(Pipeline.Workspace)/docker
-          #Variable to set to 'true' when the cache is restored
-          cacheHitVar: CACHE_RESTORED
-
-      - script: |
-          docker load -i $(Pipeline.Workspace)/docker/cache.tar
-        displayName: Restore Docker cache
-        condition: and(not(canceled()), eq(variables.CACHE_RESTORED, 'true'))
 
       - bash: |
           echo "##vso[task.setvariable variable=my_version]$(cat .semversion)"
