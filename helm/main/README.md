@@ -2,10 +2,8 @@
 
 
 # One time operations 1:
-# cert-manager
-# https://cert-manager.io/docs/installation/helm/
-helm repo add jetstack https://charts.jetstack.io
-helm repo update
+install onlex-infra
+
 
 ```bash
 . initshell.sh localhost
@@ -28,16 +26,16 @@ export REPORTS_IMAGE_TAG=latest
 And later on apply on e.g. dev01
 ```bash
 . initshell.sh localhost
-# to install/upgrade  application:
-h upgrade --install sinnet-reports . -f config.yaml
-# or, to upgrade:
+# to install/upgrade application:
+h upgrade --install sinnet-reports . -f config.yaml --create-namespace
+# or, just to upgrade:
 h upgrade sinnet-reports . -f config.yaml
 
 ```
 
 ##
 ## Target kubernetes configuration
-- **microk8s with enabled ingress**. It is used in some places because ingress in microk8s has defined class and namespace
+- **microk8s with custom ingress**. It is used in some places because ingress in microk8s has defined class and namespace
 - **[cert-manager](https://cert-manager.io/)** installed with version 1.6
 - **create k8s namespace *onlex-sinnet-localhost* and use it for further local deployment**
 - **add position to hosts file: 127.0.0.1 sinnet.local** because such domain is expected by ingress in onlex-sinnet-localhost namespace
@@ -46,7 +44,7 @@ h upgrade sinnet-reports . -f config.yaml
 openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout tls.key -out tls.crt -subj "/CN=sinnet.local/O=sinnet.local"
 kubectl create secret tls portal-tls-secret --key tls.key --cert tls.crt -n onlex-sinnet-localhost
 ```
-- next, start postgresql database and load secrets to allow application read secrets and connecto to database
+- next, start postgresql database and load secrets to allow application read secrets and connect to database
 ```bash
 k apply -f app-secrets.yaml
 ```
@@ -65,6 +63,12 @@ cd charts
 helm pull dapr/dapr --version=1.9.2
 
 ```
+
+View of DAPR related settings in working minikube:
+- general way: dashboard may be reached using: minikube service dapr-dashboard --url -n onlex-infra
+- minikube way: allows retrieving the dashboard url by running the command "minikube service list"
+# more: https://github.com/dapr/dapr/blob/master/charts/dapr/README.md#example-of-installing-dapr-on-minikube
+#       https://docs.dapr.io/operations/hosting/kubernetes/kubernetes-deploy/#install-dapr-from-an-official-dapr-helm-chart
 
 
 ## Used artlcles

@@ -5,7 +5,7 @@ metadata:
   labels:
     app: uservice-webapi-svc
 spec:
-  type: NodePort
+  type:
   ports:
   - port: 8080
   selector:

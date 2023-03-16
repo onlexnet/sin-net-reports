@@ -8,9 +8,15 @@ Sonar:
 ```
 
 Docker:  
-```
-  # example: to build image for tests
-  mvn clean compile jib:dockerBuild -pl host -Dimage=my-image-name
+```bash
+  # example: to build images to locally deploy to k8s
+  # 1) Optionally change context to work on minikube images
+  eval $(minikube docker-env)
+  # 2) to build image and push it to local k8s instance
+  mvnd jib:dockerBuild -pl host clean install -DskipTests
+  mvnd jib:dockerBuild -pl host -Dimage=sinnet.azurecr.io/uservice-projects-host:latest
+  mvnd jib:dockerBuild -pl initdb-host clean install -DskipTests
+  mvnd jib:dockerBuild -pl initdb-host -Dimage=sinnet.azurecr.io/uservice-projects-initdb
 
   # example: build local tar file with image
   mvn clean compile jib:buildTar -pl host

@@ -1,5 +1,24 @@
-# Build and push to minikube local image
+# Dev hints
+
+Sonar:  
+- https://docs.sonarcloud.io/advanced-setup/ci-based-analysis/sonarscanner-for-maven/
 ```
+  # push manually sonar result with jacoco coverage:
+  mvnd clean package sonar:sonar
 ```
 
-In situations where all that is needed to build a container image and no push to a registry is necessary (essentially by having set quarkus.container-image.build=true and left quarkus.container-image.push unset - it defaults to false), then this extension creates a container image and registers it with the Docker daemon. This means that although Docker isn’t used to build the image, it is nevertheless necessary. Also note that using this mode, the built container image will show up when executing docker images.
+Docker:  
+```bash
+  # example
+  # 1) Optionally change context to work on minikube images
+  eval $(minikube docker-env)
+  # 2) to build image and push it to local k8s instance
+  mvnd clean install jib:dockerBuild -Dimage=sinnet.azurecr.io/uservice-webapi-host:latest -DskipTests
+
+  # example: build local tar file with image
+  mvn clean compile jib:buildTar -pl host
+```
+
+
+# Interesting articles:
+- https://medium.com/swlh/part-ii-spring-boot-app-development-with-skaffold-kustomize-and-jib-aa663e133558

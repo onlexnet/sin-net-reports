@@ -7,7 +7,6 @@
 
   <modules>
     <module>build-tools</module>
-    <module>host-quarkus-parent</module>
     <module>host-spring-parent</module>
   </modules>
 
@@ -23,8 +22,6 @@
     <sonar.organization>on-lex-net</sonar.organization>
     <sonar.projectKey>sinnet-reports</sonar.projectKey>
     <sonar.projectName>SinNet Reports</sonar.projectName>
-
-    <spring-boot-azure.version>2.3.2</spring-boot-azure.version>
   </properties>
 
 

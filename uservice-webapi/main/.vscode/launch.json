@@ -11,9 +11,6 @@
             "mainClass": "sinnet.Program",
             "projectName": "uservice-webapi-host",
             "env": {
-                // by design such variable is automatically porvide by DAPR sidecar
-                // but in vscode we run sidecar and app separately so we need to provide it manually
-                // and use the same value in the sidecar
                 "DAPR_GRPC_PORT": 11019,
             },
             "vmArgs": "-Drevision=0.0.0-LOCAL",

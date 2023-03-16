@@ -11,13 +11,9 @@ release.properties
 .settings/
 bin/
 
-
 # Visual Studio Code
 !.vscode
 .factorypath
-
-# OSX
-.DS_Store
 
 # Local environment
 .env

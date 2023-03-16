@@ -3,7 +3,7 @@ kind: Ingress
 metadata:
   name: nginx
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    # nginx.ingress.kubernetes.io/rewrite-target: /$1
     kubernetes.io/ingress.class: {{ .Values.ingress.class }}
     cert-manager.io/issuer: {{ include "letsencrypt.instance" . }}
 spec:
@@ -15,14 +15,7 @@ spec:
   - host: {{ include "ingress.host" . }}
     http:
       paths:
-        - path: /hello
-          pathType: Prefix
-          backend:
-            service:
-              name: uservice-webapi-svc
-              port:
-                number: 8080
-        - path: /q/graphql-ui
+        - path: /graphiql
           pathType: Prefix
           backend:
             service:
@@ -30,6 +23,13 @@ spec:
               port:
                 number: 8080
         - path: /graphql
+          pathType: Prefix
+          backend:
+            service:
+              name: uservice-webapi-svc
+              port:
+                number: 8080
+        - path: /actuator
           pathType: Prefix
           backend:
             service:
@@ -44,8 +44,9 @@ spec:
               port:
                 number: 8080
 
+        - path: /
         # https://stackoverflow.com/questions/60579877/nginx-returns-index-html-content-for-all-angular-files-including-scripts
-        - path: /(.*)
+        # - path: /(.*)
           pathType: Prefix
           backend:
             service:

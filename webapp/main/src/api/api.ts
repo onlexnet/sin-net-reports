@@ -24,6 +24,7 @@ export const apolloClientFactory = (jwtToken: string) => {
       headers: {
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Credentials": true,
+        "Access-Control-Allow-Methods": "OPTIONS, GET, POST, PUT, PATCH, DELETE",
         Authorization: `Bearer ${jwtToken}`,
       },
     });

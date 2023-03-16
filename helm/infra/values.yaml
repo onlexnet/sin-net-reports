@@ -78,13 +78,113 @@ tolerations: []
 
 affinity: {}
 
-namespace: onlex-infra1
-
-# dapr related settings
-# 1) general way: dashboard may be reached using: minikube service dapr-dashboard --url -n onlex-sinnet-localhost
-# 2) minikube way: allows retrieving the dashboard url by running the command "minikube service list"
-# more: https://github.com/dapr/dapr/blob/master/charts/dapr/README.md#example-of-installing-dapr-on-minikube
-#       https://docs.dapr.io/operations/hosting/kubernetes/kubernetes-deploy/#install-dapr-from-an-official-dapr-helm-chart
 dapr:
+  global:
+    mtls:
+      enabled: false
   dapr_dashboard:
     enabled: true
+
+opentelemetry-collector:
+  # https://github.com/open-telemetry/opentelemetry-helm-charts/blob/main/charts/opentelemetry-collector/values.yaml
+  mode: deployment
+  config:
+    extensions:
+      pprof: {}
+      zpages: {}
+      health_check: {}
+      memory_ballast: {}
+    receivers:
+      otlp:
+        protocols:
+          grpc:
+            endpoint: ${MY_POD_IP}:4317
+    processors:
+      batch: {}
+
+    exporters:
+
+      otlp:
+        endpoint: "onlex-infra-jaeger-collector.onlex-infra.svc.cluster.local:4317"
+        tls:
+          insecure: true
+
+      logging:
+        loglevel: info
+
+      tracing:
+      
+    service:
+      extensions: [pprof, zpages, health_check]
+      pipelines:
+        logs:
+          receivers: [otlp]
+          processors: [batch]
+          exporters: [otlp, logging]
+        metrics:
+          receivers: [otlp]
+          processors: [batch]
+          exporters: [otlp, logging]
+        traces:
+          receivers: [otlp]
+          processors: [batch]
+          exporters: [otlp, logging]
+        
+
+# opentelemetry-operator:
+#   # https://github.com/open-telemetry/opentelemetry-helm-charts/blob/main/charts/opentelemetry-operator/values.yaml
+#   # https://github.com/open-telemetry/opentelemetry-operator/blob/main/docs/api.md
+#   # https://www.youtube.com/watch?v=X60owauFkGA&t=1481s&ab_channel=Aspecto
+#   mode: sidecar
+#   admissionWebhooks:
+#     certManager:
+#       enabled: false # <-- hack - can't install if cert-manager is not installed earlier
+#   config:
+#       receivers:
+#         otlp:
+#           protocols:
+#             grpc:
+#             http:
+#       processors:
+#         batch:
+#       exporters:
+#         logging:
+#         otlp:
+#           endpoint: "onlex-infra-opentelemetry-collector.onlex-infra.svc.cluster.local:4317"
+#           tls:
+#             insecure: true
+#       service:
+#         telemetry:
+#           logs:
+#             level: "debug"
+#         pipelines:
+#           traces:
+#             receivers: [otlp]
+#             processors: []
+#             exporters: [logging, otlp]
+
+
+# Jaeger
+# https://github.com/jaegertracing/helm-charts/blob/main/charts/jaeger/values.yaml
+# https://github.com/jaegertracing/helm-charts/tree/main/charts/jaeger#all-in-one-in-memory-configuration
+jaeger:
+  # All in One In-Memory Configuration
+  provisionDataStore:
+    cassandra: false
+  allInOne:
+    enabled: true
+  storage:
+    type: none
+  agent:
+    enabled: false
+  collector:
+    enabled: false
+  query:
+    enabled: false
+
+# https://github.com/elastic/helm-charts/blob/main/elasticsearch/values.yaml
+elasticsearch:
+
+cert-manager:
+  # https://github.com/cert-manager/cert-manager/issues/3973
+  installCRDs: true

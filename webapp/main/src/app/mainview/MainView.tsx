@@ -52,7 +52,7 @@ const LocalView: React.FC<Props> = (props) => {
         return (
             <Stack>
                 <Stack.Item align="center">
-                    <Spinner label="Ładowanie przydatnych projektów ..." ariaLive="assertive" labelPosition="right" />
+                    <Spinner label="Ładowanie przydatnych projektów ....." ariaLive="assertive" labelPosition="right" />
                 </Stack.Item>
             </Stack>);
     }

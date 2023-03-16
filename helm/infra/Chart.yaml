@@ -23,10 +23,25 @@ version: 0.1.0
 appVersion: 0.1.0
 
 dependencies:
+
+# - name: opentelemetry-operator
+#   version: "0.24.3"
+#   repository: file://charts/opentelemetry-operator
+
+- name: cert-manager
+  version: "v1.11.0"
+  repository: file://charts/cert-manager
+
 - name: dapr
-  version: "1.9.6"
+  version: "1.10.2"
   repository: file://charts/dapr
-  condition: dapr.enabled
-  
+
+# - name: jaeger
+#   version: "0.69"
+#   repository: file://charts/jaeger
+
+# - name: opentelemetry-collector
+#   version: "0.50"
+#   repository: file://charts/opentelemetry-collector
 
 

@@ -23,13 +23,10 @@ trigger:
   branches:
     include:
       - master
-      - siudeks/*
 
   paths:
     include:
       # We have to include all folders where source files are located
-      - libs-java
-      - api
       - uservice-projects
 
 pr:

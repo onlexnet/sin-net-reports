@@ -17,17 +17,35 @@ spec:
       annotations:
         # https://docs.dapr.io/reference/arguments-annotations-overview/
         dapr.io/enabled: "true"
+        dapr.io/config: "tracing"
         dapr.io/app-id: "uservice-projects"
-        dapr.io/app-port: "8080"
+        dapr.io/app-port: "18080"
         dapr.io/app-protocol: grpc
+        # sidecar.opentelemetry.io/inject: "true"
+        # instrumentation.opentelemetry.io/inject-java: "true"
 
     spec:
+      volumes:
+      - name: data-volume
+        emptyDir: {}
       imagePullSecrets:
         - name: regcred
       initContainers:
+        - name: download-otel
+          image: curlimages/curl
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              #!/bin/bash
+              echo "Download OTEL lib"
+              # -L used to avoid downloading file with size 0
+              curl -L -o /pod-data/opentelemetry-javaagent.jar https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/v1.23.0/opentelemetry-javaagent.jar
+          volumeMounts:
+          - name: data-volume
+            mountPath: /pod-data
         - name: initdb
-          image: uservice-projects-initdb:{{ required "Tag of onlex-sinnet-projects image has to be provided" .Values.imageProjectsTag }}
-          imagePullPolicy: Never
+          image: sinnet.azurecr.io/uservice-projects-initdb:{{ required "Tag of onlex-sinnet-projects image has to be provided" .Values.imageProjectsTag }}
+          imagePullPolicy: IfNotPresent
           env:
           - name: SPRING_PROFILES_ACTIVE
             value: "prod"
@@ -63,13 +81,28 @@ spec:
                 key: services_database_password
       containers:
         - name: host
-          # image: sinnet.azurecr.io/uservice-projects-host:{{ required "Tag of onlex-sinnet-projects image has to be provided" .Values.imageProjectsTag }}
-          image: uservice-projects-host:{{ required "Tag of onlex-sinnet-projects image has to be provided" .Values.imageProjectsTag }}
+          image: sinnet.azurecr.io/uservice-projects-host:{{ required "Tag of onlex-sinnet-projects image has to be provided" .Values.imageProjectsTag }}
           # when use local docker image: Never to use locally build image, or Always when working on real k8s environment
-          imagePullPolicy: Never
-          ports:
-          - containerPort: 8080
+          imagePullPolicy: IfNotPresent
           env:
+          
+          # OTEL
+          # https://opentelemetry.io/docs/instrumentation/java/automatic/#setup
+          # https://opentelemetry.io/docs/concepts/sdk-configuration/otlp-exporter-configuration/
+          - name: JAVA_TOOL_OPTIONS
+            value: "-javaagent:/pod-data/opentelemetry-javaagent.jar"
+          - name: OTEL_SERVICE_NAME
+            value: "uservice-projects"
+          - name: OTEL_EXPORTER_OTLP_ENDPOINT
+            value: onlex-infra-opentelemetry-collector.onlex-infra.svc.cluster.local:4317
+          - name: OTEL_EXPORTER_OTLP_PROTOCOL
+            value: grpc
+
+          # DAPR
+          - name: APP_PORT
+            value: "18080"
+          
+          # APP
           - name: SPRING_PROFILES_ACTIVE
             value: "prod"
           - name: DATABASE_HOST
@@ -102,3 +135,6 @@ spec:
               secretKeyRef:
                 name: app-secrets
                 key: services_database_password
+          volumeMounts:
+          - name: data-volume
+            mountPath: /pod-data
