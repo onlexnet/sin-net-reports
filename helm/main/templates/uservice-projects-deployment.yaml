@@ -94,7 +94,7 @@ spec:
           - name: OTEL_SERVICE_NAME
             value: "uservice-projects"
           - name: OTEL_EXPORTER_OTLP_ENDPOINT
-            value: onlex-infra-opentelemetry-collector.onlex-infra.svc.cluster.local:4317
+            value: http://onlex-infra-opentelemetry-collector.onlex-infra.svc.cluster.local:4317
           - name: OTEL_EXPORTER_OTLP_PROTOCOL
             value: grpc
 
