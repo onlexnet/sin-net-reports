@@ -49,14 +49,14 @@ public interface DailyReports {
     }
   }
 
-    /** Description of a single service. */
-    @NoArgsConstructor
-    @Data
-    @AllArgsConstructor
-    @Builder
-    class ServiceSummary {
-        /** Date when services has been done. */
-        private LocalDate when;
-        private String what;
-    }
+  /** Description of a single service. */
+  @NoArgsConstructor
+  @Data
+  @AllArgsConstructor
+  @Builder
+  class ServiceSummary {
+    /** Date when services has been done. */
+    private LocalDate when;
+    private String what;
+  }
 }

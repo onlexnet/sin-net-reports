@@ -4,6 +4,9 @@ import java.util.UUID;
 
 import lombok.Value;
 
+/**
+ * TBD.
+ */
 @Value
 public class Entity<VALUE> {
   @Deprecated

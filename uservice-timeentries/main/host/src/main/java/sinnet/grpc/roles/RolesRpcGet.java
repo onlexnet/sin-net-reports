@@ -16,19 +16,19 @@ import sinnet.read.RolesProjector;
 @Slf4j
 @AllArgsConstructor
 public class RolesRpcGet implements Mapper {
-    private final RolesProjector.Provider rolesProjector;
+  private final RolesProjector.Provider rolesProjector;
 
-    public void query(GetRequest request, StreamObserver<GetReply> responseObserver) {
-      var userToken = request.getUserToken();
-      var emailAsString = userToken.getRequestorEmail();
-      var email = ValEmail.of(emailAsString);
-      var projectIdAsString = userToken.getProjectId();
-      var projectId = UUID.fromString(projectIdAsString);
-      var result = rolesProjector.find(email, projectId);
-      var reply = GetReply.newBuilder()
-          .setRole(toDto(result))
-          .build();
-      responseObserver.onNext(reply);
-      responseObserver.onCompleted();
-    }
+  public void query(GetRequest request, StreamObserver<GetReply> responseObserver) {
+    var userToken = request.getUserToken();
+    var emailAsString = userToken.getRequestorEmail();
+    var email = ValEmail.of(emailAsString);
+    var projectIdAsString = userToken.getProjectId();
+    var projectId = UUID.fromString(projectIdAsString);
+    var result = rolesProjector.find(email, projectId);
+    var reply = GetReply.newBuilder()
+        .setRole(toDto(result))
+        .build();
+    responseObserver.onNext(reply);
+    responseObserver.onCompleted();
+  }
 }

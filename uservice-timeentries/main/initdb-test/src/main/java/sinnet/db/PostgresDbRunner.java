@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.testcontainers.containers.PostgreSQLContainer;
 
+/** Will be described. */
 public final class PostgresDbRunner {
 
   private static final String TESTCONTAINERS = "testcontainers";
@@ -12,6 +13,7 @@ public final class PostgresDbRunner {
       .withPassword(TESTCONTAINERS)
       .withDatabaseName(TESTCONTAINERS);
 
+  /** Will be described. */
   public SafeAutoCloseable start() {
     postgres.start();
     var items = List.of(
@@ -32,6 +34,7 @@ public final class PostgresDbRunner {
         : () -> System.setProperty(propertyName, actual);
   }
 
+  /** Will be described. */
   @FunctionalInterface
   public interface SafeAutoCloseable extends AutoCloseable {
     void close();

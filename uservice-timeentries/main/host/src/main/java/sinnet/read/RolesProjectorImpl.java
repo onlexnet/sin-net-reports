@@ -22,7 +22,9 @@ public class RolesProjectorImpl implements RolesProjector.Provider {
     var probe = new ServicemanDbo().setProjectId(projectId).setEmail(testedPerson.getValue());
     var example = Example.of(probe);
     var candidates = repo.findAll(example, Sort.unsorted());
-    if (candidates.isEmpty()) return Role.NONE;
+    if (candidates.isEmpty()) {
+      return Role.NONE;
+    }
     return Role.USER;
   }
 }

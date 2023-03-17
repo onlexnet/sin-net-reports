@@ -11,20 +11,20 @@ import lombok.ToString;
 @NoArgsConstructor
 public final class ValName {
 
-    private static ValName empty = new ValName(null);
+  private static ValName empty = new ValName(null);
 
-    @Getter
-    private String value;
+  @Getter
+  private String value;
 
-    private ValName(String value) {
-        this.value = value;
-    }
+  private ValName(String value) {
+    this.value = value;
+  }
 
-    public static ValName of(String value) {
-        return new ValName(value);
-    }
+  public static ValName of(String value) {
+    return new ValName(value);
+  }
 
-    public static ValName empty() {
-        return empty;
-    }
+  public static ValName empty() {
+    return empty;
+  }
 }

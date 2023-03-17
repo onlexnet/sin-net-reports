@@ -14,12 +14,12 @@ import lombok.NoArgsConstructor;
 @Table(name =  Const.PROJECTION_NAME)
 public class DailyReportEntry {
 
-    /** Unique id of th record. */
-    @Id
-    private Long id;
+  /** Unique id of th record. */
+  @Id
+  private Long id;
 
-    /** When the service has been provided. */
-    private LocalDate when;
+  /** When the service has been provided. */
+  private LocalDate when;
 
-    private String description;
+  private String description;
 }

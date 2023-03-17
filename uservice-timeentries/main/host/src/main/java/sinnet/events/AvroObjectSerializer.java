@@ -15,7 +15,7 @@ import lombok.SneakyThrows;
  * Not optimized ser/deser component for Avro generated classes.
  * Used: https://stackoverflow.com/questions/60703971/jsonmappingexception-not-a-map-not-an-array-or-not-an-enum
  */
-final public class AvroObjectSerializer implements DaprObjectSerializer {
+public final class AvroObjectSerializer implements DaprObjectSerializer {
 
   private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
@@ -24,6 +24,7 @@ final public class AvroObjectSerializer implements DaprObjectSerializer {
         org.apache.avro.specific.SpecificRecord.class, // Interface implemented by all generated Avro-Classes
         JacksonIgnoreAvroPropertiesMixIn.class);
   }
+
   @Override
   @SneakyThrows
   public byte[] serialize(Object o) throws IOException {
@@ -44,7 +45,10 @@ final public class AvroObjectSerializer implements DaprObjectSerializer {
     return "application/json";
   }
 
-  public abstract class JacksonIgnoreAvroPropertiesMixIn {
+/**
+ * TBD.
+ */
+public abstract class JacksonIgnoreAvroPropertiesMixIn {
 
     @JsonIgnore
     public abstract org.apache.avro.Schema getSchema();

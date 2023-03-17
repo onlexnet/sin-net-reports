@@ -1,9 +1,10 @@
 package sinnet.models;
-
 import java.util.UUID;
-
 import lombok.Value;
 
+/**
+ * TBD.
+ */
 @Value
 public class ProjectId {
 

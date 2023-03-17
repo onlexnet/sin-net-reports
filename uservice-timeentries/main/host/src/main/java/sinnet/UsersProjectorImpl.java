@@ -11,6 +11,9 @@ import sinnet.read.ServicemanRepo;
 import sinnet.read.UserModel;
 import sinnet.read.UsersRepositoryEx;
 
+/**
+ * TBD.
+ */
 @Service
 @RequiredArgsConstructor
 public class UsersProjectorImpl implements UsersRepositoryEx {
