@@ -16,14 +16,23 @@ import org.springframework.stereotype.Repository;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+/**
+ * TBD.
+ */
 @Repository
 public interface ActionRepository extends JpaRepository<ActionRepository.ActionDbo, UUID> {
   
   void deleteByProjectIdAndEntityIdAndEntityVersion(UUID projectId, UUID entityId, long version);
+
   ActionDbo findByProjectIdAndEntityIdAndEntityVersion(UUID projectId, UUID entityId, long version);
+
   ActionDbo findByProjectIdAndEntityId(UUID projectId, UUID entityId);
+
   List<ActionDbo> findByProjectIdAndDateGreaterThanEqualAndDateLessThanEqual(UUID projectId, LocalDate from, LocalDate to);
 
+  /**
+   * TBD.
+   */
   @Entity
   @Table(name = "actions")
   @Data

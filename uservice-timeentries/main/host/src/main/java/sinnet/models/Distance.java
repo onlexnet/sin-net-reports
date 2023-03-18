@@ -9,11 +9,11 @@ public final class Distance {
 
   private static Distance empty = new Distance(0);
 
-  @Getter
   /**
    * Value of the distance.
    * Invariant: value >=0.
    */
+  @Getter
   private final int value;
 
   private Distance(int value) {

@@ -3,6 +3,9 @@ package sinnet.models;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
+/**
+ * TBD.
+ */
 @EqualsAndHashCode
 public final class ActionDuration {
 

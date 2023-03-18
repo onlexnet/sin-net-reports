@@ -10,6 +10,9 @@ import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+/**
+ * TBD.
+ */
 @Entity
 @Table(name = "serviceman")
 @Data

@@ -12,6 +12,9 @@ import sinnet.models.Entity;
 import sinnet.models.ShardedId;
 import sinnet.write.ActionRepositoryEx;
 
+/**
+ * TBD.
+ */
 @Service
 @RequiredArgsConstructor
 public class ActionRepositoryExImpl implements ActionRepositoryEx, MapperDbo {

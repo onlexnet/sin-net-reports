@@ -7,6 +7,9 @@ import org.springframework.stereotype.Repository;
 
 import io.vavr.collection.List;
 
+/**
+ * TBD.
+ */
 @Repository
 public interface ServicemanRepo extends JpaRepository<ServicemanDbo, UUID> {
 

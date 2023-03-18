@@ -4,6 +4,9 @@ import java.util.UUID;
 
 import lombok.Value;
 
+/**
+ * TBD.
+ */
 @Value
 public class ShardedId {
 
@@ -12,7 +15,7 @@ public class ShardedId {
   private long version;
 
   public ShardedId next() {
-    return new ShardedId(this.projectId, this.id, version+1);
+    return new ShardedId(this.projectId, this.id, version + 1);
   }
 
   public static ShardedId of(UUID projectId, UUID id, long version) {

@@ -5,6 +5,9 @@ import java.time.LocalDateTime;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+/**
+ * TBD.
+ */
 @Data
 @Accessors(chain = true)
 public final class CustomerSecretEx {

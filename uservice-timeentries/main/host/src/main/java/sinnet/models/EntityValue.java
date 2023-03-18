@@ -2,6 +2,9 @@ package sinnet.models;
 
 import java.util.UUID;
 
+/**
+ * TBD.
+ */
 public interface EntityValue<T> {
 
   default Entity<T> withId(UUID projectId, UUID entityId, long version) {

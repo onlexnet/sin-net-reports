@@ -8,6 +8,9 @@ import sinnet.grpc.roles.GetReply;
 import sinnet.grpc.roles.GetRequest;
 import sinnet.grpc.roles.RbacGrpc.RbacImplBase;
 
+/**
+ * TBD.
+ */
 @Component
 @RequiredArgsConstructor
 public class RolesRpc extends RbacImplBase {

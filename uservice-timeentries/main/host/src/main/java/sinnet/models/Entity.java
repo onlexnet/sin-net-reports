@@ -8,15 +8,18 @@ import lombok.Value;
  * TBD.
  */
 @Value
-public class Entity<VALUE> {
+public class Entity<V> {
+
   @Deprecated
   private UUID projectId;
   @Deprecated
   private UUID entityId;
   @Deprecated
   private long version;
+
   public ShardedId getId() {
     return ShardedId.of(projectId, entityId, version);
   }
-  private VALUE value;
+
+  private V value;
 }

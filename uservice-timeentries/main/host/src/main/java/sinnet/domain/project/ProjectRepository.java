@@ -14,9 +14,15 @@ import org.springframework.stereotype.Repository;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+/**
+ * TBD.
+ */
 @Repository
 public interface ProjectRepository extends JpaRepository<ProjectRepository.DboTemplate, UUID> {
 
+  /**
+   * TBD.
+   */
   @Entity
   @Table(name = "projects")
   @Data

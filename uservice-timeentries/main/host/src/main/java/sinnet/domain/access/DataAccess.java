@@ -8,13 +8,20 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import sinnet.models.UserToken;
 
+/**
+ * TBD.
+ */
 public interface DataAccess {
 
+  /**
+   * TBD.
+   */
   interface Provider {
 
     /**
      * TBD.
-     * @param invoker
+     *
+     * @param invoker tbd
      * @param <T> TBD
      * @return TBD.
      */
@@ -28,30 +35,45 @@ public interface DataAccess {
    */
   interface AccessOptions<T> {
 
-      AccessOptions<T> unlimited(AccessUnlimited<T> handler);
+    AccessOptions<T> unlimited(AccessUnlimited<T> handler);
 
-      AccessOptions<T> limitedByProject(AccessLimitedByProject<T> handler);
+    AccessOptions<T> limitedByProject(AccessLimitedByProject<T> handler);
 
-      AccessOptions<T> limitedByGuardian(AccessLimitedByGuardian<T> handler);
+    AccessOptions<T> limitedByGuardian(AccessLimitedByGuardian<T> handler);
 
-      T apply(T defaultValue);
+    T apply(T defaultValue);
   }
 
+  /**
+   * TBD.
+   */
   @FunctionalInterface
   interface AccessUnlimited<T> {
-      T handle();
+
+    T handle();
   }
 
+  /**
+   * TBD.
+   */
   @FunctionalInterface
   interface AccessLimitedByProject<T> {
-      T handle(Seq<UUID> projectIds);
+
+    T handle(Seq<UUID> projectIds);
   }
 
+  /**
+   * TBD.
+   */
   @FunctionalInterface
   interface AccessLimitedByGuardian<T> {
-      T handle(Seq<UUID> projectIds, UUID customerId);
+
+    T handle(Seq<UUID> projectIds, UUID customerId);
   }
 
+  /**
+   * TBD.
+   */
   @NoArgsConstructor
   final class EffectiveAccess<T> implements AccessOptions<T> {
 
@@ -87,15 +109,15 @@ public interface DataAccess {
     public T apply(T defaultValue) {
 
       if (limitedToGuardian != null && limitedToProjects != null && accessLimitedToGuardianHandler != null) {
-          return accessLimitedToGuardianHandler.handle(limitedToProjects, limitedToGuardian);
+        return accessLimitedToGuardianHandler.handle(limitedToProjects, limitedToGuardian);
       }
 
       if (limitedToProjects != null && accessLimitedToProjectsHandler != null) {
-          return accessLimitedToProjectsHandler.handle(limitedToProjects);
+        return accessLimitedToProjectsHandler.handle(limitedToProjects);
       }
 
       if (accessUnlimitedHandler != null) {
-          return accessUnlimitedHandler.handle();
+        return accessUnlimitedHandler.handle();
       }
 
       return defaultValue;

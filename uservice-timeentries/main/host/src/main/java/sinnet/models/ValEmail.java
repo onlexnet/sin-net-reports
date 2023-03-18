@@ -4,6 +4,9 @@ import org.apache.commons.lang3.StringUtils;
 
 import lombok.Value;
 
+/**
+ * TBD.
+ */
 @Value
 public final class ValEmail {
 
@@ -11,9 +14,14 @@ public final class ValEmail {
 
   private String value;
 
+  /**
+   * TBD.
+   */
   public static ValEmail of(String value) {
-    if (StringUtils.isBlank(value))
+
+    if (StringUtils.isBlank(value)) {
       return EMPTY;
+    }
     return new ValEmail(value);
   }
 

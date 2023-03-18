@@ -7,8 +7,14 @@ import sinnet.models.Distance;
 import sinnet.models.ValEmail;
 import sinnet.models.Entity;
 
+/**
+ * TBD.
+ */
 public interface MapperDbo {
 
+  /**
+   * TBD.
+   */
   default ActionDbo toDbo(Entity<ActionValue> entity) {
     var id = entity.getId();
     var value = entity.getValue();
@@ -27,6 +33,9 @@ public interface MapperDbo {
 
   }
 
+  /**
+   * TBD.
+   */
   default Entity<ActionValue> fromDbo(ActionDbo dbo) {
     return new ActionValue()
       .setWho(ValEmail.of(dbo.getServicemanEmail()))

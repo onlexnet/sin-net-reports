@@ -5,9 +5,12 @@ import sinnet.read.RolesProjector;
 
 interface Mapper {
 
-    default Role toDto(RolesProjector.Role role) {
-        if (role == RolesProjector.Role.USER) return Role.SERVICEMAN;
-        return Role.NONE;
+  default Role toDto(RolesProjector.Role role) {
+    
+    if (role == RolesProjector.Role.USER) {
+      return Role.SERVICEMAN;
     }
+    return Role.NONE;
+  }
 }
 

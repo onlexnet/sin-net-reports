@@ -3,6 +3,9 @@ package sinnet.models;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+/**
+ * TBD.
+ */
 @Data
 @Accessors(chain = true, fluent = true)
 public final class CustomerValue {

@@ -11,8 +11,14 @@ import sinnet.models.ValName;
 import sinnet.models.ValEmail;
 import sinnet.models.ShardedId;
 
+/**
+ * TBD.
+ */
 public interface MapperDbo {
 
+  /**
+   * TBD.
+   */
   default CustomerContact fromDbo(CustomerRepository.CustomerDboContact dbo) {
     return new CustomerContact()
       .setFirstName(dbo.getFirstName())
@@ -21,6 +27,9 @@ public interface MapperDbo {
       .setEmail(dbo.getEmail());
   }
 
+  /**
+   * TBD.
+   */
   default CustomerSecretEx fromDbo(CustomerRepository.CustomerDboSecretEx dbo) {
     return new CustomerSecretEx()
       .setUsername(dbo.getUsername())
@@ -32,6 +41,9 @@ public interface MapperDbo {
       .setChangedWhen(dbo.getChangedWhen());
   }
 
+  /**
+   * TBD.
+   */
   default CustomerSecret fromDbo(CustomerRepository.CustomerDboSecret dbo) {
     return new CustomerSecret()
       .setUsername(dbo.getUsername())
@@ -41,39 +53,42 @@ public interface MapperDbo {
       .setChangedWhen(dbo.getChangedWhen());
   }
 
+  /**
+   * TBD.
+   */
   default CustomerModel fromDbo(CustomerRepository.CustomerDbo dbo) {
     var id = ShardedId.of(dbo.getProjectId(), dbo.getEntityId() , dbo.getEntityVersion());
     var contacts = dbo.getContacts().stream().map(this::fromDbo).toList();
     var secrets = dbo.getSecrets().stream().map(this::fromDbo).toList();
     var secretsEx = dbo.getSecretsEx().stream().map(this::fromDbo).toList();
     var value = new CustomerValue()
-      .operatorEmail(ValEmail.of(dbo.getOperatorEmail()))
-      .billingModel(dbo.getBillingModel())
-      .supportStatus(dbo.getSupportStatus())
-      .distance(dbo.getDistance())
-      .customerName(ValName.of(dbo.getCustomerName()))
-      .customerCityName(ValName.of(dbo.getCustomerCityName()))
-      .customerAddress(dbo.getCustomerAddress())
-      .nfzUmowa(dbo.getNfzUmowa())
-      .nfzMaFilie(dbo.getNfzMaFilie())
-      .nfzLekarz(dbo.getNfzLekarz())
-      .nfzPolozna(dbo.getNfzPolozna())
-      .nfzPielegniarkaSrodowiskowa(dbo.getNfzPielegniarka_srodowiskowa())
-      .nfzMedycynaSzkolna(dbo.getNfz_medycyna_szkolna())
-      .nfzTransportSanitarny(dbo.getNfz_transport_sanitarny())
-      .nfzNocnaPomocLekarska(dbo.getNfz_nocna_pomoc_lekarska())
-      .nfzAmbulatoryjnaOpiekaSpecjalistyczna(dbo.getNfz_ambulatoryjna_opieka_specjalistyczna())
-      .nfzRehabilitacja(dbo.getNfz_rehabilitacja())
-      .nfzStomatologia(dbo.getNfz_stomatologia())
-      .nfzPsychiatria(dbo.getNfz_psychiatria())
-      .nfzSzpitalnictwo(dbo.getNfzSzpitalnictwo())
-      .nfzProgramyProfilaktyczne(dbo.getNfzProgramyProfilaktyczne())
-      .nfzZaopatrzenieOrtopedyczne(dbo.getNfzZaopatrzenieOrtopedyczne())
-      .nfzOpiekaDlugoterminowa(dbo.getNfzOpiekaDlugoterminowa())
-      .nfzNotatki(dbo.getNfzNotatki())
-      .komercjaJest(dbo.getKomercjaJest())
-      .komercjaNotatki(dbo.getKomercjaNotatki())
-      .daneTechniczne(dbo.getDaneTechniczne());
+        .operatorEmail(ValEmail.of(dbo.getOperatorEmail()))
+        .billingModel(dbo.getBillingModel())
+        .supportStatus(dbo.getSupportStatus())
+        .distance(dbo.getDistance())
+        .customerName(ValName.of(dbo.getCustomerName()))
+        .customerCityName(ValName.of(dbo.getCustomerCityName()))
+        .customerAddress(dbo.getCustomerAddress())
+        .nfzUmowa(dbo.getNfzUmowa())
+        .nfzMaFilie(dbo.getNfzMaFilie())
+        .nfzLekarz(dbo.getNfzLekarz())
+        .nfzPolozna(dbo.getNfzPolozna())
+        .nfzPielegniarkaSrodowiskowa(dbo.getNfzPielegniarka_srodowiskowa())
+        .nfzMedycynaSzkolna(dbo.getNfz_medycyna_szkolna())
+        .nfzTransportSanitarny(dbo.getNfz_transport_sanitarny())
+        .nfzNocnaPomocLekarska(dbo.getNfz_nocna_pomoc_lekarska())
+        .nfzAmbulatoryjnaOpiekaSpecjalistyczna(dbo.getNfz_ambulatoryjna_opieka_specjalistyczna())
+        .nfzRehabilitacja(dbo.getNfz_rehabilitacja())
+        .nfzStomatologia(dbo.getNfz_stomatologia())
+        .nfzPsychiatria(dbo.getNfz_psychiatria())
+        .nfzSzpitalnictwo(dbo.getNfzSzpitalnictwo())
+        .nfzProgramyProfilaktyczne(dbo.getNfzProgramyProfilaktyczne())
+        .nfzZaopatrzenieOrtopedyczne(dbo.getNfzZaopatrzenieOrtopedyczne())
+        .nfzOpiekaDlugoterminowa(dbo.getNfzOpiekaDlugoterminowa())
+        .nfzNotatki(dbo.getNfzNotatki())
+        .komercjaJest(dbo.getKomercjaJest())
+        .komercjaNotatki(dbo.getKomercjaNotatki())
+        .daneTechniczne(dbo.getDaneTechniczne());
     return new CustomerModel().setId(id).setValue(value).setContacts(contacts).setSecrets(secrets).setSecretsEx(secretsEx);
   }
 

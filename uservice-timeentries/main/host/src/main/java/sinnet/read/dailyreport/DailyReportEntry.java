@@ -9,6 +9,9 @@ import org.springframework.data.annotation.Id;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * TBD.
+ */
 @NoArgsConstructor
 @Data
 @Table(name =  Const.PROJECTION_NAME)

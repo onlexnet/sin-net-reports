@@ -1,4 +1,5 @@
 package sinnet.models;
+
 import java.util.UUID;
 import lombok.Value;
 

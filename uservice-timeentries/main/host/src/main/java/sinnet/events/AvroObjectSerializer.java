@@ -45,10 +45,10 @@ public final class AvroObjectSerializer implements DaprObjectSerializer {
     return "application/json";
   }
 
-/**
- * TBD.
- */
-public abstract class JacksonIgnoreAvroPropertiesMixIn {
+  /**
+   * TBD.
+   */
+  public abstract class JacksonIgnoreAvroPropertiesMixIn {
 
     @JsonIgnore
     public abstract org.apache.avro.Schema getSchema();
