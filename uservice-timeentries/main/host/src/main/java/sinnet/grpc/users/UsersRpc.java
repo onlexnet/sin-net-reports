@@ -6,6 +6,9 @@ import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
 import sinnet.grpc.users.UsersGrpc.UsersImplBase;
 
+/**
+ * TBD.
+ */
 @Component
 @RequiredArgsConstructor
 public class UsersRpc extends UsersImplBase {

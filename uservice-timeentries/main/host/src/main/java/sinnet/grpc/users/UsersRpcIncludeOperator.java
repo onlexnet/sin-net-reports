@@ -4,6 +4,9 @@ import org.springframework.stereotype.Component;
 
 import sinnet.grpc.mapping.RpcCommandHandler;
 
+/**
+ * TBD.
+ */
 @Component
 public final class UsersRpcIncludeOperator
              implements RpcCommandHandler<IncludeOperatorCommand, IncludeOperatorResult> {

@@ -7,6 +7,9 @@ import org.springframework.stereotype.Component;
 import io.grpc.stub.StreamObserver;
 import sinnet.models.ShardedId;
 
+/**
+ * TBD.
+ */
 @Component
 public class CustomersRpcReserve implements sinnet.grpc.common.Mapper {
 

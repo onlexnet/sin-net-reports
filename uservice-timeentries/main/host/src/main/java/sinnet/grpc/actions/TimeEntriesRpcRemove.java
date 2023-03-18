@@ -9,9 +9,11 @@ import sinnet.grpc.timeentries.RemoveCommand;
 import sinnet.grpc.timeentries.RemoveResult;
 import sinnet.write.ActionRepositoryEx;
 
+/**
+ * TBD.
+ */
 @Component
 @RequiredArgsConstructor
-@Slf4j
 public class TimeEntriesRpcRemove implements
     RpcCommandHandler<RemoveCommand, RemoveResult>,
     sinnet.grpc.common.Mapper {

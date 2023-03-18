@@ -30,6 +30,27 @@ public interface MapperDto extends sinnet.grpc.common.Mapper {
 
   /**
    * TBD.
+   */
+  default Entity<ActionValue> fromDto(TimeEntryModel dto) {
+    var projectIdAsString = dto.getEntityId().getProjectId();
+    var projectId = UUID.fromString(projectIdAsString);
+    var entityIdAsString = dto.getEntityId().getEntityId();
+    var entityId = UUID.fromString(entityIdAsString);
+    var entityVersion = dto.getEntityId().getEntityVersion();
+    var customerIdAsString = dto.getCustomerId();
+    var customerId = UUID.fromString(customerIdAsString);
+    var value = new ActionValue()
+        .setWho(ValEmail.of(dto.getServicemanEmail()))
+        .setWhen(fromDto(dto.getWhenProvided()))
+        .setWhom(customerId)
+        .setWhat(dto.getDescription())
+        .setHowLong(ActionDuration.of(dto.getDuration()))
+        .setHowFar(Distance.of(dto.getDistance()));
+    return value.withId(projectId, entityId, entityVersion);
+  }
+
+  /**
+   * TBD.
   */
   default sinnet.grpc.timeentries.LocalDate.Builder toDto(LocalDate it) {
 
@@ -56,28 +77,6 @@ public interface MapperDto extends sinnet.grpc.common.Mapper {
       .set(it.getValue().getHowLong().getValue(), b -> b::setDuration)
       .set(it.getValue().getHowFar().getValue(), b -> b::setDistance)
       .done().build();
-  }
-
-  /**
-   * TBD.
-   */
-  default Entity<ActionValue> fromDto(TimeEntryModel dto) {
-    var projectIdAsString = dto.getEntityId().getProjectId();
-    var projectId = UUID.fromString(projectIdAsString);
-    var entityIdAsString = dto.getEntityId().getEntityId();
-    var entityId = UUID.fromString(entityIdAsString);
-    var entityVersion = dto.getEntityId().getEntityVersion();
-    var customerIdAsString = dto.getCustomerId();
-    var customerId = UUID.fromString(customerIdAsString);
-    var value = new ActionValue()
-        .setWho(ValEmail.of(dto.getServicemanEmail()))
-        .setWhen(fromDto(dto.getWhenProvided()))
-        .setWhom(customerId)
-        .setWhat(dto.getDescription())
-        .setHowLong(ActionDuration.of(dto.getDuration()))
-        .setHowFar(Distance.of(dto.getDistance()));
-    return value.withId(projectId, entityId, entityVersion);
-
   }
 
 }

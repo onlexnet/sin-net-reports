@@ -11,6 +11,9 @@ import sinnet.grpc.timeentries.GetQuery;
 import sinnet.grpc.timeentries.GetReply;
 import sinnet.write.ActionRepositoryEx;
 
+/**
+ * TBD.
+ */
 @Component
 @RequiredArgsConstructor
 @Slf4j

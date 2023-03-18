@@ -15,6 +15,9 @@ import sinnet.models.Entity;
 import sinnet.models.ValEmail;
 import sinnet.write.ActionRepositoryEx;
 
+/**
+ * TBD.
+ */
 @Component
 @RequiredArgsConstructor
 public class TimeEntriesRpcSearch implements RpcQueryHandler<SearchQuery, SearchReply>, MapperDto {

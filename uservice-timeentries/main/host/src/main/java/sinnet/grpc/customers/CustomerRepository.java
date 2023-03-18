@@ -20,6 +20,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
+/**
+ * TBD.
+ */
 @Repository
 public interface CustomerRepository extends JpaRepository<CustomerRepository.CustomerDbo, UUID> {
 
@@ -29,6 +32,9 @@ public interface CustomerRepository extends JpaRepository<CustomerRepository.Cus
   
   CustomerDbo findByProjectIdAndEntityId(UUID projectId, UUID entityId);
 
+  /**
+   * TBD.
+   */
   @Entity
   @Table(name = "customers")
   @Data
@@ -83,28 +89,28 @@ public interface CustomerRepository extends JpaRepository<CustomerRepository.Cus
     private Boolean nfzPolozna;
 
     @Column(name = "nfz_pielegniarka_srodowiskowa")
-    private Boolean nfzPielegniarka_srodowiskowa;
+    private Boolean nfzPielegniarkaSrodowiskowa;
 
     @Column(name = "nfz_medycyna_szkolna")
-    private Boolean nfz_medycyna_szkolna;
+    private Boolean nfzMedycynaSzkolna;
 
     @Column(name = "nfz_transport_sanitarny")
-    private Boolean nfz_transport_sanitarny;
+    private Boolean nfzTransportSanitarny;
 
     @Column(name = "nfz_nocna_pomoc_lekarska")
-    private Boolean nfz_nocna_pomoc_lekarska;
+    private Boolean nfzNocnaPomocLekarska;
 
     @Column(name = "nfz_ambulatoryjna_opieka_specjalistyczna")
-    private Boolean nfz_ambulatoryjna_opieka_specjalistyczna;
+    private Boolean nfzAmbulatoryjnaOpiekaSpecjalistyczna;
 
     @Column(name = "nfz_rehabilitacja")
-    private Boolean nfz_rehabilitacja;
+    private Boolean nfzRehabilitacja;
 
     @Column(name = "nfz_stomatologia")
-    private Boolean nfz_stomatologia;
+    private Boolean nfzStomatologia;
 
     @Column(name = "nfz_psychiatria")
-    private Boolean nfz_psychiatria;
+    private Boolean nfzPsychiatria;
 
     @Column(name = "nfz_szpitalnictwo")
     private Boolean nfzSzpitalnictwo;
@@ -143,6 +149,9 @@ public interface CustomerRepository extends JpaRepository<CustomerRepository.Cus
     private List<CustomerDboSecretEx> secretsEx;
   }
 
+  /**
+   * TBD.
+   */
   @Data
   @Accessors(chain = true)
   @Embeddable
@@ -161,6 +170,9 @@ public interface CustomerRepository extends JpaRepository<CustomerRepository.Cus
     private String email;
   }
 
+  /**
+   * TBD.
+   */
   @Data
   @Accessors(chain = true)
   @Embeddable
@@ -182,6 +194,9 @@ public interface CustomerRepository extends JpaRepository<CustomerRepository.Cus
     private LocalDateTime changedWhen;
   }
 
+  /**
+   * TBD.
+   */
   @Data
   @Accessors(chain = true)
   @Embeddable

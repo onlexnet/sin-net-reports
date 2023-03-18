@@ -7,9 +7,11 @@ import lombok.extern.slf4j.Slf4j;
 import sinnet.grpc.mapping.RpcCommandHandler;
 import sinnet.models.ValEmail;
 
+/**
+ * TBD.
+ */
 @Component
 @RequiredArgsConstructor
-@Slf4j
 public class CustomersRpcUpdate implements
     RpcCommandHandler<UpdateCommand, UpdateResult>,
     MapperDto {

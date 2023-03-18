@@ -15,6 +15,9 @@ import sinnet.models.ShardedId;
 import sinnet.models.ValEmail;
 import sinnet.write.ActionRepositoryEx;
 
+/**
+ * TBD.
+ */
 @Component
 @RequiredArgsConstructor
 public class TimeEntriesRpcReserve implements RpcCommandHandler<ReserveCommand, ReserveResult>, MapperDto {

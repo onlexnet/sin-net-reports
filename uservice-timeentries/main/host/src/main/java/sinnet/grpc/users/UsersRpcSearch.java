@@ -11,6 +11,9 @@ import sinnet.grpc.mapping.RpcQueryHandler;
 import sinnet.models.ValEmail;
 import sinnet.read.UsersRepositoryEx;
 
+/**
+ * TBD.
+ */
 @Component
 @RequiredArgsConstructor
 public class UsersRpcSearch implements RpcQueryHandler<SearchRequest, SearchReply>, MapperDto {
@@ -29,7 +32,7 @@ public class UsersRpcSearch implements RpcQueryHandler<SearchRequest, SearchRepl
     // project?
     var email = ValEmail.of(emailAsString);
     var authorized = !result.map(it -> Objects.equals(it, email)).isEmpty();
-    var asDto = authorized ? toDto(result) : List.<UsersSearchModel>of() ;
+    var asDto = authorized ? toDto(result) : List.<UsersSearchModel>of();
 
     return SearchReply.newBuilder()
         .addAllItems(asDto)

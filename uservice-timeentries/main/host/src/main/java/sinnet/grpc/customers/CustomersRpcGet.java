@@ -7,6 +7,9 @@ import org.springframework.stereotype.Component;
 import lombok.RequiredArgsConstructor;
 import sinnet.grpc.mapping.RpcQueryHandler;
 
+/**
+ * TBD.
+ */
 @Component
 @RequiredArgsConstructor
 public class CustomersRpcGet implements

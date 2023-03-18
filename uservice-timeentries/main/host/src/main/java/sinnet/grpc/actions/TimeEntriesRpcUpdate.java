@@ -9,6 +9,9 @@ import sinnet.grpc.timeentries.UpdateCommand;
 import sinnet.grpc.timeentries.UpdateResult;
 import sinnet.write.ActionRepositoryEx;
 
+/**
+ * TBD.
+ */
 @Component
 @RequiredArgsConstructor
 public class TimeEntriesRpcUpdate implements RpcCommandHandler<UpdateCommand, UpdateResult>, MapperDto {

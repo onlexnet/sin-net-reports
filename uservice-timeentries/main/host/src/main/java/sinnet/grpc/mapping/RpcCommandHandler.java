@@ -4,12 +4,21 @@ import com.google.protobuf.GeneratedMessageV3;
 
 import io.grpc.stub.StreamObserver;
 
-public interface RpcCommandHandler<TREQUEST extends GeneratedMessageV3, TRESPONSE extends GeneratedMessageV3> {
+/**
+ * TBD.
+ */
+public interface RpcCommandHandler<Q extends GeneratedMessageV3, S extends GeneratedMessageV3> {
 
-  TRESPONSE apply(TREQUEST cmd);
+  /**
+   * TBD.
+   */
+  S apply(Q cmd);
 
-  default void command(TREQUEST request, StreamObserver<TRESPONSE> responseStream) {
-    var result = this.apply(request);
+  /**
+   * TBD.
+   */
+  default void command(Q request, StreamObserver<S> responseStream) {
+    S result = this.apply(request);
     responseStream.onNext(result);
     responseStream.onCompleted();
   }

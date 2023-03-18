@@ -8,6 +8,9 @@ import lombok.RequiredArgsConstructor;
 import sinnet.grpc.mapping.RpcCommandHandler;
 import sinnet.models.ShardedId;
 
+/**
+ * TBD.
+ */
 @Component
 @RequiredArgsConstructor
 public class CustomersRpcRemove implements
@@ -18,9 +21,9 @@ public class CustomersRpcRemove implements
   @Override
   public RemoveReply apply(RemoveRequest request) {
     var id = request.getEntityId();
-    var projectIdAsUUID = UUID.fromString(id.getProjectId());
-    var entityIdAsUUID = UUID.fromString(id.getEntityId());
-    var entityId = ShardedId.of(projectIdAsUUID, entityIdAsUUID, id.getEntityVersion());
+    var projectIdAsUuid = UUID.fromString(id.getProjectId());
+    var entityIdAsUuid = UUID.fromString(id.getEntityId());
+    var entityId = ShardedId.of(projectIdAsUuid, entityIdAsUuid, id.getEntityVersion());
     var result = repository.remove(entityId);
     return RemoveReply.newBuilder()
         .setSuccess(result)

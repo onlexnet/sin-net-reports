@@ -23,6 +23,9 @@ public class GrpcServer implements AutoCloseable {
 
   private Server server;
 
+  /**
+   * TBD.
+   */
   @jakarta.annotation.PostConstruct
   @SneakyThrows
   public void start() {

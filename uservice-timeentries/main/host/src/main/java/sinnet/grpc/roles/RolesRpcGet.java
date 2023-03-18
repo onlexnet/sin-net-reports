@@ -12,12 +12,17 @@ import sinnet.grpc.roles.GetRequest;
 import sinnet.models.ValEmail;
 import sinnet.read.RolesProjector;
 
+/**
+ * TBD.
+ */
 @Component
-@Slf4j
 @AllArgsConstructor
 public class RolesRpcGet implements Mapper {
   private final RolesProjector.Provider rolesProjector;
 
+  /**
+   * TBD.
+   */
   public void query(GetRequest request, StreamObserver<GetReply> responseObserver) {
     var userToken = request.getUserToken();
     var emailAsString = userToken.getRequestorEmail();

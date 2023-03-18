@@ -16,6 +16,9 @@ import sinnet.models.CustomerSecret;
 import sinnet.models.CustomerSecretEx;
 import sinnet.models.ShardedId;
 
+/**
+ * TBD.
+ */
 @Component
 @RequiredArgsConstructor
 public final class CustomerRepositoryEx implements MapperDbo {
@@ -63,14 +66,14 @@ public final class CustomerRepositoryEx implements MapperDbo {
         .setNfzMaFilie(value.nfzMaFilie())
         .setNfzLekarz(value.nfzLekarz())
         .setNfzPolozna(value.nfzPolozna())
-        .setNfzPielegniarka_srodowiskowa(value.nfzPielegniarkaSrodowiskowa())
-        .setNfz_medycyna_szkolna(value.nfzMedycynaSzkolna())
-        .setNfz_transport_sanitarny(value.nfzTransportSanitarny())
-        .setNfz_nocna_pomoc_lekarska(value.nfzNocnaPomocLekarska())
-        .setNfz_ambulatoryjna_opieka_specjalistyczna(value.nfzAmbulatoryjnaOpiekaSpecjalistyczna())
-        .setNfz_rehabilitacja(value.nfzRehabilitacja())
-        .setNfz_stomatologia(value.nfzStomatologia())
-        .setNfz_psychiatria(value.nfzPsychiatria())
+        .setNfzPielegniarkaSrodowiskowa(value.nfzPielegniarkaSrodowiskowa())
+        .setNfzMedycynaSzkolna(value.nfzMedycynaSzkolna())
+        .setNfzTransportSanitarny(value.nfzTransportSanitarny())
+        .setNfzNocnaPomocLekarska(value.nfzNocnaPomocLekarska())
+        .setNfzAmbulatoryjnaOpiekaSpecjalistyczna(value.nfzAmbulatoryjnaOpiekaSpecjalistyczna())
+        .setNfzRehabilitacja(value.nfzRehabilitacja())
+        .setNfzStomatologia(value.nfzStomatologia())
+        .setNfzPsychiatria(value.nfzPsychiatria())
         .setNfzSzpitalnictwo(value.nfzSzpitalnictwo())
         .setNfzProgramyProfilaktyczne(value.nfzProgramyProfilaktyczne())
         .setNfzZaopatrzenieOrtopedyczne(value.nfzZaopatrzenieOrtopedyczne())
@@ -114,6 +117,9 @@ public final class CustomerRepositoryEx implements MapperDbo {
         .setChangedWho(it.getChangedWho().getValue());
   }
 
+  /**
+   * TBD.
+   */
   public Boolean remove(ShardedId id) {
     var projectId = id.getProjectId();
     var eid = id.getId();

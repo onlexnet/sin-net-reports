@@ -57,7 +57,7 @@ public interface MapperDbo {
    * TBD.
    */
   default CustomerModel fromDbo(CustomerRepository.CustomerDbo dbo) {
-    var id = ShardedId.of(dbo.getProjectId(), dbo.getEntityId() , dbo.getEntityVersion());
+    var id = ShardedId.of(dbo.getProjectId(), dbo.getEntityId(), dbo.getEntityVersion());
     var contacts = dbo.getContacts().stream().map(this::fromDbo).toList();
     var secrets = dbo.getSecrets().stream().map(this::fromDbo).toList();
     var secretsEx = dbo.getSecretsEx().stream().map(this::fromDbo).toList();
@@ -73,14 +73,14 @@ public interface MapperDbo {
         .nfzMaFilie(dbo.getNfzMaFilie())
         .nfzLekarz(dbo.getNfzLekarz())
         .nfzPolozna(dbo.getNfzPolozna())
-        .nfzPielegniarkaSrodowiskowa(dbo.getNfzPielegniarka_srodowiskowa())
-        .nfzMedycynaSzkolna(dbo.getNfz_medycyna_szkolna())
-        .nfzTransportSanitarny(dbo.getNfz_transport_sanitarny())
-        .nfzNocnaPomocLekarska(dbo.getNfz_nocna_pomoc_lekarska())
-        .nfzAmbulatoryjnaOpiekaSpecjalistyczna(dbo.getNfz_ambulatoryjna_opieka_specjalistyczna())
-        .nfzRehabilitacja(dbo.getNfz_rehabilitacja())
-        .nfzStomatologia(dbo.getNfz_stomatologia())
-        .nfzPsychiatria(dbo.getNfz_psychiatria())
+        .nfzPielegniarkaSrodowiskowa(dbo.getNfzPielegniarkaSrodowiskowa())
+        .nfzMedycynaSzkolna(dbo.getNfzMedycynaSzkolna())
+        .nfzTransportSanitarny(dbo.getNfzTransportSanitarny())
+        .nfzNocnaPomocLekarska(dbo.getNfzNocnaPomocLekarska())
+        .nfzAmbulatoryjnaOpiekaSpecjalistyczna(dbo.getNfzAmbulatoryjnaOpiekaSpecjalistyczna())
+        .nfzRehabilitacja(dbo.getNfzRehabilitacja())
+        .nfzStomatologia(dbo.getNfzStomatologia())
+        .nfzPsychiatria(dbo.getNfzPsychiatria())
         .nfzSzpitalnictwo(dbo.getNfzSzpitalnictwo())
         .nfzProgramyProfilaktyczne(dbo.getNfzProgramyProfilaktyczne())
         .nfzZaopatrzenieOrtopedyczne(dbo.getNfzZaopatrzenieOrtopedyczne())
