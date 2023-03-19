@@ -56,17 +56,5 @@ public class PropsBuilder {
     }
   }
 
-  public static <S, U1, U2> Optional<U2> ofNullable(S maybe, Function1<S, U1> map1, Function1<U1, U2> map2) {
-    return Optional.ofNullable(maybe).map(map1).map(map2);
-  }
-
-  public static <S, U1> Optional<U1> ofNullable(S maybe, Function1<S, U1> map1) {
-    return Optional.ofNullable(maybe).map(map1);
-  }
-
-  public static <S> Optional<S> ofNullable(S maybe) {
-    return Optional.ofNullable(maybe);
-  }
-
 }
   
