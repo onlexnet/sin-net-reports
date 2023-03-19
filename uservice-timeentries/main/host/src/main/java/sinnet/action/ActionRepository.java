@@ -34,7 +34,7 @@ public interface ActionRepository extends JpaRepository<ActionRepository.ActionD
    * TBD.
    */
   @Entity
-  @Table(name = "actions")
+  @Table(name = "ACTIONS")
   @Data
   @Accessors(chain = true)
   final class ActionDbo {

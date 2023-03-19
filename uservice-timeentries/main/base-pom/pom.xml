@@ -13,14 +13,14 @@
 
   <properties>
     <aggregate.report.dir>report-aggregate/target/site/jacoco-aggregate/jacoco.xml</aggregate.report.dir>
-    <api.version>0.1.0-SNAPSHOT</api.version>
+    <api.version>0.1.1-SNAPSHOT</api.version>
   </properties>
 
   <dependencies>
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
-      <version>1.18.24</version>
+      <version>1.18.26</version>
     </dependency>
     <dependency>
       <groupId>org.apache.commons</groupId>
