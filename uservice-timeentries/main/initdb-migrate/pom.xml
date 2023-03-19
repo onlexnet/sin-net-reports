@@ -1,8 +1,8 @@
 <project>
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>net.siudek</groupId>
-        <artifactId>sinnet</artifactId>
+        <groupId>onlexnet.sinnet</groupId>
+        <artifactId>uservice-timeentries-base</artifactId>
         <version>${revision}</version>
         <relativePath>../base-pom/pom.xml</relativePath>
     </parent>

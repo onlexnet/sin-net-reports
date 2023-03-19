@@ -15,6 +15,7 @@
     <module>initdb-migrate</module>
     <module>initdb-test</module>
     <module>initdb</module>
+    <module>report-aggregate</module>
   </modules>
 
   <properties>
