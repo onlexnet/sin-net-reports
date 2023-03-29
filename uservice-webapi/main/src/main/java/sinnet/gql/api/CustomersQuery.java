@@ -1,13 +1,12 @@
-package sinnet.gql.models;
+package sinnet.gql.api;
 
-import org.eclipse.microprofile.graphql.Ignore;
 
 import lombok.Value;
 import sinnet.grpc.common.UserToken;
 
-@Value
+/** Fixme. */
+@Value(staticConstructor = "of")
 public class CustomersQuery {
   private String projectId;
-  @Ignore
   private UserToken userToken;
 }

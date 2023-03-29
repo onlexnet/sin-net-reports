@@ -1,29 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: uservice-projects
+  name: uservice-timeentries-dep
   labels:
-    app: uservice-projects
+    app: uservice-timeentries
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: uservice-projects
+      app: uservice-timeentries
   
   template:
     metadata:
       labels:
-        app: uservice-projects
-      annotations:
-        # https://docs.dapr.io/reference/arguments-annotations-overview/
-        dapr.io/enabled: "true"
-        dapr.io/config: "tracing"
-        dapr.io/app-id: "uservice-projects"
-        dapr.io/app-port: "18080"
-        dapr.io/app-protocol: grpc
-        # sidecar.opentelemetry.io/inject: "true"
-        # instrumentation.opentelemetry.io/inject-java: "true"
-
+        app: uservice-timeentries
+    
     spec:
       volumes:
       - name: data-volume
@@ -43,8 +34,8 @@ spec:
           volumeMounts:
           - name: data-volume
             mountPath: /pod-data
-        - name: initdb
-          image: sinnet.azurecr.io/uservice-projects-initdb:{{ required "Tag of onlex-sinnet-projects image has to be provided" .Values.imageProjectsTag }}
+        - name: uservice-timeentries-initdb
+          image: sinnet.azurecr.io/uservice-timeentries-initdb:{{ required "Tag of uservice-timeentries image has to be provided" .Values.imageUserviceTimeEntriesTag }}
           imagePullPolicy: IfNotPresent
           env:
           - name: SPRING_PROFILES_ACTIVE
@@ -68,24 +59,24 @@ spec:
             valueFrom:
               secretKeyRef:
                 name: app-secrets
-                key: services_database_projects_schema
+                key: services_database_timeentries_schema
           - name: DATABASE_USERNAME
             valueFrom:
               secretKeyRef:
                 name: app-secrets
-                key: services_database_projects_username
+                key: services_database_timeentries_username
           - name: DATABASE_PASSWORD
             valueFrom:
               secretKeyRef:
                 name: app-secrets
-                key: services_database_projects_password
+                key: services_database_timeentries_password
       containers:
-        - name: host
-          image: sinnet.azurecr.io/uservice-projects-host:{{ required "Tag of onlex-sinnet-projects image has to be provided" .Values.imageProjectsTag }}
-          # when use local docker image: Never to use locally build image, or Always when working on real k8s environment
+        - name: uservice-timeentries
+          image: sinnet.azurecr.io/uservice-timeentries-host:{{ required "Tag of uservice-timeentries image has to be provided" .Values.imageUserviceTimeEntriesTag }}
           imagePullPolicy: IfNotPresent
+          ports:
+          - containerPort: 8080
           env:
-          
           # OTEL
           # https://opentelemetry.io/docs/instrumentation/java/automatic/#setup
           # https://opentelemetry.io/docs/concepts/sdk-configuration/otlp-exporter-configuration/
@@ -124,17 +115,17 @@ spec:
             valueFrom:
               secretKeyRef:
                 name: app-secrets
-                key: services_database_projects_schema
+                key: services_database_timeentries_schema
           - name: DATABASE_USERNAME
             valueFrom:
               secretKeyRef:
                 name: app-secrets
-                key: services_database_projects_username
+                key: services_database_timeentries_username
           - name: DATABASE_PASSWORD
             valueFrom:
               secretKeyRef:
                 name: app-secrets
-                key: services_database_projects_password
+                key: services_database_timeentries_password
           volumeMounts:
           - name: data-volume
             mountPath: /pod-data

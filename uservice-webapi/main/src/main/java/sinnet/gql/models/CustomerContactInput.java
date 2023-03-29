@@ -1,11 +1,9 @@
 package sinnet.gql.models;
 
-import org.eclipse.microprofile.graphql.Input;
-
 import lombok.Data;
 
+/** Fixme. */
 @Data
-@Input("CustomerContactInput")
 public class CustomerContactInput {
   private String firstName;
   private String lastName;

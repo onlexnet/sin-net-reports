@@ -7,7 +7,7 @@ Sonar:
   mvnd clean package sonar:sonar
 ```
 
-Docker:  
+Docker:
 ```bash
   # example: to build images to locally deploy to k8s
   # 1) Optionally change context to work on minikube images

@@ -1,16 +1,15 @@
 package sinnet.gql.models;
 
-import org.eclipse.microprofile.graphql.NonNull;
-
 import lombok.Data;
 
+/** Fixme. */
 @Data
-public class CustomerModel {
+public class CustomerModelGql {
   private String operatorEmail;
   private String billingModel;
   private String supportStatus;
   private Integer distance;
-  private @NonNull String customerName;
+  private String customerName;
   private String customerCityName;
   private String customerAddress;
   private Boolean nfzUmowa;

@@ -9,7 +9,7 @@
   <packaging>pom</packaging>
 
   <properties>
-    <spring-boot.version>3.0.4</spring-boot.version>
+    <spring-boot.version>3.0.5</spring-boot.version>
   </properties>
 
   <build>
@@ -35,7 +35,7 @@
           <dependency>
             <groupId>com.puppycrawl.tools</groupId>
             <artifactId>checkstyle</artifactId>
-            <version>10.4</version>
+            <version>10.9.3</version>
           </dependency>
           <dependency>
             <groupId>onlexnet.sinnet</groupId>

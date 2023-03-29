@@ -2,8 +2,9 @@ package sinnet.gql.models;
 
 import lombok.Data;
 
+/** Fixme. */
 @Data
-public class CustomerContact {
+public class CustomerContactGql {
   private String firstName;
   private String lastName;
   private String phoneNo;

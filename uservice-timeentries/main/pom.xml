@@ -14,7 +14,7 @@
     <module>host</module>
     <module>initdb-migrate</module>
     <module>initdb-test</module>
-    <module>initdb</module>
+    <module>initdb-host</module>
     <module>report-aggregate</module>
   </modules>
 
@@ -61,6 +61,15 @@
             </goals>
           </execution>
         </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>com.google.cloud.tools</groupId>
+        <artifactId>jib-maven-plugin</artifactId>
+        <configuration>
+          <!-- We don't want jib to execute on this module-->
+          <skip>true</skip>
+        </configuration>
       </plugin>
 
     </plugins>

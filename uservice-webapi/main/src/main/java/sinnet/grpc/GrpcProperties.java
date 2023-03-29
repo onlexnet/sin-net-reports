@@ -14,6 +14,8 @@ class GrpcProperties {
   private ServiceAddress projects;
   @NotNull
   private ServiceAddress rbac;
+  @NotNull
+  private ServiceAddress customers;
 
   @Data
   @Validated
