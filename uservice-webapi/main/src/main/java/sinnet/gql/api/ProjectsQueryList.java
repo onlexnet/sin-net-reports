@@ -23,7 +23,6 @@ class ProjectsQueryList {
 
   @SchemaMapping
   List<ProjectEntityGql> list(ProjectsQuery self, @Argument String name) {
-    log.info("Test log to see in Jaeger 1");
     var request = ListRequest.newBuilder()
         .setEmailOfRequestor(self.getRequestorEmail())
         .build();
@@ -32,7 +31,6 @@ class ProjectsQueryList {
   }
 
   public Integer numberOfProjects(ProjectsQuery self) {
-    log.info("Test log to see in Jaeger 2");
     var request = UserStatsRequest.newBuilder()
         .setEmailOfRequestor(self.getRequestorEmail())
         .build();

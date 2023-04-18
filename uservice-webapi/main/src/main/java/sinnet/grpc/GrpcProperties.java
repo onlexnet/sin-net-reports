@@ -11,11 +11,11 @@ import lombok.Data;
 @Validated
 class GrpcProperties {
   @NotNull
-  private ServiceAddress projects;
+  ServiceAddress projects;
   @NotNull
-  private ServiceAddress rbac;
+  ServiceAddress rbac;
   @NotNull
-  private ServiceAddress customers;
+  ServiceAddress customers;
 
   @Data
   @Validated
