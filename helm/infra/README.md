@@ -1,19 +1,17 @@
 # Dev notes
 Install/upgrade
 ```bash
-helm upgrade --install onlex-infra . -f values.yaml --create-namespace --namespace onlex-infra
+helm upgrade --install onlexnet-infra . -f values.yaml --create-namespace --namespace onlexnet-infra
 ```
 
-
-# Ingress
+# Optionally: upgrade ingress in case you would like to upgrade ingress: 
 # https://helm.nginx.com/
 helm repo add nginx-stable https://helm.nginx.com/stable
 helm pull nginx-stable/nginx-ingress
+# now adjust files and configuration to new version
 
 
-
-
-## How to upgrade OpenTelemetry chart
+## Optionally: upgrade OpenTelemetry chart
 - *helm repo update*
 - *helm pull open-telemetry/opentelemetry-collector*
 - move just downloaded file to *charts* subfolder
@@ -21,12 +19,10 @@ helm pull nginx-stable/nginx-ingress
 - More: https://github.com/open-telemetry/opentelemetry-helm-charts/tree/main/charts/opentelemetry-collector
 
 
-
-# Add the official Dapr Helm chart.
+## Optionally: upgrade Dapr Helm chart.
 helm repo add dapr https://dapr.github.io/helm-charts/
 helm repo update
 helm pull dapr/dapr
-
 # See which chart versions are available
 helm search repo dapr --devel --versions
 
@@ -39,17 +35,16 @@ helm repo add jetstack https://charts.jetstack.io
 helm pull jetstack/cert-manager
 
 
-<!-- # OpenTelemetry
+# OpenTelemetry
 helm repo add open-telemetry https://open-telemetry.github.io/opentelemetry-helm-charts
 helm repo update
 helm pull open-telemetry/opentelemetry-operator
-To see configuration: helm show values open-telemetry/opentelemetry-operator -->
+To see configuration: helm show values open-telemetry/opentelemetry-operator
 
 
 https://github.com/jaegertracing/helm-charts
 helm repo add jaegertracing https://jaegertracing.github.io/helm-charts
 helm pull jaegertracing/jaeger
-
 
 
 

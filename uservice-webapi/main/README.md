@@ -15,8 +15,6 @@ Docker:
   # 2) to build image and push it to local k8s instance
   mvnd clean install jib:dockerBuild -Dimage=sinnet.azurecr.io/uservice-webapi-host:latest -DskipTests
 
-  # example: build local tar file with image
-  mvn clean compile jib:buildTar -pl host
 ```
 
 

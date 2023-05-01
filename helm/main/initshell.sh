@@ -5,6 +5,6 @@
 # k == kubectl --namespace onlex-sinnet-dev01
 # h == helm --namespace onlex-sinnet-dev01
 namespace="onlex-sinnet-$1"
-alias kc="kubectl"
+alias kc="minikube kubectl"
 alias k="kc --namespace $namespace"
 alias h="helm --namespace $namespace"

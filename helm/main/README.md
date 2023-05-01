@@ -2,7 +2,7 @@
 
 
 # One time operations 1:
-install onlex-infra
+install shared helm part located in ../infra
 
 
 ```bash
