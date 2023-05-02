@@ -1,12 +1,12 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: nginx
+  name: sinnet
   annotations:
     # nginx.ingress.kubernetes.io/rewrite-target: /$1
-    kubernetes.io/ingress.class: {{ .Values.ingress.class }}
     cert-manager.io/issuer: {{ include "letsencrypt.instance" . }}
 spec:
+  ingressClassName: {{ .Values.ingress.class }}
   tls:
   - hosts:
     - {{ include "ingress.host" . }}

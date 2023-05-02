@@ -30,9 +30,9 @@ Docker:
   # 1) Optionally change context to work on minikube images
   eval $(minikube docker-env)
   # 2) to build image and push it to local k8s instance
-  mvnd jib:dockerBuild -pl host clean install -DskipTests
+  mvnd jib:dockerBuild -pl host -am clean install -DskipTests
   mvnd jib:dockerBuild -pl host -Dimage=sinnet.azurecr.io/uservice-timeentries-host:latest
-  mvnd jib:dockerBuild -pl initdb-host clean install -DskipTests
+  mvnd jib:dockerBuild -pl -am initdb-host clean install -DskipTests
   mvnd jib:dockerBuild -pl initdb-host -Dimage=sinnet.azurecr.io/uservice-timeentries-initdb
 
   # example: build local tar file with image

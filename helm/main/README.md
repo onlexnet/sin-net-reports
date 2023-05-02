@@ -6,7 +6,13 @@ install shared helm part located in ../infra
 
 
 ```bash
-. initshell.sh localhost
+. initshell.sh local
+```
+
+# One time operation:
+```
+# create namespace for local development
+
 ```
 
 # One time operation 2:
@@ -25,7 +31,7 @@ export REPORTS_IMAGE_TAG=latest
 ```
 And later on apply on e.g. dev01
 ```bash
-. initshell.sh localhost
+. initshell.sh local
 # to install/upgrade application:
 h upgrade --install sinnet-reports . -f config.yaml --create-namespace
 # or, just to upgrade:
@@ -35,14 +41,14 @@ h upgrade sinnet-reports . -f config.yaml
 
 ##
 ## Target kubernetes configuration
-- **microk8s with custom ingress**. It is used in some places because ingress in microk8s has defined class and namespace
+- **microk8s with custom ingress**. It is used in some places because ingress in microk8s has defined customized class and namespace
 - **[cert-manager](https://cert-manager.io/)** installed with version 1.6
-- **create k8s namespace *onlex-sinnet-localhost* and use it for further local deployment**
-- **add position to hosts file: 127.0.0.1 sinnet.local** because such domain is expected by ingress in onlex-sinnet-localhost namespace
+- **create k8s namespace *onlex-sinnet-local* and use it for further local deployment**
+- **add position to localhopst hosts file (e.g. C:\Windows\System32\drivers\etc\hosts): 127.0.0.1 sinnet.local** because such domain is expected by ingress in onlex-sinnet-local namespace
 - create and self-signed cert (used locally instead of letsencrypt), and import the key to k8s to support secure connection
 ```bash
 openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout tls.key -out tls.crt -subj "/CN=sinnet.local/O=sinnet.local"
-kubectl create secret tls portal-tls-secret --key tls.key --cert tls.crt -n onlex-sinnet-localhost
+kubectl create secret tls portal-tls-secret --key tls.key --cert tls.crt -n onlexnet-sinnet-local
 ```
 - next, start postgresql database and load secrets to allow application read secrets and connect to database
 ```bash

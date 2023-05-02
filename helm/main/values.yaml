@@ -4,12 +4,6 @@
 
 replicaCount: 1
 
-image:
-  repository: nginx
-  pullPolicy: IfNotPresent
-  # Overrides the image tag whose default is the chart appVersion.
-  tag: "1.21"
-
 nameOverride: ""
 fullnameOverride: ""
 
@@ -42,15 +36,12 @@ service:
 ingress:
   enabled: true
   # possible values depends on k8s implementation and way how the ingress is installed
-  # 'namespace: ingress' for microk8s
-  # 'namespace: ingress-nginx' for minikube addon
   namespace: onlex-infra
-  # 'class: public' for microk8s
-  # 'class: ingress-nginx' for minikube addon
-  # 'class: nginx' for out own ingress
-  class: nginx
+  # 'class: nginx' is hardcoded as we have our own ingress with such class
+  # it solves the issue of having different ingresses per environment
+  class: onlexnet
   # kubernetes.io/tls-acme: "true"
-  baseHost: localhost
+  baseHost: local
   port: 80
   annotations: {}
 
