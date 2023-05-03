@@ -6,7 +6,6 @@ import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
-import sinnet.grpc.customers.CustomerRepository.CustomerDbo;
 import sinnet.grpc.customers.CustomerRepository.CustomerDboContact;
 import sinnet.grpc.customers.CustomerRepository.CustomerDboSecret;
 import sinnet.grpc.customers.CustomerRepository.CustomerDboSecretEx;

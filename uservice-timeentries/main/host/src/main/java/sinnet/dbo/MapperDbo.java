@@ -1,6 +1,5 @@
 package sinnet.dbo;
 
-import sinnet.dbo.ActionRepository.ActionDbo;
 import sinnet.models.ActionDuration;
 import sinnet.models.ActionValue;
 import sinnet.models.Distance;

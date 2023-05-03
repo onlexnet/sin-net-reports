@@ -17,7 +17,7 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 @Entity
-@Table(name = "PROJECT")
+@Table(name = "projects")
 @Data
 @Accessors(chain = true)
 class ProjectDbo {

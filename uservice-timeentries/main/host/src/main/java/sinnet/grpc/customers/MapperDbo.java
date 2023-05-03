@@ -1,7 +1,5 @@
 package sinnet.grpc.customers;
 
-import java.util.List;
-
 import sinnet.models.CustomerContact;
 import sinnet.models.CustomerModel;
 import sinnet.models.CustomerSecret;
@@ -56,7 +54,7 @@ public interface MapperDbo {
   /**
    * TBD.
    */
-  default CustomerModel fromDbo(CustomerRepository.CustomerDbo dbo) {
+  default CustomerModel fromDbo(CustomerDbo dbo) {
     var id = ShardedId.of(dbo.getProjectId(), dbo.getEntityId(), dbo.getEntityVersion());
     var contacts = dbo.getContacts().stream().map(this::fromDbo).toList();
     var secrets = dbo.getSecrets().stream().map(this::fromDbo).toList();

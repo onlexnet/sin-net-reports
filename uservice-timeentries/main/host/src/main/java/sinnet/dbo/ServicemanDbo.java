@@ -17,7 +17,7 @@ import lombok.experimental.Accessors;
 @Table(name = "serviceman")
 @Data
 @Accessors(chain = true)
-public class ServicemanDbo {
+class ServicemanDbo {
   @Id
   @Column(name = "entity_id")
   private UUID entityId;
