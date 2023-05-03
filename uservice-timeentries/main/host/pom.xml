@@ -99,6 +99,13 @@
     </dependency>
 
     <dependency>
+      <groupId>onlexnet.sinnet</groupId>
+      <version>0.0.1</version>
+      <artifactId>testcontainers-dapr</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
       <groupId>io.dapr</groupId>
       <artifactId>dapr-sdk</artifactId>
     </dependency>

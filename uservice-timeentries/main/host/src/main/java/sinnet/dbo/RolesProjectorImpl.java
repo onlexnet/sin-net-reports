@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import sinnet.models.ValEmail;
 import sinnet.read.RolesProjector;
-import sinnet.read.RolesProjector.Provider;
 import sinnet.read.RolesProjector.Role;
 
 /** Projections implementation using VertX async db client. */

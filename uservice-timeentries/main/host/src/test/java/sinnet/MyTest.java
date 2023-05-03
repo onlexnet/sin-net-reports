@@ -26,7 +26,7 @@ import org.springframework.web.context.WebApplicationContext;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited
-@BootstrapWith(SpringBootDbTestContextBootstrapper.class)
+@BootstrapWith(HostTestContextBootstrapper.class)
 public @interface MyTest {
 
 	/**

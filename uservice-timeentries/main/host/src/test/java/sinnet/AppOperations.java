@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import io.grpc.ManagedChannelBuilder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import sinnet.grpc.projects.RpcFacade;
 import sinnet.grpc.projects.generated.CreateRequest;
 import sinnet.grpc.projects.generated.GetRequest;
 import sinnet.grpc.projects.generated.ListRequest;
@@ -32,7 +33,7 @@ import sinnet.grpc.projects.generated.UserToken;
 public class AppOperations implements ApplicationListener<ApplicationReadyEvent> {
 
   private ProjectsGrpc.ProjectsBlockingStub self;
-  private final TestRestTemplate restTemplate;
+  private final RpcFacade rpcFacade;
 
   ProjectId create(String emailOfUser) {
     var reserveCmd = CreateRequest.newBuilder()
@@ -129,8 +130,7 @@ public class AppOperations implements ApplicationListener<ApplicationReadyEvent>
 
   @Override
   public void onApplicationEvent(ApplicationReadyEvent event) {
-    var grpcModel = restTemplate.getForObject("/actuator/grpc", GrpcActuatorModel.class);
-    var grpcPort = grpcModel.getPort();
+    var grpcPort = rpcFacade.getServerPort().getAsInt();
 
     var channel = ManagedChannelBuilder.forAddress("localhost", grpcPort)
         .usePlaintext()

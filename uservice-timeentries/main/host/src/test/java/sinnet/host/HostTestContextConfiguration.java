@@ -5,6 +5,6 @@ import org.springframework.context.annotation.Import;
 
 @Configuration
 @Import(HostConfiguration.class)
-public class HostContextConfiguration {
+public class HostTestContextConfiguration {
   
 }

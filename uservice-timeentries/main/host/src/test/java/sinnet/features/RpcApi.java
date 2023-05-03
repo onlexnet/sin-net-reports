@@ -1,20 +1,28 @@
 package sinnet.features;
 
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
 import io.dapr.v1.AppCallbackGrpc;
 import io.dapr.v1.AppCallbackGrpc.AppCallbackBlockingStub;
 import io.grpc.ManagedChannelBuilder;
-import jakarta.annotation.PostConstruct;
 import lombok.Getter;
+import sinnet.AppOperations;
+import sinnet.AppOperations.GrpcActuatorModel;
+import sinnet.grpc.projects.RpcFacade;
 import sinnet.grpc.timeentries.TimeEntriesGrpc;
 import sinnet.grpc.timeentries.TimeEntriesGrpc.TimeEntriesBlockingStub;
 import sinnet.grpc.users.UsersGrpc;
 import sinnet.grpc.users.UsersGrpc.UsersBlockingStub;
 
 @Component
-public class RpcApi {
+public class RpcApi implements ApplicationListener<ApplicationReadyEvent> {
+
+  @Autowired
+  RpcFacade rpcFacade;
   
   @Getter
   private UsersBlockingStub users;
@@ -25,17 +33,18 @@ public class RpcApi {
   @Getter
   private AppCallbackBlockingStub apiCallback;
 
-  @Value("${grpc.server.port}")
-  private int grpcPort;
+  AppOperations appOperations;
+  
+  @Override
+  public void onApplicationEvent(ApplicationReadyEvent event) {
+    var grpcPort = rpcFacade.getServerPort().getAsInt();
 
-  @PostConstruct
-  void init() {
     var channel = ManagedChannelBuilder.forAddress("localhost", grpcPort)
         .usePlaintext()
         .build();
+    
     users = UsersGrpc.newBlockingStub(channel);
     timeentries = TimeEntriesGrpc.newBlockingStub(channel);
     apiCallback = AppCallbackGrpc.newBlockingStub(channel);
   }
-  
 }

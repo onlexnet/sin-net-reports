@@ -15,10 +15,10 @@ import org.springframework.test.context.ContextConfiguration;
 import sinnet.db.PostgresDbExtension;
 import sinnet.domain.model.ValEmail;
 import sinnet.domain.model.ValProjectId;
-import sinnet.host.Program;
+import sinnet.host.HostTestContextConfiguration;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ContextConfiguration(classes = { Program.class })
+@ContextConfiguration(classes = { HostTestContextConfiguration.class })
 @ActiveProfiles(sinnet.Profiles.TEST)
 @ExtendWith(PostgresDbExtension.class)
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)

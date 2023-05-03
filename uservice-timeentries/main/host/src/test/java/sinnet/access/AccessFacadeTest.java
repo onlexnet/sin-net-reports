@@ -16,12 +16,12 @@ import io.grpc.StatusRuntimeException;
 import sinnet.db.PostgresDbExtension;
 import sinnet.Profiles;
 import sinnet.grpc.projects.generated.UserToken;
-import sinnet.host.HostContextConfiguration;
+import sinnet.host.HostTestContextConfiguration;
 import sinnet.domain.access.AccessFacade;
 import sinnet.domain.model.ValProjectId;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ContextConfiguration(classes = { HostContextConfiguration.class })
+@ContextConfiguration(classes = { HostTestContextConfiguration.class })
 @ActiveProfiles(Profiles.TEST)
 @ExtendWith(PostgresDbExtension.class)
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)

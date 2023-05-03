@@ -16,6 +16,7 @@
     <module>initdb-test</module>
     <module>initdb-host</module>
     <module>report-aggregate</module>
+    <module>testcontainer-dapr</module>
   </modules>
 
   <properties>

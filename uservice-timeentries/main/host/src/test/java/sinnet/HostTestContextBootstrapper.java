@@ -6,7 +6,10 @@ import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.test.context.TestContext;
 
 import lombok.extern.slf4j.Slf4j;
+import reactor.core.Disposable;
+import reactor.core.Disposables;
 import sinnet.db.PostgresDbRunner;
+import testcontainers.dapr.DaprContainer;
 
 /**
  * For Cucumber we would like to run 3 things in the same time:
@@ -18,20 +21,30 @@ import sinnet.db.PostgresDbRunner;
  * the issue we trying solve: https://stackoverflow.com/questions/74431287/junit-5-how-to-use-extensions-with-a-test-suite
  */
 @Slf4j
-public final class SpringBootDbTestContextBootstrapper extends SpringBootTestContextBootstrapper {
+public final class HostTestContextBootstrapper extends SpringBootTestContextBootstrapper {
 
-  public SpringBootDbTestContextBootstrapper() {
+  public HostTestContextBootstrapper() {
     super();
     log.error("SPARTA1");
   }
   
   @Override
   public TestContext buildTestContext() {
+    
     var dbRunner = new PostgresDbRunner();
-    var disposer = dbRunner.start();
+    var dbDisposer = dbRunner.start();
+
+    
+    var dapr = new DaprContainer();
+    dapr.start();
+    Disposable daprDisposer = () -> dapr.close();
+
+
+    var disposer = Disposables.composite(dbDisposer::close, daprDisposer);
+    
     var testContext = super.buildTestContext();
     var appContext = (AbstractApplicationContext) testContext.getApplicationContext();
-    appContext.addApplicationListener((ContextClosedEvent e) -> disposer.close());
+    appContext.addApplicationListener((ContextClosedEvent e) -> disposer.dispose());
     log.error("SPARTA2");
     return testContext;
   }
