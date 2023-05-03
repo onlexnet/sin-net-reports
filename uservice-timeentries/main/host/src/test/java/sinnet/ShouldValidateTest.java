@@ -14,10 +14,10 @@ import org.springframework.test.context.ContextConfiguration;
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 import sinnet.db.PostgresDbExtension;
-import sinnet.host.Program;
+import sinnet.host.HostContextConfiguration;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ContextConfiguration(classes = { Program.class })
+@ContextConfiguration(classes = { HostContextConfiguration.class })
 @ActiveProfiles(Profiles.TEST)
 @ExtendWith(PostgresDbExtension.class)
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)

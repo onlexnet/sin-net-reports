@@ -10,7 +10,7 @@ import sinnet.SpringBootDbTestContextBootstrapper;
 
 @CucumberContextConfiguration
 // examples https://github.com/cucumber/cucumber-jvm/pull/1911
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT, classes = HostContextConfiguration.class)
 @BootstrapWith(SpringBootDbTestContextBootstrapper.class)
 @ActiveProfiles("test")
 class CucumberSpringConfiguration {
