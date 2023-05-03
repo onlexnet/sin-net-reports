@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import sinnet.rpc.RpcFacade;
+import sinnet.grpc.projects.RpcFacade;
 
 @Component
 @Endpoint(id = "grpc")

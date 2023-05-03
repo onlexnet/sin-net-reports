@@ -4,6 +4,7 @@ import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes;
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
 
 import com.tngtech.archunit.core.domain.JavaClass;
+import com.tngtech.archunit.core.importer.ImportOption;
 import com.tngtech.archunit.junit.AnalyzeClasses;
 import com.tngtech.archunit.junit.ArchTest;
 import com.tngtech.archunit.lang.ArchCondition;
@@ -16,7 +17,7 @@ import com.tngtech.archunit.library.GeneralCodingRules;
 import jakarta.persistence.Entity;
 
 /** Architectural tests. */
-@AnalyzeClasses(packages = "sinnet")
+@AnalyzeClasses(packages = "sinnet", importOptions = ImportOption.DoNotIncludeTests.class)
 public class ArchTests {
 
   @ArchTest

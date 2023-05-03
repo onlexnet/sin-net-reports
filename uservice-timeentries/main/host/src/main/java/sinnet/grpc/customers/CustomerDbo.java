@@ -25,7 +25,7 @@ import sinnet.grpc.customers.CustomerRepository.CustomerDboSecretEx;
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Accessors(chain = true)
-public class CustomerDbo {
+class CustomerDbo {
 
   @Column(name = "project_id")
   @EqualsAndHashCode.Include

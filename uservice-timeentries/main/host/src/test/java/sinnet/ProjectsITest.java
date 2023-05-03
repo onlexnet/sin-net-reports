@@ -27,10 +27,10 @@ import lombok.val;
 import sinnet.db.PostgresDbExtension;
 import sinnet.grpc.projects.generated.Project;
 import sinnet.grpc.projects.generated.ProjectModel;
-import sinnet.host.Program;
+import sinnet.host.HostContextConfiguration;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ContextConfiguration(classes = { Program.class })
+@ContextConfiguration(classes = { HostContextConfiguration.class })
 @ActiveProfiles(Profiles.TEST)
 @ExtendWith(PostgresDbExtension.class)
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
