@@ -50,6 +50,11 @@
         <version>${api.version}</version>
       </dependency>
       <dependency>
+        <groupId>onlexnet.sinnet</groupId>
+        <artifactId>uservice-projects.rpc</artifactId>
+        <version>${api.version}</version>
+      </dependency>
+      <dependency>
         <groupId>io.dapr</groupId>
         <artifactId>dapr-sdk</artifactId>
         <version>1.7.0</version>
@@ -126,7 +131,7 @@
             <path>
               <groupId>org.projectlombok</groupId>
               <artifactId>lombok</artifactId>
-              <version>1.18.24</version>
+              <version>1.18.26</version>
             </path>
           </annotationProcessorPaths>
         </configuration>

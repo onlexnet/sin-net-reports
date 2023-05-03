@@ -8,14 +8,16 @@
             "type": "java",
             "name": "Launch Program with Dapr",
             "request": "launch",
-            "mainClass": "sinnet.Program",
+            "mainClass": "sinnet.host.Program",
             "projectName": "uservice-timeentries-host",
             "env": {
                 "SPRING_PROFILES_ACTIVE": "dev",
-                "DATABASE_JDBC": "jdbc:postgresql://localhost:5432/devlocaldb",
+                "DATABASE_HOST": "localhost",
+                "DATABASE_PORT": "5432",
+                "DATABASE_NAME": "devlocaldb",
                 "DATABASE_USERNAME": "uservice_timeentries_role_name",
                 "DATABASE_PASSWORD": "uservice_timeentries_role_password",
-                "DATABASE_SCHEMA": "uservice_timeentries",
+                "DATABASE_SCHEMA": "uservice_timeentries"
             },
             "preLaunchTask": "dapr-debug",
             "postDebugTask": "dapr-down"

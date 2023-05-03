@@ -23,6 +23,11 @@
       <groupId>onlexnet.sinnet</groupId>
       <artifactId>uservice-projects.events</artifactId>
     </dependency>
+    <dependency>
+      <groupId>onlexnet.sinnet</groupId>
+      <artifactId>uservice-projects.rpc</artifactId>
+    </dependency>
+
 
     <dependency>
       <groupId>onlexnet.sinnet</groupId>
@@ -35,11 +40,20 @@
       <scope>test</scope>
     </dependency>
 
+    <dependency>
+      <groupId>io.rest-assured</groupId>
+      <artifactId>rest-assured</artifactId>
+      <scope>test</scope>
+    </dependency>
 
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
       <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-validation</artifactId>
     </dependency>
     <dependency>
       <groupId>org.projectlombok</groupId>

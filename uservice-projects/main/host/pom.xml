@@ -17,15 +17,6 @@
 
     <dependency>
       <groupId>onlexnet.sinnet</groupId>
-      <artifactId>uservice-projects.rpc</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>onlexnet.sinnet</groupId>
-      <artifactId>uservice-projects.events</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>onlexnet.sinnet</groupId>
       <artifactId>uservice-projects-initdb-migrate</artifactId>
       <scope>test</scope>
     </dependency>
