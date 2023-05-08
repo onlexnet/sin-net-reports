@@ -26,11 +26,11 @@ jobs:
           cache: maven
 
       - name: Build shared libs
-        run: mvn -B package --file pom.xml
+        run: mvn -B install --file pom.xml
         working-directory: libs-java
   
       - name: Build GRPC api
-        run: mvn -B package --file pom.xml
+        run: mvn -B install --file pom.xml
         working-directory: api/client-java
     
       - name: Build with Maven
