@@ -1,5 +1,8 @@
 package sinnet.reports;
 
+import sinnet.reports.grpc.YearMonth;
+import sinnet.report3.grpc.ReportRequest;
+
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -14,61 +17,56 @@ import org.springframework.test.context.ContextConfiguration;
 
 import lombok.SneakyThrows;
 import sinnet.AppOperations;
+import sinnet.Profiles;
 import sinnet.db.PostgresDbExtension;
 import sinnet.host.HostTestContextConfiguration;
-import sinnet.report2.grpc.ActivityDetails;
-import sinnet.report2.grpc.ReportRequest;
-import sinnet.reports.grpc.YearMonth;
-import sinnet.Profiles;
+import sinnet.report3.grpc.CustomerDetails;
+import sinnet.report3.grpc.GroupDetails;
+import sinnet.report3.grpc.ReportsGrpc;
 
 @SpringBootTest
 @ContextConfiguration(classes = { HostTestContextConfiguration.class })
 @ActiveProfiles(Profiles.TEST)
 @ExtendWith(PostgresDbExtension.class)
 @Timeout(value = 3)
-class ReportService2Test {
+class ReportService3Test {
 
   @Autowired
   AppOperations operations;
 
   @Test
-  void produceReportWithMinDataCase1() {
-    var activity = ActivityDetails.newBuilder().build();
-    var request = ReportRequest.newBuilder().build();
-    var self = operations.getSelfReport2();
+  void produceReportWithEmptyValues() {
+    var self = operations.getSelfReport3();
+    var request = ReportRequest.newBuilder()
+        .addDetails(GroupDetails
+            .newBuilder()
+            .addDetails(CustomerDetails
+                .newBuilder()))
+        .build();
+
     var res = self.produce(request);
-    var data = res.getData().toByteArray();
-    Assertions
-        .assertThat(data)
-        .isNotEmpty();
   }
 
   @Test
   @SneakyThrows
   void produceReportWithMinDataCase2() {
-    var self = operations.getSelfReport2();
-    var period = YearMonth.newBuilder().setYear(2001).setMonth(1);
+    var self = operations.getSelfReport3();
     var request = ReportRequest.newBuilder()
-        .addDetails(ActivityDetails
+        .addDetails(GroupDetails
             .newBuilder()
-            .setPersonName("Ala")
-            .setYearMonth(period)
-            .setHowLongInMins(42)
-            .build())
-        .addDetails(ActivityDetails
-            .newBuilder()
-            .setPersonName("Ola")
-            .setYearMonth(period)
-            .setHowLongInMins(123)
-            .setHowFarInKms(4)
-            .build())
+            .setPersonName("PersonA")
+            .addDetails(CustomerDetails
+                .newBuilder()
+                .setName("Customer1")
+                .setAddress("Address1")
+                .setCity("City1")))
         .build();
+
     var res = self.produce(request);
     var data = res.getData().toByteArray();
 
-    Files.write(Paths.get("temp_raport2_from_test.pdf"), data);
+    Files.write(Paths.get("temp_raport3_from_test.pdf"), data);
 
     Assertions.assertThat(data).isNotEmpty();
   }
-
 }

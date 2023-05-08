@@ -38,12 +38,14 @@ public class AppOperations implements ApplicationListener<ApplicationReadyEvent>
 
   private ProjectsGrpc.ProjectsBlockingStub self;
   
-  @Delegate
+  @Getter
   private ReportsGrpc.ReportsBlockingStub selfReport;
   
   @Getter
   private sinnet.report2.grpc.ReportsGrpc.ReportsBlockingStub selfReport2;
 
+  @Getter
+  private sinnet.report3.grpc.ReportsGrpc.ReportsBlockingStub selfReport3;
 
 
   ProjectId create(String emailOfUser) {
@@ -149,5 +151,6 @@ public class AppOperations implements ApplicationListener<ApplicationReadyEvent>
     self = ProjectsGrpc.newBlockingStub(channel);
     selfReport = ReportsGrpc.newBlockingStub(channel);
     selfReport2 = sinnet.report2.grpc.ReportsGrpc.newBlockingStub(channel);
+    selfReport3 = sinnet.report3.grpc.ReportsGrpc.newBlockingStub(channel);
   }
 }

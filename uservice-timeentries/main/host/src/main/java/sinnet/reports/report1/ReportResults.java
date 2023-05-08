@@ -1,8 +1,6 @@
 package sinnet.reports.report1;
 
 import java.io.ByteArrayOutputStream;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 import com.google.common.base.Objects;
 import com.lowagie.text.Chunk;
@@ -14,11 +12,9 @@ import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
 
-import io.vavr.Function1;
 import io.vavr.Function2;
 import io.vavr.Function3;
 import io.vavr.Tuple;
-import io.vavr.Tuple2;
 import io.vavr.collection.List;
 import io.vavr.collection.Seq;
 import io.vavr.control.Option;
@@ -26,6 +22,7 @@ import lombok.SneakyThrows;
 import sinnet.reports.shared.Fonts;
 import sinnet.reports.shared.Kilometers;
 import sinnet.reports.shared.Minutes;
+import sinnet.reports.shared.Utils;
 
 class ReportResults {
 
@@ -119,9 +116,6 @@ class ReportResults {
     return table;
   }
 
-  DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-  Function1<Option<LocalDate>, String> maybeDateAsString = maybeDate -> maybeDate.map(it -> it.format(timeFormatter)).getOrElse("-");
-
   // Serviceman has sometimes too long name to fit to one line, so minimizing font fits to todays data
   Option<Integer> servicemanNameSizeAdjustment = Option.of(-4);
 
@@ -140,7 +134,7 @@ class ReportResults {
       var who = item.who();
       addValue.apply(false, List.of(
         new CellParams(who, TableColumns.Col1widthServiceman, HorizontalAlignment.LEFT, servicemanNameSizeAdjustment),
-        new CellParams(maybeDateAsString.apply(item.when()), TableColumns.Col2widthDay, HorizontalAlignment.CENTER, Option.none()),
+        new CellParams(Utils.maybeDateAsString(item.when()), TableColumns.Col2widthDay, HorizontalAlignment.CENTER, Option.none()),
         new CellParams(item.description(), TableColumns.Col3widthDescription, HorizontalAlignment.CENTER, Option.none()),
         new CellParams(howLong.asString(), TableColumns.Col4widthDuration, HorizontalAlignment.RIGHT, Option.none()),
         new CellParams(distance.toString(), TableColumns.Col5widthDistance, HorizontalAlignment.RIGHT, Option.none())));
@@ -185,7 +179,7 @@ class ReportResults {
       var who = item.who();
       addValue.apply(false, List.of(
         new CellParams(who, col1, HorizontalAlignment.LEFT, servicemanNameSizeAdjustment),
-        new CellParams(maybeDateAsString.apply(item.when()), col2, HorizontalAlignment.CENTER, Option.none()),
+        new CellParams(Utils.maybeDateAsString(item.when()), col2, HorizontalAlignment.CENTER, Option.none()),
         new CellParams(item.description(), col3, HorizontalAlignment.CENTER, Option.none()),
         new CellParams("0:00", col4, HorizontalAlignment.RIGHT, Option.none()),
         new CellParams(distance.toString(), col5, HorizontalAlignment.RIGHT, Option.none())));

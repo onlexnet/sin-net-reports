@@ -27,142 +27,146 @@ import sinnet.report1.grpc.ReportRequest;
 import sinnet.report1.grpc.ReportRequests;
 import sinnet.reports.grpc.Date;
 
-
 @SpringBootTest
 @ContextConfiguration(classes = { HostTestContextConfiguration.class })
 @ActiveProfiles(Profiles.TEST)
 @ExtendWith(PostgresDbExtension.class)
 class ReportService1Test {
-    
-    @Autowired
-    AppOperations self;
 
-    @Test
-    void produceReportWithMinDataCase1() {
-        var customer = CustomerDetails.newBuilder().build();
-        var activity = ActivityDetails.newBuilder().build();
-        var request = ReportRequest.newBuilder().build();
-        var res = self.produce(request);
-        var data = res.getData().toByteArray();
+  @Autowired
+  AppOperations operations;
 
-        Assertions.assertThat(data).isNotEmpty();
-    }
+  @Test
+  void produceReportWithMinDataCase1() {
+    var self = operations.getSelfReport();
+    var customer = CustomerDetails.newBuilder().build();
+    var activity = ActivityDetails.newBuilder().build();
+    var request = ReportRequest.newBuilder().build();
+    var res = self.produce(request);
+    var data = res.getData().toByteArray();
 
-    @Test
-    @SneakyThrows
-    void produceReportWithMinDataCase2() {
-        var customer = CustomerDetails.newBuilder()
-            .setCustomerName("Customer name")
-            .setCustomerId("Customer ID")
-            .setCustomerAddress("Customer Address")
-            .setCustomerCity("Customer City")
-            .build();
-        var who = "PERSON WITH LONG NAME 1 LINE";
-        var when = Date.newBuilder().setYear(2001).setMonth(2).setDayOfTheMonth(3).build();
-        var request = ReportRequest.newBuilder()
-            .setCustomer(customer)
-            .addDetails(ActivityDetails
-                .newBuilder()
-                .setWho(who)
-                .setWhen(when)
-                .setDescription("Position 1")
-                .setHowFarInKms(23)
-                .build())
-            .addDetails(ActivityDetails
-                .newBuilder()
-                .setWho(who)
-                .setWhen(when)
-                .setDescription("Position 2")
-                .setHowLongInMins(12)
-                .setHowFarInKms(34)
-                .build())
-            .build();
-        var res = self.produce(request);
-        var data = res.getData().toByteArray();
-        
-        // produce local copy of the file for manual review
-        // Files.write(Paths.get("temp_raport1_from_test.pdf"), data);
+    Assertions.assertThat(data).isNotEmpty();
+  }
 
-        Assertions.assertThat(data).isNotEmpty();
-    }
-
-    @Test
-    @SneakyThrows
-    void producePackEndpoint() {
-        val request = ReportRequest.newBuilder().build();
-        val pack = ReportRequests.newBuilder()
-            .addItems(request)
-            .addItems(request)
-            .build();
-        val res = self.producePack(pack);
-
-        var data = res.getData().toByteArray();
-        val byteStream = new ByteArrayInputStream(data);
-        val zis = new ZipInputStream(byteStream);
-
-        var entry1 = zis.getNextEntry();
-        var entry2 = zis.getNextEntry();
-        var entry3 = zis.getNextEntry();
-        Assertions.assertThat(entry1.getSize()).isNotZero();
-        Assertions.assertThat(entry2.getSize()).isNotZero();
-        Assertions.assertThat(entry3).isNull();
-    }
-
-    /**
-      * https://github.com/onlexnet/sin-net-reports/issues/73
-      * Three digits for element number
-      */
-    @Test
-    void files_should_be_numerated_using_three_sigits() {
-        val request = ReportRequest.newBuilder().build();
-        val pack = Stream.from(1).take(3)
-                .foldLeft(ReportRequests.newBuilder(), (acc, v) -> {
-                    val item = ReportRequest.newBuilder();
-                    return acc.addItems(item);
-                })
-                .build();
-        val res = self.producePack(pack);
-
-        var data = res.getData().toByteArray();
-        val byteStream = new ByteArrayInputStream(data);
-        val zis = new ZipInputStream(byteStream);
-
-        val fileNames = Iterator
-            .iterate(() -> Try.of(() -> zis.getNextEntry()).map(Option::of).get())
-            .map(it -> {
-              return it;
-            })
-            .map(it -> it.getName())
-            .toJavaList();
-
-        Assertions.assertThat(fileNames).containsExactly("001-.pdf", "002-.pdf", "003-.pdf");
-    }
-
-    /**
-      * https://github.com/onlexnet/sin-net-reports/issues/73
-      * Slash in client name produces valid filename
-      */
-    @Test
-    @SneakyThrows
-    void files_should_be_normalized_when_customer_has_special_characters_in_name() {
-        var companyWithSlashInName = ReportRequest
+  @Test
+  @SneakyThrows
+  void produceReportWithMinDataCase2() {
+    var self = operations.getSelfReport();
+    var customer = CustomerDetails.newBuilder()
+        .setCustomerName("Customer name")
+        .setCustomerId("Customer ID")
+        .setCustomerAddress("Customer Address")
+        .setCustomerCity("Customer City")
+        .build();
+    var who = "PERSON WITH LONG NAME 1 LINE";
+    var when = Date.newBuilder().setYear(2001).setMonth(2).setDayOfTheMonth(3).build();
+    var request = ReportRequest.newBuilder()
+        .setCustomer(customer)
+        .addDetails(ActivityDetails
             .newBuilder()
-            .setCustomer(CustomerDetails.newBuilder().setCustomerName("My/Company"))
-            .build();
-        val request = ReportRequests.newBuilder()
-            .addItems(companyWithSlashInName)
-            .build();
-        val res = self.producePack(request);
+            .setWho(who)
+            .setWhen(when)
+            .setDescription("Position 1")
+            .setHowFarInKms(23)
+            .build())
+        .addDetails(ActivityDetails
+            .newBuilder()
+            .setWho(who)
+            .setWhen(when)
+            .setDescription("Position 2")
+            .setHowLongInMins(12)
+            .setHowFarInKms(34)
+            .build())
+        .build();
+    var res = self.produce(request);
+    var data = res.getData().toByteArray();
 
-        var data = res.getData().toByteArray();
-        val byteStream = new ByteArrayInputStream(data);
-        val zis = new ZipInputStream(byteStream);
+    // produce local copy of the file for manual review
+    // Files.write(Paths.get("temp_raport1_from_test.pdf"), data);
 
-        var entry1 = zis.getNextEntry();
-        Assertions.assertThat(entry1.getName()).isEqualTo("001-My_Company.pdf");
-    }
+    Assertions.assertThat(data).isNotEmpty();
+  }
 
-//     // /** https://github.com/onlexnet/sin-net-reports/issues/60 */
-//     // @Test
-//     // class 
+  @Test
+  @SneakyThrows
+  void producePackEndpoint() {
+    var self = operations.getSelfReport();
+    val request = ReportRequest.newBuilder().build();
+    val pack = ReportRequests.newBuilder()
+        .addItems(request)
+        .addItems(request)
+        .build();
+    val res = self.producePack(pack);
+
+    var data = res.getData().toByteArray();
+    val byteStream = new ByteArrayInputStream(data);
+    val zis = new ZipInputStream(byteStream);
+
+    var entry1 = zis.getNextEntry();
+    var entry2 = zis.getNextEntry();
+    var entry3 = zis.getNextEntry();
+    Assertions.assertThat(entry1.getSize()).isNotZero();
+    Assertions.assertThat(entry2.getSize()).isNotZero();
+    Assertions.assertThat(entry3).isNull();
+  }
+
+  /**
+   * https://github.com/onlexnet/sin-net-reports/issues/73
+   * Three digits for element number
+   */
+  @Test
+  void files_should_be_numerated_using_three_sigits() {
+    var self = operations.getSelfReport();
+    val request = ReportRequest.newBuilder().build();
+    val pack = Stream.from(1).take(3)
+        .foldLeft(ReportRequests.newBuilder(), (acc, v) -> {
+          val item = ReportRequest.newBuilder();
+          return acc.addItems(item);
+        })
+        .build();
+    val res = self.producePack(pack);
+
+    var data = res.getData().toByteArray();
+    val byteStream = new ByteArrayInputStream(data);
+    val zis = new ZipInputStream(byteStream);
+
+    val fileNames = Iterator
+        .iterate(() -> Try.of(() -> zis.getNextEntry()).map(Option::of).get())
+        .map(it -> {
+          return it;
+        })
+        .map(it -> it.getName())
+        .toJavaList();
+
+    Assertions.assertThat(fileNames).containsExactly("001-.pdf", "002-.pdf", "003-.pdf");
+  }
+
+  /**
+   * https://github.com/onlexnet/sin-net-reports/issues/73
+   * Slash in client name produces valid filename
+   */
+  @Test
+  @SneakyThrows
+  void files_should_be_normalized_when_customer_has_special_characters_in_name() {
+    var self = operations.getSelfReport();
+    var companyWithSlashInName = ReportRequest
+        .newBuilder()
+        .setCustomer(CustomerDetails.newBuilder().setCustomerName("My/Company"))
+        .build();
+    val request = ReportRequests.newBuilder()
+        .addItems(companyWithSlashInName)
+        .build();
+    val res = self.producePack(request);
+
+    var data = res.getData().toByteArray();
+    val byteStream = new ByteArrayInputStream(data);
+    val zis = new ZipInputStream(byteStream);
+
+    var entry1 = zis.getNextEntry();
+    Assertions.assertThat(entry1.getName()).isEqualTo("001-My_Company.pdf");
+  }
+
+  // // /** https://github.com/onlexnet/sin-net-reports/issues/60 */
+  // // @Test
+  // // class
 }

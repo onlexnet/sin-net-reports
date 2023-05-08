@@ -77,10 +77,6 @@ class ReportResults {
     return table;
   }
 
-  DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-  Function1<Option<LocalDate>, String> maybeDateAsString = maybeDate -> maybeDate.map(it -> it.format(timeFormatter))
-      .getOrElse("-");
-
   private void asTable(Function2<Boolean, Seq<CellParams>, Void> addValue, Seq<ActivityDetails> activities) {
 
     addValue.apply(false, List.of(

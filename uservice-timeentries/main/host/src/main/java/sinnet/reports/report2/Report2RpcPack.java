@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 
 import com.google.protobuf.ByteString;
 
-import lombok.Cleanup;
 import lombok.SneakyThrows;
 import lombok.val;
 import sinnet.grpc.projects.RpcQueryHandler;
