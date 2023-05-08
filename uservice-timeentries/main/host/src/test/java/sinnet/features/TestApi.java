@@ -16,7 +16,6 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import lombok.val;
 import lombok.experimental.Accessors;
 import sinnet.events.AvroObjectSerializer;
 import sinnet.grpc.common.EntityId;

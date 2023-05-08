@@ -1,10 +1,7 @@
 package sinnet.reports;
 
 import java.io.ByteArrayInputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.zip.ZipInputStream;
-import java.util.zip.ZipOutputStream;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -28,27 +25,8 @@ import sinnet.report1.grpc.ActivityDetails;
 import sinnet.report1.grpc.CustomerDetails;
 import sinnet.report1.grpc.ReportRequest;
 import sinnet.report1.grpc.ReportRequests;
-import sinnet.report1.grpc.ReportsGrpc;
 import sinnet.reports.grpc.Date;
 
-// import io.quarkus.example.GreeterGrpc
-// import io.quarkus.example.HelloRequest
-// import io.quarkus.grpc.GrpcClient
-// import io.quarkus.test.junit.QuarkusTest
-// import io.restassured.RestAssured.given
-// import org.assertj.core.api.Assertions
-// import org.hamcrest.CoreMatchers.`is`
-// import org.junit.jupiter.api.Nested
-// import org.junit.jupiter.api.Test
-// import sinnet.report1.grpc.ReportsGrpc
-
-// import java.io.ByteArrayInputStream
-// import java.util.zip.ZipInputStream
-// import javax.inject.Inject
-// import scala.annotation.meta.field
-
-// import collection.JavaConverters._
-// import sinnet.reports.grpc.Date
 
 @SpringBootTest
 @ContextConfiguration(classes = { HostTestContextConfiguration.class })

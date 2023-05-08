@@ -2,7 +2,6 @@ package sinnet.features;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
@@ -11,7 +10,6 @@ import io.dapr.v1.AppCallbackGrpc.AppCallbackBlockingStub;
 import io.grpc.ManagedChannelBuilder;
 import lombok.Getter;
 import sinnet.AppOperations;
-import sinnet.AppOperations.GrpcActuatorModel;
 import sinnet.grpc.projects.RpcFacade;
 import sinnet.grpc.timeentries.TimeEntriesGrpc;
 import sinnet.grpc.timeentries.TimeEntriesGrpc.TimeEntriesBlockingStub;

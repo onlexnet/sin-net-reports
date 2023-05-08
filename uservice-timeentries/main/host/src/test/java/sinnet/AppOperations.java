@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import io.grpc.ManagedChannelBuilder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Delegate;
 import sinnet.grpc.projects.RpcFacade;
@@ -28,18 +29,22 @@ import sinnet.grpc.projects.generated.UpdateCommand;
 import sinnet.grpc.projects.generated.UpdateResult;
 import sinnet.grpc.projects.generated.UserToken;
 import sinnet.report1.grpc.ReportsGrpc;
-import sinnet.reports.grpc.Reports;
 
 @Component
 @RequiredArgsConstructor
 public class AppOperations implements ApplicationListener<ApplicationReadyEvent> {
 
+  private final RpcFacade rpcFacade;
+
   private ProjectsGrpc.ProjectsBlockingStub self;
   
   @Delegate
   private ReportsGrpc.ReportsBlockingStub selfReport;
+  
+  @Getter
+  private sinnet.report2.grpc.ReportsGrpc.ReportsBlockingStub selfReport2;
 
-  private final RpcFacade rpcFacade;
+
 
   ProjectId create(String emailOfUser) {
     var reserveCmd = CreateRequest.newBuilder()
@@ -143,5 +148,6 @@ public class AppOperations implements ApplicationListener<ApplicationReadyEvent>
         .build();
     self = ProjectsGrpc.newBlockingStub(channel);
     selfReport = ReportsGrpc.newBlockingStub(channel);
+    selfReport2 = sinnet.report2.grpc.ReportsGrpc.newBlockingStub(channel);
   }
 }
