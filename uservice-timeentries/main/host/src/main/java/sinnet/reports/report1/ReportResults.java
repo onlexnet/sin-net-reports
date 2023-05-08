@@ -17,11 +17,12 @@ import com.lowagie.text.pdf.PdfWriter;
 import io.vavr.Function1;
 import io.vavr.Function2;
 import io.vavr.Function3;
+import io.vavr.Tuple;
+import io.vavr.Tuple2;
 import io.vavr.collection.List;
 import io.vavr.collection.Seq;
 import io.vavr.control.Option;
 import lombok.SneakyThrows;
-import reactor.util.function.Tuples;
 import sinnet.reports.shared.Fonts;
 import sinnet.reports.shared.Kilometers;
 import sinnet.reports.shared.Minutes;
@@ -145,11 +146,11 @@ class ReportResults {
         new CellParams(distance.toString(), TableColumns.Col5widthDistance, HorizontalAlignment.RIGHT, Option.none())));
     }
 
-    var initialAcc = Tuples.of(Kilometers.of(0), Minutes.of(0));
+    var initialAcc = Tuple.of(Kilometers.of(0), Minutes.of(0));
     // var (howFar, howLong) = activities.foldLeft(initialAcc)((acc, v) => (acc._1 + v.howFarInKms, acc._2 + v.howLongInMins))
-    var howFarAndhowLong = activities.foldLeft(initialAcc, (acc, v) -> Tuples.of(acc.getT1().add(v.howFarInKms()), acc.getT2().add(v.howLongInMins())));
-    var howFar = howFarAndhowLong.getT1();
-    var howLong = howFarAndhowLong.getT2();
+    var howFarAndhowLong = activities.foldLeft(initialAcc, (acc, v) -> Tuple.of(acc._1().add(v.howFarInKms()), acc._2().add(v.howLongInMins())));
+    var howFar = howFarAndhowLong._1();
+    var howLong = howFarAndhowLong._2();
 
     addValue.apply(true, List.of(
       new CellParams(null, TableColumns.Col1widthServiceman, HorizontalAlignment.LEFT, Option.none()),
