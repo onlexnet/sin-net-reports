@@ -1,5 +1,11 @@
 package sinnet.reports;
 
+import java.io.ByteArrayInputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
+
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -8,6 +14,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 
+import io.vavr.collection.Iterator;
+import io.vavr.collection.Stream;
+import io.vavr.control.Option;
+import io.vavr.control.Try;
+import lombok.SneakyThrows;
+import lombok.val;
 import sinnet.AppOperations;
 import sinnet.Profiles;
 import sinnet.db.PostgresDbExtension;
@@ -15,7 +27,9 @@ import sinnet.host.HostTestContextConfiguration;
 import sinnet.report1.grpc.ActivityDetails;
 import sinnet.report1.grpc.CustomerDetails;
 import sinnet.report1.grpc.ReportRequest;
+import sinnet.report1.grpc.ReportRequests;
 import sinnet.report1.grpc.ReportsGrpc;
+import sinnet.reports.grpc.Date;
 
 // import io.quarkus.example.GreeterGrpc
 // import io.quarkus.example.HelloRequest
@@ -56,97 +70,92 @@ class ReportService1Test {
         Assertions.assertThat(data).isNotEmpty();
     }
 
-//     @Test
-//     def produceReportWithMinDataCase2(): Unit = {
-//         val customer = CustomerDetailsDTO.newBuilder()
-//             .setCustomerName("Customer name")
-//             .setCustomerId("Customer ID")
-//             .setCustomerAddress("Customer Address")
-//             .setCustomerCity("Customer City")
-//             .build()
-//         val who = "PERSON WITH LONG NAME 1 LINE";
-//         val when = Date.newBuilder().setYear(2001).setMonth(2).setDayOfTheMonth(3).build()
-//         val request = ReportRequestDTO.newBuilder()
-//             .setCustomer(customer)
-//             .addDetails(ActivityDetailsDTO
-//                 .newBuilder()
-//                 .setWho(who)
-//                 .setWhen(when)
-//                 .setDescription("Position 1")
-//                 .setHowFarInKms(23)
-//                 .build())
-//             .addDetails(ActivityDetailsDTO
-//                 .newBuilder()
-//                 .setWho(who)
-//                 .setWhen(when)
-//                 .setDescription("Position 2")
-//                 .setHowLongInMins(12)
-//                 .setHowFarInKms(34)
-//                 .build())
-//             .build()
-//         val res = self.produce(request)
-//         var data = res.getData().toByteArray()
+    @Test
+    @SneakyThrows
+    void produceReportWithMinDataCase2() {
+        var customer = CustomerDetails.newBuilder()
+            .setCustomerName("Customer name")
+            .setCustomerId("Customer ID")
+            .setCustomerAddress("Customer Address")
+            .setCustomerCity("Customer City")
+            .build();
+        var who = "PERSON WITH LONG NAME 1 LINE";
+        var when = Date.newBuilder().setYear(2001).setMonth(2).setDayOfTheMonth(3).build();
+        var request = ReportRequest.newBuilder()
+            .setCustomer(customer)
+            .addDetails(ActivityDetails
+                .newBuilder()
+                .setWho(who)
+                .setWhen(when)
+                .setDescription("Position 1")
+                .setHowFarInKms(23)
+                .build())
+            .addDetails(ActivityDetails
+                .newBuilder()
+                .setWho(who)
+                .setWhen(when)
+                .setDescription("Position 2")
+                .setHowLongInMins(12)
+                .setHowFarInKms(34)
+                .build())
+            .build();
+        var res = self.produce(request);
+        var data = res.getData().toByteArray();
         
-//         // uncomment block of lines below to produce a local example raport file
-//         import java.io.File
-//         import java.nio.file.Files
-//         import java.nio.file.Paths
+        // produce local copy of the file for manual review
+        // Files.write(Paths.get("temp_raport1_from_test.pdf"), data);
 
-// import org.springframework.beans.factory.annotation.Autowired;
-// import org.springframework.boot.test.context.SpringBootTest;
-// import org.springframework.test.context.ActiveProfiles;
-//         Files.write(Paths.get("temp_raport1_from_test.pdf"), data)
+        Assertions.assertThat(data).isNotEmpty();
+    }
 
-//         Assertions.assertThat(data).isNotEmpty()
-//     }
+    @Test
+    @SneakyThrows
+    void producePackEndpoint() {
+        val request = ReportRequest.newBuilder().build();
+        val pack = ReportRequests.newBuilder()
+            .addItems(request)
+            .addItems(request)
+            .build();
+        val res = self.producePack(pack);
 
-//     @Test
-//     def producePackEndpoint(): Unit = {
-//         val request = ReportRequestDTO.newBuilder().build
-//         val pack = ReportRequestsDTO.newBuilder()
-//             .addItems(request)
-//             .addItems(request)
-//             .build()
-//         val res = self.producePack(pack)
+        var data = res.getData().toByteArray();
+        val byteStream = new ByteArrayInputStream(data);
+        val zis = new ZipInputStream(byteStream);
 
-//         var data = res.getData().toByteArray()
-//         val byteStream = new ByteArrayInputStream(data)
-//         val zis = new ZipInputStream(byteStream)
+        var entry1 = zis.getNextEntry();
+        var entry2 = zis.getNextEntry();
+        var entry3 = zis.getNextEntry();
+        Assertions.assertThat(entry1.getSize()).isNotZero();
+        Assertions.assertThat(entry2.getSize()).isNotZero();
+        Assertions.assertThat(entry3).isNull();
+    }
 
-//         var entry1 = zis.getNextEntry()
-//         var entry2 = zis.getNextEntry()
-//         var entry3 = zis.getNextEntry()
-//         Assertions.assertThat(entry1.getSize()).isNotZero()
-//         Assertions.assertThat(entry2.getSize()).isNotZero()
-//         Assertions.assertThat(entry3).isNull()
-//     }
+    /**
+      * https://github.com/onlexnet/sin-net-reports/issues/73
+      * Three digits for element number
+      */
+    @Test
+    void files_should_be_numerated_using_three_sigits() {
+        val request = ReportRequest.newBuilder().build();
+        val pack = Stream.from(1).take(3)
+                .foldLeft(ReportRequests.newBuilder(), (acc, v) -> {
+                    val item = ReportRequest.newBuilder();
+                    return acc.addItems(item);
+                })
+                .build();
+        val res = self.producePack(pack);
 
-//     /**
-//       * https://github.com/onlexnet/sin-net-reports/issues/73
-//       * Three digits for element number
-//       */
-//     @Test
-//     def files_should_be_numerated_using_three_sigits(): Unit = {
-//         val request = ReportRequestDTO.newBuilder().build
-//         val pack = Stream.from(1).take(3)
-//                 .foldLeft(ReportRequestsDTO.newBuilder())((acc, v) => {
-//                     val item = ReportRequestDTO.newBuilder()
-//                     acc.addItems(item)
-//                 })
-//                 .build()
-//         val res = self.producePack(pack)
+        var data = res.getData().toByteArray();
+        val byteStream = new ByteArrayInputStream(data);
+        val zis = new ZipInputStream(byteStream);
 
-//         var data = res.getData().toByteArray()
-//         val byteStream = new ByteArrayInputStream(data)
-//         val zis = new ZipInputStream(byteStream)
+        val fileNames = Iterator
+            .iterate(() -> Try.of(() -> zis.getNextEntry()).toOption())
+            .map(it -> it.getName())
+            .toJavaList();
 
-//         val fileNames = Iterator.iterate((zis.getNextEntry(), zis)){case (entry, zis) => (zis.getNextEntry(), zis)}
-//             .takeWhile{case (entry, _) => entry != null}
-//             .map( _._1)
-//             .map(_.getName())
-//             .toArray
-//         Assertions.assertThat(fileNames).containsExactly("001-.pdf", "002-.pdf", "003-.pdf")
-//     }
+        Assertions.assertThat(fileNames).containsExactly("001-.pdf", "002-.pdf", "003-.pdf");
+    }
 
 //     /**
 //       * https://github.com/onlexnet/sin-net-reports/issues/73
