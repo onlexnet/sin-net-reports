@@ -1,15 +1,15 @@
 # This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
 # For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
 
-name: GitHub image build for uservice-webapi
+name: GitHub image build for uservice-timeentries
 
 on:
   push:
     branches: [ master ]
-    paths: [ uservice-webapi/**, .github/workflows/uservice-webapi.yml ]
+    paths: [ uservice-timeentries/**, .github/workflows/uservice-timeentries.yml ]
   pull_request:
     branches: [ master ]
-    paths: [ uservice-webapi/**, .github/workflows/uservice-webapi.yml ]
+    paths: [ uservice-timeentries/**, .github/workflows/uservice-timeentries.yml ]
 
 jobs:
   build:
@@ -26,4 +26,4 @@ jobs:
           cache: maven
       - name: Build with Maven
         run: mvn -B package --file pom.xml
-        working-directory: uservice-webapi/main
+        working-directory: uservice-timeentries/main
