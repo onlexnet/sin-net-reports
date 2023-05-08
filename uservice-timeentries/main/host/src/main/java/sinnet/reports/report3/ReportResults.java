@@ -89,7 +89,7 @@ class ReportResults {
         var address = client.address();
         var city = client.city();
 
-        var description = name + "\n" + address + "\n " + city;
+        var description = name + "\n" + address + "\n" + city;
         addValue.apply(false, List.of(
             new CellParams(description, TableColumns.Col1widthDescription, HorizontalAlignment.LEFT),
             new CellParams("", TableColumns.Col2widthNoted, HorizontalAlignment.LEFT)));

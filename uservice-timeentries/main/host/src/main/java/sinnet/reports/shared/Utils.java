@@ -12,7 +12,7 @@ public class Utils {
 
   private static DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
-  /** TBD. */
+  /** Unified way of represnting date in SinNet. */
   public static String maybeDateAsString(Option<LocalDate> maybeDate) {
     return maybeDate.map(it -> it.format(timeFormatter)).getOrElse("-");
   }
