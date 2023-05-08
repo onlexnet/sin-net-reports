@@ -26,13 +26,13 @@ jobs:
           cache: maven
 
       - name: Build shared libs
-        run: mvn -B install --file pom.xml
+        run: mvn -ntp install --file pom.xml
         working-directory: libs-java
 
       - name: Build GRPC api
-        run: mvn -B install --file pom.xml
+        run: mvn -ntp install --file pom.xml
         working-directory: api/client-java
 
       - name: Build with Maven
-        run: mvn -B package --file pom.xml
+        run: mvn -ntp package --file pom.xml
         working-directory: uservice-timeentries/main
