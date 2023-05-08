@@ -6,7 +6,7 @@ name: GitHub image build for uservice-webapi
 on:
   push:
     branches: [ master ]
-    paths: [ uservice-webapi/**, .github/workflows/uservice-webapp.yml ]
+    paths: [ uservice-webapi/**, .github/workflows/uservice-webapi.yml ]
   pull_request:
     branches: [ master ]
 
