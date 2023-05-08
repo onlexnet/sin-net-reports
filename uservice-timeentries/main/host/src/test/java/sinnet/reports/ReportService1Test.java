@@ -150,35 +150,39 @@ class ReportService1Test {
         val zis = new ZipInputStream(byteStream);
 
         val fileNames = Iterator
-            .iterate(() -> Try.of(() -> zis.getNextEntry()).toOption())
+            .iterate(() -> Try.of(() -> zis.getNextEntry()).map(Option::of).get())
+            .map(it -> {
+              return it;
+            })
             .map(it -> it.getName())
             .toJavaList();
 
         Assertions.assertThat(fileNames).containsExactly("001-.pdf", "002-.pdf", "003-.pdf");
     }
 
-//     /**
-//       * https://github.com/onlexnet/sin-net-reports/issues/73
-//       * Slash in client name produces valid filename
-//       */
-//     @Test
-//     def files_should_be_normalized_when_customer_has_special_characters_in_name(): Unit = {
-//         var companyWithSlashInName = ReportRequestDTO
-//             .newBuilder()
-//             .setCustomer(CustomerDetailsDTO.newBuilder().setCustomerName("My/Company"))
-//             .build()
-//         val request = ReportRequestsDTO.newBuilder()
-//             .addItems(companyWithSlashInName)
-//             .build()
-//         val res = self.producePack(request)
+    /**
+      * https://github.com/onlexnet/sin-net-reports/issues/73
+      * Slash in client name produces valid filename
+      */
+    @Test
+    @SneakyThrows
+    void files_should_be_normalized_when_customer_has_special_characters_in_name() {
+        var companyWithSlashInName = ReportRequest
+            .newBuilder()
+            .setCustomer(CustomerDetails.newBuilder().setCustomerName("My/Company"))
+            .build();
+        val request = ReportRequests.newBuilder()
+            .addItems(companyWithSlashInName)
+            .build();
+        val res = self.producePack(request);
 
-//         var data = res.getData().toByteArray()
-//         val byteStream = new ByteArrayInputStream(data)
-//         val zis = new ZipInputStream(byteStream)
+        var data = res.getData().toByteArray();
+        val byteStream = new ByteArrayInputStream(data);
+        val zis = new ZipInputStream(byteStream);
 
-//         var entry1 = zis.getNextEntry()
-//         Assertions.assertThat(entry1.getName()).isEqualTo("001-My_Company.pdf")
-//     }
+        var entry1 = zis.getNextEntry();
+        Assertions.assertThat(entry1.getName()).isEqualTo("001-My_Company.pdf");
+    }
 
 //     // /** https://github.com/onlexnet/sin-net-reports/issues/60 */
 //     // @Test

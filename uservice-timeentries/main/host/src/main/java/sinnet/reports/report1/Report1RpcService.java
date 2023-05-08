@@ -42,7 +42,7 @@ import sinnet.grpc.projects.RpcQueryHandler;
 
 /** Exposes gRPC endpoints to allow produce PDF report based on requested data. */
 @Service
-final class Report1Service implements RpcQueryHandler<ReportRequest, Response> {
+final class Report1RpcService implements RpcQueryHandler<ReportRequest, Response> {
 
   @Override
   public Response apply(ReportRequest request) {
@@ -58,43 +58,3 @@ final class Report1Service implements RpcQueryHandler<ReportRequest, Response> {
   }
 }
 
-// @GrpcService
-// class Report1Service extends ReportsGrpc.ReportsImplBase {
-
-
-//     responseObserver.onNext(response)
-//     responseObserver.onCompleted()
-//   }
-
-//   override def producePack(request: ReportRequestsDTO, responseObserver: StreamObserver[Response]): Unit = {
-//     for (
-//       baos <- managed(new ByteArrayOutputStream());
-//       zos <- managed(new ZipOutputStream(baos))
-//     ) {
-
-//       for ((itemDto, index) <- request.getItemsList().asScala.zip(Stream from 1)) {
-//         val item = Mapper(itemDto)
-//         var model = ReportResult(item)
-//         val report = model.content
-//         val fileName = f"$index%03d-${item.customer.customerName}.pdf";
-//         val normalizedFileName = fileName.replace("/","_")
-//         val entry = new ZipEntry(normalizedFileName)
-//         zos.putNextEntry(entry)
-//         zos.write(report)
-//         zos.closeEntry()
-//       }
-
-//       zos.close()
-
-//       val binaryData = baos.toByteArray()
-//       val dtoData = ByteString.copyFrom(binaryData)
-//       var response = Response
-//         .newBuilder()
-//         .setData(dtoData)
-//         .build()
-
-//       responseObserver.onNext(response)
-//       responseObserver.onCompleted()
-//     }
-//   }
-// }

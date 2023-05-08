@@ -15,16 +15,17 @@ import sinnet.reports.grpc.Response;
 @Component
 @RequiredArgsConstructor
 class Report1Rpc extends ReportsImplBase {
-  private final Report1Service service;
+  private final Report1RpcService service;
+  private final Report1RpcPack servicePack;
 
   @Override
   public void produce(ReportRequest request, StreamObserver<Response> responseObserver) {
-      service.query(request, responseObserver);
+    service.query(request, responseObserver);
   }
 
   @Override
   public void producePack(ReportRequests request, StreamObserver<Response> responseObserver) {
-      // TODO Auto-generated method stub
-      super.producePack(request, responseObserver);
+    servicePack.query(request, responseObserver);
   }
+
 }

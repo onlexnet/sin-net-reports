@@ -22,9 +22,9 @@ import io.vavr.collection.Seq;
 import io.vavr.control.Option;
 import lombok.SneakyThrows;
 import reactor.util.function.Tuples;
-import sinnet.reports.Fonts;
-import sinnet.reports.Kilometers;
-import sinnet.reports.Minutes;
+import sinnet.reports.shared.Fonts;
+import sinnet.reports.shared.Kilometers;
+import sinnet.reports.shared.Minutes;
 
 class ReportResults {
 

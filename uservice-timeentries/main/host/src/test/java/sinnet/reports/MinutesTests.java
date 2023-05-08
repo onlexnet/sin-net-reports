@@ -3,6 +3,8 @@ package sinnet.reports;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import sinnet.reports.shared.Minutes;
+
 class MinutesTests {
 
     @Test

@@ -1,4 +1,4 @@
-package sinnet.reports;
+package sinnet.reports.shared;
 
 import lombok.Value;
 
