@@ -27,7 +27,7 @@ jobs:
 
       - name: Build with Maven
         run: mvn -B package --file pom.xml
-        working-directory: uservice-libs-java/main
+        working-directory: libs-java
 
       - name: Build with Maven
         run: mvn -B package --file pom.xml
