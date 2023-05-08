@@ -8,13 +8,13 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
 import io.grpc.ManagedChannelBuilder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.Delegate;
 import sinnet.grpc.projects.RpcFacade;
 import sinnet.grpc.projects.generated.CreateRequest;
 import sinnet.grpc.projects.generated.GetRequest;
@@ -27,12 +27,18 @@ import sinnet.grpc.projects.generated.RemoveCommand;
 import sinnet.grpc.projects.generated.UpdateCommand;
 import sinnet.grpc.projects.generated.UpdateResult;
 import sinnet.grpc.projects.generated.UserToken;
+import sinnet.report1.grpc.ReportsGrpc;
+import sinnet.reports.grpc.Reports;
 
 @Component
 @RequiredArgsConstructor
 public class AppOperations implements ApplicationListener<ApplicationReadyEvent> {
 
   private ProjectsGrpc.ProjectsBlockingStub self;
+  
+  @Delegate
+  private ReportsGrpc.ReportsBlockingStub selfReport;
+
   private final RpcFacade rpcFacade;
 
   ProjectId create(String emailOfUser) {
@@ -136,5 +142,6 @@ public class AppOperations implements ApplicationListener<ApplicationReadyEvent>
         .usePlaintext()
         .build();
     self = ProjectsGrpc.newBlockingStub(channel);
+    selfReport = ReportsGrpc.newBlockingStub(channel);
   }
 }

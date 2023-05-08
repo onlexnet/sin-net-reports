@@ -55,6 +55,12 @@
         <version>${api.version}</version>
       </dependency>
       <dependency>
+        <groupId>onlexnet.sinnet</groupId>
+        <artifactId>uservice-reports.rpc</artifactId>
+        <version>${api.version}</version>
+      </dependency>
+
+      <dependency>
         <groupId>io.dapr</groupId>
         <artifactId>dapr-sdk</artifactId>
         <version>1.7.0</version>
