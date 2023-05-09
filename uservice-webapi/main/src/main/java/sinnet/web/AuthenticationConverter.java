@@ -1,15 +1,12 @@
 package sinnet.web;
 
-import java.util.Collections;
 import java.util.Optional;
-
-import org.springframework.security.oauth2.jwt.Jwt;
-
-import io.vavr.control.Try;
 
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
-import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.oauth2.jwt.Jwt;
+
+import io.vavr.control.Try;
 
 /** Fixme. */
 public class AuthenticationConverter implements Converter<Jwt, AbstractAuthenticationToken> {

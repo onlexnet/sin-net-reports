@@ -3,16 +3,22 @@ package bdd;
 import static org.mockito.ArgumentMatchers.any;
 
 import java.time.Duration;
+import java.time.Instant;
+import java.time.ZonedDateTime;
+import java.util.Date;
+import java.util.List;
 
-import org.assertj.core.api.Assertions;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.graphql.test.tester.HttpGraphQlTester;
 import org.springframework.http.HttpHeaders;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.context.WebApplicationContext;
+
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.nimbusds.jwt.JWTClaimsSet;
 
 import io.cucumber.java.Before;
 import io.cucumber.java.en.Then;
@@ -56,7 +62,7 @@ public class StepDefinitions {
     var client = WebTestClient.bindToServer()
         .responseTimeout(Duration.ofMinutes(10))
         .baseUrl(rootUri + "/graphql")
-        .defaultHeader(HttpHeaders.AUTHORIZATION, "Bearer token")
+        .defaultHeader(HttpHeaders.AUTHORIZATION, "Bearer " + createJwt())
         .build();
 
     var tester = HttpGraphQlTester.create(client);
@@ -79,6 +85,15 @@ public class StepDefinitions {
     // Write code here that turns the phrase above into concrete actions
   }
 
-
+  String createJwt() {
+    var secret = "my super secret key to sign my dev JWT token";
+    return JWT.create()
+      .withSubject("a@b.c")
+      .withIssuer("https://issuer")
+      .withClaim("emails", List.of("a@b.c"))
+      .withIssuedAt(Instant.now())
+      .withExpiresAt(ZonedDateTime.now().plusHours(1).toInstant())
+      .sign(Algorithm.HMAC256(secret));
+  }
   
 }
