@@ -11,6 +11,7 @@ import java.util.List;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.context.ApplicationContext;
 import org.springframework.graphql.test.tester.HttpGraphQlTester;
 import org.springframework.http.HttpHeaders;
 import org.springframework.test.web.reactive.server.WebTestClient;
@@ -18,7 +19,6 @@ import org.springframework.web.context.WebApplicationContext;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.nimbusds.jwt.JWTClaimsSet;
 
 import io.cucumber.java.Before;
 import io.cucumber.java.en.Then;
@@ -30,11 +30,6 @@ import sinnet.grpc.projects.generated.ListReply;
 public class StepDefinitions {
 
   @Autowired
-  WebApplicationContext applicationContext;
-
-  // @MockBean
-  // NameTestCallback nameProvider;
-
   ProjectsGrpcService projectsGrpcService;
 
   @Autowired
@@ -42,7 +37,7 @@ public class StepDefinitions {
 
   @Before
   public void before() {
-    projectsGrpcService = Mockito.mock(ProjectsGrpcService.class);
+    Mockito.clearInvocations(projectsGrpcService);
   }
 
   @When("user is requesting list of projects")
@@ -95,5 +90,5 @@ public class StepDefinitions {
       .withExpiresAt(ZonedDateTime.now().plusHours(1).toInstant())
       .sign(Algorithm.HMAC256(secret));
   }
-  
+
 }

@@ -9,7 +9,7 @@ import sinnet.Profiles;
 import sinnet.Program;
 
 @CucumberContextConfiguration
-@ContextConfiguration(classes = { Program.class })
+@ContextConfiguration(classes = { Program.class, PortsConfigurer.class })
 @ActiveProfiles(Profiles.TEST)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, properties = {"DAPR_GRPC_PORT=0"})
 public class CucumberContextConfigurer {
