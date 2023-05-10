@@ -57,7 +57,7 @@ public class StepDefinitions {
     var client = WebTestClient.bindToServer()
         .responseTimeout(Duration.ofMinutes(10))
         .baseUrl(rootUri + "/graphql")
-        .defaultHeader(HttpHeaders.AUTHORIZATION, "Bearer " + createJwt())
+        .defaultHeader(HttpHeaders.AUTHORIZATION, "Bearer " + createTestJwt())
         .build();
 
     var tester = HttpGraphQlTester.create(client);
@@ -80,7 +80,7 @@ public class StepDefinitions {
     // Write code here that turns the phrase above into concrete actions
   }
 
-  String createJwt() {
+  String createTestJwt() {
     var secret = "my super secret key to sign my dev JWT token";
     return JWT.create()
       .withSubject("a@b.c")
