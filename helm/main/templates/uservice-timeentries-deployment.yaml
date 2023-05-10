@@ -19,7 +19,7 @@ spec:
         dapr.io/enabled: "true"
         dapr.io/config: "tracing"
         dapr.io/app-id: "uservice-timeentries"
-        dapr.io/app-port: "9090"
+        dapr.io/app-port: "9091"
         dapr.io/app-protocol: "grpc"
     
     spec:
@@ -98,7 +98,7 @@ spec:
 
           # DAPR
           - name: APP_PORT
-            value: "9090"
+            value: "9091"
           
           # APP
           - name: SPRING_PROFILES_ACTIVE
