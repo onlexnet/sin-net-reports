@@ -36,7 +36,7 @@ service:
 ingress:
   enabled: true
   # possible values depends on k8s implementation and way how the ingress is installed
-  namespace: onlex-infra
+  namespace: onlexnet-infra
   # 'class: nginx' is hardcoded as we have our own ingress with such class
   # it solves the issue of having different ingresses per environment
   class: onlexnet

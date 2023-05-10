@@ -49,10 +49,10 @@ helm pull jaegertracing/jaeger
 
 
 # view Jeager UI
-minikube service onlex-infra-jaeger-query --url -n onlex-infra
+minikube service onlexnet-infra-jaeger-query --url -n onlexnet-infra
 or
 kubectl port-forward service/onlex-infra-jaeger-query 16686:16686 -n onlex-infra
 and then http://localhost:16686
 
 # view dapr dashboard
-minikube service dapr-dashboard --url -n onlex-infra
+minikube service dapr-dashboard --url -n onlexnet-infra

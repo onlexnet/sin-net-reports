@@ -14,6 +14,13 @@ spec:
     metadata:
       labels:
         app: uservice-timeentries
+      annotations:
+        # https://docs.dapr.io/reference/arguments-annotations-overview/
+        dapr.io/enabled: "true"
+        dapr.io/config: "tracing"
+        dapr.io/app-id: "uservice-timeentries"
+        dapr.io/app-port: "9090"
+        dapr.io/app-protocol: "grpc"
     
     spec:
       volumes:
@@ -85,13 +92,13 @@ spec:
           - name: OTEL_SERVICE_NAME
             value: "uservice-projects"
           - name: OTEL_EXPORTER_OTLP_ENDPOINT
-            value: http://onlex-infra-opentelemetry-collector.onlex-infra.svc.cluster.local:4317
+            value: http://onlexnet-infra-opentelemetry-collector.onlexnet-infra.svc.cluster.local:4317
           - name: OTEL_EXPORTER_OTLP_PROTOCOL
             value: grpc
 
           # DAPR
           - name: APP_PORT
-            value: "18080"
+            value: "9090"
           
           # APP
           - name: SPRING_PROFILES_ACTIVE
