@@ -49,6 +49,9 @@ spec:
           - containerPort: 8080
           env:
           
+          - name: SPRING_PROFILES_ACTIVE
+            value: "prod"
+
           # OTEL
           # https://opentelemetry.io/docs/instrumentation/java/automatic/#setup
           # https://opentelemetry.io/docs/concepts/sdk-configuration/otlp-exporter-configuration/
