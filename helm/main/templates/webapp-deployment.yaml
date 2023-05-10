@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: webapp-dep
+  name: uservice-webapp
   labels:
     app: webapp
 spec:
