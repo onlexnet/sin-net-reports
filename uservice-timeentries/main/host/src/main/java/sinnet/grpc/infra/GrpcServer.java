@@ -20,7 +20,7 @@ public class GrpcServer implements RpcFacade, AutoCloseable {
   private OptionalInt serverPort = OptionalInt.empty();
 
   public GrpcServer(BindableService[] services,
-                    @Value("${grpc.server.port}") int port) {
+                    @Value("${grpc.server-port}") int port) {
     this.services = services;
     this.port = port;
   }
