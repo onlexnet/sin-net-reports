@@ -38,7 +38,7 @@ h upgrade sinnet-reports . -f config.yaml
 - **microk8s with custom ingress**. It is used in some places because ingress in microk8s has defined class and namespace
 - **[cert-manager](https://cert-manager.io/)** installed with version 1.6
 - **create k8s namespace *onlex-sinnet-localhost* and use it for further local deployment**
-- **add position to hosts file: 127.0.0.1 sinnet.local** because such domain is expected by ingress in onlex-sinnet-localhost namespace
+- **add position to C:\Windows\System32\drivers\etc\hosts file: 127.0.0.1 sinnet.local** because such domain is expected by ingress in onlex-sinnet-localhost namespace
 - create and self-signed cert (used locally instead of letsencrypt), and import the key to k8s to support secure connection
 ```bash
 openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout tls.key -out tls.crt -subj "/CN=sinnet.local/O=sinnet.local"
