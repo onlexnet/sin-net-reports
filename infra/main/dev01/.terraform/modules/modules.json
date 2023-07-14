@@ -1,1 +1,1 @@
-{"Modules":[{"Key":"","Source":"","Dir":"."},{"Key":"shared","Source":"../../shared","Dir":"../../shared"}]}
+{"Modules":[{"Key":"","Source":"","Dir":"."},{"Key":"shared","Source":"../../shared","Dir":"../../shared"},{"Key":"shared.resourcegroup","Source":"./module_resourcegroup","Dir":"../../shared/module_resourcegroup"}]}

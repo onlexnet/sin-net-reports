@@ -11,13 +11,13 @@ data "azurerm_client_config" "current" {}
 # }
 
 
-# module "resourcegroup" {
-#   source               = "./module_resourcegroup"
-#   application_name     = var.application_name
-#   environment_name     = var.environment_name
-#   environment_location = var.environment_location
-#   subscription_id      = data.azurerm_client_config.current.subscription_id
-# }
+module "resourcegroup" {
+  source               = "./module_resourcegroup"
+  application_name     = var.application_name
+  environment_name     = var.environment_name
+  environment_location = local.environment_location
+  subscription_id      = data.azurerm_client_config.current.subscription_id
+}
 
 # module applications {
 #   source = "./module_applications"
