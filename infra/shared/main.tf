@@ -19,6 +19,11 @@ module "resourcegroup" {
   subscription_id      = data.azurerm_client_config.current.subscription_id
 }
 
+module "dns" {
+  source = "./module_dns"
+  resource_group_name = module.resourcegroup.main.name
+}
+
 # module applications {
 #   source = "./module_applications"
 # }
@@ -28,15 +33,16 @@ module "resourcegroup" {
 # #   resourcegroup = module.resourcegroup.main
 # # }
 
-# module "keyvault" {
-#   source           = "./module_keyvault"
-#   application_name = var.application_name
-#   environment_name = var.environment_name
-#   resourcegroup    = module.resourcegroup.main
+module "keyvault" {
+  source           = "./module_keyvault"
+  organization_name = local.organization_name
+  application_name = var.application_name
+  environment_name = var.environment_name
+  resourcegroup    = module.resourcegroup.main
 
-#   # appinsight_connection_string = module.appinsights.connection_string
-#   # support_security_group_name  = var.support_security_group
-# }
+  # appinsight_connection_string = module.appinsights.connection_string
+  # support_security_group_name  = var.support_security_group
+}
 
 # module "storage_account" {
 #   source           = "./module_storage_account"
@@ -96,9 +102,9 @@ module "resourcegroup" {
 # }
 
 
-# module "database" {
-#   source = "./module_database"
-#   resource_group = module.resourcegroup.main
-#   admin_password = module.keyvault.env.SQL_ADMIN_PASSWORD
-#   environment_name = var.environment_name
-# }
+module "database" {
+  source = "./module_database"
+  resource_group = module.resourcegroup.main
+  admin_password = module.keyvault.env.SQL_ADMIN_PASSWORD
+  environment_name = var.environment_name
+}
