@@ -34,6 +34,7 @@ In scope:
 - run backend
 - run frontend
 ## Used articles
+- [https://code.visualstudio.com/docs/devcontainers/create-dev-container]
 - [How to export OpenTelemetry to Application Insight](https://docs.dapr.io/operations/monitoring/tracing/open-telemetry-collector-appinsights/)
 - https://devhub.io/repos/JrCs-docker-letsencrypt-nginx-proxy-companion
 - https://blog.linuxserver.io/2017/11/28/how-to-setup-a-reverse-proxy-with-letsencrypt-ssl-for-all-your-docker-apps/
