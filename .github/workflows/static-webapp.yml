@@ -15,6 +15,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
+      - name: "test1"
+        run: echo "docker build . -t ghcr.io/onlexnet/static-webapp:${GITHUB_RUN_ID}"
+      - name: "test2"
+        run: echo "docker build . -t ghcr.io/onlexnet/static-webapp:$GITHUB_RUN_ID"
+
       - name: Checkout (GitHub)
         uses: actions/checkout@v3
 
