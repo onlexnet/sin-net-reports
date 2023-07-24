@@ -36,5 +36,5 @@ jobs:
           subFolder: static-webapp
           runCmd: |
             # env variables: https://docs.github.com/en/actions/learn-github-actions/variables#default-environment-variables
-            docker build . -t ghcr.io/onlexnet/static-webapp:$GITHUB_RUN_ID
+            docker build . -t ghcr.io/onlexnet/static-webapp:${GITHUB_RUN_ID}
 
