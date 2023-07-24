@@ -32,6 +32,8 @@ jobs:
 
       - name: Build docker image for static-webapp
         uses: devcontainers/ci@v0.3
+        env:
+          GITHUB_RUN_ID: $GITHUB_RUN_ID
         with:
           subFolder: static-webapp
           runCmd: |
