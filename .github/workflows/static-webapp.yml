@@ -15,16 +15,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-      - name: "test1"
-        run: echo "docker build . -t ghcr.io/onlexnet/static-webapp:${GITHUB_RUN_ID}"
-
-      - name: "test2"
-        run: echo "docker build . -t ghcr.io/onlexnet/static-webapp:$GITHUB_RUN_ID"
-
-      - name: Wyświetl SHA bieżącego commitu
-        run: echo "SHA $GITHUB_SHA"
-
-        
       - name: Checkout (GitHub)
         uses: actions/checkout@v3
 
@@ -43,10 +33,10 @@ jobs:
       - name: Build docker image for static-webapp
         uses: devcontainers/ci@v0.3
         env:
-          GITHUB_RUN_ID: $GITHUB_RUN_ID
+          RUN_ID: $GITHUB_RUN_ID
         with:
           subFolder: static-webapp
           runCmd: |
             # env variables: https://docs.github.com/en/actions/learn-github-actions/variables#default-environment-variables
-            docker build . -t ghcr.io/onlexnet/static-webapp:${GITHUB_RUN_ID}
+            docker build . -t ghcr.io/onlexnet/static-webapp:$RUN_ID
 
