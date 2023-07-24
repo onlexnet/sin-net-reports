@@ -87,4 +87,3 @@ jobs:
           tags: |
             latest
             $(Build.SourceBranchName)-$(Build.BuildNumber)
-

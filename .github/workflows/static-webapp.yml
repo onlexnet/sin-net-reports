@@ -6,7 +6,7 @@ name: GitHub image build for static-webapp
 on:
   push:
     branches: [ master, siudeks/issue123-1 ]
-    paths: [ static-webapp/**, .github/workflows/static-webapp.yml ]
+    paths: [ static-webapp/**, /uservice-webapi/api.graphql/, .github/workflows/static-webapp.yml ]
   pull_request:
     branches: [ master ]
 
@@ -22,10 +22,19 @@ jobs:
         uses: devcontainers/ci@v0.3
         with:
           subFolder: static-webapp
-          # imageName: mcr.microsoft.com/devcontainers/typescript-node:1-20-bullseye
-          # Change this to be your CI task/script
           runCmd: |
+            export MY_VERSION=$(cat .version)
             cd main
+            npm version $MY_VERSION 
             npm install
             npm run generate
             npm run build
+
+      - name: Build docker image for static-webapp
+        uses: devcontainers/ci@v0.3
+        with:
+          subFolder: static-webapp
+          runCmd: |
+            # env variables: https://docs.github.com/en/actions/learn-github-actions/variables#default-environment-variables
+            docker build . -t ghcr.io/onlexnet/static-webapp:$GITHUB_RUN_ID
+
