@@ -1,0 +1,30 @@
+# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
+
+name: GitHub image build for uservice-webapp
+
+on:
+  push:
+    branches: [ master, siudeks/issue123-1 ]
+    paths: [ uservice-webapp/**, .github/workflows/uservice-webapp.yml ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout (GitHub)
+        uses: actions/checkout@v3
+
+      - name: Build and run dev container task
+        uses: devcontainers/ci@v0.3
+        with:
+          imageName: mcr.microsoft.com/devcontainers/typescript-node:1-20-bullseye
+          # Change this to be your CI task/script
+          runCmd: |
+            cd main
+            npm install
+            npm run generate
+            npm run build
