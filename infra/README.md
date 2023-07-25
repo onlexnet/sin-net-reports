@@ -28,3 +28,12 @@ The infrastructure is currently designed to be started by manual invocation by a
 rm -fr .terraform
 terraform init -upgrade
 ```
+
+### Variables used in terraform cloud:
+- ARM_CLIENT_ID - id if service principal designed to apply changes in Azure infrastructure
+- ARM_CLIENT_SECRET - secret of the principal
+- ARM_TENANT_ID - AD of onlex.net
+- CLOUDFLARE_API_TOKEN - Cloudflare token named onlexnet-dns-edit to update DNS records in onlex.net
+- GITHUB_TOKEN - token onlexnet-sinnet-infra
+- TF_VAR_azure_subscription_id_prod - onlexnet-sinnet-dev01
+

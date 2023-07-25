@@ -59,12 +59,12 @@ jobs:
         run: echo I am deploying!
 
   DeployUat:
-    name: Deploy to DEV01
+    name: Deploy to PROD
     if: github.event.ref == 'refs/heads/main'
     needs: [ Build ]
     runs-on: ubuntu-latest
     environment:
-      name: dev01
+      name: prod
       url: 'http://www.myapp.com'
     steps:
       - name: Deploy

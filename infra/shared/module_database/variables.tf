@@ -14,3 +14,6 @@ variable "environment_name" {
   # Used to construct some names where environment name is the part of constructed name
   type = string
 }
+
+variable "application_name" {
+}

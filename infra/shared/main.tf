@@ -62,20 +62,20 @@ module "github" {
 #   resource_group = module.resourcegroup.main
 # }
 
-# module "cloudflare" {
-#   source = "./module_cloudflare"
-#   webapp_prefix = var.environment_name
-#   webapp_fqdn = module.static_app.webapp_fqdn
-#   webapi_prefix = "api-${var.environment_name}"
-#   webapi_fqdn = module.container_apps.webapi_fqdn
-# }
+module "static_app" {
+  source = "./module_static_app"
+  resource_group = module.resourcegroup.main
 
-# module "static_app" {
-#   source = "./module_static_app"
-#   resource_group = module.resourcegroup.main
+  custom_domain = "${var.application_name}-${var.environment_name}.onlex.net"
+}
 
-#   custom_domain = "${var.environment_name}.fin2set.net"
-# }
+module "cloudflare" {
+  source = "./module_cloudflare"
+  webapp_prefix = "${var.application_name}-${var.environment_name}"
+  webapp_fqdn = module.static_app.webapp_fqdn
+  webapi_prefix = "${var.application_name}-${var.environment_name}-api"
+  webapi_fqdn = module.container_apps.webapi_fqdn
+}
 
 # module "github_repo" {
 #   source = "./module_github_repo"
@@ -85,26 +85,24 @@ module "github" {
 #   acr_registry_url = data.azurerm_container_registry.alldev.login_server
 # }
 
-# module "container_apps" {
-#   source = "./module_container_apps"
-#   resource_group = module.resourcegroup.main
-#   log_analytics_workspace = module.log_analytics_workspace.main
-#   env = {
-#     NORDIGEN_SECRET_ID = module.keyvault.env.NORDIGEN_SECRET_ID
-#     NORDIGEN_SECRET_KEY = module.keyvault.env.NORDIGEN_SECRET_KEY
-#     DATABASE_HOST = module.database.database_host
-#     DATABASE_PORT = module.database.database_port
-#     DATABASE_NAME = module.database.database_name
-#     DATABASE_USERNAME = module.database.database_username
-#     DATABASE_PASSWORD = module.database.database_password
-#   }
+module "container_apps" {
+  source = "./module_container_apps"
+  resource_group = module.resourcegroup.main
+  log_analytics_workspace = module.log_analytics_workspace.main
+  env = {
+    DATABASE_HOST = module.database.database_host
+    DATABASE_PORT = module.database.database_port
+    DATABASE_NAME = module.database.database_name
+    DATABASE_USERNAME = module.database.database_username
+    DATABASE_PASSWORD = module.database.database_password
+  }
 
-# }
+}
 
-# module "log_analytics_workspace" {
-#   source = "./module_log_analytics_workspace"
-#   resource_group = module.resourcegroup.main
-# }
+module "log_analytics_workspace" {
+  source = "./module_log_analytics_workspace"
+  resource_group = module.resourcegroup.main
+}
 
 
 module "database" {
@@ -112,4 +110,5 @@ module "database" {
   resource_group   = module.resourcegroup.main
   admin_password   = module.keyvault.env.SQL_ADMIN_PASSWORD
   environment_name = var.environment_name
+  application_name = var.application_name
 }

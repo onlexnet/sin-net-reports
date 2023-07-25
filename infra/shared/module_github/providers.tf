@@ -7,9 +7,3 @@ terraform {
     }
   }
 }
-
-# Configure the GitHub Provider
-provider "github" {
-  # required to use GITHUB_TOKEN (defined inside Terraform Cloud CI workspace) as owned by the organization, not by a personal access
-  # owner = "onlexnet"
-}
