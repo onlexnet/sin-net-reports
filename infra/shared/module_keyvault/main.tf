@@ -45,18 +45,6 @@ resource "azurerm_key_vault_access_policy" "infra" {
   ]
 }
 
-resource "azurerm_key_vault_secret" "NORDIGEN-SECRET-ID" {
-  name         = "NORDIGEN-SECRET-ID"
-  value        = data.external.env.result["TF_VAR_NORDIGEN_SECRET_ID"]
-  key_vault_id = azurerm_key_vault.example.id
-}
-
-resource "azurerm_key_vault_secret" "NORDIGEN-SECRET-KEY" {
-  name         = "NORDIGEN-SECRET-KEY"
-  value        = data.external.env.result["TF_VAR_NORDIGEN_SECRET_KEY"]
-  key_vault_id = azurerm_key_vault.example.id
-}
-
 resource "azurerm_key_vault_secret" "SQL-ADMIN-PASSWORD" {
   name         = "SQL-ADMIN-PASSWORD"
   value        = random_string.password.result

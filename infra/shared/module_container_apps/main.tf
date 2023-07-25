@@ -92,26 +92,16 @@ resource "azurerm_container_app" "default" {
     container {
       name = "uservice-openapi"
       # step 1
-      # image = "busybox:latest"
       # step 2
       # image  = "${data.azurerm_container_registry.alldev.login_server}/fin2set:latest"
       #  image  = "${data.azurerm_container_registry.alldev.login_server}/fin2set:latest"
-      image = "mendhak/http-https-ech"
+      image = "busybox:latest"
       cpu    = 0.25
       memory = "0.5Gi"
 
       # scale - currently not supported
       # https://github.com/hashicorp/terraform-provider-azurerm/issues/20629
       # please manage manually using portal or az tools
-
-      env {
-        name = "NORDIGEN_SECRET_ID"
-        secret_name = "nordigen-secret-id"
-      }
-      env {
-        name = "NORDIGEN_SECRET_KEY"
-        secret_name = "nordigen-secret-key"
-      }
 
       env {
         name = "DATABASE_HOST"
