@@ -48,7 +48,7 @@ jobs:
 
   DeployDev:
     name: Deploy to DEV01
-    if: github.event_name == 'pull_request'
+    if: ${{ github.event_name == 'pull_request' }}
     needs: [ Build ]
     runs-on: ubuntu-latest
     environment:
@@ -64,7 +64,7 @@ jobs:
     needs: [ Build ]
     runs-on: ubuntu-latest
     environment:
-      name: prod
+      name: prod1
       url: 'http://www.myapp.com'
     steps:
       - name: Deploy
