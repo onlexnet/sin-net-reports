@@ -39,6 +39,7 @@ jobs:
           subFolder: static-webapp
           runCmd: |
             # env variables: https://docs.github.com/en/actions/learn-github-actions/variables#default-environment-variables
+            # also interesting here https://github.com/devcontainers/ci/issues/153#issuecomment-1488384391
             # docker build . -t ghcr.io/onlexnet/static-webapp:$RUN_ID
             echo "RUN_ID = $RUN_ID"
             echo "GITHUB_RUN_ID = $GITHUB_RUN_ID"

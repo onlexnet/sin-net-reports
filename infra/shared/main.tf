@@ -20,7 +20,7 @@ module "resourcegroup" {
 }
 
 module "dns" {
-  source = "./module_dns"
+  source              = "./module_dns"
   resource_group_name = module.resourcegroup.main.name
 }
 
@@ -34,14 +34,19 @@ module "dns" {
 # # }
 
 module "keyvault" {
-  source           = "./module_keyvault"
+  source            = "./module_keyvault"
   organization_name = local.organization_name
-  application_name = var.application_name
-  environment_name = var.environment_name
-  resourcegroup    = module.resourcegroup.main
+  application_name  = var.application_name
+  environment_name  = var.environment_name
+  resourcegroup     = module.resourcegroup.main
 
   # appinsight_connection_string = module.appinsights.connection_string
   # support_security_group_name  = var.support_security_group
+}
+
+module "github" {
+  source           = "./module_github"
+  environment_name = var.environment_name
 }
 
 # module "storage_account" {
@@ -68,7 +73,7 @@ module "keyvault" {
 # module "static_app" {
 #   source = "./module_static_app"
 #   resource_group = module.resourcegroup.main
-  
+
 #   custom_domain = "${var.environment_name}.fin2set.net"
 # }
 
@@ -93,7 +98,7 @@ module "keyvault" {
 #     DATABASE_USERNAME = module.database.database_username
 #     DATABASE_PASSWORD = module.database.database_password
 #   }
-    
+
 # }
 
 # module "log_analytics_workspace" {
@@ -103,8 +108,8 @@ module "keyvault" {
 
 
 module "database" {
-  source = "./module_database"
-  resource_group = module.resourcegroup.main
-  admin_password = module.keyvault.env.SQL_ADMIN_PASSWORD
+  source           = "./module_database"
+  resource_group   = module.resourcegroup.main
+  admin_password   = module.keyvault.env.SQL_ADMIN_PASSWORD
   environment_name = var.environment_name
 }
