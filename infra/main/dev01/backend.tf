@@ -10,7 +10,6 @@ terraform {
       name = "sinnet-dev01"
     }
 
-    features {}
   }
 
   required_version = ">= 0.14.0"
