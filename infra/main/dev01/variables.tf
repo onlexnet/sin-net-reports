@@ -4,5 +4,6 @@ variable "environment_name" {
     default = "dev01"
 }
 
-variable "azure_subscription_id_prod" {
+# Should be supplied by environment variables
+variable "azure_subscription_id_dev" {
 }

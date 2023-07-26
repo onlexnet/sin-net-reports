@@ -2,7 +2,8 @@
 # sharing them using terraform is the simplest option
 output "env" {
   value = {
-    SQL_ADMIN_PASSWORD = random_string.password.result
+    SQL_ADMIN_PASSWORD = azurerm_key_vault_secret.sqladminpassword.value
+    # random_string.password.result
   }
   sensitive = true
 }
