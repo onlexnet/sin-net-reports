@@ -47,6 +47,7 @@ module "keyvault" {
 module "github" {
   source           = "./module_github"
   environment_name = var.environment_name
+  azure_static_web_apps_api_token = module.static_app.static_app_api_key
 }
 
 # module "storage_account" {

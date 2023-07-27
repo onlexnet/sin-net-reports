@@ -25,8 +25,9 @@ resource "github_repository_environment_deployment_policy" "master" {
   branch_pattern = "master"
 }
 
-resource "github_repository_environment_deployment_policy" "to-delete" {
-  repository     = data.github_repository.sinnet.name
-  environment    = github_repository_environment.main.environment
-  branch_pattern = "siudeks/*"
+resource "github_actions_environment_secret" "azure_static_web_apps_api_token" {
+  environment     = github_repository_environment.main.environment
+  repository      = data.github_repository.sinnet.name
+  secret_name     = "AZURE_STATIC_WEB_APPS_API_TOKEN"
+  plaintext_value = var.azure_static_web_apps_api_token
 }
