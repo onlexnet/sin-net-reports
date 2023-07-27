@@ -17,37 +17,28 @@ resource "azurerm_key_vault" "example" {
   tenant_id                  = data.azurerm_client_config.current.tenant_id
   sku_name                   = "standard"
   soft_delete_retention_days = 7
-}
 
-resource "azurerm_key_vault_access_policy" "support" {
-  key_vault_id = azurerm_key_vault.example.id
-  tenant_id    = data.azurerm_client_config.current.tenant_id
-  object_id    = data.azuread_group.support.object_id
+  access_policy {
+    tenant_id    = data.azurerm_client_config.current.tenant_id
+    object_id    = data.azuread_group.support.object_id
 
-  secret_permissions = [
-    # "Get", "Set", "List", "Delete"
-    "Get", "List"
-  ]
+    secret_permissions = [
+      # "Get", "Set", "List", "Delete"
+      "Get", "List"
+    ]
   
-}
+  }
 
-resource "azurerm_key_vault_access_policy" "infra" {
-  key_vault_id = azurerm_key_vault.example.id
-  tenant_id    = data.azurerm_client_config.current.tenant_id
-  object_id    = data.azurerm_client_config.current.object_id
+  access_policy {
+    tenant_id    = data.azurerm_client_config.current.tenant_id
+    object_id    = data.azurerm_client_config.current.object_id
 
-  secret_permissions = [
-    # all known values, as there is no point to limit onlex-infra, and additionally lack of some values throw unexpected issues (e.g. in destroying keyvault)
-    "Backup", "Delete", "Get", "List", "Purge", "Recover", "Restore", "Set"
-    # "Get", "Set", "List", "Delete",
+    secret_permissions = [
+      # all known values, as there is no point to limit onlex-infra, and additionally lack of some values throw unexpected issues (e.g. in destroying keyvault)
+      "Backup", "Delete", "Get", "List", "Purge", "Recover", "Restore", "Set"
+    ]
+  }
 
-    # # fix error: autorest/azure: Service returned an error. Status=403 Code="Forbidden" Message="The user, group or application 
-    # # 'appid=...' does not have secrets recover permission on key vault 'fin2set-dev01;location=westeurope'
-    # "Recover",
-
-    # # Required when the environment is destroyed
-    # "Purge"
-  ]
 }
 
 resource "azurerm_key_vault_secret" "sqladminpassword" {

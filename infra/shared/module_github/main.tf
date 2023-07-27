@@ -10,7 +10,7 @@ resource "github_repository_environment" "main" {
   environment = var.environment_name
   repository  = data.github_repository.sinnet.name
   reviewers {
-    users = [data.github_user.current.id]
+    # users = [data.github_user.current.id]
   }
 
   deployment_branch_policy {
