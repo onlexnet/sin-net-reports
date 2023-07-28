@@ -55,6 +55,9 @@ jobs:
       name: dev01
       url: 'http://sinnet-dev01.onlex.net'
     steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
       - name: Deploy
         run: echo I am deploying!
       - name: Build And Deploy
