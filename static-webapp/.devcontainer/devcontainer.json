@@ -21,8 +21,13 @@
 			"installUsingPython": true,
 			"version": "latest"
 		}
-	}
+	},
 
+	// https://stackoverflow.com/a/75644266
+	"mounts": [
+		"type=bind,source=/home/${localEnv:USER}/.ssh,target=/home/node/.ssh"
+	]
+	
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],
 
