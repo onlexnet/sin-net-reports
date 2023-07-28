@@ -34,6 +34,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "generate": "graphql-codegen --config ./graphql-codegen-config.yml",
+    "cibuild": "CI=false && graphql-codegen --config ./graphql-codegen-config.yml && react-scripts build",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
