@@ -54,7 +54,7 @@ const View: React.FC<ViewProps> = props => {
     <Stack >
       <Stack.Item align="center">
         <span>
-          <Spinner label="Pracowite sprawdzanie kim jesteś ..." ariaLive="assertive" labelPosition="right" />
+          <Spinner label="Pracowite sprawdzanie kim jesteś ;) ..." ariaLive="assertive" labelPosition="right" />
         </span>
       </Stack.Item>
     </Stack>
