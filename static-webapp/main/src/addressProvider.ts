@@ -6,6 +6,7 @@ export const addressProvider = (): { host: string } => {
 
 const asBackendHost = (appHost: string): string => {
   if (origin.endsWith("raport.sin.net.pl")) return appHost;
+  console.log("origin", origin);
   if (origin.endsWith("onlex.net")) return appHost;
   if (origin.endsWith("sinnet.local")) return appHost;
   return "https://sinnet.local";
