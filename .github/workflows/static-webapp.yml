@@ -30,6 +30,11 @@ jobs:
             npm install
             npm run generate
             npm run build
+      - name: Store build react binaries
+        uses: actions/upload-artifact@v2
+        with:
+          name: webapp-binaries
+          path: static-webapp/main/build
 
       - name: Build docker image for static-webapp
         uses: devcontainers/ci@v0.3
@@ -71,7 +76,9 @@ jobs:
           ###### Repository/Build Configurations - These values can be configured to match your app requirements. ######
           # For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
           app_location: "/static-webapp/main" # App source code path
-          app_build_command: "npm run cibuild"
+          # app_build_command: "npm run cibuild"
+          # we expect to have built binaries by earlier job
+          skip_app_build: true
           # api_location: "" # Api source code path - optional
           output_location: "build" # Built app content directory - optional
           ###### End of Repository/Build Configurations ######
