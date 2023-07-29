@@ -29,6 +29,9 @@ jobs:
       - name: Build with Maven base package
         run: mvn -ntp install
         working-directory: libs-java
+
       - name: Build with Maven Timeentries
-        run: mvn -ntp package --file pom.xml
+        run: |
+          export SEMVERSION=$(cat ../.semversion)
+          mvn -ntp package --file pom.xml
         working-directory: uservice-timeentries/main
