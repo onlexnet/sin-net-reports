@@ -1,5 +1,28 @@
 {
-    "platform": {
-      "apiRuntime": "node:16"
+  "platform": {
+    "apiRuntime": "node:16"
+  },
+
+  "auth": {
+    "identityProviders": {
+      "customOpenIdConnectProviders": {
+        "myProvider": {
+          "registration": {
+            "clientIdSettingName": "36305176-2249-4ce5-8d59-a91dd7363610",
+            "clientCredential": {
+              "clientSecretSettingName": "MY_PROVIDER_CLIENT_SECRET"
+            },
+            "openIdConnectConfiguration": {
+              "wellKnownOpenIdConfiguration": "https://<PROVIDER_ISSUER_URL>/.well-known/openid-configuration"
+            }
+          },
+          "login": {
+            "nameClaimType": "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name",
+            "scopes": [],
+            "loginParameterNames": []
+          }
+        }
+      }
     }
   }
+}
