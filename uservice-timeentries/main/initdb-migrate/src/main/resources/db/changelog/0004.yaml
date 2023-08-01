@@ -1,0 +1,36 @@
+databaseChangeLog:
+- changeSet:
+    id: 202009231900-3
+    author: siudeks
+    changes:
+    - createTable:
+        tableName: customers
+        columns:
+        - column:
+            name: project_id
+            type: UUID
+            constraints:
+              nullable: false
+        - column:
+            name: entity_id
+            type: UUID
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: customer_PK
+        - column:
+            name: entity_version
+            type: INTEGER
+            constraints:
+              nullable: false
+        - column:
+            name: customer_name
+            type: VARCHAR(200)
+            constraints:
+              nullable: false
+        - column:
+            name: customer_city_name
+            type: VARCHAR(50)
+        - column:
+            name: customer_address
+            type: VARCHAR(50)

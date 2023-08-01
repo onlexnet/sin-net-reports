@@ -3,7 +3,7 @@
 ## Profiles
 We support some profiles in backend code to allow run them with different configurations:
 - dev - no security
-- prod - ready for deployment, postgresql database
+- prod - ready for deployment, mssql database
 
 ## Good development practices
 

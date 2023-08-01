@@ -1,0 +1,14 @@
+databaseChangeLog:
+- changeSet:
+    id: 202009231900-2
+    author: siudeks
+    changes:
+    - insert:
+        tableName: projects
+        columns:
+        - column:
+            name: entity_id
+            value: 2be00ecf-16cc-42ff-b36b-20ea1e623e70
+        - column:
+            name: name
+            value: sin.net.pl

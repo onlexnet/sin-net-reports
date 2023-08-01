@@ -15,7 +15,7 @@
         </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>
-            <artifactId>postgresql</artifactId>
+            <artifactId>mssqlserver</artifactId>
             <exclusions>
                 <exclusion>
                     <groupId>junit</groupId>

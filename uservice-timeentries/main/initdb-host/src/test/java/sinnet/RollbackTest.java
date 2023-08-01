@@ -15,11 +15,11 @@ import liquibase.integration.spring.SpringLiquibase;
 import liquibase.resource.ClassLoaderResourceAccessor;
 import lombok.Cleanup;
 import lombok.SneakyThrows;
-import sinnet.db.PostgresDbExtension;
+import sinnet.db.SqlServerDbExtension;
 
 @DisplayNameGeneration(DisplayNameGenerator.IndicativeSentences.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
-@ExtendWith(PostgresDbExtension.class)
+@ExtendWith(SqlServerDbExtension.class)
 class RollbackTest {
 
 

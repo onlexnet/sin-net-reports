@@ -1,0 +1,33 @@
+databaseChangeLog:
+- changeSet:
+    id: 20210103-1
+    author: siudeks
+    changes:
+      - createTable:
+          tableName: contact
+          columns:
+            - column:
+                name: customer_id
+                type: UUID
+                constraints:
+                  nullable: false
+            - column:
+                name: first_name
+                type: varchar(50)
+            - column:
+                name: last_name
+                type: varchar(50)
+            - column:
+                name: phone_no
+                type: varchar(50)
+            - column:
+                name: email
+                type: varchar(50)
+          foreignKeyConstraints:
+              - foreignKeyConstraint:
+                  baseTableName: contact
+                  baseColumnNames: customer_id
+                  constraintName: contact_FK1
+                  referencedTableName: customers
+                  referencedColumnNames: entity_id
+                  onDelete: CASCADE

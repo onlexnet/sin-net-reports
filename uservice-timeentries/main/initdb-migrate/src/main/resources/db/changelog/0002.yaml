@@ -1,0 +1,152 @@
+databaseChangeLog:
+- changeSet:
+    id: 202009231900-1
+    author: liquibase-docs
+    changes:
+    - insert:
+        tableName: projects
+        columns:
+        - column:
+            name: entity_id
+            value: 00000000-0000-0000-0001-000000000001
+        - column:
+            name: name
+            value: Siudek Test project
+    - insert:
+        tableName: projects
+        columns:
+        - column:
+            name: entity_id
+            value: 00000000-0000-0000-0001-000000000002
+        - column:
+            name: name
+            value: SinNet Test project
+    - insert:
+        tableName: projects
+        columns:
+        - column:
+            name: entity_id
+            value: 00000000-0000-0000-0001-000000000003
+        - column:
+            name: name
+            value: SinNet Production
+    - insert:
+        tableName: serviceman
+        columns:
+        - column:
+            name: project_entity_id
+            value: 00000000-0000-0000-0001-000000000001
+        - column:
+            name: entity_id
+            value: 00000000-0000-0000-0002-000000000001
+        - column:
+            name: email
+            value: user1@project1
+    - insert:
+        tableName: serviceman
+        columns:
+        - column:
+            name: project_entity_id
+            value: 00000000-0000-0000-0001-000000000001
+        - column:
+            name: entity_id
+            value: 00000000-0000-0000-0002-000000000002
+        - column:
+            name: email
+            value: user2@project1
+    - insert:
+        tableName: serviceman
+        columns:
+        - column:
+            name: project_entity_id
+            value: 00000000-0000-0000-0001-000000000001
+        - column:
+            name: entity_id
+            value: 00000000-0000-0000-0002-000000000003
+        - column:
+            name: email
+            value: siudeks@gmail.com
+    - insert:
+        tableName: serviceman
+        columns:
+        - column:
+            name: project_entity_id
+            value: 00000000-0000-0000-0001-000000000002
+        - column:
+            name: entity_id
+            value: 00000000-0000-0000-0002-000000000004
+        - column:
+            name: email
+            value: biuro@sin.net.pl
+    - insert:
+        tableName: serviceman
+        columns:
+        - column:
+            name: project_entity_id
+            value: 00000000-0000-0000-0001-000000000002
+        - column:
+            name: entity_id
+            value: 00000000-0000-0000-0002-000000000005
+        - column:
+            name: email
+            value: kamil@sin.net.pl
+    - insert:
+        tableName: serviceman
+        columns:
+        - column:
+            name: project_entity_id
+            value: 00000000-0000-0000-0001-000000000002
+        - column:
+            name: entity_id
+            value: 00000000-0000-0000-0002-000000000006
+        - column:
+            name: email
+            value: robert@sin.net.pl
+    - insert:
+        tableName: serviceman
+        columns:
+        - column:
+            name: project_entity_id
+            value: 00000000-0000-0000-0001-000000000002
+        - column:
+            name: entity_id
+            value: 00000000-0000-0000-0002-000000000007
+        - column:
+            name: email
+            value: siudeks@gmail.com
+    - insert:
+        tableName: serviceman
+        columns:
+        - column:
+            name: project_entity_id
+            value: 00000000-0000-0000-0001-000000000003
+        - column:
+            name: entity_id
+            value: 00000000-0000-0000-0002-000000000008
+        - column:
+            name: email
+            value: biuro@sin.net.pl
+    - insert:
+        tableName: serviceman
+        columns:
+        - column:
+            name: project_entity_id
+            value: 00000000-0000-0000-0001-000000000003
+        - column:
+            name: entity_id
+            value: 00000000-0000-0000-0002-000000000009
+        - column:
+            name: email
+            value: kamil@sin.net.pl
+    - insert:
+        tableName: serviceman
+        columns:
+        - column:
+            name: project_entity_id
+            value: 00000000-0000-0000-0001-000000000003
+        - column:
+            name: entity_id
+            value: 00000000-0000-0000-0002-000000000010
+        - column:
+            name: email
+            value: robert@sin.net.pl

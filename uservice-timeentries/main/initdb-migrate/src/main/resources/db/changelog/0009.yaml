@@ -1,0 +1,21 @@
+databaseChangeLog:
+- changeSet:
+    id: 20210106-1
+    author: siudeks
+    changes:
+      - addColumn:
+          tableName: actions
+          columns:
+            - column:
+                name: customer_id
+                type: UUID
+      - addForeignKeyConstraint:
+          baseTableName: actions
+          baseColumnNames: customer_id
+          constraintName: actions_FK1
+          referencedTableName: customers
+          referencedColumnNames: entity_id
+          onDelete: NO ACTION
+      - dropColumn:
+          tableName: actions
+          columnName: customer_name

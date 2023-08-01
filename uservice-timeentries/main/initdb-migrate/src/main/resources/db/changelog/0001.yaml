@@ -1,0 +1,116 @@
+databaseChangeLog:
+- changeSet:
+    id: 1601237109370-1
+    author: siudeks
+    changes:
+    - createTable:
+        tableName: actions
+        columns:
+        - column:
+            name: project_id
+            type: UUID
+            constraints:
+              nullable: false
+        - column: 
+            name: entity_id
+            type: UUID
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: actions_PK
+        - column:
+            name: entity_version
+            type: INTEGER
+            constraints:
+              nullable: false
+        - column:
+            name: serviceman_email
+            type: VARCHAR(50)
+        - column:
+            name: customer_name
+            type: VARCHAR(50)
+        - column:
+            name: description
+            type: VARCHAR(4000)
+        - column:
+            name: distance
+            type: INTEGER
+        - column:
+            name: duration
+            type: BIGINT
+        - column:
+            name: serviceman_name
+            type: VARCHAR(255)
+        - column:
+            name: date
+            type: date
+            constraints:
+              nullable: false
+    - createTable:
+        tableName: proj_daily_report
+        columns:
+        - column:
+            name: id
+            type: BIGINT
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: proj_daily_reportPK
+        - column:
+            name: description
+            type: VARCHAR(255)
+        - column:
+            name: when
+            type: date
+    - createTable:
+        tableName: projects
+        columns:
+        - column:
+            name: entity_id
+            type: UUID
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: PK_projects
+        - column:
+            name: name
+            type: VARCHAR(50)
+    - createTable:
+        tableName: serviceman
+        columns:
+        - column:
+            name: entity_id
+            type: UUID
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: servicemanPK
+        - column:
+            name: email
+            type: VARCHAR(50)
+            constraints:
+              nullable: false
+        - column:
+            name: project_entity_id
+            type: UUID
+- changeSet:
+    id: 1601237109370-7
+    author: siudeks
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: project_entity_id
+        baseTableName: serviceman
+        constraintName: serviceman_project_FK
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: entity_id
+        referencedTableName: projects
+        validate: true
+    - addUniqueConstraint:
+        columnNames: email, project_entity_id
+        constraintName: qunique_email_project
+        deferrable: true
+        initiallyDeferred: true
+        tableName: serviceman
+        validate: true

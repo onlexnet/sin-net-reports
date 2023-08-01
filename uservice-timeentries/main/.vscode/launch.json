@@ -12,7 +12,7 @@
             "projectName": "uservice-timeentries-host",
             "env": {
                 "SPRING_PROFILES_ACTIVE": "dev",
-                "DATABASE_JDBC": "jdbc:postgresql://localhost:5432/devlocaldb",
+                "DATABASE_JDBC": "jdbc:sqlserver://localhost:1433;database=devlocaldb;encrypt=false",
                 "DATABASE_USERNAME": "uservice_timeentries_role_name",
                 "DATABASE_PASSWORD": "uservice_timeentries_role_password",
                 "DATABASE_SCHEMA": "uservice_timeentries",

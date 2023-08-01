@@ -1,0 +1,17 @@
+databaseChangeLog:
+  - changeSet:
+      author: siudeks
+      id: 20201219-2
+      changes:
+      - addColumn:
+          tableName: customers
+          columns:
+            - column:
+                name: komercja_jest
+                type: boolean
+            - column:
+                name: komercja_notatki
+                type: varchar(10000)
+            - column:
+                name: dane_techniczne
+                type: varchar(10000)

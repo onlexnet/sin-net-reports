@@ -1,0 +1,71 @@
+databaseChangeLog:
+  - changeSet:
+      author: siudeks
+      id: 20201225-1
+      changes:
+        - createTable:
+            tableName: secret
+            columns:
+              - column:
+                  name: customer_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: location
+                  type: varchar(50)
+              - column:
+                  name: username
+                  type: varchar(50)
+              - column:
+                  name: password
+                  type: varchar(50)
+              - column:
+                  name: changed_who
+                  type: varchar(50)
+              - column:
+                  name: changed_when
+                  type: timestamp without time zone
+        - addForeignKeyConstraint:
+            baseTableName: secret
+            baseColumnNames: customer_id
+            constraintName: secret_FK1
+            referencedTableName: customers
+            referencedColumnNames: entity_id
+            onDelete: CASCADE
+        - createTable:
+            tableName: secret_ex
+            columns:
+              - column:
+                  name: customer_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: location
+                  type: varchar(50)
+              - column:
+                  name: entity_name
+                  type: varchar(50)
+              - column:
+                  name: entity_code
+                  type: varchar(50)
+              - column:
+                  name: username
+                  type: varchar(50)
+              - column:
+                  name: password
+                  type: varchar(50)
+              - column:
+                  name: changed_who
+                  type: varchar(50)
+              - column:
+                  name: changed_when
+                  type: timestamp without time zone
+        - addForeignKeyConstraint:
+            baseTableName: secret_ex
+            baseColumnNames: customer_id
+            constraintName: secret_ex_FK1
+            referencedTableName: customers
+            referencedColumnNames: entity_id
+            onDelete: CASCADE

@@ -8,7 +8,7 @@ databaseChangeLog:
         columns:
         - column:
             name: entity_version
-            type: INTEGER
+            type: BIGINT
             defaultValue: '1'
             constraints:
               nullable: false
