@@ -42,11 +42,11 @@ public interface CustomerRepository extends JpaRepository<CustomerRepository.Cus
   @Accessors(chain = true)
   class CustomerDbo {
 
-    @Column(name = "project_id")
+    @Column(name = "project_id", columnDefinition = "uniqueidentifier")
     @EqualsAndHashCode.Include
     private UUID projectId;
 
-    @Column(name = "entity_id")
+    @Column(name = "entity_id", columnDefinition = "uniqueidentifier")
     @Id
     @EqualsAndHashCode.Include
     private UUID entityId;
@@ -137,15 +137,15 @@ public interface CustomerRepository extends JpaRepository<CustomerRepository.Cus
     private String daneTechniczne;
 
     @ElementCollection
-    @CollectionTable(name = "contact", joinColumns = @JoinColumn(name = "customer_id"))
+    @CollectionTable(name = "contact", joinColumns = @JoinColumn(name = "customer_id", columnDefinition = "uniqueidentifier"))
     private List<CustomerDboContact> contacts;
 
     @ElementCollection
-    @CollectionTable(name = "secret", joinColumns = @JoinColumn(name = "customer_id"))
+    @CollectionTable(name = "secret", joinColumns = @JoinColumn(name = "customer_id", columnDefinition = "uniqueidentifier"))
     private List<CustomerDboSecret> secrets;
 
     @ElementCollection
-    @CollectionTable(name = "secret_ex", joinColumns = @JoinColumn(name = "customer_id"))
+    @CollectionTable(name = "secret_ex", joinColumns = @JoinColumn(name = "customer_id", columnDefinition = "uniqueidentifier"))
     private List<CustomerDboSecretEx> secretsEx;
   }
 

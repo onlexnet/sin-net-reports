@@ -22,7 +22,6 @@ public final class SpringBootDbTestContextBootstrapper extends SpringBootTestCon
 
   public SpringBootDbTestContextBootstrapper() {
     super();
-    log.error("SPARTA1");
   }
   
   @Override

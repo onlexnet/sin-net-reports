@@ -4,15 +4,15 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
+import org.hibernate.annotations.Type;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
-
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -39,11 +39,12 @@ public interface ActionRepository extends JpaRepository<ActionRepository.ActionD
   @Accessors(chain = true)
   final class ActionDbo {
 
-    @Column(name = "project_id")
+    // @Type(type = "uuid-char")
+    @Column(name = "project_id", columnDefinition = "uniqueidentifier")
     private UUID projectId;
 
     @Id
-    @Column(name = "entity_id")
+    @Column(name = "entity_id", columnDefinition = "uniqueidentifier")
     private UUID entityId;
 
     @Version
@@ -68,7 +69,7 @@ public interface ActionRepository extends JpaRepository<ActionRepository.ActionD
     @Column(name = "date")
     private LocalDate date;
 
-    @Column(name = "customer_id")
+    @Column(name = "customer_id", columnDefinition = "uniqueidentifier")
     private UUID customerId;
   }
 }

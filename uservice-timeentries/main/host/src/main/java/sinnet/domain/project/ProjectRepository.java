@@ -30,7 +30,7 @@ public interface ProjectRepository extends JpaRepository<ProjectRepository.DboTe
   static class DboTemplate {
 
     @Id
-    @Column(name = "entity_id")
+    @Column(name = "entity_id", columnDefinition = "uniqueidentifier")
     private UUID entityId;
 
     @Version
