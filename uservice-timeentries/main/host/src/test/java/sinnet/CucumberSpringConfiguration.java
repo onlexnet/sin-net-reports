@@ -8,7 +8,7 @@ import io.cucumber.spring.CucumberContextConfiguration;
 
 @CucumberContextConfiguration
 // examples https://github.com/cucumber/cucumber-jvm/pull/1911
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @BootstrapWith(SpringBootDbTestContextBootstrapper.class)
 @ActiveProfiles("test")
 class CucumberSpringConfiguration {

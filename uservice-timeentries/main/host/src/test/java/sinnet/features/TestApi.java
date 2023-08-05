@@ -92,6 +92,9 @@ public class TestApi {
 
 }
 
+/**
+ * In BDD tests ClientContext represents separated, connected user.
+ */
 @Accessors(fluent = true)
 class ClientContext {
   @Getter
