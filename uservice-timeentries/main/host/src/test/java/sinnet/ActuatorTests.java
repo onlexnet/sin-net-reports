@@ -20,30 +20,28 @@ import io.restassured.RestAssured;
 import sinnet.db.SqlServerDbExtension;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ContextConfiguration(classes = { Program.class })
 @ActiveProfiles("test")
 @ExtendWith(SqlServerDbExtension.class)
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class ActuatorTests {
 
   @Autowired
-  private TestRestTemplate testRestTemplate;
+  TestRestTemplate testRestTemplate;
   
-  // @BeforeEach
-  // public void beforeEach() {
-  //   var uriAsString = testRestTemplate.getRootUri();
-  //   var currentPort = URI.create(uriAsString).getPort();
-  //   RestAssured.port = currentPort;
-  // }
+  @BeforeEach
+  public void beforeEach() {
+    var uriAsString = testRestTemplate.getRootUri();
+    var currentPort = URI.create(uriAsString).getPort();
+    RestAssured.port = currentPort;
+  }
 
   @Test
   public void getHealth() {
-    // given()
-
-    //     .when().get("/actuator/health")
-    //     .then()
-    //     .statusCode(200)
-    //     .body("components.livenessState.status", Matchers.equalTo("UP"));
+    given()
+        .when().get("/actuator/health")
+        .then()
+        .statusCode(200)
+        .body("components.livenessState.status", Matchers.equalTo("UP"));
   }
 
 }
