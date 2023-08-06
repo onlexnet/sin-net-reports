@@ -41,7 +41,7 @@ jobs:
         #   RUN_ID: ${{ github.run_id }}
         #   TEST_ENV: ABC
         with:
-          subFolder: static-timeentries
+          subFolder: uservice-timeentries
             # env variables: https://docs.github.com/en/actions/learn-github-actions/variables#default-environment-variables
             # also interesting here https://github.com/devcontainers/ci/issues/153#issuecomment-1488384391
             # docker build . -t ghcr.io/onlexnet/static-webapp:$RUN_ID
