@@ -35,16 +35,16 @@ jobs:
           export SEMVERSION=$(cat ../.semversion)
           mvn -ntp package --file pom.xml
         working-directory: uservice-timeentries/main
-      - name: Build docker image for static-webapp
+      - name: Build docker image for uservice-timeentries
         uses: devcontainers/ci@v0.3
         # env:
         #   RUN_ID: ${{ github.run_id }}
         #   TEST_ENV: ABC
+        # env variables: https://docs.github.com/en/actions/learn-github-actions/variables#default-environment-variables
+        # also interesting here https://github.com/devcontainers/ci/issues/153#issuecomment-1488384391
+        # docker build . -t ghcr.io/onlexnet/static-webapp:$RUN_ID
         with:
           subFolder: uservice-timeentries
-            # env variables: https://docs.github.com/en/actions/learn-github-actions/variables#default-environment-variables
-            # also interesting here https://github.com/devcontainers/ci/issues/153#issuecomment-1488384391
-            # docker build . -t ghcr.io/onlexnet/static-webapp:$RUN_ID
           runCmd: |
             echo "RUN_ID = $RUN_ID"
             echo "GITHUB_RUN_ID = $GITHUB_RUN_ID"
