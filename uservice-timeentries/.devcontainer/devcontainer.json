@@ -5,6 +5,7 @@
 	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
 	"image": "mcr.microsoft.com/devcontainers/base:jammy",
 
+	// as the container is run in another container on CICD, we have to manually reuse host env variables reuqired for CI builds
 	"containerEnv": {
 		"GITHUB_RUN_ID": "${localEnv:GITHUB_RUN_ID}"
 	},
