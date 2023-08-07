@@ -44,7 +44,7 @@ jobs:
       - name: Build docker image
         working-directory: uservice-timeentries/main
         run: |
-          IMAGE_TAG=$(ghcr.io/onlexnet/uservice-timeentries:$GITHUB_RUN_ID)
+          IMAGE_TAG=ghcr.io/onlexnet/uservice-timeentries:$GITHUB_RUN_ID
           docker build . -t $IMAGE_TAG
           docker push $IMAGE_TAG
 
