@@ -1,10 +1,6 @@
 <project>
   <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>onlexnet.sinnet</groupId>
-    <artifactId>uservice-spring-parent</artifactId>
-    <version>0.1.3</version>
-  </parent>
+  <groupId>onlexnet.sinnet</groupId>
   <artifactId>uservice-timeentries-parent</artifactId>
   <version>${revision}</version>
   <packaging>pom</packaging>
