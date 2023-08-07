@@ -23,6 +23,11 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
           cache: maven
+
+      - name: Login to Docker 
+        run: |
+          echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+  
       - name: Build with Maven gRpc API
         run: mvn -ntp install
         working-directory: api/client-java
@@ -35,14 +40,22 @@ jobs:
           export SEMVERSION=$(cat ../.semversion)
           mvn -ntp package --file pom.xml
         working-directory: uservice-timeentries/main
-      - name: Build docker image for uservice-timeentries
-        uses: devcontainers/ci@v0.3
-        with:
-          subFolder: uservice-timeentries
-          runCmd: |
-            # env variables: https://docs.github.com/en/actions/learn-github-actions/variables#default-environment-variables
-            docker build . -t ghcr.io/onlexnet/uservice-timeentries:$GITHUB_RUN_ID
-            # login to docker artifactory
-            echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-            # push image to docker artifactory
-            docker push ghcr.io/onlexnet/uservice-timeentries:$GITHUB_RUN_ID
+      
+      - name: Build docker image
+        working-directory: uservice-timeentries/main
+        run: |
+          IMAGE_TAG=$(ghcr.io/onlexnet/uservice-timeentries:$GITHUB_RUN_ID)
+          docker build . -t $IMAGE_TAG
+          docker push $IMAGE_TAG
+
+      # - name: Build docker image for uservice-timeentries
+      #   uses: devcontainers/ci@v0.3
+      #   with:
+      #     subFolder: uservice-timeentries
+      #     runCmd: |
+      #       # env variables: https://docs.github.com/en/actions/learn-github-actions/variables#default-environment-variables
+      #       docker build . -t ghcr.io/onlexnet/uservice-timeentries:$GITHUB_RUN_ID
+      #       # login to docker artifactory
+      #       echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+      #       # push image to docker artifactory
+      #       docker push ghcr.io/onlexnet/uservice-timeentries:$GITHUB_RUN_ID
