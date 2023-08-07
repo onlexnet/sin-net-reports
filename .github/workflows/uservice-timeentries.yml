@@ -54,8 +54,9 @@ jobs:
         run: |
           IMAGE_NAME_HOST=ghcr.io/onlexnet/uservice-timeentries:$GITHUB_RUN_ID
           mvn spring-boot:build-image -ntp -pl host -Dspring-boot.build-image.imageName=$IMAGE_NAME_HOST -DskipTests
+          docker push $IMAGE_NAME_HOST
           IMAGE_NAME_INITDB_HOST=ghcr.io/onlexnet/uservice-timeentries-initdb:$GITHUB_RUN_ID
-          mvn spring-boot:build-image -ntp -pl host-initdb -Dspring-boot.build-image.imageName=$IMAGE_NAME_INITDB_HOST -DskipTests
+          mvn spring-boot:build-image -ntp -pl initdb-host -Dspring-boot.build-image.imageName=$IMAGE_NAME_INITDB_HOST -DskipTests
           docker push $IMAGE_NAME_INITDB_HOST
 
       # - name: Build docker image for uservice-timeentries
