@@ -46,7 +46,7 @@ jobs:
       - name: Build with Maven Timeentries
         run: |
           export SEMVERSION=$(cat ../.semversion)
-          mvn -ntp package --file pom.xml
+          mvn -ntp install --file pom.xml
         working-directory: uservice-timeentries/main
       
       - name: Build docker image
