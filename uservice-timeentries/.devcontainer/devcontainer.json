@@ -7,7 +7,8 @@
 
 	// as the container is run in another container on CICD, we have to manually reuse host env variables reuqired for CI builds
 	"containerEnv": {
-		"GITHUB_RUN_ID": "${localEnv:GITHUB_RUN_ID}"
+		"GITHUB_RUN_ID": "${localEnv:GITHUB_RUN_ID}",
+		"GITHUB_TOKEN": "${localEnv:GITHUB_TOKEN}"
 	},
 
 	// Features to add to the dev container. More info: https://containers.dev/features.
