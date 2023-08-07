@@ -112,6 +112,7 @@
         <version>${spring-boot.version}</version>
         <configuration>
           <skip>true</skip>
+          <enabled>true</enabled>
         </configuration>
       </plugin>
 

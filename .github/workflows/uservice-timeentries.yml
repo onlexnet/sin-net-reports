@@ -28,6 +28,14 @@ jobs:
         run: |
           echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
   
+      - name: cache maven
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+      
       - name: Build with Maven gRpc API
         run: mvn -ntp install
         working-directory: api/client-java
@@ -44,9 +52,10 @@ jobs:
       - name: Build docker image
         working-directory: uservice-timeentries/main
         run: |
-          IMAGE_TAG=ghcr.io/onlexnet/uservice-timeentries:$GITHUB_RUN_ID
-          docker build . -t $IMAGE_TAG
-          docker push $IMAGE_TAG
+          IMAGE_NAME=ghcr.io/onlexnet/uservice-timeentries:$GITHUB_RUN_ID
+          # docker build . -t $IMAGE_TAG
+          # docker push $IMAGE_TAG
+          mvn spring-boot:build-image -ntp -pl host -Dspring-boot.build-image.imageName=$IMAGE_NAME -DskipTests
 
       # - name: Build docker image for uservice-timeentries
       #   uses: devcontainers/ci@v0.3
