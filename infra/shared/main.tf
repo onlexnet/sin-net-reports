@@ -91,6 +91,8 @@ module "container_apps" {
   resource_group = module.resourcegroup.main
   log_analytics_workspace = module.log_analytics_workspace.main
   env = {
+    GITHUB_USERNAME = module.keyvault.env.GITHUB_USERNAME
+    CR_PAT = module.keyvault.env.CR_PAT
     DATABASE_HOST = module.database.database_host
     DATABASE_PORT = module.database.database_port
     DATABASE_NAME = module.database.database_name

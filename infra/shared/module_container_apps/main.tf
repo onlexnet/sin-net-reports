@@ -31,7 +31,7 @@ resource "azurerm_container_app_environment" "default" {
 # Known issues:f
 # https://github.com/hashicorp/terraform-provider-azurerm/issues/20435
 resource "azurerm_container_app" "default" {
-  name                         = "uservice-openapi"
+  name                         = "uservice-timeentries"
   container_app_environment_id = azurerm_container_app_environment.default.id
   resource_group_name          = var.resource_group.name
   revision_mode = "Single"
@@ -41,10 +41,11 @@ resource "azurerm_container_app" "default" {
     identity_ids = [azurerm_user_assigned_identity.containerapp.id]
   }
 
-  # registry {
-  #   server   = data.azurerm_container_registry.alldev.login_server
-  #   identity = azurerm_user_assigned_identity.containerapp.id
-  # }
+  registry {
+    server   = "ghcr.io"
+    username = var.env.GITHUB_USERNAME
+    password_secret_name = "cr-pat"
+  }
 
   # step 2
   ingress {
@@ -54,6 +55,23 @@ resource "azurerm_container_app" "default" {
       latest_revision = true
       percentage      = 100
     }
+  }
+
+  secret {
+    name = "cr-pat"
+    value = var.env.CR_PAT
+  }
+
+  secret {
+    # not used, should be removed
+    # but can't be removed per https://github.com/microsoft/azure-container-apps/issues/395
+    name = "github-token"
+    value = var.env.CR_PAT
+  }
+
+  secret {
+    name = "database-host"
+    value = var.env.DATABASE_HOST
   }
 
   secret {
@@ -82,20 +100,20 @@ resource "azurerm_container_app" "default" {
   }
 
   dapr {
-    app_id = "uservice-openapi"
-    app_port = "8080"
-    app_protocol = "http"
+    app_id = "uservice-timeentries"
+    app_port = "9000"
+    app_protocol = "grpc"
   }
 
   template {
     
     container {
-      name = "uservice-openapi"
+      name = "uservice-timeentries"
       # step 1
       # step 2
       # image  = "${data.azurerm_container_registry.alldev.login_server}/fin2set:latest"
       #  image  = "${data.azurerm_container_registry.alldev.login_server}/fin2set:latest"
-      image = "busybox:latest"
+      image = "ghcr.io/onlexnet/uservice-timeentries:5788995472"
       cpu    = 0.25
       memory = "0.5Gi"
 
@@ -131,6 +149,13 @@ resource "azurerm_container_app" "default" {
       env {
         name = "SPRING_PROFILES_ACTIVE"
         value = "prod"
+      }
+
+      env {
+        # default value is BPL_JVM_THREAD_COUNT=250 and app docker image build by packeto cant start as calculated memry is higher than available memory (0.5GB atm)
+        # more: https://github.com/paketo-buildpacks/bellsoft-liberica/issues/68
+        name = "BPL_JVM_THREAD_COUNT"
+        value = "20"
       }
 
       # readiness_probe {

@@ -3,7 +3,8 @@
 output "env" {
   value = {
     SQL_ADMIN_PASSWORD = azurerm_key_vault_secret.sqladminpassword.value
-    # random_string.password.result
+    GITHUB_USERNAME    = "siudeks"
+    CR_PAT       = data.external.env.result["CR_PAT"]
   }
   sensitive = true
 }

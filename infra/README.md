@@ -35,5 +35,6 @@ terraform init -upgrade
 - ARM_TENANT_ID - AD of onlex.net
 - CLOUDFLARE_API_TOKEN - Cloudflare token named onlexnet-dns-edit to update DNS records in onlex.net
 - GITHUB_TOKEN - token onlexnet-sinnet-infra
+- CR_PAT - classic token used to read github packages
 - TF_VAR_azure_subscription_id_prod - onlexnet-sinnet-dev01
 
