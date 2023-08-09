@@ -113,7 +113,7 @@ resource "azurerm_container_app" "default" {
       # step 2
       # image  = "${data.azurerm_container_registry.alldev.login_server}/fin2set:latest"
       #  image  = "${data.azurerm_container_registry.alldev.login_server}/fin2set:latest"
-      image = "ghcr.io/onlexnet/uservice-timeentries:5788995472"
+      image = "ghcr.io/onlexnet/uservice-timeentries:5812506400"
       cpu    = 0.25
       memory = "0.5Gi"
 
