@@ -46,7 +46,8 @@
 			"extensions": [
 				"editorconfig.editorconfig",
 				"vmware.vscode-boot-dev-pack",
-				"vscjava.vscode-java-pack"
+				"vscjava.vscode-java-pack",
+				"ms-azuretools.vscode-dapr"
 			]
 		}
 	},

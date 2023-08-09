@@ -27,7 +27,9 @@
     <dependency>
       <groupId>onlexnet.sinnet</groupId>
       <artifactId>uservice-timeentries-initdb-migrate</artifactId>
-      <scope>test</scope>
+      <!--
+        Separate migrations as scope:test part of https://github.com/onlexnet/sin-net-reports/issues/158
+        -->
     </dependency>
     <dependency>
       <groupId>onlexnet.sinnet</groupId>
