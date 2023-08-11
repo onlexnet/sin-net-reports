@@ -5,10 +5,10 @@ name: GitHub image build for uservice-webapi
 
 on:
   push:
-    branches: [ master, siudeks/issue123-1 ]
+    branches: [ main, siudeks/issue123-1 ]
     paths: [ uservice-webapi/**, .github/workflows/uservice-webapi.yml ]
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
 
 jobs:
   build:

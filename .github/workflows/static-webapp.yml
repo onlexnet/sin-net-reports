@@ -5,10 +5,10 @@ name: GitHub image build for static-webapp
 
 on:
   push:
-    branches: [ master, siudeks/issue123-1 ]
+    branches: [ main, siudeks/issue123-1 ]
     paths: [ static-webapp/**, /uservice-webapi/api.graphql/, .github/workflows/static-webapp.yml ]
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
 
 jobs:
 
