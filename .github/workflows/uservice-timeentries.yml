@@ -60,10 +60,10 @@ jobs:
           IMAGE_NAME_HOST=ghcr.io/onlexnet/uservice-timeentries:$GITHUB_RUN_ID
           mvn spring-boot:build-image -ntp -pl host -Dspring-boot.build-image.imageName=$IMAGE_NAME_HOST -DskipTests
           docker push $IMAGE_NAME_HOST
-          IMAGE_NAME_INITDB_HOST=ghcr.io/onlexnet/uservice-timeentries-initdb:$GITHUB_RUN_ID
-          mvn spring-boot:build-image -ntp -pl initdb-host -Dspring-boot.build-image.imageName=$IMAGE_NAME_INITDB_HOST -DskipTests
-          docker push $IMAGE_NAME_INITDB_HOST
-          echo "image_name=$IMAGE_NAME_INITDB_HOST" >> "$GITHUB_OUTPUT"
+          echo "image_name=$IMAGE_NAME_HOST" >> "$GITHUB_OUTPUT"
+          # IMAGE_NAME_INITDB_HOST=ghcr.io/onlexnet/uservice-timeentries-initdb:$GITHUB_RUN_ID
+          # mvn spring-boot:build-image -ntp -pl initdb-host -Dspring-boot.build-image.imageName=$IMAGE_NAME_INITDB_HOST -DskipTests
+          # docker push $IMAGE_NAME_INITDB_HOST
 
   DeployDev:
     # https://learn.microsoft.com/en-us/azure/container-apps/github-actions#deploy-an-existing-container-image-to-container-apps
@@ -82,7 +82,7 @@ jobs:
       
       - name: DisplayIMageName
         env:
-          OUTPUT1: ${{needs.Build.outputs.uservice_timeentries_image_name}}
+          IMAGE_NAME_INITDB_HOST: ${{needs.Build.outputs.uservice_timeentries_image_name}}
         run: |
           echo "image_name: $IMAGE_NAME_INITDB_HOST"
 
