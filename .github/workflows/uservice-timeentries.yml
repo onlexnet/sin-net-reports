@@ -13,6 +13,10 @@ on:
 jobs:
   Build:
     runs-on: ubuntu-latest
+
+    outputs:
+      uservice_timeentries_image_name: ${{ steps.BuildDockerImage.outputs.image_name }}
+
     steps:
 
       - uses: actions/checkout@v2
@@ -49,7 +53,8 @@ jobs:
           mvn -ntp install --file pom.xml
         working-directory: uservice-timeentries/main
       
-      - name: Build docker image
+      - id: BuildDockerImage
+        name: Build Docker Image
         working-directory: uservice-timeentries/main
         run: |
           IMAGE_NAME_HOST=ghcr.io/onlexnet/uservice-timeentries:$GITHUB_RUN_ID
@@ -58,6 +63,7 @@ jobs:
           IMAGE_NAME_INITDB_HOST=ghcr.io/onlexnet/uservice-timeentries-initdb:$GITHUB_RUN_ID
           mvn spring-boot:build-image -ntp -pl initdb-host -Dspring-boot.build-image.imageName=$IMAGE_NAME_INITDB_HOST -DskipTests
           docker push $IMAGE_NAME_INITDB_HOST
+          echo "image_name=$IMAGE_NAME_INITDB_HOST" >> "$GITHUB_OUTPUT"
 
   DeployDev:
     # https://learn.microsoft.com/en-us/azure/container-apps/github-actions#deploy-an-existing-container-image-to-container-apps
@@ -73,4 +79,10 @@ jobs:
           # prepare credentials for Azure CLI
           # more: https://github.com/marketplace/actions/azure-login#configure-a-service-principal-with-a-secret
           creds: '{"clientId":"${{ secrets.ONLEXNET_INFRA_CLIENT_ID }}","clientSecret":"${{ secrets.ONLEXNET_INFRA_SECRET }}","subscriptionId":"${{ secrets.ONLEXNET_SINNET_DEV01_SUBSCRIPTION_ID }}","tenantId":"${{ secrets.ONLEXNET_TENANT_ID }}"}'
+      
+      - name: DisplayIMageName
+        env:
+          OUTPUT1: ${{needs.Build.outputs.uservice_timeentries_image_name}}
+        run: |
+          echo "image_name: $IMAGE_NAME_INITDB_HOST"
 
