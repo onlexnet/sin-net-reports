@@ -65,6 +65,7 @@ jobs:
     # if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
     needs: [ Build ]
     runs-on: ubuntu-latest
+    environment: DEV01
     steps:
       - name: Log in to Azure
         uses: azure/login@v1
