@@ -70,8 +70,7 @@ jobs:
       - name: Log in to Azure
         uses: azure/login@v1
         with:
-          tenant-id: ${{ secrets.ONLEXNET_TENANT_ID }}
-          subscription-id: ${{ secrets.ONLEXNET_SINNET_DEV01_SUBSCRIPTION_ID }}
-          client-id: ${{ secrets.ONLEXNET_INFRA_CLIENT_ID }}
-          creds: ${{ secrets.ONLEXNET_INFRA_SECRET }}
+          # prepare credentials for Azure CLI
+          # more: https://github.com/marketplace/actions/azure-login#configure-a-service-principal-with-a-secret
+          creds: '{"clientId":"${{ secrets.ONLEXNET_INFRA_CLIENT_ID }}","clientSecret":"${{ secrets.ONLEXNET_INFRA_SECRET }}","subscriptionId":"${{ secrets.ONLEXNET_SINNET_DEV01_SUBSCRIPTION_ID }}","tenantId":"${{ secrets.ONLEXNET_TENANT_ID }}"}'
 
