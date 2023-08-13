@@ -45,9 +45,13 @@ module "keyvault" {
 }
 
 module "github" {
-  source           = "./module_github"
-  environment_name = var.environment_name
-  azure_static_web_apps_api_token = module.static_app.static_app_api_key
+  source                                = "./module_github"
+  environment_name                      = var.environment_name
+  azure_static_web_apps_api_token       = module.static_app.static_app_api_key
+  ONLEXNET_INFRA_SECRET                 = module.keyvault.env.ONLEXNET_INFRA_SECRET
+  ONLEXNET_TENANT_ID                    = module.keyvault.env.ONLEXNET_TENANT_ID
+  ONLEXNET_SINNET_DEV01_SUBSCRIPTION_ID = module.keyvault.env.ONLEXNET_SINNET_DEV01_SUBSCRIPTION_ID
+  ONLEXNET_INFRA_CLIENT_ID              = module.keyvault.env.ONLEXNET_INFRA_CLIENT_ID
 }
 
 # module "storage_account" {
@@ -64,18 +68,18 @@ module "github" {
 # }
 
 module "static_app" {
-  source = "./module_static_app"
+  source         = "./module_static_app"
   resource_group = module.resourcegroup.main
 
   custom_domain = "${var.application_name}-${var.environment_name}.onlex.net"
 }
 
 module "cloudflare" {
-  source = "./module_cloudflare"
+  source        = "./module_cloudflare"
   webapp_prefix = "${var.application_name}-${var.environment_name}"
-  webapp_fqdn = module.static_app.webapp_fqdn
+  webapp_fqdn   = module.static_app.webapp_fqdn
   webapi_prefix = "${var.application_name}-${var.environment_name}-api"
-  webapi_fqdn = module.container_apps.webapi_fqdn
+  webapi_fqdn   = module.container_apps.webapi_fqdn
 }
 
 # module "github_repo" {
@@ -87,15 +91,15 @@ module "cloudflare" {
 # }
 
 module "container_apps" {
-  source = "./module_container_apps"
-  resource_group = module.resourcegroup.main
+  source                  = "./module_container_apps"
+  resource_group          = module.resourcegroup.main
   log_analytics_workspace = module.log_analytics_workspace.main
   env = {
-    GITHUB_USERNAME = module.keyvault.env.GITHUB_USERNAME
-    CR_PAT = module.keyvault.env.CR_PAT
-    DATABASE_HOST = module.database.database_host
-    DATABASE_PORT = module.database.database_port
-    DATABASE_NAME = module.database.database_name
+    GITHUB_USERNAME   = module.keyvault.env.GITHUB_USERNAME
+    CR_PAT            = module.keyvault.env.CR_PAT
+    DATABASE_HOST     = module.database.database_host
+    DATABASE_PORT     = module.database.database_port
+    DATABASE_NAME     = module.database.database_name
     DATABASE_USERNAME = module.database.database_username
     DATABASE_PASSWORD = module.database.database_password
   }
@@ -103,7 +107,7 @@ module "container_apps" {
 }
 
 module "log_analytics_workspace" {
-  source = "./module_log_analytics_workspace"
+  source         = "./module_log_analytics_workspace"
   resource_group = module.resourcegroup.main
 }
 

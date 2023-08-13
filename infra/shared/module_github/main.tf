@@ -31,3 +31,32 @@ resource "github_actions_environment_secret" "azure_static_web_apps_api_token" {
   secret_name     = "AZURE_STATIC_WEB_APPS_API_TOKEN"
   plaintext_value = var.azure_static_web_apps_api_token
 }
+
+resource github_actions_environment_secret ONLEXNET_TENANT_ID {
+  environment     = github_repository_environment.main.environment
+  repository      = data.github_repository.sinnet.name
+  secret_name     = "ONLEXNET_TENANT_ID"
+  plaintext_value = var.ONLEXNET_TENANT_ID
+}
+
+resource github_actions_environment_secret ONLEXNET_SINNET_DEV01_SUBSCRIPTION_ID {
+  environment     = github_repository_environment.main.environment
+  repository      = data.github_repository.sinnet.name
+  secret_name     = "ONLEXNET_SINNET_DEV01_SUBSCRIPTION_ID"
+  plaintext_value = var.ONLEXNET_SINNET_DEV01_SUBSCRIPTION_ID
+}
+
+resource github_actions_environment_secret ONLEXNET_INFRA_CLIENT_ID {
+  environment     = github_repository_environment.main.environment
+  repository      = data.github_repository.sinnet.name
+  secret_name     = "ONLEXNET_INFRA_CLIENT_ID"
+  plaintext_value = var.ONLEXNET_INFRA_CLIENT_ID
+}
+
+resource github_actions_environment_secret ONLEXNET_INFRA_SECRET {
+  environment     = github_repository_environment.main.environment
+  repository      = data.github_repository.sinnet.name
+  secret_name     = "ONLEXNET_INFRA_SECRET"
+  plaintext_value = var.ONLEXNET_INFRA_SECRET
+}
+
