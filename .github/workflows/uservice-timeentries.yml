@@ -59,9 +59,13 @@ jobs:
         run: |
           export IMAGE_NAME=ghcr.io/onlexnet/uservice-timeentries
           export IMAGE_NAME_HOST=$IMAGE_NAME
+          # add proper tag based on run id
+          echo "docker tag $IMAGE_NAME_HOST $GITHUB_RUN_ID"
           docker tag $IMAGE_NAME_HOST $GITHUB_RUN_ID
-          docker tag $IMAGE_NAME_HOST latest 
-          mvn spring-boot:build-image -ntp -pl host -Dspring-boot.build-image.imageName=$IMAGE_NAME -DskipTests
+          # also add latest tag used as fallback value in some places to guerantee we know always some tag name
+          echo "docker tag $IMAGE_NAME_HOST latest"
+          docker tag $IMAGE_NAME_HOST latest
+          mvn spring-boot:build-image -ntp -pl host -Dspring-boot.build-image.imageName=$IMAGE_NAME_HOST -DskipTests
           docker push --all-tags $IMAGE_NAME
           echo "image_name=$IMAGE_NAME_HOST" >> "$GITHUB_OUTPUT"
           # IMAGE_NAME_INITDB_HOST=ghcr.io/onlexnet/uservice-timeentries-initdb:$GITHUB_RUN_ID
