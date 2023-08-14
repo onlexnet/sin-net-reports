@@ -5,7 +5,7 @@ name: GitHub image build for static-webapp
 
 on:
   push:
-    branches: [ main, siudeks/issue123-1 ]
+    branches: [ main ]
     paths: [ static-webapp/**, /uservice-webapi/api.graphql/, .github/workflows/static-webapp.yml ]
   pull_request:
     branches: [ main ]
@@ -36,21 +36,6 @@ jobs:
           name: ${$GITHUB_RUN_ID}-webapp-binaries
           path: static-webapp/main/build
 
-      # - name: Build docker image for static-webapp
-      #   uses: devcontainers/ci@v0.3
-      #   env:
-      #     RUN_ID: ${{ github.run_id }}
-      #     TEST_ENV: ABC
-      #   with:
-      #     subFolder: static-webapp
-      #       # env variables: https://docs.github.com/en/actions/learn-github-actions/variables#default-environment-variables
-      #       # also interesting here https://github.com/devcontainers/ci/issues/153#issuecomment-1488384391
-      #       # docker build . -t ghcr.io/onlexnet/static-webapp:$RUN_ID
-      #     runCmd: |
-      #       echo "RUN_ID = $RUN_ID"
-      #       echo "GITHUB_RUN_ID = $GITHUB_RUN_ID"
-      #       echo "TEST_ENV = $TEST_ENV"
-
   DeployDev:
     name: Deploy to DEV01
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
@@ -58,7 +43,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: dev01
-      url: 'http://sinnet-dev01.onlex.net'
+      url: 'https://sinnet-dev01.onlex.net'
     steps:
       - name: Deploy
         run: echo I am deploying!
@@ -87,49 +72,6 @@ jobs:
           # output_location: "build" # Built app content directory - optional
           ###### End of Repository/Build Configurations ######
 
-
-
-
-# jobs:
-#   build_and_deploy_job:
-#     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
-#     runs-on: ubuntu-latest
-#     name: Build and Deploy Job
-#     steps:
-#       - uses: actions/checkout@v2
-#         with:
-#           submodules: true
-#       - name: Build And Deploy
-#         id: builddeploy
-#         uses: Azure/static-web-apps-deploy@v1
-#         with:
-#           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
-#           repo_token: ${{ secrets.GITHUB_TOKEN }} # Used for Github integrations (i.e. PR comments)
-#           action: "upload"
-#           ###### Repository/Build Configurations - These values can be configured to match your app requirements. ######
-#           # For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
-#           app_location: "/app" # App source code path
-#           api_location: "" # Api source code path - optional
-#           output_location: "build" # Built app content directory - optional
-#           ###### End of Repository/Build Configurations ######
-
-#   close_pull_request_job:
-#     if: github.event_name == 'pull_request' && github.event.action == 'closed'
-#     runs-on: ubuntu-latest
-#     name: Close Pull Request Job
-#     steps:
-#       - name: Close Pull Request
-#         id: closepullrequest
-#         uses: Azure/static-web-apps-deploy@v1
-#         with:
-#           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_YELLOW_RIVER_074C06603 }}
-#           action: "close"
-
-
-
-
-
-
   DeployUat:
     name: Deploy to PROD
     if: github.event.ref == 'refs/heads/main'
@@ -137,7 +79,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: prod1
-      url: 'http://www.myapp.com'
+      url: 'https://sinnet.onlex.net'
     steps:
       - name: Deploy
         run: echo I am deploying!
