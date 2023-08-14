@@ -19,10 +19,10 @@ resource "github_repository_environment" "main" {
   }
 }
 
-resource "github_repository_environment_deployment_policy" "master" {
+resource "github_repository_environment_deployment_policy" "main" {
   repository     = data.github_repository.sinnet.name
   environment    = github_repository_environment.main.environment
-  branch_pattern = "siudeks/*"
+  branch_pattern = "main"
 }
 
 resource "github_actions_environment_secret" "azure_static_web_apps_api_token" {
