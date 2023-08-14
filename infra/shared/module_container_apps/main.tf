@@ -31,7 +31,7 @@ resource "azurerm_container_app_environment" "default" {
 # Known issues:f
 # https://github.com/hashicorp/terraform-provider-azurerm/issues/20435
 resource "azurerm_container_app" "default" {
-  name                         = "uservice-timeentries"
+  name                         = "sinnet"
   container_app_environment_id = azurerm_container_app_environment.default.id
   resource_group_name          = var.resource_group.name
   revision_mode = "Single"
@@ -113,7 +113,7 @@ resource "azurerm_container_app" "default" {
       # step 2
       # image  = "${data.azurerm_container_registry.alldev.login_server}/fin2set:latest"
       #  image  = "${data.azurerm_container_registry.alldev.login_server}/fin2set:latest"
-      image = "ghcr.io/onlexnet/uservice-timeentries:5812506400"
+      image = "ghcr.io/onlexnet/uservice-timeentries:latest"
       cpu    = 0.25
       memory = "0.5Gi"
 
