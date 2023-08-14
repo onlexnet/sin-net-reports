@@ -58,10 +58,13 @@ jobs:
         working-directory: uservice-timeentries/main
         run: |
           export IMAGE_NAME=ghcr.io/onlexnet/uservice-timeentries
+          echo "IMAGE_NAME=$IMAGE_NAME"
+
           export IMAGE_NAME_HOST=$IMAGE_NAME
           # add proper tag based on run id
           echo "docker tag $IMAGE_NAME_HOST $GITHUB_RUN_ID"
           docker tag $IMAGE_NAME_HOST $GITHUB_RUN_ID
+
           # also add latest tag used as fallback value in some places to guerantee we know always some tag name
           echo "docker tag $IMAGE_NAME_HOST latest"
           docker tag $IMAGE_NAME_HOST latest
