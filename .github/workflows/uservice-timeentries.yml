@@ -80,9 +80,11 @@ jobs:
           # more: https://github.com/marketplace/actions/azure-login#configure-a-service-principal-with-a-secret
           creds: '{"clientId":"${{ secrets.ONLEXNET_INFRA_CLIENT_ID }}","clientSecret":"${{ secrets.ONLEXNET_INFRA_SECRET }}","subscriptionId":"${{ secrets.ONLEXNET_SINNET_DEV01_SUBSCRIPTION_ID }}","tenantId":"${{ secrets.ONLEXNET_TENANT_ID }}"}'
       
-      - name: DisplayIMageName
+      - name: Display Image Name
         env:
           IMAGE_NAME_INITDB_HOST: ${{needs.Build.outputs.uservice_timeentries_image_name}}
         run: |
           echo "image_name: $IMAGE_NAME_INITDB_HOST"
+          # TODO replace hardcoded params below with proper values
+          az containerapp update -n uservice-timeentries -g sinnet-env-dev01 --container-name uservice-timeentries --image $IMAGE_NAME_INITDB_HOST
 
