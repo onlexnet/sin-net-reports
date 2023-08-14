@@ -25,11 +25,11 @@
     </dependency>
 
     <dependency>
-      <groupId>onlexnet.sinnet</groupId>
-      <artifactId>uservice-timeentries-initdb-migrate</artifactId>
       <!--
         Separate migrations as scope:test part of https://github.com/onlexnet/sin-net-reports/issues/158
-        -->
+      -->
+      <groupId>onlexnet.sinnet</groupId>
+      <artifactId>uservice-timeentries-initdb-migrate</artifactId>
     </dependency>
     <dependency>
       <groupId>onlexnet.sinnet</groupId>
