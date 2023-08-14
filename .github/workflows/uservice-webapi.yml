@@ -1,27 +1,22 @@
-# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
-# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
-
-name: GitHub image build for uservice-webapi
+name: CI uservice-webapi
 
 on:
   push:
-    branches: [ main, siudeks/issue123-1 ]
+    branches: [ main ]
     paths: [ uservice-webapi/**, .github/workflows/uservice-webapi.yml ]
   pull_request:
     branches: [ main ]
 
 jobs:
-  build:
+  Build:
     runs-on: ubuntu-latest
+
+    outputs:
+      uservice_webapi_image_name: ${{ steps.BuildDockerImage.outputs.image_name }}
+
     steps:
 
       - uses: actions/checkout@v2
-
-      - name: Create local copy of used external resources
-        run: |
-          ./links.sh
-          cp -Lr .links .links-COPY && rm -r .links && mv .links-COPY .links
-        working-directory: uservice-webapi
 
       - name: Set up JDK 17
         uses: actions/setup-java@v2
@@ -29,6 +24,66 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
           cache: maven
-      - name: Build with Maven
-        run: mvn -B package --file pom.xml
-        working-directory: uservice-webapi/main
+
+      - name: Login to Docker 
+        run: |
+          echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+  
+      - name: cache maven
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+      
+      - name: Build with Maven gRpc API
+        run: mvn -ntp install
+        working-directory: api/client-java
+      - name: Build with Maven base package
+        run: mvn -ntp install
+        working-directory: libs-java
+
+      - name: Build with Maven Webapi
+        run: |
+          export SEMVERSION=$(cat ../.semversion)
+          mvn -ntp install --file pom.xml
+        working-directory: uservice-webapi
+      
+      - id: BuildDockerImage
+        name: Build Docker Image
+        working-directory: uservice-webapi
+        run: |
+          export IMAGE_NAME=ghcr.io/onlexnet/uservice-webapi
+
+          export IMAGE_NAME_HOST=$IMAGE_NAME
+          # build 'latest' image
+          mvn spring-boot:build-image -ntp -pl host -Dspring-boot.build-image.imageName=$IMAGE_NAME_HOST -DskipTests
+          # add proper ID to distinguish image from other images built in this workflow
+          docker tag $IMAGE_NAME_HOST $GITHUB_RUN_ID
+          docker push --all-tags $IMAGE_NAME
+          echo "image_name=$IMAGE_NAME_HOST" >> "$GITHUB_OUTPUT"
+
+  DeployDev:
+    # https://learn.microsoft.com/en-us/azure/container-apps/github-actions#deploy-an-existing-container-image-to-container-apps
+    name: Deploy to DEV01
+    # if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
+    needs: [ Build ]
+    runs-on: ubuntu-latest
+    environment: DEV01
+    steps:
+      - name: Log in to Azure
+        uses: azure/login@v1
+        with:
+          # prepare credentials for Azure CLI
+          # more: https://github.com/marketplace/actions/azure-login#configure-a-service-principal-with-a-secret
+          creds: '{"clientId":"${{ secrets.ONLEXNET_INFRA_CLIENT_ID }}","clientSecret":"${{ secrets.ONLEXNET_INFRA_SECRET }}","subscriptionId":"${{ secrets.ONLEXNET_SINNET_DEV01_SUBSCRIPTION_ID }}","tenantId":"${{ secrets.ONLEXNET_TENANT_ID }}"}'
+      
+      - name: Display Image Name
+        env:
+          IMAGE_NAME_INITDB_HOST: ${{needs.Build.outputs.uservice_webapi_image_name}}
+        run: |
+          echo "image_name: $IMAGE_NAME_INITDB_HOST"
+          # TODO replace hardcoded params below with proper values
+          az containerapp update -n uservice-webapi -g sinnet-env-dev01 --container-name uservice-webapi --image $IMAGE_NAME_INITDB_HOST
+
