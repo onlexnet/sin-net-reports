@@ -59,8 +59,8 @@ jobs:
         run: |
           IMAGE_NAME=ghcr.io/onlexnet/uservice-timeentries
           IMAGE_NAME_HOST=$IMAGE_NAME
-          docker tag $GITHUB_RUN_ID $IMAGE_NAME_HOST
-          docker tag latest $IMAGE_NAME_HOST
+          docker tag $IMAGE_NAME_HOST $GITHUB_RUN_ID
+          docker tag $IMAGE_NAME_HOST latest 
           mvn spring-boot:build-image -ntp -pl host -Dspring-boot.build-image.imageName=$IMAGE_NAME -DskipTests
           docker push --all-tags $IMAGE_NAME
           echo "image_name=$IMAGE_NAME_HOST" >> "$GITHUB_OUTPUT"
