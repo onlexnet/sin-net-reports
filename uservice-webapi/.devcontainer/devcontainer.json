@@ -11,7 +11,7 @@
 			"installMaven": "true",
 			"installGradle": "false"
 		}
-	}
+	},
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],
@@ -20,7 +20,17 @@
 	// "postCreateCommand": "java -version",
 
 	// Configure tool-specific properties.
-	// "customizations": {},
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"vscjava.vscode-java-pack",
+				"zxh404.vscode-proto3",
+				"shengchen.vscode-checkstyle",
+				"editorconfig.editorconfig",
+				"ms-azuretools.vscode-dapr"
+			]
+		}
+	},
 
 	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
 	// "remoteUser": "root"

@@ -5,7 +5,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 
 import lombok.RequiredArgsConstructor;
-import sinnet.web.B2CauthenticationToken;
+import sinnet.web.AuthenticationToken;
 
 @Controller
 @RequiredArgsConstructor
@@ -13,7 +13,7 @@ class Query {
   
   @QueryMapping("Projects")
   ProjectsQuery projects() {
-    var authentication = (B2CauthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+    var authentication = (AuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
     var primaryEmail = authentication.getPrincipal();
 
     return ProjectsQuery.of(primaryEmail);

@@ -4,10 +4,8 @@ import static org.mockito.ArgumentMatchers.any;
 
 import java.time.Duration;
 
-import org.assertj.core.api.Assertions;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.graphql.test.tester.HttpGraphQlTester;
 import org.springframework.http.HttpHeaders;
@@ -53,10 +51,13 @@ public class StepDefinitions {
     // Mockito.when(nameProvider.getName()).thenReturn("my name");
     var rootUri = restTemplate.getRootUri();
 
+    final var principalNameHeaderName = "X-MS-CLIENT-PRINCIPAL-NAME";
+    final var principalNameHeaderId = "X-MS-CLIENT-PRINCIPAL-ID";
     var client = WebTestClient.bindToServer()
         .responseTimeout(Duration.ofMinutes(10))
         .baseUrl(rootUri + "/graphql")
-        .defaultHeader(HttpHeaders.AUTHORIZATION, "Bearer token")
+        .defaultHeader(principalNameHeaderName, "principal-name")
+        .defaultHeader(principalNameHeaderId, "principal-id")
         .build();
 
     var tester = HttpGraphQlTester.create(client);

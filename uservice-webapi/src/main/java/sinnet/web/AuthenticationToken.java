@@ -7,10 +7,13 @@ import org.springframework.security.authentication.AbstractAuthenticationToken;
 import lombok.Getter;
 
 /** Fixme. */
-public final class B2CauthenticationToken extends AbstractAuthenticationToken {
+public final class AuthenticationToken extends AbstractAuthenticationToken {
 
   @Getter
-  private String email;
+  private String name;
+
+  @Getter 
+  private String id;
 
   /**
    * Fixme.
@@ -18,12 +21,10 @@ public final class B2CauthenticationToken extends AbstractAuthenticationToken {
    * @param accountId fixme
    * @param email fixme
    */
-  B2CauthenticationToken(String accountId,
-                          String email,
-                          String name,
-                          boolean newUser) {
+  AuthenticationToken(String accountId, String name) {
     super(Collections.emptyList());
-    this.email = email;
+    this.name = name;
+    this.id = accountId;
     this.setAuthenticated(true);
   }
 
@@ -37,6 +38,6 @@ public final class B2CauthenticationToken extends AbstractAuthenticationToken {
   /** Contains primary email of the user. */
   @Override
   public String getPrincipal() {
-    return email;
+    return name;
   }
 }
