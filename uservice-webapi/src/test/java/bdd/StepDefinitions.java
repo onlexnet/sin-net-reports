@@ -6,9 +6,9 @@ import java.time.Duration;
 
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.graphql.test.tester.HttpGraphQlTester;
-import org.springframework.http.HttpHeaders;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -16,7 +16,7 @@ import io.cucumber.java.Before;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import sinnet.gql.models.ProjectEntityGql;
-import sinnet.grpc.ProjectsGrpcService;
+import sinnet.grpc.ProjectsGrpcAdapter;
 import sinnet.grpc.projects.generated.ListReply;
 
 public class StepDefinitions {
@@ -24,18 +24,16 @@ public class StepDefinitions {
   @Autowired
   WebApplicationContext applicationContext;
 
-  // @MockBean
-  // NameTestCallback nameProvider;
-
-  ProjectsGrpcService projectsGrpcService;
+  @MockBean
+  ProjectsGrpcAdapter projectsGrpcService;
 
   @Autowired
   TestRestTemplate restTemplate;
 
-  @Before
-  public void before() {
-    projectsGrpcService = Mockito.mock(ProjectsGrpcService.class);
-  }
+  // @Before
+  // public void before() {
+  //   projectsGrpcService = Mockito.mock(ProjectsGrpcService.class);
+  // }
 
   @When("user is requesting list of projects")
   public void user_is_requesting_list_of_projects() {

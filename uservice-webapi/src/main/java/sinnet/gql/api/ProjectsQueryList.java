@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import sinnet.gql.mappers.ProjectsMapper;
 import sinnet.gql.models.ProjectEntityGql;
-import sinnet.grpc.ProjectsGrpcService;
+import sinnet.grpc.ProjectsGrpcAdapter;
 import sinnet.grpc.projects.generated.ListRequest;
 import sinnet.grpc.projects.generated.UserStatsRequest;
 
@@ -19,7 +19,7 @@ import sinnet.grpc.projects.generated.UserStatsRequest;
 @Slf4j
 class ProjectsQueryList {
 
-  private final ProjectsGrpcService service;
+  private final ProjectsGrpcAdapter service;
 
   @SchemaMapping
   List<ProjectEntityGql> list(ProjectsQuery self, @Argument String name) {

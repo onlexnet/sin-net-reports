@@ -12,7 +12,7 @@ import sinnet.grpc.projects.generated.ProjectsGrpc.ProjectsBlockingStub;
 /** Mockable equivalent of {@link ProjectsGrpcStub}. */
 @Component
 @RequiredArgsConstructor
-public class ProjectsGrpcService {
+public class ProjectsGrpcAdapter {
 
   private interface ProjectsService {
     public ListReply list(sinnet.grpc.projects.generated.ListRequest request);

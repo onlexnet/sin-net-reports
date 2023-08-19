@@ -18,7 +18,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.context.WebApplicationContext;
 
 import sinnet.gql.models.ProjectEntityGql;
-import sinnet.grpc.ProjectsGrpcService;
+import sinnet.grpc.ProjectsGrpcAdapter;
 import sinnet.grpc.projects.generated.ListReply;
 
 @SpringBootTest(webEnvironment = RANDOM_PORT, classes = Program.class)
@@ -33,7 +33,7 @@ class GqlTest {
   WebApplicationContext applicationContext;
 
   @MockBean
-  ProjectsGrpcService projectsGrpcService;
+  ProjectsGrpcAdapter projectsGrpcService;
 
   @Test
   void doSomething() {
