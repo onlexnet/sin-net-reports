@@ -6,14 +6,9 @@ import java.util.List;
 import org.springframework.graphql.test.tester.GraphQlTester.Entity;
 import org.springframework.graphql.test.tester.GraphQlTester.EntityList;
 import org.springframework.graphql.test.tester.HttpGraphQlTester;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
-import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
 import lombok.SneakyThrows;
-import reactor.netty.http.Http11SslContextSpec;
-import reactor.netty.http.client.HttpClient;
 import sinnet.gql.models.ProjectEntityGql;
 import sinnet.gql.models.SomeEntityGql;
 import sinnet.gql.models.UserGql;
