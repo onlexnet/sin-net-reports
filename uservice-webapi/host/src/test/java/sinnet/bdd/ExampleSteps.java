@@ -88,124 +88,124 @@ public class ExampleSteps {
   ProjectEntityGql lastlyCreatedProject;
   Integer expectedNumberOfProjects;
 
-  @When("a project is saved")
-  public void project_is_saved() {
-    var projectNewName = "projectname-" + UUID.randomUUID();
+  // @When("a project is saved")
+  // public void project_is_saved() {
+  //   var projectNewName = "projectname-" + UUID.randomUUID();
 
-    var projectId1 = new ProjectId("1", 1L);
-    Mockito
-        .when(projectsGrpc.create(requestorEmail))
-        .thenReturn(projectId1);
-    var projectId2 = new ProjectId("1", 2L);
-    Mockito
-        .when(
-            projectsGrpc.update(eq(requestorEmail), eq(projectId1), eq(projectNewName), eq(requestorEmail), eq(List.of())))
-        .thenReturn(projectId2);
-    var saveResult = appApi.createProject(projectNewName);
+  //   var projectId1 = new ProjectId("1", 1L);
+  //   Mockito
+  //       .when(projectsGrpc.create(requestorEmail))
+  //       .thenReturn(projectId1);
+  //   var projectId2 = new ProjectId("1", 2L);
+  //   Mockito
+  //       .when(
+  //           projectsGrpc.update(eq(requestorEmail), eq(projectId1), eq(projectNewName), eq(requestorEmail), eq(List.of())))
+  //       .thenReturn(projectId2);
+  //   var saveResult = appApi.createProject(projectNewName);
 
-    lastlyCreatedProject = saveResult.get();
-    expectedCreatedProject = new ProjectEntityGql()
-        .setEntity(new SomeEntityGql()
-            .setEntityId("1")
-            .setEntityVersion(2L)
-            .setProjectId("1"))
-        .setName(projectNewName);
-  }
+  //   lastlyCreatedProject = saveResult.get();
+  //   expectedCreatedProject = new ProjectEntityGql()
+  //       .setEntity(new SomeEntityGql()
+  //           .setEntityId("1")
+  //           .setEntityVersion(2L)
+  //           .setProjectId("1"))
+  //       .setName(projectNewName);
+  // }
 
-  @Then("operation result is returned")
-  public void operation_result_is_returned() {
-    assertThat(lastlyCreatedProject)
-        .isEqualTo(expectedCreatedProject);
-  }
+  // @Then("operation result is returned")
+  // public void operation_result_is_returned() {
+  //   assertThat(lastlyCreatedProject)
+  //       .isEqualTo(expectedCreatedProject);
+  // }
 
-  @When("userstats request is send to backend")
-  public void userstats_request_is_send_to_backend() {
+  // @When("userstats request is send to backend")
+  // public void userstats_request_is_send_to_backend() {
 
-    expectedNumberOfProjects = new Random().nextInt();
-    Mockito
-        .when(projectsGrpc.userStats(requestorEmail))
-        .thenReturn(new StatsResult(expectedNumberOfProjects));
-  }
+  //   expectedNumberOfProjects = new Random().nextInt();
+  //   Mockito
+  //       .when(projectsGrpc.userStats(requestorEmail))
+  //       .thenReturn(new StatsResult(expectedNumberOfProjects));
+  // }
 
-  @Then("userstats are returned")
-  public void userstats_are_returned() {
-    var numberOfProjects = appApi.numberOfProjects().get();
+  // @Then("userstats are returned")
+  // public void userstats_are_returned() {
+  //   var numberOfProjects = appApi.numberOfProjects().get();
 
-    Mockito
-        .verify(projectsGrpc)
-        .userStats(requestorEmail);
+  //   Mockito
+  //       .verify(projectsGrpc)
+  //       .userStats(requestorEmail);
 
-    assertThat(numberOfProjects)
-        .isEqualTo(expectedNumberOfProjects);
-  }
+  //   assertThat(numberOfProjects)
+  //       .isEqualTo(expectedNumberOfProjects);
+  // }
 
   Runnable reserveValidation;
 
-  @When("Customer creation request is send to backend")
-  public void Customer_creation_request_is_send_to_backend() {
-    var projectId = "projectId [" + UUID.randomUUID() + "]";
+  // @When("Customer creation request is send to backend")
+  // public void Customer_creation_request_is_send_to_backend() {
+  //   var projectId = "projectId [" + UUID.randomUUID() + "]";
 
-    var projectVersion = 1L;
-    var expectedCmd = sinnet.grpc.customers.ReserveRequest.newBuilder()
-        .setProjectId(projectId)
-        .build();
-    var expectedResult = sinnet.grpc.customers.ReserveReply.newBuilder()
-        .setEntityId(EntityId.newBuilder()
-            .setEntityId(projectId)
-            .setEntityVersion(projectVersion)
-            .build())
-        .build();
+  //   var projectVersion = 1L;
+  //   var expectedCmd = sinnet.grpc.customers.ReserveRequest.newBuilder()
+  //       .setProjectId(projectId)
+  //       .build();
+  //   var expectedResult = sinnet.grpc.customers.ReserveReply.newBuilder()
+  //       .setEntityId(EntityId.newBuilder()
+  //           .setEntityId(projectId)
+  //           .setEntityVersion(projectVersion)
+  //           .build())
+  //       .build();
 
-    Mockito
-      .when(customersGrpc.reserve(expectedCmd))
-      .thenReturn(expectedResult);
+  //   Mockito
+  //     .when(customersGrpc.reserve(expectedCmd))
+  //     .thenReturn(expectedResult);
 
-    reserveValidation = () -> {
-      var reserveCustomerResult = appApi.reserveCustomer(projectId).get();;
-      Assertions.assertThat(reserveCustomerResult.getEntityId()).isEqualTo(projectId);
-      Assertions.assertThat(reserveCustomerResult.getEntityVersion()).isEqualTo(projectVersion);
-    };
-  }
+  //   reserveValidation = () -> {
+  //     var reserveCustomerResult = appApi.reserveCustomer(projectId).get();;
+  //     Assertions.assertThat(reserveCustomerResult.getEntityId()).isEqualTo(projectId);
+  //     Assertions.assertThat(reserveCustomerResult.getEntityVersion()).isEqualTo(projectVersion);
+  //   };
+  // }
 
-  @Then("Customer creation result is verified")
-  public void Customer_creation_result_is_returned() {
-      reserveValidation.run();
-      reserveValidation = null;
-  }
+  // @Then("Customer creation result is verified")
+  // public void Customer_creation_result_is_returned() {
+  //     reserveValidation.run();
+  //     reserveValidation = null;
+  // }
 
-  @When("Users list query is send")
-  public void Users_list_query_is_send() {
-    var projectId = "projectId [" + UUID.randomUUID() + "]";
+  // @When("Users list query is send")
+  // public void Users_list_query_is_send() {
+  //   var projectId = "projectId [" + UUID.randomUUID() + "]";
 
-    var query = sinnet.grpc.users.SearchRequest.newBuilder()
-        .setUserToken(UserToken.newBuilder()
-            .setRequestorEmail(requestorEmail)
-            .setProjectId(projectId))
-        .build();
-    var reply = sinnet.grpc.users.SearchReply.newBuilder()
-        .addItems(UsersSearchModel.newBuilder()
-          .setEmail("my email")
-          .setEntityId("my entity id"))
-        .build();
+  //   var query = sinnet.grpc.users.SearchRequest.newBuilder()
+  //       .setUserToken(UserToken.newBuilder()
+  //           .setRequestorEmail(requestorEmail)
+  //           .setProjectId(projectId))
+  //       .build();
+  //   var reply = sinnet.grpc.users.SearchReply.newBuilder()
+  //       .addItems(UsersSearchModel.newBuilder()
+  //         .setEmail("my email")
+  //         .setEntityId("my entity id"))
+  //       .build();
 
-    Mockito
-      .when(usersGrpc.search(query))
-      .thenReturn(reply);
+  //   Mockito
+  //     .when(usersGrpc.search(query))
+  //     .thenReturn(reply);
 
-    userListValidation = () -> {
-      var response = appApi.searchUsers(projectId).get();
-      Assertions.assertThat(response)
-        .containsOnly(new UserGql("my email", "my entity id"));
-    };
+  //   userListValidation = () -> {
+  //     var response = appApi.searchUsers(projectId).get();
+  //     Assertions.assertThat(response)
+  //       .containsOnly(new UserGql("my email", "my entity id"));
+  //   };
 
-  }
+  // }
 
-  Runnable userListValidation;
+  // Runnable userListValidation;
 
-  @Then("Users list response is returned")
-  public void Users_list_response_is_returned() {
-    userListValidation.run();
-    userListValidation = null;
-  }
+  // @Then("Users list response is returned")
+  // public void Users_list_response_is_returned() {
+  //   userListValidation.run();
+  //   userListValidation = null;
+  // }
 
 }

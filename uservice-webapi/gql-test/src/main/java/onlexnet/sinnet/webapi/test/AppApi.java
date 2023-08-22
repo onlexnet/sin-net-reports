@@ -26,24 +26,13 @@ public class AppApi {
   /** TBD. */
   @SneakyThrows
   public AppApi(String rootUri, String email) {
-    var token = Jwt.createTestJwt(email);
-
-    var http11SslContextSpec = Http11SslContextSpec
-        .forClient()
-        .configure(builder -> builder.trustManager(InsecureTrustManagerFactory.INSTANCE));
-
-    // create a custom connector and customize TLS configuration there.
-    // Ustawienie niestandardowego SSLContext w WebTestClient
-    var httpClient = HttpClient.create()
-        .secure(spec -> {
-          spec.sslContext(http11SslContextSpec);
-        });
-    var connector = new ReactorClientHttpConnector(httpClient);
-
-    var client = WebTestClient.bindToServer(connector)
+    final var principalNameHeaderName = "X-MS-CLIENT-PRINCIPAL-NAME";
+    final var principalNameHeaderId = "X-MS-CLIENT-PRINCIPAL-ID";
+    var client = WebTestClient.bindToServer()
         .responseTimeout(Duration.ofMinutes(10))
         .baseUrl(rootUri + "/graphql")
-        .defaultHeader(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+        .defaultHeader(principalNameHeaderName, email)
+        .defaultHeader(principalNameHeaderId, "principal-id")
         .build();
 
     tester = HttpGraphQlTester.create(client);
