@@ -1,12 +1,4 @@
-# GraphQL endpoint
-
-## Technical aspects:
-- Native build
-- Role check
-- Health check used by Helm test
-- GraphQL schema generation
-
-## Dev hints
+# Dev hints
 
 Sonar:  
 - https://docs.sonarcloud.io/advanced-setup/ci-based-analysis/sonarscanner-for-maven/

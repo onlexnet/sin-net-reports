@@ -1,0 +1,92 @@
+<project>
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>onlexnet.sinnet</groupId>
+    <artifactId>uservice-spring-parent</artifactId>
+    <version>0.1.3-SNAPSHOT</version>
+  </parent>
+  <artifactId>uservice-webapi-base</artifactId>
+  <version>${revision}</version>
+  <packaging>pom</packaging>
+
+  <dependencyManagement>
+    <dependencies>
+
+      <dependency>
+        <groupId>onlexnet.sinnet</groupId>
+        <artifactId>uservice-webapi-gql-test</artifactId>
+        <version>${revision}</version>
+        <scope>test</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>onlexnet.sinnet</groupId>
+        <artifactId>uservice-webapi-gql-model</artifactId>
+        <version>${revision}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.cucumber</groupId>
+        <artifactId>cucumber-bom</artifactId>
+        <version>7.11.2</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>onlexnet.sinnet</groupId>
+        <artifactId>uservice-projects.rpc</artifactId>
+        <version>${api.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>onlexnet.sinnet</groupId>
+        <artifactId>uservice-timeentries.rpc</artifactId>
+        <version>${api.version}</version>
+      </dependency>
+      <dependency>
+        <!-- apache lang3-->
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-lang3</artifactId>
+        <version>3.12.0</version>
+      </dependency>
+      <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <scope>provided</scope>
+        <version>1.18.26</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <build>
+
+    <pluginManagement>
+
+      <plugins>
+
+        <plugin>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-maven-plugin</artifactId>
+          <version>${spring-boot.version}</version>
+        </plugin>
+
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <version>0.8.10</version>
+      </plugin>
+
+      </plugins>
+    </pluginManagement>
+
+    <plugins>
+      <plugin>
+        <groupId>com.google.cloud.tools</groupId>
+        <artifactId>jib-maven-plugin</artifactId>
+        <version>3.3.1</version>
+        <configuration>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>

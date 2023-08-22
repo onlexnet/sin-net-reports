@@ -1,0 +1,195 @@
+<project>
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>onlexnet.sinnet</groupId>
+    <artifactId>uservice-webapi-base</artifactId>
+    <version>${revision}</version>
+    <relativePath>../base-pom/pom.xml</relativePath>
+  </parent>
+  <artifactId>uservice-webapi-gql-test</artifactId>
+  <version>${revision}</version>
+
+  <properties>
+    <api.version>0.1.1-SNAPSHOT</api.version>
+    <!--
+    <aggregate.report.dir>report-aggregate/target/site/jacoco-aggregate/jacoco.xml</aggregate.report.dir> -->
+    <sonar.projectKey>sin-net-reports:${project.artifactId}</sonar.projectKey>
+    <!-- sonar properties -> https://docs.sonarqube.org/latest/analysis/analysis-parameters/ -->
+    <sonar.organization>onlexnet</sonar.organization>
+    <sonar.projectKey>sin-net-reports</sonar.projectKey>
+    <sonar.projectName>SinNet Reports</sonar.projectName>
+    <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+    <!-- Environment variable is already defined in CICD as SONAR_TOKEN -->
+    <sonar.login>${env.SONAR_TOKEN}</sonar.login>
+
+    <!--
+    <aggregate.report.dir>report-aggregate/target/site/jacoco-aggregate/jacoco.xml</aggregate.report.dir> -->
+    <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/../${aggregate.report.dir}</sonar.coverage.jacoco.xmlReportPaths>
+
+    <!--
+      Disable error:
+      [ERROR] .NET Assembly Analyzer could not be initialized and at least one 'exe' or 'dll' was
+      scanned. The 'dotnet' executable could not be found on the path; either disable the Assembly
+      Analyzer or add the path to dotnet core in the configuration.
+      [ERROR] The dotnet 6.0 core runtime or SDK is required to analyze assemblies
+    -->
+    <analyzer.assembly.enabled>false</analyzer.assembly.enabled>
+  </properties>
+
+
+  <dependencies>
+
+    <dependency>
+      <groupId>onlexnet.sinnet</groupId>
+      <artifactId>uservice-webapi-gql-model</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.auth0</groupId>
+      <artifactId>java-jwt</artifactId>
+      <version>4.4.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>onlexnet.sinnet</groupId>
+      <artifactId>uservice-timeentries.rpc</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.graphql</groupId>
+      <artifactId>spring-graphql-test</artifactId>
+    </dependency>
+    <!-- Also add this, unless "spring-boot-starter-webflux" is also present to test Subscriptions
+    with GraphQL -->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-webflux</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>io.vavr</groupId>
+      <artifactId>vavr</artifactId>
+      <version>0.10.4</version>
+    </dependency>
+
+
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-graphql</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.graphql-java</groupId>
+      <artifactId>graphql-java-extended-scalars</artifactId>
+      <version>20.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-devtools</artifactId>
+      <scope>runtime</scope>
+      <optional>true</optional>
+    </dependency>
+
+    <dependency>
+      <groupId>io.cucumber</groupId>
+      <artifactId>cucumber-java</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.cucumber</groupId>
+      <artifactId>cucumber-spring</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.projectreactor.netty</groupId>
+      <artifactId>reactor-netty-http</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.cucumber</groupId>
+      <artifactId>cucumber-junit-platform-engine</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.platform</groupId>
+      <artifactId>junit-platform-suite</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+  </dependencies>
+
+  <build>
+
+    <plugins>
+      <plugin>
+        <groupId>com.google.cloud.tools</groupId>
+        <artifactId>jib-maven-plugin</artifactId>
+        <configuration>
+          <skip>true</skip>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+      </plugin>
+
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.10.1</version>
+        <configuration>
+          <release>17</release>
+          <!-- https://stackoverflow.com/questions/46878649/maven-compilation-issue-with-java-9 -->
+          <forceJavacCompilerUse>true</forceJavacCompilerUse>
+          <compilerArgs>
+            <arg>-Werror</arg>
+            <arg>-parameters</arg>
+          </compilerArgs>
+          <annotationProcessorPaths>
+            <path>
+              <!-- Generation of properties. -->
+              <groupId>org.springframework.boot</groupId>
+              <artifactId>spring-boot-configuration-processor</artifactId>
+              <version>${spring-boot.version}</version>
+            </path>
+            <path>
+              <groupId>org.projectlombok</groupId>
+              <artifactId>lombok</artifactId>
+              <version>1.18.26</version>
+            </path>
+          </annotationProcessorPaths>
+        </configuration>
+      </plugin>
+
+    </plugins>
+
+
+    <pluginManagement>
+
+      <plugins>
+
+        <plugin>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-maven-plugin</artifactId>
+          <version>${spring-boot.version}</version>
+        </plugin>
+
+      </plugins>
+    </pluginManagement>
+
+  </build>
+
+</project>

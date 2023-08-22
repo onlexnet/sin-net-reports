@@ -1,0 +1,11 @@
+mutation reserveCustomer($projectId: ID!) {
+  Customers(projectId: $projectId) {
+    reserve {
+      projectId
+      entityId
+      entityVersion
+      __typename
+    }
+  __typename
+  }
+}
