@@ -19,19 +19,19 @@ resource "azurerm_key_vault" "example" {
   soft_delete_retention_days = 7
 
   access_policy {
-    tenant_id    = data.azurerm_client_config.current.tenant_id
-    object_id    = data.azuread_group.support.object_id
+    tenant_id = data.azurerm_client_config.current.tenant_id
+    object_id = data.azuread_group.support.object_id
 
     secret_permissions = [
       # "Get", "Set", "List", "Delete"
       "Get", "List"
     ]
-  
+
   }
 
   access_policy {
-    tenant_id    = data.azurerm_client_config.current.tenant_id
-    object_id    = data.azurerm_client_config.current.object_id
+    tenant_id = data.azurerm_client_config.current.tenant_id
+    object_id = data.azurerm_client_config.current.object_id
 
     secret_permissions = [
       # all known values, as there is no point to limit onlex-infra, and additionally lack of some values throw unexpected issues (e.g. in destroying keyvault)

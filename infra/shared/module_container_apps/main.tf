@@ -34,16 +34,16 @@ resource "azurerm_container_app" "default" {
   name                         = "sinnet"
   container_app_environment_id = azurerm_container_app_environment.default.id
   resource_group_name          = var.resource_group.name
-  revision_mode = "Single"
-  
+  revision_mode                = "Single"
+
   identity {
     type         = "UserAssigned"
     identity_ids = [azurerm_user_assigned_identity.containerapp.id]
   }
 
   registry {
-    server   = "ghcr.io"
-    username = var.env.GITHUB_USERNAME
+    server               = "ghcr.io"
+    username             = var.env.GITHUB_USERNAME
     password_secret_name = "cr-pat"
   }
 
@@ -58,59 +58,63 @@ resource "azurerm_container_app" "default" {
   }
 
   secret {
-    name = "cr-pat"
+    name  = "cr-pat"
     value = var.env.CR_PAT
   }
 
   secret {
     # not used, should be removed
     # but can't be removed per https://github.com/microsoft/azure-container-apps/issues/395
-    name = "github-token"
+    name  = "github-token"
     value = var.env.CR_PAT
   }
 
   secret {
-    name = "database-host"
+    name  = "database-host"
     value = var.env.DATABASE_HOST
   }
 
   secret {
-    name = "database-host"
+    name  = "database-host"
     value = var.env.DATABASE_HOST
   }
 
   secret {
-    name = "database-port"
+    name  = "database-port"
     value = var.env.DATABASE_PORT
   }
 
   secret {
-    name = "database-name"
+    name  = "database-name"
     value = var.env.DATABASE_NAME
   }
 
   secret {
-    name = "database-password"
+    name  = "database-password"
     value = var.env.DATABASE_PASSWORD
   }
 
   secret {
-    name = "database-username"
+    name  = "database-username"
     value = var.env.DATABASE_USERNAME
   }
 
   dapr {
-    app_id = "uservice-timeentries"
-    app_port = "9000"
+    app_id       = "uservice-timeentries"
+    app_port     = "9000"
     app_protocol = "grpc"
   }
 
+  lifecycle {
+      ignore_changes = [template[0].container[0].image]
+  }
+
   template {
-    
+
     container {
 
-      name = "uservice-timeentries"
-      image = "ghcr.io/onlexnet/uservice-timeentries:latest"
+      name   = "uservice-timeentries"
+      image  = "ghcr.io/onlexnet/uservice-timeentries:latest"
       cpu    = 0.25
       memory = "0.5Gi"
 
@@ -119,39 +123,104 @@ resource "azurerm_container_app" "default" {
       # please manage manually using portal or az tools
 
       env {
-        name = "DATABASE_HOST"
+        name        = "DATABASE_HOST"
         secret_name = "database-host"
       }
 
       env {
-        name = "DATABASE_PORT"
+        name        = "DATABASE_PORT"
         secret_name = "database-port"
       }
 
       env {
-        name = "DATABASE_NAME"
+        name        = "DATABASE_NAME"
         secret_name = "database-name"
       }
 
       env {
-        name = "DATABASE_USERNAME"
+        name        = "DATABASE_USERNAME"
         secret_name = "database-username"
       }
 
       env {
-        name = "DATABASE_PASSWORD"
+        name        = "DATABASE_PASSWORD"
         secret_name = "database-password"
       }
 
       env {
-        name = "SPRING_PROFILES_ACTIVE"
+        name  = "SPRING_PROFILES_ACTIVE"
         value = "prod"
       }
 
       env {
         # default value is BPL_JVM_THREAD_COUNT=250 and app docker image build by packeto cant start as calculated memry is higher than available memory (0.5GB atm)
         # more: https://github.com/paketo-buildpacks/bellsoft-liberica/issues/68
-        name = "BPL_JVM_THREAD_COUNT"
+        name  = "BPL_JVM_THREAD_COUNT"
+        value = "20"
+      }
+
+      # readiness_probe {
+      #   transport = "HTTP"
+      #   port      = 80
+      # }
+
+      # liveness_probe {
+      #   transport = "HTTP"
+      #   port      = 80
+      # }
+
+      # startup_probe {
+      #   transport = "HTTP"
+      #   port      = 80
+      # }
+
+    }
+
+    container {
+
+      name   = "uservice-webapi"
+      image  = "ghcr.io/onlexnet/uservice-webapi:latest"
+      cpu    = 0.25
+      memory = "0.5Gi"
+
+      # scale - currently not supported
+      # https://github.com/hashicorp/terraform-provider-azurerm/issues/20629
+      # please manage manually using portal or az tools
+
+      env {
+        name        = "DATABASE_HOST"
+        secret_name = "database-host"
+      }
+
+      env {
+        name        = "DATABASE_PORT"
+        secret_name = "database-port"
+      }
+
+      env {
+        name        = "DATABASE_NAME"
+        secret_name = "database-name"
+      }
+
+      env {
+        name        = "DATABASE_USERNAME"
+        secret_name = "database-username"
+      }
+
+      env {
+        name        = "DATABASE_PASSWORD"
+        secret_name = "database-password"
+      }
+
+      env {
+        name  = "SPRING_PROFILES_ACTIVE"
+        value = "prod"
+      }
+
+      env {
+        # default value is BPL_JVM_THREAD_COUNT=250 and app docker image build by packeto cant start as calculated memry is higher than available memory (0.5GB atm)
+        # more: https://github.com/paketo-buildpacks/bellsoft-liberica/issues/68
+        name  = "BPL_JVM_THREAD_COUNT"
         value = "20"
       }
 
@@ -179,8 +248,8 @@ resource "azurerm_container_app" "default" {
 #   name      = "uservice-openapi-native"
 #   parent_id = var.resource_group.id
 #   location  = var.resource_group.location
- 
- 
+
+
 #   identity {
 #     type         = "UserAssigned"
 #     identity_ids = [azurerm_user_assigned_identity.containerapp.id]
@@ -253,7 +322,7 @@ resource "azurerm_container_app" "default" {
 #         }
 #       }
 #     }
- 
+
 #   })
 #   ignore_missing_property = true
 #   depends_on = [

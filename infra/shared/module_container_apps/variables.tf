@@ -12,13 +12,13 @@ variable "log_analytics_workspace" {
   })
 }
 
-variable env {
+variable "env" {
   type = object({
-    GITHUB_USERNAME = string
-    CR_PAT = string
-    DATABASE_HOST = string
-    DATABASE_NAME = string
-    DATABASE_PORT = string
+    GITHUB_USERNAME   = string
+    CR_PAT            = string
+    DATABASE_HOST     = string
+    DATABASE_NAME     = string
+    DATABASE_PORT     = string
     DATABASE_USERNAME = string
     DATABASE_PASSWORD = string
   })

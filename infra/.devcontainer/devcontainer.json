@@ -31,6 +31,8 @@
             }
         }
     },
+
+    // Required by terraform extension
     "remoteEnv": {
         "TF_LOG": "'info",
         "TF_LOG_PATH": "'./terraform.log"

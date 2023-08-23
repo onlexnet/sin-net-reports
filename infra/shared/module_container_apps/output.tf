@@ -3,3 +3,8 @@ output "webapi_fqdn" {
   value = azurerm_container_app.default.ingress[0].fqdn
 }
 
+# name of containerapp
+output "containerapp_name" {
+  value = azurerm_container_app.default.name
+}
+

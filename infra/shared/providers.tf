@@ -19,7 +19,7 @@ provider "azurerm" {
       # solution from: https://stackoverflow.com/a/72506375/1237627
       recover_soft_deleted_key_vaults = false
       purge_soft_delete_on_destroy    = true
-      
+
     }
   }
 }

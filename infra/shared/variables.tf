@@ -26,7 +26,7 @@ variable "environment_name" {
 # }
 
 variable "application_name" {
-  type    = string
+  type = string
 }
 
 variable "azure_subscription_id" {

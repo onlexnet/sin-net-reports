@@ -45,13 +45,14 @@ module "keyvault" {
 }
 
 module "github" {
-  source                                = "./module_github"
-  environment_name                      = var.environment_name
-  azure_static_web_apps_api_token       = module.static_app.static_app_api_key
-  ONLEXNET_INFRA_SECRET                 = module.keyvault.env.ONLEXNET_INFRA_SECRET
-  ONLEXNET_TENANT_ID                    = module.keyvault.env.ONLEXNET_TENANT_ID
-  ONLEXNET_SINNET_DEV01_SUBSCRIPTION_ID = module.keyvault.env.ONLEXNET_SINNET_DEV01_SUBSCRIPTION_ID
-  ONLEXNET_INFRA_CLIENT_ID              = module.keyvault.env.ONLEXNET_INFRA_CLIENT_ID
+  source                                  = "./module_github"
+  environment_name                        = var.environment_name
+  azure_static_web_apps_api_token         = module.static_app.static_app_api_key
+  ONLEXNET_INFRA_SECRET                   = module.keyvault.env.ONLEXNET_INFRA_SECRET
+  ONLEXNET_TENANT_ID                      = module.keyvault.env.ONLEXNET_TENANT_ID
+  ONLEXNET_SINNET_DEV01_SUBSCRIPTION_ID   = module.keyvault.env.ONLEXNET_SINNET_DEV01_SUBSCRIPTION_ID
+  ONLEXNET_INFRA_CLIENT_ID                = module.keyvault.env.ONLEXNET_INFRA_CLIENT_ID
+  ONLEXNET_SINNET_DEV01_CONTAINERAPP_NAME = module.container_apps.containerapp_name
 }
 
 # module "storage_account" {
