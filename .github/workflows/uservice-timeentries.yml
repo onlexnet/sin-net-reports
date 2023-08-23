@@ -86,8 +86,9 @@ jobs:
       - name: Display Image Name
         env:
           IMAGE_NAME_INITDB_HOST: ${{needs.Build.outputs.uservice_timeentries_image_name}}
+          CONTAINERAPP_NAME: ${{ env.ONLEXNET_SINNET_DEV01_CONTAINERAPP_NAME }}
         run: |
           echo "image_name: $IMAGE_NAME_INITDB_HOST"
           # TODO replace hardcoded params below with proper values
-          az containerapp update -n uservice-timeentries -g sinnet-env-dev01 --container-name uservice-timeentries --image $IMAGE_NAME_INITDB_HOST
+          az containerapp update -n $CONTAINERAPP_NAME -g sinnet-env-dev01 --container-name uservice-timeentries --image $IMAGE_NAME_INITDB_HOST
 
