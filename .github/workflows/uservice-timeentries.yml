@@ -62,8 +62,8 @@ jobs:
           mvn spring-boot:build-image -ntp -pl host -Dspring-boot.build-image.imageName=$IMAGE_NAME_HOST -DskipTests
 
           # add proper ID to distinguish image from other images built in this workflow
-          docker tag $IMAGE_NAME_HOST $GITHUB_RUN_ID
-          echo "docker tag $IMAGE_NAME_HOST $GITHUB_RUN_ID"
+          docker tag $IMAGE_NAME_HOST:latest $GITHUB_RUN_ID
+          echo "docker tag $IMAGE_NAME_HOST:latest $GITHUB_RUN_ID"
 
           docker push --all-tags $IMAGE_NAME_HOST
           echo "docker push --all-tags $IMAGE_NAME_HOST"
