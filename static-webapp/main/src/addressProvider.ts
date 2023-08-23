@@ -9,6 +9,7 @@ const asBackendHost = (appHost: string): string => {
   console.log("origin", origin);
   if (origin.endsWith("onlex.net")) return appHost;
   if (origin.endsWith("sinnet.local")) return appHost;
+  if (origin === "sinnet-dev01.onlex.net") return "https://sinnet-webapi--f0l0su8.proudstone-d1ff7602.westeurope.azurecontainerapps.io/";
   return "https://sinnet.local";
   // return "http://localhost:11010";
 }
