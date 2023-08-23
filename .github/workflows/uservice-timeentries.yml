@@ -16,10 +16,10 @@ jobs:
 
     steps:
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Set up JDK 17
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v3
         with:
           java-version: '17'
           distribution: 'temurin'
@@ -62,7 +62,7 @@ jobs:
           # add proper ID to distinguish image from other images built in this workflow
           docker tag $IMAGE_NAME_HOST $GITHUB_RUN_ID
           docker push --all-tags $IMAGE_NAME
-          echo "image_name=$IMAGE_NAME_HOST" >> "$GITHUB_OUTPUT"
+          echo "image_name=$IMAGE_NAME_HOST:$GITHUB_RUN_ID" >> "$GITHUB_OUTPUT"
 
           # IMAGE_NAME_INITDB_HOST=ghcr.io/onlexnet/uservice-timeentries-initdb:$GITHUB_RUN_ID
           # mvn spring-boot:build-image -ntp -pl initdb-host -Dspring-boot.build-image.imageName=$IMAGE_NAME_INITDB_HOST -DskipTests

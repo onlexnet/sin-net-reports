@@ -10,6 +10,11 @@
 			"version": "none",
 			"installMaven": "true",
 			"installGradle": "false"
+		},
+		"docker-in-docker": {
+			"version": "latest",
+			"moby": true,
+			"dockerDashComposeVersion": "v1"
 		}
 	},
 
