@@ -45,14 +45,15 @@ module "keyvault" {
 }
 
 module "github" {
-  source                                  = "./module_github"
-  environment_name                        = var.environment_name
-  azure_static_web_apps_api_token         = module.static_app.static_app_api_key
-  ONLEXNET_INFRA_SECRET                   = module.keyvault.env.ONLEXNET_INFRA_SECRET
-  ONLEXNET_TENANT_ID                      = module.keyvault.env.ONLEXNET_TENANT_ID
-  ONLEXNET_SINNET_DEV01_SUBSCRIPTION_ID   = module.keyvault.env.ONLEXNET_SINNET_DEV01_SUBSCRIPTION_ID
-  ONLEXNET_INFRA_CLIENT_ID                = module.keyvault.env.ONLEXNET_INFRA_CLIENT_ID
-  ONLEXNET_SINNET_DEV01_CONTAINERAPP_NAME = module.container_apps.containerapp_name
+  source                                              = "./module_github"
+  environment_name                                    = var.environment_name
+  azure_static_web_apps_api_token                     = module.static_app.static_app_api_key
+  ONLEXNET_INFRA_SECRET                               = module.keyvault.env.ONLEXNET_INFRA_SECRET
+  ONLEXNET_TENANT_ID                                  = module.keyvault.env.ONLEXNET_TENANT_ID
+  ONLEXNET_SINNET_DEV01_SUBSCRIPTION_ID               = module.keyvault.env.ONLEXNET_SINNET_DEV01_SUBSCRIPTION_ID
+  ONLEXNET_INFRA_CLIENT_ID                            = module.keyvault.env.ONLEXNET_INFRA_CLIENT_ID
+  ONLEXNET_SINNET_DEV01_CONTAINERAPP_NAME_TIMEENTRIES = module.container_apps_timeentries.containerapp_name
+  ONLEXNET_SINNET_DEV01_CONTAINERAPP_NAME_WEBAPI      = module.container_apps_webapi.containerapp_name
 }
 
 # module "storage_account" {
@@ -80,21 +81,37 @@ module "cloudflare" {
   webapp_prefix = "${var.application_name}-${var.environment_name}"
   webapp_fqdn   = module.static_app.webapp_fqdn
   webapi_prefix = "${var.application_name}-${var.environment_name}-api"
-  webapi_fqdn   = module.container_apps.webapi_fqdn
+  webapi_fqdn   = module.container_apps_webapi.webapi_fqdn
 }
 
-# module "github_repo" {
-#   source = "./module_github_repo"
-#   static_app_api_key = module.static_app.static_app_api_key
-#   acr_admin_name = data.azurerm_container_registry.alldev.admin_username
-#   acr_admin_secret = data.azurerm_container_registry.alldev.admin_password
-#   acr_registry_url = data.azurerm_container_registry.alldev.login_server
-# }
+module "container_apps_env" {
+  source                  = "./module_container_app_env"
+  resource_group          = module.resourcegroup.main
+  log_analytics_workspace = module.log_analytics_workspace.main
+}
 
-module "container_apps" {
+module "container_apps_timeentries" {
   source                  = "./module_container_app_timeentries"
   resource_group          = module.resourcegroup.main
   log_analytics_workspace = module.log_analytics_workspace.main
+  env_id                  = module.container_apps_env.env_id
+  env = {
+    GITHUB_USERNAME   = module.keyvault.env.GITHUB_USERNAME
+    CR_PAT            = module.keyvault.env.CR_PAT
+    DATABASE_HOST     = module.database.database_host
+    DATABASE_PORT     = module.database.database_port
+    DATABASE_NAME     = module.database.database_name
+    DATABASE_USERNAME = module.database.database_username
+    DATABASE_PASSWORD = module.database.database_password
+  }
+
+}
+
+module "container_apps_webapi" {
+  source                  = "./module_container_app_webapi"
+  resource_group          = module.resourcegroup.main
+  log_analytics_workspace = module.log_analytics_workspace.main
+  env_id                  = module.container_apps_env.env_id
   env = {
     GITHUB_USERNAME   = module.keyvault.env.GITHUB_USERNAME
     CR_PAT            = module.keyvault.env.CR_PAT

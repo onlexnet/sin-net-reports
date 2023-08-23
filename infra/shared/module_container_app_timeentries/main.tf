@@ -21,18 +21,11 @@ resource "azurerm_user_assigned_identity" "containerapp" {
 #   ]
 # }
 
-resource "azurerm_container_app_environment" "default" {
-  name                       = "dev01-env"
-  location                   = var.resource_group.location
-  resource_group_name        = var.resource_group.name
-  log_analytics_workspace_id = var.log_analytics_workspace.id
-}
-
 # Known issues:f
 # https://github.com/hashicorp/terraform-provider-azurerm/issues/20435
 resource "azurerm_container_app" "default" {
-  name                         = "sinnet"
-  container_app_environment_id = azurerm_container_app_environment.default.id
+  name                         = "sinnet-timeentries"
+  container_app_environment_id = var.env_id
   resource_group_name          = var.resource_group.name
   revision_mode                = "Single"
 
@@ -106,7 +99,7 @@ resource "azurerm_container_app" "default" {
   }
 
   lifecycle {
-      ignore_changes = [template[0].container[0].image]
+    ignore_changes = [template[0].container[0].image]
   }
 
   template {

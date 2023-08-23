@@ -60,10 +60,16 @@ resource "github_actions_environment_secret" "ONLEXNET_INFRA_SECRET" {
   plaintext_value = var.ONLEXNET_INFRA_SECRET
 }
 
-resource "github_actions_environment_variable" "ONLEXNET_SINNET_DEV01_CONTAINERAPP_NAME" {
-  environment     = github_repository_environment.main.environment
-  repository      = data.github_repository.sinnet.name
-  variable_name   = "ONLEXNET_SINNET_DEV01_CONTAINERAPP_NAME"
-  value = var.ONLEXNET_SINNET_DEV01_CONTAINERAPP_NAME
+resource "github_actions_environment_variable" "ONLEXNET_SINNET_DEV01_CONTAINERAPP_NAME_TIMEENTRIES" {
+  environment   = github_repository_environment.main.environment
+  repository    = data.github_repository.sinnet.name
+  variable_name = "ONLEXNET_SINNET_DEV01_CONTAINERAPP_NAME_TIMEENTRIES"
+  value         = var.ONLEXNET_SINNET_DEV01_CONTAINERAPP_NAME_TIMEENTRIES
 }
 
+resource "github_actions_environment_variable" "ONLEXNET_SINNET_DEV01_CONTAINERAPP_NAME_WEBAPI" {
+  environment   = github_repository_environment.main.environment
+  repository    = data.github_repository.sinnet.name
+  variable_name = "ONLEXNET_SINNET_DEV01_CONTAINERAPP_NAME_WEBAPI"
+  value         = var.ONLEXNET_SINNET_DEV01_CONTAINERAPP_NAME_WEBAPI
+}

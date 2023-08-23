@@ -96,7 +96,7 @@ jobs:
       - name: Display Image Name
         env:
           IMAGE_NAME_INITDB_HOST: ${{needs.Build.outputs.uservice_timeentries_image_name}}
-          CONTAINERAPP_NAME: ${{ vars.ONLEXNET_SINNET_DEV01_CONTAINERAPP_NAME }}
+          CONTAINERAPP_NAME: ${{ vars.ONLEXNET_SINNET_DEV01_CONTAINERAPP_NAME_TIMEENTRIES }}
         run: |
           echo "image_name: $IMAGE_NAME_INITDB_HOST"
           # TODO replace hardcoded params below with proper values
