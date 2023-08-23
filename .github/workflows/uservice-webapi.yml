@@ -1,5 +1,11 @@
 name: CI uservice-webapi
 
+# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
+# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
+concurrency:
+  group: "uservice-webapi"
+  cancel-in-progress: false
+
 on:
   push:
     branches: [ main ]
@@ -16,10 +22,10 @@ jobs:
 
     steps:
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Set up JDK 17
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v3
         with:
           java-version: '17'
           distribution: 'temurin'
@@ -48,21 +54,29 @@ jobs:
         run: |
           export SEMVERSION=$(cat ../.semversion)
           mvn -ntp install --file pom.xml
-        working-directory: uservice-webapi
+        working-directory: uservice-wabapi
       
       - id: BuildDockerImage
         name: Build Docker Image
         working-directory: uservice-webapi
         run: |
-          export IMAGE_NAME=ghcr.io/onlexnet/uservice-webapi
+          export IMAGE_NAME_BASE=ghcr.io/onlexnet/uservice-webapi
 
-          export IMAGE_NAME_HOST=$IMAGE_NAME
-          # build 'latest' image
+          export IMAGE_NAME_HOST=$IMAGE_NAME_BASE
+
+          # build 'latest' image. 'latest' tag is added automatically by build-image plugin
           mvn spring-boot:build-image -ntp -pl host -Dspring-boot.build-image.imageName=$IMAGE_NAME_HOST -DskipTests
+
           # add proper ID to distinguish image from other images built in this workflow
-          docker tag $IMAGE_NAME_HOST $GITHUB_RUN_ID
-          docker push --all-tags $IMAGE_NAME
-          echo "image_name=$IMAGE_NAME_HOST" >> "$GITHUB_OUTPUT"
+          docker tag $IMAGE_NAME_HOST $IMAGE_NAME_HOST:$GITHUB_RUN_ID
+
+          docker push --all-tags $IMAGE_NAME_HOST
+          echo "docker push --all-tags $IMAGE_NAME_HOST"
+
+          docker images
+
+          # export just published image name so that it can be used by next steps
+          echo "image_name=$IMAGE_NAME_HOST:$GITHUB_RUN_ID" >> "$GITHUB_OUTPUT"
 
   DeployDev:
     # https://learn.microsoft.com/en-us/azure/container-apps/github-actions#deploy-an-existing-container-image-to-container-apps
@@ -82,8 +96,10 @@ jobs:
       - name: Display Image Name
         env:
           IMAGE_NAME_INITDB_HOST: ${{needs.Build.outputs.uservice_webapi_image_name}}
+          CONTAINERAPP_NAME: ${{ vars.ONLEXNET_SINNET_DEV01_CONTAINERAPP_NAME }}
         run: |
           echo "image_name: $IMAGE_NAME_INITDB_HOST"
           # TODO replace hardcoded params below with proper values
-          az containerapp update -n uservice-webapi -g sinnet-env-dev01 --container-name uservice-webapi --image $IMAGE_NAME_INITDB_HOST
+          # az containerapp update -n $CONTAINERAPP_NAME -g sinnet-env-dev01 --container-name uservice-webapi --image $IMAGE_NAME_INITDB_HOST
+          az containerapp update -n sinnet -g sinnet-env-dev01 --container-name uservice-webapi --image $IMAGE_NAME_INITDB_HOST
 
