@@ -57,11 +57,17 @@ jobs:
           export IMAGE_NAME=ghcr.io/onlexnet/uservice-timeentries
 
           export IMAGE_NAME_HOST=$IMAGE_NAME
+          
           # build 'latest' image
           mvn spring-boot:build-image -ntp -pl host -Dspring-boot.build-image.imageName=$IMAGE_NAME_HOST -DskipTests
+
           # add proper ID to distinguish image from other images built in this workflow
           docker tag $IMAGE_NAME_HOST $GITHUB_RUN_ID
-          docker push --all-tags $IMAGE_NAME
+          echo "docker tag $IMAGE_NAME_HOST $GITHUB_RUN_ID"
+
+          docker push --all-tags $IMAGE_NAME_HOST
+          echo "docker push --all-tags $IMAGE_NAME_HOST"
+
           echo "image_name=$IMAGE_NAME_HOST:$GITHUB_RUN_ID" >> "$GITHUB_OUTPUT"
 
           # IMAGE_NAME_INITDB_HOST=ghcr.io/onlexnet/uservice-timeentries-initdb:$GITHUB_RUN_ID
