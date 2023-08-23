@@ -92,7 +92,7 @@ module "cloudflare" {
 # }
 
 module "container_apps" {
-  source                  = "./module_container_apps"
+  source                  = "./module_container_app_timeentries"
   resource_group          = module.resourcegroup.main
   log_analytics_workspace = module.log_analytics_workspace.main
   env = {
