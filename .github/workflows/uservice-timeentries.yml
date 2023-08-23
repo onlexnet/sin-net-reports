@@ -54,11 +54,11 @@ jobs:
         name: Build Docker Image
         working-directory: uservice-timeentries/main
         run: |
-          export IMAGE_NAME=ghcr.io/onlexnet/uservice-timeentries
+          export IMAGE_NAME_BASE=ghcr.io/onlexnet/uservice-timeentries
 
-          export IMAGE_NAME_HOST=$IMAGE_NAME
+          export IMAGE_NAME_HOST=$IMAGE_NAME_BASE
 
-          # build 'latest' image
+          # build 'latest' image. 'latest' tag is added automatically by build-image plugin
           mvn spring-boot:build-image -ntp -pl host -Dspring-boot.build-image.imageName=$IMAGE_NAME_HOST -DskipTests
 
           # add proper ID to distinguish image from other images built in this workflow
@@ -69,6 +69,7 @@ jobs:
 
           docker images
 
+          # export just published image name so that it can be used by next steps
           echo "image_name=$IMAGE_NAME_HOST:$GITHUB_RUN_ID" >> "$GITHUB_OUTPUT"
 
   DeployDev:
