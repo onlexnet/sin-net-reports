@@ -89,5 +89,6 @@ jobs:
         run: |
           echo "image_name: $IMAGE_NAME_INITDB_HOST"
           # TODO replace hardcoded params below with proper values
-          az containerapp update -n $ONLEXNET_SINNET_DEV01_CONTAINERAPP_NAME -g sinnet-env-dev01 --container-name uservice-timeentries --image $IMAGE_NAME_INITDB_HOST
+          # az containerapp update -n $ONLEXNET_SINNET_DEV01_CONTAINERAPP_NAME -g sinnet-env-dev01 --container-name uservice-timeentries --image $IMAGE_NAME_INITDB_HOST
+          az containerapp update -n sinnet -g sinnet-env-dev01 --container-name uservice-timeentries --image $IMAGE_NAME_INITDB_HOST
 
