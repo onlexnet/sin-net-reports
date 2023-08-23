@@ -52,7 +52,7 @@ jobs:
 
       - name: Build with Maven Timeentries
         run: |
-          export SEMVERSION=$(cat ../.semversion)
+          export SEMVERSION=$(cat .semversion)
           mvn -ntp install --file pom.xml
         working-directory: uservice-timeentries/main
       
