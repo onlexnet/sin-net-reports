@@ -19,9 +19,9 @@ public class WebSecurityConfig {
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     return http
-        // disable CORS as it may be not enough
-        // .cors(cors -> cors
-        //     .configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues()))
+        disable CORS as it may be not enough
+        .cors(cors -> cors
+            .configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues()))
         .csrf().disable()
         .httpBasic().disable()
         // .authorizeHttpRequests(it -> it.anyRequest().permitAll())
