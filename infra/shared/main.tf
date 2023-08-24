@@ -120,6 +120,7 @@ module "container_apps_webapi" {
     DATABASE_NAME     = module.database.database_name
     DATABASE_USERNAME = module.database.database_username
     DATABASE_PASSWORD = module.database.database_password
+    SINNETAPP_PROD_SECRET = module.keyvault.env.SINNETAPP_PROD_SECRET
   }
 
 }

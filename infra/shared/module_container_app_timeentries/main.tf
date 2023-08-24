@@ -42,17 +42,12 @@ resource "azurerm_container_app" "default" {
 
   # step 2
   ingress {
-    external_enabled = true
+    external_enabled = false
     target_port      = 8080
     traffic_weight {
       latest_revision = true
       percentage      = 100
     }
-  }
-
-  secret {
-    name  = "cr-pat"
-    value = var.env.CR_PAT
   }
 
   secret {
@@ -63,18 +58,13 @@ resource "azurerm_container_app" "default" {
   }
 
   secret {
-    name  = "database-host"
-    value = var.env.DATABASE_HOST
+    name  = "cr-pat"
+    value = var.env.CR_PAT
   }
 
   secret {
     name  = "database-host"
     value = var.env.DATABASE_HOST
-  }
-
-  secret {
-    name  = "database-port"
-    value = var.env.DATABASE_PORT
   }
 
   secret {
@@ -85,6 +75,11 @@ resource "azurerm_container_app" "default" {
   secret {
     name  = "database-password"
     value = var.env.DATABASE_PASSWORD
+  }
+
+  secret {
+    name  = "database-port"
+    value = var.env.DATABASE_PORT
   }
 
   secret {
@@ -103,6 +98,8 @@ resource "azurerm_container_app" "default" {
   }
 
   template {
+
+    max_replicas = 1
 
     container {
 
