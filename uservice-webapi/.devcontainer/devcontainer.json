@@ -32,7 +32,9 @@
 				"zxh404.vscode-proto3",
 				"shengchen.vscode-checkstyle",
 				"editorconfig.editorconfig",
-				"ms-azuretools.vscode-dapr"
+				"ms-azuretools.vscode-dapr",
+				"vscjava.vscode-java-dependency",
+				"visualstudioexptteam.vscodeintellicode"
 			]
 		}
 	},
