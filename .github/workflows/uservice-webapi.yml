@@ -54,7 +54,7 @@ jobs:
         run: |
           export SEMVERSION=$(cat .semversion)
           mvn -ntp install --file pom.xml
-        working-directory: uservice-wabapi
+        working-directory: uservice-webapi
       
       - id: BuildDockerImage
         name: Build Docker Image
