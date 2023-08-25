@@ -5,10 +5,12 @@ export const addressProvider = (): { host: string } => {
 }
 
 const asBackendHost = (appHost: string): string => {
+  const dev01 = "https://sinnet-webapi.proudstone-d1ff7602.westeurope.azurecontainerapps.io";
   if (origin.endsWith("raport.sin.net.pl")) return appHost;
   console.log("origin", origin);
+  if (origin.includes("localhost")) return dev01;
   if (origin.endsWith("sinnet.local")) return appHost;
-  if (origin.endsWith("sinnet-dev01.onlex.net")) return "https://sinnet-webapi--f0l0su8.proudstone-d1ff7602.westeurope.azurecontainerapps.io/";
+  if (origin.endsWith("sinnet-dev01.onlex.net")) return dev01;
   return "https://sinnet.local";
   // return "http://localhost:11010";
 }
