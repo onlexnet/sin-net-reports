@@ -32,7 +32,7 @@ public class RpcApi implements ApplicationListener<ApplicationReadyEvent> {
   @Getter
   private AppCallbackBlockingStub apiCallback;
 
-  @Value("${grpc.server.port}")
+  @Value("${grpc.server-port}")
   private int grpcPort;
 
   @Data
