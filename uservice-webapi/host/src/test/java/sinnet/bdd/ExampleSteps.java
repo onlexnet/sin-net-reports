@@ -1,36 +1,17 @@
 package sinnet.bdd;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-
-import java.util.List;
-import java.util.Objects;
-import java.util.Random;
 import java.util.UUID;
 
-import org.assertj.core.api.Assertions;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.test.web.servlet.result.StatusResultMatchers;
 
 import io.cucumber.java.Before;
-import io.cucumber.java.PendingException;
-import io.cucumber.java.en.Then;
-import io.cucumber.java.en.When;
 import onlexnet.sinnet.webapi.test.AppApi;
-import sinnet.domain.ProjectId;
 import sinnet.gql.models.ProjectEntityGql;
-import sinnet.gql.models.SomeEntityGql;
-import sinnet.gql.models.UserGql;
 import sinnet.grpc.CustomersGrpcService;
 import sinnet.grpc.ProjectsGrpcFacade;
 import sinnet.grpc.UsersGrpcService;
-import sinnet.grpc.ProjectsGrpcFacade.StatsResult;
-import sinnet.grpc.common.EntityId;
-import sinnet.grpc.common.UserToken;
-import sinnet.grpc.users.UsersSearchModel;
 
 public class ExampleSteps {
 
