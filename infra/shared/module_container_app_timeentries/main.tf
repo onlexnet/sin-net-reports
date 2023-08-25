@@ -150,6 +150,12 @@ resource "azurerm_container_app" "default" {
         value = "20"
       }
 
+
+      env {
+        name        = "APP_PORT"
+        value       = "9000"
+      }
+
       # readiness_probe {
       #   transport = "HTTP"
       #   port      = 80

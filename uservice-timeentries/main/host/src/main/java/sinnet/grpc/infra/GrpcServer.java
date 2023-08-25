@@ -22,7 +22,7 @@ public final class GrpcServer implements AutoCloseable {
   private OptionalInt serverPort = OptionalInt.empty();
 
   public GrpcServer(BindableService[] services,
-                    @Value("${grpc.server.port}") int port) {
+                    @Value("${grpc.server-port}") int port) {
     this.services = services;
     desiredPort = port;
   }
