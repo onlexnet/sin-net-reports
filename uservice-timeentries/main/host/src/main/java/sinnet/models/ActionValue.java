@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
+import sinnet.domain.model.ValEmail;
 
 /** Register details about provided service. */
 @Data

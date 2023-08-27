@@ -3,12 +3,12 @@ package sinnet.grpc.actions;
 import java.time.LocalDate;
 import java.util.UUID;
 
+import sinnet.domain.model.ValEmail;
 import sinnet.grpc.mapping.PropsBuilder;
 import sinnet.grpc.timeentries.TimeEntryModel;
 import sinnet.models.ActionDuration;
 import sinnet.models.ActionValue;
 import sinnet.models.Distance;
-import sinnet.models.ValEmail;
 import sinnet.models.Entity;
 import sinnet.models.ShardedId;
 
@@ -71,7 +71,7 @@ public interface MapperDto extends sinnet.grpc.common.Mapper {
     return PropsBuilder.build(TimeEntryModel.newBuilder())
       .set(it, o -> ShardedId.of(o), this::toDto, b -> b::setEntityId)
       .set(it.getValue().getWhom(), UUID::toString, b -> b::setCustomerId)
-      .set(it.getValue().getWho().getValue(), b -> b::setServicemanName)
+      .set(it.getValue().getWho().value(), b -> b::setServicemanName)
       .set(it.getValue().getWhen(), this::toDto, b -> b::setWhenProvided)
       .set(it.getValue().getWhat(), b -> b::setDescription)
       .set(it.getValue().getHowLong().getValue(), b -> b::setDuration)

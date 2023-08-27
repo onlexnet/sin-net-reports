@@ -2,8 +2,8 @@ package sinnet.grpc.common;
 
 import java.util.UUID;
 
+import sinnet.domain.model.ValEmail;
 import sinnet.grpc.mapping.PropsBuilder;
-import sinnet.models.ValEmail;
 import sinnet.models.ShardedId;
 import sinnet.models.UserToken;
 

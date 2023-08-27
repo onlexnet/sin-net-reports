@@ -2,7 +2,7 @@ package sinnet.read;
 
 import lombok.Builder;
 import lombok.Value;
-import sinnet.models.ValEmail;
+import sinnet.domain.model.ValEmail;
 import sinnet.models.EntityValue;
 
 /**

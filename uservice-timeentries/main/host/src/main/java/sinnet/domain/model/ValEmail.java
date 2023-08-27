@@ -1,13 +1,15 @@
-package sinnet.models;
+package sinnet.domain.model;
 
 import org.apache.commons.lang3.StringUtils;
 
 import lombok.Value;
+import lombok.experimental.Accessors;
 
 /**
  * TBD.
  */
 @Value
+@Accessors(fluent = true)
 public final class ValEmail {
 
   private static final ValEmail EMPTY = new ValEmail(null);

@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.val;
 import lombok.experimental.Accessors;
+import sinnet.domain.model.ValEmail;
 import sinnet.events.AvroObjectSerializer;
 import sinnet.grpc.common.EntityId;
 import sinnet.grpc.common.UserToken;
@@ -25,7 +26,6 @@ import sinnet.grpc.timeentries.LocalDate;
 import sinnet.grpc.timeentries.SearchQuery;
 import sinnet.grpc.users.IncludeOperatorCommand;
 import sinnet.models.ProjectId;
-import sinnet.models.ValEmail;
 import sinnet.models.ValName;
 import sinnet.project.events.ProjectCreatedEvent;
 
@@ -58,7 +58,7 @@ public class TestApi {
     var operatorId = ctx.getOperatorId(operatorAlias, false);
     var cmd = IncludeOperatorCommand.newBuilder()
         .setProjectId(projectId.getId().toString())
-        .addOperatorEmail(operatorId.getValue())
+        .addOperatorEmail(operatorId.value())
         .build();
     rpcApi.getUsers().includeOperator(cmd);
   }
@@ -70,7 +70,7 @@ public class TestApi {
     var operatorId = ctx.getOperatorId(operatorAlias, false);
     var invoker = UserToken.newBuilder()
         .setProjectId(projectId.getId().toString())
-        .setRequestorEmail(operatorId.getValue());
+        .setRequestorEmail(operatorId.value());
     var when = ctx.todayAsDto;
     var result = rpcApi.getTimeentries().reserve(newBuilder()
         .setInvoker(invoker)

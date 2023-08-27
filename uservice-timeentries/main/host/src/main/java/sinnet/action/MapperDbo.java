@@ -1,10 +1,10 @@
 package sinnet.action;
 
 import sinnet.action.ActionRepository.ActionDbo;
+import sinnet.domain.model.ValEmail;
 import sinnet.models.ActionDuration;
 import sinnet.models.ActionValue;
 import sinnet.models.Distance;
-import sinnet.models.ValEmail;
 import sinnet.models.Entity;
 
 /**
@@ -22,11 +22,11 @@ public interface MapperDbo {
       .setProjectId(id.getProjectId())
       .setEntityId(id.getId())
       .setEntityVersion(id.getVersion())
-      .setServicemanEmail(value.getWho().getValue())
+      .setServicemanEmail(value.getWho().value())
       .setDescription(value.getWhat())
       .setDistance(value.getHowFar().getValue())
       .setDuration(value.getHowLong().getValue())
-      .setServicemanName(value.getWho().getValue())
+      .setServicemanName(value.getWho().value())
       .setDate(value.getWhen())
       // TODO untained customer id
       .setCustomerId(value.getWhom());

@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
+import sinnet.domain.model.ValEmail;
 
 /**
  * TBD.

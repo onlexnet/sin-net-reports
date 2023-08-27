@@ -58,7 +58,7 @@ public final class CustomerRepositoryEx implements MapperDbo {
     dbo.setCustomerName(value.customerName().getValue())
         .setCustomerCityName(value.customerCityName().getValue())
         .setCustomerAddress(value.customerAddress())
-        .setOperatorEmail(value.operatorEmail().getValue())
+        .setOperatorEmail(value.operatorEmail().value())
         .setBillingModel(value.billingModel())
         .setSupportStatus(value.supportStatus())
         .setDistance(value.distance())
@@ -103,7 +103,7 @@ public final class CustomerRepositoryEx implements MapperDbo {
         .setPassword(it.getPassword())
         .setUsername(it.getUsername())
         .setChangedWhen(it.getChangedWhen())
-        .setChangedWho(it.getChangedWho().getValue());
+        .setChangedWho(it.getChangedWho().value());
   }
 
   CustomerDboSecretEx toDbo(CustomerSecretEx it) {
@@ -114,7 +114,7 @@ public final class CustomerRepositoryEx implements MapperDbo {
         .setEntityCode(it.getEntityCode())
         .setEntityName(it.getEntityName())
         .setChangedWhen(it.getChangedWhen())
-        .setChangedWho(it.getChangedWho().getValue());
+        .setChangedWho(it.getChangedWho().value());
   }
 
   /**

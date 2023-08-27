@@ -7,8 +7,8 @@ import java.util.UUID;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
+import sinnet.domain.model.ValEmail;
 import sinnet.grpc.mapping.RpcQueryHandler;
-import sinnet.models.ValEmail;
 import sinnet.read.UsersRepositoryEx;
 
 /**

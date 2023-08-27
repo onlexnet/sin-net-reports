@@ -25,7 +25,7 @@ public interface MapperDto extends Mapper {
    */
   default sinnet.grpc.users.UsersSearchModel toDto(UserModel model) {
     return PropsBuilder.build(sinnet.grpc.users.UsersSearchModel.newBuilder())
-        .tset(Optional.ofNullable(model.getEmail().getValue()), b -> b::setEmail)
+        .tset(Optional.ofNullable(model.getEmail().value()), b -> b::setEmail)
         .set(UUID.randomUUID().toString(), b -> b::setEntityId)
         .done().build();
   }

@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 import io.vavr.control.Option;
+import sinnet.domain.model.ValEmail;
 import sinnet.grpc.common.Mapper;
 import sinnet.grpc.mapping.PropsBuilder;
 import sinnet.models.CustomerContact;
@@ -11,7 +12,6 @@ import sinnet.models.CustomerModel;
 import sinnet.models.CustomerSecret;
 import sinnet.models.CustomerSecretEx;
 import sinnet.models.CustomerValue;
-import sinnet.models.ValEmail;
 import sinnet.models.ValName;
 
 /**
@@ -41,7 +41,7 @@ public interface MapperDto extends Mapper {
    */
   default sinnet.grpc.customers.CustomerValue toDto(CustomerValue value) {
     return PropsBuilder.build(sinnet.grpc.customers.CustomerValue.newBuilder())
-        .set(value.operatorEmail(), ValEmail::getValue, b -> b::setOperatorEmail)
+        .set(value.operatorEmail(), ValEmail::value, b -> b::setOperatorEmail)
         .set(value.billingModel(), b -> b::setBillingModel)
         .set(value.supportStatus(), b -> b::setSupportStatus)
         .set(value.distance(), b -> b::setDistance)
@@ -99,7 +99,7 @@ public interface MapperDto extends Mapper {
         .set(Option.of(value.getLocation()).getOrElse("?"), b -> b::setLocation)
         .set(value.getUsername(), b -> b::setUsername)
         .set(value.getPassword(), b -> b::setPassword)
-        .set(Option.of(value.getChangedWho().getValue()).getOrElse("?"), b -> b::setChangedWho)
+        .set(Option.of(value.getChangedWho().value()).getOrElse("?"), b -> b::setChangedWho)
         .set(toDto(value.getChangedWhen()), b -> b::setChangedWhen)
         .done().build();
   }
@@ -111,7 +111,7 @@ public interface MapperDto extends Mapper {
         .set(it.getPassword(), b -> b::setPassword)
         .set(it.getEntityName(), b -> b::setEntityName)
         .set(it.getEntityCode(), b -> b::setEntityCode)
-        .set(Option.of(it.getChangedWho().getValue()).getOrElse("?"), b -> b::setChangedWho)
+        .set(Option.of(it.getChangedWho().value()).getOrElse("?"), b -> b::setChangedWho)
         .set(toDto(it.getChangedWhen()), b -> b::setChangedWhen)
         .done().build();
   }

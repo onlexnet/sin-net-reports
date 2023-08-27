@@ -2,7 +2,7 @@ package sinnet.read;
 
 import java.util.UUID;
 
-import sinnet.models.ValEmail;
+import sinnet.domain.model.ValEmail;
 
 /**
  * TBD.

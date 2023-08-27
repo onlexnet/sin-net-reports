@@ -6,13 +6,13 @@ import java.util.UUID;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
+import sinnet.domain.model.ValEmail;
 import sinnet.grpc.mapping.RpcCommandHandler;
 import sinnet.grpc.timeentries.ReserveCommand;
 import sinnet.grpc.timeentries.ReserveResult;
 import sinnet.grpc.timeentries.ReserveCommand.OptionalWhenCase;
 import sinnet.models.ActionValue;
 import sinnet.models.ShardedId;
-import sinnet.models.ValEmail;
 import sinnet.write.ActionRepositoryEx;
 
 /**

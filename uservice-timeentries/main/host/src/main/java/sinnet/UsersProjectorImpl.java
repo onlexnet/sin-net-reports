@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 import io.vavr.collection.List;
 import lombok.RequiredArgsConstructor;
-import sinnet.models.ValEmail;
+import sinnet.domain.model.ValEmail;
 import sinnet.read.ServicemanRepo;
 import sinnet.read.UserModel;
 import sinnet.read.UsersRepositoryEx;

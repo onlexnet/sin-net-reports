@@ -1,6 +1,6 @@
 package sinnet;
 
-import sinnet.models.ValEmail;
+import sinnet.domain.model.ValEmail;
 import sinnet.models.UserToken;
 
 public class TestUsers {
