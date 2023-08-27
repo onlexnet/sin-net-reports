@@ -23,7 +23,7 @@ import lombok.experimental.Accessors;
 class ProjectDbo {
 
   @Id
-  @Column(name = "ENTITY_ID")
+  @Column(name = "ENTITY_ID", columnDefinition = "uniqueidentifier")
   private UUID entityId;
 
   @Version
