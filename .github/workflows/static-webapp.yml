@@ -32,6 +32,7 @@ jobs:
           runCmd: |
             export MY_VERSION=$(cat .version)
             cd main
+            ls
             npm config set allow-same-version true
             npm version $MY_VERSION 
             npm install
