@@ -33,4 +33,17 @@ class Mutation {
 
     return new CustomersMutation(projectId, userToken);
   }
+
+  @MutationMapping("Actions")
+  ActionsMutation actions(@Argument String projectId) {
+    var authentication = (AuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+    var primaryEmail = authentication.getPrincipal();
+
+    var userToken = UserToken.newBuilder()
+        .setProjectId(projectId)
+        .setRequestorEmail(primaryEmail)
+        .build();
+
+    return new ActionsMutation(projectId, userToken);
+  }
 }

@@ -101,11 +101,11 @@ public class ActionsSteps {
     var entityId = UUID.randomUUID();
     var entityVersion = 42L;
     Mockito
-      .when(actionsGrpcFacade.newAction("requestor-email", projectId, when))
+      .when(actionsGrpcFacade.newAction(requestorEmail, projectId, when))
       .thenReturn(new sinnet.domain.EntityId(projectId, entityId, entityVersion));
 
 
-    var actual = appApi.newAction("projectId", when).get();
+    var actual = appApi.newAction(projectId.toString(), when).get();
 
     Assertions.assertThat(actual).isEqualTo(new SomeEntityGql().setProjectId(projectId.toString()).setEntityId(entityId.toString()).setEntityVersion(entityVersion));
   }
