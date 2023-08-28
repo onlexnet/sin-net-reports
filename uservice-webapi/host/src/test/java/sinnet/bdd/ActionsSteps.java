@@ -114,4 +114,15 @@ public class ActionsSteps {
   public void actions_create_result_is_returned() {
   }
 
+  @When("Actions get query is sent")
+  public void actions_get_query_is_sent() {
+      // Write code here that turns the phrase above into concrete actions
+      throw new io.cucumber.java.PendingException();
+  }
+  
+  @Then("Actions get query is returned")
+  public void actions_get_query_is_returned() {
+      // Write code here that turns the phrase above into concrete actions
+      throw new io.cucumber.java.PendingException();
+  }
 }

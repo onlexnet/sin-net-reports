@@ -29,3 +29,7 @@ Feature: An example
     When Actions create command is send
     Then Actions create result is returned
 
+  Scenario: User gets existing Action
+    When Actions get query is sent
+    Then Actions get query is returned
+
