@@ -9,7 +9,9 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 class CustomAuthenticationFilter extends OncePerRequestFilter {
 
   @Override
@@ -20,8 +22,9 @@ class CustomAuthenticationFilter extends OncePerRequestFilter {
     final var principalNameHeaderId = "X-MS-CLIENT-PRINCIPAL-ID";
     final var principalNameHeaderName = "X-MS-CLIENT-PRINCIPAL-NAME";
 
-    var username = request.getHeader(principalNameHeaderName);
     var id = request.getHeader(principalNameHeaderId);
+    var username = request.getHeader(principalNameHeaderName);
+    log.info("Authentication: ID:{}, Name:{}", id, username);
 
     if (username == null && id == null) {
       // not our responsibility. delegate down the chain. maybe a different filter
