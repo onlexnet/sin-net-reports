@@ -33,6 +33,16 @@ public interface CommonMapper {
     return result;
   }
 
+  /** LocalDate conversion. */
+  public static java.time.LocalDate toGql(LocalDate whenProvided) {
+    if (whenProvided == null) {
+      return null;
+    }
+
+    return java.time.LocalDate.of(whenProvided.getYear(), whenProvided.getMonth(), whenProvided.getDay());
+  }
+
+
   /** Gql -> Grpc mapping. */
   public static ProjectId toGrpc(EntityGql it) {
     if (it == null) {
@@ -46,6 +56,10 @@ public interface CommonMapper {
 
   /** LocalDate conversion. */
   public static LocalDate toGrpc(java.time.LocalDate from) {
+    if (from == null) {
+      return null;
+    }
+
     return LocalDate.newBuilder()
         .setYear(from.getYear())
         .setMonth(from.getMonthValue())
