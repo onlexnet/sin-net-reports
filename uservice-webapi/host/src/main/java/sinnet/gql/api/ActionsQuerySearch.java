@@ -25,7 +25,7 @@ class ActionsQuerySearch {
     var projectId = UUID.fromString(self.projectId());
     var result = service.search(projectId, filter.getFrom(), filter.getTo());
     return new ServicesSearchResultGql()
-      .setItems(List.of());
+      .setItems(result);
   }
 
 }

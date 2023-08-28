@@ -17,6 +17,7 @@ import io.cucumber.java.Before;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import onlexnet.sinnet.webapi.test.AppApi;
+import sinnet.gql.api.CommonMapper;
 import sinnet.gql.models.ServiceModelGql;
 import sinnet.gql.models.ServicesSearchResultGql;
 import sinnet.grpc.ActionsGrpcFacade;
@@ -57,6 +58,7 @@ public class ActionsSteps {
       .thenReturn(List.of(
         TimeEntryModel.newBuilder()
           .setDescription("desc1")
+          .setWhenProvided(CommonMapper.toGrpc(now))
           .build()
        ));
 
@@ -66,7 +68,9 @@ public class ActionsSteps {
 
     var expected = new ServicesSearchResultGql()
         .setItems(List.of(
-          new ServiceModelGql().setDescription("aaaa")
+          new ServiceModelGql()
+          .setDescription("desc1")
+          .setWhenProvided(now)
         ));
 
     Assertions.assertThat(actual).isEqualTo(expected);
@@ -74,7 +78,5 @@ public class ActionsSteps {
 
   @Then("Actions list response is returned")
   public void actions_list_response_is_returned() {
-    // Write code here that turns the phrase above into concrete actions
-    throw new io.cucumber.java.PendingException();
   }
 }
