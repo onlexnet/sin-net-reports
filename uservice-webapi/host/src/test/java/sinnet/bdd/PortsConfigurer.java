@@ -4,6 +4,7 @@ import org.mockito.Mockito;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 
+import sinnet.grpc.ActionsGrpcFacade;
 import sinnet.grpc.CustomersGrpcService;
 import sinnet.grpc.ProjectsGrpcFacade;
 import sinnet.grpc.UsersGrpcService;
@@ -33,6 +34,12 @@ class PortsConfigurer {
   UsersGrpcService usersGrpcServiceMocked() {
     var service = Mockito.mock(UsersGrpcService.class);
     return service;
+  }
+
+  @Bean
+  @Primary
+  ActionsGrpcFacade actionsGrpcFacade() {
+    return Mockito.mock(ActionsGrpcFacade.class);
   }
 
 }

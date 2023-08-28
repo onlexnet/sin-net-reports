@@ -30,9 +30,9 @@ import sinnet.grpc.common.UserToken;
 import sinnet.grpc.users.UsersSearchModel;
 
 public class StepDefinitions {
+
   @Autowired
   ProjectsGrpcFacade projectsGrpc;
-
 
   @Autowired
   CustomersGrpcService customersGrpc;

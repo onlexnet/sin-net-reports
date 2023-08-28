@@ -3,6 +3,7 @@ package onlexnet.sinnet.webapi.test;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.graphql.test.tester.GraphQlTester.Entity;
 import org.springframework.graphql.test.tester.GraphQlTester.EntityList;
@@ -83,7 +84,7 @@ public class AppApi {
   }
 
   /** Returns list of timeentries from requested project between 'from' and 'to' dates. */
-  public Entity<ServicesSearchResultGql, ?> searchActions(String projectId, LocalDate from, LocalDate to) {
+  public Entity<ServicesSearchResultGql, ?> searchActions(UUID projectId, LocalDate from, LocalDate to) {
     return tester.documentName("searchActions")
         .variable("projectId", projectId)
         .variable("from", from.toString())

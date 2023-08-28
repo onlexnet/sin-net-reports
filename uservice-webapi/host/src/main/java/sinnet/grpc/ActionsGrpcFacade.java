@@ -11,6 +11,15 @@ import sinnet.grpc.timeentries.TimeEntryModel;
 public interface ActionsGrpcFacade {
 
   /** REturns list of actions for requested project, limited result from-to range. */
-  public <T> List<T> search(UUID projectId, LocalDate from, LocalDate to, Function<TimeEntryModel, T> mapper);
+  <T> List<T> search(UUID projectId, LocalDate from, LocalDate to, Function<TimeEntryModel, T> mapper);
+
+  /** Returns list of actions for requested project, limited result from-to range. */
+  default List<String> search(UUID projectId, LocalDate from, LocalDate to) {
+    return search(projectId, from, to, ActionsGrpcFacade::map);
+  }
+
+  static String map(TimeEntryModel model) {
+    return model.getDescription();
+  }
 
 }
