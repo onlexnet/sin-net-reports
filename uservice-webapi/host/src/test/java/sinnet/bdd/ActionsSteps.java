@@ -24,6 +24,7 @@ import sinnet.grpc.ActionsGrpcFacade;
 import sinnet.grpc.CustomersGrpcService;
 import sinnet.grpc.ProjectsGrpcFacade;
 import sinnet.grpc.UsersGrpcService;
+import sinnet.grpc.common.EntityId;
 import sinnet.grpc.timeentries.TimeEntryModel;
 
 public class ActionsSteps {
@@ -59,6 +60,11 @@ public class ActionsSteps {
         TimeEntryModel.newBuilder()
           .setDescription("desc1")
           .setWhenProvided(CommonMapper.toGrpc(now))
+          .setDistance(1)
+          .setDuration(2)
+          .setServicemanName("my-serviceman")
+          .setServicemanEmail("my-serviceman-email")
+          .setEntityId(EntityId.newBuilder().setEntityId("entity-id").setEntityVersion(10).setProjectId("project-id"))
           .build()
        ));
 
@@ -71,6 +77,13 @@ public class ActionsSteps {
           new ServiceModelGql()
           .setDescription("desc1")
           .setWhenProvided(now)
+          .setDistance(1)
+          .setDuration(2)
+          .setServicemanName("my-serviceman")
+          .setServicemanEmail("my-serviceman-email")
+          .setEntityId("entity-id")
+          .setEntityVersion(10)
+          .setProjectId("project-id")
         ));
 
     Assertions.assertThat(actual).isEqualTo(expected);
