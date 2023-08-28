@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import io.vavr.collection.Iterator;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,6 +26,10 @@ class CustomAuthenticationFilter extends OncePerRequestFilter {
     var id = request.getHeader(principalNameHeaderId);
     var username = request.getHeader(principalNameHeaderName);
     log.info("Authentication: ID:{}, Name:{}", id, username);
+
+    for (var header: Iterator.ofAll(request.getHeaderNames().asIterator())) {
+      log.info("Header: {}", header);
+    }
 
     if (username == null && id == null) {
       // not our responsibility. delegate down the chain. maybe a different filter
