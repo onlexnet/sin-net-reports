@@ -5,7 +5,7 @@ import org.springframework.stereotype.Controller;
 
 import io.vavr.collection.Iterator;
 import lombok.RequiredArgsConstructor;
-import sinnet.gql.models.CustomerEntity;
+import sinnet.gql.models.CustomerEntityGql;
 import sinnet.grpc.CustomersGrpcService;
 import sinnet.grpc.customers.ListRequest;
 
@@ -15,13 +15,13 @@ class CustomersQueryList implements CustomerMapper {
 
   private final CustomersGrpcService service;
 
-  public CustomerEntity[] list(CustomersQuery self) {
+  public CustomerEntityGql[] list(CustomersQuery self) {
     var request = ListRequest.newBuilder()
         .setProjectId(self.getProjectId())
         .setUserToken(self.getUserToken())
         .build();
     var items = service.list(request);
-    return Iterator.ofAll(items.getCustomersList()).map(this::toGql).toJavaArray(CustomerEntity[]::new);
+    return Iterator.ofAll(items.getCustomersList()).map(this::toGql).toJavaArray(CustomerEntityGql[]::new);
   }
 
 }

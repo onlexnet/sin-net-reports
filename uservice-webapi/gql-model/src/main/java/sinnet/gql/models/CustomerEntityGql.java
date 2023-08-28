@@ -4,7 +4,7 @@ import lombok.Data;
 
 /** Fixme. */
 @Data
-public class CustomerEntity {
+public class CustomerEntityGql {
   private SomeEntityGql id;
   private CustomerModelGql data;
   private CustomerSecretGql[] secrets;

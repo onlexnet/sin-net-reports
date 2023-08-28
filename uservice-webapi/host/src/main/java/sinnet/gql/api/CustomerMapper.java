@@ -6,8 +6,8 @@ import java.time.format.DateTimeFormatter;
 import io.vavr.collection.Iterator;
 import io.vavr.control.Option;
 import sinnet.gql.models.CustomerContactGql;
-import sinnet.gql.models.CustomerContactInput;
-import sinnet.gql.models.CustomerEntity;
+import sinnet.gql.models.CustomerContactInputGql;
+import sinnet.gql.models.CustomerEntityGql;
 import sinnet.gql.models.CustomerInput;
 import sinnet.gql.models.CustomerModelGql;
 import sinnet.gql.models.CustomerSecretGql;
@@ -99,7 +99,7 @@ public interface CustomerMapper extends CommonMapper {
   }
 
   /** Fixme. */
-  default sinnet.grpc.customers.CustomerContact toGrpc(CustomerContactInput it) {
+  default sinnet.grpc.customers.CustomerContact toGrpc(CustomerContactInputGql it) {
     if (it == null) {
       return null;
     }
@@ -178,11 +178,11 @@ public interface CustomerMapper extends CommonMapper {
   }
 
   /** FixMe. */
-  default CustomerEntity toGql(sinnet.grpc.customers.CustomerModel item) {
+  default CustomerEntityGql toGql(sinnet.grpc.customers.CustomerModel item) {
     if (item == null) {
       return null;
     }
-    var result = new CustomerEntity();
+    var result = new CustomerEntityGql();
     result.setId(toGql(item.getId()));
     result.setData(toGql(item.getValue()));
     result.setSecrets(Iterator.ofAll(item.getSecretsList()).map(this::toGql).toJavaArray(CustomerSecretGql[]::new));
@@ -228,7 +228,7 @@ public interface CustomerMapper extends CommonMapper {
   }
    
   /** FixMe. */
-  default CustomerEntity toGql(GetReply dto) {
+  default CustomerEntityGql toGql(GetReply dto) {
     if (dto == null) {
       return null;
     }

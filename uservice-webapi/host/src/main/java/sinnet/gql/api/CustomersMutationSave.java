@@ -4,7 +4,7 @@ import org.springframework.stereotype.Controller;
 
 import io.vavr.collection.Array;
 import lombok.RequiredArgsConstructor;
-import sinnet.gql.models.CustomerContactInput;
+import sinnet.gql.models.CustomerContactInputGql;
 import sinnet.gql.models.CustomerInput;
 import sinnet.gql.models.CustomerSecretExInput;
 import sinnet.gql.models.CustomerSecretInput;
@@ -24,7 +24,7 @@ class CustomersMutationSave implements CustomerMapper {
   public SomeEntityGql save(CustomersMutation self, EntityGql id, CustomerInput entry,
       CustomerSecretInput[] secrets,
       CustomerSecretExInput[] secretsEx,
-      CustomerContactInput[] contacts) {
+      CustomerContactInputGql[] contacts) {
 
     var request = UpdateCommand.newBuilder()
         .setUserToken(self.getUserToken())

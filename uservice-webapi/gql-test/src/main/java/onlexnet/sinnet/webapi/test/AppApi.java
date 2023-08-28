@@ -1,6 +1,7 @@
 package onlexnet.sinnet.webapi.test;
 
 import java.time.Duration;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.graphql.test.tester.GraphQlTester.Entity;
@@ -10,6 +11,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 
 import lombok.SneakyThrows;
 import sinnet.gql.models.ProjectEntityGql;
+import sinnet.gql.models.ServicesSearchResultGql;
 import sinnet.gql.models.SomeEntityGql;
 import sinnet.gql.models.UserGql;
 
@@ -78,5 +80,16 @@ public class AppApi {
         .execute()
         .path("Users.search")
         .entityList(UserGql.class);
+  }
+
+  /** Returns list of timeentries from requested project between 'from' and 'to' dates. */
+  public Entity<ServicesSearchResultGql, ?> searchActions(String projectId, LocalDate from, LocalDate to) {
+    return tester.documentName("searchActions")
+        .variable("projectId", projectId)
+        .variable("from", from)
+        .variable("to", to)
+        .execute()
+        .path("Actions.search")
+        .entity(ServicesSearchResultGql.class);
   }
 }

@@ -4,7 +4,7 @@ import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.stereotype.Controller;
 
 import lombok.RequiredArgsConstructor;
-import sinnet.gql.models.CustomerEntity;
+import sinnet.gql.models.CustomerEntityGql;
 import sinnet.grpc.CustomersGrpcService;
 import sinnet.grpc.common.EntityId;
 import sinnet.grpc.customers.GetRequest;
@@ -15,7 +15,7 @@ class CustomersQueryGet implements CustomerMapper {
 
   private final CustomersGrpcService service;
 
-  public CustomerEntity get(CustomersQuery self, @Argument String entityId) {
+  public CustomerEntityGql get(CustomersQuery self, @Argument String entityId) {
     var request = GetRequest.newBuilder()
         .setEntityId(EntityId.newBuilder()
             .setProjectId(self.getProjectId())

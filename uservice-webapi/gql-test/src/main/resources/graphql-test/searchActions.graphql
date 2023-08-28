@@ -1,0 +1,27 @@
+query searchActions($projectId: ID!, $from: Date!, $to: Date!) {
+  Actions(projectId: $projectId) {
+    search(filter: { from: $from, to: $to }) {
+      items {
+        customer {
+          id {
+            entityId
+            entityVersion
+            projectId
+          }
+          data {
+            customerName
+					}
+        }
+        description
+        distance
+        duration
+        entityId
+        entityVersion
+        projectId
+        servicemanEmail
+        servicemanName
+        whenProvided
+			}
+    }
+  }
+}

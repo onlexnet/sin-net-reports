@@ -4,7 +4,7 @@ import lombok.Data;
 
 /** Fixme. */
 @Data
-public class CustomerContactInput {
+public class CustomerContactInputGql {
   private String firstName;
   private String lastName;
   private String phoneNo;

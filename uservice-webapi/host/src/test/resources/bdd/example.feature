@@ -20,3 +20,7 @@ Feature: An example
   Scenario: Users list query
     When Users list query is send
     Then Users list response is returned
+
+  Scenario: Users list actions
+    When Actions list query is send
+    Then Actions list response is returned
