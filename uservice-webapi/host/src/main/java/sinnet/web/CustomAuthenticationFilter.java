@@ -27,7 +27,7 @@ class CustomAuthenticationFilter extends OncePerRequestFilter {
     var username = request.getHeader(principalNameHeaderName);
     log.info("Authentication: ID:{}, Name:{}", id, username);
 
-    for (var header: Iterator.ofAll(request.getHeaderNames().asIterator())) {
+    for (var header : Iterator.ofAll(request.getHeaderNames().asIterator())) {
       log.info("Header: {}", header);
     }
 
