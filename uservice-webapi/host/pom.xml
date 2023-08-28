@@ -10,7 +10,6 @@
   <version>${revision}</version>
 
   <properties>
-    <api.version>0.1.1-SNAPSHOT</api.version>
     <!--
     <aggregate.report.dir>report-aggregate/target/site/jacoco-aggregate/jacoco.xml</aggregate.report.dir> -->
     <sonar.projectKey>sin-net-reports:${project.artifactId}</sonar.projectKey>
@@ -345,16 +344,6 @@
         <version>7.11.2</version>
         <type>pom</type>
         <scope>import</scope>
-      </dependency>
-      <dependency>
-        <groupId>onlexnet.sinnet</groupId>
-        <artifactId>uservice-projects.rpc</artifactId>
-        <version>${api.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>onlexnet.sinnet</groupId>
-        <artifactId>uservice-timeentries.rpc</artifactId>
-        <version>${api.version}</version>
       </dependency>
       <dependency>
         <groupId>org.projectlombok</groupId>

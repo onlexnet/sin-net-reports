@@ -34,7 +34,8 @@
 				"editorconfig.editorconfig",
 				"ms-azuretools.vscode-dapr",
 				"vscjava.vscode-java-dependency",
-				"visualstudioexptteam.vscodeintellicode"
+				"visualstudioexptteam.vscodeintellicode",
+				"cucumberopen.cucumber-official"
 			]
 		}
 	},

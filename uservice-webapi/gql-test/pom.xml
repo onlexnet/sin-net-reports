@@ -10,7 +10,6 @@
   <version>${revision}</version>
 
   <properties>
-    <api.version>0.1.1-SNAPSHOT</api.version>
     <!--
     <aggregate.report.dir>report-aggregate/target/site/jacoco-aggregate/jacoco.xml</aggregate.report.dir> -->
     <sonar.projectKey>sin-net-reports:${project.artifactId}</sonar.projectKey>
