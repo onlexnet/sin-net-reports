@@ -23,6 +23,7 @@ import sinnet.grpc.ActionsGrpcFacade;
 import sinnet.grpc.CustomersGrpcService;
 import sinnet.grpc.ProjectsGrpcFacade;
 import sinnet.grpc.UsersGrpcService;
+import sinnet.grpc.timeentries.TimeEntryModel;
 
 public class ActionsSteps {
 
@@ -51,11 +52,16 @@ public class ActionsSteps {
     var to = now.plusDays(1);
 
     Mockito
-      .when(actionsGrpcFacade.search(eq(projectId), eq(from), eq(to)))
-      .thenReturn(List.of("a"));
+    
+      .when(actionsGrpcFacade.searchInternal(projectId, from, to))
+      .thenReturn(List.of(
+        TimeEntryModel.newBuilder()
+          .setDescription("desc1")
+          .build()
+       ));
 
 
-    var actual = appApi.searchActions(projectId, from, to);
+    var actual = appApi.searchActions(projectId, from, to).get();
 
 
     var expected = new ServicesSearchResultGql()

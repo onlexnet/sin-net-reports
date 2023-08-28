@@ -3,7 +3,6 @@ package sinnet.grpc;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
-import java.util.function.Function;
 
 import sinnet.grpc.timeentries.TimeEntryModel;
 
@@ -11,11 +10,11 @@ import sinnet.grpc.timeentries.TimeEntryModel;
 public interface ActionsGrpcFacade {
 
   /** REturns list of actions for requested project, limited result from-to range. */
-  <T> List<T> search(UUID projectId, LocalDate from, LocalDate to, Function<TimeEntryModel, T> mapper);
+  List<TimeEntryModel> searchInternal(UUID projectId, LocalDate from, LocalDate to);
 
   /** Returns list of actions for requested project, limited result from-to range. */
   default List<String> search(UUID projectId, LocalDate from, LocalDate to) {
-    return search(projectId, from, to, ActionsGrpcFacade::map);
+    return searchInternal(projectId, from, to).stream().map(ActionsGrpcFacade::map).toList();
   }
 
   static String map(TimeEntryModel model) {

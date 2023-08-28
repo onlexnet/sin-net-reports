@@ -1,5 +1,6 @@
 package sinnet.bdd;
 
+import org.mockito.Answers;
 import org.mockito.Mockito;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
@@ -39,7 +40,7 @@ class PortsConfigurer {
   @Bean
   @Primary
   ActionsGrpcFacade actionsGrpcFacade() {
-    return Mockito.mock(ActionsGrpcFacade.class);
+    return Mockito.mock(ActionsGrpcFacade.class, Answers.CALLS_REAL_METHODS);
   }
 
 }
