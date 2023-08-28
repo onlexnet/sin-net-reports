@@ -8,6 +8,7 @@ import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.SchemaMapping;
 import org.springframework.stereotype.Controller;
 
+import lombok.Cleanup;
 import lombok.RequiredArgsConstructor;
 import sinnet.gql.models.ServiceFilterInputGql;
 import sinnet.gql.models.ServicesSearchResultGql;
@@ -21,6 +22,10 @@ class ActionsQuerySearch {
 
   @SchemaMapping
   ServicesSearchResultGql search(ActionsQuery self, @Argument ServiceFilterInputGql filter) {
+    @Cleanup
+    var event = new ExampleEvent();
+    
+    event.begin();
     var requestorEmail = self.primaryEmail();
     var projectId = UUID.fromString(self.projectId());
     var result = service.search(projectId, filter.getFrom(), filter.getTo());
@@ -28,6 +33,17 @@ class ActionsQuerySearch {
       .setItems(result);
   }
 
-}
+  static class ExampleEvent extends jdk.jfr.Event implements AutoCloseable {
 
+    public ExampleEvent() {
+      super.begin();
+    }
+
+    @Override
+    public void close() {
+      super.end();
+      super.commit();
+    }
+  }
+}
 

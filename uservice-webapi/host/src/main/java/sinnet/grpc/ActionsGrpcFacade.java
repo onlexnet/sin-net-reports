@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
+import sinnet.domain.EntityId;
 import sinnet.gql.api.CommonMapper;
 import sinnet.gql.models.ServiceModelGql;
 import sinnet.grpc.timeentries.TimeEntryModel;
@@ -14,6 +15,9 @@ public interface ActionsGrpcFacade {
   /** REturns list of actions for requested project, limited result from-to range. */
   List<TimeEntryModel> searchInternal(UUID projectId, LocalDate from, LocalDate to);
 
+  /** Fixme. */
+  EntityId newAction(String requestorEmail, UUID projectId, LocalDate when);
+  
   /** Returns list of actions for requested project, limited result from-to range. */
   default List<ServiceModelGql> search(UUID projectId, LocalDate from, LocalDate to) {
     return searchInternal(projectId, from, to).stream().map(ActionsGrpcFacade::map).toList();

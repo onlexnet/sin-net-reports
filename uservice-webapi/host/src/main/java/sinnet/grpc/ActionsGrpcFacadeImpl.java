@@ -7,7 +7,10 @@ import java.util.UUID;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
+import sinnet.domain.EntityId;
 import sinnet.gql.api.CommonMapper;
+import sinnet.grpc.common.UserToken;
+import sinnet.grpc.timeentries.ReserveCommand;
 import sinnet.grpc.timeentries.SearchQuery;
 import sinnet.grpc.timeentries.TimeEntriesGrpc.TimeEntriesBlockingStub;
 import sinnet.grpc.timeentries.TimeEntryModel;
@@ -32,6 +35,21 @@ class ActionsGrpcFacadeImpl implements ActionsGrpcFacade {
     var result = stub.search(searchQuery);
 
     return result.getActivitiesList();
+  }
+
+  @Override
+  public EntityId newAction(String requestorEmail, UUID projectId, LocalDate when) {
+
+    var cmd = ReserveCommand.newBuilder()
+        .setInvoker(UserToken.newBuilder()
+          .setProjectId(projectId.toString())
+          .setRequestorEmail(requestorEmail))
+        .setWhen(CommonMapper.toGrpc(when))
+        .build();
+
+    var result = stub.reserve(cmd);
+
+    return CommonMapper.fromGrpc(result.getEntityId());
   }
 
 }

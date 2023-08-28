@@ -1,0 +1,9 @@
+mutation newAction($projectId: ID!, $when: Date!) {
+    Actions(projectId: $projectId) {
+        newAction(whenProvided: $when) {
+            projectId
+            entityId
+            entityVersion
+        }
+    }
+}

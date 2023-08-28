@@ -1,8 +1,10 @@
 package sinnet.gql.api;
 
+import java.util.UUID;
+
+import sinnet.domain.EntityId;
 import sinnet.gql.models.EntityGql;
 import sinnet.gql.utils.PropsBuilder;
-import sinnet.grpc.common.EntityId;
 import sinnet.grpc.projects.generated.ProjectId;
 import sinnet.grpc.timeentries.LocalDate;
 
@@ -22,7 +24,7 @@ public interface CommonMapper {
   }
 
   /** Grpc -> Gql mapping. */
-  public static EntityGql toGql(EntityId it) {
+  public static EntityGql toGql(sinnet.grpc.common.EntityId it) {
     if (it == null) {
       return null;
     }
@@ -65,6 +67,14 @@ public interface CommonMapper {
         .setMonth(from.getMonthValue())
         .setDay(from.getDayOfMonth())
         .build();
+  }
+
+  /** Fixme. */
+  public static EntityId fromGrpc(sinnet.grpc.common.EntityId dto) {
+    var projectId = UUID.fromString(dto.getProjectId());
+    var entityId = UUID.fromString(dto.getEntityId());
+    var entityTag = dto.getEntityVersion();
+    return new EntityId(projectId, entityId, entityTag);
   }
 
 }

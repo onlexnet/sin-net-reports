@@ -20,6 +20,7 @@ import onlexnet.sinnet.webapi.test.AppApi;
 import sinnet.gql.api.CommonMapper;
 import sinnet.gql.models.ServiceModelGql;
 import sinnet.gql.models.ServicesSearchResultGql;
+import sinnet.gql.models.SomeEntityGql;
 import sinnet.grpc.ActionsGrpcFacade;
 import sinnet.grpc.CustomersGrpcService;
 import sinnet.grpc.ProjectsGrpcFacade;
@@ -54,7 +55,6 @@ public class ActionsSteps {
     var to = now.plusDays(1);
 
     Mockito
-    
       .when(actionsGrpcFacade.searchInternal(projectId, from, to))
       .thenReturn(List.of(
         TimeEntryModel.newBuilder()
@@ -92,4 +92,26 @@ public class ActionsSteps {
   @Then("Actions list response is returned")
   public void actions_list_response_is_returned() {
   }
+
+  @When("Actions create command is send")
+  public void actions_create_command_is_send() {
+
+    var projectId = UUID.randomUUID();
+    var when = LocalDate.now();
+    var entityId = UUID.randomUUID();
+    var entityVersion = 42L;
+    Mockito
+      .when(actionsGrpcFacade.newAction("requestor-email", projectId, when))
+      .thenReturn(new sinnet.domain.EntityId(projectId, entityId, entityVersion));
+
+
+    var actual = appApi.newAction("projectId", when).get();
+
+    Assertions.assertThat(actual).isEqualTo(new SomeEntityGql().setProjectId(projectId.toString()).setEntityId(entityId.toString()).setEntityVersion(entityVersion));
+  }
+
+  @Then("Actions create result is returned")
+  public void actions_create_result_is_returned() {
+  }
+
 }

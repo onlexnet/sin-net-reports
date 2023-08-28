@@ -24,3 +24,8 @@ Feature: An example
   Scenario: Users list actions
     When Actions list query is send
     Then Actions list response is returned
+
+  Scenario: User creates new Action
+    When Actions create command is send
+    Then Actions create result is returned
+

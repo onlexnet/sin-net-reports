@@ -93,4 +93,15 @@ public class AppApi {
         .path("Actions.search")
         .entity(ServicesSearchResultGql.class);
   }
+
+  /** Creates new action (placeholder). */
+  public Entity<SomeEntityGql, ?> newAction(String projectId, LocalDate when) {
+    return tester.documentName("newAction")
+        .variable("projectId", projectId)
+        .variable("when", when.toString())
+        .execute()
+        .path("Actions.newAction")
+        .entity(SomeEntityGql.class);
+  }
+
 }
