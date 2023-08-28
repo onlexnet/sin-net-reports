@@ -86,8 +86,8 @@ public class AppApi {
   public Entity<ServicesSearchResultGql, ?> searchActions(String projectId, LocalDate from, LocalDate to) {
     return tester.documentName("searchActions")
         .variable("projectId", projectId)
-        .variable("from", from)
-        .variable("to", to)
+        .variable("from", from.toString())
+        .variable("to", to.toString())
         .execute()
         .path("Actions.search")
         .entity(ServicesSearchResultGql.class);

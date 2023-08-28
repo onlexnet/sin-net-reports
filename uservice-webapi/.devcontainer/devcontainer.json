@@ -35,7 +35,8 @@
 				"ms-azuretools.vscode-dapr",
 				"vscjava.vscode-java-dependency",
 				"visualstudioexptteam.vscodeintellicode",
-				"cucumberopen.cucumber-official"
+				"cucumberopen.cucumber-official",
+				"vmware.vscode-boot-dev-pack"
 			]
 		}
 	},
