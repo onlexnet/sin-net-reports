@@ -4,6 +4,7 @@ import sinnet.gql.models.EntityGql;
 import sinnet.gql.utils.PropsBuilder;
 import sinnet.grpc.common.EntityId;
 import sinnet.grpc.projects.generated.ProjectId;
+import sinnet.grpc.timeentries.LocalDate;
 
 /** Mappings. */
 public interface CommonMapper {
@@ -41,6 +42,15 @@ public interface CommonMapper {
         .set(b -> b::setEId, it.getEntityId())
         .set(b -> b::setETag, it.getEntityVersion())
         .done().build();
+  }
+
+  /** LocalDate conversion. */
+  public static LocalDate toGrpc(java.time.LocalDate from) {
+    return LocalDate.newBuilder()
+        .setYear(from.getYear())
+        .setMonth(from.getMonthValue())
+        .setDay(from.getDayOfMonth())
+        .build();
   }
 
 }

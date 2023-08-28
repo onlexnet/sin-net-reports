@@ -18,6 +18,8 @@ class GrpcProperties {
   ServiceAddress customers;
   @NotNull
   ServiceAddress users;
+  @NotNull
+  ServiceAddress timeentries;
 
   @Data
   @Validated

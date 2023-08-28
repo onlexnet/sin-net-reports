@@ -27,4 +27,12 @@ class Query {
 
     return new UsersQuery(projectId, primaryEmail);
   }
+
+  @QueryMapping("Actions")
+  ActionsQuery actions(@Argument String projectId) {
+    var authentication = (AuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+    var primaryEmail = authentication.getPrincipal();
+
+    return new ActionsQuery(projectId, primaryEmail);
+  }
 }
