@@ -19,7 +19,7 @@ import sinnet.grpc.customers.UpdateResult;
 /** Mockable equivalent of {@link ProjectsGrpcStub}. */
 @Component
 @RequiredArgsConstructor
-public class CustomersGrpcService {
+public class CustomersGrpcFacade {
 
   private interface CustomersService {
 

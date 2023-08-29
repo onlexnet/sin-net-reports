@@ -7,7 +7,7 @@ import lombok.experimental.Accessors;
 @Data
 @Accessors(chain = true)
 public class SomeEntityGql {
+  private String projectId;
   private String entityId;
   private Long entityVersion;
-  private String projectId;
 }

@@ -5,10 +5,12 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
+import org.assertj.core.api.Assertions;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -18,15 +20,17 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import onlexnet.sinnet.webapi.test.AppApi;
 import sinnet.domain.ProjectId;
+import sinnet.gql.models.CustomerInput;
 import sinnet.gql.models.ProjectEntityGql;
 import sinnet.gql.models.SomeEntityGql;
 import sinnet.gql.models.UserGql;
-import sinnet.grpc.CustomersGrpcService;
+import sinnet.grpc.CustomersGrpcFacade;
 import sinnet.grpc.ProjectsGrpcFacade;
 import sinnet.grpc.ProjectsGrpcFacade.StatsResult;
 import sinnet.grpc.UsersGrpcService;
 import sinnet.grpc.common.EntityId;
 import sinnet.grpc.common.UserToken;
+import sinnet.grpc.customers.UpdateResult;
 import sinnet.grpc.users.UsersSearchModel;
 
 public class StepDefinitions {
@@ -35,7 +39,7 @@ public class StepDefinitions {
   ProjectsGrpcFacade projectsGrpc;
 
   @Autowired
-  CustomersGrpcService customersGrpc;
+  CustomersGrpcFacade customersGrpc;
 
   @Autowired
   UsersGrpcService usersGrpc;
@@ -203,6 +207,42 @@ public class StepDefinitions {
     userListValidation.run();
     userListValidation = null;
   }
+
+  @When("Customer save request is send to backend")
+  public void customer_save_request_is_send_to_backend() {
+    var projectId = UUID.randomUUID();
+    var projectIdStr = projectId.toString();
+    var entityId = UUID.randomUUID();
+    var entityIdStr = entityId.toString();
+    var customerId = UUID.randomUUID();
+    var now = LocalDate.now();
+
+    Mockito
+      .when(customersGrpc.update(any()))
+      .thenReturn(UpdateResult.newBuilder()
+        .setEntityId(EntityId.newBuilder().setProjectId(projectIdStr).setEntityId(entityIdStr).setEntityVersion(42L)
+          .setProjectId(projectId.toString())
+          .setEntityId(entityId.toString())
+          .setEntityVersion(43))
+          .build());
+
+    var actual = appApi.saveCustomer(
+      projectId,
+      new SomeEntityGql().setProjectId(projectIdStr).setEntityId(entityIdStr).setEntityVersion(42L),
+      new CustomerInput(),
+      List.of(),
+      List.of(),
+      List.of()).get();
+
+    var expected = new SomeEntityGql().setProjectId(projectIdStr).setEntityId(entityId.toString()).setEntityVersion(43L);
+    Assertions.assertThat(actual).isEqualTo(expected);
+  }
+
+  @Then("Customer save result is verified")
+  public void customer_save_result_is_verified() {
+  }
+
+
 
 }
 

@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 
 import sinnet.grpc.ActionsGrpcFacade;
-import sinnet.grpc.CustomersGrpcService;
+import sinnet.grpc.CustomersGrpcFacade;
 import sinnet.grpc.ProjectsGrpcFacade;
 import sinnet.grpc.UsersGrpcService;
 
@@ -25,8 +25,8 @@ class PortsConfigurer {
 
   @Bean
   @Primary
-  CustomersGrpcService customersGrpcServiceMocked() {
-    var service = Mockito.mock(CustomersGrpcService.class);
+  CustomersGrpcFacade customersGrpcServiceMocked() {
+    var service = Mockito.mock(CustomersGrpcFacade.class);
     return service;
   }
 

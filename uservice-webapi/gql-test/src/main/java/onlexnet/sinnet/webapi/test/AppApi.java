@@ -11,6 +11,10 @@ import org.springframework.graphql.test.tester.HttpGraphQlTester;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 import lombok.SneakyThrows;
+import sinnet.gql.models.CustomerContactInputGql;
+import sinnet.gql.models.CustomerInput;
+import sinnet.gql.models.CustomerSecretExInput;
+import sinnet.gql.models.CustomerSecretInput;
 import sinnet.gql.models.ProjectEntityGql;
 import sinnet.gql.models.ServiceModelGql;
 import sinnet.gql.models.ServicesSearchResultGql;
@@ -72,6 +76,27 @@ public class AppApi {
         .variable("projectId", projectId)
         .execute()
         .path("Customers.reserve")
+        .entity(SomeEntityGql.class);
+  }
+
+  /**
+   * Invokes Customers.reserve
+   */
+  public Entity<SomeEntityGql, ?> saveCustomer(UUID projectId, 
+                                               SomeEntityGql id,
+                                               CustomerInput entry,
+                                               List<CustomerSecretInput> secrets,
+                                               List<CustomerSecretExInput> secretsEx,
+                                               List<CustomerContactInputGql> contacts) {
+    return tester.documentName("saveCustomer")
+        .variable("projectId", projectId.toString())
+        .variable("id", id)
+        .variable("entry", entry)
+        .variable("secrets", secrets)
+        .variable("secretsEx", secretsEx)
+        .variable("contacts", contacts)
+        .execute()
+        .path("Customers.save")
         .entity(SomeEntityGql.class);
   }
 

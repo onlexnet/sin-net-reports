@@ -5,14 +5,14 @@ import org.springframework.stereotype.Controller;
 
 import lombok.RequiredArgsConstructor;
 import sinnet.gql.models.EntityGql;
-import sinnet.grpc.CustomersGrpcService;
+import sinnet.grpc.CustomersGrpcFacade;
 import sinnet.grpc.customers.ReserveRequest;
 
 @Controller
 @RequiredArgsConstructor
 class CustomersMutationReserve implements CommonMapper {
 
-  private final CustomersGrpcService service;
+  private final CustomersGrpcFacade service;
 
   @SchemaMapping
   public EntityGql reserve(CustomersMutation self) {

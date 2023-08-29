@@ -5,7 +5,7 @@ import org.springframework.stereotype.Controller;
 
 import lombok.RequiredArgsConstructor;
 import sinnet.gql.models.CustomerEntityGql;
-import sinnet.grpc.CustomersGrpcService;
+import sinnet.grpc.CustomersGrpcFacade;
 import sinnet.grpc.common.EntityId;
 import sinnet.grpc.customers.GetRequest;
 
@@ -13,7 +13,7 @@ import sinnet.grpc.customers.GetRequest;
 @RequiredArgsConstructor
 class CustomersQueryGet implements CustomerMapper {
 
-  private final CustomersGrpcService service;
+  private final CustomersGrpcFacade service;
 
   public CustomerEntityGql get(CustomersQuery self, @Argument String entityId) {
     var request = GetRequest.newBuilder()

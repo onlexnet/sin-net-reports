@@ -1,4 +1,4 @@
-mutation SaveCustomer($projectId: ID!, $id: MyEntity!, $entry: CustomerInput!, $secrets: [CustomerSecretInput!]!, $secretsEx: [CustomerSecretExInput!]!, $contacts: [CustomerContactInput!]!) {
+mutation saveCustomer($projectId: ID!, $id: MyEntity!, $entry: CustomerInput!, $secrets: [CustomerSecretInput!]!, $secretsEx: [CustomerSecretExInput!]!, $contacts: [CustomerContactInput!]!) {
     Customers(projectId: $projectId) {
         save(id: $id, entry: $entry, secrets: $secrets, secretsEx: $secretsEx, contacts: $contacts) {
             projectId

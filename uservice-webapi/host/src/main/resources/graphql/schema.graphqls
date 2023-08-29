@@ -81,7 +81,7 @@ type CustomersMutation {
   projectId: String
   remove(id: MyEntity!): Boolean!
   reserve: SomeEntity!
-  save(contacts: [CustomerContactInput!]!, entry: CustomerInput!, id: MyEntity!, secrets: [CustomerSecretInput!]!, secretsEx: [CustomerSecretExInput!]!): SomeEntity!
+  save(id: MyEntity!, entry: CustomerInput!, secrets: [CustomerSecretInput!]!, secretsEx: [CustomerSecretExInput!]!, contacts: [CustomerContactInput!]!): SomeEntity!
 }
 
 type CustomersQuery {

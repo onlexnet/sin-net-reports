@@ -1,8 +1,5 @@
 package sinnet.bdd;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
@@ -10,7 +7,6 @@ import java.util.UUID;
 import org.assertj.core.api.Assertions;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 
 import io.cucumber.java.Before;
@@ -18,13 +14,11 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import onlexnet.sinnet.webapi.test.AppApi;
 import sinnet.gql.api.CommonMapper;
+import sinnet.gql.models.CustomerInput;
 import sinnet.gql.models.ServiceModelGql;
 import sinnet.gql.models.ServicesSearchResultGql;
 import sinnet.gql.models.SomeEntityGql;
 import sinnet.grpc.ActionsGrpcFacade;
-import sinnet.grpc.CustomersGrpcService;
-import sinnet.grpc.ProjectsGrpcFacade;
-import sinnet.grpc.UsersGrpcService;
 import sinnet.grpc.common.EntityId;
 import sinnet.grpc.timeentries.TimeEntryModel;
 
@@ -155,4 +149,5 @@ public class ActionsSteps {
   @Then("Actions get query is returned")
   public void actions_get_query_is_returned() {
   }
+
 }

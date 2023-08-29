@@ -6,14 +6,14 @@ import org.springframework.stereotype.Controller;
 import io.vavr.collection.Iterator;
 import lombok.RequiredArgsConstructor;
 import sinnet.gql.models.CustomerEntityGql;
-import sinnet.grpc.CustomersGrpcService;
+import sinnet.grpc.CustomersGrpcFacade;
 import sinnet.grpc.customers.ListRequest;
 
 @Controller
 @RequiredArgsConstructor
 class CustomersQueryList implements CustomerMapper {
 
-  private final CustomersGrpcService service;
+  private final CustomersGrpcFacade service;
 
   public CustomerEntityGql[] list(CustomersQuery self) {
     var request = ListRequest.newBuilder()
