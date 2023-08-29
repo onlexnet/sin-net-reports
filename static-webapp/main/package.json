@@ -9,8 +9,6 @@
     "@azure/msal-react": "^1.0.1",
     "@fluentui/azure-themes": "^8.2.12",
     "@fluentui/react": "^8.62.3",
-    "@microsoft/applicationinsights-react-js": "^3.1.5",
-    "@microsoft/applicationinsights-web": "^2.6.5",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/user-event": "^7.2.1",
     "apollo": "^2.33.4",

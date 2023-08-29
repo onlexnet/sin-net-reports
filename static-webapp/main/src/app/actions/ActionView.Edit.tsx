@@ -11,7 +11,6 @@ import { useGetUsers } from "../../api/useGetUsers";
 import { useRemoveActionMutation, useUpdateActionMutation } from "../../Components/.generated/components";
 import CustomerView from "./ActionView.Edit.CustomerView"
 import { CustomerComboBox } from "./CustomerComboBox";
-import { useAppInsightsContext, useTrackMetric } from "@microsoft/applicationinsights-react-js";
 import { asDtoDate } from "../../api/Mapper";
 import { useListCustomersQuery } from "../../Components/.generated/components"
 
@@ -42,9 +41,6 @@ interface ActionViewEditProps extends PropsFromRedux {
  * @returns 
  */
 export const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
-    const appInsights = useAppInsightsContext();
-    const trackComponent = useTrackMetric(appInsights, "ActionViewEditLocal");
-
     const { item, cancelEdit, actionUpdated } = props;
 
     const propsProjectId = item?.projectId;
