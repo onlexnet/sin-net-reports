@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import sinnet.domain.EntityId;
 import sinnet.gql.api.CommonMapper;
 import sinnet.grpc.common.UserToken;
+import sinnet.grpc.timeentries.GetQuery;
 import sinnet.grpc.timeentries.ReserveCommand;
 import sinnet.grpc.timeentries.SearchQuery;
 import sinnet.grpc.timeentries.TimeEntriesGrpc.TimeEntriesBlockingStub;
@@ -50,6 +51,19 @@ class ActionsGrpcFacadeImpl implements ActionsGrpcFacade {
     var result = stub.reserve(cmd);
 
     return CommonMapper.fromGrpc(result.getEntityId());
+  }
+
+  @Override
+  public TimeEntryModel getActionInternal(UUID projectId, UUID timeentryId) {
+
+    var query = GetQuery.newBuilder()
+        .setProjectId(projectId.toString())
+        .setTimeentryId(timeentryId.toString())
+        .build();
+
+    var result = stub.get(query);
+
+    return result.getItem();
   }
 
 }

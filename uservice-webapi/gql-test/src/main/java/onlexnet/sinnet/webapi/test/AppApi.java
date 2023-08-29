@@ -12,6 +12,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 
 import lombok.SneakyThrows;
 import sinnet.gql.models.ProjectEntityGql;
+import sinnet.gql.models.ServiceModelGql;
 import sinnet.gql.models.ServicesSearchResultGql;
 import sinnet.gql.models.SomeEntityGql;
 import sinnet.gql.models.UserGql;
@@ -102,6 +103,16 @@ public class AppApi {
         .execute()
         .path("Actions.newAction")
         .entity(SomeEntityGql.class);
+  }
+
+  /** Creates new action (placeholder). */
+  public Entity<ServiceModelGql, ?> getAction(String projectId, String actionId) {
+    return tester.documentName("getAction")
+        .variable("projectId", projectId.toString())
+        .variable("actionId", actionId.toString())
+        .execute()
+        .path("Actions.get")
+        .entity(ServiceModelGql.class);
   }
 
 }

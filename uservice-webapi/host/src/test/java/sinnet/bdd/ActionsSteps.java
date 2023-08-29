@@ -116,13 +116,43 @@ public class ActionsSteps {
 
   @When("Actions get query is sent")
   public void actions_get_query_is_sent() {
-      // Write code here that turns the phrase above into concrete actions
-      throw new io.cucumber.java.PendingException();
+
+    var projectId = UUID.randomUUID();
+    var entityId = UUID.randomUUID();
+    var customerId = UUID.randomUUID();
+    var now = LocalDate.now();
+
+    var result = TimeEntryModel.newBuilder()
+        .setCustomerId(customerId.toString())
+        .setDescription("my-description")
+        .setDistance(1)
+        .setDuration(2)
+        .setEntityId(EntityId.newBuilder().setEntityId(entityId.toString()).setEntityVersion(42).setProjectId(projectId.toString()))
+        .setServicemanEmail("serviceman-email")
+        .setServicemanName("serviceman-name")
+        .setWhenProvided(CommonMapper.toGrpc(now))
+        .build();
+    Mockito
+      .when(actionsGrpcFacade.getActionInternal(projectId, entityId))
+      .thenReturn(result);
+
+      var actual = appApi.getAction(projectId.toString(), entityId.toString()).get();
+
+      var expected = new ServiceModelGql()
+          .setDescription("my-description")
+          .setDistance(1)
+          .setDuration(2)
+          .setEntityId(entityId.toString())
+          .setEntityVersion(42)
+          .setProjectId(projectId.toString())
+          .setServicemanEmail("serviceman-email")
+          .setServicemanName("serviceman-name")
+          .setWhenProvided(now);
+
+      Assertions.assertThat(actual).isEqualTo(expected);
   }
   
   @Then("Actions get query is returned")
   public void actions_get_query_is_returned() {
-      // Write code here that turns the phrase above into concrete actions
-      throw new io.cucumber.java.PendingException();
   }
 }

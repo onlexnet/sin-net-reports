@@ -1,0 +1,25 @@
+query getAction($projectId: ID!, $actionId: ID!) {
+  Actions(projectId: $projectId) {
+    get (actionId: $actionId) {
+      projectId
+      entityId
+      entityVersion
+      whenProvided
+      servicemanEmail
+      servicemanName
+      customer {
+        id {
+          projectId
+          entityId
+          entityVersion
+        }
+        data {
+          customerName
+        }
+      }
+      description
+      duration
+      distance
+    }
+  }
+}

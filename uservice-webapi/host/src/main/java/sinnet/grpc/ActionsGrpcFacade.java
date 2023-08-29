@@ -18,6 +18,14 @@ public interface ActionsGrpcFacade {
   /** Fixme. */
   EntityId newAction(String requestorEmail, UUID projectId, LocalDate when);
   
+  /** Fixme. */
+  TimeEntryModel getActionInternal(UUID projectId, UUID entityId);
+
+  default ServiceModelGql getAction(UUID projectId, UUID entityId) {
+    var dto =  getActionInternal(projectId, entityId);
+    return map(dto);
+  }
+  
   /** Returns list of actions for requested project, limited result from-to range. */
   default List<ServiceModelGql> search(UUID projectId, LocalDate from, LocalDate to) {
     return searchInternal(projectId, from, to).stream().map(ActionsGrpcFacade::map).toList();

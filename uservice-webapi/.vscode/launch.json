@@ -13,9 +13,9 @@
             "env": {
                 "DAPR_GRPC_PORT": 11019,
             },
-            "vmArgs": "-Drevision=0.0.0-LOCAL",
+            "vmArgs": "-Drevision=0.0.0-LOCAL -XX:+UnlockCommercialFeatures -XX:FlightRecorder -XX:StartFlightRecording=duration=200s,filename=$HOME/flight.jfr",
             "preLaunchTask": "dapr-debug",
-            "postDebugTask": "dapr-down"
+            "postDebugTask": "dapr-down",
         }
     ]
 }
