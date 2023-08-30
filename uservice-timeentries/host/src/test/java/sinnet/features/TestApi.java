@@ -22,6 +22,7 @@ import sinnet.domain.model.ValEmail;
 import sinnet.events.AvroObjectSerializer;
 import sinnet.grpc.common.EntityId;
 import sinnet.grpc.common.UserToken;
+import sinnet.grpc.customers.ReserveRequest;
 import sinnet.grpc.timeentries.LocalDate;
 import sinnet.grpc.timeentries.SearchQuery;
 import sinnet.grpc.users.IncludeOperatorCommand;
@@ -37,6 +38,13 @@ public class TestApi {
 
   // we use the same deserializer as the whole ecosystem in ser / deser events.
   private final AvroObjectSerializer objectSerializer = new AvroObjectSerializer();
+
+  void reserveCustomer() {
+    var request = ReserveRequest.newBuilder()
+        .setProjectId("00000000-0000-0000-0001-000000000001")
+        .build();
+    rpcApi.getCustomers().reserve(request);
+  }
 
   @SneakyThrows
   void notifyNewProject(ClientContext ctx, ValName projectAlias) {

@@ -26,7 +26,7 @@ P1=$!
 # http: 11020
 # grpc: 11021
 # dapr sidecar from vscode: 11029
-cd ../../uservice-timeentries/main
+cd ../../uservice-timeentries
 # rebuild dependant modules before starting spring boot
 # mvn -Dmaven.test.skip=true install -pl host -am
 export DATABASE_USERNAME=uservice_timeentries_role_name && \

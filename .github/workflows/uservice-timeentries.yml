@@ -54,11 +54,11 @@ jobs:
         run: |
           export SEMVERSION=$(cat .semversion)
           mvn -ntp install --file pom.xml
-        working-directory: uservice-timeentries/main
+        working-directory: uservice-timeentries
       
       - id: BuildDockerImage
         name: Build Docker Image
-        working-directory: uservice-timeentries/main
+        working-directory: uservice-timeentries
         run: |
           export IMAGE_NAME_BASE=ghcr.io/onlexnet/uservice-timeentries
 

@@ -65,7 +65,7 @@ jobs:
         # https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/build/maven
         displayName: 'Project compilation with Maven'
         inputs:
-          mavenPomFile: 'uservice-timeentries/main/pom.xml'
+          mavenPomFile: 'uservice-timeentries/pom.xml'
           goals: 'verify'
           javaHomeOption: 'JDKVersion'
           jdkVersionOption: '1.11'

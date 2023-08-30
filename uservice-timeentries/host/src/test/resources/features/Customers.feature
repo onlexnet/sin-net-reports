@@ -1,0 +1,9 @@
+Feature: Manage Customers
+
+  Background:
+    Given a new project called project1
+    And an operator called operator1 assigned to project called project1
+
+  Scenario: Create a new Project
+    When the Operator creates a new customer
+    Then the Operator is able to change the name of the Customer
