@@ -2,8 +2,6 @@ package sinnet.events;
 
 import java.io.IOException;
 
-import org.apache.avro.message.BinaryMessageDecoder;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.ObjectMapper;
 

@@ -6,10 +6,7 @@ import org.springframework.stereotype.Component;
 
 import io.grpc.stub.StreamObserver;
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import sinnet.domain.model.ValEmail;
-import sinnet.grpc.roles.GetReply;
-import sinnet.grpc.roles.GetRequest;
 import sinnet.read.RolesProjector;
 
 /**

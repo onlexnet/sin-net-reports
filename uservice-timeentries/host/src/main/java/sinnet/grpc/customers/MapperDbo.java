@@ -1,15 +1,13 @@
 package sinnet.grpc.customers;
 
-import java.util.List;
-
 import sinnet.domain.model.ValEmail;
 import sinnet.models.CustomerContact;
 import sinnet.models.CustomerModel;
 import sinnet.models.CustomerSecret;
 import sinnet.models.CustomerSecretEx;
 import sinnet.models.CustomerValue;
-import sinnet.models.ValName;
 import sinnet.models.ShardedId;
+import sinnet.models.ValName;
 
 /**
  * TBD.

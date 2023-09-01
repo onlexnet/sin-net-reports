@@ -1,7 +1,5 @@
 package sinnet.grpc.projects;
 
-import static io.vavr.control.Either.right;
-
 import java.util.Optional;
 import java.util.UUID;
 

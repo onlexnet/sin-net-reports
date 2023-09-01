@@ -4,7 +4,6 @@ import org.springframework.stereotype.Component;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import sinnet.domain.model.ValEmail;
 import sinnet.grpc.mapping.RpcCommandHandler;
 
