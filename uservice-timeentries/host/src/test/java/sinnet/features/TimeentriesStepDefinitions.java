@@ -12,11 +12,10 @@ import sinnet.models.ValName;
 public class TimeentriesStepDefinitions {
 
   private final TestApi testApi;
-  private ClientContext ctx;
+  private final ClientContext ctx;
 
   @Given("a new project called {projectAlias}")
   public void a_new_project_called(ValName projectAlias) {
-    ctx = new ClientContext();
     testApi.notifyNewProject(ctx, projectAlias);
   }
 

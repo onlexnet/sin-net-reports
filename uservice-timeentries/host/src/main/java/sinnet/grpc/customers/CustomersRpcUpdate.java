@@ -2,6 +2,7 @@ package sinnet.grpc.customers;
 
 import org.springframework.stereotype.Component;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import sinnet.domain.model.ValEmail;
@@ -19,6 +20,7 @@ public class CustomersRpcUpdate implements
   private final CustomerRepositoryEx repository;
 
   @Override
+  @Transactional
   public UpdateResult apply(UpdateCommand cmd) {
     var emailOfRequestor = ValEmail.of(cmd.getUserToken().getRequestorEmail());
     var model = fromDto(cmd.getModel());

@@ -47,6 +47,10 @@
   </module>
 
   <module name="TreeWalker">
+
+    <!-- https://checkstyle.org/checks/imports/unusedimports.html -->
+    <module name="UnusedImports"/>
+
     <module name="OuterTypeFilename"/>
     <module name="IllegalTokenText">
       <property name="tokens" value="STRING_LITERAL, CHAR_LITERAL"/>

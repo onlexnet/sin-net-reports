@@ -8,14 +8,16 @@ import lombok.RequiredArgsConstructor;
 public class CustomersStepDefinition {
 
   private final TestApi testApi;
+  private final ClientContext ctx;
 
-  @When("the operator creates new Customer")
-  public void the_operator_creates_new_customer() {
-    testApi.reserveCustomer();
+  @When("the Operator creates a new customer")
+  public void the_operator_creates_a_new_customer() {
+    testApi.reserveCustomer(ctx);
+    testApi.updateCustomer(ctx, "new-name");
   }
 
-  @Then("the Customer is visible on the list of customers")
-  public void the_customer_is_visible_on_the_list_of_customers() {
+  @Then("the Operator is able to change the name of the Customer")
+  public void the_operator_is_able_to_change_the_name_of_the_customer() {
     // Write code here that turns the phrase above into concrete actions
     throw new io.cucumber.java.PendingException();
   }

@@ -15,6 +15,7 @@ import jakarta.persistence.Embeddable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import jakarta.persistence.JoinColumn;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -53,6 +54,7 @@ public interface CustomerRepository extends JpaRepository<CustomerRepository.Cus
 
     @Column(name = "entity_version")
     @EqualsAndHashCode.Include
+    @Version
     private Long entityVersion;
 
     @Column(name = "customer_name")

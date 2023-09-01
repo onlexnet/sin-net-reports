@@ -54,6 +54,12 @@ public final class CustomerRepositoryEx implements MapperDbo {
     var entityId = eid.getId();
     var version = eid.getVersion();
     var dbo = repository.findByProjectIdAndEntityId(projectId, entityId);
+    if (dbo == null) {
+      dbo = new CustomerDbo();
+      dbo.setProjectId(projectId);
+      dbo.setEntityId(entityId);
+      dbo.setEntityVersion(version);
+    }
     dbo.setEntityVersion(version);
     dbo.setCustomerName(value.customerName().getValue())
         .setCustomerCityName(value.customerCityName().getValue())

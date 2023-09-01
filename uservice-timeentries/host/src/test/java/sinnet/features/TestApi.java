@@ -2,31 +2,25 @@ package sinnet.features;
 
 import static sinnet.grpc.timeentries.ReserveCommand.newBuilder;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
 import org.springframework.stereotype.Component;
 
 import com.google.protobuf.ByteString;
 
 import io.dapr.v1.DaprAppCallbackProtos.TopicEventRequest;
-import lombok.Getter;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import lombok.val;
-import lombok.experimental.Accessors;
-import sinnet.domain.model.ValEmail;
 import sinnet.events.AvroObjectSerializer;
 import sinnet.grpc.common.EntityId;
 import sinnet.grpc.common.UserToken;
+import sinnet.grpc.customers.CustomerModel;
+import sinnet.grpc.customers.CustomerValue;
 import sinnet.grpc.customers.ReserveRequest;
+import sinnet.grpc.customers.UpdateCommand;
 import sinnet.grpc.timeentries.LocalDate;
 import sinnet.grpc.timeentries.SearchQuery;
 import sinnet.grpc.users.IncludeOperatorCommand;
-import sinnet.models.ProjectId;
 import sinnet.models.ValName;
 import sinnet.project.events.ProjectCreatedEvent;
 
@@ -39,11 +33,27 @@ public class TestApi {
   // we use the same deserializer as the whole ecosystem in ser / deser events.
   private final AvroObjectSerializer objectSerializer = new AvroObjectSerializer();
 
-  void reserveCustomer() {
+  void reserveCustomer(ClientContext ctx) {
+    var projectId = "00000000-0000-0000-0001-000000000001";
     var request = ReserveRequest.newBuilder()
-        .setProjectId("00000000-0000-0000-0001-000000000001")
+        .setProjectId(projectId)
         .build();
-    rpcApi.getCustomers().reserve(request);
+    var entityId = rpcApi.getCustomers().reserve(request).getEntityId();
+    
+    ctx.on(new CustomerReservedEvent(entityId));
+  }
+
+  void updateCustomer(ClientContext ctx, String newName) {
+    var id = ctx.reservedCustomer;
+    var cmd = UpdateCommand.newBuilder()
+        .setModel(CustomerModel.newBuilder()
+          .setId(id)
+          .setValue(CustomerValue.newBuilder()
+            .setCustomerName(newName)))
+        .build();
+    var result = rpcApi.getCustomers().update(cmd);
+
+    ctx.on(new CustomerUpdatedEvent(id, cmd));
   }
 
   @SneakyThrows
@@ -100,62 +110,4 @@ public class TestApi {
 
 }
 
-/**
- * In BDD tests ClientContext represents separated, connected user.
- */
-@Accessors(fluent = true)
-class ClientContext {
-  @Getter
-  ValName currentOperator;
-  @Getter
-  ValName currentProject;
-  @Getter
-  EntityId latestTimeentryId;
 
-  @Getter
-  LocalDate todayAsDto = LocalDate.newBuilder().setMonth(1).setDay(1).setYear(2020).build();
-
-  @Getter
-  private final KnownFacts known = new KnownFacts();
-
-  public ProjectId setProjectId(@NonNull ValName projectAlias) {
-    currentProject = projectAlias;
-    var projectId = ProjectId.anyNew();
-    known.projects().put(projectAlias, projectId);
-    return known.projects().get(projectAlias);
-  }
-
-  public void newTimeentry(EntityId id, LocalDate when) {
-    var entry = new TimeentryContext(when);
-    known().timeentries.put(id, entry);
-    latestTimeentryId = id;
-  }
-
-  public ProjectId getProjectId(@NonNull ValName projectAlias) {
-    return known.projects().get(projectAlias);
-  }
-
-  public ValEmail getOperatorId(@NonNull ValName operatorAlias, boolean setCurrent) {
-    if (setCurrent)
-      currentOperator = operatorAlias;
-    var actual = known.users.get(operatorAlias);
-    if (actual != null)
-      return actual;
-    var emailAsString = "user@" + UUID.randomUUID();
-    var email = ValEmail.of(emailAsString);
-    known.users().put(operatorAlias, email);
-    return email;
-  }
-
-  @Getter
-  @Accessors(fluent = true, chain = false)
-  class KnownFacts {
-    private final Map<ValName, ValEmail> users = new HashMap<>();
-    private final Map<ValName, ProjectId> projects = new HashMap<>();
-    private final Map<EntityId, TimeentryContext> timeentries = new HashMap<>();
-  }
-
-}
-
-record TimeentryContext(LocalDate when) {
-}
