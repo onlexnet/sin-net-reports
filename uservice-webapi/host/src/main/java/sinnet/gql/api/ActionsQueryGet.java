@@ -1,7 +1,5 @@
 package sinnet.gql.api;
 
-import java.time.LocalDate;
-import java.util.List;
 import java.util.UUID;
 
 import org.springframework.graphql.data.method.annotation.Argument;

@@ -6,7 +6,6 @@ import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.SchemaMapping;
 import org.springframework.stereotype.Controller;
 
-import io.vavr.collection.Array;
 import lombok.RequiredArgsConstructor;
 import sinnet.gql.models.CustomerContactInputGql;
 import sinnet.gql.models.CustomerInput;
