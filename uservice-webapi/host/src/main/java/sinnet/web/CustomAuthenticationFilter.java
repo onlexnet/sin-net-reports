@@ -28,8 +28,12 @@ class CustomAuthenticationFilter extends OncePerRequestFilter {
     log.info("Authentication: ID:{}, Name:{}", id, username);
 
     var claimsBase64 = request.getHeader("X-MS-CLIENT-PRINCIPAL");
-    var claims = Base64.getEncoder().encodeToString(claimsBase64.getBytes());
-    log.info("Claims: {}", claims);
+    if (claimsBase64 == null) {
+      log.info("Claims: not available");
+    } else {
+      var claims = Base64.getEncoder().encodeToString(claimsBase64.getBytes());
+      log.info("Claims: {}", claims);
+    }
     
 
     if (username == null && id == null) {
