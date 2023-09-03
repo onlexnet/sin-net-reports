@@ -1,6 +1,7 @@
 package sinnet.web;
 
 import java.io.IOException;
+import java.util.Base64;
 
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -25,6 +26,11 @@ class CustomAuthenticationFilter extends OncePerRequestFilter {
     var id = request.getHeader(principalNameHeaderId);
     var username = request.getHeader(principalNameHeaderName);
     log.info("Authentication: ID:{}, Name:{}", id, username);
+
+    var claimsBase64 = request.getHeader("X-MS-CLIENT-PRINCIPAL");
+    var claims = Base64.getEncoder().encodeToString(claimsBase64.getBytes());
+    log.info("Claims: {}", claims);
+    
 
     if (username == null && id == null) {
       // not our responsibility. delegate down the chain. maybe a different filter
