@@ -9,6 +9,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import groovyjarjarantlr4.v4.parse.ANTLRParser.elementOption_return;
+import io.vavr.Tuple;
+import io.vavr.Tuple2;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.experimental.Accessors;
@@ -86,7 +88,7 @@ class ClientContext {
     private final Map<ValName, ValEmail> users = new HashMap<>();
     private final Map<ValName, ProjectId> projects = new HashMap<>();
     private final Map<EntityId, TimeentryContext> timeentries = new HashMap<>();
-    private final Map<EntityId, CustomerModel> customers = new HashMap<>();
+    private final Map<ValName, Tuple2<EntityId, CustomerModel>> customers = new HashMap<>();
   }
 
   public void on(AppEvent event) {
@@ -103,7 +105,10 @@ class ClientContext {
   private void on(CustomerUpdatedEvent event) { 
     var id = event.entityId();
     var model = event.cmd().getModel();
-    known.customers.put(id, model);
+    var newId = event.newEntityId();
+
+    known.customers.remove(event.customerAlias());
+    known.customers.put(event.customerAlias(), Tuple.of(newId, model));
   }
 
   class Build implements EventConsumer {
@@ -133,8 +138,8 @@ class ClientContext {
 
 sealed interface AppEvent { }
 
-record CustomerReservedEvent(EntityId entityId) implements AppEvent { }
-record CustomerUpdatedEvent(EntityId entityId, UpdateCommand cmd) implements AppEvent { }
+record CustomerReservedEvent(ValName customerAlias, EntityId entityId) implements AppEvent { }
+record CustomerUpdatedEvent(ValName customerAlias, EntityId entityId, EntityId newEntityId, UpdateCommand cmd) implements AppEvent { }
 
 
 interface EventConsumer {

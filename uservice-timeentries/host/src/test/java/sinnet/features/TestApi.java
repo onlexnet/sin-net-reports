@@ -4,6 +4,7 @@ import static sinnet.grpc.timeentries.ReserveCommand.newBuilder;
 
 import java.util.List;
 
+import org.assertj.core.api.Assertions;
 import org.springframework.stereotype.Component;
 
 import com.google.protobuf.ByteString;
@@ -16,6 +17,7 @@ import sinnet.grpc.common.EntityId;
 import sinnet.grpc.common.UserToken;
 import sinnet.grpc.customers.CustomerModel;
 import sinnet.grpc.customers.CustomerValue;
+import sinnet.grpc.customers.ListRequest;
 import sinnet.grpc.customers.ReserveRequest;
 import sinnet.grpc.customers.UpdateCommand;
 import sinnet.grpc.timeentries.LocalDate;
@@ -33,17 +35,17 @@ public class TestApi {
   // we use the same deserializer as the whole ecosystem in ser / deser events.
   private final AvroObjectSerializer objectSerializer = new AvroObjectSerializer();
 
-  void reserveCustomer(ClientContext ctx) {
+  void reserveCustomer(ClientContext ctx, ValName customerAlias) {
     var projectId = "00000000-0000-0000-0001-000000000001";
     var request = ReserveRequest.newBuilder()
         .setProjectId(projectId)
         .build();
     var entityId = rpcApi.getCustomers().reserve(request).getEntityId();
     
-    ctx.on(new CustomerReservedEvent(entityId));
+    ctx.on(new CustomerReservedEvent(customerAlias, entityId));
   }
 
-  void updateCustomer(ClientContext ctx, String newName) {
+  void updateCustomer(ClientContext ctx, ValName customerAlias, String newName) {
     var id = ctx.reservedCustomer;
     var cmd = UpdateCommand.newBuilder()
         .setModel(CustomerModel.newBuilder()
@@ -52,8 +54,9 @@ public class TestApi {
             .setCustomerName(newName)))
         .build();
     var result = rpcApi.getCustomers().update(cmd);
+    var updatedId = result.getEntityId();
 
-    ctx.on(new CustomerUpdatedEvent(id, cmd));
+    ctx.on(new CustomerUpdatedEvent(customerAlias, id, updatedId, cmd));
   }
 
   @SneakyThrows
@@ -106,6 +109,22 @@ public class TestApi {
         .setProjectId(projectId.getId().toString())
         .build());
     return result.getActivitiesList().stream().map(it -> it.getEntityId()).toList();
+  }
+
+  public void customerExists(ClientContext ctx, String customerName) {
+    var customerCtx = ctx.known().customers().entrySet().stream()
+        .filter(it -> it.getValue()._2.getValue().getCustomerName().equals(customerName))
+        .findAny()
+        .get();
+    var projectId = customerCtx.getValue()._1.getProjectId();
+    var operatorId = ctx.currentOperator().getValue();
+    var req = ListRequest.newBuilder()
+        .setProjectId(projectId)
+        .setUserToken(UserToken.newBuilder().setProjectId(projectId).setRequestorEmail(operatorId))
+        .build();
+    var response = rpcApi.getCustomers().list(req);
+    var foundElements = response.getCustomersList().size();
+    Assertions.assertThat(foundElements).isGreaterThan(0);
   }
 
 }
