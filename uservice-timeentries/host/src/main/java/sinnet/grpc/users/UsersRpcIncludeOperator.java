@@ -8,7 +8,7 @@ import sinnet.grpc.mapping.RpcCommandHandler;
  * TBD.
  */
 @Component
-public final class UsersRpcIncludeOperator
+class UsersRpcIncludeOperator
              implements RpcCommandHandler<IncludeOperatorCommand, IncludeOperatorResult> {
 
   @Override

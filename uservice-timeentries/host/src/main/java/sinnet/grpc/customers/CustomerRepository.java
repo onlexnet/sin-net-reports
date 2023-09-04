@@ -16,6 +16,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
+import jakarta.transaction.Transactional;
+import jakarta.transaction.Transactional.TxType;
 import jakarta.persistence.JoinColumn;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -25,6 +27,7 @@ import lombok.experimental.Accessors;
  * TBD.
  */
 @Repository
+@Transactional(TxType.MANDATORY)
 public interface CustomerRepository extends JpaRepository<CustomerRepository.CustomerDbo, UUID> {
 
   void deleteByProjectIdAndEntityIdAndEntityVersion(UUID projectId, UUID entityId, Long version);
