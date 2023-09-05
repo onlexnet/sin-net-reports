@@ -92,7 +92,7 @@ public final class CustomerRepositoryEx implements MapperDbo {
         .setContacts(contacts.stream().map(this::toDbo).collect(Collectors.toCollection(ArrayList::new)))
         .setSecrets(secrets.stream().map(this::toDbo).collect(Collectors.toCollection(ArrayList::new)))
         .setSecretsEx(secretsEx.stream().map(this::toDbo).collect(Collectors.toCollection(ArrayList::new)));
-    repository.save(dbo);
+    repository.saveAndFlush(dbo);
     return eid.next();
   }
 

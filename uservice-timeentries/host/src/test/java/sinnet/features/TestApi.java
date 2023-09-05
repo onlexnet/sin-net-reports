@@ -126,7 +126,10 @@ public class TestApi {
     var foundElements = response.getCustomersList().stream()
         .filter(it -> it.getValue().getCustomerName().equals(customerName))
         .count();
-    Assertions.assertThat(foundElements).isGreaterThan(0);
+    Assertions
+      .assertThat(foundElements)
+      .as("Expected existence of customer: [%s]", customerName)
+      .isEqualTo(1);
   }
 
 }

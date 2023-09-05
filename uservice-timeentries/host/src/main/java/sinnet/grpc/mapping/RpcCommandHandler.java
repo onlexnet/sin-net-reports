@@ -9,6 +9,7 @@ import jakarta.transaction.Transactional.TxType;
 /**
  * TBD.
  */
+@Transactional(TxType.REQUIRES_NEW)
 public interface RpcCommandHandler<Q extends GeneratedMessageV3, S extends GeneratedMessageV3> {
 
   /**
@@ -19,7 +20,6 @@ public interface RpcCommandHandler<Q extends GeneratedMessageV3, S extends Gener
   /**
    * TBD.
    */
-  @Transactional(TxType.REQUIRES_NEW)
   default void command(Q request, StreamObserver<S> responseStream) {
     S result = this.apply(request);
     responseStream.onNext(result);
