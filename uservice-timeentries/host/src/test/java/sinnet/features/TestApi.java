@@ -123,7 +123,9 @@ public class TestApi {
         .setUserToken(UserToken.newBuilder().setProjectId(projectId).setRequestorEmail(operatorId))
         .build();
     var response = rpcApi.getCustomers().list(req);
-    var foundElements = response.getCustomersList().size();
+    var foundElements = response.getCustomersList().stream()
+        .filter(it -> it.getValue().getCustomerName().equals(customerName))
+        .count();
     Assertions.assertThat(foundElements).isGreaterThan(0);
   }
 

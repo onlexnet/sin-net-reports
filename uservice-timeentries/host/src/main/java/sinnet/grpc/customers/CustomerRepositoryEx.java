@@ -1,6 +1,8 @@
 package sinnet.grpc.customers;
 
+import java.util.ArrayList;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Component;
@@ -60,7 +62,6 @@ public final class CustomerRepositoryEx implements MapperDbo {
       dbo.setEntityId(entityId);
       dbo.setEntityVersion(version);
     }
-    dbo.setEntityVersion(version);
     dbo.setCustomerName(value.customerName().getValue())
         .setCustomerCityName(value.customerCityName().getValue())
         .setCustomerAddress(value.customerAddress())
@@ -88,9 +89,9 @@ public final class CustomerRepositoryEx implements MapperDbo {
         .setKomercjaJest(value.komercjaJest())
         .setKomercjaNotatki(value.komercjaNotatki())
         .setDaneTechniczne(value.daneTechniczne())
-        .setContacts(contacts.stream().map(this::toDbo).toList())
-        .setSecrets(secrets.stream().map(this::toDbo).toList())
-        .setSecretsEx(secretsEx.stream().map(this::toDbo).toList());
+        .setContacts(contacts.stream().map(this::toDbo).collect(Collectors.toCollection(ArrayList::new)))
+        .setSecrets(secrets.stream().map(this::toDbo).collect(Collectors.toCollection(ArrayList::new)))
+        .setSecretsEx(secretsEx.stream().map(this::toDbo).collect(Collectors.toCollection(ArrayList::new)));
     repository.save(dbo);
     return eid.next();
   }
