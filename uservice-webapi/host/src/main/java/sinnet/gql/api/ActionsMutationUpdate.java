@@ -3,6 +3,7 @@ package sinnet.gql.api;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.SchemaMapping;
 import org.springframework.stereotype.Controller;
 
@@ -18,7 +19,7 @@ class ActionsMutationUpdate {
   private final ActionsGrpcFacade actionsGrpc;
 
   @SchemaMapping 
-  boolean update(ActionsMutation self, ServiceEntryInputGql content, String entityId, int entityVersion) {
+  boolean update(ActionsMutation self, @Argument ServiceEntryInputGql content, @Argument String entityId, @Argument Integer entityVersion) {
     var requestorEmail = self.userToken().getRequestorEmail();
     var projectId = UUID.fromString(self.userToken().getProjectId());
 
