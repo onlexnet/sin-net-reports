@@ -19,7 +19,7 @@ class ActionsMutationUpdate {
   private final ActionsGrpcFacade actionsGrpc;
 
   @SchemaMapping 
-  boolean update(ActionsMutation self, @Argument ServiceEntryInputGql content, @Argument String entityId, @Argument Integer entityVersion) {
+  Boolean update(ActionsMutation self, @Argument ServiceEntryInputGql content, @Argument String entityId, @Argument Integer entityVersion) {
     var requestorEmail = self.userToken().getRequestorEmail();
     var projectId = UUID.fromString(self.userToken().getProjectId());
 
