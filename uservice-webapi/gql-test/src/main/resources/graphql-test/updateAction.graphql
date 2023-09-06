@@ -1,0 +1,12 @@
+mutation updateAction($projectId: ID!, $entityId: ID!, $entityVersion: Int!, $when: Date!, $what: String, $who: String, $customerId: ID, $duration: Int, $distance: Int) {
+    Actions(projectId: $projectId) {
+        update(entityId: $entityId, entityVersion: $entityVersion, content: {
+            servicemanName: $who,
+            whenProvided: $when,
+            customerId: $customerId,
+            description: $what,
+            duration: $duration,
+            distance: $distance})
+        }
+    }
+}

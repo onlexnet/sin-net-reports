@@ -80,6 +80,7 @@ class ActionsGrpcFacadeImpl implements ActionsGrpcFacade {
         .setServicemanEmail(servicemanEmail)
         .setServicemanName(servicemanName)
         .setWhenProvided(whenProvidedGprc)
+        .setEntityId(entitIdGrpc)
         .build();
     var cmd = UpdateCommand.newBuilder()
         .setModel(model)
