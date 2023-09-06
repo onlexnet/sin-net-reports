@@ -17,6 +17,10 @@ public interface ActionsGrpcFacade {
 
   /** Fixme. */
   EntityId newAction(String requestorEmail, UUID projectId, LocalDate when);
+
+  /** Fixme. */
+  boolean update(EntityId entityId, String customerId, String description, int distance, int duration,
+                 String servicemanEmail, String servicemanName, LocalDate whenProvided);
   
   /** Fixme. */
   TimeEntryModel getActionInternal(UUID projectId, UUID entityId);
@@ -43,7 +47,6 @@ public interface ActionsGrpcFacade {
         .setServicemanEmail(model.getServicemanEmail())
         .setServicemanName(model.getServicemanName())
         .setWhenProvided(CommonMapper.toGql(model.getWhenProvided()));
-
   }
 
 }

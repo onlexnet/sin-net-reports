@@ -56,6 +56,19 @@ public interface CommonMapper {
         .done().build();
   }
 
+  /** Domain -> Grpc mapping. */
+  public static sinnet.grpc.common.EntityId toGrpc(EntityId it) {
+    if (it == null) {
+      return null;
+    }
+    return PropsBuilder.build(sinnet.grpc.common.EntityId.newBuilder())
+        .set(b -> b::setProjectId, it.projectId().toString())
+        .set(b -> b::setEntityId, it.id().toString())
+        .set(b -> b::setEntityVersion, it.tag())
+        .done().build();
+  }
+
+
   /** LocalDate conversion. */
   public static LocalDate toGrpc(java.time.LocalDate from) {
     if (from == null) {

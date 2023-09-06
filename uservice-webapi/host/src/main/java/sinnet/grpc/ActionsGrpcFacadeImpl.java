@@ -15,6 +15,7 @@ import sinnet.grpc.timeentries.ReserveCommand;
 import sinnet.grpc.timeentries.SearchQuery;
 import sinnet.grpc.timeentries.TimeEntriesGrpc.TimeEntriesBlockingStub;
 import sinnet.grpc.timeentries.TimeEntryModel;
+import sinnet.grpc.timeentries.UpdateCommand;
 
 
 /** Mockable equivalent of {@link ProjectsGrpcStub}. */
@@ -52,7 +53,7 @@ class ActionsGrpcFacadeImpl implements ActionsGrpcFacade {
 
     return CommonMapper.fromGrpc(result.getEntityId());
   }
-
+  
   @Override
   public TimeEntryModel getActionInternal(UUID projectId, UUID timeentryId) {
 
@@ -64,6 +65,30 @@ class ActionsGrpcFacadeImpl implements ActionsGrpcFacade {
     var result = stub.get(query);
 
     return result.getItem();
+  }
+
+  @Override
+  public boolean update(EntityId entitId, String customerId, String description, int distance, int duration,
+                        String servicemanEmail, String servicemanName, LocalDate whenProvided) {
+    var whenProvidedGprc = CommonMapper.toGrpc(whenProvided);
+    var entitIdGrpc = CommonMapper.toGrpc(entitId);
+    var model = TimeEntryModel.newBuilder()
+        .setCustomerId(customerId)
+        .setDescription(description)
+        .setDistance(0)
+        .setDuration(distance)
+        .setServicemanEmail(servicemanEmail)
+        .setServicemanName(servicemanName)
+        .setWhenProvided(whenProvidedGprc)
+        .build();
+    var cmd = UpdateCommand.newBuilder()
+        .setModel(model)
+        .build();
+        
+
+    var result = stub.update(cmd);
+
+    return result.getSuccess();
   }
 
 }
