@@ -1,0 +1,20 @@
+query ListCustomers($projectId: ID!) {
+    Customers(projectId: $projectId) {
+        list {
+            id {
+                projectId
+                entityId
+                entityVersion
+                }
+            data {
+                customerName
+                customerCityName
+                customerAddress
+                }
+            secretsEx {
+                location
+                entityCode
+            }
+        }
+    }
+}

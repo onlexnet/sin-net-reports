@@ -33,7 +33,7 @@ class DboUpdateImpl implements DboUpdate {
         // set expected version so that optimistic locking will reject operation, if version would not be the same
         .peek(it -> it.setVersion(etag))
         .peek(it -> applyCommand(it, content))
-        .map(it -> repository.saveAndFlush(it))
+        .map(it -> repository.save(it))
         .map(this::getVersion)
         .toEither(Status.NOT_FOUND);
     } catch (ObjectOptimisticLockingFailureException e) {

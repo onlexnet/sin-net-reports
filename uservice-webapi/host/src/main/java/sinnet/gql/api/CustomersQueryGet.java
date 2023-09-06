@@ -1,6 +1,7 @@
 package sinnet.gql.api;
 
 import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.SchemaMapping;
 import org.springframework.stereotype.Controller;
 
 import lombok.RequiredArgsConstructor;
@@ -15,10 +16,11 @@ class CustomersQueryGet implements CustomerMapper {
 
   private final CustomersGrpcFacade service;
 
+  @SchemaMapping
   public CustomerEntityGql get(CustomersQuery self, @Argument String entityId) {
     var request = GetRequest.newBuilder()
         .setEntityId(EntityId.newBuilder()
-            .setProjectId(self.getProjectId())
+            .setProjectId(self.userToken().getProjectId())
             .setEntityId(entityId))
         .build();
     var result = service.get(request);

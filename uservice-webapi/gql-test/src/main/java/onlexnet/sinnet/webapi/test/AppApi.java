@@ -12,6 +12,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 
 import lombok.SneakyThrows;
 import sinnet.gql.models.CustomerContactInputGql;
+import sinnet.gql.models.CustomerEntityGql;
 import sinnet.gql.models.CustomerInput;
 import sinnet.gql.models.CustomerSecretExInput;
 import sinnet.gql.models.CustomerSecretInput;
@@ -99,6 +100,18 @@ public class AppApi {
         .path("Customers.save")
         .entity(SomeEntityGql.class);
   }
+
+  /**
+   * Invokes Customers.reserve
+   */
+  public Entity<List<CustomerEntityGql>, ?> listCustomers(UUID projectId) {
+    return tester.documentName("listCustomer")
+        .variable("projectId", projectId.toString())
+        .execute()
+        .path("Customers.list")
+        .entityList(CustomerEntityGql.class);
+  }
+
 
   /** REturns list of all users (emails) related to given project. */
   public Entity<List<UserGql>, ?> searchUsers(String projectId) {

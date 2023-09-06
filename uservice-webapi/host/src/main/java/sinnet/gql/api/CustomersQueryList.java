@@ -1,6 +1,7 @@
 package sinnet.gql.api;
 
 
+import org.springframework.graphql.data.method.annotation.SchemaMapping;
 import org.springframework.stereotype.Controller;
 
 import io.vavr.collection.Iterator;
@@ -15,10 +16,11 @@ class CustomersQueryList implements CustomerMapper {
 
   private final CustomersGrpcFacade service;
 
+  @SchemaMapping
   public CustomerEntityGql[] list(CustomersQuery self) {
     var request = ListRequest.newBuilder()
-        .setProjectId(self.getProjectId())
-        .setUserToken(self.getUserToken())
+        .setProjectId(self.userToken().getProjectId())
+        .setUserToken(self.userToken())
         .build();
     var items = service.list(request);
     return Iterator.ofAll(items.getCustomersList()).map(this::toGql).toJavaArray(CustomerEntityGql[]::new);

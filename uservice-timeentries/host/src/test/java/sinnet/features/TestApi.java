@@ -128,7 +128,7 @@ public class TestApi {
         .count();
     Assertions
       .assertThat(foundElements)
-      .as("Expected existence of customer: [%s]", customerName)
+      .as("Expected existence of customer named: [%s]", customerName)
       .isEqualTo(1);
   }
 

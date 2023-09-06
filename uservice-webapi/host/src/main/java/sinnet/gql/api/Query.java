@@ -6,6 +6,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 
 import lombok.RequiredArgsConstructor;
+import sinnet.grpc.common.UserToken;
 import sinnet.web.AuthenticationToken;
 
 @Controller
@@ -34,5 +35,17 @@ class Query {
     var primaryEmail = authentication.getPrincipal();
 
     return new ActionsQuery(projectId, primaryEmail);
+  }
+
+  @QueryMapping("Customers")
+  CustomersQuery customers(@Argument String projectId) {
+    var authentication = (AuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+    var primaryEmail = authentication.getPrincipal();
+
+    var userToken = UserToken.newBuilder()
+        .setProjectId(projectId)
+        .setRequestorEmail(primaryEmail)
+        .build();
+    return new CustomersQuery(userToken);
   }
 }

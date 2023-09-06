@@ -21,6 +21,10 @@ Feature: An example
     When Customer save request is send to backend
     Then Customer save result is verified
 
+  Scenario: Customer list
+    When Customer list request is send to backend
+    Then Customer list result is verified
+
   Scenario: Users list query
     When Users list query is send
     Then Users list response is returned

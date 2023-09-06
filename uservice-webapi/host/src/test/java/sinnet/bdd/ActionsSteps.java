@@ -14,7 +14,6 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import onlexnet.sinnet.webapi.test.AppApi;
 import sinnet.gql.api.CommonMapper;
-import sinnet.gql.models.CustomerInput;
 import sinnet.gql.models.ServiceModelGql;
 import sinnet.gql.models.ServicesSearchResultGql;
 import sinnet.gql.models.SomeEntityGql;
