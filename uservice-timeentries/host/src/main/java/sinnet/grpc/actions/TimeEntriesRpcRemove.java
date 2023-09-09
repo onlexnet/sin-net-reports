@@ -3,7 +3,7 @@ package sinnet.grpc.actions;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
-import sinnet.grpc.mapping.RpcCommandHandler;
+import sinnet.grpc.mapping.RpcCommandHandlerBase;
 import sinnet.grpc.timeentries.RemoveCommand;
 import sinnet.grpc.timeentries.RemoveResult;
 import sinnet.write.ActionRepositoryEx;
@@ -13,8 +13,7 @@ import sinnet.write.ActionRepositoryEx;
  */
 @Component
 @RequiredArgsConstructor
-public class TimeEntriesRpcRemove implements
-    RpcCommandHandler<RemoveCommand, RemoveResult>,
+public class TimeEntriesRpcRemove extends RpcCommandHandlerBase<RemoveCommand, RemoveResult> implements
     sinnet.grpc.common.Mapper {
 
   private final ActionRepositoryEx actionService;

@@ -2,17 +2,16 @@ package sinnet.grpc.users;
 
 import org.springframework.stereotype.Component;
 
-import sinnet.grpc.mapping.RpcCommandHandler;
+import sinnet.grpc.mapping.RpcCommandHandlerBase;
 
 /**
  * TBD.
  */
 @Component
-class UsersRpcIncludeOperator
-             implements RpcCommandHandler<IncludeOperatorCommand, IncludeOperatorResult> {
+class UsersRpcIncludeOperator extends RpcCommandHandlerBase<IncludeOperatorCommand, IncludeOperatorResult> {
 
   @Override
-  public IncludeOperatorResult apply(IncludeOperatorCommand cmd) {
+  protected IncludeOperatorResult apply(IncludeOperatorCommand cmd) {
     return IncludeOperatorResult.newBuilder()
         .setSuccess(true).build();
   }

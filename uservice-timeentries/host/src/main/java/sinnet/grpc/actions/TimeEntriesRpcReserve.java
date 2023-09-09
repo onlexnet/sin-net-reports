@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
 import sinnet.domain.model.ValEmail;
-import sinnet.grpc.mapping.RpcCommandHandler;
+import sinnet.grpc.mapping.RpcCommandHandlerBase;
 import sinnet.grpc.timeentries.ReserveCommand;
 import sinnet.grpc.timeentries.ReserveResult;
 import sinnet.grpc.timeentries.ReserveCommand.OptionalWhenCase;
@@ -20,12 +20,12 @@ import sinnet.write.ActionRepositoryEx;
  */
 @Component
 @RequiredArgsConstructor
-public class TimeEntriesRpcReserve implements RpcCommandHandler<ReserveCommand, ReserveResult>, MapperDto {
+public class TimeEntriesRpcReserve extends RpcCommandHandlerBase<ReserveCommand, ReserveResult> implements MapperDto {
 
   private final ActionRepositoryEx actionService;
 
   @Override
-  public ReserveResult apply(ReserveCommand cmd) {
+  protected ReserveResult apply(ReserveCommand cmd) {
     var whenProvided = cmd.getOptionalWhenCase() == OptionalWhenCase.WHEN
         ? fromDto(cmd.getWhen())
         : LocalDate.now();

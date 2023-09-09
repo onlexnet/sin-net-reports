@@ -5,7 +5,6 @@ import java.util.stream.Stream;
 
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import io.grpc.Status;
 import io.vavr.control.Either;
@@ -21,7 +20,6 @@ class DboUpdateImpl implements DboUpdate {
 
   private final ProjectRepository repository;
   
-  @Transactional
   @Override
   public Either<Status, ProjectVid> updateCommand(ProjectVid vid, UpdateCommandContent content) {
     var eid = vid.id();

@@ -5,7 +5,7 @@ import java.util.UUID;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
-import sinnet.grpc.mapping.RpcCommandHandler;
+import sinnet.grpc.mapping.RpcCommandHandlerBase;
 import sinnet.models.ShardedId;
 
 /**
@@ -13,13 +13,12 @@ import sinnet.models.ShardedId;
  */
 @Component
 @RequiredArgsConstructor
-public class CustomersRpcRemove implements
-    RpcCommandHandler<RemoveRequest, RemoveReply> {
+public class CustomersRpcRemove extends RpcCommandHandlerBase<RemoveRequest, RemoveReply> {
 
   private final CustomerRepositoryEx repository;
 
   @Override
-  public RemoveReply apply(RemoveRequest request) {
+  protected RemoveReply apply(RemoveRequest request) {
     var id = request.getEntityId();
     var projectIdAsUuid = UUID.fromString(id.getProjectId());
     var entityIdAsUuid = UUID.fromString(id.getEntityId());
@@ -28,7 +27,7 @@ public class CustomersRpcRemove implements
     return RemoveReply.newBuilder()
         .setSuccess(result)
         .build();
-
   }
+
 
 }

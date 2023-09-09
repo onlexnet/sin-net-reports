@@ -4,13 +4,14 @@ import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
 import sinnet.domain.model.ValEmail;
+import sinnet.grpc.mapping.RpcCommandHandlerBase;
 
 /**
  * TBD.
  */
 @Component
 @RequiredArgsConstructor
-class CustomersRpcUpdateImpl implements CustomersRpcUpdate, MapperDto {
+class CustomersRpcUpdateImpl extends RpcCommandHandlerBase<UpdateCommand, UpdateResult> implements CustomersRpcUpdate, MapperDto {
 
   private final CustomerRepositoryEx repository;
 

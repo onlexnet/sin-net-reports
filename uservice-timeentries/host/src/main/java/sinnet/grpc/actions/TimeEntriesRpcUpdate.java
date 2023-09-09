@@ -4,7 +4,7 @@ import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
 import sinnet.grpc.customers.CustomerRepositoryEx;
-import sinnet.grpc.mapping.RpcCommandHandler;
+import sinnet.grpc.mapping.RpcCommandHandlerBase;
 import sinnet.grpc.timeentries.UpdateCommand;
 import sinnet.grpc.timeentries.UpdateResult;
 import sinnet.write.ActionRepositoryEx;
@@ -14,13 +14,13 @@ import sinnet.write.ActionRepositoryEx;
  */
 @Component
 @RequiredArgsConstructor
-public class TimeEntriesRpcUpdate implements RpcCommandHandler<UpdateCommand, UpdateResult>, MapperDto {
+public class TimeEntriesRpcUpdate extends RpcCommandHandlerBase<UpdateCommand, UpdateResult> implements MapperDto {
 
   private final ActionRepositoryEx actionService;
   private final CustomerRepositoryEx customerRepo;
   
   @Override
-  public UpdateResult apply(UpdateCommand cmd) {
+  protected UpdateResult apply(UpdateCommand cmd) {
     var entityId = fromDto(cmd.getModel().getEntityId());
 
     var entryDto = cmd.getModel();

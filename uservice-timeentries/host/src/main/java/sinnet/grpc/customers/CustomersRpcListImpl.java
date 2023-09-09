@@ -4,13 +4,10 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Component;
 
-import jakarta.transaction.Transactional;
-import jakarta.transaction.Transactional.TxType;
 import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
-@Transactional(TxType.REQUIRES_NEW)
 class CustomersRpcListImpl implements CustomersRpcList,
                            MapperDto,
                            MapperDbo {
