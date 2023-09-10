@@ -13,8 +13,8 @@ public class CustomersStepDefinition {
 
   private ValName singleCustomer = ValName.of("example customer");
 
-  @When("the Operator creates a new customer")
-  public void the_operator_creates_a_new_customer() {
+  @When("{operatorAlias} creates a new customer")
+  public void the_operator_creates_a_new_customer(ValName operatorAlias) {
     testApi.reserveCustomer(ctx, singleCustomer);
   }
 

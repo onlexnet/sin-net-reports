@@ -23,11 +23,11 @@ public class TimeentriesStepDefinitions {
   public void an_operator_called_alias1_assigned_toproject_called_alias2(ValName operatorAlias, ValName projectAlias) {
     ctx.getOperatorId(operatorAlias, true);
     ctx.setProjectId(projectAlias);
-    testApi.assignOperator(ctx);
+    testApi.assignOperator(ctx, operatorAlias, projectAlias);
   }
 
-  @When("the operator creates new timeentry")
-  public void operator_called_creates_new_timeentry() {
+  @When("{operatorAlias} creates new timeentry")
+  public void operator_called_creates_new_timeentry(ValName operatorAlias) {
     testApi.createEntry(ctx);
   }
 

@@ -8,7 +8,6 @@ import java.util.function.Consumer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import groovyjarjarantlr4.v4.parse.ANTLRParser.elementOption_return;
 import io.vavr.Tuple;
 import io.vavr.Tuple2;
 import lombok.Getter;
@@ -17,10 +16,10 @@ import lombok.experimental.Accessors;
 import sinnet.domain.model.ValEmail;
 import sinnet.grpc.common.EntityId;
 import sinnet.grpc.customers.CustomerModel;
-import sinnet.grpc.customers.CustomerValue;
 import sinnet.grpc.customers.UpdateCommand;
 import sinnet.grpc.timeentries.LocalDate;
 import sinnet.models.ProjectId;
+import sinnet.models.ShardedId;
 import sinnet.models.ValName;
 
 
@@ -89,12 +88,14 @@ class ClientContext {
     private final Map<ValName, ProjectId> projects = new HashMap<>();
     private final Map<EntityId, TimeentryContext> timeentries = new HashMap<>();
     private final Map<ValName, Tuple2<EntityId, CustomerModel>> customers = new HashMap<>();
+    private final Map<ValName, ShardedId> operators = new HashMap<>();
   }
 
   public void on(AppEvent event) {
     new Build()
       .add(CustomerReservedEvent.class, this::on)
       .add(CustomerUpdatedEvent.class, this::on)
+      .add(OperatorAssignedEvent.class, this::on)
       .use(event);
   }
 
@@ -109,6 +110,12 @@ class ClientContext {
 
     known.customers.remove(event.customerAlias());
     known.customers.put(event.customerAlias(), Tuple.of(newId, model));
+  }
+
+  private void on(OperatorAssignedEvent event) {
+    var projectId = known.projects().get(event.projectAlias());
+    var id = ShardedId.anyNew(projectId);
+    known.operators.put(currentOperator, id);
   }
 
   class Build implements EventConsumer {
@@ -140,6 +147,7 @@ sealed interface AppEvent { }
 
 record CustomerReservedEvent(ValName customerAlias, EntityId entityId) implements AppEvent { }
 record CustomerUpdatedEvent(ValName customerAlias, EntityId entityId, EntityId newEntityId, UpdateCommand cmd) implements AppEvent { }
+record OperatorAssignedEvent(ValName operatorAlias, ValName projectAlias) implements AppEvent { }
 
 
 interface EventConsumer {

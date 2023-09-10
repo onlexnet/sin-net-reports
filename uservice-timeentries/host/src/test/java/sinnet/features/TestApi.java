@@ -72,9 +72,7 @@ public class TestApi {
     rpcApi.getApiCallback().onTopicEvent(te);
   }
 
-  void assignOperator(ClientContext ctx) {
-    var projectAlias = ctx.currentProject();
-    var operatorAlias = ctx.currentOperator();
+  void assignOperator(ClientContext ctx, ValName operatorAlias, ValName projectAlias) {
     var projectId = ctx.getProjectId(projectAlias);
     var operatorId = ctx.getOperatorId(operatorAlias, false);
     var cmd = IncludeOperatorCommand.newBuilder()
@@ -82,6 +80,8 @@ public class TestApi {
         .addOperatorEmail(operatorId.value())
         .build();
     rpcApi.getUsers().includeOperator(cmd);
+
+    ctx.on(new OperatorAssignedEvent(operatorAlias, projectAlias));
   }
 
   void createEntry(ClientContext ctx) {
