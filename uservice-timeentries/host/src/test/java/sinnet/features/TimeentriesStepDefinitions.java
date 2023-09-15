@@ -21,14 +21,12 @@ public class TimeentriesStepDefinitions {
 
   @Given("an operator called {operatorAlias} assigned to project called {projectAlias}")
   public void an_operator_called_alias1_assigned_toproject_called_alias2(ValName operatorAlias, ValName projectAlias) {
-    ctx.getOperatorId(operatorAlias, true);
-    ctx.setProjectId(projectAlias);
     testApi.assignOperator(ctx, operatorAlias, projectAlias);
   }
 
-  @When("{operatorAlias} creates new timeentry")
-  public void operator_called_creates_new_timeentry(ValName operatorAlias) {
-    testApi.createEntry(ctx);
+  @When("{operatorAlias} creates new timeentry for {projectAlias}")
+  public void operator_called_creates_new_timeentry(ValName operatorAlias, ValName projectAlias) {
+    testApi.createEntry(ctx, operatorAlias, projectAlias);
   }
 
   @Then("operation succeeded")

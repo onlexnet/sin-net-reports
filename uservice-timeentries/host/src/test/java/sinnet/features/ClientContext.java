@@ -19,7 +19,6 @@ import sinnet.grpc.customers.CustomerModel;
 import sinnet.grpc.customers.UpdateCommand;
 import sinnet.grpc.timeentries.LocalDate;
 import sinnet.models.ProjectId;
-import sinnet.models.ShardedId;
 import sinnet.models.ValName;
 
 
@@ -37,8 +36,6 @@ class TestBeans {
  */
 @Accessors(fluent = true)
 class ClientContext {
-  @Getter
-  ValName currentOperator;
   @Getter
   ValName currentProject;
   @Getter
@@ -69,9 +66,7 @@ class ClientContext {
     return known.projects().get(projectAlias);
   }
 
-  public ValEmail getOperatorId(@NonNull ValName operatorAlias, boolean setCurrent) {
-    if (setCurrent)
-      currentOperator = operatorAlias;
+  public ValEmail getOperatorId(@NonNull ValName operatorAlias) {
     var actual = known.users.get(operatorAlias);
     if (actual != null)
       return actual;
@@ -88,7 +83,7 @@ class ClientContext {
     private final Map<ValName, ProjectId> projects = new HashMap<>();
     private final Map<EntityId, TimeentryContext> timeentries = new HashMap<>();
     private final Map<ValName, Tuple2<EntityId, CustomerModel>> customers = new HashMap<>();
-    private final Map<ValName, ShardedId> operators = new HashMap<>();
+    // private final Map<ValName, ShardedId> operators = new HashMap<>();
   }
 
   public void on(AppEvent event) {
@@ -113,9 +108,7 @@ class ClientContext {
   }
 
   private void on(OperatorAssignedEvent event) {
-    var projectId = known.projects().get(event.projectAlias());
-    var id = ShardedId.anyNew(projectId);
-    known.operators.put(currentOperator, id);
+    known.users().computeIfAbsent(currentProject, key -> ValEmail.of(currentProject + "-email"));
   }
 
   class Build implements EventConsumer {

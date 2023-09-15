@@ -74,7 +74,7 @@ public class TestApi {
 
   void assignOperator(ClientContext ctx, ValName operatorAlias, ValName projectAlias) {
     var projectId = ctx.getProjectId(projectAlias);
-    var operatorId = ctx.getOperatorId(operatorAlias, false);
+    var operatorId = ctx.known().users().get(operatorAlias);
     var cmd = IncludeOperatorCommand.newBuilder()
         .setProjectId(projectId.getId().toString())
         .addOperatorEmail(operatorId.value())
@@ -84,11 +84,9 @@ public class TestApi {
     ctx.on(new OperatorAssignedEvent(operatorAlias, projectAlias));
   }
 
-  void createEntry(ClientContext ctx) {
-    var projectAlias = ctx.currentProject();
-    var operatorAlias = ctx.currentOperator();
+  void createEntry(ClientContext ctx, ValName projectAlias, ValName operatorAlias) {
     var projectId = ctx.getProjectId(projectAlias);
-    var operatorId = ctx.getOperatorId(operatorAlias, false);
+    var operatorId = ctx.known().users().get(operatorAlias);
     var invoker = UserToken.newBuilder()
         .setProjectId(projectId.getId().toString())
         .setRequestorEmail(operatorId.value());
@@ -111,13 +109,13 @@ public class TestApi {
     return result.getActivitiesList().stream().map(it -> it.getEntityId()).toList();
   }
 
-  public void customerExists(ClientContext ctx, String customerName) {
+  public void customerExists(ClientContext ctx, ValName operatorAlias, String customerName) {
     var customerCtx = ctx.known().customers().entrySet().stream()
         .filter(it -> it.getValue()._2.getValue().getCustomerName().equals(customerName))
         .findAny()
         .get();
     var projectId = customerCtx.getValue()._1.getProjectId();
-    var operatorId = ctx.currentOperator().getValue();
+    var operatorId = ctx.getOperatorId(operatorAlias).value();
     var req = ListRequest.newBuilder()
         .setProjectId(projectId)
         .setUserToken(UserToken.newBuilder().setProjectId(projectId).setRequestorEmail(operatorId))
