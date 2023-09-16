@@ -14,6 +14,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import sinnet.grpc.customers.CustomersGrpc;
 import sinnet.grpc.customers.CustomersGrpc.CustomersBlockingStub;
+import sinnet.grpc.projects.generated.ProjectsGrpc.ProjectsBlockingStub;
 import sinnet.grpc.timeentries.TimeEntriesGrpc;
 import sinnet.grpc.timeentries.TimeEntriesGrpc.TimeEntriesBlockingStub;
 import sinnet.grpc.users.UsersGrpc;
@@ -33,6 +34,9 @@ public class RpcApi implements ApplicationListener<ApplicationReadyEvent> {
 
   @Getter
   private CustomersBlockingStub customers;
+
+  @Getter
+  private ProjectsBlockingStub projects;
 
   @Getter
   private AppCallbackBlockingStub apiCallback;

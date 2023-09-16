@@ -49,13 +49,6 @@ class ClientContext {
   @Getter
   private final KnownFacts known = new KnownFacts();
 
-  public ProjectId setProjectId(@NonNull ValName projectAlias) {
-    currentProject = projectAlias;
-    var projectId = ProjectId.anyNew();
-    known.projects().put(projectAlias, projectId);
-    return known.projects().get(projectAlias);
-  }
-
   public void newTimeentry(EntityId id, LocalDate when) {
     var entry = new TimeentryContext(when);
     known.timeentries.put(id, entry);
@@ -88,17 +81,17 @@ class ClientContext {
 
   public void on(AppEvent event) {
     new Build()
-      .add(CustomerReservedEvent.class, this::on)
-      .add(CustomerUpdatedEvent.class, this::on)
-      .add(OperatorAssignedEvent.class, this::on)
+      .add(CustomerReservedAppEvent.class, this::on)
+      .add(CustomerUpdatedAppEvent.class, this::on)
+      .add(OperatorAssignedAppEvent.class, this::on)
       .use(event);
   }
 
-  private void on(CustomerReservedEvent event) { 
+  private void on(CustomerReservedAppEvent event) { 
     reservedCustomer = event.entityId();
   }
 
-  private void on(CustomerUpdatedEvent event) { 
+  private void on(CustomerUpdatedAppEvent event) { 
     var id = event.entityId();
     var model = event.cmd().getModel();
     var newId = event.newEntityId();
@@ -107,7 +100,7 @@ class ClientContext {
     known.customers.put(event.customerAlias(), Tuple.of(newId, model));
   }
 
-  private void on(OperatorAssignedEvent event) {
+  private void on(OperatorAssignedAppEvent event) {
     known.users().computeIfAbsent(currentProject, key -> ValEmail.of(currentProject + "-email"));
   }
 
@@ -138,9 +131,10 @@ class ClientContext {
 
 sealed interface AppEvent { }
 
-record CustomerReservedEvent(ValName customerAlias, EntityId entityId) implements AppEvent { }
-record CustomerUpdatedEvent(ValName customerAlias, EntityId entityId, EntityId newEntityId, UpdateCommand cmd) implements AppEvent { }
-record OperatorAssignedEvent(ValName operatorAlias, ValName projectAlias) implements AppEvent { }
+record ProjectCreatedAppEvent(ValName projectAlias, sinnet.grpc.projects.generated.ProjectId projectId) implements AppEvent { }
+record CustomerReservedAppEvent(ValName customerAlias, EntityId entityId) implements AppEvent { }
+record CustomerUpdatedAppEvent(ValName customerAlias, EntityId entityId, EntityId newEntityId, UpdateCommand cmd) implements AppEvent { }
+record OperatorAssignedAppEvent(ValName operatorAlias, ValName projectAlias) implements AppEvent { }
 
 
 interface EventConsumer {

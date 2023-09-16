@@ -3,6 +3,7 @@ package sinnet.features;
 import static sinnet.grpc.timeentries.ReserveCommand.newBuilder;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.assertj.core.api.Assertions;
 import org.springframework.stereotype.Component;
@@ -12,6 +13,7 @@ import com.google.protobuf.ByteString;
 import io.dapr.v1.DaprAppCallbackProtos.TopicEventRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import sinnet.domain.model.ValEmail;
 import sinnet.events.AvroObjectSerializer;
 import sinnet.grpc.common.EntityId;
 import sinnet.grpc.common.UserToken;
@@ -20,6 +22,7 @@ import sinnet.grpc.customers.CustomerValue;
 import sinnet.grpc.customers.ListRequest;
 import sinnet.grpc.customers.ReserveRequest;
 import sinnet.grpc.customers.UpdateCommand;
+import sinnet.grpc.projects.generated.CreateRequest;
 import sinnet.grpc.timeentries.LocalDate;
 import sinnet.grpc.timeentries.SearchQuery;
 import sinnet.grpc.users.IncludeOperatorCommand;
@@ -42,7 +45,7 @@ public class TestApi {
         .build();
     var entityId = rpcApi.getCustomers().reserve(request).getEntityId();
     
-    ctx.on(new CustomerReservedEvent(customerAlias, entityId));
+    ctx.on(new CustomerReservedAppEvent(customerAlias, entityId));
   }
 
   void updateCustomer(ClientContext ctx, ValName customerAlias, String newName) {
@@ -56,32 +59,45 @@ public class TestApi {
     var result = rpcApi.getCustomers().update(cmd);
     var updatedId = result.getEntityId();
 
-    ctx.on(new CustomerUpdatedEvent(customerAlias, id, updatedId, cmd));
+    ctx.on(new CustomerUpdatedAppEvent(customerAlias, id, updatedId, cmd));
   }
 
   @SneakyThrows
-  void notifyNewProject(ClientContext ctx, ValName projectAlias) {
-    var projectId = ctx.setProjectId(projectAlias);
+  void newProject(ClientContext ctx, ValName operatorAliasCreator, ValName projectAlias) {
+
+    var operatorId = ctx.getOperatorId(operatorAliasCreator).value();
+    var createRequest = CreateRequest.newBuilder()
+        .setUserToken(
+          sinnet.grpc.projects.generated.UserToken.newBuilder()
+            .setRequestorEmail(operatorId)
+            .build())
+        .build();
+
+    var result = rpcApi.getProjects().create(createRequest);
+
     var event = ProjectCreatedEvent.newBuilder()
-        .setEid(projectId.getId().toString())
-        .setEtag(projectId.getVersion())
+        .setEid(result.getEntityId().toString())
+        .setEtag(result.getEntityId().getETag())
         .build();
     var eventSerialized = objectSerializer.serialize(event);
     var data = ByteString.copyFrom(eventSerialized);
     var te = TopicEventRequest.newBuilder().setData(data).build();
     rpcApi.getApiCallback().onTopicEvent(te);
+
+    ctx.on(new ProjectCreatedAppEvent(projectAlias, result.getEntityId()));
   }
 
   void assignOperator(ClientContext ctx, ValName operatorAlias, ValName projectAlias) {
     var projectId = ctx.getProjectId(projectAlias);
-    var operatorId = ctx.known().users().get(operatorAlias);
+    var operatorId = ctx.getOperatorId(operatorAlias);
+    
     var cmd = IncludeOperatorCommand.newBuilder()
         .setProjectId(projectId.getId().toString())
         .addOperatorEmail(operatorId.value())
         .build();
     rpcApi.getUsers().includeOperator(cmd);
 
-    ctx.on(new OperatorAssignedEvent(operatorAlias, projectAlias));
+    ctx.on(new OperatorAssignedAppEvent(operatorAlias, projectAlias));
   }
 
   void createEntry(ClientContext ctx, ValName projectAlias, ValName operatorAlias) {

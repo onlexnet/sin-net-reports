@@ -14,9 +14,9 @@ public class TimeentriesStepDefinitions {
   private final TestApi testApi;
   private final ClientContext ctx;
 
-  @Given("a new project called {projectAlias}")
-  public void a_new_project_called(ValName projectAlias) {
-    testApi.notifyNewProject(ctx, projectAlias);
+  @Given("a new project called {projectAlias} created by {operatorAlias}")
+  public void a_new_project_called(ValName projectAlias, ValName operatorAlias) {
+    testApi.newProject(ctx, operatorAlias, projectAlias);
   }
 
   @Given("an operator called {operatorAlias} assigned to project called {projectAlias}")
