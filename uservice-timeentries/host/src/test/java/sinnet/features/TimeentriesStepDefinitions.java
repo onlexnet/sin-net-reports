@@ -26,7 +26,7 @@ public class TimeentriesStepDefinitions {
 
   @When("{operatorAlias} creates new timeentry for {projectAlias}")
   public void operator_called_creates_new_timeentry(ValName operatorAlias, ValName projectAlias) {
-    testApi.createEntry(ctx, operatorAlias, projectAlias);
+    testApi.createEntry(ctx, projectAlias, operatorAlias);
   }
 
   @Then("operation succeeded")

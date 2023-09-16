@@ -26,6 +26,7 @@ import sinnet.grpc.projects.generated.CreateRequest;
 import sinnet.grpc.timeentries.LocalDate;
 import sinnet.grpc.timeentries.SearchQuery;
 import sinnet.grpc.users.IncludeOperatorCommand;
+import sinnet.models.ProjectId;
 import sinnet.models.ValName;
 import sinnet.project.events.ProjectCreatedEvent;
 
@@ -76,7 +77,7 @@ public class TestApi {
     var result = rpcApi.getProjects().create(createRequest);
 
     var event = ProjectCreatedEvent.newBuilder()
-        .setEid(result.getEntityId().toString())
+        .setEid(result.getEntityId().getEId())
         .setEtag(result.getEntityId().getETag())
         .build();
     var eventSerialized = objectSerializer.serialize(event);
@@ -84,7 +85,10 @@ public class TestApi {
     var te = TopicEventRequest.newBuilder().setData(data).build();
     rpcApi.getApiCallback().onTopicEvent(te);
 
-    ctx.on(new ProjectCreatedAppEvent(projectAlias, result.getEntityId()));
+    var projId = ProjectId.of(
+      UUID.fromString(result.getEntityId().getEId()),
+      result.getEntityId().getETag());
+    ctx.on(new ProjectCreatedAppEvent(projectAlias, projId));
   }
 
   void assignOperator(ClientContext ctx, ValName operatorAlias, ValName projectAlias) {

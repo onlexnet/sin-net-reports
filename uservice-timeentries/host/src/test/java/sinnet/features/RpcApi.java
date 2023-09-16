@@ -14,6 +14,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import sinnet.grpc.customers.CustomersGrpc;
 import sinnet.grpc.customers.CustomersGrpc.CustomersBlockingStub;
+import sinnet.grpc.projects.generated.ProjectsGrpc;
 import sinnet.grpc.projects.generated.ProjectsGrpc.ProjectsBlockingStub;
 import sinnet.grpc.timeentries.TimeEntriesGrpc;
 import sinnet.grpc.timeentries.TimeEntriesGrpc.TimeEntriesBlockingStub;
@@ -62,6 +63,7 @@ public class RpcApi implements ApplicationListener<ApplicationReadyEvent> {
     timeentries = TimeEntriesGrpc.newBlockingStub(channel);
     apiCallback = AppCallbackGrpc.newBlockingStub(channel);
     customers = CustomersGrpc.newBlockingStub(channel);
+    projects = ProjectsGrpc.newBlockingStub(channel);
   }
 
 }

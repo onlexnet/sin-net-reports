@@ -10,9 +10,9 @@ import lombok.Value;
 public class ProjectId {
 
   private UUID id;
-  private int version;
+  private long version;
 
-  public static ProjectId of(UUID id, int version) {
+  public static ProjectId of(UUID id, long version) {
     return new ProjectId(id, version);
   }
 

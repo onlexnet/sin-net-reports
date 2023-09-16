@@ -81,17 +81,18 @@ class ClientContext {
 
   public void on(AppEvent event) {
     new Build()
-      .add(CustomerReservedAppEvent.class, this::on)
-      .add(CustomerUpdatedAppEvent.class, this::on)
-      .add(OperatorAssignedAppEvent.class, this::on)
+      .add(CustomerReservedAppEvent.class, this::onAppEvent)
+      .add(CustomerUpdatedAppEvent.class, this::onAppEvent)
+      .add(OperatorAssignedAppEvent.class, this::onAppEvent)
+      .add(ProjectCreatedAppEvent.class, this::onAppEvent)
       .use(event);
   }
 
-  private void on(CustomerReservedAppEvent event) { 
+  private void onAppEvent(CustomerReservedAppEvent event) { 
     reservedCustomer = event.entityId();
   }
 
-  private void on(CustomerUpdatedAppEvent event) { 
+  private void onAppEvent(CustomerUpdatedAppEvent event) { 
     var id = event.entityId();
     var model = event.cmd().getModel();
     var newId = event.newEntityId();
@@ -100,8 +101,12 @@ class ClientContext {
     known.customers.put(event.customerAlias(), Tuple.of(newId, model));
   }
 
-  private void on(OperatorAssignedAppEvent event) {
+  private void onAppEvent(OperatorAssignedAppEvent event) {
     known.users().computeIfAbsent(currentProject, key -> ValEmail.of(currentProject + "-email"));
+  }
+
+  private void onAppEvent(ProjectCreatedAppEvent event) {
+    known.projects().put(event.projectAlias(), event.projectId());
   }
 
   class Build implements EventConsumer {
@@ -131,7 +136,7 @@ class ClientContext {
 
 sealed interface AppEvent { }
 
-record ProjectCreatedAppEvent(ValName projectAlias, sinnet.grpc.projects.generated.ProjectId projectId) implements AppEvent { }
+record ProjectCreatedAppEvent(ValName projectAlias, ProjectId projectId) implements AppEvent { }
 record CustomerReservedAppEvent(ValName customerAlias, EntityId entityId) implements AppEvent { }
 record CustomerUpdatedAppEvent(ValName customerAlias, EntityId entityId, EntityId newEntityId, UpdateCommand cmd) implements AppEvent { }
 record OperatorAssignedAppEvent(ValName operatorAlias, ValName projectAlias) implements AppEvent { }
