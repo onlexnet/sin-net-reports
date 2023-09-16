@@ -15,7 +15,7 @@ public interface Mapper {
   /**
    * TBD.
    */
-  default ShardedId fromDto(sinnet.grpc.common.EntityId it) {
+  static ShardedId fromDto(sinnet.grpc.common.EntityId it) {
     if (it == null) {
       return null;
     }
@@ -37,7 +37,7 @@ public interface Mapper {
   /**
    * TBD.
    */
-  default sinnet.grpc.common.EntityId toDto(ShardedId eid) {
+  static sinnet.grpc.common.EntityId toDto(ShardedId eid) {
     if (eid == null) {
       return null;
     }

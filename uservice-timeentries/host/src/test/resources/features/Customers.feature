@@ -8,3 +8,4 @@ Feature: Manage Customers
   Scenario: Create a new Project
     When operator1 creates a new customer
     Then operator1 is able to change the name of the Customer
+    And operator1 is able to change all properties of the Customer

@@ -19,7 +19,9 @@ import sinnet.grpc.common.EntityId;
 import sinnet.grpc.common.UserToken;
 import sinnet.grpc.customers.CustomerModel;
 import sinnet.grpc.customers.CustomerValue;
+import sinnet.grpc.customers.GetRequest;
 import sinnet.grpc.customers.ListRequest;
+import sinnet.grpc.customers.MapperDto;
 import sinnet.grpc.customers.ReserveRequest;
 import sinnet.grpc.customers.UpdateCommand;
 import sinnet.grpc.projects.generated.CreateRequest;
@@ -49,18 +51,31 @@ public class TestApi {
     ctx.on(new CustomerReservedAppEvent(customerAlias, entityId));
   }
 
-  void updateCustomer(ClientContext ctx, ValName customerAlias, String newName) {
+  void updateCustomer(ClientContext ctx, ValName customerAlias, sinnet.models.CustomerValue customerValue) {
     var id = ctx.reservedCustomer;
     var cmd = UpdateCommand.newBuilder()
         .setModel(CustomerModel.newBuilder()
           .setId(id)
-          .setValue(CustomerValue.newBuilder()
-            .setCustomerName(newName)))
+          .setValue(MapperDto.toDto(customerValue)))
         .build();
     var result = rpcApi.getCustomers().update(cmd);
     var updatedId = result.getEntityId();
 
     ctx.on(new CustomerUpdatedAppEvent(customerAlias, id, updatedId, cmd));
+  }
+
+  sinnet.models.CustomerModel getCustomer(ClientContext ctx, ValName customerAlias, ValName operatorAliasRequestor) {
+    var id = ctx.reservedCustomer;
+    var projectId = "00000000-0000-0000-0001-000000000001";
+    var operatorId = ctx.getOperatorId(operatorAliasRequestor).value();
+    var query = GetRequest.newBuilder()
+        .setEntityId(id)
+        .setUserToken(UserToken.newBuilder()
+          .setProjectId(projectId)
+          .setRequestorEmail(operatorId))
+        .build();
+    var result = rpcApi.getCustomers().get(query);
+    var customerModel = MapperDto.fromDto(result.getModel());
   }
 
   @SneakyThrows

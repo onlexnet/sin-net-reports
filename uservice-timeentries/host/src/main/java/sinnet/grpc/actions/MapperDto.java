@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 import sinnet.domain.model.ValEmail;
+import sinnet.grpc.common.Mapper;
 import sinnet.grpc.mapping.PropsBuilder;
 import sinnet.grpc.timeentries.TimeEntryModel;
 import sinnet.models.ActionDuration;
@@ -15,12 +16,12 @@ import sinnet.models.ShardedId;
 /**
  * TBD.
  */
-public interface MapperDto extends sinnet.grpc.common.Mapper {
+public interface MapperDto {
 
   /**
    * TBD.
    */
-  default LocalDate fromDto(sinnet.grpc.timeentries.LocalDate it) {
+  static LocalDate fromDto(sinnet.grpc.timeentries.LocalDate it) {
 
     if (it == null) {
       return null;
@@ -31,7 +32,7 @@ public interface MapperDto extends sinnet.grpc.common.Mapper {
   /**
    * TBD.
    */
-  default Entity<ActionValue> fromDto(TimeEntryModel dto) {
+  static Entity<ActionValue> fromDto(TimeEntryModel dto) {
     var projectIdAsString = dto.getEntityId().getProjectId();
     var projectId = UUID.fromString(projectIdAsString);
     var entityIdAsString = dto.getEntityId().getEntityId();
@@ -52,7 +53,7 @@ public interface MapperDto extends sinnet.grpc.common.Mapper {
   /**
    * TBD.
   */
-  default sinnet.grpc.timeentries.LocalDate.Builder toDto(LocalDate it) {
+  static sinnet.grpc.timeentries.LocalDate.Builder toDto(LocalDate it) {
 
     if (it == null) {
       return null;
@@ -67,12 +68,12 @@ public interface MapperDto extends sinnet.grpc.common.Mapper {
   /**
    * TBD.
    */
-  default TimeEntryModel toDto(Entity<ActionValue> it) {
+  static TimeEntryModel toDto(Entity<ActionValue> it) {
     return PropsBuilder.build(TimeEntryModel.newBuilder())
-      .set(it, o -> ShardedId.of(o), this::toDto, b -> b::setEntityId)
+      .set(it, o -> ShardedId.of(o), Mapper::toDto, b -> b::setEntityId)
       .set(it.getValue().getWhom(), UUID::toString, b -> b::setCustomerId)
       .set(it.getValue().getWho().value(), b -> b::setServicemanName)
-      .set(it.getValue().getWhen(), this::toDto, b -> b::setWhenProvided)
+      .set(it.getValue().getWhen(), MapperDto::toDto, b -> b::setWhenProvided)
       .set(it.getValue().getWhat(), b -> b::setDescription)
       .set(it.getValue().getHowLong().getValue(), b -> b::setDuration)
       .set(it.getValue().getHowFar().getValue(), b -> b::setDistance)

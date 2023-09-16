@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
 import sinnet.domain.model.ValEmail;
+import sinnet.grpc.common.Mapper;
 import sinnet.grpc.mapping.RpcCommandHandlerBase;
 import sinnet.grpc.timeentries.ReserveCommand;
 import sinnet.grpc.timeentries.ReserveResult;
@@ -20,14 +21,14 @@ import sinnet.write.ActionRepositoryEx;
  */
 @Component
 @RequiredArgsConstructor
-public class TimeEntriesRpcReserve extends RpcCommandHandlerBase<ReserveCommand, ReserveResult> implements MapperDto {
+public class TimeEntriesRpcReserve extends RpcCommandHandlerBase<ReserveCommand, ReserveResult> {
 
   private final ActionRepositoryEx actionService;
 
   @Override
   protected ReserveResult apply(ReserveCommand cmd) {
     var whenProvided = cmd.getOptionalWhenCase() == OptionalWhenCase.WHEN
-        ? fromDto(cmd.getWhen())
+        ? MapperDto.fromDto(cmd.getWhen())
         : LocalDate.now();
     var emailOfCurrentUser = cmd.getInvoker().getRequestorEmail();
     var projectId = UUID.fromString(cmd.getInvoker().getProjectId());
@@ -36,7 +37,7 @@ public class TimeEntriesRpcReserve extends RpcCommandHandlerBase<ReserveCommand,
         .setWhen(whenProvided);
     var entityId = ShardedId.anyNew(projectId);
     actionService.save(entityId, model);
-    var result = toDto(entityId);
+    var result = Mapper.toDto(entityId);
     return ReserveResult.newBuilder()
         .setEntityId(result)
         .build();

@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
 import sinnet.domain.model.ValEmail;
+import sinnet.grpc.common.Mapper;
 import sinnet.grpc.mapping.RpcCommandHandlerBase;
 
 /**
@@ -11,17 +12,17 @@ import sinnet.grpc.mapping.RpcCommandHandlerBase;
  */
 @Component
 @RequiredArgsConstructor
-class CustomersRpcUpdateImpl extends RpcCommandHandlerBase<UpdateCommand, UpdateResult> implements CustomersRpcUpdate, MapperDto {
+class CustomersRpcUpdateImpl extends RpcCommandHandlerBase<UpdateCommand, UpdateResult> implements CustomersRpcUpdate {
 
   private final CustomerRepositoryEx repository;
 
   @Override
   public UpdateResult apply(UpdateCommand cmd) {
     var emailOfRequestor = ValEmail.of(cmd.getUserToken().getRequestorEmail());
-    var model = fromDto(cmd.getModel());
+    var model = MapperDto.fromDto(cmd.getModel());
     var newId = repository.write(model);
     return UpdateResult.newBuilder()
-        .setEntityId(toDto(newId))
+        .setEntityId(Mapper.toDto(newId))
         .build();
   }
 

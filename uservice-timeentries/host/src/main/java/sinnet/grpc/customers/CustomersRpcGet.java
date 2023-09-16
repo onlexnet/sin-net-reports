@@ -14,7 +14,6 @@ import sinnet.grpc.mapping.RpcQueryHandler;
 @RequiredArgsConstructor
 public class CustomersRpcGet implements
     RpcQueryHandler<GetRequest, GetReply>,
-    MapperDto,
     MapperDbo {
 
   private final CustomerRepository repository;
@@ -26,7 +25,7 @@ public class CustomersRpcGet implements
 
     var dbo = repository.findByProjectIdAndEntityId(projectId, entityId);
     var result = this.fromDbo(dbo);
-    var dto = this.toDto(result);
+    var dto = MapperDto.toDto(result);
     return GetReply.newBuilder().setModel(dto).build();
   }
 

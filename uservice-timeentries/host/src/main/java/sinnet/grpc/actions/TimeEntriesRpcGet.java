@@ -17,7 +17,7 @@ import sinnet.write.ActionRepositoryEx;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class TimeEntriesRpcGet implements RpcQueryHandler<GetQuery, GetReply>, MapperDto {
+public class TimeEntriesRpcGet implements RpcQueryHandler<GetQuery, GetReply> {
 
   private final ActionRepositoryEx actionRepository;
 
@@ -26,7 +26,7 @@ public class TimeEntriesRpcGet implements RpcQueryHandler<GetQuery, GetReply>, M
     var projectId = UUID.fromString(request.getProjectId());
     var itemId = UUID.fromString(request.getTimeentryId());
     var item = actionRepository.get(projectId, itemId);
-    var response = toDto(item);
+    var response = MapperDto.toDto(item);
     return GetReply.newBuilder()
         .setItem(response)
         .build();
