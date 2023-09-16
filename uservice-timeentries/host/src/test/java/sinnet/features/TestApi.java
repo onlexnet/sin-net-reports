@@ -76,6 +76,7 @@ public class TestApi {
         .build();
     var result = rpcApi.getCustomers().get(query);
     var customerModel = MapperDto.fromDto(result.getModel());
+    return customerModel;
   }
 
   @SneakyThrows

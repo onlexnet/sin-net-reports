@@ -1,5 +1,7 @@
 package sinnet.features;
 
+import org.assertj.core.api.Assertions;
+
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import lombok.RequiredArgsConstructor;
@@ -32,9 +34,12 @@ public class CustomersStepDefinition {
 
   @Then("{operatorAlias} is able to change all properties of the Customer")
   public void operator1_is_able_to_change_all_properties_of_the_c_ustomer(ValName operatorAlias) {
-    var customerValue = new CustomerValue().customerName(ValName.of("new-name-1"));
+    var customerValue = new CustomerValue().customerName(ValName.of("new-name-1")).billingModel("my-billing-model");
     testApi.updateCustomer(ctx, singleCustomer, customerValue);
-    testApi
+    var customer = testApi.getCustomer(ctx, singleCustomer, operatorAlias);
+
+    Assertions.assertThat(customer.getValue().customerName().getValue()).isEqualTo("new-name-1");
+    Assertions.assertThat(customer.getValue().billingModel()).isEqualTo("my-billing-model");
 
   }
 
