@@ -23,7 +23,9 @@ class CustomersQueryGet implements CustomerMapper {
             .setProjectId(self.userToken().getProjectId())
             .setEntityId(entityId))
         .build();
+
     var result = service.get(request);
+
     return this.toGql(result);
   }
 

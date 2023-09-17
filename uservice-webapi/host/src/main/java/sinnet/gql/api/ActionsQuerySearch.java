@@ -6,17 +6,20 @@ import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.SchemaMapping;
 import org.springframework.stereotype.Controller;
 
+import io.vavr.Function1;
 import lombok.Cleanup;
 import lombok.RequiredArgsConstructor;
 import sinnet.gql.models.ServiceFilterInputGql;
 import sinnet.gql.models.ServicesSearchResultGql;
 import sinnet.grpc.ActionsGrpcFacade;
+import sinnet.grpc.CustomersGrpcFacade;
 
 @Controller
 @RequiredArgsConstructor
-class ActionsQuerySearch {
+class ActionsQuerySearch implements CustomerMapper {
 
   private final ActionsGrpcFacade service;
+  private final CustomersGrpcFacade customerService;
 
   @SchemaMapping
   ServicesSearchResultGql search(ActionsQuery self, @Argument ServiceFilterInputGql filter) {
@@ -26,7 +29,10 @@ class ActionsQuerySearch {
     event.begin();
     var requestorEmail = self.primaryEmail();
     var projectId = UUID.fromString(self.projectId());
-    var result = service.search(projectId, filter.getFrom(), filter.getTo());
+
+    var customerGet = Function1.of((String customerId) -> customerService.customerGet(self.projectId(), self.primaryEmail(), customerId, this::toGql));
+
+    var result = service.search(projectId, filter.getFrom(), filter.getTo(), customerGet);
     return new ServicesSearchResultGql()
       .setItems(result);
   }

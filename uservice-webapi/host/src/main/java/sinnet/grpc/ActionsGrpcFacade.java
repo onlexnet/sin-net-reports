@@ -3,9 +3,11 @@ package sinnet.grpc;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Function;
 
 import sinnet.domain.EntityId;
 import sinnet.gql.api.CommonMapper;
+import sinnet.gql.models.CustomerEntityGql;
 import sinnet.gql.models.ServiceModelGql;
 import sinnet.grpc.timeentries.TimeEntryModel;
 
@@ -25,18 +27,18 @@ public interface ActionsGrpcFacade {
   /** Fixme. */
   TimeEntryModel getActionInternal(UUID projectId, UUID entityId);
 
-  default ServiceModelGql getAction(UUID projectId, UUID entityId) {
+  default ServiceModelGql getAction(UUID projectId, UUID entityId, Function<String, CustomerEntityGql> customerMapper) {
     var dto =  getActionInternal(projectId, entityId);
-    return map(dto);
+    return map(dto, customerMapper);
   }
   
   /** Returns list of actions for requested project, limited result from-to range. */
-  default List<ServiceModelGql> search(UUID projectId, LocalDate from, LocalDate to) {
-    return searchInternal(projectId, from, to).stream().map(ActionsGrpcFacade::map).toList();
+  default List<ServiceModelGql> search(UUID projectId, LocalDate from, LocalDate to, Function<String, CustomerEntityGql> customerMapper) {
+    return searchInternal(projectId, from, to).stream().map(it -> map(it, customerMapper)).toList();
   }
 
   /** Internal mapping. */
-  static ServiceModelGql map(TimeEntryModel model) {
+  static ServiceModelGql map(TimeEntryModel model, Function<String, CustomerEntityGql> customerMapper) {
     return new ServiceModelGql()
         .setDescription(model.getDescription())
         .setDistance(model.getDistance())

@@ -1,9 +1,14 @@
 package sinnet.grpc;
 
+import java.util.function.Function;
+
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Delegate;
+import sinnet.gql.models.CustomerEntityGql;
+import sinnet.grpc.common.EntityId;
+import sinnet.grpc.common.UserToken;
 import sinnet.grpc.customers.CustomersGrpc.CustomersBlockingStub;
 import sinnet.grpc.customers.GetReply;
 import sinnet.grpc.customers.GetRequest;
@@ -32,6 +37,25 @@ public class CustomersGrpcFacade {
     RemoveReply remove(RemoveRequest request);
 
     UpdateResult update(UpdateCommand request);
+  }
+
+  /** Doxme. */
+  public CustomerEntityGql customerGet(String projectId, String requestorEmail, String customerId, Function<GetReply, CustomerEntityGql> mapper) {
+    var entityId = EntityId.newBuilder()
+        .setEntityId(customerId)
+        .setEntityVersion(0)
+        .setProjectId(projectId)
+        .build();
+    var userToken = UserToken.newBuilder()
+        .setProjectId(projectId)
+        .setRequestorEmail(requestorEmail)
+        .build();
+    var request = GetRequest.newBuilder()
+        .setEntityId(entityId)
+        .setUserToken(userToken)
+        .build();
+    var result = get(request);
+    return mapper.apply(result);
   }
 
   @Delegate(types = CustomersService.class)
