@@ -1,0 +1,63 @@
+query GetCustomer($projectId: ID!, $entityId: ID!) {
+  Customers(projectId:$projectId) {
+    get(entityId: $entityId) {
+      id {
+        projectId
+        entityId
+        entityVersion
+      }
+      data {
+        operatorEmail
+        billingModel
+        supportStatus
+        distance
+        customerName
+        customerCityName
+        customerAddress
+        nfzUmowa
+        nfzMaFilie
+        nfzLekarz
+        nfzPolozna
+        nfzPielegniarkaSrodowiskowa
+        nfzMedycynaSzkolna
+        nfzTransportSanitarny
+        nfzNocnaPomocLekarska
+        nfzAmbulatoryjnaOpiekaSpecjalistyczna
+        nfzRehabilitacja
+        nfzStomatologia
+        nfzPsychiatria
+        nfzSzpitalnictwo
+        nfzProgramyProfilaktyczne
+        nfzZaopatrzenieOrtopedyczne
+        nfzOpiekaDlugoterminowa
+        nfzNotatki
+        komercjaJest
+        komercjaNotatki
+        daneTechniczne
+      }
+      secrets {
+        location
+        username
+        password
+        changedWho
+        changedWhen
+      }
+      secretsEx {
+        location
+        username
+        password
+        entityName
+        entityCode
+        changedWho
+        changedWhen
+      }
+      contacts {
+        firstName
+        lastName
+        phoneNo
+        email
+      }
+
+    }
+  }
+}

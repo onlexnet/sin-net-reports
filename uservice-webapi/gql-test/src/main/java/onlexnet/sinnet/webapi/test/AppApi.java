@@ -112,6 +112,17 @@ public class AppApi {
         .entityList(CustomerEntityGql.class);
   }
 
+  /**
+   * Invokes Customers.reserve
+   */
+  public Entity<CustomerEntityGql, ?> getCustomer(UUID projectId, UUID customerId) {
+    return tester.documentName("getCustomer")
+        .variable("projectId", projectId.toString())
+        .variable("entityId", customerId.toString())
+        .execute()
+        .path("Customers.get")
+        .entity(CustomerEntityGql.class);
+  }
 
   /** REturns list of all users (emails) related to given project. */
   public Entity<List<UserGql>, ?> searchUsers(String projectId) {

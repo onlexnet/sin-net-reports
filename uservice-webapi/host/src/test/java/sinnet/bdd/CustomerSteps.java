@@ -5,6 +5,7 @@ import static org.mockito.ArgumentMatchers.any;
 import java.util.List;
 import java.util.UUID;
 
+import org.assertj.core.api.Assertions;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -15,6 +16,9 @@ import io.cucumber.java.en.When;
 import onlexnet.sinnet.webapi.test.AppApi;
 import sinnet.grpc.ActionsGrpcFacade;
 import sinnet.grpc.CustomersGrpcFacade;
+import sinnet.grpc.customers.CustomerModel;
+import sinnet.grpc.customers.CustomerValue;
+import sinnet.grpc.customers.GetReply;
 import sinnet.grpc.customers.ListReply;
 
 public class CustomerSteps {
@@ -50,6 +54,30 @@ public class CustomerSteps {
 
   @Then("Customer list result is verified")
   public void customer_list_result_is_verified() {
+      // Write code here that turns the phrase above into concrete actions
+      // throw new io.cucumber.java.PendingException();
+  }
+
+  @When("Customer read request is send to backend")
+  public void customer_read_request_is_send_to_backend() {
+    Mockito
+      .when(customersGrpc.get(any()) )
+      .thenReturn(GetReply
+        .newBuilder()
+        .setModel(CustomerModel.newBuilder()
+          .setValue(CustomerValue.newBuilder()
+            .setBillingModel("my billing model")))
+            .build());
+    
+    var projectId = UUID.randomUUID();
+    var entityId = UUID.randomUUID();
+    var response = appApi.getCustomer(projectId, entityId).get();
+
+    Assertions.assertThat(response.getData().getBillingModel()).isEqualTo("my billing model");
+  }
+
+  @Then("Customer read result is verified")
+  public void customer_read_result_is_verified() {
       // Write code here that turns the phrase above into concrete actions
       // throw new io.cucumber.java.PendingException();
   }
