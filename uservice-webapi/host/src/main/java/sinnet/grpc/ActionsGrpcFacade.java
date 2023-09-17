@@ -39,7 +39,9 @@ public interface ActionsGrpcFacade {
 
   /** Internal mapping. */
   static ServiceModelGql map(TimeEntryModel model, Function<String, CustomerEntityGql> customerMapper) {
+    var customerId = model.getCustomerId();
     return new ServiceModelGql()
+        .setCustomer(customerMapper.apply(customerId))
         .setDescription(model.getDescription())
         .setDistance(model.getDistance())
         .setDuration(model.getDuration())
