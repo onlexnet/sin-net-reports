@@ -20,7 +20,7 @@ resource "azurerm_mssql_server" "default" {
 resource "azurerm_mssql_database" "default" {
   name           = "main"
   server_id      = azurerm_mssql_server.default.id
-  collation      = "SQL_Latin1_General_CP1_CI_AS"
+  collation      = "Polish_CI_AS"
   license_type   = "LicenseIncluded"
   max_size_gb    = 2
   sku_name       = "Basic"
