@@ -85,7 +85,7 @@ public interface CustomerMapper extends CommonMapper {
   }
 
   /** Fixme. */
-  default sinnet.grpc.customers.CustomerSecretEx toGrpc(CustomerSecretExInput it) {
+  default sinnet.grpc.customers.CustomerSecretEx toGrpc(CustomerSecretExInput it, LocalDateTime whenChanged, String whoChanged) {
     if (it == null) {
       return null;
     }
@@ -95,6 +95,8 @@ public interface CustomerMapper extends CommonMapper {
         .set(b -> b::setPassword, it.getPassword())
         .set(b -> b::setEntityName, it.getEntityName())
         .set(b -> b::setEntityCode, it.getEntityCode())
+        .set(b -> b::setChangedWhen, CommonMapper.toGrpc(whenChanged))
+        .set(b -> b::setChangedWho, whoChanged)
         .done().build();
   }
 
@@ -112,7 +114,7 @@ public interface CustomerMapper extends CommonMapper {
   }
   
   /** Doc me. */
-  default sinnet.grpc.customers.CustomerSecret toGrpc(CustomerSecretInput it) {
+  default sinnet.grpc.customers.CustomerSecret toGrpc(CustomerSecretInput it, LocalDateTime whenChanged, String whoChanged) {
     if (it == null) {
       return null;
     }
@@ -120,6 +122,8 @@ public interface CustomerMapper extends CommonMapper {
         .set(b -> b::setLocation, it.getLocation())
         .set(b -> b::setUsername, it.getUsername())
         .set(b -> b::setPassword, it.getPassword())
+        .set(b -> b::setChangedWhen, CommonMapper.toGrpc(whenChanged))
+        .set(b -> b::setChangedWho, whoChanged)
         .done().build();
   }
 
