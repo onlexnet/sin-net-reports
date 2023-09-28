@@ -1,5 +1,6 @@
 package sinnet.grpc;
 
+import java.util.List;
 import java.util.function.Function;
 
 import org.springframework.stereotype.Component;
@@ -56,6 +57,20 @@ public class CustomersGrpcFacade {
         .build();
     var result = get(request);
     return mapper.apply(result);
+  }
+
+  /** Doxme. */
+  public <T> List<T> customerList(String projectId, String requestorEmail, Function<sinnet.grpc.customers.CustomerModel, T> mapper) {
+    var userToken = UserToken.newBuilder()
+        .setProjectId(projectId)
+        .setRequestorEmail(requestorEmail)
+        .build();
+    var request = ListRequest.newBuilder()
+        .setProjectId(projectId)
+        .setUserToken(userToken)
+        .build();
+    var result = list(request).getCustomersList().stream().map(mapper).toList();
+    return result;
   }
 
   @Delegate(types = CustomersService.class)

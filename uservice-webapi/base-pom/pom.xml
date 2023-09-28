@@ -48,6 +48,11 @@
         <artifactId>uservice-timeentries.rpc</artifactId>
         <version>${api.version}</version>
       </dependency>
+      <dependency>
+        <groupId>onlexnet.sinnet</groupId>
+        <artifactId>uservice-reports.rpc</artifactId>
+        <version>${api.version}</version>
+      </dependency>
 
       <dependency>
         <!-- apache lang3-->

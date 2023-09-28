@@ -56,6 +56,10 @@
       <groupId>onlexnet.sinnet</groupId>
       <artifactId>uservice-timeentries.rpc</artifactId>
     </dependency>
+    <dependency>
+      <groupId>onlexnet.sinnet</groupId>
+      <artifactId>uservice-reports.rpc</artifactId>
+    </dependency>
 
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -80,7 +84,10 @@
       <artifactId>vavr</artifactId>
       <version>0.10.4</version>
     </dependency>
-
+    <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-lang3</artifactId>
+    </dependency>
 
     <dependency>
       <groupId>org.projectlombok</groupId>

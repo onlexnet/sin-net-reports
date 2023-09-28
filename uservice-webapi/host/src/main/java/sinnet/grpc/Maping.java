@@ -20,7 +20,7 @@ class Maping {
         .setProjectId(model.getEntityId().getProjectId())
         .setServicemanEmail(model.getServicemanEmail())
         .setServicemanName(model.getServicemanName())
-        .setWhenProvided(CommonMapper.toGql(model.getWhenProvided()));
+        .setWhenProvided(CommonMapper.fromGrpc(model.getWhenProvided()));
   }
 
 

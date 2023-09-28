@@ -19,6 +19,8 @@ class GrpcProperties {
   @NotNull
   ServiceAddress users;
   @NotNull
+  ServiceAddress reports;
+  @NotNull
   ServiceAddress timeentries;
 
   @Data
