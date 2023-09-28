@@ -12,7 +12,7 @@ import sinnet.report3.grpc.ReportsGrpc.ReportsBlockingStub;
 class Reports3GrpcConfig {
 
   @Bean
-  ReportsBlockingStub reports1BlockingStub(Closeable.Of<ReportsBlockingStub> closeableUsersBlockingStub) {
+  ReportsBlockingStub reports3BlockingStub(Closeable.Of<ReportsBlockingStub> closeableUsersBlockingStub) {
     return closeableUsersBlockingStub.item();
   }
 
