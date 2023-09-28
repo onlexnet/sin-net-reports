@@ -12,12 +12,12 @@ import sinnet.report1.grpc.ReportsGrpc.ReportsBlockingStub;
 class Reports1GrpcConfig {
 
   @Bean
-  ReportsBlockingStub reports1BlockingStub(Closeable.Of<ReportsBlockingStub> closeableUsersBlockingStub) {
-    return closeableUsersBlockingStub.item();
+  ReportsBlockingStub reports1BlockingStub(Closeable.Of<ReportsBlockingStub> closeableReports1BlockingStub) {
+    return closeableReports1BlockingStub.item();
   }
 
   @Bean
-  Closeable.Of<ReportsBlockingStub> closeableUsersBlockingStub(GrpcProperties props) {
+  Closeable.Of<ReportsBlockingStub> closeableReports1BlockingStub(GrpcProperties props) {
     return managedChannel(props.getReports());
   }
 
