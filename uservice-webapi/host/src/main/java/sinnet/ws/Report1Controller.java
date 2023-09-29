@@ -6,7 +6,6 @@ import java.util.Objects;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,7 +26,6 @@ import sinnet.report1.grpc.CustomerDetails;
 import sinnet.report1.grpc.ReportRequest;
 import sinnet.report1.grpc.ReportRequests;
 import sinnet.reports.grpc.Date;
-import sinnet.web.AuthenticationToken;
 
 @RestController
 @RequestMapping("/api/raporty")
