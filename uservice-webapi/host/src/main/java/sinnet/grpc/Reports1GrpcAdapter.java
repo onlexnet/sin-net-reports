@@ -9,7 +9,7 @@ import sinnet.report1.grpc.ReportsGrpc.ReportsBlockingStub;
 /** Mockable equivalent of {@link ReportsBlockingStub}. */
 @Component
 @RequiredArgsConstructor
-public class Reports1GrpcService {
+public class Reports1GrpcAdapter {
 
   private interface Reports1Service {
 

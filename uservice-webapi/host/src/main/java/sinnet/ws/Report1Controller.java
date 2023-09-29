@@ -20,11 +20,11 @@ import sinnet.gql.api.CommonMapper;
 import sinnet.gql.api.CustomerMapper;
 import sinnet.grpc.ActionsGrpcFacade;
 import sinnet.grpc.CustomersGrpcFacade;
+import sinnet.grpc.Reports1GrpcAdapter;
 import sinnet.report1.grpc.ActivityDetails;
 import sinnet.report1.grpc.CustomerDetails;
 import sinnet.report1.grpc.ReportRequest;
 import sinnet.report1.grpc.ReportRequests;
-import sinnet.report1.grpc.ReportsGrpc.ReportsBlockingStub;
 import sinnet.reports.grpc.Date;
 import sinnet.web.AuthenticationToken;
 
@@ -35,7 +35,7 @@ class Report1Controller implements CustomerMapper {
 
   private final ActionsGrpcFacade timeentries;
   private final CustomersGrpcFacade customersClient;
-  private final ReportsBlockingStub reportsClient;
+  private final Reports1GrpcAdapter reportsClient;
 
   @GetMapping("/klienci/{projectId}/{year}/{month}")
   public ResponseEntity<byte[]> downloadPdfFile(UUID projectId, int year, int month) {
