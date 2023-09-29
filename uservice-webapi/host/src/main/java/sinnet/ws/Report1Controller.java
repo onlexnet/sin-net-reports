@@ -8,6 +8,7 @@ import java.util.UUID;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -38,7 +39,7 @@ class Report1Controller implements CustomerMapper {
   private final Reports1GrpcAdapter reportsClient;
 
   @GetMapping("/klienci/{projectId}/{year}/{month}")
-  public ResponseEntity<byte[]> downloadPdfFile(UUID projectId, int year, int month) {
+  public ResponseEntity<byte[]> downloadPdfFile(@PathVariable UUID projectId, @PathVariable int year, @PathVariable int month) {
 
     var dateFrom = LocalDate.of(year, month, 1);
     var dateTo = LocalDate.of(year, month, 1).plusMonths(1).minusDays(1);
