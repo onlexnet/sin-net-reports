@@ -83,9 +83,9 @@ class Report1Controller implements CustomerMapper {
   }
 
   private java.util.List<CustomerModel> getCustomers(String projectId) {
-    var authentication = (AuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
-    var primaryEmail = authentication.getPrincipal();
-    var reply = customersClient.customerList(projectId, primaryEmail, it -> new CustomerModel(
+    // var authentication = (AuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+    // var primaryEmail = authentication.getPrincipal();
+    var reply = customersClient.customerList(projectId, "ignored@owner", it -> new CustomerModel(
         it.getId().getEntityId(), 
         it.getValue().getCustomerName(),
         it.getValue().getCustomerCityName(),
