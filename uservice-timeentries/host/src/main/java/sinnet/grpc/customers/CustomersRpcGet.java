@@ -12,9 +12,7 @@ import sinnet.grpc.mapping.RpcQueryHandler;
  */
 @Component
 @RequiredArgsConstructor
-public class CustomersRpcGet implements
-    RpcQueryHandler<GetRequest, GetReply>,
-    MapperDbo {
+public class CustomersRpcGet implements RpcQueryHandler<GetRequest, GetReply>, MapperDbo {
 
   private final CustomerRepository repository;
 
