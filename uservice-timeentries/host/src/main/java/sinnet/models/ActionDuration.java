@@ -2,6 +2,7 @@ package sinnet.models;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.val;
 
 /**
  * TBD.
@@ -33,4 +34,19 @@ public final class ActionDuration {
   public static ActionDuration add(ActionDuration v1, ActionDuration v2) {
     return ActionDuration.of(v1.value + v2.value);
   }
+
+  /** Default, company-wide approved formatting for time. */
+  public String asString() {
+
+    val minutesPerHour = 60;
+    val minutes = value % minutesPerHour;
+    val hours = value / minutesPerHour;
+
+    val minumuValueWithDoubleDigits = 10;
+    val minutesPrefix = (minutes < minumuValueWithDoubleDigits) ? ":0" : ":";
+    var minutesAsText = minutesPrefix + minutes;
+
+    return hours + minutesAsText;
+  }
+
 }

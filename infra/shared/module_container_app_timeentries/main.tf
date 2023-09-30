@@ -144,7 +144,7 @@ resource "azurerm_container_app" "default" {
       }
 
       env {
-        # default value is BPL_JVM_THREAD_COUNT=250 and app docker image build by packeto cant start as calculated memry is higher than available memory (0.5GB atm)
+        # default value is BPL_JVM_THREAD_COUNT=250 and app docker image build by packeto cant start as calculated memory is higher than available memory (0.5GB atm)
         # more: https://github.com/paketo-buildpacks/bellsoft-liberica/issues/68
         name  = "BPL_JVM_THREAD_COUNT"
         value = "20"

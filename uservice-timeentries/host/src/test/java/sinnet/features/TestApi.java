@@ -13,12 +13,10 @@ import com.google.protobuf.ByteString;
 import io.dapr.v1.DaprAppCallbackProtos.TopicEventRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import sinnet.domain.model.ValEmail;
 import sinnet.events.AvroObjectSerializer;
 import sinnet.grpc.common.EntityId;
 import sinnet.grpc.common.UserToken;
 import sinnet.grpc.customers.CustomerModel;
-import sinnet.grpc.customers.CustomerValue;
 import sinnet.grpc.customers.GetRequest;
 import sinnet.grpc.customers.ListRequest;
 import sinnet.grpc.customers.MapperDto;
@@ -143,6 +141,12 @@ public class TestApi {
         .setProjectId(projectId.getId().toString())
         .build());
     return result.getActivitiesList().stream().map(it -> it.getEntityId()).toList();
+  }
+
+  byte[] requestReport1Pack(ClientContext ctx) {
+    var request = sinnet.report1.grpc.ReportRequests.newBuilder().build();
+    var result = rpcApi.getReports1().producePack(request);
+    return result.getData().toByteArray();
   }
 
   public void customerExists(ClientContext ctx, ValName operatorAlias, String customerName) {

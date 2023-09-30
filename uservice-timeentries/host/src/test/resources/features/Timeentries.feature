@@ -8,3 +8,7 @@ Feature: Manage Timeentries
     When operator1 creates new timeentry for project1
     Then operation succeeded
     And the new timeentry is visible on the project1
+
+  Scenario: Ask about report pack
+    When operator1 requests report1 pack
+    Then report1 pack is returned

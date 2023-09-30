@@ -10,4 +10,11 @@
     "java.debug.settings.onBuildFailureProceed": true,
     "java.checkstyle.configuration": "/home/siudeks/git/sin-net-reports/libs-java/build-tools/src/main/resources/build-checkstyle/google_checks_customized.xml",
     "java.checkstyle.version": "10.7.0",
+    "graalvm.home": "/usr/local/sdkman/candidates/java/17.0.8-graal",
+    "graalvm.installations": [
+        "/usr/local/sdkman/candidates/java/17.0.8-graal"
+    ],
+    "terminal.integrated.env.linux": {
+        "GRAALVM_HOME": "/usr/local/sdkman/candidates/java/17.0.8-graal"
+    },
 }

@@ -41,4 +41,14 @@ public class TimeentriesStepDefinitions {
     var items = testApi.listTimeentries(ctx, projectAlias, timeentryCtx.when());
     Assertions.assertThat(items).contains(latestTimeentryId);
   }
+
+  @When("operator1 requests report1 pack")
+  public void operator1_requests_report1_pack() {
+    var items = testApi.requestReport1Pack(ctx);
+  }
+
+  @Then("report1 pack is returned")
+  public void report1_pack_is_returned() {
+  }
+
 }

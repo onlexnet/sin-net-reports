@@ -20,6 +20,8 @@ import sinnet.grpc.timeentries.TimeEntriesGrpc;
 import sinnet.grpc.timeentries.TimeEntriesGrpc.TimeEntriesBlockingStub;
 import sinnet.grpc.users.UsersGrpc;
 import sinnet.grpc.users.UsersGrpc.UsersBlockingStub;
+import sinnet.report1.grpc.Reports1;
+import sinnet.report1.grpc.ReportsGrpc.ReportsBlockingStub;
 
 @Component
 @RequiredArgsConstructor
@@ -38,6 +40,9 @@ public class RpcApi implements ApplicationListener<ApplicationReadyEvent> {
 
   @Getter
   private ProjectsBlockingStub projects;
+
+  @Getter
+  private ReportsBlockingStub reports1;
 
   @Getter
   private AppCallbackBlockingStub apiCallback;
@@ -64,6 +69,7 @@ public class RpcApi implements ApplicationListener<ApplicationReadyEvent> {
     apiCallback = AppCallbackGrpc.newBlockingStub(channel);
     customers = CustomersGrpc.newBlockingStub(channel);
     projects = ProjectsGrpc.newBlockingStub(channel);
+    reports1 = sinnet.report1.grpc.ReportsGrpc.newBlockingStub(channel);
   }
 
 }
