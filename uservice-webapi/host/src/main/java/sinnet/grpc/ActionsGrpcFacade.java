@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Function;
 
+import io.micrometer.common.util.StringUtils;
 import sinnet.domain.EntityId;
 import sinnet.gql.api.CommonMapper;
 import sinnet.gql.models.CustomerEntityGql;
@@ -40,9 +41,9 @@ public interface ActionsGrpcFacade {
   /** Internal mapping. */
   static ServiceModelGql map(TimeEntryModel model, Function<String, CustomerEntityGql> customerMapper) {
     var customerId = model.getCustomerId();
-    var customer = customerId != null
-        ? customerMapper.apply(customerId)
-        : null;
+    var customer = StringUtils.isEmpty(customerId)
+        ? null
+        : customerMapper.apply(customerId);
 
     return new ServiceModelGql()
         .setCustomer(customer)
