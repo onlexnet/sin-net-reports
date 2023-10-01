@@ -34,7 +34,7 @@ class Report1QueryPack implements RpcQueryHandler<ReportRequests, Response> {
         .forEach(arg -> {
           var itemDto = arg._1;
           var item = Models.Mapper.map(itemDto);
-          var index = arg._2;
+          var index = arg._2 + 1;
           var model = ReportResults.apply(item);
           val report = model.content();
           val fileName = String.format("%03d-%s.pdf", index, item.customer().customerName());
@@ -47,6 +47,7 @@ class Report1QueryPack implements RpcQueryHandler<ReportRequests, Response> {
           });
         });
     
+    baos.close();
     zos.close();
 
     val binaryData = baos.toByteArray();
