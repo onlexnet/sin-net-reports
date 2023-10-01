@@ -46,7 +46,7 @@ class Report1Controller implements CustomerMapper {
     var customers = getCustomers(projectIdAsString);
     var reportRequest = asReportRequests(entries, customers);
     var data = reportsClient.producePack(reportRequest);
-    var result = data.toByteArray();
+    var result = data.getData().toByteArray();
     return Response.asResponseEntity(result, "report " + year + "-" + month + ".zip");
   }
 
