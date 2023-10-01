@@ -32,4 +32,10 @@ public final class Distance {
     return Distance.of(v1.value + v2.value);
   }
 
+  @Override
+  public String toString() {
+    return Integer.toString(value);
+  }
+
+
 }
