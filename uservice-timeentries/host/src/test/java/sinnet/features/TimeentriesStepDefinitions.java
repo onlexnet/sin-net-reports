@@ -1,11 +1,15 @@
 package sinnet.features;
 
+import java.io.ByteArrayInputStream;
+import java.util.zip.ZipInputStream;
+
 import org.assertj.core.api.Assertions;
 
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import sinnet.models.ValName;
 
 @RequiredArgsConstructor
@@ -42,9 +46,16 @@ public class TimeentriesStepDefinitions {
     Assertions.assertThat(items).contains(latestTimeentryId);
   }
 
-  @When("operator1 requests report1 pack")
-  public void operator1_requests_report1_pack() {
+  @When("{operatorAlias} requests report1 pack for {projectAlias}")
+  @SneakyThrows
+  public void operator1_requests_report1_pack(ValName operatorAlias, ValName projectAlias) {
+
+    testApi.createEntry(ctx, projectAlias, operatorAlias);
+
     var items = testApi.requestReport1Pack(ctx);
+    var input = new ByteArrayInputStream(items);
+    var asStream = new ZipInputStream(input);
+    var entry = asStream.getNextEntry();
   }
 
   @Then("report1 pack is returned")

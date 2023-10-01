@@ -47,8 +47,8 @@ class Report1QueryPack implements RpcQueryHandler<ReportRequests, Response> {
           });
         });
     
-    baos.close();
     zos.close();
+    baos.close();
 
     val binaryData = baos.toByteArray();
     val dtoData = ByteString.copyFrom(binaryData);

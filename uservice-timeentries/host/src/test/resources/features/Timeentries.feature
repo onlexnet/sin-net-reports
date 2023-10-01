@@ -10,5 +10,6 @@ Feature: Manage Timeentries
     And the new timeentry is visible on the project1
 
   Scenario: Ask about report pack
-    When operator1 requests report1 pack
+    When operator1 creates new timeentry for project1
+    And operator1 requests report1 pack for project1
     Then report1 pack is returned
