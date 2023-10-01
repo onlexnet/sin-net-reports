@@ -50,8 +50,13 @@
 				"ms-azuretools.vscode-dapr"
 			]
 		}
-	}
+	},
 
+	// https://stackoverflow.com/a/75644266
+	"mounts": [
+		"type=bind,source=/home/${localEnv:USER}/.ssh,target=/home/vscode/.ssh"
+	]
+	
 	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
 	// "remoteUser": "root"
 }
