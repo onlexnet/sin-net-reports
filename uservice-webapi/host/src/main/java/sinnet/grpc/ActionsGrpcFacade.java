@@ -25,6 +25,9 @@ public interface ActionsGrpcFacade {
   boolean update(EntityId entityId, String customerId, String description, int distance, int duration,
                  String servicemanEmail, String servicemanName, LocalDate whenProvided);
   
+  /** Doxme. */       
+  boolean remove(UUID projectId, UUID entityId, int entityVersion);
+
   /** Fixme. */
   TimeEntryModel getActionInternal(UUID projectId, UUID entityId);
 

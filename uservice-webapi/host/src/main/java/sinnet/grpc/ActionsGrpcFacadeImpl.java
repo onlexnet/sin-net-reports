@@ -11,6 +11,7 @@ import sinnet.domain.EntityId;
 import sinnet.gql.api.CommonMapper;
 import sinnet.grpc.common.UserToken;
 import sinnet.grpc.timeentries.GetQuery;
+import sinnet.grpc.timeentries.RemoveCommand;
 import sinnet.grpc.timeentries.ReserveCommand;
 import sinnet.grpc.timeentries.SearchQuery;
 import sinnet.grpc.timeentries.TimeEntriesGrpc.TimeEntriesBlockingStub;
@@ -90,6 +91,21 @@ class ActionsGrpcFacadeImpl implements ActionsGrpcFacade {
     var result = stub.update(cmd);
 
     return result.getSuccess();
+  }
+
+  @Override
+  public boolean remove(UUID projectId, UUID entityId, int entityVersion) {
+    var removeCommand = RemoveCommand.newBuilder()
+        .setEntityId(sinnet.grpc.common.EntityId.newBuilder()
+            .setEntityId(entityId.toString())
+            .setProjectId(projectId.toString())
+            .setEntityVersion(entityVersion)
+            .build())
+        .build();
+        
+    var result = stub.remove(removeCommand);
+
+    return result.getResult();
   }
 
 }
