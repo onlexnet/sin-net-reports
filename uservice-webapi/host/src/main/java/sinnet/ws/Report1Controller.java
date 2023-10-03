@@ -2,7 +2,6 @@ package sinnet.ws;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Function;
@@ -52,8 +51,8 @@ class Report1Controller implements CustomerMapper {
     var projectIdAsString = projectId.toString();
     var entries = getTimeentries(projectIdAsString, dateFrom, dateTo);
     var customers = getCustomers(projectIdAsString);
-    var users = getUsers(projectId);
-    var reportRequest = asReportRequests(entries, customers);
+    var users = emailToName(projectId);
+    var reportRequest = asReportRequests(entries, customers, users);
     var data = reportsClient.producePack(reportRequest);
     var result = data.getData().toByteArray();
     return Response.asResponseEntity(result, "report " + year + "-" + month + ".zip");
@@ -93,24 +92,27 @@ class Report1Controller implements CustomerMapper {
   }
 
   private Function<String, String> emailToName(UUID projectId) {
+
     record Serviceman(String email, String customName) { }
+
     var request = SearchRequest.newBuilder()
         .setUserToken(UserToken.newBuilder().setProjectId(projectId.toString()).setRequestorEmail("ignored@owner").build())
         .build();
     var response = usersService.search(request);
-    var emailToName = response.getItemsList().stream().map(it -> {
-        var customName = it.getCustomName();
-        var email = it.getEmail();
-        if (StringUtils.isBlank(customName)) {
-          if (email.contains("@")) {
-            customName = email.split("@")[0];
-          } else {
-            customName = email;
+    var emailToName = response.getItemsList().stream()
+        .map(it -> {
+          var customName = it.getCustomName();
+          var email = it.getEmail();
+          if (StringUtils.isBlank(customName)) {
+            if (email.contains("@")) {
+              customName = email.split("@")[0];
+            } else {
+              customName = email;
+            }
           }
-        }
-        return new Serviceman(email, customName);
-    })
-    .collect(Collectors.toMap(it -> it.email(), it -> it.customName()));
+          return new Serviceman(email, customName);
+        })
+        .collect(Collectors.toMap(it -> it.email(), it -> it.customName()));
 
     return email -> {
       var customName = emailToName.get(email);
@@ -124,7 +126,8 @@ class Report1Controller implements CustomerMapper {
    * Prepares raport request based on given items and given customer.
    * It does not check if the customer is actually same as defined in items.
    */
-  Option<ReportRequest> asReportRequest(io.vavr.collection.List<TimeEntryModel> items, Option<CustomerModel> maybeCustomer, Function<String, String> emailToName) {
+  Option<ReportRequest> asReportRequest(io.vavr.collection.List<TimeEntryModel> items,
+                                        Option<CustomerModel> maybeCustomer, Function<String, String> emailToName) {
     return items.headOption()
       .map(it -> {
         var requestBuilder = ReportRequest.newBuilder();
@@ -167,14 +170,14 @@ class Report1Controller implements CustomerMapper {
       });
   }
 
-  ReportRequests asReportRequests(List<TimeEntryModel> items, List<CustomerModel> customers) {
+  ReportRequests asReportRequests(List<TimeEntryModel> items, List<CustomerModel> customers, Function<String, String> emailToName) {
     return io.vavr.collection.List.ofAll(items)
         // lets group actions related to the same customer
         .groupBy(it -> it.customerId())
         .map((k, v) -> {
           var customerId = k;
           var customer = io.vavr.collection.List.ofAll(customers).find(it -> Objects.equals(customerId, it.getCustomerId()));
-          var newValue = asReportRequest(v, customer);
+          var newValue = asReportRequest(v, customer, emailToName);
           return Tuple.of(k, newValue);
         })
         // key is no longer needed
