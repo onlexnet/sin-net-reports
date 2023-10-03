@@ -31,6 +31,7 @@ message SearchReply {
 message UsersSearchModel {
   string entityId = 1;
   string email = 2;
+  string custom_name = 3;
 }
 
 message IncludeOperatorCommand {
