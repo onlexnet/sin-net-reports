@@ -1,7 +1,5 @@
 package sinnet.grpc.users;
 
-import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 import org.springframework.stereotype.Component;
@@ -31,8 +29,9 @@ public class UsersRpcSearch implements RpcQueryHandler<SearchRequest, SearchRepl
     // does the requestor is also use about the requested set of user form the same
     // project?
     var email = ValEmail.of(emailAsString);
-    var authorized = !result.map(it -> Objects.equals(it, email)).isEmpty();
-    var asDto = authorized ? toDto(result) : List.<UsersSearchModel>of();
+    // var authorized = !result.map(it -> Objects.equals(it, email)).isEmpty();
+    // var asDto = authorized ? toDto(result) : List.<UsersSearchModel>of();
+     var asDto = toDto(result);
 
     return SearchReply.newBuilder()
         .addAllItems(asDto)
