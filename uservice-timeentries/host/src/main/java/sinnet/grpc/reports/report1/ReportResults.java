@@ -156,7 +156,7 @@ class ReportResults {
   // Serviceman has sometimes too long name to fit to one line, so minimizing font fits to todays data
   static OptionalInt servicemanNameSizeAdjustment = OptionalInt.of(-4);
 
-  private static void asTable(AddLine addValue, Iterator<ActivityDetails> activities) {
+  private static void asTable(AddLine addValue, Iterable<ActivityDetails> activities) {
 
     addValue.apply(false,
       new CellParams("Serwisant", TableColumns.col1widthServiceman, HorizontalAlignment.CENTER),
@@ -188,7 +188,7 @@ class ReportResults {
     }
 
     var initialAcc = new Summary(Distance.empty(), ActionDuration.empty());
-    var howFarAndHowLong = activities.foldLeft(initialAcc, (agg, item) -> agg.add(item));
+    var howFarAndHowLong = Iterator.ofAll(activities).foldLeft(initialAcc, (agg, item) -> agg.add(item));
     var howFar = howFarAndHowLong.distance();
     var howLong = howFarAndHowLong.duration();
 
@@ -201,7 +201,7 @@ class ReportResults {
 
   }
 
-  private static void tableSpecial(AddLine addValue, Iterator<ActivityDetails> activities) {
+  private static void tableSpecial(AddLine addValue, Iterable<ActivityDetails> activities) {
 
     val col1 = TableColumns.col1widthServiceman;
     val col2 = TableColumns.col2widthDay;
@@ -221,7 +221,6 @@ class ReportResults {
         new CellParams("KM", col5, HorizontalAlignment.RIGHT));
 
     for (var item : activities) {
-      val howLong = item.howLongInMins();
       var distance = item.howFarInKms();
       var who = item.who();
       addValue.apply(false,
@@ -233,7 +232,7 @@ class ReportResults {
     }
 
     val initialAcc = Distance.empty();
-    val howFar = activities.foldLeft(initialAcc, (acc, v) -> Distance.add(acc, v.howFarInKms()));
+    val howFar = Iterator.ofAll(activities).foldLeft(initialAcc, (acc, v) -> Distance.add(acc, v.howFarInKms()));
 
     addValue.apply(true,
       new CellParams(null, col1, HorizontalAlignment.LEFT),
