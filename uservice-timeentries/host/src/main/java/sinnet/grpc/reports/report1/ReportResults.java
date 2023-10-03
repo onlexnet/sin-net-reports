@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.OptionalInt;
 
@@ -89,13 +90,13 @@ class ReportResults {
     var timedActivities = partitionedByTime._1;
 
     var table1 = newTable();
-    asTable(addLine(table1), timedActivities);
+    asTable(addLine(table1), timedActivities.toJavaList());
     document.add(table1);
     document.add(newLineParagraph);
 
     var table2 = newTable();
     var noTimedActivities = partitionedByTime._2;
-    tableSpecial(addLine(table2), noTimedActivities);
+    tableSpecial(addLine(table2), noTimedActivities.toJavaList());
     document.add(table2);
     document.add(newLineParagraph);
 
@@ -156,7 +157,7 @@ class ReportResults {
   // Serviceman has sometimes too long name to fit to one line, so minimizing font fits to todays data
   static OptionalInt servicemanNameSizeAdjustment = OptionalInt.of(-4);
 
-  private static void asTable(AddLine addValue, Iterable<ActivityDetails> activities) {
+  private static void asTable(AddLine addValue, List<ActivityDetails> activities) {
 
     addValue.apply(false,
       new CellParams("Serwisant", TableColumns.col1widthServiceman, HorizontalAlignment.CENTER),
@@ -201,7 +202,7 @@ class ReportResults {
 
   }
 
-  private static void tableSpecial(AddLine addValue, Iterable<ActivityDetails> activities) {
+  private static void tableSpecial(AddLine addValue, List<ActivityDetails> activities) {
 
     val col1 = TableColumns.col1widthServiceman;
     val col2 = TableColumns.col2widthDay;
