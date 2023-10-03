@@ -31,7 +31,7 @@ public class UsersRpcSearch implements RpcQueryHandler<SearchRequest, SearchRepl
     var email = ValEmail.of(emailAsString);
     // var authorized = !result.map(it -> Objects.equals(it, email)).isEmpty();
     // var asDto = authorized ? toDto(result) : List.<UsersSearchModel>of();
-     var asDto = toDto(result);
+    var asDto = toDto(result);
 
     return SearchReply.newBuilder()
         .addAllItems(asDto)

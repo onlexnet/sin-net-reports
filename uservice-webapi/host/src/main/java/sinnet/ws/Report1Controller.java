@@ -100,19 +100,7 @@ class Report1Controller implements CustomerMapper {
         .build();
     var response = usersService.search(request);
     var emailToName = response.getItemsList().stream()
-        .map(it -> {
-          var customName = it.getCustomName();
-          var email = it.getEmail();
-          if (StringUtils.isBlank(customName)) {
-            if (email.contains("@")) {
-              customName = email.split("@")[0];
-            } else {
-              customName = email;
-            }
-          }
-          return new Serviceman(email, customName);
-        })
-        .collect(Collectors.toMap(it -> it.email(), it -> it.customName()));
+        .collect(Collectors.toMap(it -> it.getEmail(), it -> it.getCustomName()));
 
     return email -> {
       var customName = emailToName.get(email);
