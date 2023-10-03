@@ -48,7 +48,8 @@
 				"vmware.vscode-boot-dev-pack",
 				"vscjava.vscode-java-pack",
 				"ms-azuretools.vscode-dapr",
-				"github.vscode-pull-request-github"
+				"github.vscode-pull-request-github",
+				"cucumberopen.cucumber-official"
 			]
 		}
 	},

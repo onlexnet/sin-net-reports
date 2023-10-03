@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import io.vavr.collection.List;
 import lombok.RequiredArgsConstructor;
 import sinnet.domain.model.ValEmail;
+import sinnet.models.ValName;
 import sinnet.read.ServicemanRepo;
 import sinnet.read.UserModel;
 import sinnet.read.UsersRepositoryEx;
@@ -26,6 +27,7 @@ public class UsersProjectorImpl implements UsersRepositoryEx {
         .map(it -> UserModel
             .builder()
             .email(ValEmail.of(it.getEmail()))
+            .customName(ValName.of(it.getCustomName()))
             .build());
   }
 }
