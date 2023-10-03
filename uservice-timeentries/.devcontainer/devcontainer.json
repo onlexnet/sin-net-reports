@@ -47,7 +47,8 @@
 				"editorconfig.editorconfig",
 				"vmware.vscode-boot-dev-pack",
 				"vscjava.vscode-java-pack",
-				"ms-azuretools.vscode-dapr"
+				"ms-azuretools.vscode-dapr",
+				"github.vscode-pull-request-github"
 			]
 		}
 	},

@@ -2,9 +2,13 @@ package sinnet.ws;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,6 +25,9 @@ import sinnet.gql.api.CustomerMapper;
 import sinnet.grpc.ActionsGrpcFacade;
 import sinnet.grpc.CustomersGrpcFacade;
 import sinnet.grpc.Reports1GrpcAdapter;
+import sinnet.grpc.UsersGrpcService;
+import sinnet.grpc.common.UserToken;
+import sinnet.grpc.users.SearchRequest;
 import sinnet.report1.grpc.ActivityDetails;
 import sinnet.report1.grpc.CustomerDetails;
 import sinnet.report1.grpc.ReportRequest;
@@ -35,6 +42,7 @@ class Report1Controller implements CustomerMapper {
   private final ActionsGrpcFacade timeentries;
   private final CustomersGrpcFacade customersClient;
   private final Reports1GrpcAdapter reportsClient;
+  private final UsersGrpcService usersService;
 
   @GetMapping("/klienci/{projectId}/{year}/{month}")
   public ResponseEntity<byte[]> downloadPdfFile(@PathVariable UUID projectId, @PathVariable int year, @PathVariable int month) {
@@ -44,21 +52,14 @@ class Report1Controller implements CustomerMapper {
     var projectIdAsString = projectId.toString();
     var entries = getTimeentries(projectIdAsString, dateFrom, dateTo);
     var customers = getCustomers(projectIdAsString);
+    var users = getUsers(projectId);
     var reportRequest = asReportRequests(entries, customers);
     var data = reportsClient.producePack(reportRequest);
     var result = data.getData().toByteArray();
     return Response.asResponseEntity(result, "report " + year + "-" + month + ".zip");
   }
 
-  @Value 
-  class TimeEntryModel {
-    String customerId;
-    String what;
-    LocalDate when;
-    String servicemanName;
-    int howFar;
-    int howLong;
-  }
+  record TimeEntryModel(String customerId, String what, LocalDate when, String servicemanName, int howFar, int howLong) { }
 
   private java.util.List<TimeEntryModel> getTimeentries(String projectId, LocalDate from, LocalDate to) {
     var projectIdTyped = UUID.fromString(projectId);
@@ -73,7 +74,7 @@ class Report1Controller implements CustomerMapper {
   }
 
   @Value
-  class CustomerModel {
+  static class CustomerModel {
     String customerId;
     String customerName;
     String customerCity;
@@ -91,11 +92,39 @@ class Report1Controller implements CustomerMapper {
     return reply;
   }
 
+  private Function<String, String> emailToName(UUID projectId) {
+    record Serviceman(String email, String customName) { }
+    var request = SearchRequest.newBuilder()
+        .setUserToken(UserToken.newBuilder().setProjectId(projectId.toString()).setRequestorEmail("ignored@owner").build())
+        .build();
+    var response = usersService.search(request);
+    var emailToName = response.getItemsList().stream().map(it -> {
+        var customName = it.getCustomName();
+        var email = it.getEmail();
+        if (StringUtils.isBlank(customName)) {
+          if (email.contains("@")) {
+            customName = email.split("@")[0];
+          } else {
+            customName = email;
+          }
+        }
+        return new Serviceman(email, customName);
+    })
+    .collect(Collectors.toMap(it -> it.email(), it -> it.customName()));
+
+    return email -> {
+      var customName = emailToName.get(email);
+      return customName != null
+        ? customName
+        : "brak danych";
+    };
+  }
+
   /**
    * Prepares raport request based on given items and given customer.
    * It does not check if the customer is actually same as defined in items.
    */
-  Option<ReportRequest> asReportRequest(io.vavr.collection.List<TimeEntryModel> items, Option<CustomerModel> maybeCustomer) {
+  Option<ReportRequest> asReportRequest(io.vavr.collection.List<TimeEntryModel> items, Option<CustomerModel> maybeCustomer, Function<String, String> emailToName) {
     return items.headOption()
       .map(it -> {
         var requestBuilder = ReportRequest.newBuilder();
@@ -119,19 +148,16 @@ class Report1Controller implements CustomerMapper {
             .forEach(item -> {
               var v = item;
               var builder = ActivityDetails.newBuilder();
-              Option.of(v.getWhat()).forEach(builder::setDescription);
+              Option.of(v.what()).forEach(builder::setDescription);
               builder
-                  .setHowFarInKms(v.getHowFar())
-                  .setHowLongInMins(v.getHowLong());
-              Option.of(v.getWhen()).forEach(o -> builder
+                  .setHowFarInKms(v.howFar())
+                  .setHowLongInMins(v.howLong());
+              Option.of(v.when()).forEach(o -> builder
                   .setWhen(Date.newBuilder()
-                  .setYear(v.getWhen().getYear())
-                  .setMonth(v.getWhen().getMonthValue())
-                  .setDayOfTheMonth(v.getWhen().getDayOfMonth())));
-              // Option.of(v.getWho())
-              //     .map(o -> o.split("@")[0])
-              //     .forEach(builder::setWho);
-              Option.of(item.getServicemanName())
+                  .setYear(v.when().getYear())
+                  .setMonth(v.when().getMonthValue())
+                  .setDayOfTheMonth(v.when().getDayOfMonth())));
+              Option.of(item.servicemanName()).map(emailToName)
                   .forEach(builder::setWho);
 
               requestBuilder.addDetails(builder);
@@ -144,7 +170,7 @@ class Report1Controller implements CustomerMapper {
   ReportRequests asReportRequests(List<TimeEntryModel> items, List<CustomerModel> customers) {
     return io.vavr.collection.List.ofAll(items)
         // lets group actions related to the same customer
-        .groupBy(it -> it.getCustomerId())
+        .groupBy(it -> it.customerId())
         .map((k, v) -> {
           var customerId = k;
           var customer = io.vavr.collection.List.ofAll(customers).find(it -> Objects.equals(customerId, it.getCustomerId()));
@@ -158,4 +184,5 @@ class Report1Controller implements CustomerMapper {
         .foldLeft(ReportRequests.newBuilder(), (acc, v) -> acc.addItems(v))
         .build();
   }
+
 }

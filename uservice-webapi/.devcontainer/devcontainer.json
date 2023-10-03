@@ -36,7 +36,8 @@
 				"vscjava.vscode-java-dependency",
 				"visualstudioexptteam.vscodeintellicode",
 				"cucumberopen.cucumber-official",
-				"vmware.vscode-boot-dev-pack"
+				"vmware.vscode-boot-dev-pack",
+				"github.vscode-pull-request-github"
 			]
 		}
 	},
