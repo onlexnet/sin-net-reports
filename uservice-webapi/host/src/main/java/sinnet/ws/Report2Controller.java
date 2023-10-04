@@ -33,7 +33,7 @@ class Report2Controller {
 
 
   @GetMapping("/2/{projectId}")
-  public ResponseEntity<byte[]> downloadPdfFile(UUID projectId,
+  public ResponseEntity<byte[]> downloadPdfFile(@PathVariable UUID projectId,
       @RequestParam("yearFrom") int yearFrom, @RequestParam("monthFrom") int monthFrom,
       @RequestParam("yearTo") int yearTo, @RequestParam("monthTo") int monthTo) {
 
