@@ -1,5 +1,6 @@
 package sinnet.grpc.common;
 
+import java.time.YearMonth;
 import java.util.UUID;
 
 import sinnet.domain.model.ValEmail;
@@ -32,6 +33,13 @@ public interface Mapper {
     var emailAsString = dtoModel.getRequestorEmail();
     var email = ValEmail.of(emailAsString);
     return new UserToken(email);
+  }
+
+  /**
+   * TBD.
+   */
+  static YearMonth fromDto(sinnet.reports.grpc.YearMonth dto) {
+    return YearMonth.of(dto.getYear(), dto.getMonth());
   }
 
   /**

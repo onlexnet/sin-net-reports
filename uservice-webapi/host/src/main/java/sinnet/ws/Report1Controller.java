@@ -92,8 +92,6 @@ class Report1Controller implements CustomerMapper {
 
   private Function<String, String> emailToName(UUID projectId) {
 
-    record Serviceman(String email, String customName) { }
-
     var request = SearchRequest.newBuilder()
         .setUserToken(UserToken.newBuilder().setProjectId(projectId.toString()).setRequestorEmail("ignored@owner").build())
         .build();

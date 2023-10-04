@@ -3,7 +3,6 @@ package sinnet.grpc.reports.report1;
 import java.io.ByteArrayOutputStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.OptionalInt;
@@ -23,6 +22,7 @@ import lombok.Cleanup;
 import lombok.SneakyThrows;
 import lombok.val;
 import sinnet.grpc.reports.common.Fonts;
+import sinnet.grpc.reports.common.TableColumn;
 import sinnet.grpc.reports.report1.Models.ActivityDetails;
 import sinnet.grpc.reports.report1.Models.ReportRequest;
 import sinnet.models.ActionDuration;
@@ -49,7 +49,7 @@ class ReportResults {
           cell.setBorderWidth(0);
         }
         cell.setHorizontalAlignment(it.alignment.getId());
-        cell.setColspan(it.width.width);
+        cell.setColspan(it.width.width());
         table.addCell(cell);
       }
     };
@@ -108,18 +108,6 @@ class ReportResults {
 
     return new ReportResult(request, content);
 
-  }
-
-  // List of all columns available for activities.
-  // In some logic we can merge some of them (using e.g. sum of two values for one column)
-  // but finally we should use all columns so that all tables create using such columns will have
-  // similar location of columns.
-  record TableColumn(int width) {
-    
-    static TableColumn of(TableColumn... that) { 
-      var extraSize = Arrays.stream(that).mapToInt(it -> it.width()).sum();
-      return new TableColumn(extraSize);
-    }
   }
 
   static TableColumnsDef TableColumns = new TableColumnsDef();
