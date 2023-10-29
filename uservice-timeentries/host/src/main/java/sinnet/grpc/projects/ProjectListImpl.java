@@ -1,5 +1,8 @@
 package sinnet.grpc.projects;
 
+import java.util.stream.Stream;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
@@ -17,8 +20,14 @@ class ProjectListImpl implements RpcQueryHandler<ListRequest, ListReply> {
   @Override
   public ListReply apply(ListRequest request) {
     var emailOfRequestor = ValEmail.of(request.getEmailOfRequestor());
-    var result = dbo.ownedAsProject(emailOfRequestor);
-    return ListReply.newBuilder().addAllProjects(result).build();
+
+    var ownedProjects = dbo.ownedAsId(emailOfRequestor).toJavaStream();
+    var associadedProjects = dbo.assignedAsId(emailOfRequestor).toJavaStream();
+
+    var availableProjects = Stream.concat(ownedProjects, associadedProjects).collect(Collectors.toSet());
+
+    // return ListReply.newBuilder().addAllProjects(ownedProjects).build();
+    throw new IllegalStateException();
   }
 
 }
