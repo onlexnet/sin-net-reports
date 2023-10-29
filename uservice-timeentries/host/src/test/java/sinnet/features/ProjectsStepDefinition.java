@@ -31,6 +31,14 @@ public class ProjectsStepDefinition {
     Assertions.assertThat(typed.value).isGreaterThan(0);
   }
 
+  @Then("list of projects is empty")
+  public void list_of_projects_is_empty() {
+    var statement = statements.pop();
+    var typed = (NumberOfProjects) statement;
+
+    Assertions.assertThat(typed.value).isZero();
+  }
+
   sealed interface Statement {
   }
 

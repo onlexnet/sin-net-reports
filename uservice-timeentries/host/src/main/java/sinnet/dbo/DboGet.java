@@ -1,6 +1,7 @@
 package sinnet.dbo;
 
 import io.vavr.collection.Seq;
+import io.vavr.collection.Iterator;
 import sinnet.grpc.projects.generated.Project;
 import sinnet.domain.model.ValEmail;
 import sinnet.domain.model.ValProjectId;
@@ -24,6 +25,8 @@ interface DboGet {
   StatsResult getStats(ValEmail ownerEmail);
 
   Project get(ValProjectId projectId);
+
+  Seq<Project> getAll(Iterator<ValProjectId> projectId);
 
   record StatsResult(int numberOdProjects) {
   }
