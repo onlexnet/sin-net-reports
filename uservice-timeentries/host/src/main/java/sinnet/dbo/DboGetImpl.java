@@ -1,21 +1,26 @@
 package sinnet.dbo;
 
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Component;
 
 import io.vavr.Function1;
+import io.vavr.collection.Iterator;
 import io.vavr.collection.Seq;
 import lombok.RequiredArgsConstructor;
+import sinnet.domain.model.ValEmail;
+import sinnet.domain.model.ValProjectId;
 import sinnet.grpc.projects.generated.Project;
 import sinnet.grpc.projects.generated.ProjectId;
 import sinnet.grpc.projects.generated.ProjectModel;
-import sinnet.domain.model.ValEmail;
-import sinnet.domain.model.ValProjectId;
+import sinnet.read.ServicemanDbo;
+import sinnet.read.ServicemanRepo;
 
 @Component
 @RequiredArgsConstructor
 final class DboGetImpl implements DboGet {
 
   private final ProjectRepository projectRepository;
+  private final ServicemanRepo servicemanRepo;
 
   private ValProjectId mapToIdHolder(ProjectDbo dbo) {
     return ValProjectId.of(dbo.getEntityId());
@@ -62,7 +67,7 @@ final class DboGetImpl implements DboGet {
   }
 
   private <T> Seq<T> ownedAndMap(ValEmail emailOfOwner, Function1<ProjectDbo, T> mapper) {
-    return projectRepository.findByEmailOfOwner(emailOfOwner.value()).map(mapper);
+    return projectRepository.findByEmailOfOwner(emailOfOwner.value()).map(mapper).toList();
   }
 
   @Override
@@ -71,6 +76,15 @@ final class DboGetImpl implements DboGet {
     // but we need to return int as it is natural for expected real number of projects.
     var numberOfProjects = (int) projectRepository.countByEmailOfOwner(ownerEmail.value());
     return new StatsResult(numberOfProjects);
+  }
+
+  @Override
+  public Seq<ValProjectId> assignedAsId(ValEmail operatorEmail) {
+    var probe = new ServicemanDbo();
+    probe.setEmail(operatorEmail.value());
+    var example = Example.of(probe);
+    var items = servicemanRepo.findAll(example);
+    return Iterator.ofAll(items).map(it -> it.getEntityId()).map(it -> ValProjectId.of(it)).toList();
   }
 
 }

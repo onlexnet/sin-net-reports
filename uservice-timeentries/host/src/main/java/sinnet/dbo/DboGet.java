@@ -18,6 +18,8 @@ interface DboGet {
   /** List of all projects where given email is marked as owner. */
   Seq<ValProjectId> ownedAsId(ValEmail ownerEmail);
 
+  /** All project where the the operator is assigned as serviceman. */
+  Seq<ValProjectId> assignedAsId(ValEmail operatorEmail);
   
   StatsResult getStats(ValEmail ownerEmail);
 

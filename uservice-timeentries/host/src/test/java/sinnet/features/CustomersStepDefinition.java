@@ -5,7 +5,6 @@ import org.assertj.core.api.Assertions;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import lombok.RequiredArgsConstructor;
-import sinnet.models.CustomerModel;
 import sinnet.models.CustomerValue;
 import sinnet.models.ValName;
 

@@ -170,6 +170,12 @@ public class TestApi {
       .isEqualTo(1);
   }
 
+  public int numberOfProjects(ValName operatorAlias) {
+    var request = sinnet.grpc.projects.generated.ListRequest.newBuilder()
+        .setEmailOfRequestor(operatorAlias.getValue())
+        .build();
+    var response = rpcApi.getProjects().list(request);
+    return response.getProjectsCount();
+  }
 }
-
 

@@ -12,6 +12,7 @@ import io.grpc.ManagedChannelBuilder;
 import lombok.Data;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.Accessors;
 import sinnet.grpc.customers.CustomersGrpc;
 import sinnet.grpc.customers.CustomersGrpc.CustomersBlockingStub;
 import sinnet.grpc.projects.generated.ProjectsGrpc;

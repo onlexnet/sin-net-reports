@@ -28,6 +28,7 @@ public class UsersProjectorImpl implements UsersRepositoryEx {
             .builder()
             .email(ValEmail.of(it.getEmail()))
             .customName(ValName.of(it.getCustomName()))
-            .build());
+            .build())
+            .toList();
   }
 }
