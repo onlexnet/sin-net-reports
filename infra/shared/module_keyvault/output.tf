@@ -6,7 +6,7 @@ output "env" {
     GITHUB_USERNAME                       = "siudeks"
     CR_PAT                                = data.external.env.result["CR_PAT"],
     ONLEXNET_TENANT_ID                    = data.external.env.result["ONLEXNET_TENANT_ID"],
-    ONLEXNET_SINNET_DEV01_SUBSCRIPTION_ID = data.external.env.result["ONLEXNET_SINNET_DEV01_SUBSCRIPTION_ID"],
+    ONLEXNET_SINNET_PRD01_SUBSCRIPTION_ID = data.external.env.result["ONLEXNET_SINNET_PRD01_SUBSCRIPTION_ID"],
     ONLEXNET_INFRA_CLIENT_ID              = data.external.env.result["ONLEXNET_INFRA_CLIENT_ID"],
     ONLEXNET_INFRA_SECRET                 = data.external.env.result["ONLEXNET_INFRA_SECRET"],
     SINNETAPP_PROD_SECRET                 = data.external.env.result["SINNETAPP_PROD_SECRET"]

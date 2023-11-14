@@ -15,10 +15,8 @@ The infrastructure is currently designed to be started by manual invocation by a
 
 ### Work locally
 * Assumption: use bash
-* go to folder where you would like to apply changes (e.g. cd main/dev01/)
 * apply changes on selected env manually
   ```bash
-  cd main/dev01
   terraform init # init your terraform once 
   terraform apply
   ```
@@ -36,5 +34,5 @@ terraform init -upgrade
 - CLOUDFLARE_API_TOKEN - Cloudflare token named onlexnet-dns-edit to update DNS records in onlex.net
 - GITHUB_TOKEN - token onlexnet-sinnet-infra
 - CR_PAT - classic token used to read github packages
-- TF_VAR_azure_subscription_id_prod - onlexnet-sinnet-dev01
+- TF_VAR_azure_subscription_id_prod - onlexnet-sinnet-prd01
 

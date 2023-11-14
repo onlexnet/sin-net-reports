@@ -7,7 +7,7 @@ terraform {
     organization = "onlexnet"
 
     workspaces {
-      name = "sinnet-dev01"
+      name = "sinnet-prd01"
     }
 
   }

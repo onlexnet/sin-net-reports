@@ -39,11 +39,11 @@ resource "github_actions_environment_secret" "ONLEXNET_TENANT_ID" {
   plaintext_value = var.ONLEXNET_TENANT_ID
 }
 
-resource "github_actions_environment_secret" "ONLEXNET_SINNET_DEV01_SUBSCRIPTION_ID" {
+resource "github_actions_environment_secret" "ONLEXNET_SINNET_PRD01_SUBSCRIPTION_ID" {
   environment     = github_repository_environment.main.environment
   repository      = data.github_repository.sinnet.name
-  secret_name     = "ONLEXNET_SINNET_DEV01_SUBSCRIPTION_ID"
-  plaintext_value = var.ONLEXNET_SINNET_DEV01_SUBSCRIPTION_ID
+  secret_name     = "ONLEXNET_SINNET_PRD01_SUBSCRIPTION_ID"
+  plaintext_value = var.ONLEXNET_SINNET_PRD01_SUBSCRIPTION_ID
 }
 
 resource "github_actions_environment_secret" "ONLEXNET_INFRA_CLIENT_ID" {
@@ -60,16 +60,16 @@ resource "github_actions_environment_secret" "ONLEXNET_INFRA_SECRET" {
   plaintext_value = var.ONLEXNET_INFRA_SECRET
 }
 
-resource "github_actions_environment_variable" "ONLEXNET_SINNET_DEV01_CONTAINERAPP_NAME_TIMEENTRIES" {
+resource "github_actions_environment_variable" "ONLEXNET_SINNET_PRD01_CONTAINERAPP_NAME_TIMEENTRIES" {
   environment   = github_repository_environment.main.environment
   repository    = data.github_repository.sinnet.name
-  variable_name = "ONLEXNET_SINNET_DEV01_CONTAINERAPP_NAME_TIMEENTRIES"
-  value         = var.ONLEXNET_SINNET_DEV01_CONTAINERAPP_NAME_TIMEENTRIES
+  variable_name = "ONLEXNET_SINNET_PRD01_CONTAINERAPP_NAME_TIMEENTRIES"
+  value         = var.ONLEXNET_SINNET_PRD01_CONTAINERAPP_NAME_TIMEENTRIES
 }
 
-resource "github_actions_environment_variable" "ONLEXNET_SINNET_DEV01_CONTAINERAPP_NAME_WEBAPI" {
+resource "github_actions_environment_variable" "ONLEXNET_SINNET_PRD01_CONTAINERAPP_NAME_WEBAPI" {
   environment   = github_repository_environment.main.environment
   repository    = data.github_repository.sinnet.name
-  variable_name = "ONLEXNET_SINNET_DEV01_CONTAINERAPP_NAME_WEBAPI"
-  value         = var.ONLEXNET_SINNET_DEV01_CONTAINERAPP_NAME_WEBAPI
+  variable_name = "ONLEXNET_SINNET_PRD01_CONTAINERAPP_NAME_WEBAPI"
+  value         = var.ONLEXNET_SINNET_PRD01_CONTAINERAPP_NAME_WEBAPI
 }
