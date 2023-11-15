@@ -45,17 +45,15 @@ jobs:
           name: ${$GITHUB_RUN_ID}-webapp-binaries
           path: static-webapp/main/build
 
-  DeployDev:
-    name: Deploy to DEV01
-    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
+  DeployProd:
+    name: Deploy to PRD01
+    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed' && github.event.ref == 'refs/heads/main')
     needs: [ Build ]
     runs-on: ubuntu-latest
     environment:
       name: dev01
-      url: 'https://sinnet-dev01.onlex.net'
+      url: 'https://sinnet-prd01.onlex.net'
     steps:
-      - name: Deploy
-        run: echo I am deploying!
       - name: Restore artifacts from Build
         uses: actions/download-artifact@v2
         with:
@@ -80,16 +78,3 @@ jobs:
           # api_location: "" # Api source code path - optional
           # output_location: "build" # Built app content directory - optional
           ###### End of Repository/Build Configurations ######
-
-  DeployUat:
-    name: Deploy to PROD
-    if: github.event.ref == 'refs/heads/main'
-    needs: [ Build ]
-    runs-on: ubuntu-latest
-    environment:
-      name: prod1
-      url: 'https://sinnet.onlex.net'
-    steps:
-      - name: Deploy
-        run: echo I am deploying!
-
