@@ -78,7 +78,7 @@ module "static_app" {
 
 module "cloudflare" {
   source        = "./module_cloudflare"
-  webapp_prefix = "${var.application_name}-${var.environment_name}"
+  webapp_prefix = var.environment_name != "prd01" ? "${var.application_name}-${var.environment_name}" : var.application_name
   webapp_fqdn   = module.static_app.webapp_fqdn
   webapi_prefix = "${var.application_name}-${var.environment_name}-api"
   webapi_fqdn   = module.container_apps_webapi.webapi_fqdn
