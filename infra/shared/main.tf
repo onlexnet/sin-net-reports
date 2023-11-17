@@ -69,16 +69,20 @@ module "github" {
 #   resource_group = module.resourcegroup.main
 # }
 
+locals {
+  webapp_prefix = var.environment_name != "prd01" ? "${var.application_name}-${var.environment_name}" : var.application_name
+}
+
 module "static_app" {
   source         = "./module_static_app"
   resource_group = module.resourcegroup.main
 
-  custom_domain = "${var.application_name}-${var.environment_name}.onlex.net"
+  custom_domain = "${local.webapp_prefix}.onlex.net"
 }
 
 module "cloudflare" {
   source        = "./module_cloudflare"
-  webapp_prefix = var.environment_name != "prd01" ? "${var.application_name}-${var.environment_name}" : var.application_name
+  webapp_prefix = local.webapp_prefix
   webapp_fqdn   = module.static_app.webapp_fqdn
   webapi_prefix = "${var.application_name}-${var.environment_name}-api"
   webapi_fqdn   = module.container_apps_webapi.webapi_fqdn
