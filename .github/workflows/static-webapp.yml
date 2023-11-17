@@ -40,9 +40,9 @@ jobs:
             npm run generate
             npm run build
       - name: Store build react binaries
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
-          name: ${$GITHUB_RUN_ID}-webapp-binaries
+          name: ${GITHUB_RUN_ID}-webapp-binaries
           path: static-webapp/main/build
 
   DeployProd:
@@ -55,9 +55,9 @@ jobs:
       url: 'https://sinnet-prd01.onlex.net'
     steps:
       - name: Restore artifacts from Build
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
-          name: ${$GITHUB_RUN_ID}-webapp-binaries
+          name: ${GITHUB_RUN_ID}-webapp-binaries
           # may be any path, but let's reuse original location
           path: static-webapp/main/build
       - name: Build And Deploy
