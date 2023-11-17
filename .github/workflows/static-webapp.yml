@@ -51,7 +51,7 @@ jobs:
     needs: [ Build ]
     runs-on: ubuntu-latest
     environment:
-      name: dev01
+      name: prd01
       url: 'https://sinnet-prd01.onlex.net'
     steps:
       - name: Restore artifacts from Build
