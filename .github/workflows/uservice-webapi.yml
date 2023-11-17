@@ -79,27 +79,27 @@ jobs:
           # export just published image name so that it can be used by next steps
           echo "image_name=$IMAGE_NAME_HOST:$GITHUB_RUN_ID" >> "$GITHUB_OUTPUT"
 
-  DeployDev:
+  DeployPrd:
     # https://learn.microsoft.com/en-us/azure/container-apps/github-actions#deploy-an-existing-container-image-to-container-apps
-    name: Deploy to DEV01
-    # if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
+    name: Deploy to PRD01
+    # if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed' && github.event.ref == 'refs/heads/main')
     needs: [ Build ]
     runs-on: ubuntu-latest
-    environment: DEV01
+    environment: PRD01
     steps:
       - name: Log in to Azure
         uses: azure/login@v1
         with:
           # prepare credentials for Azure CLI
           # more: https://github.com/marketplace/actions/azure-login#configure-a-service-principal-with-a-secret
-          creds: '{"clientId":"${{ secrets.ONLEXNET_INFRA_CLIENT_ID }}","clientSecret":"${{ secrets.ONLEXNET_INFRA_SECRET }}","subscriptionId":"${{ secrets.ONLEXNET_SINNET_DEV01_SUBSCRIPTION_ID }}","tenantId":"${{ secrets.ONLEXNET_TENANT_ID }}"}'
+          creds: '{"clientId":"${{ secrets.ONLEXNET_INFRA_CLIENT_ID }}","clientSecret":"${{ secrets.ONLEXNET_INFRA_SECRET }}","subscriptionId":"${{ secrets.ONLEXNET_SINNET_PRD01_SUBSCRIPTION_ID }}","tenantId":"${{ secrets.ONLEXNET_TENANT_ID }}"}'
       
       - name: Display Image Name
         env:
           IMAGE_NAME_INITDB_HOST: ${{needs.Build.outputs.uservice_webapi_image_name}}
-          CONTAINERAPP_NAME: ${{ vars.ONLEXNET_SINNET_DEV01_CONTAINERAPP_NAME_WEBAPI }}
+          CONTAINERAPP_NAME: ${{ vars.ONLEXNET_SINNET_PRD01_CONTAINERAPP_NAME_WEBAPI }}
         run: |
           echo "image_name: $IMAGE_NAME_INITDB_HOST"
           # TODO replace hardcoded params below with proper values
-          az containerapp update -n $CONTAINERAPP_NAME -g sinnet-env-dev01 --container-name uservice-webapi --image $IMAGE_NAME_INITDB_HOST
+          az containerapp update -n $CONTAINERAPP_NAME -g sinnet-env-prd01 --container-name uservice-webapi --image $IMAGE_NAME_INITDB_HOST
 
