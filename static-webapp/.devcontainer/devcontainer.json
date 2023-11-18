@@ -23,6 +23,11 @@
 		}
 	},
 
+	// as the container is run in another container on CICD, we have to manually reuse host env variables reuqired for CI builds
+	"containerEnv": {
+		"GITHUB_RUN_ID": "${localEnv:GITHUB_RUN_ID}"
+	},
+
 	// https://stackoverflow.com/a/75644266
 	// "mounts": [
 	// 	"type=bind,source=/home/${localEnv:USER}/.ssh,target=/home/node/.ssh"
