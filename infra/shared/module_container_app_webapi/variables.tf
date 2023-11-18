@@ -16,13 +16,14 @@ variable "env_id" {}
 
 variable "env" {
   type = object({
-    GITHUB_USERNAME       = string
-    CR_PAT                = string
-    DATABASE_HOST         = string
-    DATABASE_NAME         = string
-    DATABASE_PORT         = string
-    DATABASE_USERNAME     = string
-    DATABASE_PASSWORD     = string
-    SINNETAPP_PROD_SECRET = string
+    APPLICATIONINSIGHTS_CONNECTION_STRING = string
+    GITHUB_USERNAME                       = string
+    CR_PAT                                = string
+    DATABASE_HOST                         = string
+    DATABASE_NAME                         = string
+    DATABASE_PORT                         = string
+    DATABASE_USERNAME                     = string
+    DATABASE_PASSWORD                     = string
+    SINNETAPP_PROD_SECRET                 = string
   })
 }

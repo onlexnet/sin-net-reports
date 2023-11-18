@@ -51,6 +51,11 @@ resource "azurerm_container_app" "default" {
   }
 
   secret {
+    name = "applicationinsights-connection-string"
+    value = var.env.APPLICATIONINSIGHTS_CONNECTION_STRING
+  }
+
+  secret {
     # not used, should be removed
     # but can't be removed per https://github.com/microsoft/azure-container-apps/issues/395
     name  = "github-token"
@@ -112,6 +117,11 @@ resource "azurerm_container_app" "default" {
       # scale - currently not supported
       # https://github.com/hashicorp/terraform-provider-azurerm/issues/20629
       # please manage manually using portal or az tools
+
+      env {
+        name = "APPLICATIONINSIGHTS_CONNECTION_STRING"
+        secret_name = "applicationinsights-connection-string"
+      }
 
       env {
         name        = "DATABASE_HOST"
