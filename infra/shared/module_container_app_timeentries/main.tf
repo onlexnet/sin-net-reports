@@ -51,7 +51,7 @@ resource "azurerm_container_app" "default" {
   }
 
   secret {
-    name = "applicationinsights-connection-string"
+    name  = "applicationinsights-connection-string"
     value = var.env.APPLICATIONINSIGHTS_CONNECTION_STRING
   }
 
@@ -119,7 +119,7 @@ resource "azurerm_container_app" "default" {
       # please manage manually using portal or az tools
 
       env {
-        name = "APPLICATIONINSIGHTS_CONNECTION_STRING"
+        name        = "APPLICATIONINSIGHTS_CONNECTION_STRING"
         secret_name = "applicationinsights-connection-string"
       }
 
@@ -162,8 +162,8 @@ resource "azurerm_container_app" "default" {
 
 
       env {
-        name        = "APP_PORT"
-        value       = "9000"
+        name  = "APP_PORT"
+        value = "9000"
       }
 
       # readiness_probe {
