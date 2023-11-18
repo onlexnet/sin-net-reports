@@ -2,11 +2,12 @@
 
 | Pipeline | Status |
 |----------|--------|
-| WebApp | [![Build Status](https://dev.azure.com/onlex/sinnet/_apis/build/status/onlex-sinnet-webapp?branchName=master)](https://dev.azure.com/onlex/sinnet/_build/latest?definitionId=2&branchName=master) |
+| WebApp | [![Build Status](https://github.com/onlexnet/sin-net-reports/actions/workflows/static-webapp.yml/badge.svg)](https://github.com/onlexnet/sin-net-reports/actions/workflows/static-webapp.yml) |
 | WebApi | [![Build Status](https://dev.azure.com/onlex/sinnet/_apis/build/status/onlex-sinnet-webapi?branchName=master)](https://dev.azure.com/onlex/sinnet/_build/latest?definitionId=4&branchName=master) |
 | Customers | [![Build Status](https://dev.azure.com/onlex/sinnet/_apis/build/status/onlex-sinnet-customers?branchName=master)](https://dev.azure.com/onlex/sinnet/_build/latest?definitionId=11&branchName=master) |
 | Helm | [![Build Status](https://dev.azure.com/onlex/sinnet/_apis/build/status/onlex-sinnet-helm?branchName=master)](https://dev.azure.com/onlex/sinnet/_build/latest?definitionId=12&branchName=master) |
 | Deploy| [![Build Status](https://dev.azure.com/onlex/sinnet/_apis/build/status/onlex-sinnet-deploy?branchName=master)](https://dev.azure.com/onlex/sinnet/_build/latest?definitionId=15&branchName=master) |
+
 
 ## Goal
 - Small project created for [Sin.Net](http://www.sin.net.pl/)
