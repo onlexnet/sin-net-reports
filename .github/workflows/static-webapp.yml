@@ -50,14 +50,14 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: prd01
-      url: 'https://sinnet-prd01.onlex.net'
+      url: 'https://sinnet.onlex.net'
     steps:
       - name: Restore artifacts from Build
         uses: actions/download-artifact@v3
         with:
           name: ${{ github.run_id }}-webapp-binaries
           # may be any path, but let's reuse original location
-          path: static-webapp/main/build
+          path: static-webapp/build
       - name: Build And Deploy
         id: builddeploy
         # https://learn.microsoft.com/en-us/azure/static-web-apps/build-configuration?tabs=github-actions
