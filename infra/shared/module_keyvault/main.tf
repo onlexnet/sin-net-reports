@@ -10,7 +10,6 @@ resource "random_id" "id" {
 data "azurerm_client_config" "current" {}
 
 resource "azurerm_key_vault" "example" {
-  // name                       = "${var.application_name}_${var.environment_name}_${random_id.id.hex}"
   name                       = "${var.organization_name}-${var.application_name}-${var.environment_name}"
   location                   = var.resourcegroup.location
   resource_group_name        = var.resourcegroup.name

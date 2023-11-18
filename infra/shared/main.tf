@@ -110,7 +110,9 @@ module "database" {
 }
 
 module "application_insights" {
-  source         = "./module_application_insights"
-  workspace_id   = module.log_analytics_workspace.main.id
-  resource_group = module.resourcegroup.main
+  source           = "./module_application_insights"
+  workspace_id     = module.log_analytics_workspace.main.id
+  resource_group   = module.resourcegroup.main
+  environment_name = var.environment_name
+  application_name = var.application_name
 }

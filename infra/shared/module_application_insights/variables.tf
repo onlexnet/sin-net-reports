@@ -7,3 +7,9 @@ variable "resource_group" {
 
 variable "workspace_id" {
 }
+
+variable "environment_name" {
+}
+
+variable "application_name" {
+}
