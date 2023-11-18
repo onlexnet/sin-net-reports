@@ -104,8 +104,9 @@
     </dependency>
 
     <!--
-      Alternative way of using applicationinsights: use via dependency instead of as agent jar
+      Alternative way of using applicationinsights: use dependency instead of as agent jar
       more: https://learn.microsoft.com/en-us/azure/azure-monitor/app/java-spring-boot#enabling-programmatically
+      ! important: JRE not supported, hence full JDK is used atm - see spring-boot-maven-plugin configuration
     -->
     <dependency>
       <groupId>com.microsoft.azure</groupId>
@@ -169,6 +170,18 @@
         <artifactId>spring-boot-maven-plugin</artifactId>
         <configuration>
           <skip>false</skip>
+
+          <image> 
+            <env>
+              <!--
+                As we use atm application insight used from dependencies, it needs to have image built on JDK as application insight agent does not work with JRE 
+
+                - How to pass JVM type to buildpack started by spring build image process: https://stackoverflow.com/questions/61855229/how-to-set-jvm-arguments-when-running-mvn-spring-bootbuild-image-command-in-spr 
+                - BP_JVM_TYPE values:  https://github.com/paketo-buildpacks/bellsoft-liberica -
+              -->
+              <BP_JVM_TYPE>JDK</BP_JVM_TYPE>
+            </env>
+          </image>
         </configuration>
         <executions>
           <execution>
