@@ -41,7 +41,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: ${{ github.run_id }}-webapp-binaries
-          path: static-webapp/main/build
+          path: static-webapp/build
 
   DeployProd:
     name: Deploy to PRD01
@@ -69,7 +69,7 @@ jobs:
           ###### Repository/Build Configurations - These values can be configured to match your app requirements. ######
           # For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
           # App source code path
-          app_location: /static-webapp/main/build
+          app_location: /static-webapp/build
           # app_build_command: "npm run cibuild"
           # we expect to have built binaries by earlier job
           skip_app_build: true
