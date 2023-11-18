@@ -32,10 +32,8 @@ jobs:
           subFolder: static-webapp
           runCmd: |
             export MY_VERSION=$(cat .version)
-            cd main
-            ls
             npm config set allow-same-version true
-            npm version $MY_VERSION 
+            npm version $MY_VERSION
             npm install
             npm run generate
             npm run build
