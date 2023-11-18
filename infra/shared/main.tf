@@ -1,16 +1,5 @@
 data "azurerm_client_config" "current" {}
 
-# data "azurerm_resource_group" "alldev" {
-#   name = "fin2set-env-alldev"
-# }
-
-# data "azurerm_container_registry" "alldev" {
-#   # provider            = azurerm.shared
-#   name                = "fin2setalldev"
-#   resource_group_name = data.azurerm_resource_group.alldev.name
-# }
-
-
 module "resourcegroup" {
   source               = "./module_resourcegroup"
   application_name     = var.application_name
@@ -24,24 +13,12 @@ module "dns" {
   resource_group_name = module.resourcegroup.main.name
 }
 
-# module applications {
-#   source = "./module_applications"
-# }
-
-# # module "appinsights" {
-# #   source        = "./module_appinsights"
-# #   resourcegroup = module.resourcegroup.main
-# # }
-
 module "keyvault" {
   source            = "./module_keyvault"
   organization_name = local.organization_name
   application_name  = var.application_name
   environment_name  = var.environment_name
   resourcegroup     = module.resourcegroup.main
-
-  # appinsight_connection_string = module.appinsights.connection_string
-  # support_security_group_name  = var.support_security_group
 }
 
 module "github" {
@@ -55,19 +32,6 @@ module "github" {
   ONLEXNET_SINNET_PRD01_CONTAINERAPP_NAME_TIMEENTRIES = module.container_apps_timeentries.containerapp_name
   ONLEXNET_SINNET_PRD01_CONTAINERAPP_NAME_WEBAPI      = module.container_apps_webapi.containerapp_name
 }
-
-# module "storage_account" {
-#   source           = "./module_storage_account"
-#   environment_name = var.environment_name
-#   resource_group   = module.resourcegroup.main
-#   application_name = var.application_name
-# }
-
-# module "b2c" {
-#   source = "./module_b2c"
-#   application_name = var.application_name
-#   resource_group = module.resourcegroup.main
-# }
 
 locals {
   webapp_prefix = var.environment_name != "prd01" ? "${var.application_name}-${var.environment_name}" : var.application_name
@@ -100,13 +64,14 @@ module "container_apps_timeentries" {
   log_analytics_workspace = module.log_analytics_workspace.main
   env_id                  = module.container_apps_env.env_id
   env = {
-    GITHUB_USERNAME   = module.keyvault.env.GITHUB_USERNAME
-    CR_PAT            = module.keyvault.env.CR_PAT
-    DATABASE_HOST     = module.database.database_host
-    DATABASE_PORT     = module.database.database_port
-    DATABASE_NAME     = module.database.database_name
-    DATABASE_USERNAME = module.database.database_username
-    DATABASE_PASSWORD = module.database.database_password
+    APPLICATIONINSIGHTS_CONNECTION_STRING = module.application_insights.connection_string
+    GITHUB_USERNAME                       = module.keyvault.env.GITHUB_USERNAME
+    CR_PAT                                = module.keyvault.env.CR_PAT
+    DATABASE_HOST                         = module.database.database_host
+    DATABASE_PORT                         = module.database.database_port
+    DATABASE_NAME                         = module.database.database_name
+    DATABASE_USERNAME                     = module.database.database_username
+    DATABASE_PASSWORD                     = module.database.database_password
   }
 
 }
@@ -117,14 +82,15 @@ module "container_apps_webapi" {
   log_analytics_workspace = module.log_analytics_workspace.main
   env_id                  = module.container_apps_env.env_id
   env = {
-    GITHUB_USERNAME   = module.keyvault.env.GITHUB_USERNAME
-    CR_PAT            = module.keyvault.env.CR_PAT
-    DATABASE_HOST     = module.database.database_host
-    DATABASE_PORT     = module.database.database_port
-    DATABASE_NAME     = module.database.database_name
-    DATABASE_USERNAME = module.database.database_username
-    DATABASE_PASSWORD = module.database.database_password
-    SINNETAPP_PROD_SECRET = module.keyvault.env.SINNETAPP_PROD_SECRET
+    APPLICATIONINSIGHTS_CONNECTION_STRING = module.application_insights.connection_string
+    GITHUB_USERNAME                       = module.keyvault.env.GITHUB_USERNAME
+    CR_PAT                                = module.keyvault.env.CR_PAT
+    DATABASE_HOST                         = module.database.database_host
+    DATABASE_PORT                         = module.database.database_port
+    DATABASE_NAME                         = module.database.database_name
+    DATABASE_USERNAME                     = module.database.database_username
+    DATABASE_PASSWORD                     = module.database.database_password
+    SINNETAPP_PROD_SECRET                 = module.keyvault.env.SINNETAPP_PROD_SECRET
   }
 
 }
@@ -141,4 +107,10 @@ module "database" {
   admin_password   = module.keyvault.env.SQL_ADMIN_PASSWORD
   environment_name = var.environment_name
   application_name = var.application_name
+}
+
+module "application_insights" {
+  source         = "./module_application_insights"
+  workspace_id   = module.log_analytics_workspace.main.id
+  resource_group = module.resourcegroup.main
 }
