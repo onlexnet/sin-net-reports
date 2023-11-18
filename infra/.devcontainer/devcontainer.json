@@ -21,7 +21,8 @@
     "customizations": {
         "vscode": {
             "extensions": [
-                "hashicorp.terraform"
+                "hashicorp.terraform",
+                "editorconfig.editorconfig"
             ],
             "settings": {
                 "terraform.languageServer": {
