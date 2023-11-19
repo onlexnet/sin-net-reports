@@ -111,8 +111,8 @@ resource "azurerm_container_app" "default" {
 
       name   = "uservice-timeentries"
       image  = "ghcr.io/onlexnet/uservice-timeentries:latest"
-      cpu    = 0.25
-      memory = "0.5Gi"
+      cpu    = 0.5
+      memory = "1Gi"
 
       # scale - currently not supported
       # https://github.com/hashicorp/terraform-provider-azurerm/issues/20629
