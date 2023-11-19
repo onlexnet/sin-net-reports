@@ -73,7 +73,7 @@ jobs:
           # as we can't modify Packeto image, we use option JAVA_TOOL_OPTIONS=-javaagent:/path/to/applicationinsights-agent.jar
           # together with packeto-native way of providing such env variable (https://stackoverflow.com/a/66605946/1237627)
           export BPE_DELIM_JAVA_TOOL_OPTIONS=' '
-          export BPE_APPEND_JAVA_TOOL_OPTIONS=-javaagent:/workspace/BOOT-INF/classes/applicationinsight/applicationinsights-agent.jar
+          export BPE_APPEND_JAVA_TOOL_OPTIONS=-javaagent:/workspace/BOOT-INF/classes/applicationinsight/applicationinsights-agentX.jar
           popd #restore workign dir
 
           export IMAGE_NAME_BASE=ghcr.io/onlexnet/uservice-timeentries
