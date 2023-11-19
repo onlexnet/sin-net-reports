@@ -103,17 +103,6 @@
       <artifactId>spring-boot-starter-validation</artifactId>
     </dependency>
 
-    <!--
-      Alternative way of using applicationinsights: use dependency instead of as agent jar
-      more: https://learn.microsoft.com/en-us/azure/azure-monitor/app/java-spring-boot#enabling-programmatically
-      ! important: JRE not supported, hence full JDK is used atm - see spring-boot-maven-plugin configuration
-    -->
-    <dependency>
-      <groupId>com.microsoft.azure</groupId>
-      <artifactId>applicationinsights-runtime-attach</artifactId>
-      <version>3.4.18</version>
-    </dependency>
-    
     <dependency>
       <groupId>io.dapr</groupId>
       <artifactId>dapr-sdk</artifactId>
@@ -174,12 +163,13 @@
           <image> 
             <env>
               <!--
-                As we use atm application insight used from dependencies, it needs to have image built on JDK as application insight agent does not work with JRE 
-
+                Example how to impact build-time buildpack evironment variable
                 - How to pass JVM type to buildpack started by spring build image process: https://stackoverflow.com/questions/61855229/how-to-set-jvm-arguments-when-running-mvn-spring-bootbuild-image-command-in-spr 
                 - BP_JVM_TYPE values:  https://github.com/paketo-buildpacks/bellsoft-liberica -
+                - note: we pass value which is equal to default value just to show how-to
               -->
-              <BP_JVM_TYPE>JDK</BP_JVM_TYPE>
+              <BP_JVM_TYPE>JRE</BP_JVM_TYPE>
+
             </env>
           </image>
         </configuration>
@@ -191,6 +181,27 @@
           </execution>
         </executions>
       </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <version>3.4.0</version>
+        <executions>
+            <execution>
+                <id>add-source</id>
+                <phase>generate-sources</phase>
+                <goals>
+                    <goal>add-source</goal>
+                </goals>
+                <configuration>
+                    <sources>
+                        <source>src/main/extras/</source>
+                    </sources>
+                </configuration>
+            </execution>
+        </executions>
+    </plugin>
+            
     </plugins>
   </build>
 
