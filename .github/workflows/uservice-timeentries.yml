@@ -59,7 +59,6 @@ jobs:
           cd host/src/main/resources # goto well-known folder designed to be included in target image
           wget --no-verbose https://github.com/microsoft/ApplicationInsights-Java/releases/download/3.4.18/applicationinsights-agent-3.4.18.jar # download ...
           mv applicationinsights-agent-3.4.18.jar applicationinsights-agent.jar # ... and rename to unified name applicationinsight agent
-          ls -la
           popd # restore working dir
 
           export SEMVERSION=$(cat .semversion)
