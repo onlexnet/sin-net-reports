@@ -64,7 +64,7 @@ jobs:
 
           # download latest version of applicationinsights to folder expected to be included into target image
           # as we known, the copied file will be located finally in /workspace/BOOT-INF/classes/applicationinsight.
-          pushd # remember current working dir
+          pushd . # remember current working dir
           cd host/src/main/extras/applicationinsight # goto well-known folder designed to be included in target image
           wget https://github.com/microsoft/ApplicationInsights-Java/releases/download/3.4.18/applicationinsights-agent-3.4.18.jar # download ...
           mv applicationinsights-agent-3.4.18.jar applicationinsights-agent.jar # ... and rename to unified name applicationinsight agent
