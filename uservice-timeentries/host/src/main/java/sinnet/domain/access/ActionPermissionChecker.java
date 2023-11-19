@@ -1,6 +1,7 @@
 package sinnet.domain.access;
 
-import io.vavr.collection.Seq;
+import java.util.List;
+
 import sinnet.domain.model.ValProjectId;
 
 /**
@@ -16,10 +17,10 @@ import sinnet.domain.model.ValProjectId;
 interface ActionPermissionChecker {
 
   /** Returns true if the current action can be performed by an Owner. */
-  ValidationResult onOwnerRole(Seq<ValProjectId> projectsId);
+  ValidationResult onOwnerRole(List<ValProjectId> projectsId);
 
   /** Returns true if the current action can be performed by an Operator. */
-  ValidationResult onOperatorRole(Seq<ValProjectId> projectsId);
+  ValidationResult onOperatorRole(List<ValProjectId> projectsId);
 
   enum ValidationResult {
     PERMITTED,

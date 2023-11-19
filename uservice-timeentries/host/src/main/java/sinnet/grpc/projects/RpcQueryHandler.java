@@ -3,6 +3,8 @@ package sinnet.grpc.projects;
 import com.google.protobuf.GeneratedMessageV3;
 
 import io.grpc.stub.StreamObserver;
+import jakarta.transaction.Transactional;
+import jakarta.transaction.Transactional.TxType;
 
 /**
  * Designed to be extended by all Query rpc operations.
@@ -10,6 +12,7 @@ import io.grpc.stub.StreamObserver;
  * @param <Q> - query type
  * @param <S> - response type
  */
+@Transactional(TxType.REQUIRES_NEW)
 public interface RpcQueryHandler<Q extends GeneratedMessageV3, S extends GeneratedMessageV3> {
 
   S apply(Q request);

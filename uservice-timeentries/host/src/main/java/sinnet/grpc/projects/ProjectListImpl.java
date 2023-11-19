@@ -24,8 +24,8 @@ class ProjectListImpl implements RpcQueryHandler<ListRequest, ListReply> {
   public ListReply apply(ListRequest request) {
     var emailOfRequestor = ValEmail.of(request.getEmailOfRequestor());
 
-    var ownedProjects = dbo.ownedAsId(emailOfRequestor).toJavaStream();
-    var associadedProjects = dbo.assignedAsId(emailOfRequestor).toJavaStream();
+    var ownedProjects = dbo.ownedAsId(emailOfRequestor).stream();
+    var associadedProjects = dbo.assignedAsId(emailOfRequestor).stream();
 
     var availableProjects = Stream.concat(ownedProjects, associadedProjects).collect(Collectors.toSet());
     var projects = dbo.getAll(Iterator.ofAll(availableProjects));

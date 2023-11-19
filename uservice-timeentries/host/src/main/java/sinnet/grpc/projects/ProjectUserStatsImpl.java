@@ -10,7 +10,7 @@ import sinnet.domain.model.ValEmail;
 
 @Component
 @RequiredArgsConstructor
-final class ProjectUserStatsImpl implements RpcQueryHandler<UserStatsRequest, UserStatsReply> {
+class ProjectUserStatsImpl implements RpcQueryHandler<UserStatsRequest, UserStatsReply> {
 
   private final DboFacade dboFacade;
 

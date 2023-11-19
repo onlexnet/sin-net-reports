@@ -1,12 +1,12 @@
 package sinnet.dbo;
 
+import java.util.List;
+
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Component;
 
 import io.vavr.Function1;
 import io.vavr.collection.Iterator;
-import io.vavr.collection.List;
-import io.vavr.collection.Seq;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import sinnet.domain.model.ValEmail;
@@ -52,12 +52,12 @@ final class DboGetImpl implements DboGet {
   }
 
   @Override
-  public Seq<Project> ownedAsProject(ValEmail ownerEmail) {
+  public List<Project> ownedAsProject(ValEmail ownerEmail) {
     return ownedAndMap(ownerEmail, this::mapToEntity);
   }
 
   @Override
-  public Seq<ValProjectId> ownedAsId(ValEmail ownerEmail) {
+  public List<ValProjectId> ownedAsId(ValEmail ownerEmail) {
     return ownedAndMap(ownerEmail, this::mapToIdHolder);
   }
 
@@ -69,8 +69,8 @@ final class DboGetImpl implements DboGet {
       .map(this::mapToEntity).orElseThrow();
   }
 
-  private <T> Seq<T> ownedAndMap(ValEmail emailOfOwner, Function1<ProjectDbo, T> mapper) {
-    return projectRepository.findByEmailOfOwner(emailOfOwner.value()).map(mapper).toList();
+  private <T> List<T> ownedAndMap(ValEmail emailOfOwner, Function1<ProjectDbo, T> mapper) {
+    return projectRepository.findByEmailOfOwner(emailOfOwner.value()).stream().map(mapper).toList();
   }
 
   @Override
@@ -82,19 +82,19 @@ final class DboGetImpl implements DboGet {
   }
 
   @Override
-  public Seq<ValProjectId> assignedAsId(ValEmail operatorEmail) {
+  public List<ValProjectId> assignedAsId(ValEmail operatorEmail) {
     var probe = new ServicemanDbo();
     probe.setEmail(operatorEmail.value());
     var example = Example.of(probe);
     var items = servicemanRepo.findAll(example);
     log.info("Assigned projects: {}", items.size());
-    return Iterator.ofAll(items).map(it -> it.getProjectId()).map(it -> ValProjectId.of(it)).toList();
+    return Iterator.ofAll(items).map(it -> it.getProjectId()).map(it -> ValProjectId.of(it)).toJavaList();
   }
 
   @Override
-  public Seq<Project> getAll(Iterator<ValProjectId> projects) {
+  public List<Project> getAll(Iterator<ValProjectId> projects) {
     var ids = projects.map(it -> it.value()).toJavaList();
-    return List.ofAll(projectRepository.findAllById(ids)).map(this::mapToEntity);
+    return Iterator.ofAll(projectRepository.findAllById(ids)).map(this::mapToEntity).toJavaList();
   }
 
 }

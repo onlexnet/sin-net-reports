@@ -1,6 +1,7 @@
 package sinnet.domain.access;
 
-import io.vavr.collection.Seq;
+import java.util.List;
+
 import lombok.Value;
 import lombok.experimental.Accessors;
 import sinnet.domain.access.ActionPermissionChecker.ValidationResult;
@@ -31,7 +32,7 @@ public sealed interface RoleContextSet {
   @Value
   @Accessors(fluent = true)
   class OwnerRoleContext implements RoleContextSet {
-    private final Seq<ValProjectId> projectsIds;
+    private final List<ValProjectId> projectsIds;
 
     @Override
     public ValidationResult processPermission(ActionPermissionChecker validator) {
@@ -43,7 +44,7 @@ public sealed interface RoleContextSet {
   @Value
   @Accessors(fluent = true)
   class OperatorRoleContext implements RoleContextSet {
-    private final Seq<ValProjectId> projectsId;
+    private final List<ValProjectId> projectsId;
 
     @Override
     public ValidationResult processPermission(ActionPermissionChecker validator) {

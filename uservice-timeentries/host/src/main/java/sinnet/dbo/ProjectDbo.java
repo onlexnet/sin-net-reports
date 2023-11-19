@@ -7,7 +7,6 @@ import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Table;
@@ -16,7 +15,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-@Entity
+@Entity(name = "ProjectDbo")
 @Table(name = "projects")
 @Data
 @Accessors(chain = true)
@@ -38,7 +37,7 @@ class ProjectDbo {
   @Size(max = 50, message = "ERR:0002")
   private String name;
 
-  @ElementCollection(fetch = FetchType.EAGER)
+  @ElementCollection
   @CollectionTable(name = "PROJECT_OPERATOR", joinColumns = @JoinColumn(name = "project_id"))
   @Column(name = "email")
   private Set<String> operators;
