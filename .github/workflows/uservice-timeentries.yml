@@ -63,7 +63,7 @@ jobs:
           popd # restore working dir
 
           export SEMVERSION=$(cat .semversion)
-          mvn -ntp install --file pom.xml
+          mvn -ntp install -pl host -am
         working-directory: uservice-timeentries
       
       - id: BuildDockerImage
