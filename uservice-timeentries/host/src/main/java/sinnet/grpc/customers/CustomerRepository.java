@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Stream;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -149,14 +151,17 @@ public interface CustomerRepository extends JpaRepository<CustomerRepository.Cus
     // without children collections.
     // the same optimalization is about the rest of collection in the class
     @ElementCollection(fetch = FetchType.EAGER)
+    @Fetch(FetchMode.JOIN) // replaces single queries to single join query to load all children elements
     @CollectionTable(name = "contact", joinColumns = @JoinColumn(name = "customer_id", columnDefinition = "uniqueidentifier"))
     private List<CustomerDboContact> contacts;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Fetch(FetchMode.JOIN) // replaces single queries to single join query to load all children elements
     @CollectionTable(name = "secret", joinColumns = @JoinColumn(name = "customer_id", columnDefinition = "uniqueidentifier"))
     private List<CustomerDboSecret> secrets;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Fetch(FetchMode.JOIN) // replaces single queries to single join query to load all children elements
     @CollectionTable(name = "secret_ex", joinColumns = @JoinColumn(name = "customer_id", columnDefinition = "uniqueidentifier"))
     private List<CustomerDboSecretEx> secretsEx;
   }
