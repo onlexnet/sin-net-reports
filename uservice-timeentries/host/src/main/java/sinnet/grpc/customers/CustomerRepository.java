@@ -3,7 +3,6 @@ package sinnet.grpc.customers;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Stream;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -35,7 +34,7 @@ public interface CustomerRepository extends JpaRepository<CustomerRepository.Cus
 
   void deleteByProjectIdAndEntityIdAndEntityVersion(UUID projectId, UUID entityId, Long version);
 
-  Stream<CustomerDbo> findByProjectId(UUID projectId);
+  List<CustomerDbo> findByProjectId(UUID projectId);
   
   CustomerDbo findByProjectIdAndEntityId(UUID projectId, UUID entityId);
 

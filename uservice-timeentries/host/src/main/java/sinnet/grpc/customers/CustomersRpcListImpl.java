@@ -16,7 +16,7 @@ class CustomersRpcListImpl implements CustomersRpcList, MapperDbo {
   public ListReply apply(ListRequest request) {
     var projectId = UUID.fromString(request.getProjectId());
     var result = repository.findByProjectId(projectId);
-    var response = result.map(this::fromDbo).map(MapperDto::toDto).toList();
+    var response = result.stream().map(this::fromDbo).map(MapperDto::toDto).toList();
 
     return ListReply.newBuilder()
         .addAllCustomers(response)
