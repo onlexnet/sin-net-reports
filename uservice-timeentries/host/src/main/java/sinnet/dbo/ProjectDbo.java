@@ -3,6 +3,9 @@ package sinnet.dbo;
 import java.util.Set;
 import java.util.UUID;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -39,6 +42,7 @@ class ProjectDbo {
   private String name;
 
   @ElementCollection(fetch = FetchType.EAGER)
+  @Fetch(FetchMode.JOIN) // replaces single queries to single join query to load all children elements
   @CollectionTable(name = "PROJECT_OPERATOR", joinColumns = @JoinColumn(name = "project_id"))
   @Column(name = "email")
   private Set<String> operators;
