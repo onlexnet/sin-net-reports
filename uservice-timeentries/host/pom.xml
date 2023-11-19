@@ -176,11 +176,11 @@
                 as we can't modify Packeto image, we use option JAVA_TOOL_OPTIONS=-javaagent:/path/to/applicationinsights-agent.jar
                 together with packeto-native way of providing such env variable (https://stackoverflow.com/a/66605946/1237627)
                 export BPE_DELIM_JAVA_TOOL_OPTIONS=' '
-                export BPE_APPEND_JAVA_TOOL_OPTIONS=-javaagent:/workspaces/BOOT-INFO/classes/applicationinsights/applicationinsights-agent.jar
+                export BPE_APPEND_JAVA_TOOL_OPTIONS=-javaagent:/workspace/BOOT-INF/classes/applicationinsights/applicationinsights-agent.jar
                 see also https://github.com/spring-projects/spring-boot/issues/21478#issuecomment-770399524
               -->
               <BPE_DELIM_JAVA_TOOL_OPTIONS xml:space="preserve"> </BPE_DELIM_JAVA_TOOL_OPTIONS>
-              <BPE_PREPEND_JAVA_TOOL_OPTIONS>-javaagent:/workspaces/BOOT-INFO/classes/applicationinsights/applicationinsights-agent.jar</BPE_PREPEND_JAVA_TOOL_OPTIONS>
+              <BPE_PREPEND_JAVA_TOOL_OPTIONS>-javaagent:/workspace/BOOT-INF/classes/applicationinsights/applicationinsights-agent.jar</BPE_PREPEND_JAVA_TOOL_OPTIONS>
      
             </env>
           </image>
