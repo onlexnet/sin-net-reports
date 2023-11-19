@@ -13,12 +13,14 @@ import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
 import jakarta.transaction.Transactional;
 import jakarta.transaction.Transactional.TxType;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -142,14 +144,22 @@ public interface CustomerRepository extends JpaRepository<CustomerRepository.Cus
     private String daneTechniczne;
 
     @ElementCollection
+    // Hack: I observe thousend of individual requests for elements of such collection when CustomerDbo.loadAll is invoked
+    // I hope SQL will be opttimized to load data faster or in more batch way
+    // Correct approach: the entity should not be used when .loadAll is requested, especially with only sobe limited set of fields, especiallly
+    // without children collections.
+    // the same optimalization is about the rest of collection in the class
+    @ManyToOne(fetch = FetchType.EAGER)
     @CollectionTable(name = "contact", joinColumns = @JoinColumn(name = "customer_id", columnDefinition = "uniqueidentifier"))
     private List<CustomerDboContact> contacts;
 
     @ElementCollection
+    @ManyToOne(fetch = FetchType.EAGER) 
     @CollectionTable(name = "secret", joinColumns = @JoinColumn(name = "customer_id", columnDefinition = "uniqueidentifier"))
     private List<CustomerDboSecret> secrets;
 
     @ElementCollection
+    @ManyToOne(fetch = FetchType.EAGER) 
     @CollectionTable(name = "secret_ex", joinColumns = @JoinColumn(name = "customer_id", columnDefinition = "uniqueidentifier"))
     private List<CustomerDboSecretEx> secretsEx;
   }
