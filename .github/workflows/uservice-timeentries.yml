@@ -68,12 +68,6 @@ jobs:
           cd host/src/main/extras/applicationinsight # goto well-known folder designed to be included in target image
           wget https://github.com/microsoft/ApplicationInsights-Java/releases/download/3.4.18/applicationinsights-agent-3.4.18.jar # download ...
           mv applicationinsights-agent-3.4.18.jar applicationinsights-agent.jar # ... and rename to unified name applicationinsight agent
-          # the last trick: we have to point out to use agent with application, and we have to ask to include such thing by packeto
-          # without packeto it should be straigntforward: https://learn.microsoft.com/en-us/azure/azure-monitor/app/java-get-started-supplemental#containers
-          # as we can't modify Packeto image, we use option JAVA_TOOL_OPTIONS=-javaagent:/path/to/applicationinsights-agent.jar
-          # together with packeto-native way of providing such env variable (https://stackoverflow.com/a/66605946/1237627)
-          export BPE_DELIM_JAVA_TOOL_OPTIONS=' '
-          export BPE_APPEND_JAVA_TOOL_OPTIONS=-javaagent:/workspace/BOOT-INF/classes/applicationinsight/applicationinsights-agentX.jar
           popd #restore workign dir
 
           export IMAGE_NAME_BASE=ghcr.io/onlexnet/uservice-timeentries
