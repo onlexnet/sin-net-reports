@@ -35,7 +35,7 @@ class TestBeans {
  * In BDD tests ClientContext represents separated, connected user.
  */
 @Accessors(fluent = true)
-class ClientContext {
+public class ClientContext {
   @Getter
   ValName currentProject;
   @Getter

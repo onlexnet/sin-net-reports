@@ -23,10 +23,10 @@ public class CustomersStepDefinition {
 
   @Then("{operatorAlias} is able to change the name of the Customer")
   public void the_operator_is_able_to_change_the_name_of_the_customer(ValName operatorAlias) {
-    testApi.updateCustomer(ctx, singleCustomer, new CustomerValue().customerName(ValName.of("new-name-1")));
+    testApi.updateReservedCustomer(ctx, singleCustomer, new CustomerValue().customerName(ValName.of("new-name-1")));
 
     testApi.customerExists(ctx, operatorAlias, "new-name-1");
-    testApi.updateCustomer(ctx, singleCustomer, new CustomerValue().customerName(ValName.of("new-name-2")));
+    testApi.updateReservedCustomer(ctx, singleCustomer, new CustomerValue().customerName(ValName.of("new-name-2")));
 
     testApi.customerExists(ctx, operatorAlias, "new-name-2");
   }
@@ -34,7 +34,7 @@ public class CustomersStepDefinition {
   @Then("{operatorAlias} is able to change all properties of the Customer")
   public void operator1_is_able_to_change_all_properties_of_the_c_ustomer(ValName operatorAlias) {
     var customerValue = new CustomerValue().customerName(ValName.of("new-name-1")).billingModel("my-billing-model");
-    testApi.updateCustomer(ctx, singleCustomer, customerValue);
+    testApi.updateReservedCustomer(ctx, singleCustomer, customerValue);
     var customer = testApi.getCustomer(ctx, singleCustomer, operatorAlias);
 
     Assertions.assertThat(customer.getValue().customerName().getValue()).isEqualTo("new-name-1");

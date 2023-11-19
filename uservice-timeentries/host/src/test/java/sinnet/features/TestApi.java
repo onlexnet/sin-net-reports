@@ -39,7 +39,7 @@ public class TestApi {
   // we use the same deserializer as the whole ecosystem in ser / deser events.
   private final AvroObjectSerializer objectSerializer = new AvroObjectSerializer();
 
-  void reserveCustomer(ClientContext ctx, ValName customerAlias) {
+  public void reserveCustomer(ClientContext ctx, ValName customerAlias) {
     var projectId = "00000000-0000-0000-0001-000000000001";
     var request = ReserveRequest.newBuilder()
         .setProjectId(projectId)
@@ -49,7 +49,7 @@ public class TestApi {
     ctx.on(new CustomerReservedAppEvent(customerAlias, entityId));
   }
 
-  void updateCustomer(ClientContext ctx, ValName customerAlias, sinnet.models.CustomerValue customerValue) {
+  public void updateReservedCustomer(ClientContext ctx, ValName customerAlias, sinnet.models.CustomerValue customerValue) {
     var id = ctx.reservedCustomer;
     var cmd = UpdateCommand.newBuilder()
         .setModel(CustomerModel.newBuilder()
@@ -168,6 +168,17 @@ public class TestApi {
       .assertThat(foundElements)
       .as("Expected existence of customer named: [%s]", customerName)
       .isEqualTo(1);
+  }
+
+  public List<String> getAllCustomers(ClientContext ctx, ValName operatorAlias) {
+    var operatorId = ctx.getOperatorId(operatorAlias).value();
+    var projectId = ctx.currentProject.getValue();
+    var req = ListRequest.newBuilder()
+        .setProjectId(projectId)
+        .setUserToken(UserToken.newBuilder().setProjectId(projectId).setRequestorEmail(operatorId))
+        .build();
+    var response = rpcApi.getCustomers().list(req);
+    return response.getCustomersList().stream().map(it -> it.getValue().getCustomerName()).toList();
   }
 
   public int numberOfProjects(ValName operatorAlias) {

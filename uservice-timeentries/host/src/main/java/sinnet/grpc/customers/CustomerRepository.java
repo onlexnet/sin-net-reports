@@ -4,8 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -38,10 +37,14 @@ public interface CustomerRepository extends JpaRepository<CustomerRepository.Cus
   
   CustomerDbo findByProjectIdAndEntityId(UUID projectId, UUID entityId);
 
+  @Override
+  @EntityGraph(value = "b_with_all_associations", type = EntityGraph.EntityGraphType.FETCH)
+  List<CustomerRepository.CustomerDbo> findAll();
+
   /**
    * TBD.
    */
-  @Entity
+  @Entity(name = "CustomerDbo")
   @Table(name = "customers")
   @Data
   @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -150,17 +153,14 @@ public interface CustomerRepository extends JpaRepository<CustomerRepository.Cus
     // without children collections.
     // the same optimalization is about the rest of collection in the class
     @ElementCollection(fetch = FetchType.EAGER)
-    @Fetch(FetchMode.JOIN) // replaces single queries to single join query to load all children elements
     @CollectionTable(name = "contact", joinColumns = @JoinColumn(name = "customer_id", columnDefinition = "uniqueidentifier"))
     private List<CustomerDboContact> contacts;
 
     @ElementCollection(fetch = FetchType.EAGER)
-    @Fetch(FetchMode.JOIN) // replaces single queries to single join query to load all children elements
     @CollectionTable(name = "secret", joinColumns = @JoinColumn(name = "customer_id", columnDefinition = "uniqueidentifier"))
     private List<CustomerDboSecret> secrets;
 
     @ElementCollection(fetch = FetchType.EAGER)
-    @Fetch(FetchMode.JOIN) // replaces single queries to single join query to load all children elements
     @CollectionTable(name = "secret_ex", joinColumns = @JoinColumn(name = "customer_id", columnDefinition = "uniqueidentifier"))
     private List<CustomerDboSecretEx> secretsEx;
   }
