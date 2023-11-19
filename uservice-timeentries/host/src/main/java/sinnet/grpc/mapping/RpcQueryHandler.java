@@ -8,6 +8,7 @@ import jakarta.transaction.Transactional.TxType;
 
 /**
  * Generic Query handler.
+ * Forcing use an transaction makes the code less error-prone
  */
 @Transactional(TxType.REQUIRES_NEW)
 public interface RpcQueryHandler<Q extends GeneratedMessageV3, S extends GeneratedMessageV3> {

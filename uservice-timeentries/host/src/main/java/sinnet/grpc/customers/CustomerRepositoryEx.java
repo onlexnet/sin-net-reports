@@ -1,6 +1,5 @@
 package sinnet.grpc.customers;
 
-import java.util.ArrayList;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -89,9 +88,9 @@ public final class CustomerRepositoryEx implements MapperDbo {
         .setKomercjaJest(value.komercjaJest())
         .setKomercjaNotatki(value.komercjaNotatki())
         .setDaneTechniczne(value.daneTechniczne())
-        .setContacts(contacts.stream().map(this::toDbo).collect(Collectors.toCollection(ArrayList::new)))
-        .setSecrets(secrets.stream().map(this::toDbo).collect(Collectors.toCollection(ArrayList::new)))
-        .setSecretsEx(secretsEx.stream().map(this::toDbo).collect(Collectors.toCollection(ArrayList::new)));
+        .setContacts(contacts.stream().map(this::toDbo).collect(Collectors.toSet()))
+        .setSecrets(secrets.stream().map(this::toDbo).collect(Collectors.toSet()))
+        .setSecretsEx(secretsEx.stream().map(this::toDbo).collect(Collectors.toSet()));
     repository.save(dbo);
     return eid.next();
   }

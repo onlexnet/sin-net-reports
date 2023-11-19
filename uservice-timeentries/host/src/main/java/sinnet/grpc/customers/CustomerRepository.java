@@ -2,10 +2,11 @@ package sinnet.grpc.customers;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
-import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import jakarta.persistence.CollectionTable;
@@ -13,7 +14,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Table;
@@ -33,12 +33,19 @@ public interface CustomerRepository extends JpaRepository<CustomerRepository.Cus
 
   void deleteByProjectIdAndEntityIdAndEntityVersion(UUID projectId, UUID entityId, Long version);
 
+  @Query("""
+      select c from CustomerDbo c
+      left join fetch c.secrets
+      left join fetch c.secretsEx
+      left join fetch c.contacts
+      where c.projectId = :projectId
+      """)
   List<CustomerDbo> findByProjectId(UUID projectId);
   
   CustomerDbo findByProjectIdAndEntityId(UUID projectId, UUID entityId);
 
   @Override
-  @EntityGraph(value = "b_with_all_associations", type = EntityGraph.EntityGraphType.FETCH)
+  @Query("select c from CustomerDbo c left join fetch c.secrets")
   List<CustomerRepository.CustomerDbo> findAll();
 
   /**
@@ -152,17 +159,18 @@ public interface CustomerRepository extends JpaRepository<CustomerRepository.Cus
     // Correct approach: the entity should not be used when .loadAll is requested, especially with only sobe limited set of fields, especiallly
     // without children collections.
     // the same optimalization is about the rest of collection in the class
-    @ElementCollection(fetch = FetchType.EAGER)
+    // @ElementCollection(fetch = FetchType.EAGER)
+    @ElementCollection
     @CollectionTable(name = "contact", joinColumns = @JoinColumn(name = "customer_id", columnDefinition = "uniqueidentifier"))
-    private List<CustomerDboContact> contacts;
+    private Set<CustomerDboContact> contacts;
 
-    @ElementCollection(fetch = FetchType.EAGER)
+    @ElementCollection
     @CollectionTable(name = "secret", joinColumns = @JoinColumn(name = "customer_id", columnDefinition = "uniqueidentifier"))
-    private List<CustomerDboSecret> secrets;
+    private Set<CustomerDboSecret> secrets;
 
-    @ElementCollection(fetch = FetchType.EAGER)
+    @ElementCollection
     @CollectionTable(name = "secret_ex", joinColumns = @JoinColumn(name = "customer_id", columnDefinition = "uniqueidentifier"))
-    private List<CustomerDboSecretEx> secretsEx;
+    private Set<CustomerDboSecretEx> secretsEx;
   }
 
   /**
