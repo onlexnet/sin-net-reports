@@ -6,4 +6,4 @@ Alternatives:
 Current approach:
  - add to resource folder host/src/main/extras (parent of the current one) using 'build-helper-maven-plugin' (see details in pom.xml)
  - in CI downloading to the folder host/src/main/extras/applicationinsights required version of applicationinsight agent
- - as we build using spring-boot:build-image (it uses packeto build behind the sceen), it will be recreated in target image together with codebase, it means default location /workspace/BOOT-INFO/classes
+ - as we build using spring-boot:build-image (it uses packeto build behind the sceen), it will be recreated in target image together with codebase, it means default location /workspaces/BOOT-INFO/classes

@@ -54,7 +54,7 @@ jobs:
       - name: Build with Maven Timeentries
         run: |
           # download latest version of applicationinsights to folder expected to be included into target image
-          # as we known, the copied file will be located finally in /workspace/BOOT-INFO/classes/applicationinsights.
+          # as we known, the copied file will be located finally in /workspaces/BOOT-INFO/classes/applicationinsights.
           pushd . # remember current working dir
           cd host/src/main/extras/applicationinsights # goto well-known folder designed to be included in target image
           wget --no-verbose https://github.com/microsoft/ApplicationInsights-Java/releases/download/3.4.18/applicationinsights-agent-3.4.18.jar # download ...
