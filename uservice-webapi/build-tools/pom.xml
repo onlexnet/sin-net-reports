@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>onlexnet.sinnet</groupId>
   <artifactId>build-tools</artifactId>
-  <version>${revision}</version>
+  <version>0.0.0-Local</version>
   <name>Build Tools</name>
 
   <properties>
