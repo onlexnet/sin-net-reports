@@ -1,0 +1,14 @@
+<project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>onlexnet.sinnet</groupId>
+  <artifactId>build-tools</artifactId>
+  <version>${revision}</version>
+  <name>Build Tools</name>
+
+  <properties>
+    <!-- Disable warning
+      [WARNING] Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent! -->
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+</project>

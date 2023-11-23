@@ -10,6 +10,7 @@
     <module>gql-test</module>
     <module>gql-model</module>
     <module>base-pom</module>
+    <module>build-tools</module>
   </modules>
 
   <build>
