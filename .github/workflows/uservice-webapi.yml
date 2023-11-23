@@ -47,9 +47,6 @@ jobs:
       - name: Build with Maven gRpc API
         run: mvn -ntp install
         working-directory: api/client-java
-      - name: Build with Maven base package
-        run: mvn -ntp install
-        working-directory: libs-java
 
       - name: Build with Maven Webapi
         run: |
@@ -62,7 +59,7 @@ jobs:
           popd # restore working dir
 
           export SEMVERSION=$(cat .semversion)
-          mvn -ntp install --file pom.xml
+          mvn -ntp install -Drevision=$SEMVERSION
         working-directory: uservice-webapi
       
       - id: BuildDockerImage
