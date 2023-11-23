@@ -69,7 +69,7 @@
     </plugins>
   </build>
 
-  <distributionManagement>
+  <!-- <distributionManagement>
     <repository>
       <id>sinnet</id>
       <url>https://pkgs.dev.azure.com/onlexnet/sinnet/_packaging/sinnet/maven/v1</url>
@@ -80,7 +80,7 @@
         <enabled>true</enabled>
       </snapshots>
     </repository>
-  </distributionManagement>
+  </distributionManagement> -->
 
 
 </project>
