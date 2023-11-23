@@ -7,7 +7,6 @@
     <relativePath>../base-pom/pom.xml</relativePath>
   </parent>
   <artifactId>uservice-webapi-gql-test</artifactId>
-  <version>${revision}</version>
 
   <properties>
     <!--
