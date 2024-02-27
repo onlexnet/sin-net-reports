@@ -1,4 +1,4 @@
-import { DetailsList, DetailsListLayoutMode, IColumn, IDetailsColumnRenderTooltipProps, IDetailsHeaderProps, IRenderFunction, IStackTokens, mergeStyleSets, ScrollablePane, ScrollbarVisibility, SelectionMode, Stack, Sticky, StickyPositionType, TextField, Toggle, TooltipHost } from "@fluentui/react";
+import { DetailsList, DetailsListLayoutMode, IColumn, IDetailsColumnRenderTooltipProps, IDetailsHeaderProps, IRenderFunction, IStackTokens, ScrollablePane, ScrollbarVisibility, SelectionMode, Stack, Sticky, StickyPositionType, TextField, Toggle, TooltipHost } from "@fluentui/react";
 import _ from "lodash";
 import * as React from "react";
 import { useState } from "react";
@@ -16,42 +16,6 @@ import { ActionEditItem, VIEWCONTEXT_ACTION_EDIT_START } from "../store/viewcont
 import { Duration } from "./ActionList.Duration";
 import { ServiceListModel } from "./ServiceListModel";
 
-const classNames = mergeStyleSets({
-  fileIconHeaderIcon: {
-    padding: 0,
-    fontSize: "16px"
-  },
-  fileIconCell: {
-    textAlign: "center",
-    selectors: {
-      "&:before": {
-        content: ".",
-        display: "inline-block",
-        verticalAlign: "middle",
-        height: "100%",
-        width: "0px",
-        visibility: "hidden"
-      }
-    }
-  },
-  fileIconImg: {
-    verticalAlign: "middle",
-    maxHeight: "16px",
-    maxWidth: "16px"
-  },
-  controlWrapper: {
-    display: "flex",
-    flexWrap: "wrap"
-  },
-  exampleToggle: {
-    display: "inline-block",
-    marginBottom: "10px",
-    marginRight: "30px"
-  },
-  selectionDetails: {
-    marginBottom: "20px"
-  }
-});
 const controlStyles = {
   root: {
     margin: "0 30px 20px 0",
@@ -100,7 +64,6 @@ type PropsFromRedux = ConnectedProps<typeof connector>
 
 const ConnectedContent: React.FC<PropsFromRedux> = props => {
 
-  const [dateSorted, setDateSorted] = useState(true);
   const [dateSortedDescending, setDateSortedDescending] = useState(true);
 
   const initialColumns: TypedColumn[] = [
@@ -114,7 +77,7 @@ const ConnectedContent: React.FC<PropsFromRedux> = props => {
     {
       key: "column3", name: "Data", fieldName: "when", minWidth: 70, maxWidth: 90, isResizable: true,
       data: "date",
-      isSorted: dateSorted,
+      isSorted: true,
       isSortedDescending: dateSortedDescending,
       onColumnClick: () => { setDateSortedDescending(!dateSortedDescending) },
       onRender: (item: IDocument) => {

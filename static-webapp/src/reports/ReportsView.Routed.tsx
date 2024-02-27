@@ -1,6 +1,5 @@
 import React from "react"
 import { connect, ConnectedProps } from "react-redux";
-import { RouteComponentProps } from "react-router-dom";
 import { Dispatch } from "redux";
 import { RootState } from "../store/reducers";
 import { ReportsView } from "./ReportsView";
