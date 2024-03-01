@@ -12,11 +12,11 @@
             "projectName": "uservice-timeentries-host",
             "env": {
                 "SPRING_PROFILES_ACTIVE": "dev",
-                "DATABASE_NAME": "devlocaldb",
+                "DATABASE_NAME": "tempdb",
                 "DATABASE_PORT": 1433,
                 "DATABASE_HOST": "localhost",
-                "DATABASE_USERNAME": "uservice_timeentries_role_name",
-                "DATABASE_PASSWORD": "uservice_timeentries_role_password",
+                "DATABASE_USERNAME": "sa",
+                "DATABASE_PASSWORD": "password123!",
                 "DATABASE_SCHEMA": "uservice_timeentries"
             },
             "preLaunchTask": "dapr-debug",

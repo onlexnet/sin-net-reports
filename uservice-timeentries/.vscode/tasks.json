@@ -2,15 +2,15 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"appId": "activities-app-id",
+			"appId": "uservice-timesheets",
 			"appPort": 11021,
 			"appProtocol": "grpc",
 			"label": "dapr-debug",
-			"componentsPath": "../../.components",
+			"componentsPath": "../.components",
 			"type": "dapr",
 		},
 		{
-			"appId": "activities-app-id",
+			"appId": "uservice-timesheets",
 			"label": "dapr-down",
 			"type": "daprd-down"
 		}

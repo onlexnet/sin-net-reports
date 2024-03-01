@@ -5,15 +5,18 @@ We support some profiles in backend code to allow run them with different config
 - dev - no security
 - prod - ready for deployment, mssql database
 
-## Good development practices
+## build project
+```bash
+mvn -f ../api/client-java install -ntp
+mvn -f ../libs-java -ntp install
+mvn clean install -ntp clean install
+```
 
-- **[mvn versions:display-dependency-updates](https://www.mojohaus.org/versions-maven-plugin/display-dependency-updates-mojo.html)** to display all dependencies that have newer versions available
+## Good development practices
+- **code ../.github/workflows/uservice-timeentries.yml** to see build definition
+- **[mvn versions:display-property-updates -ntp](https://www.mojohaus.org/versions/versions-maven-plugin/display-property-updates-mojo.html)** Displays properties that are linked to artifact versions and have updates available
 - **[mvn versions:display-plugin-updates](https://www.mojohaus.org/versions-maven-plugin/display-plugin-updates-mojo.html)** to display all plugins that have newer versions available, taking care of Maven version prerequisites
 - **[mvn project-info-reports:licenses]
-
-<https://www.freecodecamp.org/news/cjn-junit-test-with-maven-in-vscode/>
-https://github.com/SonarSource/sonar-scanning-examples/blob/master/doc/jacoco.md
-
 
 ## Used articles
 - https://www.vinsguru.com/grpc-client-streaming-api-in-java/
