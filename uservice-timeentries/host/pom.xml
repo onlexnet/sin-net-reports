@@ -57,6 +57,19 @@
     </dependency>
 
 
+    <!--
+      Optional dependency to see startup time with dependencies
+      Feel free to comment
+      When uncommented, please see live report at http://localhost:8080/startup-report
+      more: https://github.com/maciejwalkowiak/spring-boot-startup-report
+    -->
+    <!-- <dependency>
+        <groupId>com.maciejwalkowiak.spring</groupId>
+        <artifactId>spring-boot-startup-report</artifactId>
+        <version>0.2.0</version>
+        <optional>true</optional>
+    </dependency> -->
+
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
