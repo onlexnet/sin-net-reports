@@ -1,28 +1,11 @@
 import React from "react"
 import { EntityId } from "../../store/actions/ServiceModel";
-import { RootState } from "../../store/reducers";
-import { Dispatch } from "redux";
-import { connect, ConnectedProps } from "react-redux";
 import { RouteComponentProps } from "react-router-dom";
 import { CustomerViewEdit } from "./CustomerView.Edit";
 import { routing } from "../../Routing";
 
 
-const mapStateToProps = (state: RootState) => {
-    if (state.appState.empty) {
-        throw new Error('Invalid state');
-    }
-    return state;
-}
-
-const mapDispatchToProps = (dispatch: Dispatch) => {
-    return { }
-}
-
-const connector = connect(mapStateToProps, mapDispatchToProps);
-type PropsFromRedux = ConnectedProps<typeof connector>;
-  
-interface CustomerViewEditProps extends PropsFromRedux, RouteComponentProps<{ projectId: string, entityId: string, entityVersion: string}> {
+interface CustomerViewEditProps extends RouteComponentProps<{ projectId: string, entityId: string, entityVersion: string}> {
 }
 
   
@@ -39,4 +22,4 @@ export const CustomerViewRoutedEditLocal: React.FC<CustomerViewEditProps> = prop
                                      itemRemoved={itemRemoved} />;
 }
 
-export const CustomerViewRoutedEdit = connect(mapStateToProps, mapDispatchToProps)(CustomerViewRoutedEditLocal);
+export const CustomerViewRoutedEdit = CustomerViewRoutedEditLocal;

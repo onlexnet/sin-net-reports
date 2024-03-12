@@ -1,12 +1,10 @@
-import React, { useState } from "react";
+import React, { useReducer, useState } from "react";
 import { TextField, PrimaryButton, Separator, DetailsList, IColumn } from "@fluentui/react";
 import { Link, RouteComponentProps } from "react-router-dom";
 import { routing } from "../../Routing";
 import { HorizontalSeparatorStack } from "../../Components/HorizontalSeparatorStack";
 import { useListCustomers, ListCustomersItem } from "../../api/useListCustomers";
-import { RootState } from "../../store/reducers";
-import { Dispatch } from "redux";
-import { connect, ConnectedProps } from "react-redux";
+import { RootState, initialState, reducer } from "../../store/reducers";
 import _ from "lodash";
 
 
@@ -17,24 +15,18 @@ const mapStateToProps = (state: RootState) => {
     return state;
 }
 
-const mapDispatchToProps = (dispatch: Dispatch) => {
-    return { }
-}
-
-const connector = connect(mapStateToProps, mapDispatchToProps);
-type PropsFromRedux = ConnectedProps<typeof connector>;
-  
-interface ReportsProps extends PropsFromRedux, RouteComponentProps {
+interface ReportsProps extends RouteComponentProps {
 
 }
 
 const Reports: React.FC<ReportsProps> = (props) => {
+    const [state, dispatch] = useReducer(reducer, initialState);
 
     interface TypedColumn extends IColumn {
         fieldName: keyof ListCustomersItem;
     }
 
-    const items = useListCustomers(props.appState.projectId);
+    const items = useListCustomers(state.appState.projectId);
     const [searchPhrase, setSearchPhrase] = useState<string | undefined>('');
 
     const columns: TypedColumn[] = [
@@ -102,4 +94,4 @@ const Reports: React.FC<ReportsProps> = (props) => {
 }
 
 
-export const Customers = connect(mapStateToProps, mapDispatchToProps)(Reports);
+export const Customers = Reports;

@@ -1,9 +1,7 @@
 import { Spinner, Stack } from "@fluentui/react";
 import _ from "lodash";
-import React from "react";
-import { connect, ConnectedProps } from "react-redux";
+import React, { useReducer } from "react";
 import { HashRouter as Router, Route } from "react-router-dom";
-import { Dispatch } from "redux";
 import { useAvailableProjectsQuery } from "../../Components/.generated/components";
 import { Debug } from "../../debug/Debug";
 import { Home } from "../../Home";
@@ -12,7 +10,7 @@ import { ReportsViewRouted } from "../../reports/ReportsView.Routed";
 import { routing } from "../../Routing";
 import { ServicesDefault } from "../../services";
 import { AppContextAction } from "../../store/appcontext/types";
-import { RootState } from "../../store/reducers";
+import { RootState, initialState, reducer } from "../../store/reducers";
 import { ActionViewRoutedEdit } from "../actions/ActionView.Routed.Edit";
 import { CustomerViewRoutedEdit } from "../customer/CustomerView.Routed.Edit";
 import { CustomerViewNew } from "../customer/CustomerView.Routed.New";
@@ -20,29 +18,20 @@ import { CustomersRoutedConnectedView } from "../customers/Customers.Routed";
 import { MainViewMultipleProjects } from "./MainView.MultipleProjects";
 import { MainViewNoProjects } from "./MainView.NoProjects";
 
-const mapStateToProps = (state: RootState) => {
-    return { auth: state.auth, appState: state.appState };
-}
-const mapDispatchToProps = (dispatch: Dispatch) => {
-    return {
-        setProject: (projectId: string) => {
-            const action: AppContextAction = {
-                type: 'APPCONTEXT_READY',
-                projectId
-            }
-            dispatch(action);
-        }
-    }
-}
-const connector = connect(mapStateToProps, mapDispatchToProps);
-type PropsFromRedux = ConnectedProps<typeof connector>;
-
-interface Props extends PropsFromRedux {
+interface Props {
 }
 
 const LocalView: React.FC<Props> = (props) => {
-
+    const [state, dispatch] = useReducer(reducer, initialState);
     const { data, error } = useAvailableProjectsQuery();
+
+    const setProject = (projectId: string) => {
+        const action: AppContextAction = {
+            type: 'APPCONTEXT_READY',
+            projectId
+        }
+        dispatch(action);
+    }
 
     if (error) {
         return (<p>Error: {JSON.stringify(error)}</p>);
@@ -67,13 +56,13 @@ const LocalView: React.FC<Props> = (props) => {
         return <MainViewNoProjects />;
     }
 
-    if (availableProjects.length > 1 && props.appState.empty) {
-        return <MainViewMultipleProjects projects={availableProjects} projectSelected={id => props.setProject(id)} />;
+    if (availableProjects.length > 1 && state.appState.empty) {
+        return <MainViewMultipleProjects projects={availableProjects} projectSelected={id => setProject(id)} />;
     }
 
-    if (availableProjects.length === 1 && props.appState.empty) {
+    if (availableProjects.length === 1 && state.appState.empty) {
         const project = availableProjects[0];
-        props.setProject(project.id);
+        setProject(project.id);
         return (<p>Set application context ....</p>);
     }
 
@@ -100,4 +89,4 @@ const LocalView: React.FC<Props> = (props) => {
 
 }
 
-export const MainView = connect(mapStateToProps, mapDispatchToProps)(LocalView);
+export const MainView = LocalView;

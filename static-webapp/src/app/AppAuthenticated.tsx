@@ -1,30 +1,17 @@
-import React from "react";
+import React, { useReducer } from "react";
 
 import { ApolloProvider } from "@apollo/react-hooks";
 import { apolloClientFactory } from "../api";
-import { RootState } from "../store/reducers";
-import { Dispatch } from "redux";
-import { connect, ConnectedProps } from "react-redux";
 import { MainView } from "./mainview/MainView";
+import { initialState, reducer } from "../store/reducers";
 
-const mapStateToProps = (state: RootState) => {
-  return state.auth;
-}
-const mapDispatchToProps = (dispatch: Dispatch) => {
-  return {
-  }
-}
-const connector = connect(mapStateToProps, mapDispatchToProps);
-type PropsFromRedux = ConnectedProps<typeof connector>;
-
-
-
-interface Props extends PropsFromRedux {
+interface Props {
 }
 
 const ViewLocal: React.FC<Props> = (props) => {
+  const [state, dispatch] = useReducer(reducer, initialState);
 
-  const client = apolloClientFactory(props.idToken);
+  const client = apolloClientFactory(state.auth.idToken);
 
   return (
     <ApolloProvider client={client}>
@@ -33,4 +20,4 @@ const ViewLocal: React.FC<Props> = (props) => {
   );
 };
 
-export const View = connect(mapStateToProps, mapDispatchToProps)(ViewLocal);
+export const View = ViewLocal;

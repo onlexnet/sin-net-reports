@@ -1,39 +1,23 @@
-import React from "react"
+import React, { useReducer } from "react"
 import { EntityId } from "../../store/actions/ServiceModel";
-import { RootState } from "../../store/reducers";
-import { Dispatch } from "redux";
-import { connect, ConnectedProps } from "react-redux";
+import { initialState, reducer } from "../../store/reducers";
 import { CustomerView, CustomerViewEntry } from "./CustomerView";
 import { RouteComponentProps } from "react-router-dom";
 import { useReserveCustomerMutation } from "../../Components/.generated/components";
 import { routing } from "../../Routing";
 
 
-const mapStateToProps = (state: RootState) => {
-    if (state.appState.empty) {
-        throw new Error('Invalid state');
-    }
-    return state;
+interface CustomerViewNewProps extends RouteComponentProps  {
 }
-
-const mapDispatchToProps = (dispatch: Dispatch) => {
-    return { }
-}
-
-const connector = connect(mapStateToProps, mapDispatchToProps);
-type PropsFromRedux = ConnectedProps<typeof connector>;
-  
-interface CustomerViewNewProps extends PropsFromRedux, RouteComponentProps  {
-}
-
   
 export const CustomerViewNewLocal: React.FC<CustomerViewNewProps> = props => {
+    const [state, dispatch] = useReducer(reducer, initialState);
     const [reserveCustomerMutation, { data, called}] = useReserveCustomerMutation();
 
     if (!called) {
         reserveCustomerMutation({
             variables: {
-                projectId: props.appState.projectId
+                projectId: state.appState.projectId
             }
         });
     }
@@ -54,4 +38,4 @@ export const CustomerViewNewLocal: React.FC<CustomerViewNewProps> = props => {
     return null;
 }
 
-export const CustomerViewNew = connect(mapStateToProps, mapDispatchToProps)(CustomerViewNewLocal);
+export const CustomerViewNew = CustomerViewNewLocal;

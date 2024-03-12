@@ -1,13 +1,13 @@
 import { SessionState, SessionAction, SignInFlow } from "./types";
 import _ from "lodash";
 
-const initialState: SessionState = {
+export const initialSessionState: SessionState = {
     flow: SignInFlow.Unknown,
     idToken: "undefined",
     email: "invalid@email"
 }
 
-export const sessionReducer = (state = initialState, action: SessionAction): SessionState => {
+export const sessionReducer = (state: SessionState, action: SessionAction): SessionState => {
     const clone = _.cloneDeep(state);
     switch (action.type) {
         case 'INITIATE_SESSION_STARTED':

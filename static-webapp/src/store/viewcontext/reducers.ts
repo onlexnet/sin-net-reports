@@ -2,14 +2,14 @@ import _ from "lodash";
 import { ViewContextState, ViewContextAction, VIEWCONTEXT_ACTION_EDIT_START, VIEWCONTEXT_ACTION_EDIT_CANCEL, VIEWCONTEXT_ACTION_EDIT_UPDATED } from "./types";
 import { TimePeriod } from "./TimePeriod";
 
-const initialState: ViewContextState = {
+export const initialViewContextState: ViewContextState = {
     period: new TimePeriod(new Date()),
     // UI has to adjust View to the fact of being (or not) edited an Action
     editedActionId: null,
     lastTouchedActionId: null
 }
 
-export const viewContextReducer = (state = initialState, action: ViewContextAction): ViewContextState => {
+export const viewContextReducer = (state: ViewContextState, action: ViewContextAction): ViewContextState => {
     const clone = _.cloneDeep(state);
     switch (action.type) {
         case 'VIEWCONTEXT_PERIOD_SELECTED':

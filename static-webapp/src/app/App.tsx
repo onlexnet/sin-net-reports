@@ -1,31 +1,16 @@
 import './App.css';
-import React from "react";
+import React, { useReducer } from "react";
 
 import { View as AuthenticatedView } from "./AppAuthenticated";
 import { View as UnauthenticatedView } from "./AppUnauthenticated";
 import InProgressView from "./AppInProgress";
-import { Dispatch } from "redux";
-import { connect, ConnectedProps } from "react-redux";
 import { SignInFlow } from "../store/session/types";
-import { initiateSession } from "../store/session/actions";
-import { RootState } from "../store/reducers";
+import { initialState, reducer } from "../store/reducers";
 import { Configuration, LogLevel, PublicClientApplication } from "@azure/msal-browser";
 import { MsalProvider } from "@azure/msal-react";
+import { initiateSession } from '../store/session/actions';
 
-const mapStateToProps = (state: RootState) => {
-  return state.auth;
-}
-const mapDispatchToProps = (dispatch: Dispatch) => {
-  return {
-    login: () => {
-      dispatch(initiateSession());
-    }
-  }
-}
-const connector = connect(mapStateToProps, mapDispatchToProps);
-type PropsFromRedux = ConnectedProps<typeof connector>;
-
-interface AppProps extends PropsFromRedux {
+interface AppProps {
 }
 
 const config: Configuration = {
@@ -70,17 +55,22 @@ const config: Configuration = {
 const pca = new PublicClientApplication(config);
 
 const App: React.FC<AppProps> = props => {
+  const [state, dispatch] = useReducer(reducer, initialState);
+  const login = () => {
+      dispatch(initiateSession());
+  }
 
-  switch (props.flow) {
+  alert(1)
+  switch (state.auth.flow) {
     case SignInFlow.Unknown:
     case SignInFlow.SessionInitiated:
       return (<MsalProvider instance={pca}><InProgressView /></MsalProvider>);
     case SignInFlow.SessionEstablished:
       return (<MsalProvider instance={pca}><AuthenticatedView /></MsalProvider>);
     default:
-      return <UnauthenticatedView login={props.login} />;
+      return <UnauthenticatedView login={login} />;
   }
 };
 
-export default connector(App)
+export default App
 

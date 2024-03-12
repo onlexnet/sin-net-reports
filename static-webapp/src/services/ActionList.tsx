@@ -2,17 +2,14 @@ import { DetailsList, DetailsListLayoutMode, IColumn, IDetailsColumnRenderToolti
 import _ from "lodash";
 import * as React from "react";
 import { useState } from "react";
-import { connect, ConnectedProps } from "react-redux";
 import { Link } from "react-router-dom";
-import { Dispatch } from "redux";
 import { toActionModel } from "../api/DtoMapper";
 import { asDtoDates } from "../api/Mapper";
 import { LocalDateView } from "../app/LocalDateView";
 import { useFetchServicesQuery } from "../Components/.generated/components";
 import { ServiceAppModel } from "../store/actions/ServiceModel";
-import { RootState } from "../store/reducers";
+import { initialState, reducer } from "../store/reducers";
 import { TimePeriod } from "../store/viewcontext/TimePeriod";
-import { ActionEditItem, VIEWCONTEXT_ACTION_EDIT_START } from "../store/viewcontext/types";
 import { Duration } from "./ActionList.Duration";
 import { ServiceListModel } from "./ServiceListModel";
 
@@ -40,30 +37,9 @@ export interface TypedColumn extends IColumn {
 export interface ContentProps {
 }
 
-const mapStateToProps = (state: RootState) => {
-  if (state.appState.empty) {
-    throw new Error('Invalid state');
-  }
-  return { ...state.viewContext, selectedProjectId: state.appState.projectId, currentEmail: state.auth.email };
-};
-const mapDispatchToProps = (dispatch: Dispatch) => {
-  return {
-    editItem: (actionEntityId: string) => {
-      var action: ActionEditItem = {
-        type: VIEWCONTEXT_ACTION_EDIT_START,
-        payload: { actionEntityId }
-      }
-      dispatch(action);
-    }
-  }
-}
-const connector = connect(mapStateToProps, mapDispatchToProps);
+const ConnectedContent: React.FC<ContentProps> = props => {
 
-
-type PropsFromRedux = ConnectedProps<typeof connector>
-
-const ConnectedContent: React.FC<PropsFromRedux> = props => {
-
+  const [state, dispatch] = React.useReducer(reducer, initialState);
   const [dateSortedDescending, setDateSortedDescending] = useState(true);
 
   const initialColumns: TypedColumn[] = [
@@ -106,18 +82,19 @@ const ConnectedContent: React.FC<PropsFromRedux> = props => {
     }
   ];
 
-  const [lastTouchedActionId, setlastTouchedActionId] = useState(props.lastTouchedActionId);
+  const [lastTouchedActionId, setlastTouchedActionId] = useState(state.viewContext.lastTouchedActionId);
 
-  const newDataIsComing = props.lastTouchedActionId != null && props.lastTouchedActionId !== lastTouchedActionId;
+  const newDataIsComing = state.viewContext.lastTouchedActionId != null && state.viewContext.lastTouchedActionId !== lastTouchedActionId;
   if (newDataIsComing) {
     console.log('newDataIsComing');
-    setlastTouchedActionId(props.lastTouchedActionId);
+    setlastTouchedActionId(state.viewContext.lastTouchedActionId);
   }
 
-  const periodDto = asDtoDates(props.period);
+  const selectedProjectId = state.appState.projectId;
+  const periodDto = asDtoDates(state.viewContext.period);
   const { data, refetch } = useFetchServicesQuery({
     variables: {
-      projectId: props.selectedProjectId,
+      projectId: selectedProjectId,
       from: periodDto.dateFrom,
       to: periodDto.dateTo
     }
@@ -126,10 +103,11 @@ const ConnectedContent: React.FC<PropsFromRedux> = props => {
     refetch();
   }
 
+  const currentEmail = state.auth.email
   const [onlyMyData, setOnlyMyData] = useState(true);
   const filterByOnlyMyData = (item: ServiceListModel): boolean => {
     if (!onlyMyData) return true;
-    if (item.servicemanEmail === props.currentEmail) return true;
+    if (item.servicemanEmail === currentEmail) return true;
     return false;
   }
 
@@ -178,8 +156,8 @@ const ConnectedContent: React.FC<PropsFromRedux> = props => {
 
 
   const [currentPeriod, setCurrentPeriod] = useState<TimePeriod | null>(null);
-  if (currentPeriod !== props.period) {
-    setCurrentPeriod(props.period);
+  if (currentPeriod !== state.viewContext.period) {
+    setCurrentPeriod(state.viewContext.period);
   }
 
 
@@ -240,7 +218,7 @@ const ConnectedContent: React.FC<PropsFromRedux> = props => {
   );
 }
 
-export const Content = connector(ConnectedContent);
+export const Content = ConnectedContent;
 
 const toLocalModel = (it: ServiceAppModel): ServiceListModel => {
   return {

@@ -1,4 +1,3 @@
-import { Action } from "redux";
 import { EntityId } from "../actions/ServiceModel";
 import { TimePeriod } from "./TimePeriod";
 
@@ -31,36 +30,36 @@ export const VIEWCONTEXT_ACTION_EDIT_START = "VIEWCONTEXT_ACTION_EDIT_START";
 export const VIEWCONTEXT_ACTION_EDIT_CANCEL = "VIEWCONTEXT_ACTION_EDIT_CANCEL";
 export const VIEWCONTEXT_ACTION_EDIT_UPDATED = "VIEWCONTEXT_ACTION_EDIT_UPDATED";
 
-export interface PeriodPrev extends Action<typeof VIEWCONTEXT_PREV_PERIOD> {
+export interface PeriodPrev {
     type: typeof VIEWCONTEXT_PREV_PERIOD,
     payload: {}
 }
 
-export interface PeriodNext extends Action<typeof VIEWCONTEXT_NEXT_PERIOD> {
+export interface PeriodNext {
     type: typeof VIEWCONTEXT_NEXT_PERIOD,
     payload: {}
 }
 
-export interface PeriodSelected extends Action<typeof VIEWCONTEXT_PERIOD_SELECTED> {
+export interface PeriodSelected {
     type: typeof VIEWCONTEXT_PERIOD_SELECTED,
     payload: {
         requested: TimePeriod
     }
 }
 
-export interface ActionEditItem extends Action<typeof VIEWCONTEXT_ACTION_EDIT_START> {
+export interface ActionEditItem {
     type: typeof VIEWCONTEXT_ACTION_EDIT_START,
     payload: {
         actionEntityId: string
     }
 }
 
-export interface ActionEditCancel extends Action<typeof VIEWCONTEXT_ACTION_EDIT_CANCEL> {
+export interface ActionEditCancel {
     type: typeof VIEWCONTEXT_ACTION_EDIT_CANCEL,
     payload: {}
 }
 
-export interface ActionEditUpdated extends Action<typeof VIEWCONTEXT_ACTION_EDIT_UPDATED> {
+export interface ActionEditUpdated {
     type: typeof VIEWCONTEXT_ACTION_EDIT_UPDATED,
     payload: {
         lastTouchedEntityId: EntityId

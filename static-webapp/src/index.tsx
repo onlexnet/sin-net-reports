@@ -6,8 +6,6 @@ import * as serviceWorker from "./serviceWorker";
 import '@fluentui/react/dist/css/fabric.css';
 
 import { initializeIcons } from "@fluentui/react/lib/Icons";
-import { Provider } from "react-redux";
-import { store } from "./store/store";
 import App from "./app/App";
 
 import {
@@ -24,9 +22,7 @@ const theme = AzureThemeLight; // or alternatively AzureThemeDark
 
 ReactDOM.render(
   <ThemeProvider>
-    <Provider store={store}>
-        <App />
-    </Provider>
+      <App />
   </ThemeProvider>,
   document.getElementById("app")
 );

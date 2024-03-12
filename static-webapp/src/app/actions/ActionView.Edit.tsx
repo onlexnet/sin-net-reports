@@ -1,10 +1,8 @@
 import { EntityId, ServiceAppModel } from "../../store/actions/ServiceModel";
-import { RootState } from "../../store/reducers";
-import { Dispatch } from "redux";
-import { connect, ConnectedProps } from "react-redux";
+import { RootState, initialState, reducer } from "../../store/reducers";
 import _ from "lodash";
 import { ComboBox, DefaultButton, IComboBox, IComboBoxOption, PrimaryButton, Stack, TextField } from "@fluentui/react";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useReducer, useRef, useState } from "react";
 import { AppDatePicker } from "../../services/ActionList.DatePicker";
 import { LocalDate } from "../../store/viewcontext/TimePeriod";
 import { useGetUsers } from "../../api/useGetUsers";
@@ -14,22 +12,8 @@ import { CustomerComboBox } from "./CustomerComboBox";
 import { asDtoDate } from "../../api/Mapper";
 import { useListCustomersQuery } from "../../Components/.generated/components"
 
-const mapStateToProps = (state: RootState) => {
-    if (state.appState.empty) {
-        throw new Error('Invalid state');
-    }
-    return state;
-}
 
-const mapDispatchToProps = (dispatch: Dispatch) => {
-    return {}
-}
-
-const connector = connect(mapStateToProps, mapDispatchToProps);
-type PropsFromRedux = ConnectedProps<typeof connector>;
-
-
-interface ActionViewEditProps extends PropsFromRedux {
+interface ActionViewEditProps {
     item: ServiceAppModel,
     cancelEdit: () => void,
     actionUpdated: (entity: EntityId) => void
@@ -41,6 +25,7 @@ interface ActionViewEditProps extends PropsFromRedux {
  * @returns 
  */
 export const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
+    const [state, dispatch] = useReducer(reducer, initialState);
     const { item, cancelEdit, actionUpdated } = props;
 
     const propsProjectId = item?.projectId;
@@ -292,5 +277,5 @@ export const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
     );
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ActionViewEditLocal);
+export default ActionViewEditLocal;
 

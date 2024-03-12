@@ -1,7 +1,5 @@
 import React from "react"
 import { RootState } from "../../store/reducers";
-import { Dispatch } from "redux";
-import { connect, ConnectedProps } from "react-redux";
 import { RouteComponentProps } from "react-router-dom";
 import ActionViewEdit from "./ActionView.Edit";
 import { useGetActionQuery } from "../../Components/.generated/components";
@@ -16,14 +14,7 @@ const mapStateToProps = (state: RootState) => {
     return state;
 }
 
-const mapDispatchToProps = (dispatch: Dispatch) => {
-    return {}
-}
-
-const connector = connect(mapStateToProps, mapDispatchToProps);
-type PropsFromRedux = ConnectedProps<typeof connector>;
-
-interface ActionViewEditProps extends PropsFromRedux, RouteComponentProps<{ projectId: string, entityId: string, entityVersion: string }> {
+interface ActionViewEditProps extends RouteComponentProps<{ projectId: string, entityId: string, entityVersion: string }> {
 }
 
 
@@ -50,4 +41,4 @@ export const ActionViewRoutedEditLocal: React.FC<ActionViewEditProps> = props =>
     return <div>Loading ...</div>
 }
 
-export const ActionViewRoutedEdit = connect(mapStateToProps, mapDispatchToProps)(ActionViewRoutedEditLocal);
+export const ActionViewRoutedEdit = ActionViewRoutedEditLocal;

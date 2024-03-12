@@ -1,8 +1,6 @@
-import React from "react"
+import React, { useReducer } from "react"
 import { EntityId } from "../../store/actions/ServiceModel";
-import { RootState } from "../../store/reducers";
-import { Dispatch } from "redux";
-import { connect, ConnectedProps } from "react-redux";
+import { RootState, initialState, reducer } from "../../store/reducers";
 import { ContactDetails, CustomerView, CustomerViewEntry, SecretExModel, SecretModel } from "./CustomerView";
 import { useGetCustomerQuery } from "../../Components/.generated/components";
 import _ from "lodash";
@@ -16,14 +14,7 @@ const mapStateToProps = (state: RootState) => {
     return state;
 }
 
-const mapDispatchToProps = (dispatch: Dispatch) => {
-    return { }
-}
-
-const connector = connect(mapStateToProps, mapDispatchToProps);
-type PropsFromRedux = ConnectedProps<typeof connector>;
-  
-interface CustomerViewEditProps extends PropsFromRedux {
+interface CustomerViewEditProps {
     id: EntityId,
     itemSaved: () => void
     itemRemoved: () => void
@@ -31,9 +22,10 @@ interface CustomerViewEditProps extends PropsFromRedux {
 
   
 export const CustomerViewEditLocal: React.FC<CustomerViewEditProps> = props => {
+    const [state, dispatch] = useReducer(reducer, initialState);
     const { data, error } = useGetCustomerQuery({
         variables: {
-            projectId: props.appState.projectId,
+            projectId: state.appState.projectId,
             entityId: props.id.entityId
         }
     })
@@ -135,4 +127,4 @@ export const CustomerViewEditLocal: React.FC<CustomerViewEditProps> = props => {
     return <div>Loading customer details...</div>
 }
 
-export const CustomerViewEdit = connect(mapStateToProps, mapDispatchToProps)(CustomerViewEditLocal);
+export const CustomerViewEdit = CustomerViewEditLocal;

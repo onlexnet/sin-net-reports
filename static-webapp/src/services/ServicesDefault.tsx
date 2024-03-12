@@ -1,25 +1,17 @@
 import { Label, Stack } from "@fluentui/react";
-import React from "react";
-import { connect, ConnectedProps } from "react-redux";
+import React, { useReducer } from "react";
 import { RouteComponentProps } from "react-router-dom";
-import { Dispatch } from "redux";
 import { routing } from "../Routing";
-import { RootState } from "../store/reducers";
 import { Content } from "./ActionList";
 import { ServiceCommandBar } from "./Commands";
+import { initialState, reducer } from "../store/reducers";
 
-const mapStateToProps = (state: RootState) => {
-  return ({ viewContext: state.viewContext, appState: state.appState });
-}
-const mapDispatchToProps = (dispatch: Dispatch) => ({});
 
-const connector = connect(mapStateToProps, mapDispatchToProps);
-type PropsFromRedux = ConnectedProps<typeof connector>;
-
-interface MainProps extends PropsFromRedux, RouteComponentProps {
+interface MainProps extends RouteComponentProps {
 }
 
 const MainView: React.FC<MainProps> = (props) => {
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   return (
     <Stack styles={{
@@ -36,7 +28,7 @@ const MainView: React.FC<MainProps> = (props) => {
       <Stack.Item  >
         <div style={{ padding: "10px" }}>
           <Label >
-            {"Miesiąc: " + props.viewContext.period.toString()}
+            {"Miesiąc: " + state.viewContext.period.toString()}
           </Label>
         </div>
       </Stack.Item>
@@ -55,4 +47,4 @@ const MainView: React.FC<MainProps> = (props) => {
   );
 };
 
-export const ServicesDefault = connect(mapStateToProps, mapDispatchToProps)(MainView);
+export const ServicesDefault = MainView;
