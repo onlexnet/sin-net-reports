@@ -31,6 +31,7 @@ interface CustomerViewEditProps extends PropsFromRedux {
 
   
 export const CustomerViewEditLocal: React.FC<CustomerViewEditProps> = props => {
+
     const { data, error } = useGetCustomerQuery({
         variables: {
             projectId: props.appState.projectId,
@@ -76,7 +77,8 @@ export const CustomerViewEditLocal: React.FC<CustomerViewEditProps> = props => {
                 entityName: it.entityName ?? undefined,
                 entityCode: it.entityCode ?? undefined,
                 who: it.changedWho,
-                when: SecretsTimestamp.of(it.changedWhen)
+                when: SecretsTimestamp.of(it.changedWhen),
+                code: { type: "UNDEFINED" }
             };
             return ret;
         })

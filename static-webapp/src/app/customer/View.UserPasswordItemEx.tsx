@@ -1,10 +1,13 @@
 import { DefaultButton, IStackTokens, Separator, Stack, TextField } from "@fluentui/react";
 import React from "react";
+import { CodeType } from "./CodeType";
 
 const stackTokens: IStackTokens = { childrenGap: 12 };
 
 interface UserPasswordExtModel {
+    // internal ID used by React to identify the element on list of elements
     localKey: string,
+    // editable properties of the component
     location: string
     username?: string,
     password?: string,
@@ -56,6 +59,7 @@ export const UserPasswordItemExt: React.FC<UserPasswordExtItemProps> = props => 
                     <Stack horizontal tokens={stackTokens}>
                         <TextField value={props.changedBy} disabled defaultValue="-" />
                         <TextField value={props.changedWhen} disabled defaultValue="-"/>
+                        <TextField value={'Brak kodu TOTP'} disabled defaultValue="-"/>
                     </Stack>
                 </Stack>
             </div>
