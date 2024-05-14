@@ -109,6 +109,16 @@ message CustomerSecretEx {
   string entityCode = 5;
   string changedWho = 6;
   LocalDateTime changedWhen = 7;
+  oneof otp {
+    Totp totp = 8;
+  }
+}
+
+// Time-based one-time password
+message Totp {
+  string secret = 1;
+  // time-based counter, e.g. 30 means: 30 secs
+  int32 counter = 2;
 }
 
 message CustomerContact {

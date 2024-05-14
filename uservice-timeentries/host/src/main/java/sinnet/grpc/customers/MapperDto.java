@@ -12,6 +12,7 @@ import sinnet.models.CustomerModel;
 import sinnet.models.CustomerSecret;
 import sinnet.models.CustomerSecretEx;
 import sinnet.models.CustomerValue;
+import sinnet.models.OtpType;
 import sinnet.models.ValName;
 
 /**
@@ -103,6 +104,16 @@ public interface MapperDto extends Mapper {
   /**
    * TBD.
    */
+  static Optional<Totp> toDto(OtpType optType) {
+    return switch (optType) {
+      case OtpType.None x -> Optional.empty();
+      case OtpType.Totp(var secret, var counter) -> Optional.of(Totp.newBuilder().setSecret(secret).setCounter(counter).build());
+    };
+  }
+
+  /**
+   * TBD.
+   */
   static sinnet.grpc.customers.CustomerSecret toDto(CustomerSecret value) {
     return PropsBuilder.build(sinnet.grpc.customers.CustomerSecret.newBuilder())
         .set(Option.of(value.getLocation()).getOrElse("?"), b -> b::setLocation)
@@ -125,6 +136,7 @@ public interface MapperDto extends Mapper {
         .set(it.getEntityCode(), b -> b::setEntityCode)
         .set(Option.of(it.getChangedWho().value()).getOrElse("?"), b -> b::setChangedWho)
         .set(toDto(it.getChangedWhen()), b -> b::setChangedWhen)
+        .tset(toDto(it.getCodeType()), b -> b::setTotp)
         .done().build();
   }
 
@@ -165,6 +177,10 @@ public interface MapperDto extends Mapper {
    * TBD.
    */
   static CustomerSecretEx fromDto(sinnet.grpc.customers.CustomerSecretEx item) {
+    var otpType = switch (item.getOtpCase()) {
+      case TOTP -> new OtpType.Totp(item.getTotp().getSecret(), item.getTotp().getCounter());
+      default -> OtpType.None.INSTANCE;
+    };
     return new CustomerSecretEx()
         .setLocation(item.getLocation())
         .setPassword(item.getPassword())
@@ -172,7 +188,8 @@ public interface MapperDto extends Mapper {
         .setEntityCode(item.getEntityCode())
         .setEntityName(item.getEntityName())
         .setChangedWho(ValEmail.of(item.getChangedWho()))
-        .setChangedWhen(fromDto(item.getChangedWhen()));
+        .setChangedWhen(fromDto(item.getChangedWhen()))
+        .setCodeType(otpType);
   }
 
   /**

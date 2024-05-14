@@ -19,4 +19,5 @@ public final class CustomerSecretEx {
   private String entityCode;
   private ValEmail changedWho = ValEmail.empty();
   private LocalDateTime changedWhen;
+  private OtpType codeType;
 }

@@ -6,6 +6,7 @@ import sinnet.models.CustomerModel;
 import sinnet.models.CustomerSecret;
 import sinnet.models.CustomerSecretEx;
 import sinnet.models.CustomerValue;
+import sinnet.models.OtpType;
 import sinnet.models.ShardedId;
 import sinnet.models.ValName;
 
@@ -36,7 +37,8 @@ public interface MapperDbo {
       .setEntityName(dbo.getEntityName())
       .setEntityCode(dbo.getEntityCode())
       .setChangedWho(ValEmail.of(dbo.getChangedWho()))
-      .setChangedWhen(dbo.getChangedWhen());
+      .setChangedWhen(dbo.getChangedWhen())
+      .setCodeType(OtpType.fromDbo(dbo.getOtp()));
   }
 
   /**

@@ -3,7 +3,7 @@ Folder contains codebase of client part of SinNet PSA application.
 
 - **npm install** install packages
 - **npm run generate** generate local graphql models
-- **npm start** to run against loal backend
+- **npm start** to run against production backend
 
 ## Used articles
 * https://daveceddia.com/pluggable-slots-in-react-components/
@@ -12,11 +12,4 @@ Folder contains codebase of client part of SinNet PSA application.
 * https://docs.microsoft.com/en-us/azure/active-directory/develop/reference-app-manifest
 * https://github.com/syncweek-react-aad/react-aad/tree/master/samples/react-typescript
 
-## Build and push local version of the app
-
-```bash
-eval $(minikube docker-env)
-docker build . -t sinnet.azurecr.io/webapp:latest
-```
-
-## Static Web APp configuration: https://learn.microsoft.com/en-us/azure/static-web-apps/configuration
+## Static Web App configuration: https://learn.microsoft.com/en-us/azure/static-web-apps/configuration
