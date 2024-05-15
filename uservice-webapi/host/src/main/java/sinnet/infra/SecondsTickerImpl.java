@@ -54,11 +54,10 @@ class SecondsTickerImpl implements SecondsTicker, AutoCloseable {
 
     @Override
     public void accept(Long t) {
-      virtualTask.submit(() -> {
-        for (var handler : handlers) {
-          handler.on(LocalDateTime.now());
-        }
-      });
+      var value = LocalDateTime.now().withNano(0);
+      for (var handler : handlers) {
+        virtualTask.submit(() -> { handler.on(value); });
+      };
     }
   }
 }

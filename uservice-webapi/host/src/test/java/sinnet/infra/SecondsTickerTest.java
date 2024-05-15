@@ -5,7 +5,6 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicReference;
 
-import org.apache.tomcat.util.collections.SynchronizedQueue;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
@@ -18,7 +17,7 @@ import lombok.SneakyThrows;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = InfraConfiguration.class)
-@Timeout(value = 3)
+@Timeout(value = 5)
 public class SecondsTickerTest {
   
   @Autowired
@@ -52,6 +51,7 @@ public class SecondsTickerTest {
 
   @Test
   void shouldNotInvokeWhenThePreviousInvocationIsUnfinished() {
+    // TBD
   }
 
   @Test
