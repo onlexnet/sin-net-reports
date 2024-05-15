@@ -1,5 +1,7 @@
 package sinnet.gql.api;
 
+import static java.util.Optional.ofNullable;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -19,6 +21,7 @@ import sinnet.gql.models.SomeEntityGql;
 import sinnet.gql.utils.PropsBuilder;
 import sinnet.grpc.common.EntityId;
 import sinnet.grpc.customers.GetReply;
+import sinnet.grpc.customers.Totp;
 
 /** FixMe. */
 public interface CustomerMapper extends CommonMapper {
@@ -89,6 +92,7 @@ public interface CustomerMapper extends CommonMapper {
     if (it == null) {
       return null;
     }
+
     return PropsBuilder.build(sinnet.grpc.customers.CustomerSecretEx.newBuilder())
         .set(b -> b::setLocation, it.getLocation())
         .set(b -> b::setUsername, it.getUsername())
@@ -96,6 +100,7 @@ public interface CustomerMapper extends CommonMapper {
         .set(b -> b::setEntityName, it.getEntityName())
         .set(b -> b::setEntityCode, it.getEntityCode())
         .set(b -> b::setChangedWhen, CommonMapper.toGrpc(whenChanged))
+        .tset(ofNullable(it.getTotpSecret()).map(x -> Totp.newBuilder().setSecret(x).setCounter(30).build()), b -> b::setTotp)
         .set(b -> b::setChangedWho, whoChanged)
         .done().build();
   }

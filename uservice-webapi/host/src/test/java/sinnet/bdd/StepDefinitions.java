@@ -4,12 +4,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
 import org.assertj.core.api.Assertions;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -19,7 +19,9 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import onlexnet.sinnet.webapi.test.AppApi;
 import sinnet.domain.ProjectId;
+import sinnet.gql.api.CommonMapper;
 import sinnet.gql.models.CustomerInput;
+import sinnet.gql.models.CustomerSecretExInput;
 import sinnet.gql.models.ProjectEntityGql;
 import sinnet.gql.models.SomeEntityGql;
 import sinnet.gql.models.UserGql;
@@ -29,8 +31,14 @@ import sinnet.grpc.ProjectsGrpcFacade.StatsResult;
 import sinnet.grpc.UsersGrpcService;
 import sinnet.grpc.common.EntityId;
 import sinnet.grpc.common.UserToken;
+import sinnet.grpc.customers.CustomerModel;
+import sinnet.grpc.customers.CustomerSecretEx;
+import sinnet.grpc.customers.CustomerValue;
+import sinnet.grpc.customers.Totp;
+import sinnet.grpc.customers.UpdateCommand;
 import sinnet.grpc.customers.UpdateResult;
 import sinnet.grpc.users.UsersSearchModel;
+import sinnet.infra.TimeProvider;
 
 public class StepDefinitions {
 
@@ -45,6 +53,9 @@ public class StepDefinitions {
 
   @Autowired
   TestRestTemplate restTemplate;
+
+  @Autowired
+  TimeProvider timeProvider;
 
   String requestorEmail;
   AppApi appApi;
@@ -213,11 +224,10 @@ public class StepDefinitions {
     var projectIdStr = projectId.toString();
     var entityId = UUID.randomUUID();
     var entityIdStr = entityId.toString();
-    var customerId = UUID.randomUUID();
-    var now = LocalDate.now();
 
+    var argumentCaptor = ArgumentCaptor.forClass(UpdateCommand.class);
     Mockito
-      .when(customersGrpc.update(any()))
+      .when(customersGrpc.update(argumentCaptor.capture()))
       .thenReturn(UpdateResult.newBuilder()
         .setEntityId(EntityId.newBuilder().setProjectId(projectIdStr).setEntityId(entityIdStr).setEntityVersion(42L)
           .setProjectId(projectId.toString())
@@ -225,16 +235,53 @@ public class StepDefinitions {
           .setEntityVersion(43))
           .build());
 
+    var secretExt = new CustomerSecretExInput()
+        .setEntityCode("entity code 1")
+        .setEntityName("entity name 1")
+        .setLocation("location 1")
+        .setPassword("password 1")
+        .setUsername("username 1")
+        .setTotpSecret("my secret");
     var actual = appApi.saveCustomer(
       projectId,
       new SomeEntityGql().setProjectId(projectIdStr).setEntityId(entityIdStr).setEntityVersion(42L),
       new CustomerInput(),
       List.of(),
-      List.of(),
+      List.of(secretExt),
       List.of()).get();
 
-    var expected = new SomeEntityGql().setProjectId(projectIdStr).setEntityId(entityId.toString()).setEntityVersion(43L);
-    Assertions.assertThat(actual).isEqualTo(expected);
+    var expectedResult = new SomeEntityGql().setProjectId(projectIdStr).setEntityId(entityId.toString()).setEntityVersion(43L);
+    Assertions.assertThat(actual).isEqualTo(expectedResult);
+
+    var expectedCommand = UpdateCommand.newBuilder()
+        .setUserToken(UserToken.newBuilder()
+          .setProjectId(projectId.toString())
+          .setRequestorEmail(requestorEmail))
+        .setModel(CustomerModel.newBuilder()
+          .setId(EntityId.newBuilder()
+            .setProjectId(projectIdStr)
+            .setEntityId(entityIdStr)
+            .setEntityVersion(42))
+          .addSecretEx(CustomerSecretEx.newBuilder()
+            .setEntityCode("entity code 1")
+            .setEntityName("entity name 1")
+            .setLocation("location 1")
+            .setPassword("password 1")
+            .setUsername("username 1")
+            .setTotp(Totp.newBuilder()
+              .setSecret("my secret")
+              .setCounter(30)) // hardcoded value by the application
+            .setChangedWho(requestorEmail)
+            .setChangedWhen(CommonMapper.toGrpc(timeProvider.now())))
+          .setValue(CustomerValue.newBuilder()
+            .build()))
+          // .setTotpSecret("totp secret 1");
+            
+          
+
+        .build();
+    Assertions.assertThat(argumentCaptor.getValue())
+        .isEqualTo(expectedCommand);
   }
 
   @Then("Customer save result is verified")
