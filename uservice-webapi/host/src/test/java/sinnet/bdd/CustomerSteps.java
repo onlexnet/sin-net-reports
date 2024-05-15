@@ -14,12 +14,16 @@ import io.cucumber.java.Before;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import onlexnet.sinnet.webapi.test.AppApi;
-import sinnet.grpc.ActionsGrpcFacade;
+import sinnet.gql.models.CustomerSecretExGql;
 import sinnet.grpc.CustomersGrpcFacade;
 import sinnet.grpc.customers.CustomerModel;
+import sinnet.grpc.customers.CustomerSecretEx;
 import sinnet.grpc.customers.CustomerValue;
 import sinnet.grpc.customers.GetReply;
 import sinnet.grpc.customers.ListReply;
+import sinnet.grpc.customers.LocalDateTime;
+import sinnet.grpc.customers.Totp;
+import sinnet.otp.OtpGeneratorTests;
 
 public class CustomerSteps {
 
@@ -66,7 +70,10 @@ public class CustomerSteps {
         .newBuilder()
         .setModel(CustomerModel.newBuilder()
           .setValue(CustomerValue.newBuilder()
-            .setBillingModel("my billing model")))
+            .setBillingModel("my billing model"))
+          .addSecretEx(CustomerSecretEx.newBuilder()
+            .setChangedWhen(LocalDateTime.newBuilder().setYear(2001).setMonth(2).setDay(3).setHour(4).setMinute(5))
+            .setTotp(Totp.newBuilder().setCounter(30).setSecret(OtpGeneratorTests.exampleSecret))))
             .build());
     
     var projectId = UUID.randomUUID();
@@ -74,6 +81,15 @@ public class CustomerSteps {
     var response = appApi.getCustomer(projectId, entityId).get();
 
     Assertions.assertThat(response.getData().getBillingModel()).isEqualTo("my billing model");
+    Assertions.assertThat(response.getSecretsEx()).containsOnly(new CustomerSecretExGql()
+        .setLocation("")
+        .setUsername("")
+        .setPassword("")
+        .setEntityName("")
+        .setEntityCode("")
+        .setChangedWhen("2001-02-03T04:05:00")
+        .setChangedWho("")
+        .setTotp(OtpGeneratorTests.expectedCode));
   }
 
   @Then("Customer read result is verified")

@@ -12,6 +12,7 @@ import sinnet.grpc.CustomersGrpcFacade;
 import sinnet.grpc.ProjectsGrpcFacade;
 import sinnet.grpc.UsersGrpcService;
 import sinnet.infra.TimeProvider;
+import sinnet.otp.OtpGeneratorTests;
 
 /**
  * Place where we keep all ports which are mocked as part of all DDD scenarions.
@@ -51,7 +52,7 @@ class PortsConfigurer {
     return new TimeProvider() {
       @Override
       public LocalDateTime now() {
-        return LocalDateTime.of(2001, 2, 3, 4, 5, 6);
+        return OtpGeneratorTests.examplePeriod;
       }
     };
   }

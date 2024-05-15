@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -17,6 +18,7 @@ import lombok.SneakyThrows;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = InfraConfigurer.class)
+@DirtiesContext
 @Timeout(value = 5)
 public class SecondsTickerTest {
   

@@ -20,6 +20,7 @@ import reactor.core.publisher.Flux;
 @Component
 class SecondsTickerImpl implements SecondsTicker, AutoCloseable {
 
+  private final TimeProvider timeProvider;
   private final Flux<Long> timer = Flux.interval(computeDelay(), Duration.ofSeconds(1));
   private final Disposable.Composite instanceDisposer = Disposables.composite();
   private final List<Handler> handlers = new CopyOnWriteArrayList<>();
@@ -55,7 +56,7 @@ class SecondsTickerImpl implements SecondsTicker, AutoCloseable {
 
     @Override
     public void accept(Long t) {
-      var value = LocalDateTime.now().withNano(0);
+      var value = timeProvider.now().withNano(0);
       for (var handler : handlers) {
         virtualTask.submit(() -> {
           handler.on(value);

@@ -7,8 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Primary;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -21,6 +21,7 @@ import sinnet.infra.SecondsTicker;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = OtpConfigurer.class)
+@Import(sinnet.otp.OtpGeneratorTests.TestConfig.class)
 @Timeout(value = 3)
 public class OtpGeneratorTests {
 
@@ -30,21 +31,20 @@ public class OtpGeneratorTests {
   @Autowired
   TestSecondsTicker secondsTicker;
 
+  public static String exampleSecret = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+  public static LocalDateTime examplePeriod = LocalDateTime.of(2001, 2, 3, 4, 5, 6);
+  public static String expectedCode = "175333";
+
   @Test
   @SneakyThrows
   void shouldGenerateValuesWithTime() {
 
-    var exampleSecret = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
-    var exampleTime = LocalDateTime.of(2001, 2, 3, 4, 5, 6);
-    var expectedCode = "175333";
-
     var actual = otpGenerator.values(exampleSecret, 30);
-    secondsTicker.getTimeHandler().on(exampleTime);
+    secondsTicker.getTimeHandler().on(examplePeriod);
     var first = actual.findFirst();
 
     Assertions.assertThat(first).contains(expectedCode);
   }
-
   static class TestSecondsTicker implements SecondsTicker {
 
     @Getter
@@ -57,7 +57,6 @@ public class OtpGeneratorTests {
     }
   }
 
-  @TestConfiguration
   public static class TestConfig {
 
     @Bean
@@ -67,4 +66,5 @@ public class OtpGeneratorTests {
     }
 
   }
+
 }

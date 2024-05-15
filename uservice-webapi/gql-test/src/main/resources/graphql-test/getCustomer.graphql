@@ -50,6 +50,7 @@ query GetCustomer($projectId: ID!, $entityId: ID!) {
         entityCode
         changedWho
         changedWhen
+        totp
       }
       contacts {
         firstName
