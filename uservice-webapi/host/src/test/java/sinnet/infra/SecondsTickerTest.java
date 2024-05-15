@@ -1,6 +1,7 @@
 package sinnet.infra;
 
 import java.time.LocalDateTime;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -51,6 +52,10 @@ public class SecondsTickerTest {
 
   @Test
   void shouldNotInvokeWhenThePreviousInvocationIsUnfinished() {
+  }
+
+  @Test
+  void shouldEmitExpectedValues() throws InterruptedException {
     LocalDateTime now;
     while (true) {
       // lets wait when it is close to half a second
@@ -61,11 +66,18 @@ public class SecondsTickerTest {
       }
     }
 
-    var handled = new SynchronizedQueue<LocalDateTime>();
-    var expected1 = now.plusSeconds(1).withNano(0);
+    var waiter = new Semaphore(-2);
+    var handled = new LinkedBlockingQueue<LocalDateTime>();
     SecondsTicker.Handler h = time -> {
-      handled.
+      handled.add(time);
+      waiter.release();
     };
     secondsTicker.schedule(h);
+
+    waiter.acquire();
+    var expected1 = now.plusSeconds(1).withNano(0);
+    Assertions.assertThat(handled).contains(
+      expected1,
+      expected1.plusSeconds(1));
   }
 }
