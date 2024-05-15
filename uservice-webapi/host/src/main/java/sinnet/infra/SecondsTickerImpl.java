@@ -49,15 +49,18 @@ class SecondsTickerImpl implements SecondsTicker, AutoCloseable {
     return () -> handlers.remove(timeHandler);
   }
 
-  private final ExecutorService virtualTask =  Executors.newVirtualThreadPerTaskExecutor();
+  private final ExecutorService virtualTask = Executors.newVirtualThreadPerTaskExecutor();
+
   class TimerListener implements Consumer<Long> {
 
     @Override
     public void accept(Long t) {
       var value = LocalDateTime.now().withNano(0);
       for (var handler : handlers) {
-        virtualTask.submit(() -> { handler.on(value); });
-      };
+        virtualTask.submit(() -> {
+          handler.on(value);
+        });
+      }
     }
   }
 }

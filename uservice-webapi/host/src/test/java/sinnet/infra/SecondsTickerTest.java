@@ -16,7 +16,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import lombok.SneakyThrows;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = InfraConfiguration.class)
+@ContextConfiguration(classes = InfraConfigurer.class)
 @Timeout(value = 5)
 public class SecondsTickerTest {
   

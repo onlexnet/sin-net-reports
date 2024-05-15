@@ -11,9 +11,9 @@
   <packaging>pom</packaging>
 
   <properties>
+    <api.version>0.1.3</api.version>
     <aggregate.report.dir>report-aggregate/target/site/jacoco-aggregate/jacoco.xml</aggregate.report.dir>
     <dapr.version>1.7.0</dapr.version>
-    <api.version>0.1.3</api.version>
     <jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
   </properties>
 
@@ -176,6 +176,7 @@
           <artifactId>jacoco-maven-plugin</artifactId>
           <version>${jacoco-maven-plugin.version}</version>
         </plugin>
+
         <!--
           Checking for Violations as Part of the Build
           https://maven.apache.org/plugins/maven-checkstyle-plugin/usage.html
