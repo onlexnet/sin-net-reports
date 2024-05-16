@@ -79,7 +79,7 @@ export const CustomerViewEditLocal: React.FC<CustomerViewEditProps> = props => {
                 who: it.changedWho,
                 when: SecretsTimestamp.of(it.changedWhen),
                 otpSecret: it.otpSecret ?? undefined,
-                otpRecoveryKey: it.otpRecoveryKeys ?? undefined
+                otpRecoveryKeys: it.otpRecoveryKeys ?? undefined
             };
             return ret;
         })

@@ -119,7 +119,7 @@ export interface SecretExModel {
     who?: string
     when?: SecretsTimestamp
     otpSecret?: string
-    otpRecoveryKey?: string
+    otpRecoveryKeys?: string
 }
 
 interface CustomerViewProps {
@@ -301,7 +301,7 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
                     entityName: it.entityName,
                     entityCode: it.entityCode,
                     otpSecret: it.otpSecret,
-                    otpRecoveryKeys: it.otpRecoveryKey
+                    otpRecoveryKeys: it.otpRecoveryKeys
                 };
                 return ret;
             })
