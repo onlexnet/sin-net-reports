@@ -370,5 +370,11 @@
              default="checkstyle-xpath-suppressions.xml" />
       <property name="optional" value="true"/>
     </module>
+
+    <!-- Used to allow suppress checkstyle warnings -->
+    <module name="SuppressWarnings">
+      <property name="id" value="checkstyle:suppresswarnings"/>
+    </module>
+
   </module>
 </module>

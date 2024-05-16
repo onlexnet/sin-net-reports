@@ -120,8 +120,12 @@ public final class CustomerRepositoryEx implements MapperDbo {
         .setEntityCode(it.getEntityCode())
         .setEntityName(it.getEntityName())
         .setChangedWhen(it.getChangedWhen())
-        .setChangedWho(it.getChangedWho().value());
+        .setChangedWho(it.getChangedWho().value())
+        .setOtpSecret(it.getOtpSecret())
+        .setOtpRecoveryKeys(it.getOtpRecoveryKeys());
   }
+
+
 
   /**
    * TBD.

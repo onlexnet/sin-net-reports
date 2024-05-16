@@ -125,6 +125,8 @@ public interface MapperDto extends Mapper {
         .set(it.getEntityCode(), b -> b::setEntityCode)
         .set(Option.of(it.getChangedWho().value()).getOrElse("?"), b -> b::setChangedWho)
         .set(toDto(it.getChangedWhen()), b -> b::setChangedWhen)
+        .set(it.getOtpSecret(), b -> b::setOtpSecret)
+        .set(it.getOtpRecoveryKeys(), b -> b::setOtpRecoveryKeys)
         .done().build();
   }
 
@@ -172,7 +174,10 @@ public interface MapperDto extends Mapper {
         .setEntityCode(item.getEntityCode())
         .setEntityName(item.getEntityName())
         .setChangedWho(ValEmail.of(item.getChangedWho()))
-        .setChangedWhen(fromDto(item.getChangedWhen()));
+        .setChangedWhen(fromDto(item.getChangedWhen()))
+        .setOtpSecret(item.getOtpSecret())
+        .setOtpRecoveryKeys(item.getOtpRecoveryKeys());
+
   }
 
   /**

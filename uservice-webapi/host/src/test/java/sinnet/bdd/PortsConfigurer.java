@@ -1,5 +1,7 @@
 package sinnet.bdd;
 
+import java.time.LocalDateTime;
+
 import org.mockito.Answers;
 import org.mockito.Mockito;
 import org.springframework.context.annotation.Bean;
@@ -9,10 +11,11 @@ import sinnet.grpc.ActionsGrpcFacade;
 import sinnet.grpc.CustomersGrpcFacade;
 import sinnet.grpc.ProjectsGrpcFacade;
 import sinnet.grpc.UsersGrpcService;
+import sinnet.infra.TimeProvider;
+import sinnet.otp.OtpGeneratorTests;
 
 /**
  * Place where we keep all ports which are mocked as part of all DDD scenarions.
- * AS I am in r
  */
 class PortsConfigurer {
 
@@ -41,6 +44,17 @@ class PortsConfigurer {
   @Primary
   ActionsGrpcFacade actionsGrpcFacade() {
     return Mockito.mock(ActionsGrpcFacade.class, Answers.CALLS_REAL_METHODS);
+  }
+
+  @Bean
+  @Primary
+  TimeProvider timeProvider() {
+    return new TimeProvider() {
+      @Override
+      public LocalDateTime now() {
+        return OtpGeneratorTests.examplePeriod;
+      }
+    };
   }
 
 }

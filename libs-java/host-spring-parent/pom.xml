@@ -17,7 +17,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>
-        <version>3.1.2</version>
+        <version>3.3.1</version>
         <executions>
           <execution>
             <phase>process-sources</phase>
@@ -35,7 +35,7 @@
           <dependency>
             <groupId>com.puppycrawl.tools</groupId>
             <artifactId>checkstyle</artifactId>
-            <version>10.9.3</version>
+            <version>10.16.0</version>
           </dependency>
           <dependency>
             <groupId>onlexnet.sinnet</groupId>

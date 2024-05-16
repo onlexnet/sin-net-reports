@@ -10,14 +10,15 @@ import sinnet.gql.models.CustomerContactInputGql;
 import sinnet.gql.models.CustomerEntityGql;
 import sinnet.gql.models.CustomerInput;
 import sinnet.gql.models.CustomerModelGql;
-import sinnet.gql.models.CustomerSecretGql;
 import sinnet.gql.models.CustomerSecretExGql;
 import sinnet.gql.models.CustomerSecretExInput;
+import sinnet.gql.models.CustomerSecretGql;
 import sinnet.gql.models.CustomerSecretInput;
 import sinnet.gql.models.EntityGql;
 import sinnet.gql.models.SomeEntityGql;
 import sinnet.gql.utils.PropsBuilder;
 import sinnet.grpc.common.EntityId;
+import sinnet.grpc.customers.CustomerSecretEx;
 import sinnet.grpc.customers.GetReply;
 
 /** FixMe. */
@@ -89,6 +90,7 @@ public interface CustomerMapper extends CommonMapper {
     if (it == null) {
       return null;
     }
+
     return PropsBuilder.build(sinnet.grpc.customers.CustomerSecretEx.newBuilder())
         .set(b -> b::setLocation, it.getLocation())
         .set(b -> b::setUsername, it.getUsername())
@@ -96,6 +98,8 @@ public interface CustomerMapper extends CommonMapper {
         .set(b -> b::setEntityName, it.getEntityName())
         .set(b -> b::setEntityCode, it.getEntityCode())
         .set(b -> b::setChangedWhen, CommonMapper.toGrpc(whenChanged))
+        .set(b -> b::setOtpSecret, it.getOtpSecret())
+        .set(b -> b::setOtpRecoveryKeys, it.getOtpRecoveryKeys())
         .set(b -> b::setChangedWho, whoChanged)
         .done().build();
   }
@@ -152,7 +156,7 @@ public interface CustomerMapper extends CommonMapper {
   }
   
   /** DocMe. */
-  default CustomerSecretExGql toGql(sinnet.grpc.customers.CustomerSecretEx it) {
+  default CustomerSecretExGql toGql(CustomerSecretEx it) {
     if (it == null) {
       return null;
     }
@@ -164,6 +168,8 @@ public interface CustomerMapper extends CommonMapper {
     result.setEntityName(it.getEntityName());
     result.setChangedWhen(Option.of(map(it.getChangedWhen())).map(timestampFormatter::format).getOrElse("?"));
     result.setChangedWho(it.getChangedWho());
+    result.setOtpSecret(it.getOtpSecret());
+    result.setOtpRecoveryKeys(it.getOtpRecoveryKeys());
     return result;
   }
 

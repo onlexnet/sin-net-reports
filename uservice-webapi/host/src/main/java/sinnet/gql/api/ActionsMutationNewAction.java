@@ -20,7 +20,6 @@ class ActionsMutationNewAction {
   SomeEntityGql newAction(ActionsMutation self) {
     var requestorEmail = self.userToken().getRequestorEmail();
     var projectId = UUID.fromString(self.userToken().getProjectId());
-    var when = LocalDate.now();
 
     // no security check as each person can create its own projects
 

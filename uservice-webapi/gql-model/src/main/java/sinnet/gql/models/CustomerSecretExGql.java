@@ -1,9 +1,11 @@
 package sinnet.gql.models;
 
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 /** Fixme. */
 @Data
+@Accessors(chain = true)
 public class CustomerSecretExGql {
   private String location;
   private String username;
@@ -12,4 +14,6 @@ public class CustomerSecretExGql {
   private String entityCode;
   private String changedWhen;
   private String changedWho;
+  private String otpSecret;
+  private String otpRecoveryKeys;
 }

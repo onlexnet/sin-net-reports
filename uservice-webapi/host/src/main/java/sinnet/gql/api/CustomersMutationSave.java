@@ -1,6 +1,5 @@
 package sinnet.gql.api;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.graphql.data.method.annotation.Argument;
@@ -17,11 +16,14 @@ import sinnet.gql.models.SomeEntityGql;
 import sinnet.grpc.CustomersGrpcFacade;
 import sinnet.grpc.customers.CustomerModel;
 import sinnet.grpc.customers.UpdateCommand;
+import sinnet.infra.TimeProvider;
 
 /** Fixme. */
 @Controller
 @RequiredArgsConstructor
 class CustomersMutationSave implements CustomerMapper {
+
+  private final TimeProvider timeProvider;
 
   private final CustomersGrpcFacade service;
 
@@ -33,7 +35,7 @@ class CustomersMutationSave implements CustomerMapper {
                             @Argument List<CustomerSecretExInput> secretsEx,
                             @Argument List<CustomerContactInputGql> contacts) {
 
-    var changedWhen = LocalDateTime.now();
+    var changedWhen = timeProvider.now();
     var changedWho = self.getUserToken().getRequestorEmail();
     
     var request = UpdateCommand.newBuilder()

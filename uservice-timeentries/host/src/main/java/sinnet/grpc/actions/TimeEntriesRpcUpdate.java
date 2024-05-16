@@ -22,12 +22,12 @@ public class TimeEntriesRpcUpdate extends RpcCommandHandlerBase<UpdateCommand, U
   
   @Override
   protected UpdateResult apply(UpdateCommand cmd) {
-    var entityId = Mapper.fromDto(cmd.getModel().getEntityId());
+    Mapper.fromDto(cmd.getModel().getEntityId());
 
     var entryDto = cmd.getModel();
     var entry = MapperDto.fromDto(entryDto);
 
-    var result = actionService.update(entry);
+    actionService.update(entry);
     return UpdateResult.newBuilder().setSuccess(true).build();
   }
 

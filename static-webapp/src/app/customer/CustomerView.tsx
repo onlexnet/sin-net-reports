@@ -10,6 +10,7 @@ import { SecretsTimestamp } from "./SecretsTimestamp";
 import { NewSecret } from "./View.NewSecret";
 import { UserPasswordItem } from "./View.UserPasswordItem";
 import { UserPasswordItemExt } from "./View.UserPasswordItemEx";
+import { CodeType } from "./CodeType";
 
 
 const stackStyles: Partial<IStackStyles> = { root: { width: 650 } };
@@ -109,6 +110,7 @@ export interface SecretModel {
 }
 
 export interface SecretExModel {
+    // Used by React to identify elements during rendering of list elements
     localKey: string
     location: string
     username?: string
@@ -117,6 +119,7 @@ export interface SecretExModel {
     entityCode?: string
     who?: string
     when?: SecretsTimestamp
+    code: CodeType
 }
 
 interface CustomerViewProps {
@@ -572,7 +575,11 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
                                                     onChange={v => {
                                                         const clone = _.clone(model);
                                                         const index = _.findIndex(clone.AutoryzacjeEx, it => it.localKey === v.localKey);
-                                                        clone.AutoryzacjeEx[index] = v;
+                                                        const actual = clone.AutoryzacjeEx[index];
+                                                        // update new values and clone read-only values
+                                                        const readOnlyValues = { code: actual.code };
+                                                        const newValue = { ...v, ...readOnlyValues}
+                                                        clone.AutoryzacjeEx[index] = newValue ;
                                                         setModel(clone);
                                                     }}
                                                     onRemove={localKey => {
@@ -608,7 +615,8 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
                                                     const localKey = uuid();
                                                     const newItem: SecretExModel = {
                                                         localKey,
-                                                        location: name
+                                                        location: name,
+                                                        code: { type: "UNDEFINED" }
                                                     };
                                                     clone.AutoryzacjeEx.push(newItem);
                                                     setModel(clone);

@@ -5,7 +5,6 @@ import java.util.UUID;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import sinnet.grpc.mapping.RpcQueryHandler;
 import sinnet.grpc.timeentries.GetQuery;
 import sinnet.grpc.timeentries.GetReply;
@@ -16,7 +15,6 @@ import sinnet.write.ActionRepositoryEx;
  */
 @Component
 @RequiredArgsConstructor
-@Slf4j
 public class TimeEntriesRpcGet implements RpcQueryHandler<GetQuery, GetReply> {
 
   private final ActionRepositoryEx actionRepository;

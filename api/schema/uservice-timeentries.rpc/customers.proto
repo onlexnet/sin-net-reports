@@ -109,6 +109,8 @@ message CustomerSecretEx {
   string entityCode = 5;
   string changedWho = 6;
   LocalDateTime changedWhen = 7;
+  string otpSecret = 8;
+  string otpRecoveryKeys = 9;
 }
 
 message CustomerContact {

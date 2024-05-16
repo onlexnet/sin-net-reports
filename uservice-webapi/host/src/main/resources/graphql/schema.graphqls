@@ -1,3 +1,18 @@
+type Query {
+  Actions(projectId: ID!): ActionsQuery!
+  Customers(projectId: ID!): CustomersQuery!
+  Projects: ProjectsQuery!
+  Users(projectId: ID!): UsersQuery!
+  getPrincipal: PrincipalModel!
+  test: PrincipalModel!
+}
+
+type Mutation {
+  Actions(projectId: ID!): ActionsMutation!
+  Customers(projectId: ID!): CustomersMutation!
+  Projects: ProjectsMutation!
+}
+
 type ActionsMutation {
   newAction(
     "ISO-8601"
@@ -75,6 +90,8 @@ type CustomerSecretEx {
   location: String!
   password: String
   username: String
+  otpSecret: String
+  otpRecoveryKeys: String
 }
 
 type CustomersMutation {
@@ -88,13 +105,6 @@ type CustomersQuery {
   get(entityId: ID): CustomerEntity
   list: [CustomerEntity!]!
   projectId: String
-}
-
-"Mutation root"
-type Mutation {
-  Actions(projectId: ID!): ActionsMutation!
-  Customers(projectId: ID!): CustomersMutation!
-  Projects: ProjectsMutation!
 }
 
 type PrincipalModel {
@@ -127,15 +137,6 @@ type ProjectsQuery {
 }
 
 "Query root"
-type Query {
-  Actions(projectId: ID!): ActionsQuery!
-  Customers(projectId: ID!): CustomersQuery!
-  Projects: ProjectsQuery!
-  Users(projectId: ID!): UsersQuery!
-  getPrincipal: PrincipalModel!
-  test: PrincipalModel!
-}
-
 type ServiceModel {
   customer: CustomerEntity
   description: String
@@ -219,6 +220,8 @@ input CustomerSecretExInput {
   location: String!
   password: String
   username: String
+  otpSecret: String
+  otpRecoveryKeys: String
 }
 
 input CustomerSecretInput {

@@ -36,7 +36,9 @@ public interface MapperDbo {
       .setEntityName(dbo.getEntityName())
       .setEntityCode(dbo.getEntityCode())
       .setChangedWho(ValEmail.of(dbo.getChangedWho()))
-      .setChangedWhen(dbo.getChangedWhen());
+      .setChangedWhen(dbo.getChangedWhen())
+      .setOtpSecret(dbo.getOtpSecret())
+      .setOtpRecoveryKeys(dbo.getOtpRecoveryKeys());
   }
 
   /**
