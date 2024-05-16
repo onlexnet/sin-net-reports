@@ -1,10 +1,7 @@
 package sinnet.gql.api;
 
-import static java.util.Optional.ofNullable;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.function.Function;
 
 import io.vavr.collection.Iterator;
 import io.vavr.control.Option;
@@ -13,9 +10,9 @@ import sinnet.gql.models.CustomerContactInputGql;
 import sinnet.gql.models.CustomerEntityGql;
 import sinnet.gql.models.CustomerInput;
 import sinnet.gql.models.CustomerModelGql;
-import sinnet.gql.models.CustomerSecretGql;
 import sinnet.gql.models.CustomerSecretExGql;
 import sinnet.gql.models.CustomerSecretExInput;
+import sinnet.gql.models.CustomerSecretGql;
 import sinnet.gql.models.CustomerSecretInput;
 import sinnet.gql.models.EntityGql;
 import sinnet.gql.models.SomeEntityGql;
@@ -23,7 +20,6 @@ import sinnet.gql.utils.PropsBuilder;
 import sinnet.grpc.common.EntityId;
 import sinnet.grpc.customers.CustomerSecretEx;
 import sinnet.grpc.customers.GetReply;
-import sinnet.grpc.customers.Totp;
 
 /** FixMe. */
 public interface CustomerMapper extends CommonMapper {
@@ -102,7 +98,8 @@ public interface CustomerMapper extends CommonMapper {
         .set(b -> b::setEntityName, it.getEntityName())
         .set(b -> b::setEntityCode, it.getEntityCode())
         .set(b -> b::setChangedWhen, CommonMapper.toGrpc(whenChanged))
-        .tset(ofNullable(it.getTotpSecret()).map(x -> Totp.newBuilder().setSecret(x).setCounter(30).build()), b -> b::setTotp)
+        .set(b -> b::setOtpSecret, it.getOtpSecret())
+        .set(b -> b::setOtpRecoveryKeys, it.getOtpRecoveryKeys())
         .set(b -> b::setChangedWho, whoChanged)
         .done().build();
   }
@@ -159,7 +156,7 @@ public interface CustomerMapper extends CommonMapper {
   }
   
   /** DocMe. */
-  default CustomerSecretExGql toGql(CustomerSecretEx it, Function<sinnet.grpc.customers.Totp, String> totp) {
+  default CustomerSecretExGql toGql(CustomerSecretEx it) {
     if (it == null) {
       return null;
     }
@@ -171,7 +168,8 @@ public interface CustomerMapper extends CommonMapper {
     result.setEntityName(it.getEntityName());
     result.setChangedWhen(Option.of(map(it.getChangedWhen())).map(timestampFormatter::format).getOrElse("?"));
     result.setChangedWho(it.getChangedWho());
-    result.setTotp(totp.apply(it.getTotp()));
+    result.setOtpSecret(it.getOtpSecret());
+    result.setOtpRecoveryKeys(it.getOtpRecoveryKeys());
     return result;
   }
 
@@ -190,7 +188,7 @@ public interface CustomerMapper extends CommonMapper {
   }
 
   /** FixMe. */
-  default CustomerEntityGql toGql(sinnet.grpc.customers.CustomerModel item, Function<Totp, String> totp) {
+  default CustomerEntityGql toGql(sinnet.grpc.customers.CustomerModel item) {
     if (item == null) {
       return null;
     }
@@ -198,7 +196,7 @@ public interface CustomerMapper extends CommonMapper {
     result.setId(toGql(item.getId()));
     result.setData(toGql(item.getValue()));
     result.setSecrets(Iterator.ofAll(item.getSecretsList()).map(this::toGql).toJavaArray(CustomerSecretGql[]::new));
-    result.setSecretsEx(Iterator.ofAll(item.getSecretExList()).map(x -> this.toGql(x, totp)).toJavaArray(CustomerSecretExGql[]::new));
+    result.setSecretsEx(Iterator.ofAll(item.getSecretExList()).map(this::toGql).toJavaArray(CustomerSecretExGql[]::new));
     result.setContacts(Iterator.ofAll(item.getContactsList()).map(this::toGql).toJavaArray(CustomerContactGql[]::new));
     return result;
   }
@@ -240,12 +238,12 @@ public interface CustomerMapper extends CommonMapper {
   }
    
   /** FixMe. */
-  default CustomerEntityGql toGql(GetReply dto, Function<Totp, String> totp) {
+  default CustomerEntityGql toGql(GetReply dto) {
     if (dto == null) {
       return null;
     }
     var item = dto.getModel();
-    return toGql(item, totp);
+    return toGql(item);
   }
 
 }

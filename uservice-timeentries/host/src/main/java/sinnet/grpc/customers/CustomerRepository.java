@@ -247,7 +247,10 @@ public interface CustomerRepository extends JpaRepository<CustomerRepository.Cus
     @Column(name = "changed_when")
     private LocalDateTime changedWhen;
 
-    @Column(name = "otp")
-    private String otp;
+    @Column(name = "otp_secret")
+    private String otpSecret;
+
+    @Column(name = "otp_recovery_keys")
+    private String otpRecoveryKeys;
   }
 }

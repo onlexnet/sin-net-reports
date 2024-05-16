@@ -14,5 +14,6 @@ public class CustomerSecretExGql {
   private String entityCode;
   private String changedWhen;
   private String changedWho;
-  private String totp;
+  private String otpSecret;
+  private String otpRecoveryKeys;
 }

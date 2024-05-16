@@ -12,5 +12,6 @@ public class CustomerSecretExInput {
   private String password;
   private String entityName;
   private String entityCode;
-  private String totpSecret;
+  private String otpSecret;
+  private String otpRecoveryKeys;
 }

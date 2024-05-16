@@ -23,7 +23,7 @@ class CustomersQueryList implements CustomerMapper {
         .setUserToken(self.userToken())
         .build();
     var items = service.list(request);
-    return Iterator.ofAll(items.getCustomersList()).map(it -> this.toGql(it, ignored -> null)).toJavaArray(CustomerEntityGql[]::new);
+    return Iterator.ofAll(items.getCustomersList()).map(this::toGql).toJavaArray(CustomerEntityGql[]::new);
   }
 
 }

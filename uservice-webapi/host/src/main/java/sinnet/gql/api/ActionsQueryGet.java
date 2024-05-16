@@ -25,7 +25,7 @@ class ActionsQueryGet implements CustomerMapper {
     var actionIdTyped = UUID.fromString(actionId);
 
     var customerGet = Function1.of((String customerId) -> 
-        customerService.customerGet(self.projectId(), self.primaryEmail(), customerId, it -> this.toGql(it, ignored -> null)));
+        customerService.customerGet(self.projectId(), self.primaryEmail(), customerId, this::toGql));
     var result = service.getAction(projectId, actionIdTyped, customerGet);
 
     return result;

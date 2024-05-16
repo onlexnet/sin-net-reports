@@ -23,6 +23,8 @@ import sinnet.infra.SecondsTicker;
 @ContextConfiguration(classes = OtpConfigurer.class)
 @Import(sinnet.otp.OtpGeneratorTests.TestConfig.class)
 @Timeout(value = 3)
+// not used by aplication logic
+// but I like the code and Totp logic behind
 public class OtpGeneratorTests {
 
   @Autowired

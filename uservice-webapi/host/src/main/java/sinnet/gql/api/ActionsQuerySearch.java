@@ -31,7 +31,7 @@ class ActionsQuerySearch implements CustomerMapper {
     var requestorEmail = self.primaryEmail();
     var projectId = UUID.fromString(self.projectId());
 
-    var customerList = customerService.customerList(self.projectId(), requestorEmail, it -> this.toGql(it, ignored -> null));
+    var customerList = customerService.customerList(self.projectId(), requestorEmail, this::toGql);
 
     var customerGet = Function1.of((String customerId) -> customerList.stream()
         .filter(it -> Objects.equals(customerId, it.getId().getEntityId())).findAny().orElse(null));

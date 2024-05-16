@@ -90,7 +90,8 @@ type CustomerSecretEx {
   location: String!
   password: String
   username: String
-  totp: String
+  otpSecret: String
+  otpRecoveryKeys: String
 }
 
 type CustomersMutation {
@@ -219,7 +220,8 @@ input CustomerSecretExInput {
   location: String!
   password: String
   username: String
-  totpSecret: String
+  otpSecret: String
+  otpRecoveryKeys: String
 }
 
 input CustomerSecretInput {

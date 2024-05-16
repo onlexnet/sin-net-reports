@@ -34,7 +34,6 @@ import sinnet.grpc.common.UserToken;
 import sinnet.grpc.customers.CustomerModel;
 import sinnet.grpc.customers.CustomerSecretEx;
 import sinnet.grpc.customers.CustomerValue;
-import sinnet.grpc.customers.Totp;
 import sinnet.grpc.customers.UpdateCommand;
 import sinnet.grpc.customers.UpdateResult;
 import sinnet.grpc.users.UsersSearchModel;
@@ -241,7 +240,8 @@ public class StepDefinitions {
         .setLocation("location 1")
         .setPassword("password 1")
         .setUsername("username 1")
-        .setTotpSecret("my secret");
+        .setOtpSecret("my secret")
+        .setOtpRecoveryKeys("my key1");
     var actual = appApi.saveCustomer(
       projectId,
       new SomeEntityGql().setProjectId(projectIdStr).setEntityId(entityIdStr).setEntityVersion(42L),
@@ -268,17 +268,11 @@ public class StepDefinitions {
             .setLocation("location 1")
             .setPassword("password 1")
             .setUsername("username 1")
-            .setTotp(Totp.newBuilder()
-              .setSecret("my secret")
-              .setCounter(30)) // hardcoded value by the application
+            .setOtpSecret("my secret")
+            .setOtpRecoveryKeys("my key1")
             .setChangedWho(requestorEmail)
             .setChangedWhen(CommonMapper.toGrpc(timeProvider.now())))
-          .setValue(CustomerValue.newBuilder()
-            .build()))
-          // .setTotpSecret("totp secret 1");
-            
-          
-
+          .setValue(CustomerValue.newBuilder()))
         .build();
     Assertions.assertThat(argumentCaptor.getValue())
         .isEqualTo(expectedCommand);

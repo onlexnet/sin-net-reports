@@ -10,7 +10,6 @@ import io.cucumber.java.en.When;
 import lombok.RequiredArgsConstructor;
 import sinnet.models.CustomerSecretEx;
 import sinnet.models.CustomerValue;
-import sinnet.models.OtpType;
 import sinnet.models.ValName;
 
 @RequiredArgsConstructor
@@ -43,7 +42,8 @@ public class CustomersStepDefinition {
         .billingModel("my-billing-model");
     var secretExt = new CustomerSecretEx()
         .setChangedWhen(LocalDateTime.of(2001,2,3,4,5,6))
-        .setCodeType(new OtpType.Totp("my secret", 42));
+        .setOtpSecret("my secret")
+        .setOtpRecoveryKeys("key1");
     testApi.updateReservedCustomer(ctx, singleCustomer, customerValue, List.of(secretExt));
     var customer = testApi.getCustomer(ctx, singleCustomer, operatorAlias);
 
@@ -51,7 +51,8 @@ public class CustomersStepDefinition {
     Assertions.assertThat(customer.getValue().billingModel()).isEqualTo("my-billing-model");
     Assertions.assertThat(customer.getSecretsEx()).isNotEmpty();
     var actual = customer.getSecretsEx().get(0);
-    Assertions.assertThat(actual.getCodeType()).isEqualTo(new OtpType.Totp("my secret", 42));
+    Assertions.assertThat(actual.getOtpSecret()).isEqualTo("my secret");
+    Assertions.assertThat(actual.getOtpRecoveryKeys()).isEqualTo("key1");
 
   }
 

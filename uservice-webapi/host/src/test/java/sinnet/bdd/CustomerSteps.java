@@ -22,8 +22,6 @@ import sinnet.grpc.customers.CustomerValue;
 import sinnet.grpc.customers.GetReply;
 import sinnet.grpc.customers.ListReply;
 import sinnet.grpc.customers.LocalDateTime;
-import sinnet.grpc.customers.Totp;
-import sinnet.otp.OtpGeneratorTests;
 
 public class CustomerSteps {
 
@@ -73,7 +71,8 @@ public class CustomerSteps {
             .setBillingModel("my billing model"))
           .addSecretEx(CustomerSecretEx.newBuilder()
             .setChangedWhen(LocalDateTime.newBuilder().setYear(2001).setMonth(2).setDay(3).setHour(4).setMinute(5))
-            .setTotp(Totp.newBuilder().setCounter(30).setSecret(OtpGeneratorTests.exampleSecret))))
+            .setOtpSecret("my secret")
+            .setOtpRecoveryKeys("my key1")))
             .build());
     
     var projectId = UUID.randomUUID();
@@ -89,7 +88,8 @@ public class CustomerSteps {
         .setEntityCode("")
         .setChangedWhen("2001-02-03T04:05:00")
         .setChangedWho("")
-        .setTotp(OtpGeneratorTests.expectedCode));
+        .setOtpSecret("my secret")
+        .setOtpRecoveryKeys("my key1"));
   }
 
   @Then("Customer read result is verified")
