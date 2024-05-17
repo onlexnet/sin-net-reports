@@ -61,8 +61,10 @@ export const CustomerViewEditLocal: React.FC<CustomerViewEditProps> = props => {
                     username: it.username ?? undefined,
                     password: it.password ?? undefined,
                     who: it.changedWho,
-                    when: SecretsTimestamp.of(it.changedWhen)
-                };
+                    when: SecretsTimestamp.of(it.changedWhen),
+                    otpSecret: it.otpSecret ?? undefined,
+                    otpRecoveryKeys: it.otpRecoveryKeys ?? undefined
+                    };
                 return ret;
             })
             .value();
