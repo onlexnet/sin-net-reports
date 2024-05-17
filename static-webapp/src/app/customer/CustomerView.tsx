@@ -106,6 +106,8 @@ export interface SecretModel {
     password?: string
     who?: string
     when?: SecretsTimestamp
+    otpSecret?: string
+    otpRecoveryKeys?: string
 }
 
 export interface SecretExModel {
@@ -287,7 +289,9 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
                 const ret: CustomerSecretInput = {
                     location: it.location ?? '---',
                     username: it.username,
-                    password: it.password
+                    password: it.password,
+                    otpSecret: it.otpSecret,
+                    otpRecoveryKeys: it.otpRecoveryKeys
                 };
                 return ret;
             })
