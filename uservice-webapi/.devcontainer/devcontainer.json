@@ -1,16 +1,19 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the
 // README at: https://github.com/devcontainers/templates/tree/main/src/java
 {
-	"name": "Java",
+	"name": "sinnet-webapi",
 	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
 	// more templates: https://containers.dev/templates
 	"image": "mcr.microsoft.com/devcontainers/java:21-bullseye",
 
 	"features": {
 		"ghcr.io/devcontainers/features/java:1": {
-			"version": "none",
-			"installMaven": "true",
-			"installGradle": "false"
+			"installMaven": true,
+			"installGradle": false,
+			"version": "21",
+			"jdkDistro": "oracle",
+			"mavenVersion": "latest",
+			"antVersion": "latest"
 		},
 		"docker-in-docker": {
 			"version": "latest",
