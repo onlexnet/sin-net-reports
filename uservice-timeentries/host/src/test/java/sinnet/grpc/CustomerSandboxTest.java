@@ -61,7 +61,7 @@ public class CustomerSandboxTest {
       em.clear();
     }
 
-    // @Test
+    @Test
     @Transactional
     void persist_customers() {
       String jpql = "SELECT c FROM CustomerDbo c "
