@@ -41,4 +41,5 @@ Docker:
   # example: build local tar file with image
   mvn clean compile jib:buildTar -pl host
 ```
+Extra line to start build
 
