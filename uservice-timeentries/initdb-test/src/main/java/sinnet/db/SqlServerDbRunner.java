@@ -18,7 +18,7 @@ public final class SqlServerDbRunner {
   public SafeAutoCloseable start() {
     database.start();
     var items = List.of(
-        setProperty("DATABASE_HOST", database.getHost()),
+        setProperty("DATABASE_HOST", "127.0.0.1"),
         // setProperty("DATABASE_NAME", database.getDatabaseName()),
         setProperty("DATABASE_NAME", "master"),
         setProperty("DATABASE_PORT", String.valueOf(database.getFirstMappedPort())),
