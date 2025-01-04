@@ -16,7 +16,7 @@ on:
 
 jobs:
   Build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     outputs:
       uservice_timeentries_image_name: ${{ steps.BuildDockerImage.outputs.image_name }}
