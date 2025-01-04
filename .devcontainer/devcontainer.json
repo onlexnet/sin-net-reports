@@ -42,7 +42,8 @@
                 "editorconfig.editorconfig",
 				"jebbs.plantuml",
 				"vscjava.vscode-java-pack",
-				"vmware.vscode-boot-dev-pack"
+				"vmware.vscode-boot-dev-pack",
+				"github.vscode-github-actions"
             ],
             "settings": {
                 "terraform.languageServer": {
