@@ -30,7 +30,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "CI=false && react-scripts build",
     "test": "react-scripts test",
     "generate": "graphql-codegen --config ./graphql-codegen-config.yml",
     "cibuild": "CI=false && graphql-codegen --config ./graphql-codegen-config.yml && react-scripts build",

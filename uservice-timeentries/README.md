@@ -8,8 +8,8 @@ We support some profiles in backend code to allow run them with different config
 ## build project
 ```bash
 mvn -f ../api/client-java install -ntp
-mvn -f ../libs-java -ntp install
-mvn clean install -ntp clean install
+mvn -f ../libs-java install -ntp
+mvn clean install -ntp
 ```
 
 ## Good development practices

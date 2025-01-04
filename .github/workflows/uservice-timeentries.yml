@@ -16,7 +16,7 @@ on:
 
 jobs:
   Build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     outputs:
       uservice_timeentries_image_name: ${{ steps.BuildDockerImage.outputs.image_name }}
@@ -37,21 +37,21 @@ jobs:
           echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
   
       - name: cache maven
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: ~/.m2/repository
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
       
-      - name: Build with Maven gRpc API
+      - name: Build gRpc API (Maven)
         run: mvn -ntp install
         working-directory: api/client-java
-      - name: Build with Maven base package
+      - name: Build base package (Maven)
         run: mvn -ntp install
         working-directory: libs-java
 
-      - name: Build with Maven Timeentries
+      - name: Build Timeentries (Maven)
         run: |
           # download latest version of applicationinsights to folder expected to be included into target image
           # as we known, the copied file will be located finally in /workspaces/BOOT-INFO/classes/applicationinsights.

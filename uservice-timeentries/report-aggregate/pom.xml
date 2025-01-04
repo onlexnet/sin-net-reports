@@ -13,6 +13,7 @@
       <!-- The module is just to keep aggregated jacoco reports, so no required to be in included in
       Sonar reports. -->
       <sonar.skip>true</sonar.skip>
+      <org.testcontainers-version>1.20.4</org.testcontainers-version>
     </properties>
   
   
@@ -31,7 +32,13 @@
       <dependency>
         <groupId>org.testcontainers</groupId>
         <artifactId>junit-jupiter</artifactId>
-        <version>1.15.2</version>
+        <version>${org.testcontainers-version}</version>
+        <scope>test</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-test</artifactId>
         <scope>test</scope>
       </dependency>
     </dependencies>
