@@ -1,4 +1,4 @@
-import { InteractionStatus, InteractionType, RedirectRequest, SsoSilentRequest } from "@azure/msal-browser";
+import { InteractionStatus, InteractionType, PopupRequest, RedirectRequest, SsoSilentRequest } from "@azure/msal-browser";
 import { useMsal, useMsalAuthentication } from "@azure/msal-react";
 import { Spinner, Stack } from "@fluentui/react";
 import React from "react";
@@ -29,8 +29,9 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 interface ViewProps extends PropsFromRedux {
 }
 
-const request: RedirectRequest | SsoSilentRequest = {
+const request = {
   scopes: ["openid", "profile"],
+  loginHint: "undefined",
 }
 
 const View: React.FC<ViewProps> = props => {

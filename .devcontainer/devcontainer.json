@@ -19,7 +19,7 @@
 		// # We need node 16 to work
 		// # TODO: migrate to node20
 		"ghcr.io/devcontainers/features/node:1": {
-			"version": "16.20.2"
+			"version": "22.12.0"
 		},
 		"ghcr.io/devcontainers/features/azure-cli:1": {
 			"installUsingPython": true,
