@@ -13,9 +13,16 @@ on:
   workflow_dispatch:
   push:
     branches: [ main ]
-    paths: [ static-webapp/**, /uservice-webapi/api.graphql/, .github/workflows/static-webapp.yml ]
+    paths: 
+      - static-webapp/**
+      - /uservice-webapi/api.graphql/**
+      - .github/workflows/static-webapp.yml
   pull_request:
     branches: [ main ]
+    paths: 
+      - static-webapp/**
+      - /uservice-webapi/api.graphql/**
+      - .github/workflows/static-webapp.yml
 
 jobs:
 

@@ -10,9 +10,18 @@ on:
   workflow_dispatch:
   push:
     branches: [ main ]
-    paths: [ uservice-webapi/**, .github/workflows/uservice-webapi.yml ]
+    paths: 
+      - libs-java/**
+      - api/**
+      - uservice-webapi/**
+      - .github/workflows/uservice-webapi.yml
   pull_request:
     branches: [ main ]
+    paths: 
+      - libs-java/**
+      - api/**
+      - uservice-webapi/**
+      - .github/workflows/uservice-webapi.yml
 
 jobs:
   Build:
