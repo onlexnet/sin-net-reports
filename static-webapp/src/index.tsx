@@ -12,9 +12,6 @@ import App from "./app/App";
 
 import {
   AzureThemeLight,
-  AzureThemeDark,
-  AzureThemeHighContrastLight,
-  AzureThemeHighContrastDark,
 } from '@fluentui/azure-themes';
 
 initializeIcons();
