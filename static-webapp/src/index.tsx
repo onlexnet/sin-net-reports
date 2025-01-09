@@ -1,30 +1,20 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { ThemeProvider } from "@fluentui/react";
 import * as serviceWorker from "./serviceWorker";
 
-import '@fluentui/react/dist/css/fabric.css';
-
-import { initializeIcons } from "@fluentui/react/lib/Icons";
 import { Provider } from "react-redux";
 import { store } from "./store/store";
 import App from "./app/App";
 
-import {
-  AzureThemeLight,
-} from '@fluentui/azure-themes';
+import { ConfigProvider } from "antd";
 
-initializeIcons();
-
-// https://github.com/microsoft/fluentui/tree/master/packages/azure-themes
-const theme = AzureThemeLight; // or alternatively AzureThemeDark
 
 ReactDOM.render(
-  <ThemeProvider>
+  <ConfigProvider>
     <Provider store={store}>
         <App />
     </Provider>
-  </ThemeProvider>,
+  </ConfigProvider>,
   document.getElementById("app")
 );
 

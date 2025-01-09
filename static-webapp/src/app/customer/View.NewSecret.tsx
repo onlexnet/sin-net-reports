@@ -1,8 +1,6 @@
-import React from "react"
-
-import { IComboBoxOption, ComboBox, IComboBox } from "@fluentui/react";
+import React from "react";
+import { Select } from 'antd';
 import _ from "lodash";
-
 
 type SECRET_TYPE = 'PORTAL_SWIADCZENIODAWCY'
     | 'SIMP'
@@ -15,16 +13,14 @@ type SECRET_TYPE = 'PORTAL_SWIADCZENIODAWCY'
     | 'DILO'
     | 'RPWDL';
 
-
 interface NewAuthorisationProps {
     newAuthorisationRequested: (name: string) => void;
     newAuthorisationExRequested: (name: string) => void;
 }
 
 const onChangeHandler = (props: NewAuthorisationProps) => {
-    return (event: React.FormEvent<IComboBox>, option?: IComboBoxOption, index?: number, value?: string): void => {
-        if (!option) return;
-        const model = toHint(option.key as SECRET_TYPE);
+    return (value: SECRET_TYPE) => {
+        const model = toHint(value);
         if (!model.extended) {
             props.newAuthorisationRequested(model.text);
         } else {
@@ -76,20 +72,24 @@ const options: SECRET_TYPE[] = [
     'DILO',
     'RPWDL']
 
-
 export const NewSecret: React.FC<NewAuthorisationProps> = props => {
     const authorisationType = _.chain(options)
         .map(it => toHint(it))
         .map(it => ({ key: it.key, text: it.text }))
         .value()
-    return (<div className="ms-Grid-row">
-        <div className="ms-Grid-col ms-smPush1 ms-sm4">
-            <ComboBox
-                label="Dodaj nową autoryzację"
-                options={authorisationType}
-                onChange={onChangeHandler(props)} />
+    return (
+        <div>
+            <Select
+                placeholder="Dodaj nową autoryzację"
+                style={{ width: '100%' }}
+                onChange={onChangeHandler(props)}
+            >
+                {authorisationType.map(option => (
+                    <Select.Option key={option.key} value={option.key}>{option.text}</Select.Option>
+                ))}
+            </Select>
         </div>
-    </div>);
+    );
 }
 
 

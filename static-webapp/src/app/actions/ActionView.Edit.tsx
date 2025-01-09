@@ -3,7 +3,7 @@ import { RootState } from "../../store/reducers";
 import { Dispatch } from "redux";
 import { connect, ConnectedProps } from "react-redux";
 import _ from "lodash";
-import { ComboBox, DefaultButton, IComboBox, IComboBoxOption, PrimaryButton, Stack, TextField } from "@fluentui/react";
+import { Select, Button, Input, Space, Row } from "antd";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { AppDatePicker } from "../../services/ActionList.DatePicker";
 import { LocalDate } from "../../store/viewcontext/TimePeriod";
@@ -66,7 +66,7 @@ export const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
     const defaultServicemanName = item?.servicemanName;
     const [servicemanName, setServicemanName] = useState(defaultServicemanName);
     const onChangeServicemanName = useCallback(
-        (ev: React.FormEvent<IComboBox>, option?: IComboBoxOption) => {
+        (ev, option) => {
             const a = option?.key as string;
             setServicemanName(a);
         },
@@ -82,7 +82,7 @@ export const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
         (newValue: LocalDate) => {
             setActionDate(newValue);
         },
-        [ ],
+        [],
     );
 
     const defaultCustomerId = item?.customer?.id.entityId;
@@ -225,12 +225,12 @@ export const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
             <div className="ms-Grid-row">
                 <div className="ms-Grid-col ms-sm6 ms-md8 ms-lg10">
 
-                    <Stack tokens={stackTokens}>
+                    <Row gutter={[0, 8]}>
                         <div className="ms-Grid-row">
                             <div className="ms-Grid-col ms-sm4">
                                 <div className="ms-Grid-row">
                                     <div className="ms-Grid-col ms-sm12">
-                                        <ComboBox label="Pracownik" selectedKey={servicemanName} options={comboBoxBasicOptions} autoComplete="on" onChange={onChangeServicemanName}
+                                        <Select options={comboBoxBasicOptions} onChange={onChangeServicemanName}
                                         />
                                         <div className="ms-Grid-row">
                                             <CustomerView projectId={projectId} customerId={customerId} />
@@ -253,38 +253,52 @@ export const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
                                     customerId={customerId}
                                     onSelected={onChangeCustomerId}
                                     useListCustomersQuery={useListCustomersQuery}
-                                     />
-                            </div>
-                            <div className="ms-Grid-col ms-sm6">
-                                <TextField label="Usługa" multiline={true} value={description} errorMessage={descriptionError} onChange={onChangeDescription}
                                 />
+                            </div>
+                            <div className="ant-col ant-col-sm-6">
+                                <Input.TextArea
+                                    value={description}
+                                    onChange={onChangeDescription}
+                                    autoSize={{ minRows: 3 }}
+                                    status={descriptionError ? 'error' : ''}
+                                />
+                                {descriptionError && <div className="ant-form-item-explain-error">{descriptionError}</div>}
                             </div>
                         </div>
 
-                        <div className="ms-Grid-row">
-                            <div className="ms-Grid-col ms-sm4">
-                                <TextField label="Czas" placeholder="0:00" value={durationAsText} errorMessage={durationError} onChange={onChangeDuration} />
+                        <div className="ant-row">
+                            <div className="ant-col ant-col-sm-4">
+                                <Input
+                                    //   label="Czas"
+                                    placeholder="0:00"
+                                    value={durationAsText}
+                                    onChange={onChangeDuration}
+                                    status={durationError ? 'error' : ''}
+                                />
+                                {durationError && <div className="ant-form-item-explain-error">{durationError}</div>}
                             </div>
-                            <div className="ms-Grid-col ms-sm2">
-                                <TextField label="Dojazd" value={distance} onChange={onChangeDistance}
+                            <div className="ant-col ant-col-sm-2">
+                                <Input
+                                    //   label="Dojazd"
+                                    value={distance}
+                                    onChange={onChangeDistance}
                                 />
                             </div>
                         </div>
-
                         <div className="ms-Grid-row">
                             <div className="ms-Grid-col ms-sm12">
-                                <Stack horizontal tokens={stackTokens}>
-                                    <PrimaryButton disabled={updateActionInProgress || (customerId === undefined)} text="Aktualizuj"
+                                <Space>
+                                    <Button type="primary" disabled={updateActionInProgress || (customerId === undefined)}
                                         onClick={() => {
                                             updateAction();
-                                        }} />
-                                    <DefaultButton onClick={() => cancelEdit()} text="Wyjdź" />
-                                    <DefaultButton text="Usuń i wyjdź" disabled={updateActionInProgress || removeConfirmed} styles={btnStyles} onClick={removeAndExit1} />
-                                    <DefaultButton text="Tak, Usuń i wyjdź" disabled={updateActionInProgress || !removeConfirmed} styles={btnStyles} onClick={removeAndExit2} />
-                                </Stack>
+                                        }}>Aktualizuj</Button>
+                                    <Button onClick={() => cancelEdit()}>Wyjdź</Button>
+                                    <Button disabled={updateActionInProgress || removeConfirmed} onClick={removeAndExit1}>Usuń i wyjdź</Button>
+                                    <Button disabled={updateActionInProgress || !removeConfirmed} onClick={removeAndExit2}>Tak, Usuń i wyjdź</Button>
+                                </Space>
                             </div>
                         </div>
-                    </Stack>
+                    </Row>
 
                 </div>
             </div>

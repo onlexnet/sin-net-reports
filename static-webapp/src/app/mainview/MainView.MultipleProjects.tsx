@@ -1,5 +1,5 @@
 import React from "react";
-import { ChoiceGroup, IChoiceGroupOption, DefaultButton, Stack } from "@fluentui/react";
+import { Radio, Button, Space } from "antd";
 import _ from "lodash";
 
 interface MainViewMultipleProjectsProps {
@@ -8,24 +8,17 @@ interface MainViewMultipleProjectsProps {
 }
 export const MainViewMultipleProjects: React.FC<MainViewMultipleProjectsProps> = props => {
 
-    const options: IChoiceGroupOption[] = _.chain(props.projects)
-        .map(it => ({ key: it.id, text: it.name }))
+    const options = _.chain(props.projects)
+        .map(it => ({ label: it.name, value: it.id }))
         .value();
 
     const [selected, setSelected] = React.useState<string | undefined>();
 
     return (
-        <Stack>
-            <Stack.Item align="center">
-                <span>
-                    <ChoiceGroup options={options} label="Wybierz projekt na którym chcesz pracować:" onChange={(e, v) => setSelected(v?.key)} />
-                </span>
-                <span>
-                    <DefaultButton disabled={selected ? false : true}
-                        onClick={e => props.projectSelected(selected!)}>Kontunuuj pracę z wybranym projektem</DefaultButton>
-                </span>
-            </Stack.Item>
-        </Stack>
+        <Space direction="vertical" align="center">
+            <Radio.Group options={options} onChange={e => setSelected(e.target.value)} />
+            <Button type="primary" disabled={!selected} onClick={() => props.projectSelected(selected!)}>Kontunuuj pracę z wybranym projektem</Button>
+        </Space>
     );
 }
 

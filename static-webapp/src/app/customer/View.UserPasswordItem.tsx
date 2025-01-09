@@ -1,8 +1,6 @@
-import { DefaultButton, IStackTokens, Label, Separator, Stack, TextField } from "@fluentui/react";
+import { Button, Input, Divider, Row, Col } from "antd";
 import React, { useEffect, useState } from "react";
 import { TOTP } from "totp-generator";
-
-const stackTokens: IStackTokens = { childrenGap: 12 };
 
 interface UserPasswordModel {
     localKey: string,
@@ -55,9 +53,9 @@ export const UserPasswordItem: React.FC<UserPasswordItemProps> = props => {
         }
     }
 
-    const extendedWidth50 = { minWidth: "50%" }
-    const extendedWidth1 = { minWidth: "300px" }
-    const extendedWidth2 = { minWidth: "492px" }
+    const extendedWidth50 = { width: "50%" }
+    const extendedWidth1 = { width: "300px" }
+    const extendedWidth2 = { width: "492px" }
 
     let otpDesc = "TOTP nie zdefiniowany"
     let expiresDesc = "-"
@@ -85,24 +83,40 @@ export const UserPasswordItem: React.FC<UserPasswordItemProps> = props => {
     return (
         <div className="ms-Grid-row">
             <div className="ms-Grid-col ms-smPush1">
-                <Separator alignContent="start"><Label>{sectionName}</Label></Separator>
-                <Stack tokens={stackTokens}>
-                    <Stack horizontal tokens={stackTokens}>
-                        <TextField style={extendedWidth1} placeholder="Użytkownik" value={username} onChange={handler((m, v) => m.username = v)} />
-                        <TextField style={extendedWidth1} placeholder="Hasło" value={password} onChange={handler((m, v) => m.password = v)} />
-                        <DefaultButton text="Usuń" onClick={() => props.onRemove(props.model.localKey)} />
-                    </Stack>
-                    <Stack horizontal tokens={stackTokens}>
-                        <TextField value={otpDesc} disabled />
-                        <TextField value={expiresDesc} disabled />
-                        <TextField style={extendedWidth1} placeholder="TOTP secret" value={otpSecret} onChange={handler((m, v) => m.otpSecret = v)} />
-                        <TextField style={extendedWidth1} multiline placeholder="TOTP recovery keys" value={otpRecoveryKeys} onChange={handler((m, v) => m.otpRecoveryKeys = v)} />
-                    </Stack>
-                    <Stack horizontal tokens={stackTokens}>
-                        <TextField value={props.changedBy} disabled />
-                        <TextField value={props.changedWhen} disabled />
-                    </Stack>
-                </Stack>
+                <Divider orientation="left">{sectionName}</Divider>
+                <Row gutter={[12, 12]}>
+                    <Col>
+                        <Input style={extendedWidth1} placeholder="Użytkownik" value={username} onChange={handler((m, v) => m.username = v)} />
+                    </Col>
+                    <Col>
+                        <Input style={extendedWidth1} placeholder="Hasło" value={password} onChange={handler((m, v) => m.password = v)} />
+                    </Col>
+                    <Col>
+                        <Button type="primary" danger onClick={() => props.onRemove(props.model.localKey)}>Usuń</Button>
+                    </Col>
+                </Row>
+                <Row gutter={[12, 12]}>
+                    <Col>
+                        <Input value={otpDesc} disabled />
+                    </Col>
+                    <Col>
+                        <Input value={expiresDesc} disabled />
+                    </Col>
+                    <Col>
+                        <Input style={extendedWidth1} placeholder="TOTP secret" value={otpSecret} onChange={handler((m, v) => m.otpSecret = v)} />
+                    </Col>
+                    <Col>
+                        <Input style={extendedWidth1} placeholder="TOTP recovery keys" value={otpRecoveryKeys} onChange={handler((m, v) => m.otpRecoveryKeys = v)} />
+                    </Col>
+                </Row>
+                <Row gutter={[12, 12]}>
+                    <Col>
+                        <Input value={props.changedBy} disabled />
+                    </Col>
+                    <Col>
+                        <Input value={props.changedWhen} disabled />
+                    </Col>
+                </Row>
             </div>
         </div>
     );

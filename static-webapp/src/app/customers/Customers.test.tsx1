@@ -1,4 +1,4 @@
-import { DetailsList, TextField } from '@fluentui/react';
+import { Table, Input } from 'antd';
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import { configure, shallow } from 'enzyme';
 import { ListCustomersItem } from '../../api/useListCustomers';
@@ -30,8 +30,8 @@ describe('<Customers />', () => {
         expect(requestedProjectId).toEqual(requestedProjectId);
         return [item1];
       }} />);
-    var details = wrapper.find(DetailsList).props();
-    expect(details.items.length).toEqual(1);
+    var details = wrapper.find(Table).props();
+    expect(details.dataSource.length).toEqual(1);
   });
 
   it('filters by name - no matching elements', () => {
@@ -47,10 +47,10 @@ describe('<Customers />', () => {
         value: "This is just for test"
       }
     };
-    var input = wrapper.find(TextField).first();
+    var input = wrapper.find(Input).first();
     input.simulate("change", event);
-    var details = wrapper.find(DetailsList).props();
-    expect(details.items.length).toEqual(0);
+    var details = wrapper.find(Table).props();
+    expect(details.dataSource.length).toEqual(0);
   });
 
   it('filters by name - some matching elements', () => {
@@ -66,10 +66,10 @@ describe('<Customers />', () => {
         value: item2.name
       }
     };
-    var input = wrapper.find(TextField).first();
+    var input = wrapper.find(Input).first();
     input.simulate("change", event);
-    var details = wrapper.find(DetailsList).props();
-    expect(details.items.length).toEqual(1);
+    var details = wrapper.find(Table).props();
+    expect(details.dataSource.length).toEqual(1);
   });
 
   /** https://github.com/onlexnet/sin-net-reports/issues/58 */
@@ -85,10 +85,10 @@ describe('<Customers />', () => {
         value: "term1" // well known part of tested code
       }
     };
-    var input = wrapper.find(TextField).first();
+    var input = wrapper.find(Input).first();
     input.simulate("change", event);
-    var details = wrapper.find(DetailsList).props();
-    expect(details.items.length).toEqual(1);
+    var details = wrapper.find(Table).props();
+    expect(details.dataSource.length).toEqual(1);
   });
 
 });

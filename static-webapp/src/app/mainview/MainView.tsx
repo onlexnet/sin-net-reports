@@ -1,4 +1,4 @@
-import { Spinner, Stack } from "@fluentui/react";
+import { Spin, Layout } from "antd";
 import _ from "lodash";
 import React from "react";
 import { connect, ConnectedProps } from "react-redux";
@@ -50,11 +50,11 @@ const LocalView: React.FC<Props> = (props) => {
 
     if (!data) {
         return (
-            <Stack>
-                <Stack.Item align="center">
-                    <Spinner label="Ładowanie przydatnych projektów ....." ariaLive="assertive" labelPosition="right" />
-                </Stack.Item>
-            </Stack>);
+            <Layout>
+                <Layout.Content style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                    <Spin tip="Ładowanie przydatnych projektów ....." />
+                </Layout.Content>
+            </Layout>);
     }
 
     const { list } = data.Projects;
@@ -80,11 +80,11 @@ const LocalView: React.FC<Props> = (props) => {
     return (
         <div style={{ height: "100vh" }}  >
             <Router>
-                <Stack horizontal styles={{ root: { height: "100%" } }}>
-                    <Stack.Item>
+                <Layout style={{ height: "100%" }}>
+                    <Layout.Sider>
                         <Route path="/" component={NavBar} />
-                    </Stack.Item>
-                    <Stack.Item styles={{ root: { width: "100%", padding: "10" } }}>
+                    </Layout.Sider>
+                    <Layout.Content style={{ padding: "10px" }}>
                         <Route path={routing.editAction} component={ActionViewRoutedEdit} />
                         <Route path={routing.actions} component={ServicesDefault} exact={true} />
                         <Route path={routing.reports} component={ReportsViewRouted} />
@@ -93,8 +93,8 @@ const LocalView: React.FC<Props> = (props) => {
                         <Route path={routing.customers} component={CustomersRoutedConnectedView} exact={true} />
                         <Route path={routing.debug} render={(localProps) => <Debug {...props} />} />
                         <Route path="/" exact component={Home} />
-                    </Stack.Item>
-                </Stack>
+                    </Layout.Content>
+                </Layout>
             </Router>
         </div>);
 

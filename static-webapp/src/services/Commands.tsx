@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { CommandBar, ICommandBarItemProps, IButtonProps } from "@fluentui/react";
+import { Menu, Button } from "antd";
 import { Dispatch } from 'redux';
 import { connect, ConnectedProps } from 'react-redux';
 import { RootState } from '../store/reducers';
@@ -10,8 +10,6 @@ import { EntityId } from '../store/actions/ServiceModel';
 import { ActionEditUpdated, VIEWCONTEXT_ACTION_EDIT_UPDATED } from '../store/viewcontext/types';
 import { LocalDate } from '../store/viewcontext/TimePeriod';
 import { Redirect } from 'react-router-dom';
-
-const overflowProps: IButtonProps = { ariaLabel: 'More commands' };
 
 const mapStateToProps = (state: RootState) => {
   if (state.appState.empty) {
@@ -104,48 +102,32 @@ const ServiceCommandBarView: React.FC<ServiceCommandBarProps> = (props) => {
     })
   }
 
-
-  const _items: ICommandBarItemProps[] = [
+  const menuItems = [
     {
       key: 'newService',
-      text: 'Nowa usługa',
-      split: true,
-      iconProps: { iconName: 'Add' },
+      label: 'Nowa usługa',
       onClick: () => newService()
     },
     {
       key: 'prevMonth',
-      text: 'Poprzedni miesiąc',
-      split: true,
-      iconProps: { iconName: 'Previous' },
+      label: 'Poprzedni miesiąc',
       onClick: props.onPreviousMonthRequested
     },
     {
       key: 'nextMonth',
-      text: 'Następny miesiąc',
-      split: true,
-      iconProps: { iconName: 'Next' },
+      label: 'Następny miesiąc',
       onClick: props.onNextMonthRequested
     },
     {
       key: 'navigateToReports',
-      text: 'Raporty',
-      split: true,
-      iconProps: { iconName: 'ZipFolder' },
+      label: 'Raporty',
       onClick: props.onReportsViewRequested
     },
-
   ];
 
   return (
-    <div>
-      <CommandBar
-        items={_items}
-        overflowButtonProps={overflowProps}
-      />
-    </div>
+    <Menu items={menuItems} mode="horizontal" />
   );
 };
-
 
 export const ServiceCommandBar = connect(mapStateToProps, mapDispatchToProps)(ServiceCommandBarView);
