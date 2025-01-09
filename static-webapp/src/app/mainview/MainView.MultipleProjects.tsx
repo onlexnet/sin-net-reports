@@ -16,7 +16,15 @@ export const MainViewMultipleProjects: React.FC<MainViewMultipleProjectsProps> =
 
     return (
         <Space direction="vertical" align="center">
-            <Radio.Group options={options} onChange={e => setSelected(e.target.value)} />
+            <Radio.Group onChange={e => setSelected(e.target.value)}>
+                <Space direction="vertical">
+                    {options.map(option => (
+                        <Radio key={option.value} value={option.value}>
+                            {option.label}
+                        </Radio>
+                    ))}
+                </Space>
+            </Radio.Group>
             <Button type="primary" disabled={!selected} onClick={() => props.projectSelected(selected!)}>Kontunuuj pracę z wybranym projektem</Button>
         </Space>
     );
