@@ -37,6 +37,13 @@
   }
 }
 
+.layout-container {
+  width: 1200px;
+  height: 100vh; /* Full height */
+  margin: 0 auto; /* Center horizontally */
+  display: flex;
+}
+
 body {
   margin: 0;
   height: 100vh;

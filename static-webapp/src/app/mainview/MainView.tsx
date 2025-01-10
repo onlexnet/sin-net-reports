@@ -1,4 +1,4 @@
-import { Spin, Layout } from "antd";
+import { Spin, Layout, Input } from "antd";
 import _ from "lodash";
 import React from "react";
 import { connect, ConnectedProps } from "react-redux";
@@ -77,14 +77,16 @@ const LocalView: React.FC<Props> = (props) => {
         return (<p>Set application context ....</p>);
     }
 
+    const { Sider, Content } = Layout;
+
     return (
         <div style={{ height: "100vh" }}  >
             <Router>
-                <Layout style={{ height: "100%" }}>
-                    <Layout.Sider>
-                        <Route path="/" component={NavBar} />
-                    </Layout.Sider>
-                    <Layout.Content style={{ padding: "10px" }}>
+                <Layout>
+                    <Sider>
+                        <Route path="/" component={NavBar}/>
+                    </Sider>
+                    <Content>
                         <Route path={routing.editAction} component={ActionViewRoutedEdit} />
                         <Route path={routing.actions} component={ServicesDefault} exact={true} />
                         <Route path={routing.reports} component={ReportsViewRouted} />
@@ -93,7 +95,7 @@ const LocalView: React.FC<Props> = (props) => {
                         <Route path={routing.customers} component={CustomersRoutedConnectedView} exact={true} />
                         <Route path={routing.debug} render={(localProps) => <Debug {...props} />} />
                         <Route path="/" exact component={Home} />
-                    </Layout.Content>
+                    </Content>
                 </Layout>
             </Router>
         </div>);
