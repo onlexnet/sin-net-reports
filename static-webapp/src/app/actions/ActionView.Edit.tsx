@@ -14,6 +14,8 @@ import { CustomerComboBox } from "./CustomerComboBox";
 import { asDtoDate } from "../../api/Mapper";
 import { useListCustomersQuery } from "../../Components/.generated/components"
 
+const { Option } = Select;
+
 const mapStateToProps = (state: RootState) => {
     if (state.appState.empty) {
         throw new Error('Invalid state');
@@ -230,8 +232,16 @@ export const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
                             <div className="ms-Grid-col ms-sm4">
                                 <div className="ms-Grid-row">
                                     <div className="ms-Grid-col ms-sm12">
-                                        <Select options={comboBoxBasicOptions} onChange={onChangeServicemanName}
-                                        />
+                                        <div>
+                                            <label htmlFor="selectServiceman">Pracownik</label>
+                                            <Select id="selectServiceman" onChange={onChangeServicemanName} defaultValue={servicemanName}>
+                                            {comboBoxBasicOptions.map((option) => (
+                                                <Option key={option.key} value={option.text}>
+                                                    {option.text}
+                                                </Option>
+                                            ))}
+                                            </Select>
+                                        </div>
                                         <div className="ms-Grid-row">
                                             <CustomerView projectId={projectId} customerId={customerId} />
                                         </div>
