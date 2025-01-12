@@ -61,7 +61,9 @@ const ConnectedContent: React.FC<PropsFromRedux> = props => {
       title: "Pracownik",
       dataIndex: "servicemanEmail",
       key: "servicemanEmail",
-      //render: (text: string, item: { projectId: string, entityId: string, entityVersion: string}) => <Link to={`/actions/${item.projectId}/${item.entityId}/${item.entityVersion}`}>{text}</Link>,
+      render: (value: string, record: ServiceListModel) => {
+        return <Link to={`/actions/${record.projectId}/${record.entityId}/${record.entityVersion}`}>{value}</Link>;
+      }
     },
     {
       title: "Data",
