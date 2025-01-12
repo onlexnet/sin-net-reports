@@ -3,7 +3,7 @@ import { RootState } from "../../store/reducers";
 import { Dispatch } from "redux";
 import { connect, ConnectedProps } from "react-redux";
 import _ from "lodash";
-import { Select, Button, Input, Space, Row } from "antd";
+import { Select, Button, Input, Space, Row, Flex, Col } from "antd";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { AppDatePicker } from "../../services/ActionList.DatePicker";
 import { LocalDate } from "../../store/viewcontext/TimePeriod";
@@ -221,96 +221,108 @@ export const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
 
 
     return (
-        <div className="ms-Grid" dir="ltr">
-            <div className="ms-Grid-row">
-                <div className="ms-Grid-col ms-sm6 ms-md8 ms-lg10">
+        <>
+            <Row align={'middle'}>
+                <Col span={2}>
+                    <label htmlFor="selectServiceman">Pracownik:</label>
+                </Col>
+                <Col span={10}>
+                    <Select style={{ width: '100%' }} id="selectServiceman" onChange={onChangeServicemanName} defaultValue={servicemanName}>
+                        {comboBoxBasicOptions.map((option) => (
+                            <Option key={option.key} value={option.text}>
+                                {option.text}
+                            </Option>
+                        ))}
+                    </Select>
+                </Col>
+                <Col span={12}>
+                </Col>
+            </Row>
+            <Row>
+                <div className="ms-Grid" dir="ltr">
+                    <div className="ms-Grid-row">
+                        <div className="ms-Grid-col ms-sm6 ms-md8 ms-lg10">
 
-                    <Row gutter={[0, 8]}>
-                        <div className="ms-Grid-row">
-                            <div className="ms-Grid-col ms-sm4">
+                            <Row gutter={[0, 8]}>
                                 <div className="ms-Grid-row">
-                                    <div className="ms-Grid-col ms-sm12">
-                                        <div>
-                                            <label htmlFor="selectServiceman">Pracownik</label>
-                                            <Select id="selectServiceman" onChange={onChangeServicemanName} defaultValue={servicemanName}>
-                                            {comboBoxBasicOptions.map((option) => (
-                                                <Option key={option.key} value={option.text}>
-                                                    {option.text}
-                                                </Option>
-                                            ))}
-                                            </Select>
-                                        </div>
+                                    <div className="ms-Grid-col ms-sm4">
                                         <div className="ms-Grid-row">
-                                            <CustomerView projectId={projectId} customerId={customerId} />
+                                            <div className="ms-Grid-col ms-sm12">
+                                                <div>
+                                                </div>
+                                                <div className="ms-Grid-row">
+                                                    <CustomerView projectId={projectId} customerId={customerId} />
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
+                                    <div className="ms-Grid-col ms-sm2">
+                                        <AppDatePicker
+                                            gotoTodayText='Idź do aktualnego miesiąca'
+                                            onSelectDate={value => onChangeDate(value)}
+                                            current={actionDate} />
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="ms-Grid-col ms-sm2">
-                                <AppDatePicker
-                                    gotoTodayText='Idź do aktualnego miesiąca'
-                                    onSelectDate={value => onChangeDate(value)}
-                                    current={actionDate} />
-                            </div>
-                        </div>
 
-                        <div className="ms-Grid-row">
-                            <div className="ms-Grid-col ms-sm4">
-                                <CustomerComboBox
-                                    projectId={projectId}
-                                    customerId={customerId}
-                                    onSelected={onChangeCustomerId}
-                                    useListCustomersQuery={useListCustomersQuery}
-                                />
-                            </div>
-                            <div className="ant-col ant-col-sm-6">
-                                <Input.TextArea
-                                    value={description}
-                                    onChange={onChangeDescription}
-                                    autoSize={{ minRows: 3 }}
-                                    status={descriptionError ? 'error' : ''}
-                                />
-                                {descriptionError && <div className="ant-form-item-explain-error">{descriptionError}</div>}
-                            </div>
-                        </div>
+                                <div className="ms-Grid-row">
+                                    <div className="ms-Grid-col ms-sm4">
+                                        <CustomerComboBox
+                                            projectId={projectId}
+                                            customerId={customerId}
+                                            onSelected={onChangeCustomerId}
+                                            useListCustomersQuery={useListCustomersQuery}
+                                        />
+                                    </div>
+                                    <div className="ant-col ant-col-sm-6">
+                                        <Input.TextArea
+                                            value={description}
+                                            onChange={onChangeDescription}
+                                            autoSize={{ minRows: 3 }}
+                                            status={descriptionError ? 'error' : ''}
+                                        />
+                                        {descriptionError && <div className="ant-form-item-explain-error">{descriptionError}</div>}
+                                    </div>
+                                </div>
 
-                        <div className="ant-row">
-                            <div className="ant-col ant-col-sm-4">
-                                <Input
-                                    //   label="Czas"
-                                    placeholder="0:00"
-                                    value={durationAsText}
-                                    onChange={onChangeDuration}
-                                    status={durationError ? 'error' : ''}
-                                />
-                                {durationError && <div className="ant-form-item-explain-error">{durationError}</div>}
-                            </div>
-                            <div className="ant-col ant-col-sm-2">
-                                <Input
-                                    //   label="Dojazd"
-                                    value={distance}
-                                    onChange={onChangeDistance}
-                                />
-                            </div>
-                        </div>
-                        <div className="ms-Grid-row">
-                            <div className="ms-Grid-col ms-sm12">
-                                <Space>
-                                    <Button type="primary" disabled={updateActionInProgress || (customerId === undefined)}
-                                        onClick={() => {
-                                            updateAction();
-                                        }}>Aktualizuj</Button>
-                                    <Button onClick={() => cancelEdit()}>Wyjdź</Button>
-                                    <Button disabled={updateActionInProgress || removeConfirmed} onClick={removeAndExit1}>Usuń i wyjdź</Button>
-                                    <Button disabled={updateActionInProgress || !removeConfirmed} onClick={removeAndExit2}>Tak, Usuń i wyjdź</Button>
-                                </Space>
-                            </div>
-                        </div>
-                    </Row>
+                                <div className="ant-row">
+                                    <div className="ant-col ant-col-sm-4">
+                                        <Input
+                                            //   label="Czas"
+                                            placeholder="0:00"
+                                            value={durationAsText}
+                                            onChange={onChangeDuration}
+                                            status={durationError ? 'error' : ''}
+                                        />
+                                        {durationError && <div className="ant-form-item-explain-error">{durationError}</div>}
+                                    </div>
+                                    <div className="ant-col ant-col-sm-2">
+                                        <Input
+                                            //   label="Dojazd"
+                                            value={distance}
+                                            onChange={onChangeDistance}
+                                        />
+                                    </div>
+                                </div>
+                                <div className="ms-Grid-row">
+                                    <div className="ms-Grid-col ms-sm12">
+                                        <Space>
+                                            <Button type="primary" disabled={updateActionInProgress || (customerId === undefined)}
+                                                onClick={() => {
+                                                    updateAction();
+                                                }}>Aktualizuj</Button>
+                                            <Button onClick={() => cancelEdit()}>Wyjdź</Button>
+                                            <Button disabled={updateActionInProgress || removeConfirmed} onClick={removeAndExit1}>Usuń i wyjdź</Button>
+                                            <Button disabled={updateActionInProgress || !removeConfirmed} onClick={removeAndExit2}>Tak, Usuń i wyjdź</Button>
+                                        </Space>
+                                    </div>
+                                </div>
+                            </Row>
 
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
+            </Row>
+        </>
     );
 }
 
