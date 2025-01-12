@@ -15,6 +15,7 @@ import { LocalDate, TimePeriod } from "../store/viewcontext/TimePeriod";
 import { ActionEditItem, VIEWCONTEXT_ACTION_EDIT_START } from "../store/viewcontext/types";
 import { Duration } from "./ActionList.Duration";
 import { ServiceListModel } from "./ServiceListModel";
+import { ColumnType } from "antd/es/table";
 
 const controlStyles = {
   margin: "0 30px 20px 0",
@@ -53,12 +54,12 @@ const ConnectedContent: React.FC<PropsFromRedux> = props => {
 
   const [dateSortedDescending, setDateSortedDescending] = useState(true);
 
-  const initialColumns = [
+  const initialColumns: ColumnType<ServiceListModel>[] = [
     {
       title: "Pracownik",
       dataIndex: "servicemanEmail",
       key: "servicemanEmail",
-      render: (text: string, item: { projectId: string, entityId: string, entityVersion: string}) => <Link to={`/actions/${item.projectId}/${item.entityId}/${item.entityVersion}`}>{text}</Link>,
+      //render: (text: string, item: { projectId: string, entityId: string, entityVersion: string}) => <Link to={`/actions/${item.projectId}/${item.entityId}/${item.entityVersion}`}>{text}</Link>,
     },
     {
       title: "Data",
@@ -199,7 +200,7 @@ const ConnectedContent: React.FC<PropsFromRedux> = props => {
         </Col>
       </Row>
       <Table
-        // columns={initialColumns}
+        columns={initialColumns}
         dataSource={items}
         pagination={false}
         rowKey="entityId"
