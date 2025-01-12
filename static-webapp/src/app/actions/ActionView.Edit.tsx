@@ -213,13 +213,6 @@ export const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
         })
     };
 
-    const btnStyles = {
-        rootHovered: {
-            backgroundColor: "#d83b01"
-        }
-    };
-
-
     return (
         <>
             <Row align={'middle'}>
@@ -235,7 +228,16 @@ export const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
                         ))}
                     </Select>
                 </Col>
-                <Col span={12}>
+
+                <Col span={1}></Col>
+                <Col span={2} style={{ textAlign: 'right' }}>
+                    <label>Data:</label>
+                </Col>
+                <Col span={9}>
+                    <AppDatePicker
+                        gotoTodayText='Idź do aktualnego miesiąca'
+                        onSelectDate={value => onChangeDate(value)}
+                        current={actionDate} />
                 </Col>
             </Row>
             <Row>
@@ -257,10 +259,6 @@ export const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
                                         </div>
                                     </div>
                                     <div className="ms-Grid-col ms-sm2">
-                                        <AppDatePicker
-                                            gotoTodayText='Idź do aktualnego miesiąca'
-                                            onSelectDate={value => onChangeDate(value)}
-                                            current={actionDate} />
                                     </div>
                                 </div>
 

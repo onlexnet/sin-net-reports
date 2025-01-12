@@ -9,10 +9,6 @@ export interface AppDatePickerProps {
   current: LocalDate;
 }
 
-const divStyle: React.CSSProperties = {
-  height: 'auto',
-};
-
 export const AppDatePicker: React.FC<AppDatePickerProps> = props => {
 
   const { current: currentDate } = props;
@@ -25,10 +21,8 @@ export const AppDatePicker: React.FC<AppDatePickerProps> = props => {
   };
 
   return (
-    <div style={divStyle}>
-      <DatePicker
+      <DatePicker style={{ width: '100%' }}
         onChange={onSelectDate}
         defaultValue={dayjs(LocalDate.toDate(currentDate))} />
-    </div>
   );
 };
