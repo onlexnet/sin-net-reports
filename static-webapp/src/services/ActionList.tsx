@@ -1,4 +1,4 @@
-import { Table, Tooltip, Input, Switch, Row, Col } from "antd";
+import { Table, Tooltip, Input, Switch, Row, Col, Typography } from "antd";
 import _ from "lodash";
 import * as React from "react";
 import { useState } from "react";
@@ -16,6 +16,8 @@ import { ActionEditItem, VIEWCONTEXT_ACTION_EDIT_START } from "../store/viewcont
 import { Duration } from "./ActionList.Duration";
 import { ServiceListModel } from "./ServiceListModel";
 import { ColumnType } from "antd/es/table";
+
+const { Text } = Typography;
 
 const controlStyles = {
   margin: "0 30px 20px 0",
@@ -192,11 +194,10 @@ const ConnectedContent: React.FC<PropsFromRedux> = props => {
           />
         </Col>
         <Col>
-          <Input
-            readOnly
-            value={totalTime()}
-            style={controlStyles}
-          />
+          <div style={{ ...controlStyles, display: 'flex', alignItems: 'center' }}>
+            <Text>Suma godzin: </Text>
+            <Text style={{ marginLeft: '8px' }}>{totalTime()}</Text>
+          </div>
         </Col>
       </Row>
       <Table
@@ -204,9 +205,9 @@ const ConnectedContent: React.FC<PropsFromRedux> = props => {
         dataSource={items}
         pagination={false}
         rowKey="entityId"
-        // onChange={(pagination, filters, sorter) => {
-        //   setDateSortedDescending(sorter.order === 'descend');
-        // }}
+      // onChange={(pagination, filters, sorter) => {
+      //   setDateSortedDescending(sorter.order === 'descend');
+      // }}
       />
     </div>
   );
