@@ -205,9 +205,9 @@ const ConnectedContent: React.FC<PropsFromRedux> = props => {
         dataSource={items}
         pagination={false}
         rowKey="entityId"
-      // onChange={(pagination, filters, sorter) => {
-      //   setDateSortedDescending(sorter.order === 'descend');
-      // }}
+       onChange={(pagination, filters, sorter) => {
+         setDateSortedDescending(!dateSortedDescending);
+       }}
       />
     </div>
   );
