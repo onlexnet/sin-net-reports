@@ -81,9 +81,7 @@ export const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
         setActionDate(initialValue);
     }, [initialValue, propsEntityId, propsEntityVersion, propsProjectId]);
     const onChangeDate = useCallback(
-        (newValue: LocalDate) => {
-            setActionDate(newValue);
-        },
+        (newValue: LocalDate) => setActionDate(newValue),
         [],
     );
 

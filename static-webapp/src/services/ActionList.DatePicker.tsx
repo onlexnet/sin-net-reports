@@ -1,7 +1,7 @@
 import { DatePicker } from 'antd';
 import { LocalDate } from '../store/viewcontext/TimePeriod';
 import React from 'react';
-import moment from 'moment';
+import dayjs from 'dayjs';
 
 export interface AppDatePickerProps {
   onSelectDate(value: LocalDate): void;
@@ -17,7 +17,7 @@ export const AppDatePicker: React.FC<AppDatePickerProps> = props => {
 
   const { current: currentDate } = props;
 
-  const onSelectDate = (date: moment.Moment | null) => {
+  const onSelectDate = (date: dayjs.Dayjs | null) => {
     if (date) {
       const asLocalDate = LocalDate.of(date.toDate());
       props.onSelectDate(asLocalDate);
@@ -28,9 +28,7 @@ export const AppDatePicker: React.FC<AppDatePickerProps> = props => {
     <div style={divStyle}>
       <DatePicker
         onChange={onSelectDate}
-        value={moment(LocalDate.toDate(currentDate))}
-        format="YYYY-MM-DD"
-      />
+        defaultValue={dayjs(LocalDate.toDate(currentDate))} />
     </div>
   );
 };
