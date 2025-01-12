@@ -83,7 +83,7 @@ const LocalView: React.FC<Props> = (props) => {
         <div style={{ height: "100vh" }}  >
             <Router>
                 <Layout>
-                    <Sider>
+                    <Sider theme="light">
                         <Route path="/" component={NavBar}/>
                     </Sider>
                     <Content>

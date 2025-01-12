@@ -6,11 +6,12 @@ import { Provider } from "react-redux";
 import { store } from "./store/store";
 import App from "./app/App";
 
-import { ConfigProvider } from "antd";
+import { ConfigProvider, theme } from "antd";
 
+const lightToken = theme.getDesignToken({ algorithm: theme.defaultAlgorithm }); 
 
 ReactDOM.render(
-  <ConfigProvider>
+  <ConfigProvider theme={{ token: lightToken }}>
     <Provider store={store}>
         <App />
     </Provider>

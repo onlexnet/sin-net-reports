@@ -102,7 +102,13 @@ const ServiceCommandBarView: React.FC<ServiceCommandBarProps> = (props) => {
     })
   }
 
-  const menuItems = [
+  interface MenuItem {
+    key: string;
+    label: string;
+    onClick: () => void;
+  }
+
+  const menuItems: MenuItem[] = [
     {
       key: 'newService',
       label: 'Nowa usługa',
@@ -126,7 +132,7 @@ const ServiceCommandBarView: React.FC<ServiceCommandBarProps> = (props) => {
   ];
 
   return (
-    <Menu items={menuItems} mode="horizontal" />
+    <Menu theme='light' items={menuItems} mode="horizontal" />
   );
 };
 
