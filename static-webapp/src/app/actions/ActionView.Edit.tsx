@@ -213,13 +213,15 @@ export const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
         })
     };
 
+    const labelStyle: React.CSSProperties = { textAlign: 'right', marginRight: '8px' };
+
     return (
         <>
             <Row align={'middle'}>
-                <Col span={2}>
-                    <label htmlFor="selectServiceman">Pracownik:</label>
+                <Col span={3} style={labelStyle}>
+                    <label>Pracownik:</label>
                 </Col>
-                <Col span={10}>
+                <Col span={9}>
                     <Select style={{ width: '100%' }} id="selectServiceman" onChange={onChangeServicemanName} defaultValue={servicemanName}>
                         {comboBoxBasicOptions.map((option) => (
                             <Option key={option.key} value={option.text}>
@@ -229,8 +231,7 @@ export const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
                     </Select>
                 </Col>
 
-                <Col span={1}></Col>
-                <Col span={2} style={{ textAlign: 'right' }}>
+                <Col span={3} style={labelStyle}>
                     <label>Data:</label>
                 </Col>
                 <Col span={9}>
