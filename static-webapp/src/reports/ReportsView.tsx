@@ -1,4 +1,4 @@
-import { Typography, Layout, Button } from "antd";
+import { Typography, Layout, Button, Space } from "antd";
 import React, { useState } from "react";
 import { addressProvider } from "../addressProvider";
 import { LocalDate } from "../store/viewcontext/TimePeriod";
@@ -28,27 +28,35 @@ export const ReportsView: React.FC<ReportsViewProps> = props => {
     <Layout style={{ padding: 10 }}>
       <Content>
         <Title level={1}>Raporty</Title>
-        <PeriodSelector suffix="OD:" year={fromYear} month={fromMonth} onYearChanged={setFromYear} onMonthChanged={setFromMonth}/>
-        <PeriodSelector suffix="DO:" year={toYear} month={toMonth} onYearChanged={setToYear} onMonthChanged={setToMonth}/>
 
-        <Button
-          disabled={fromYear == null || fromMonth == null}
-          onClick={() => { openInNewTab(addressProvider().host + `/api/raporty/klienci/${projectId}/${fromYear}/${fromMonth}`); }}
-        >
-          Raport miesięczny - załączniki do faktur
-        </Button>
+        <Space direction="vertical">
+          <PeriodSelector suffix="OD:" year={fromYear} month={fromMonth} onYearChanged={setFromYear} onMonthChanged={setFromMonth} />
+          <PeriodSelector suffix="DO:" year={toYear} month={toMonth} onYearChanged={setToYear} onMonthChanged={setToMonth} />
 
-        <Button onClick={() => {
-          openInNewTab(addressProvider().host + `/api/raporty/2/${projectId}?yearFrom=${fromYear}&monthFrom=${fromMonth}&yearTo=${toYear}&monthTo=${toMonth}`);
-        }}>
-          Zestawienie sumaryczne godzin
-        </Button>
+          <Button
+            disabled={fromYear == null || fromMonth == null}
+            type="link"
+            onClick={() => { openInNewTab(addressProvider().host + `/api/raporty/klienci/${projectId}/${fromYear}/${fromMonth}`); }}
+          >
+            Raport miesięczny - załączniki do faktur
+          </Button>
 
-        <Button onClick={() => {
-          openInNewTab(addressProvider().host + `/api/raporty/3/${projectId}`);
-        }}>
-          Lista klientów przypisanych do operatorów
-        </Button>
+          <Button
+            type="link"
+            onClick={() => {
+            openInNewTab(addressProvider().host + `/api/raporty/2/${projectId}?yearFrom=${fromYear}&monthFrom=${fromMonth}&yearTo=${toYear}&monthTo=${toMonth}`);
+          }}>
+            Zestawienie sumaryczne godzin
+          </Button>
+
+          <Button
+            type="link"
+            onClick={() => {
+            openInNewTab(addressProvider().host + `/api/raporty/3/${projectId}`);
+          }}>
+            Lista klientów przypisanych do operatorów
+          </Button>
+        </Space>
       </Content>
     </Layout>
   );
