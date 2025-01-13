@@ -194,15 +194,19 @@ const ConnectedContent: React.FC<PropsFromRedux> = props => {
           <Text style={{ marginLeft: '8px' }}>{totalTime()}</Text>
         </div>
       </Space>
+      <div>
       <Table
         columns={initialColumns}
         dataSource={items}
         pagination={false}
+        // https://medium.com/@anjantalatatam/antd-table-fixed-and-sticky-header-999812b4916a
+        scroll={{ y: `calc(100vh - 250px)` }}
         rowKey="entityId"
         onChange={(pagination, filters, sorter) => {
           setDateSortedDescending(!dateSortedDescending);
         }}
       />
+      </div>
     </div>
   );
 }
