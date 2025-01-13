@@ -11,6 +11,10 @@ import { ActionEditUpdated, VIEWCONTEXT_ACTION_EDIT_UPDATED } from '../store/vie
 import { LocalDate } from '../store/viewcontext/TimePeriod';
 import { Redirect } from 'react-router-dom';
 
+import { FileTextOutlined, LeftOutlined, PlusOutlined, RightOutlined } from '@ant-design/icons';
+
+import './Commands.css';
+
 const mapStateToProps = (state: RootState) => {
   if (state.appState.empty) {
     throw new Error('Invalid state');
@@ -105,6 +109,7 @@ const ServiceCommandBarView: React.FC<ServiceCommandBarProps> = (props) => {
   interface MenuItem {
     key: string;
     label: string;
+    icon?: React.ReactNode
     onClick: () => void;
   }
 
@@ -112,27 +117,31 @@ const ServiceCommandBarView: React.FC<ServiceCommandBarProps> = (props) => {
     {
       key: 'newService',
       label: 'Nowa usługa',
+      icon: <PlusOutlined />,
       onClick: () => newService()
     },
     {
       key: 'prevMonth',
       label: 'Poprzedni miesiąc',
+      icon: <LeftOutlined />,
       onClick: props.onPreviousMonthRequested
     },
     {
       key: 'nextMonth',
       label: 'Następny miesiąc',
+      icon: <RightOutlined />,
       onClick: props.onNextMonthRequested
     },
     {
       key: 'navigateToReports',
       label: 'Raporty',
+      icon: <FileTextOutlined />,
       onClick: props.onReportsViewRequested
     },
   ];
 
   return (
-    <Menu theme='light' items={menuItems} mode="horizontal" />
+    <Menu theme='light' items={menuItems} mode="horizontal" className="menu-item"/>
   );
 };
 

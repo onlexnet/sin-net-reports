@@ -1,4 +1,4 @@
-import { Table, Tooltip, Input, Switch, Row, Col, Typography } from "antd";
+import { Table, Tooltip, Input, Switch, Row, Col, Typography, Space } from "antd";
 import _ from "lodash";
 import * as React from "react";
 import { useState } from "react";
@@ -170,46 +170,38 @@ const ConnectedContent: React.FC<PropsFromRedux> = props => {
 
   return (
     <div>
-      <Row gutter={16}>
-        <Col>
-          <Switch
-            checkedChildren="Tylko moje"
-            unCheckedChildren="Wszystkie"
-            checked={onlyMyData}
-            onChange={setOnlyMyData}
-          />
-        </Col>
-        <Col>
-          <Input
-            placeholder="Tylko dzień"
-            value={onlyDay}
-            onChange={(e) => setOnlyDay(e.target.value)}
-            style={controlStyles}
-          />
-        </Col>
-        <Col>
-          <Input
-            placeholder="Kontrahent"
-            value={onlyCustomer}
-            onChange={(e) => setOnlyCustomer(e.target.value)}
-            style={controlStyles}
-          />
-        </Col>
-        <Col>
-          <div style={{ ...controlStyles, display: 'flex', alignItems: 'center' }}>
-            <Text>Suma godzin: </Text>
-            <Text style={{ marginLeft: '8px' }}>{totalTime()}</Text>
-          </div>
-        </Col>
-      </Row>
+      <Space direction="horizontal" align="baseline" size="middle">
+        <Switch
+          checkedChildren="Tylko moje"
+          unCheckedChildren="Wszystkie"
+          checked={onlyMyData}
+          onChange={setOnlyMyData}
+        />
+        <Input
+          placeholder="Tylko dzień"
+          value={onlyDay}
+          onChange={(e) => setOnlyDay(e.target.value)}
+          style={controlStyles}
+        />
+        <Input
+          placeholder="Kontrahent"
+          value={onlyCustomer}
+          onChange={(e) => setOnlyCustomer(e.target.value)}
+          style={controlStyles}
+        />
+        <div style={{ ...controlStyles, display: 'flex', alignItems: 'center' }}>
+          <Text>Suma godzin: </Text>
+          <Text style={{ marginLeft: '8px' }}>{totalTime()}</Text>
+        </div>
+      </Space>
       <Table
         columns={initialColumns}
         dataSource={items}
         pagination={false}
         rowKey="entityId"
-       onChange={(pagination, filters, sorter) => {
-         setDateSortedDescending(!dateSortedDescending);
-       }}
+        onChange={(pagination, filters, sorter) => {
+          setDateSortedDescending(!dateSortedDescending);
+        }}
       />
     </div>
   );

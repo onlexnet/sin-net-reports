@@ -26,11 +26,11 @@ const MainView: React.FC<MainProps> = (props) => {
 
   return (
     <Layout style={{ height: "100%" }}>
-      <Header>
+      <Header style={{ background: "#fff" }}>
         <ServiceCommandBar
           onReportsViewRequested={() => {
-            const url = routing.reports;
-            props.history.push(url);
+        const url = routing.reports;
+        props.history.push(url);
           }}
         />
       </Header>
