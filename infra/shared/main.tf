@@ -24,7 +24,7 @@ module "keyvault" {
 module "github" {
   source                                              = "./module_github"
   environment_name                                    = var.environment_name
-  azure_static_web_apps_api_token                     = module.static_app.static_app_api_key
+  azure_static_web_apps_api_token                     = module.static_app_prod.static_app_api_key
   ONLEXNET_INFRA_SECRET                               = module.keyvault.env.ONLEXNET_INFRA_SECRET
   ONLEXNET_TENANT_ID                                  = module.keyvault.env.ONLEXNET_TENANT_ID
   ONLEXNET_SINNET_PRD01_SUBSCRIPTION_ID               = module.keyvault.env.ONLEXNET_SINNET_PRD01_SUBSCRIPTION_ID
@@ -34,22 +34,32 @@ module "github" {
 }
 
 locals {
-  webapp_prefix = var.environment_name != "prd01" ? "${var.application_name}-${var.environment_name}" : var.application_name
+  webapp_subdomain_prod = var.environment_name != "prd01" ? "${var.application_name}-${var.environment_name}" : var.application_name
+  webapp_subdomain_test = "${local.webapp_subdomain_prod}test"
 }
 
-module "static_app" {
+module "static_app_prod" {
   source         = "./module_static_app"
   resource_group = module.resourcegroup.main
 
-  custom_domain = "${local.webapp_prefix}.onlex.net"
+  custom_domain = "${local.webapp_subdomain_prod}.onlex.net"
 }
 
+# module "static_app_test" {
+#   source         = "./module_static_app"
+#   resource_group = module.resourcegroup.main
+
+#   custom_domain = "${local.webapp_subdomain_test}.onlex.net"
+# }
+
 module "cloudflare" {
-  source        = "./module_cloudflare"
-  webapp_prefix = local.webapp_prefix
-  webapp_fqdn   = module.static_app.webapp_fqdn
-  webapi_prefix = "${var.application_name}-${var.environment_name}-api"
-  webapi_fqdn   = module.container_apps_webapi.webapi_fqdn
+  source             = "./module_cloudflare"
+  webapp_prefix_prod = local.webapp_subdomain_prod
+  webapp_prefix_test = local.webapp_subdomain_test
+  webapp_fqdn_prod   = module.static_app_prod.webapp_fqdn
+  webapp_fqdn_test   = module.static_app_prod.webapp_fqdn
+  webapi_prefix      = "${var.application_name}-${var.environment_name}-api"
+  webapi_fqdn        = module.container_apps_webapi.webapi_fqdn
 }
 
 module "container_apps_env" {

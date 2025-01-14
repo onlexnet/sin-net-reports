@@ -3,7 +3,15 @@ terraform {
   required_providers {
     github = {
       source  = "integrations/github"
-      version = "~> 5.0"
+      version = "~> 6.0"
     }
   }
+}
+
+# Configure the GitHub Provider
+provider "github" {
+
+  // without the owner it uses username from github token, in my case: siudeks
+  owner = "onlexnet"
+
 }
