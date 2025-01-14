@@ -35,7 +35,7 @@ module "github" {
 
 locals {
   webapp_subdomain_prod = var.environment_name != "prd01" ? "${var.application_name}-${var.environment_name}" : var.application_name
-  webapp_subdomain_test = "${local.webapp_subdomain_prod}-test"
+  webapp_subdomain_test = "${local.webapp_subdomain_prod}test"
 }
 
 module "static_app_prod" {
