@@ -26,9 +26,7 @@
 			"version": "latest"
 		},
         "ghcr.io/devcontainers/features/terraform:1": {
-            "version": "latest",
-            "tflint": "latest",
-            "terragrunt": "latest"
+            "version": "1.10.3"
         },
         "ghcr.io/dhoeric/features/terraform-docs:1": {
             "version": "latest"
