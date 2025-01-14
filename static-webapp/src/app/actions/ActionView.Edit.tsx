@@ -234,13 +234,23 @@ export const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
                 <Col span={3} style={labelStyle}>
                     <label>Data:</label>
                 </Col>
-                <Col span={9}>
+                <Col span={8}>
                     <AppDatePicker
                         gotoTodayText='Idź do aktualnego miesiąca'
                         onSelectDate={value => onChangeDate(value)}
                         current={actionDate} />
                 </Col>
             </Row>
+
+            <Row>
+            <Col span={3} style={labelStyle}>
+                    <label>Wybór klienta:</label>
+                </Col>
+                <Col span={9}>
+                    <CustomerView projectId={projectId} customerId={customerId} />
+                </Col>
+            </Row>
+
             <Row>
                 <div className="ms-Grid" dir="ltr">
                     <div className="ms-Grid-row">
@@ -254,7 +264,6 @@ export const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
                                                 <div>
                                                 </div>
                                                 <div className="ms-Grid-row">
-                                                    <CustomerView projectId={projectId} customerId={customerId} />
                                                 </div>
                                             </div>
                                         </div>
