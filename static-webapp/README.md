@@ -1,5 +1,5 @@
 # Content
-Folder contains codebase of client part of SinNet PSA application.
+Folder contains client codebase part of SinNet PSA application.
 
 - **npm install** install packages
 - **npm run generate** generate local graphql models
