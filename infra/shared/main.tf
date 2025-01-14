@@ -45,12 +45,12 @@ module "static_app_prod" {
   custom_domain = "${local.webapp_subdomain_prod}.onlex.net"
 }
 
-module "static_app_test" {
-  source         = "./module_static_app"
-  resource_group = module.resourcegroup.main
+# module "static_app_test" {
+#   source         = "./module_static_app"
+#   resource_group = module.resourcegroup.main
 
-  custom_domain = "${local.webapp_subdomain_test}.onlex.net"
-}
+#   custom_domain = "${local.webapp_subdomain_test}.onlex.net"
+# }
 
 module "cloudflare" {
   source             = "./module_cloudflare"
