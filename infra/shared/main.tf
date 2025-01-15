@@ -35,7 +35,7 @@ module "github" {
 
 locals {
   webapp_subdomain_prod = var.environment_name != "prd01" ? "${var.application_name}-${var.environment_name}" : var.application_name
-  webapp_subdomain_test = "${local.webapp_subdomain_prod}test"
+  webapp_subdomain_test = "${local.webapp_subdomain_prod}-test"
 }
 
 module "static_app_prod" {
@@ -45,19 +45,22 @@ module "static_app_prod" {
   custom_domain = "${local.webapp_subdomain_prod}.onlex.net"
 }
 
-# module "static_app_test" {
-#   source         = "./module_static_app"
-#   resource_group = module.resourcegroup.main
+module "static_app_test" {
+  source         = "./module_static_webapp"
+  resource_group = module.resourcegroup.main
+  subdomain      = local.webapp_subdomain_test
 
-#   custom_domain = "${local.webapp_subdomain_test}.onlex.net"
-# }
+  // TODO move it (custom domain only) as a next step after cloud flare so that required DNS entry is already created
+  custom_domain = "${local.webapp_subdomain_test}.onlex.net"
+
+}
 
 module "cloudflare" {
   source             = "./module_cloudflare"
   webapp_prefix_prod = local.webapp_subdomain_prod
   webapp_prefix_test = local.webapp_subdomain_test
   webapp_fqdn_prod   = module.static_app_prod.webapp_fqdn
-  webapp_fqdn_test   = module.static_app_prod.webapp_fqdn
+  webapp_fqdn_test   = module.static_app_test.webapp_fqdn
   webapi_prefix      = "${var.application_name}-${var.environment_name}-api"
   webapi_fqdn        = module.container_apps_webapi.webapi_fqdn
 }
