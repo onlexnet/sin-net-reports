@@ -93,6 +93,7 @@ jobs:
           # output_location: "build" # Built app content directory - optional
           ###### End of Repository/Build Configurations ######
 
+  # we have secondary test-view on prod environment, and we are much more flexible with its deployment
   DeployTest:
     # You can start that build using
     # git push origin HEAD:webapp-tes --force
