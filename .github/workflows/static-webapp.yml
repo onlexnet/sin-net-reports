@@ -93,6 +93,8 @@ jobs:
           ###### End of Repository/Build Configurations ######
 
   DeployTest:
+    # You can start that build using
+    # git push origin HEAD:webapp-tes --force
     name: Deploy WebApp-Test
     if: github.event_name == 'push' && github.ref == 'refs/heads/webapp-test'
     needs: [ Build ]
