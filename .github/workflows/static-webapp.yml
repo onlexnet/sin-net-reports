@@ -31,14 +31,10 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
 
-      - name: Check ref
-        run: |
-          echo "GITHUB REF: ${{ github.ref }}"
-
-      - name: Checkout (GitHub)
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up Node.js 16
+      - name: Set up Node.js 22.12.0
         uses: actions/setup-node@v3
         with:
           node-version: '22.12.0'
