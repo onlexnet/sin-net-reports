@@ -97,7 +97,7 @@ jobs:
     # You can start that build using
     # git push origin HEAD:webapp-tes --force
     name: Deploy WebApp-Test
-    if: (github.event_name == 'push' || github.event_name == 'create') && github.event.ref == 'refs/heads/main'
+    if: (github.event_name == 'push' || github.event_name == 'create') && github.event.ref == 'refs/heads/webapp-test'
     needs: [ Build ]
     runs-on: ubuntu-latest
     environment:
