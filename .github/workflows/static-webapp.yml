@@ -59,7 +59,7 @@ jobs:
     name: Deploy to PRD01
     if: (github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')) && github.event.ref == 'refs/heads/main'
     needs: [ Build ]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     environment:
       name: prd01
       url: 'https://sinnet.onlex.net'
@@ -96,7 +96,7 @@ jobs:
     name: Deploy WebApp-Test
     if: (github.event_name == 'push' || github.event_name == 'create') && github.event.ref == 'refs/heads/webapp-test'
     needs: [ Build ]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     environment:
       name: prd01
       url: 'https://sinnet-test.onlex.net'
@@ -108,7 +108,6 @@ jobs:
           # may be any path, but let's reuse original location
           path: static-webapp/build
       - name: Build And Deploy
-        id: builddeploy
         # https://learn.microsoft.com/en-us/azure/static-web-apps/build-configuration?tabs=github-actions
         uses: Azure/static-web-apps-deploy@v1
         with:
