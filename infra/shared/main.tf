@@ -58,7 +58,7 @@ module "cloudflare" {
   webapp_prefix_prod = local.webapp_subdomain_prod
   webapp_prefix_test = local.webapp_subdomain_test
   webapp_fqdn_prod   = module.static_app_prod.webapp_fqdn
-  webapp_fqdn_test   = module.static_app_prod.webapp_fqdn
+  webapp_fqdn_test   = module.static_app_test.webapp_fqdn
   webapi_prefix      = "${var.application_name}-${var.environment_name}-api"
   webapi_fqdn        = module.container_apps_webapi.webapi_fqdn
 }
