@@ -35,3 +35,5 @@ variable SINNETAPP_PROD_SECRET { // used by module_keyvault
 }
 variable CR_PAT { // used by module_keyvault
 }
+variable TF_VAR_azure_subscription_id_prod { // used by module_keyvault
+}
