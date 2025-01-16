@@ -5,6 +5,9 @@ variable resource_group {
   })
 }
 
-variable subdomain {
-  description = "Will be used as intenral name for web_app resource"
+variable static_web_app_id {
 }
+
+variable domain_name {
+}
+
