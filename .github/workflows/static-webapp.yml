@@ -111,7 +111,8 @@ jobs:
         # https://learn.microsoft.com/en-us/azure/static-web-apps/build-configuration?tabs=github-actions
         uses: Azure/static-web-apps-deploy@v1
         with:
-          azure_static_web_apps_api_token: ${{ secrets.WEBAPP_TEST_API_TOKEN }}
+          # azure_static_web_apps_api_token: ${{ secrets.WEBAPP_TEST_API_TOKEN }}
+          azure_static_web_apps_api_token: 'INVALID TOKEN!!!'
           # repo_token: ${{ secrets.GITHUB_TOKEN }} # Used for Github integrations (i.e. PR comments)
           action: "upload"
           ###### Repository/Build Configurations - These values can be configured to match your app requirements. ######
