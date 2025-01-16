@@ -32,7 +32,8 @@ jobs:
     steps:
 
       - name: Check ref
-        run: echo "GITHUB REF: ${{ github.ref }}"
+        run: |
+          echo "GITHUB REF: ${{ github.ref }}"
 
       - name: Checkout (GitHub)
         uses: actions/checkout@v4
