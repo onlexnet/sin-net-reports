@@ -1,7 +1,7 @@
 # This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
 # For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
 
-name: CICD static-webapp
+name: CI static-webapp
 
 # Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
 # However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
@@ -97,7 +97,7 @@ jobs:
     # You can start that build using
     # git push origin HEAD:webapp-tes --force
     name: Deploy WebApp-Test
-    if: github.event_name == 'push' && github.ref == 'refs/heads/webapp-test'
+    if: (github.event_name == 'push' || github.event_name == 'create') && github.event.ref == 'refs/heads/main'
     needs: [ Build ]
     runs-on: ubuntu-latest
     environment:
