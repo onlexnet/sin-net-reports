@@ -28,6 +28,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 interface AppProps extends PropsFromRedux {
 }
 
+alert(`redirectUri: ${window.location.origin}`)
 const config: Configuration = {
   auth: {
       clientId: "36305176-2249-4ce5-8d59-a91dd7363610", // sinnetapp-prod
