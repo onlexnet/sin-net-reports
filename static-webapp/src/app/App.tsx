@@ -33,12 +33,12 @@ const config: Configuration = {
       clientId: "36305176-2249-4ce5-8d59-a91dd7363610", // sinnetapp-prod
       authority: "https://sinnetapp.b2clogin.com/7c86200b-9308-4ebc-a462-fab0a67b91e6/B2C_1_sign-in-or-up",
       // navigateToLoginRequestUrl: true,
-      // postLogoutRedirectUri: 'https://raport.sin.net.pl/',
+      postLogoutRedirectUri: window.location.origin,
       knownAuthorities: [
           "sinnetapp.b2clogin.com"
       ]
-  },
-  cache: {
+      },
+      cache: {
       cacheLocation: "sessionStorage", // This configures where your cache will be stored
       storeAuthStateInCookie: false, // Set this to "true" if you are having issues on IE11 or Edge
   },
