@@ -12,5 +12,6 @@ const asBackendHost = (appHost: string): string => {
   if (origin.endsWith("raport.sin.net.pl")) return appHost;
   if (origin.includes("localhost")) return prd01;
   if (origin.endsWith("sinnet.onlex.net")) return prd01;
+  if (origin.endsWith("sinnet-test.onlex.net")) return prd01;
   return "https://sinnet.local";
 }
