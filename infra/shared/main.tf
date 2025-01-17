@@ -24,7 +24,7 @@ module "keyvault" {
 module "github" {
   source                                              = "./module_github"
   environment_name                                    = var.environment_name
-  azure_static_web_apps_api_token                     = module.static_app_prod.static_app_api_key
+  webapp_prod_api_token                               = module.static_app_prod.static_app_api_key
   webapp_test_api_token                               = module.static_app_test.static_app_api_key
   ONLEXNET_INFRA_SECRET                               = module.keyvault.env.ONLEXNET_INFRA_SECRET
   ONLEXNET_TENANT_ID                                  = module.keyvault.env.ONLEXNET_TENANT_ID

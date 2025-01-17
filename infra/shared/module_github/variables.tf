@@ -1,7 +1,7 @@
 variable "environment_name" {
 }
 
-variable "azure_static_web_apps_api_token" {
+variable "webapp_prod_api_token" {
   sensitive = true
 }
 
