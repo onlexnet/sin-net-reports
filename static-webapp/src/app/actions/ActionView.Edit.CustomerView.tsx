@@ -18,15 +18,25 @@ const View: React.FC<ViewProps> = props => {
         entityId: customerId!
     }});
 
-  if (!data) return null;
+  const it = data
+    ? data.Customers.get!
+    : {
+      data: {
+        customerName: '...',
+        customerCityName: '...',
+        customerAddress: '...',
+        operatorEmail: '...',
+        distance: '...'
+      },
+      secretsEx: [ ]
+    }
 
-  const it = data.Customers.get!;
   const { customerName, customerCityName, customerAddress, operatorEmail, distance } = it.data ;
   const specialAuth = _.chain(it.secretsEx).filter(it => it.location === 'Portal świadczeniodawcy').first().value();
   const specialAuthValue = specialAuth?.entityCode;
 
   return (
-    <Row gutter={[16, 16]}>
+    <Row gutter={[8, 8]}>
       <Col span={24}>
         <Divider orientation="center">Dane wybranego klienta:</Divider>
       </Col>
