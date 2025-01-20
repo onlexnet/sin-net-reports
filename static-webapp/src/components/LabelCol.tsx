@@ -9,7 +9,7 @@ interface LabelColProps {
     span: ColSpanType
 }
 
-const labelStyle: React.CSSProperties = { textAlign: 'right', marginRight: '8px' };
+const labelStyle: React.CSSProperties = { textAlign: 'right', paddingRight: '8px' };
 
 const LabelCol: React.FC<LabelColProps> = ({ children, text, span }) => {
     return (

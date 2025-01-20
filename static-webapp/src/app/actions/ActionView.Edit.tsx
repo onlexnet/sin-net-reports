@@ -154,8 +154,6 @@ export const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
         [],
     );
 
-    const stackTokens = { childrenGap: 8 }
-
     const users = useGetUsers(projectId);
 
     const comboBoxBasicOptions = _.chain(users)
@@ -220,9 +218,8 @@ export const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
     return (
         <>
             <PaddedRow>
-                <LabelCol span={4} text="Pracownik:" >
-                </LabelCol>
-                <Col span={8}>
+                <LabelCol span={3} text="Pracownik:" />
+                <Col span={9}>
                     <Select style={{ width: '100%' }} id="selectServiceman" onChange={onChangeServicemanName} defaultValue={servicemanName}>
                         {comboBoxBasicOptions.map((option) => (
                             <Option key={option.key} value={option.text}>
@@ -232,18 +229,14 @@ export const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
                     </Select>
                 </Col>
 
-                <Col span={3} style={labelStyle}>
-                    <label>Data:</label>
-                </Col>
-                <Col span={8}>
+                <LabelCol span={3} text="Data:"/>
+                <Col span={9}>
                     <AppDatePicker
                         gotoTodayText='Idź do aktualnego miesiąca'
                         onSelectDate={value => onChangeDate(value)}
                         current={actionDate} />
                 </Col>
-                <Col span={1} />
             </PaddedRow>
-
             <PaddedRow>
                 <LabelCol span={4} text="Wybór klienta:" />
                 <Col span={8}>
