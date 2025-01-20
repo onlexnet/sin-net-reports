@@ -108,7 +108,7 @@ export const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
                 : '';
             if (errorMessage !== descriptionError) setDescriptionError(errorMessage);
         },
-        [descriptionError],
+        [],
     );
 
 
@@ -122,10 +122,10 @@ export const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
         var minutes = duration - hours * 60;
         setDurationAsText(hours + ':' + ('00' + minutes).substr(-2));
         durationRef.current = duration;
-    }, versionedProps);
+    }, [versionedProps, props.item.duration]);
     const onChangeDuration = useCallback(
-        (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
-            const newDurationAsText = newValue ?? "0:00";
+        (event: React.FormEvent<HTMLInputElement>) => {
+            const newDurationAsText = event.currentTarget.value ?? "0:00";
             const [hoursAsText, minutesAsText] = newDurationAsText.split(":")
             const hours = Number(hoursAsText);
             const minutes = Number(minutesAsText);
@@ -139,7 +139,7 @@ export const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
                 setDurationError("");
             }
         },
-        versionedProps,
+        [],
     );
 
     const propsDistance = "" + item?.distance;
@@ -220,9 +220,9 @@ export const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
     return (
         <>
             <PaddedRow>
-                <LabelCol span={3} text="Pracownik:" >
+                <LabelCol span={4} text="Pracownik:" >
                 </LabelCol>
-                <Col span={9}>
+                <Col span={8}>
                     <Select style={{ width: '100%' }} id="selectServiceman" onChange={onChangeServicemanName} defaultValue={servicemanName}>
                         {comboBoxBasicOptions.map((option) => (
                             <Option key={option.key} value={option.text}>
@@ -245,8 +245,8 @@ export const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
             </PaddedRow>
 
             <PaddedRow>
-                <LabelCol span={3} text="Wybór klienta:" />
-                <Col span={9}>
+                <LabelCol span={4} text="Wybór klienta:" />
+                <Col span={8}>
                     <CustomerComboBox
                         projectId={projectId}
                         customerId={customerId}
@@ -254,7 +254,15 @@ export const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
                         useListCustomersQuery={useListCustomersQuery}
                     />
                 </Col>
-                <Col span={12} />
+                <Col span={12}>
+                    <Input.TextArea
+                        value={description}
+                        onChange={onChangeDescription}
+                        autoSize={{ minRows: 3 }}
+                        status={descriptionError ? 'error' : ''}
+                    />
+                    {descriptionError && <div className="ant-form-item-explain-error">{descriptionError}</div>}
+                </Col>
             </PaddedRow>
 
             <PaddedRow>
@@ -262,15 +270,27 @@ export const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
                     <CustomerView projectId={projectId} customerId={customerId} />
                 </Col>
                 <Col span={12}>
-                    <Space direction="vertical" style={{ width: '100%'}}>
-                        <label>Opis</label>
-                        <Input.TextArea style={{ width: '100%'}}
-                            value={description}
-                            onChange={onChangeDescription}
-                            autoSize={{ minRows: 3 }}
-                            status={descriptionError ? 'error' : ''}
-                        />
-                    </Space>
+                </Col>
+            </PaddedRow>
+
+            <PaddedRow>
+                <LabelCol span={2} text="Czas" />
+                <Col span={9}>
+                    <Input
+                        placeholder="0:00"
+                        value={durationAsText}
+                        onChange={onChangeDuration}
+                        status={durationError ? 'error' : ''}
+                    />
+                    {durationError && <div className="ant-form-item-explain-error">{durationError}</div>}
+                </Col>
+                <LabelCol span={2} text="Dojazd" />
+                <Col span={9}>
+                    <Input
+                        value={distance}
+                        onChange={onChangeDistance}
+                    />
+
                 </Col>
             </PaddedRow>
 
@@ -295,24 +315,17 @@ export const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
                                     </div>
                                 </div>
 
+                                <div className="ms-Grid-row">
+                                    <div className="ms-Grid-col ms-sm4">
+                                    </div>
+                                    <div className="ant-col ant-col-sm-6">
+                                    </div>
+                                </div>
 
                                 <div className="ant-row">
                                     <div className="ant-col ant-col-sm-4">
-                                        <Input
-                                            //   label="Czas"
-                                            placeholder="0:00"
-                                            value={durationAsText}
-                                            onChange={onChangeDuration}
-                                            status={durationError ? 'error' : ''}
-                                        />
-                                        {durationError && <div className="ant-form-item-explain-error">{durationError}</div>}
                                     </div>
                                     <div className="ant-col ant-col-sm-2">
-                                        <Input
-                                            //   label="Dojazd"
-                                            value={distance}
-                                            onChange={onChangeDistance}
-                                        />
                                     </div>
                                 </div>
                                 <div className="ms-Grid-row">
