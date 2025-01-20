@@ -2,7 +2,7 @@ import { Table, Button, Input, Divider } from "antd";
 import { Link } from "react-router-dom";
 import _ from "lodash";
 import { useState } from "react";
-import { HorizontalSeparatorStack } from "../../Components/HorizontalSeparatorStack";
+import { HorizontalSeparatorStack } from "../../components/HorizontalSeparatorStack";
 import { ListCustomersItem } from "../../api/useListCustomers";
 
 interface CustomersProps {

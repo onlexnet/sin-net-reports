@@ -1,6 +1,6 @@
 import _ from "lodash";
 import React from "react"
-import { useGetCustomerQuery } from "../../Components/.generated/components";
+import { useGetCustomerQuery } from "../../components/.generated/components";
 import { Col, Row, Divider, Typography } from "antd";
 const { Text } = Typography
 

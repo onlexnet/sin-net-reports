@@ -4,7 +4,7 @@ import { Dispatch } from 'redux';
 import { connect, ConnectedProps } from 'react-redux';
 import { RootState } from '../store/reducers';
 import { previousPeriodCommand, nextPeriodCommand } from '../store/viewcontext/actions';
-import { useNewActionMutation } from '../Components/.generated/components';
+import { useNewActionMutation } from '../components/.generated/components';
 import { asDtoDate } from '../api/Mapper';
 import { EntityId } from '../store/actions/ServiceModel';
 import { ActionEditUpdated, VIEWCONTEXT_ACTION_EDIT_UPDATED } from '../store/viewcontext/types';
@@ -97,7 +97,7 @@ const ServiceCommandBarView: React.FC<ServiceCommandBarProps> = (props) => {
         projectId: props.selectedProjectId,
         when: dateFrom
       }
-    }).then(r => {
+    }).then((r: any) => {
       var createdEntityId = r.data?.Actions.newAction;
       if (!createdEntityId) return;
       setWaitingResult(createdEntityId);

@@ -4,7 +4,7 @@ import React from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { HashRouter as Router, Route } from "react-router-dom";
 import { Dispatch } from "redux";
-import { useAvailableProjectsQuery } from "../../Components/.generated/components";
+import { useAvailableProjectsQuery } from "../../components/.generated/components";
 import { Debug } from "../../debug/Debug";
 import { Home } from "../../Home";
 import { NavBar } from "../../NavBar";

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Input, Button, Divider, Table } from "antd";
 import { Link, RouteComponentProps } from "react-router-dom";
 import { routing } from "../../Routing";
-import { HorizontalSeparatorStack } from "../../Components/HorizontalSeparatorStack";
+import { HorizontalSeparatorStack } from "../../components/HorizontalSeparatorStack";
 import { useListCustomers, ListCustomersItem } from "../../api/useListCustomers";
 import { RootState } from "../../store/reducers";
 import { Dispatch } from "redux";

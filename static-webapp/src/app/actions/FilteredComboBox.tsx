@@ -1,9 +1,7 @@
-import { Select } from "antd";
+import { Col, Select } from "antd";
 import React, { useCallback } from "react";
 
 export interface FilteredComboBoxProps {
-  /** Label of the ComboBox */
-  label: string,
   /** Key value of just selected option to allow select proper element */
   selectedKey?: string,
   /** List of available options */
@@ -17,7 +15,7 @@ export interface FilteredComboBoxProps {
  */
 export const FilteredComboBox: React.FC<FilteredComboBoxProps> = props => {
 
-  const { label, selectedKey, items, onChange, onPendingValueChanged } = props;
+  const { selectedKey, items, onChange, onPendingValueChanged } = props;
 
   const onChangeLocal = useCallback((value: string) => {
     onChange(value);
@@ -28,9 +26,7 @@ export const FilteredComboBox: React.FC<FilteredComboBoxProps> = props => {
   }, [onPendingValueChanged])
 
   return (
-    <div>
-      <label>{label}</label>
-      <Select
+      <Select style={{ width: '100%' }}
         value={selectedKey}
         options={items.map(item => ({ value: item.key, label: item.text }))}
         showSearch
@@ -38,7 +34,6 @@ export const FilteredComboBox: React.FC<FilteredComboBoxProps> = props => {
         onSearch={onSearchLocal}
         allowClear
       />
-    </div>
   );
 
 }

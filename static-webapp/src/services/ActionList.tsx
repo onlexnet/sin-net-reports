@@ -8,7 +8,7 @@ import { Dispatch } from "redux";
 import { toActionModel } from "../api/DtoMapper";
 import { asDtoDates } from "../api/Mapper";
 import { LocalDateView } from "../app/LocalDateView";
-import { useFetchServicesQuery } from "../Components/.generated/components";
+import { useFetchServicesQuery } from "../components/.generated/components";
 import { ServiceAppModel } from "../store/actions/ServiceModel";
 import { RootState } from "../store/reducers";
 import { LocalDate, TimePeriod } from "../store/viewcontext/TimePeriod";

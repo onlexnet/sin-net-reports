@@ -8,11 +8,13 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { AppDatePicker } from "../../services/ActionList.DatePicker";
 import { LocalDate } from "../../store/viewcontext/TimePeriod";
 import { useGetUsers } from "../../api/useGetUsers";
-import { useRemoveActionMutation, useUpdateActionMutation } from "../../Components/.generated/components";
+import { useRemoveActionMutation, useUpdateActionMutation } from "../../components/.generated/components";
 import CustomerView from "./ActionView.Edit.CustomerView"
 import { CustomerComboBox } from "./CustomerComboBox";
 import { asDtoDate } from "../../api/Mapper";
-import { useListCustomersQuery } from "../../Components/.generated/components"
+import { useListCustomersQuery } from "../../components/.generated/components"
+import PaddedRow from "../../components/PaddedRow";
+import LabelCol from "../../components/LabelCol";
 
 const { Option } = Select;
 
@@ -98,15 +100,15 @@ export const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
         setDescription(propsDescription)
     }, [propsDescription]);
     const onChangeDescription = useCallback(
-        (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
-            var value = newValue ?? '';
+        (event: React.FormEvent<HTMLTextAreaElement>) => {
+            var value = event.currentTarget.value ?? '';
             setDescription(value);
             var errorMessage = value.length > 4000
                 ? 'Za długi opis'
                 : '';
             if (errorMessage !== descriptionError) setDescriptionError(errorMessage);
         },
-        [],
+        [descriptionError],
     );
 
 
@@ -217,10 +219,9 @@ export const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
 
     return (
         <>
-            <Row align={'middle'}>
-                <Col span={3} style={labelStyle}>
-                    <label>Pracownik:</label>
-                </Col>
+            <PaddedRow>
+                <LabelCol span={3} text="Pracownik:" >
+                </LabelCol>
                 <Col span={9}>
                     <Select style={{ width: '100%' }} id="selectServiceman" onChange={onChangeServicemanName} defaultValue={servicemanName}>
                         {comboBoxBasicOptions.map((option) => (
@@ -240,16 +241,38 @@ export const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
                         onSelectDate={value => onChangeDate(value)}
                         current={actionDate} />
                 </Col>
-            </Row>
+                <Col span={1} />
+            </PaddedRow>
 
-            <Row>
-            <Col span={3} style={labelStyle}>
-                    <label>Wybór klienta:</label>
-                </Col>
+            <PaddedRow>
+                <LabelCol span={3} text="Wybór klienta:" />
                 <Col span={9}>
+                    <CustomerComboBox
+                        projectId={projectId}
+                        customerId={customerId}
+                        onSelected={onChangeCustomerId}
+                        useListCustomersQuery={useListCustomersQuery}
+                    />
+                </Col>
+                <Col span={12} />
+            </PaddedRow>
+
+            <PaddedRow>
+                <Col span={12}>
                     <CustomerView projectId={projectId} customerId={customerId} />
                 </Col>
-            </Row>
+                <Col span={12}>
+                    <Space direction="vertical" style={{ width: '100%'}}>
+                        <label>Opis</label>
+                        <Input.TextArea style={{ width: '100%'}}
+                            value={description}
+                            onChange={onChangeDescription}
+                            autoSize={{ minRows: 3 }}
+                            status={descriptionError ? 'error' : ''}
+                        />
+                    </Space>
+                </Col>
+            </PaddedRow>
 
             <Row>
                 <div className="ms-Grid" dir="ltr">
@@ -272,25 +295,6 @@ export const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
                                     </div>
                                 </div>
 
-                                <div className="ms-Grid-row">
-                                    <div className="ms-Grid-col ms-sm4">
-                                        <CustomerComboBox
-                                            projectId={projectId}
-                                            customerId={customerId}
-                                            onSelected={onChangeCustomerId}
-                                            useListCustomersQuery={useListCustomersQuery}
-                                        />
-                                    </div>
-                                    <div className="ant-col ant-col-sm-6">
-                                        <Input.TextArea
-                                            value={description}
-                                            onChange={onChangeDescription}
-                                            autoSize={{ minRows: 3 }}
-                                            status={descriptionError ? 'error' : ''}
-                                        />
-                                        {descriptionError && <div className="ant-form-item-explain-error">{descriptionError}</div>}
-                                    </div>
-                                </div>
 
                                 <div className="ant-row">
                                     <div className="ant-col ant-col-sm-4">

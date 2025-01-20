@@ -3,7 +3,7 @@ import _ from "lodash";
 import React, { MouseEventHandler } from "react";
 import { v1 as uuid } from 'uuid';
 import { useGetUsers } from "../../api/useGetUsers";
-import { CustomerContactInput, CustomerInput, CustomerSecretExInput, CustomerSecretInput, useRemoveCustomerMutation, useSaveCustomerMutation } from "../../Components/.generated/components";
+import { CustomerContactInput, CustomerInput, CustomerSecretExInput, CustomerSecretInput, useRemoveCustomerMutation, useSaveCustomerMutation } from "../../components/.generated/components";
 import { EntityId } from "../../store/actions/ServiceModel";
 import { NewContactItem } from "./NewContactItem";
 import { SecretsTimestamp } from "./SecretsTimestamp";
