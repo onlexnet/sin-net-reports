@@ -108,47 +108,61 @@ export const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
                 : '';
             if (errorMessage !== descriptionError) setDescriptionError(errorMessage);
         },
-        [],
+        [descriptionError],
     );
 
 
+    const timeToText = (value: number) => {
+        const hours = Math.floor(value / 60);
+        const minutes = value - hours * 60;
+        return hours + ':' + ('00' + minutes).substr(-2);
+    }
+    const textToTime = (value: string) => {
 
-    const [durationAsText, setDurationAsText] = useState("0:00");
-    const durationRef = useRef(0);
+
+        const tested = value.trim();
+        const pattern = /^\d{1,3}:\d{2}$/;
+        if (!(pattern.test(tested))) {
+            return NaN
+        }
+
+        const [hoursAsText, minutesAsText] = value.split(":")
+        const hours = Number(hoursAsText);
+        const minutes = Number(minutesAsText);
+        const result = hours * 60 + minutes;
+        return result;
+    }
+
+    const [durationAsText, setDurationAsText] = useState(timeToText(props.item.duration ?? 0));
     const [durationError, setDurationError] = useState("");
-    useEffect(() => {
-        const duration = props.item.duration ?? 0;
-        var hours = Math.floor(duration / 60);
-        var minutes = duration - hours * 60;
-        setDurationAsText(hours + ':' + ('00' + minutes).substr(-2));
-        durationRef.current = duration;
-    }, [versionedProps, props.item.duration]);
-    const onChangeDuration = useCallback((event: React.FormEvent<HTMLInputElement>) => {
-            const newDurationAsText = event.currentTarget.value ?? "0:00";
-            const [hoursAsText, minutesAsText] = newDurationAsText.split(":")
-            const hours = Number(hoursAsText);
-            const minutes = Number(minutesAsText);
-            const newDuration = hours * 60 + minutes;
 
+
+    const onChangeDuration = useCallback((event: React.FormEvent<HTMLInputElement>) => {
+
+        const newDurationAsText = event.currentTarget.value ?? "0:00";
+        console.log(`Split: ${newDurationAsText}`)
+
+        const time = textToTime(newDurationAsText)
+        const newDuration = timeToText(time)
+
+
+        setDurationAsText(newDurationAsText);
+        if (isNaN(time)) {
+            setDurationError(`Nieprawidłowy czas: ${newDurationAsText}`)
+        } else {
             setDurationAsText(newDurationAsText);
-            if (isNaN(newDuration)) {
-                setDurationError(`Nieprawidłowy czas: ${newDurationAsText}`)
-            } else {
-                durationRef.current = newDuration;
-                setDurationError("");
-            }
+            setDurationError("");
+        }
         },
         [],
     );
 
     const propsDistance = "" + item?.distance;
     const [distance, setDistance] = useState(propsDistance);
-    useEffect(() => {
-        setDistance(propsDistance)
-    }, [versionedProps, propsDistance]);
     const onChangeDistance = useCallback(
-        (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
-            setDistance(newValue ?? "0");
+        (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+            var value = event.currentTarget.value
+            setDistance(value ?? "0");
         },
         [],
     );
@@ -203,7 +217,7 @@ export const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
                 entityId,
                 entityVersion,
                 distance: Number(distance),
-                duration: durationRef.current,
+                duration: textToTime(durationAsText),
                 what: description,
                 when: dtoDate,
                 who: servicemanName,
@@ -211,8 +225,6 @@ export const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
             }
         })
     };
-
-    const labelStyle: React.CSSProperties = { textAlign: 'right', marginRight: '8px' };
 
     return (
         <>
