@@ -54,6 +54,30 @@ type PropsFromRedux = ConnectedProps<typeof connector>
 
 const ConnectedContent: React.FC<PropsFromRedux> = props => {
 
+
+  // dev hack
+  // https://stackoverflow.com/questions/75774800/how-to-stop-resizeobserver-loop-limit-exceeded-error-from-appearing-in-react-a
+  // when removed you can see an exception on UI when clicking multiple times 'Tylko moje' button
+  React.useEffect(() => {
+    window.addEventListener('error', e => {
+        //if (e.message === 'ResizeObserver loop completed with undelivered notifications') {
+        if (e.message.startsWith('ResizeObserver loop')) {
+            const resizeObserverErrDiv = document.getElementById(
+                'webpack-dev-server-client-overlay-div'
+            );
+            const resizeObserverErr = document.getElementById(
+                'webpack-dev-server-client-overlay'
+            );
+            if (resizeObserverErr) {
+                resizeObserverErr.setAttribute('style', 'display: none');
+            }
+            if (resizeObserverErrDiv) {
+                resizeObserverErrDiv.setAttribute('style', 'display: none');
+            }
+        }
+    });
+  }, []);
+
   const [dateSortedDescending, setDateSortedDescending] = useState(true);
 
   const initialColumns: ColumnType<ServiceListModel>[] = [

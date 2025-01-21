@@ -153,7 +153,7 @@ export const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
             setDurationAsText(newDurationAsText);
             setDurationError("");
         }
-        },
+    },
         [],
     );
 
@@ -240,7 +240,7 @@ export const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
                     </Select>
                 </Col>
 
-                <LabelCol span={3} text="Data:"/>
+                <LabelCol span={3} text="Data:" />
                 <Col span={9}>
                     <AppDatePicker
                         gotoTodayText='Idź do aktualnego miesiąca'
@@ -298,59 +298,20 @@ export const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
                 </Col>
             </PaddedRow>
 
-            <Row>
-                <div className="ms-Grid" dir="ltr">
-                    <div className="ms-Grid-row">
-                        <div className="ms-Grid-col ms-sm6 ms-md8 ms-lg10">
+            <PaddedRow>
+                <Col>
+                    <Space>
+                        <Button type="primary" disabled={updateActionInProgress || (customerId === undefined)}
+                            onClick={() => {
+                                updateAction();
+                            }}>Aktualizuj</Button>
+                        <Button onClick={() => cancelEdit()}>Wyjdź</Button>
+                        <Button disabled={updateActionInProgress || removeConfirmed} onClick={removeAndExit1}>Usuń i wyjdź</Button>
+                        <Button disabled={updateActionInProgress || !removeConfirmed} onClick={removeAndExit2}>Tak, Usuń i wyjdź</Button>
+                    </Space>
+                </Col>
+            </PaddedRow>
 
-                            <Row gutter={[0, 8]}>
-                                <div className="ms-Grid-row">
-                                    <div className="ms-Grid-col ms-sm4">
-                                        <div className="ms-Grid-row">
-                                            <div className="ms-Grid-col ms-sm12">
-                                                <div>
-                                                </div>
-                                                <div className="ms-Grid-row">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="ms-Grid-col ms-sm2">
-                                    </div>
-                                </div>
-
-                                <div className="ms-Grid-row">
-                                    <div className="ms-Grid-col ms-sm4">
-                                    </div>
-                                    <div className="ant-col ant-col-sm-6">
-                                    </div>
-                                </div>
-
-                                <div className="ant-row">
-                                    <div className="ant-col ant-col-sm-4">
-                                    </div>
-                                    <div className="ant-col ant-col-sm-2">
-                                    </div>
-                                </div>
-                                <div className="ms-Grid-row">
-                                    <div className="ms-Grid-col ms-sm12">
-                                        <Space>
-                                            <Button type="primary" disabled={updateActionInProgress || (customerId === undefined)}
-                                                onClick={() => {
-                                                    updateAction();
-                                                }}>Aktualizuj</Button>
-                                            <Button onClick={() => cancelEdit()}>Wyjdź</Button>
-                                            <Button disabled={updateActionInProgress || removeConfirmed} onClick={removeAndExit1}>Usuń i wyjdź</Button>
-                                            <Button disabled={updateActionInProgress || !removeConfirmed} onClick={removeAndExit2}>Tak, Usuń i wyjdź</Button>
-                                        </Space>
-                                    </div>
-                                </div>
-                            </Row>
-
-                        </div>
-                    </div>
-                </div>
-            </Row>
         </>
     );
 }
