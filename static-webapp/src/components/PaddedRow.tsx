@@ -7,9 +7,9 @@ interface PaddedRowProps {
     padding?: string;
 }
 
-const PaddedRow: React.FC<PaddedRowProps> = ({ children, gutter = 0, padding = '8px' }) => {
+const PaddedRow: React.FC<PaddedRowProps> = ({ children }) => {
     return (
-        <Row gutter={gutter} style={{ padding }} align={'middle'}>
+        <Row gutter={[8, 8]} align={'middle'}>
             {children}
         </Row>
     );

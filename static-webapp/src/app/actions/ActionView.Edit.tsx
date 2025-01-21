@@ -123,8 +123,7 @@ export const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
         setDurationAsText(hours + ':' + ('00' + minutes).substr(-2));
         durationRef.current = duration;
     }, [versionedProps, props.item.duration]);
-    const onChangeDuration = useCallback(
-        (event: React.FormEvent<HTMLInputElement>) => {
+    const onChangeDuration = useCallback((event: React.FormEvent<HTMLInputElement>) => {
             const newDurationAsText = event.currentTarget.value ?? "0:00";
             const [hoursAsText, minutesAsText] = newDurationAsText.split(":")
             const hours = Number(hoursAsText);
@@ -146,7 +145,7 @@ export const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
     const [distance, setDistance] = useState(propsDistance);
     useEffect(() => {
         setDistance(propsDistance)
-    }, versionedProps);
+    }, [versionedProps, propsDistance]);
     const onChangeDistance = useCallback(
         (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
             setDistance(newValue ?? "0");
@@ -238,8 +237,8 @@ export const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
                 </Col>
             </PaddedRow>
             <PaddedRow>
-                <LabelCol span={4} text="Wybór klienta:" />
-                <Col span={8}>
+                <LabelCol span={3} text="Wybór klienta:" />
+                <Col span={9}>
                     <CustomerComboBox
                         projectId={projectId}
                         customerId={customerId}
@@ -277,7 +276,7 @@ export const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
                     />
                     {durationError && <div className="ant-form-item-explain-error">{durationError}</div>}
                 </Col>
-                <LabelCol span={2} text="Dojazd" />
+                <LabelCol span={2} text="Dojazd:" />
                 <Col span={9}>
                     <Input
                         value={distance}
