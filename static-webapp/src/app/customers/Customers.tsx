@@ -1,9 +1,10 @@
-import { Table, Button, Input, Divider } from "antd";
+import { Table, Button, Input, Divider, Col } from "antd";
 import { Link } from "react-router-dom";
 import _ from "lodash";
 import { useState } from "react";
 import { HorizontalSeparatorStack } from "../../components/HorizontalSeparatorStack";
 import { ListCustomersItem } from "../../api/useListCustomers";
+import PaddedRow from "../../components/PaddedRow";
 
 interface CustomersProps {
     givenProjectId: string,
@@ -46,30 +47,25 @@ export const CustomersView: React.FC<CustomersProps> = (props) => {
         .value();
 
     return (
-        <div className="ms-Grid">
-            <HorizontalSeparatorStack >
-                <div className="ms-Grid-row">
-                    <div className="ms-Grid-col ms-sm3" style={{ padding: 10 }}>
-                        <Button type="primary" onClick={() => props.onNewClientCommand()}>Dodaj nowego klienta</Button>
-                    </div>
-                </div>
-                <div className="ms-Grid-row">
-                    <div className="ms-Grid-col ms-sm12">
-                        <Input placeholder="Wprowadź fragment nazwy klienta ..." value={searchPhrase} onChange={e => setSearchPhrase(e.target.value)} />
-                    </div>
-                </div>
-
-                <div className="ms-Grid-row">
-                    <Divider />
-                    <div className="ms-Grid-col ms-sm12">
-                        <Table
-                            dataSource={sortedItems}
-                            columns={columns}
-                            pagination={false}
-                        />
-                    </div>
-                </div>
-            </HorizontalSeparatorStack>
-        </div >
+        <>
+            <PaddedRow>
+                <Col span={24}>
+                    <Button type="primary" onClick={() => props.onNewClientCommand()}>Dodaj nowego klienta</Button>
+                </Col>
+            </PaddedRow>
+            <PaddedRow>
+                <Col span={24}>
+                    <Input style={{ width: '100%'}} placeholder="Wprowadź fragment nazwy klienta ..." value={searchPhrase} onChange={e => setSearchPhrase(e.target.value)} />
+                </Col>
+            </PaddedRow>
+            <PaddedRow>
+                <Table
+                    dataSource={sortedItems}
+                    columns={columns}
+                    pagination={false}
+                    scroll={{ y: `calc(100vh - 250px)` }}
+                />
+            </PaddedRow >
+        </>
     )
 }

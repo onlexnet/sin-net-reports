@@ -74,7 +74,7 @@ const Reports: React.FC<ReportsProps> = (props) => {
                 </div>
                 <div>
                     <Divider />
-                    <Table dataSource={sortedItems} columns={columns} pagination={false} />
+                    <Table dataSource={sortedItems} columns={columns} pagination={false} scroll={{ y: `calc(100vh - 250px)` }} />
                 </div>
             </HorizontalSeparatorStack>
         </div>
