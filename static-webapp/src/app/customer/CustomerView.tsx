@@ -1,4 +1,4 @@
-import { Button, Checkbox, Col, Divider, Form, Input, Row, Select, Spin } from 'antd';
+import { Button, Checkbox, Col, Divider, Form, Input, Row, Select, Space, Spin } from 'antd';
 import _ from "lodash";
 import React, { MouseEventHandler } from "react";
 import { v1 as uuid } from 'uuid';
@@ -322,9 +322,9 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
     }
 
     return (
-        <Form layout="vertical">
-            <Divider>Akcje</Divider>
-            <Row gutter={16}>
+        <>
+            <Divider orientation='left'>Akcje</Divider>
+            <Row>
                 <Col>
                     <Button type="primary" disabled={actionsDisabled} onClick={saveEndExit}>Zapisz i wyjdź</Button>
                 </Col>
@@ -332,39 +332,59 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
                     <Button type="default" danger disabled={actionsDisabled} onClick={removeEndExit}>Usuń klienta i wyjdź</Button>
                 </Col>
             </Row>
-            <Divider>Dane ogólne</Divider>
-            <Row gutter={16}>
-                <Col span={8}>
-                    <Form.Item label="Operator">
-                        <Select defaultValue={model.Operator} onChange={onChangeCombo((m, v) => m.Operator = v)}>
+            <Divider orientation='left'>Dane ogólne</Divider>
+            <Row>
+                <Col span={22} offset={2}>
+                    <Space style={{ width: '100%' }} direction='vertical'>
+                        <label>Operator:</label>
+                        <Select style={{ width: '100%' }} defaultValue={model.Operator} onChange={onChangeCombo((m, v) => m.Operator = v)}>
                             {comboBoxBasicOptions.map(option => (
                                 <Option key={option.key} value={option.key}>{option.text}</Option>
                             ))}
                         </Select>
-                    </Form.Item>
+                    </Space>
                 </Col>
-                <Col span={8}>
-                    <Form.Item label="Obsługa">
-                        <Select defaultValue={model.Obsluga} onChange={onChangeCombo((m, v) => m.Obsluga = v)}>
+            </Row>
+            <Row>
+                <Col span={22} offset={2}>
+                    <Space style={{ width: '100%' }} direction='vertical'>
+                        <label>Obsługa:</label>
+                        <Select style={{ width: '100%' }} defaultValue={model.Obsluga} onChange={onChangeCombo((m, v) => m.Obsluga = v)}>
                             {obsluga.map(option => (
                                 <Option key={option.key} value={option.key}>{option.text}</Option>
                             ))}
                         </Select>
-                    </Form.Item>
+                    </Space>
                 </Col>
-                <Col span={8}>
-                    <Form.Item label="Rozliczenie">
-                        <Select defaultValue={model.Rozliczenie} onChange={onChangeCombo((m, v) => m.Rozliczenie = v)}>
+            </Row>
+            <Row>
+                <Col span={22} offset={2}>
+                    <Space style={{ width: '100%' }} direction='vertical'>
+                        <label>Rozliczenie:</label>
+                        <Select style={{ width: '100%' }} defaultValue={model.Rozliczenie} onChange={onChangeCombo((m, v) => m.Rozliczenie = v)}>
                             {rozliczenia.map(option => (
                                 <Option key={option.key} value={option.key}>{option.text}</Option>
                             ))}
                         </Select>
-                    </Form.Item>
+                    </Space>
                 </Col>
-                <Col span={4}>
-                    <Form.Item label="Dystans">
-                        <Input value={model.Dystans} onChange={onChangeText((m, v) => m.Dystans = v)} />
-                    </Form.Item>
+            </Row>
+            <Row>
+                <Col span={22} offset={2}>
+                    <Space style={{ width: '100%' }} direction='vertical'>
+                        <label>???:</label>
+                    </Space>
+                </Col>
+            </Row>
+            <Row gutter={16}>
+                <Col span={24}>
+                    <Space direction="vertical" size="middle">
+                        <Form.Item label="Rozliczenie">
+                        </Form.Item>
+                        <Form.Item label="Dystans">
+                            <Input value={model.Dystans} onChange={onChangeText((m, v) => m.Dystans = v)} />
+                        </Form.Item>
+                    </Space>
                 </Col>
             </Row>
             <Divider>Dane adresowe</Divider>
@@ -546,6 +566,6 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
                     </Form.Item>
                 </Col>
             </Row>
-        </Form>
+        </>
     );
 }
