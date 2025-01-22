@@ -324,16 +324,16 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
     return (
         <>
             <Divider orientation='left'>Akcje</Divider>
-            <Row>
-                <Col>
+            <Row gutter={16}>
+                <Col offset={2} span={3}>
                     <Button type="primary" disabled={actionsDisabled} onClick={saveEndExit}>Zapisz i wyjdź</Button>
                 </Col>
-                <Col>
+                <Col span={3}>
                     <Button type="default" danger disabled={actionsDisabled} onClick={removeEndExit}>Usuń klienta i wyjdź</Button>
                 </Col>
             </Row>
             <Divider orientation='left'>Dane ogólne</Divider>
-            <Row>
+            <Row gutter={16}>
                 <Col span={22} offset={2}>
                     <Space style={{ width: '100%' }} direction='vertical'>
                         <label>Operator:</label>
@@ -345,7 +345,7 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
                     </Space>
                 </Col>
             </Row>
-            <Row>
+            <Row gutter={16}>
                 <Col span={22} offset={2}>
                     <Space style={{ width: '100%' }} direction='vertical'>
                         <label>Obsługa:</label>
@@ -357,7 +357,7 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
                     </Space>
                 </Col>
             </Row>
-            <Row>
+            <Row gutter={16}>
                 <Col span={22} offset={2}>
                     <Space style={{ width: '100%' }} direction='vertical'>
                         <label>Rozliczenie:</label>
@@ -369,43 +369,57 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
                     </Space>
                 </Col>
             </Row>
-            <Row>
+            <Row gutter={16}>
+                <Col span={4} offset={2}>
+                    <Space style={{ width: '100%' }} direction='vertical'>
+                        <label>Dystans:</label>
+                        <Input value={model.Dystans} onChange={onChangeText((m, v) => m.Dystans = v)} />
+                    </Space>
+                </Col>
+            </Row>
+            <Row gutter={16}>
                 <Col span={22} offset={2}>
                     <Space style={{ width: '100%' }} direction='vertical'>
                         <label>???:</label>
                     </Space>
                 </Col>
             </Row>
+
+            <Divider orientation='left'>Dane adresowe</Divider>
+
             <Row gutter={16}>
-                <Col span={24}>
-                    <Space direction="vertical" size="middle">
-                        <Form.Item label="Rozliczenie">
-                        </Form.Item>
-                        <Form.Item label="Dystans">
-                            <Input value={model.Dystans} onChange={onChangeText((m, v) => m.Dystans = v)} />
-                        </Form.Item>
+                <Col span={22} offset={2}>
+                    <Space style={{ width: '100%' }} direction='vertical'>
+                        <label>Nazwa:</label>
+                        <Input value={model.Nazwa} placeholder="Nazwa klienta" onChange={onChangeText((m, v) => m.Nazwa = v)} />
                     </Space>
                 </Col>
             </Row>
-            <Divider>Dane adresowe</Divider>
             <Row gutter={16}>
-                <Col span={8}>
-                    <Form.Item label="Nazwa">
-                        <Input value={model.Nazwa} placeholder="Nazwa klienta" onChange={onChangeText((m, v) => m.Nazwa = v)} />
-                    </Form.Item>
-                </Col>
-                <Col span={8}>
-                    <Form.Item label="Miejscowość">
+                <Col span={22} offset={2}>
+                    <Space style={{ width: '100%' }} direction='vertical'>
+                        <label>Miejscowość:</label>
                         <Input value={model.Miejscowosc} placeholder="Miejscowość klienta" onChange={onChangeText((m, v) => m.Miejscowosc = v)} />
-                    </Form.Item>
-                </Col>
-                <Col span={8}>
-                    <Form.Item label="Adres">
-                        <Input value={model.Adres} placeholder="Adres klienta" onChange={onChangeText((m, v) => m.Adres = v)} />
-                    </Form.Item>
+                    </Space>
                 </Col>
             </Row>
-            <Divider>NFZ</Divider>
+            <Row gutter={16}>
+                <Col span={22} offset={2}>
+                    <Space style={{ width: '100%' }} direction='vertical'>
+                        <label>Adres:</label>
+                        <Input value={model.Adres} placeholder="Adres klienta" onChange={onChangeText((m, v) => m.Adres = v)} />
+                    </Space>
+                </Col>
+            </Row>
+
+            <Divider orientation='left'>NFZ</Divider>
+            <Row gutter={16}>
+                <Col span={22} offset={2}>
+                    <Space style={{ width: '100%' }} direction='vertical'>
+                        <label>???:</label>
+                    </Space>
+                </Col>
+            </Row>
             <Row gutter={16}>
                 <Col span={8}>
                     <Checkbox checked={model.UmowaZNFZ} onChange={onChangeBoolean((m, v) => m.UmowaZNFZ = v)}>Umowa z NFZ</Checkbox>
