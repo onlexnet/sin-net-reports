@@ -488,7 +488,6 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
                 <Row gutter={16}>
                     <Col span={22} offset={2}>
                         <Space style={{ width: '100%' }} direction='vertical'>
-                            <label>Dane opisowe:</label>
                             <Input.TextArea value={model.KomercjaNotatki} placeholder="Dane opisowe" onChange={onChangeMemo((m, v) => m.KomercjaNotatki = v)} />
                         </Space>
                     </Col>

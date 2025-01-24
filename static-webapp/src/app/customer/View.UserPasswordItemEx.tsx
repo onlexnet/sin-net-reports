@@ -101,16 +101,28 @@ export const UserPasswordItemExt: React.FC<UserPasswordExtItemProps> = props => 
                     <Button onClick={() => props.onRemove(props.model.localKey)}>Usuń</Button>
                 </Col>
             </Row>
-            <Space>
-                <Input value={otpDesc} disabled />
-                <Input value={expiresDesc} disabled />
-                <Input style={{ minWidth: "300px" }} placeholder="TOTP secret" value={otpSecret} onChange={handler((m, v) => m.otpSecret = v)} />
-                <Input style={{ minWidth: "300px" }} placeholder="TOTP recovery keys" value={otpRecoveryKeys} onChange={handler((m, v) => m.otpRecoveryKeys = v)} />
-            </Space>
-            <Space>
-                <Input value={props.changedBy} disabled defaultValue="-" />
+            <Row gutter={16}>
+                <Col offset={2} span={4}>
+                    <Input value={otpDesc} disabled />
+                </Col>
+                <Col span={4}>
+                    <Input value={expiresDesc} disabled />
+                </Col>
+                <Col span={6}>
+                    <Input placeholder="TOTP secret" value={otpSecret} onChange={handler((m, v) => m.otpSecret = v)} />
+                </Col>
+                <Col span={6}>
+                    <Input.TextArea value={otpRecoveryKeys} placeholder="TOTP recovery keys" onChange={handler((m, v) => m.otpRecoveryKeys = v)} />
+                </Col>
+            </Row>
+            <Row gutter={16}>
+                <Col offset={2} span={4}>
+                    <Input value={props.changedBy} disabled defaultValue="-" />
+                </Col>
+                <Col span={4}>
                 <Input value={props.changedWhen} disabled defaultValue="-" />
-            </Space>
+                </Col>
+            </Row>
         </>
     );
 }
