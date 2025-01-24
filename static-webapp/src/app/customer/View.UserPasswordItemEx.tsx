@@ -1,4 +1,4 @@
-import { Button, Input, Divider, Space, Typography } from "antd";
+import { Button, Input, Divider, Space, Typography, Col, Row } from "antd";
 import React, { useEffect, useState } from "react";
 import { TOTP } from "totp-generator"
 
@@ -82,30 +82,36 @@ export const UserPasswordItemExt: React.FC<UserPasswordExtItemProps> = props => 
     }
 
     return (
-        <div className="ms-Grid-row">
-            <div className="ms-Grid-col ms-smPush1">
-                <Divider orientation="left"><Text>{props.model.location}</Text></Divider>
-                <Space direction="vertical" size="middle">
-                    <Space>
-                        <Input placeholder="Oddział NFZ" value={entityName} onChange={handler((m, v) => m.entityName = v)} />
-                        <Input placeholder="kod świadczeniodawcy" value={entityCode} onChange={handler((m, v) => m.entityCode = v)} />
-                        <Input style={{ minWidth: "300px" }} placeholder="Użytkownik" value={username} onChange={handler((m, v) => m.username = v)} />
-                        <Input style={{ minWidth: "300px" }} placeholder="Hasło" value={password} onChange={handler((m, v) => m.password = v)} />
-                        <Button onClick={() => props.onRemove(props.model.localKey)}>Usuń</Button>
-                    </Space>
-                    <Space>
-                        <Input value={otpDesc} disabled />
-                        <Input value={expiresDesc} disabled />
-                        <Input style={{ minWidth: "300px" }} placeholder="TOTP secret" value={otpSecret} onChange={handler((m, v) => m.otpSecret = v)} />
-                        <Input style={{ minWidth: "300px" }} placeholder="TOTP recovery keys" value={otpRecoveryKeys} onChange={handler((m, v) => m.otpRecoveryKeys = v)} />
-                    </Space>
-                    <Space>
-                        <Input value={props.changedBy} disabled defaultValue="-" />
-                        <Input value={props.changedWhen} disabled defaultValue="-" />
-                    </Space>
-                </Space>
-            </div>
-        </div>
+        <>
+            <Divider orientation="left"><Text>{props.model.location}</Text></Divider>
+            <Row gutter={16}>
+                <Col offset={2} span={4}>
+                    <Input placeholder="Oddział NFZ" value={entityName} onChange={handler((m, v) => m.entityName = v)} />
+                </Col>
+                <Col span={4}>
+                    <Input placeholder="kod świadczeniodawcy" value={entityCode} onChange={handler((m, v) => m.entityCode = v)} />
+                </Col>
+                <Col span={6}>
+                    <Input placeholder="Użytkownik" value={username} onChange={handler((m, v) => m.username = v)} />
+                </Col>
+                <Col span={6}>
+                    <Input placeholder="Hasło" value={password} onChange={handler((m, v) => m.password = v)} />
+                </Col>
+                <Col span={2}>
+                    <Button onClick={() => props.onRemove(props.model.localKey)}>Usuń</Button>
+                </Col>
+            </Row>
+            <Space>
+                <Input value={otpDesc} disabled />
+                <Input value={expiresDesc} disabled />
+                <Input style={{ minWidth: "300px" }} placeholder="TOTP secret" value={otpSecret} onChange={handler((m, v) => m.otpSecret = v)} />
+                <Input style={{ minWidth: "300px" }} placeholder="TOTP recovery keys" value={otpRecoveryKeys} onChange={handler((m, v) => m.otpRecoveryKeys = v)} />
+            </Space>
+            <Space>
+                <Input value={props.changedBy} disabled defaultValue="-" />
+                <Input value={props.changedWhen} disabled defaultValue="-" />
+            </Space>
+        </>
     );
 }
 

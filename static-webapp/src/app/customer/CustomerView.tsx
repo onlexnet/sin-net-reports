@@ -323,7 +323,7 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
 
     return (
         <>
-            <Divider orientation='left'>Akcje</Divider>
+            <Divider orientation='left'>Akcje:</Divider>
             <Row gutter={16}>
                 <Col offset={2} span={3}>
                     <Button type="primary" disabled={actionsDisabled} onClick={saveEndExit}>Zapisz i wyjdź</Button>
@@ -332,277 +332,264 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
                     <Button type="default" danger disabled={actionsDisabled} onClick={removeEndExit}>Usuń klienta i wyjdź</Button>
                 </Col>
             </Row>
-            <Divider orientation='left'>Dane ogólne</Divider>
-            <Row gutter={16}>
-                <Col span={22} offset={2}>
-                    <Space style={{ width: '100%' }} direction='vertical'>
-                        <label>Operator:</label>
-                        <Select style={{ width: '100%' }} defaultValue={model.Operator} onChange={onChangeCombo((m, v) => m.Operator = v)}>
-                            {comboBoxBasicOptions.map(option => (
-                                <Option key={option.key} value={option.key}>{option.text}</Option>
-                            ))}
-                        </Select>
-                    </Space>
-                </Col>
-            </Row>
-            <Row gutter={16}>
-                <Col span={22} offset={2}>
-                    <Space style={{ width: '100%' }} direction='vertical'>
-                        <label>Obsługa:</label>
-                        <Select style={{ width: '100%' }} defaultValue={model.Obsluga} onChange={onChangeCombo((m, v) => m.Obsluga = v)}>
-                            {obsluga.map(option => (
-                                <Option key={option.key} value={option.key}>{option.text}</Option>
-                            ))}
-                        </Select>
-                    </Space>
-                </Col>
-            </Row>
-            <Row gutter={16}>
-                <Col span={22} offset={2}>
-                    <Space style={{ width: '100%' }} direction='vertical'>
-                        <label>Rozliczenie:</label>
-                        <Select style={{ width: '100%' }} defaultValue={model.Rozliczenie} onChange={onChangeCombo((m, v) => m.Rozliczenie = v)}>
-                            {rozliczenia.map(option => (
-                                <Option key={option.key} value={option.key}>{option.text}</Option>
-                            ))}
-                        </Select>
-                    </Space>
-                </Col>
-            </Row>
-            <Row gutter={16}>
-                <Col span={4} offset={2}>
-                    <Space style={{ width: '100%' }} direction='vertical'>
-                        <label>Dystans:</label>
-                        <Input value={model.Dystans} onChange={onChangeText((m, v) => m.Dystans = v)} />
-                    </Space>
-                </Col>
-            </Row>
-            <Row gutter={16}>
-                <Col span={22} offset={2}>
-                    <Space style={{ width: '100%' }} direction='vertical'>
-                        <label>???:</label>
-                    </Space>
-                </Col>
-            </Row>
+            <div style={{ height: '100vh', overflowY: 'auto' }}>
+                <Divider orientation='left'>Dane ogólne:</Divider>
+                <Row gutter={16}>
+                    <Col span={22} offset={2}>
+                        <Space style={{ width: '100%' }} direction='vertical'>
+                            <label>Operator:</label>
+                            <Select style={{ width: '100%' }} defaultValue={model.Operator} onChange={onChangeCombo((m, v) => m.Operator = v)}>
+                                {comboBoxBasicOptions.map(option => (
+                                    <Option key={option.key} value={option.key}>{option.text}</Option>
+                                ))}
+                            </Select>
+                        </Space>
+                    </Col>
+                </Row>
+                <Row gutter={16}>
+                    <Col span={22} offset={2}>
+                        <Space style={{ width: '100%' }} direction='vertical'>
+                            <label>Obsługa:</label>
+                            <Select style={{ width: '100%' }} defaultValue={model.Obsluga} onChange={onChangeCombo((m, v) => m.Obsluga = v)}>
+                                {obsluga.map(option => (
+                                    <Option key={option.key} value={option.key}>{option.text}</Option>
+                                ))}
+                            </Select>
+                        </Space>
+                    </Col>
+                </Row>
+                <Row gutter={16}>
+                    <Col span={22} offset={2}>
+                        <Space style={{ width: '100%' }} direction='vertical'>
+                            <label>Rozliczenie:</label>
+                            <Select style={{ width: '100%' }} defaultValue={model.Rozliczenie} onChange={onChangeCombo((m, v) => m.Rozliczenie = v)}>
+                                {rozliczenia.map(option => (
+                                    <Option key={option.key} value={option.key}>{option.text}</Option>
+                                ))}
+                            </Select>
+                        </Space>
+                    </Col>
+                </Row>
+                <Row gutter={16}>
+                    <Col span={4} offset={2}>
+                        <Space style={{ width: '100%' }} direction='vertical'>
+                            <label>Dystans:</label>
+                            <Input value={model.Dystans} onChange={onChangeText((m, v) => m.Dystans = v)} />
+                        </Space>
+                    </Col>
+                </Row>
 
-            <Divider orientation='left'>Dane adresowe</Divider>
+                <Divider orientation='left'>Dane adresowe:</Divider>
+                <Row gutter={16}>
+                    <Col span={22} offset={2}>
+                        <Space style={{ width: '100%' }} direction='vertical'>
+                            <label>Nazwa:</label>
+                            <Input value={model.Nazwa} placeholder="Nazwa klienta" onChange={onChangeText((m, v) => m.Nazwa = v)} />
+                        </Space>
+                    </Col>
+                </Row>
+                <Row gutter={16}>
+                    <Col span={22} offset={2}>
+                        <Space style={{ width: '100%' }} direction='vertical'>
+                            <label>Miejscowość:</label>
+                            <Input value={model.Miejscowosc} placeholder="Miejscowość klienta" onChange={onChangeText((m, v) => m.Miejscowosc = v)} />
+                        </Space>
+                    </Col>
+                </Row>
+                <Row gutter={16}>
+                    <Col span={22} offset={2}>
+                        <Space style={{ width: '100%' }} direction='vertical'>
+                            <label>Adres:</label>
+                            <Input value={model.Adres} placeholder="Adres klienta" onChange={onChangeText((m, v) => m.Adres = v)} />
+                        </Space>
+                    </Col>
+                </Row>
 
-            <Row gutter={16}>
-                <Col span={22} offset={2}>
-                    <Space style={{ width: '100%' }} direction='vertical'>
-                        <label>Nazwa:</label>
-                        <Input value={model.Nazwa} placeholder="Nazwa klienta" onChange={onChangeText((m, v) => m.Nazwa = v)} />
-                    </Space>
-                </Col>
-            </Row>
-            <Row gutter={16}>
-                <Col span={22} offset={2}>
-                    <Space style={{ width: '100%' }} direction='vertical'>
-                        <label>Miejscowość:</label>
-                        <Input value={model.Miejscowosc} placeholder="Miejscowość klienta" onChange={onChangeText((m, v) => m.Miejscowosc = v)} />
-                    </Space>
-                </Col>
-            </Row>
-            <Row gutter={16}>
-                <Col span={22} offset={2}>
-                    <Space style={{ width: '100%' }} direction='vertical'>
-                        <label>Adres:</label>
-                        <Input value={model.Adres} placeholder="Adres klienta" onChange={onChangeText((m, v) => m.Adres = v)} />
-                    </Space>
-                </Col>
-            </Row>
+                <Row gutter={16}>
+                    <Col span={11} offset={2}>
+                        <Checkbox checked={model.UmowaZNFZ} onChange={onChangeBoolean((m, v) => m.UmowaZNFZ = v)}>Umowa z NFZ</Checkbox>
+                    </Col>
+                    <Col span={11}>
+                        <Checkbox checked={model.MaFilie} onChange={onChangeBoolean((m, v) => m.MaFilie = v)}>Posiada filię</Checkbox>
+                    </Col>
+                </Row>
+                <Row gutter={16}>
+                    <Col span={11} offset={2}>
+                        <Checkbox checked={model.Lekarz} onChange={onChangeBoolean((m, v) => m.Lekarz = v)}>L Lekarz</Checkbox>
+                    </Col>
+                    <Col span={11}>
+                        <Checkbox checked={model.PielegniarkaSrodowiskowa} onChange={onChangeBoolean((m, v) => m.PielegniarkaSrodowiskowa = v)}>PS Pielęgniarka Środowiskowa</Checkbox>
+                    </Col>
+                </Row>
+                <Row gutter={16}>
+                    <Col span={11} offset={2}>
+                        <Checkbox checked={model.Polozna} onChange={onChangeBoolean((m, v) => m.Polozna = v)}>O Położna</Checkbox>
+                    </Col>
+                    <Col span={11}>
+                        <Checkbox checked={model.MedycynaSzkolna} onChange={onChangeBoolean((m, v) => m.MedycynaSzkolna = v)}>MPSZ Medycyna Szkolna</Checkbox>
+                    </Col>
+                </Row>
+                <Row gutter={16}>
+                    <Col span={11} offset={2}>
+                        <Checkbox checked={model.TransportSanitarny} onChange={onChangeBoolean((m, v) => m.TransportSanitarny = v)}>Transport Sanitarny</Checkbox>
+                    </Col>
+                    <Col span={11}>
+                        <Checkbox checked={model.NocnaPomocLekarska} onChange={onChangeBoolean((m, v) => m.NocnaPomocLekarska = v)}>NPL Nocna pomoc lekarska</Checkbox>
+                    </Col>
+                </Row>
+                <Row gutter={16}>
+                    <Col span={11} offset={2}>
+                        <Checkbox checked={model.AmbulatoryjnaOpiekaSpecjalistyczna} onChange={onChangeBoolean((m, v) => m.AmbulatoryjnaOpiekaSpecjalistyczna = v)}>AOS Ambulatoryjna opieka specjalistyczna</Checkbox>
+                    </Col>
+                    <Col span={11}>
+                        <Checkbox checked={model.Rehabilitacja} onChange={onChangeBoolean((m, v) => m.Rehabilitacja = v)}>REH Rehabilitacja</Checkbox>
+                    </Col>
+                </Row>
+                <Row gutter={16}>
+                    <Col span={11} offset={2}>
+                        <Checkbox checked={model.Stomatologia} onChange={onChangeBoolean((m, v) => m.Stomatologia = v)}>STM Stomatologia</Checkbox>
+                    </Col>
+                    <Col span={11}>
+                        <Checkbox checked={model.Psychiatria} onChange={onChangeBoolean((m, v) => m.Psychiatria = v)}>PSY Psychiatria</Checkbox>
+                    </Col>
+                </Row>
+                <Row gutter={16}>
+                    <Col span={11} offset={2}>
+                        <Checkbox checked={model.Szpitalnictwo} onChange={onChangeBoolean((m, v) => m.Szpitalnictwo = v)}>SZP Szpitalnictwo</Checkbox>
+                    </Col>
+                    <Col span={11}>
+                        <Checkbox checked={model.ProgramyProfilaktyczne} onChange={onChangeBoolean((m, v) => m.ProgramyProfilaktyczne = v)}>PROF Programy profilaktyczne</Checkbox>
+                    </Col>
+                </Row>
+                <Row gutter={16}>
+                    <Col span={11} offset={2}>
+                        <Checkbox checked={model.ZaopatrzenieOrtopedyczne} onChange={onChangeBoolean((m, v) => m.ZaopatrzenieOrtopedyczne = v)}>ZOP Zaopatrzenie ortopedyczne i pomocniczne</Checkbox>
+                    </Col>
+                    <Col span={11}>
+                        <Checkbox checked={model.OpiekaDlugoterminowa} onChange={onChangeBoolean((m, v) => m.OpiekaDlugoterminowa = v)}>OPD Opieka długoterminowa</Checkbox>
+                    </Col>
+                </Row>
+                <Divider orientation='left'>NFZ:</Divider>
+                <Row gutter={16}>
+                    <Col span={22} offset={2}>
+                        <Space style={{ width: '100%' }} direction='vertical'>
+                            <label>Notatki NFZ:</label>
+                            <Input.TextArea value={model.NfzNotatki} placeholder="Notatki NFZ" onChange={onChangeMemo((m, v) => m.NfzNotatki = v)} />
+                        </Space>
+                    </Col>
+                </Row>
 
-            <Row gutter={16}>
-                <Col span={11} offset={2}>
-                    <Checkbox checked={model.UmowaZNFZ} onChange={onChangeBoolean((m, v) => m.UmowaZNFZ = v)}>Umowa z NFZ</Checkbox>
-                </Col>
-                <Col span={11}>
-                    <Checkbox checked={model.MaFilie} onChange={onChangeBoolean((m, v) => m.MaFilie = v)}>Posiada filię</Checkbox>
-                </Col>
-            </Row>
-            <Row gutter={16}>
-                <Col span={11} offset={2}>
-                    <Checkbox checked={model.Lekarz} onChange={onChangeBoolean((m, v) => m.Lekarz = v)}>L Lekarz</Checkbox>
-                </Col>
-                <Col span={11}>
-                    <Checkbox checked={model.PielegniarkaSrodowiskowa} onChange={onChangeBoolean((m, v) => m.PielegniarkaSrodowiskowa = v)}>PS Pielęgniarka Środowiskowa</Checkbox>
-                </Col>
-            </Row>
-            <Row gutter={16}>
-                <Col span={11} offset={2}>
-                    <Checkbox checked={model.Polozna} onChange={onChangeBoolean((m, v) => m.Polozna = v)}>O Położna</Checkbox>
-                </Col>
-                <Col span={11}>
-                    <Checkbox checked={model.MedycynaSzkolna} onChange={onChangeBoolean((m, v) => m.MedycynaSzkolna = v)}>MPSZ Medycyna Szkolna</Checkbox>
-                </Col>
-            </Row>
-            <Row gutter={16}>
-                <Col span={11} offset={2}>
-                    <Checkbox checked={model.TransportSanitarny} onChange={onChangeBoolean((m, v) => m.TransportSanitarny = v)}>Transport Sanitarny</Checkbox>
-                </Col>
-                <Col span={11}>
-                    <Checkbox checked={model.NocnaPomocLekarska} onChange={onChangeBoolean((m, v) => m.NocnaPomocLekarska = v)}>NPL Nocna pomoc lekarska</Checkbox>
-                </Col>
-            </Row>
-            <Row gutter={16}>
-                <Col span={11} offset={2}>
-                    <Checkbox checked={model.AmbulatoryjnaOpiekaSpecjalistyczna} onChange={onChangeBoolean((m, v) => m.AmbulatoryjnaOpiekaSpecjalistyczna = v)}>AOS Ambulatoryjna opieka specjalistyczna</Checkbox>
-                </Col>
-                <Col span={11}>
-                    <Checkbox checked={model.Rehabilitacja} onChange={onChangeBoolean((m, v) => m.Rehabilitacja = v)}>REH Rehabilitacja</Checkbox>
-                </Col>
-            </Row>
-            <Row gutter={16}>
-                <Col span={11} offset={2}>
-                    <Checkbox checked={model.Stomatologia} onChange={onChangeBoolean((m, v) => m.Stomatologia = v)}>STM Stomatologia</Checkbox>
-                </Col>
-                <Col span={11}>
-                    <Checkbox checked={model.Psychiatria} onChange={onChangeBoolean((m, v) => m.Psychiatria = v)}>PSY Psychiatria</Checkbox>
-                </Col>
-            </Row>
-            <Row gutter={16}>
-                <Col span={11} offset={2}>
-                    <Checkbox checked={model.Szpitalnictwo} onChange={onChangeBoolean((m, v) => m.Szpitalnictwo = v)}>SZP Szpitalnictwo</Checkbox>
-                </Col>
-                <Col span={11}>
-                    <Checkbox checked={model.ProgramyProfilaktyczne} onChange={onChangeBoolean((m, v) => m.ProgramyProfilaktyczne = v)}>PROF Programy profilaktyczne</Checkbox>
-                </Col>
-            </Row>
-            <Row gutter={16}>
-                <Col span={11} offset={2}>
-                    <Checkbox checked={model.ZaopatrzenieOrtopedyczne} onChange={onChangeBoolean((m, v) => m.ZaopatrzenieOrtopedyczne = v)}>ZOP Zaopatrzenie ortopedyczne i pomocniczne</Checkbox>
-                </Col>
-                <Col span={11}>
-                    <Checkbox checked={model.OpiekaDlugoterminowa} onChange={onChangeBoolean((m, v) => m.OpiekaDlugoterminowa = v)}>OPD Opieka długoterminowa</Checkbox>
-                </Col>
-            </Row>
-            <Divider orientation='left'>NFZ</Divider>
-            <Row gutter={16}>
-                <Col span={22} offset={2}>
-                    <Space style={{ width: '100%' }} direction='vertical'>
-                        <label>Notatki NFZ:</label>
-                        <Input.TextArea value={model.NfzNotatki} placeholder="Notatki NFZ" onChange={onChangeMemo((m, v) => m.NfzNotatki = v)} />
-                    </Space>
-                </Col>
-            </Row>
+                <Divider orientation='left'>Komercja:</Divider>
+                <Row gutter={16}>
+                    <Col span={8} offset={2}>
+                        <Checkbox checked={model.Komercja} onChange={onChangeBoolean((m, v) => m.Komercja = v)}>Komercja</Checkbox>
+                    </Col>
+                </Row>
+                <Row gutter={16}>
+                    <Col span={22} offset={2}>
+                        <Space style={{ width: '100%' }} direction='vertical'>
+                            <label>Dane opisowe:</label>
+                            <Input.TextArea value={model.KomercjaNotatki} placeholder="Dane opisowe" onChange={onChangeMemo((m, v) => m.KomercjaNotatki = v)} />
+                        </Space>
+                    </Col>
+                </Row>
 
-            <Divider>Komercja</Divider>
-            <Row gutter={16}>
-                <Col span={8} offset={2}>
-                    <Checkbox checked={model.Komercja} onChange={onChangeBoolean((m, v) => m.Komercja = v)}>Komercja</Checkbox>
-                </Col>
-            </Row>
-            <Row gutter={16}>
-                <Col span={22} offset={2}>
-                    <Space style={{ width: '100%' }} direction='vertical'>
-                        <label>Dane opisowe:</label>
-                        <Input.TextArea value={model.KomercjaNotatki} placeholder="Dane opisowe" onChange={onChangeMemo((m, v) => m.KomercjaNotatki = v)} />
-                    </Space>
-                </Col>
-            </Row>
-            <Row gutter={16}>
-                <Col span={22} offset={2}>
-                    <Space style={{ width: '100%' }} direction='vertical'>
-                        <label>???:</label>
-                    </Space>
-                </Col>
-            </Row>
-
-            <Divider orientation='left'>Autoryzacje</Divider>
-            
-            {model.AutoryzacjeEx.map(item => (
-                <UserPasswordItemExt
-                    model={item}
-                    changedBy={item.who ?? "-"}
-                    changedWhen={item.when?.value ?? "-"}
-                    onChange={v => {
+                <Divider orientation='left'>Autoryzacje:</Divider>
+                {model.AutoryzacjeEx.map(item => (
+                    <UserPasswordItemExt
+                        model={item}
+                        changedBy={item.who ?? "-"}
+                        changedWhen={item.when?.value ?? "-"}
+                        onChange={v => {
+                            const clone = _.clone(model);
+                            const index = _.findIndex(clone.AutoryzacjeEx, it => it.localKey === v.localKey);
+                            const readOnlyValues = {};
+                            const newValue = { ...v, ...readOnlyValues };
+                            clone.AutoryzacjeEx[index] = newValue;
+                            setModel(clone);
+                        }}
+                        onRemove={localKey => {
+                            const clone = _.clone(model);
+                            const index = _.findIndex(clone.AutoryzacjeEx, it => it.localKey === localKey);
+                            clone.AutoryzacjeEx.splice(index, 1);
+                            setModel(clone);
+                        }}
+                    />
+                ))}
+                {model.Autoryzacje.map(item => (
+                    <UserPasswordItem
+                        model={item}
+                        changedBy={item.who ?? "-"}
+                        changedWhen={item.when?.value ?? "-"}
+                        onChange={v => {
+                            const clone = _.clone(model);
+                            const index = _.findIndex(clone.Autoryzacje, it => it.localKey === v.localKey);
+                            clone.Autoryzacje[index] = v;
+                            setModel(clone);
+                        }}
+                        onRemove={localKey => {
+                            const clone = _.clone(model);
+                            const index = _.findIndex(clone.Autoryzacje, it => it.localKey === localKey);
+                            clone.Autoryzacje.splice(index, 1);
+                            setModel(clone);
+                        }}
+                    />
+                ))}
+                <NewSecret
+                    newAuthorisationExRequested={name => {
                         const clone = _.clone(model);
-                        const index = _.findIndex(clone.AutoryzacjeEx, it => it.localKey === v.localKey);
-                        const readOnlyValues = {};
-                        const newValue = { ...v, ...readOnlyValues };
-                        clone.AutoryzacjeEx[index] = newValue;
+                        const localKey = uuid();
+                        const newItem: SecretExModel = {
+                            localKey,
+                            location: name
+                        };
+                        clone.AutoryzacjeEx.push(newItem);
                         setModel(clone);
                     }}
-                    onRemove={localKey => {
+                    newAuthorisationRequested={name => {
                         const clone = _.clone(model);
-                        const index = _.findIndex(clone.AutoryzacjeEx, it => it.localKey === localKey);
-                        clone.AutoryzacjeEx.splice(index, 1);
+                        const localKey = uuid();
+                        const newItem: SecretModel = {
+                            localKey,
+                            location: name
+                        };
+                        clone.Autoryzacje.push(newItem);
                         setModel(clone);
                     }}
                 />
-            ))}
-            {model.Autoryzacje.map(item => (
-                <UserPasswordItem
-                    model={item}
-                    changedBy={item.who ?? "-"}
-                    changedWhen={item.when?.value ?? "-"}
-                    onChange={v => {
-                        const clone = _.clone(model);
-                        const index = _.findIndex(clone.Autoryzacje, it => it.localKey === v.localKey);
-                        clone.Autoryzacje[index] = v;
-                        setModel(clone);
-                    }}
-                    onRemove={localKey => {
-                        const clone = _.clone(model);
-                        const index = _.findIndex(clone.Autoryzacje, it => it.localKey === localKey);
-                        clone.Autoryzacje.splice(index, 1);
-                        setModel(clone);
-                    }}
-                />
-            ))}
-            <NewSecret
-                newAuthorisationExRequested={name => {
-                    const clone = _.clone(model);
-                    const localKey = uuid();
-                    const newItem: SecretExModel = {
-                        localKey,
-                        location: name
-                    };
-                    clone.AutoryzacjeEx.push(newItem);
-                    setModel(clone);
-                }}
-                newAuthorisationRequested={name => {
-                    const clone = _.clone(model);
-                    const localKey = uuid();
-                    const newItem: SecretModel = {
-                        localKey,
-                        location: name
-                    };
-                    clone.Autoryzacje.push(newItem);
-                    setModel(clone);
-                }}
-            />
-            <Divider>Dane kontaktowe</Divider>
-            {model.Kontakty.map(item => (
-                <NewContactItem
-                    model={item}
-                    onChange={v => {
-                        const clone = _.clone(model);
-                        const index = _.findIndex(clone.Kontakty, it => it.localKey === v.localKey);
-                        clone.Kontakty[index] = v;
-                        setModel(clone);
-                    }}
-                    onRemove={localKey => {
-                        const clone = _.clone(model);
-                        const index = _.findIndex(clone.Kontakty, it => it.localKey === localKey);
-                        clone.Kontakty.splice(index, 1);
-                        setModel(clone);
-                    }}
-                />
-            ))}
-            <Row gutter={16}>
-                <Col span={8}>
-                    <Button onClick={addContact}>Dodaj nowy kontakt</Button>
-                </Col>
-            </Row>
-            <Divider>Dane techniczne</Divider>
-            <Row gutter={16}>
-                <Col span={16}>
-                    <Form.Item label="Adresy IP serwerów, inne">
-                        <Input.TextArea value={model.DaneTechniczne} placeholder="Adresy IP serwerów, inne" onChange={onChangeMemo((m, v) => m.DaneTechniczne = v)} />
-                    </Form.Item>
-                </Col>
-            </Row>
-        </>
-    );
+                <Divider>Dane kontaktowe:</Divider>
+                {model.Kontakty.map(item => (
+                    <NewContactItem
+                        model={item}
+                        onChange={v => {
+                            const clone = _.clone(model);
+                            const index = _.findIndex(clone.Kontakty, it => it.localKey === v.localKey);
+                            clone.Kontakty[index] = v;
+                            setModel(clone);
+                        }}
+                        onRemove={localKey => {
+                            const clone = _.clone(model);
+                            const index = _.findIndex(clone.Kontakty, it => it.localKey === localKey);
+                            clone.Kontakty.splice(index, 1);
+                            setModel(clone);
+                        }}
+                    />
+                ))}
+                <Row gutter={16}>
+                    <Col span={8}>
+                        <Button onClick={addContact}>Dodaj nowy kontakt</Button>
+                    </Col>
+                </Row>
+
+                <Divider>Dane techniczne</Divider>
+                <Row gutter={16}>
+                    <Col span={16}>
+                        <Form.Item label="Adresy IP serwerów, inne">
+                            <Input.TextArea value={model.DaneTechniczne} placeholder="Adresy IP serwerów, inne" onChange={onChangeMemo((m, v) => m.DaneTechniczne = v)} />
+                        </Form.Item>
+                    </Col>
+                </Row>
+
+            </div>
+        </>);
 }
