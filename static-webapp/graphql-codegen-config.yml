@@ -1,7 +1,7 @@
 schema: ../uservice-webapi/**/*.graphqls
 documents: 'src/**/*.graphql'
 generates:
-  src/Components/.generated/components.tsx:
+  src/components/.generated/components.tsx:
     plugins:
       - typescript
       - typescript-operations

@@ -1,6 +1,6 @@
 import _ from "lodash"
 import React, { useRef, useState } from "react"
-import { useListCustomersQuery } from "../../Components/.generated/components"
+import { useListCustomersQuery } from "../../components/.generated/components"
 import { FilteredComboBox } from "./FilteredComboBox"
 
 export interface CustomerComboBoxProps {
@@ -70,9 +70,7 @@ export const CustomerComboBox: React.FC<CustomerComboBoxProps> = props => {
     setFilteredCustomers(filtered);
   }
 
-
-
-  return <FilteredComboBox label="Wybór klienta"
+  return <FilteredComboBox
     selectedKey={props.customerId}
     items={filteredCustomers}
     onChange={props.onSelected}

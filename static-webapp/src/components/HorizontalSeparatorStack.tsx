@@ -1,11 +1,10 @@
-import { IStackTokens, Stack } from "@fluentui/react";
+import { Row, Col } from "antd";
 import React from "react";
 
-const stackTokens: IStackTokens = { childrenGap: 12 };
 export const HorizontalSeparatorStack = (props: { children: JSX.Element[] }) => (
     <>
         {React.Children.map(props.children, child => {
-            return <Stack tokens={stackTokens}>{child}</Stack>;
+            return <Row gutter={12}><Col>{child}</Col></Row>;
         })}
     </>
 );

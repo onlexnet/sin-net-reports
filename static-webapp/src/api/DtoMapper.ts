@@ -1,4 +1,4 @@
-import { ServiceItemFragment } from "../Components/.generated/components";
+import { ServiceItemFragment } from "../components/.generated/components";
 import { ServiceAppModel } from "../store/actions/ServiceModel";
 import { LocalDate } from "../store/viewcontext/TimePeriod";
 

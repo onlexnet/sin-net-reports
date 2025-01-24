@@ -5,7 +5,7 @@ import { Dispatch } from "redux";
 import { connect, ConnectedProps } from "react-redux";
 import { CustomerView, CustomerViewEntry } from "./CustomerView";
 import { RouteComponentProps } from "react-router-dom";
-import { useReserveCustomerMutation } from "../../Components/.generated/components";
+import { useReserveCustomerMutation } from "../../components/.generated/components";
 import { routing } from "../../Routing";
 
 
