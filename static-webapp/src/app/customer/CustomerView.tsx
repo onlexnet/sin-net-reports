@@ -1,6 +1,6 @@
 import { Affix, Button, Checkbox, Col, Divider, Form, Input, Row, Select, Space, Spin } from 'antd';
 import _ from "lodash";
-import React, { MouseEventHandler } from "react";
+import React, { MouseEventHandler, useEffect, useRef, useState } from "react";
 import { v1 as uuid } from 'uuid';
 import { useGetUsers } from "../../api/useGetUsers";
 import { CustomerContactInput, CustomerInput, CustomerSecretExInput, CustomerSecretInput, useRemoveCustomerMutation, useSaveCustomerMutation } from "../../components/.generated/components";
@@ -121,6 +121,14 @@ interface CustomerViewProps {
 
 export const CustomerView: React.FC<CustomerViewProps> = props => {
 
+    const topPartRef = useRef<HTMLDivElement>(null);
+    const [topPartHeight, setTopPartHeight] = useState(0);    
+    useEffect(() => {
+        if (topPartRef.current) {
+            setTopPartHeight(topPartRef.current.clientHeight);
+        }
+    }, []);
+    
     const obsluga = [
         { key: 'Obsługiwany', text: 'Obsługiwany' },
         { key: 'Nie obsługiwany', text: 'Nie obsługiwany' },
@@ -323,16 +331,18 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
 
     return (
         <>
-            <Divider orientation='left'>Akcje:</Divider>
-            <Row gutter={16}>
-                <Col offset={2} span={3}>
-                    <Button type="primary" disabled={actionsDisabled} onClick={saveEndExit}>Zapisz i wyjdź</Button>
-                </Col>
-                <Col span={3}>
-                    <Button type="default" danger disabled={actionsDisabled} onClick={removeEndExit}>Usuń klienta i wyjdź</Button>
-                </Col>
-            </Row>
-            <div style={{ height: '100vh', overflowY: 'auto' }}>
+            <div ref={topPartRef}>
+                <Divider orientation='left'>Akcje:</Divider>
+                <Row gutter={16}>
+                    <Col offset={2} span={3}>
+                        <Button type="primary" disabled={actionsDisabled} onClick={saveEndExit}>Zapisz i wyjdź</Button>
+                    </Col>
+                    <Col span={3}>
+                        <Button type="default" danger disabled={actionsDisabled} onClick={removeEndExit}>Usuń klienta i wyjdź</Button>
+                    </Col>
+                </Row>
+            </div>
+            <div style={{ height: `calc(100vh - ${topPartHeight}px)`, overflowY: 'auto' }}>
                 <Divider orientation='left'>Dane ogólne:</Divider>
                 <Row gutter={16}>
                     <Col span={22} offset={2}>

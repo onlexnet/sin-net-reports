@@ -78,7 +78,7 @@ export const NewSecret: React.FC<NewAuthorisationProps> = props => {
         .map(it => ({ key: it.key, text: it.text }))
         .value()
     return (
-        <Row>
+        <Row gutter={32}>
             <Col offset={2}>
                 <Select
                     placeholder="Dodaj nową autoryzację"
