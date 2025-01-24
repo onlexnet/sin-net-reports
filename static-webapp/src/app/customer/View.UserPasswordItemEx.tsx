@@ -98,7 +98,7 @@ export const UserPasswordItemExt: React.FC<UserPasswordExtItemProps> = props => 
                     <Input placeholder="Hasło" value={password} onChange={handler((m, v) => m.password = v)} />
                 </Col>
                 <Col span={2}>
-                    <Button onClick={() => props.onRemove(props.model.localKey)}>Usuń</Button>
+                    <Button danger onClick={() => props.onRemove(props.model.localKey)}>Usuń</Button>
                 </Col>
             </Row>
             <Row gutter={16}>

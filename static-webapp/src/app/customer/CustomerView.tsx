@@ -556,7 +556,7 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
                         setModel(clone);
                     }}
                 />
-                <Divider>Dane kontaktowe:</Divider>
+                <Divider orientation='left'>Dane kontaktowe:</Divider>
                 {model.Kontakty.map(item => (
                     <NewContactItem
                         model={item}
@@ -575,14 +575,14 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
                     />
                 ))}
                 <Row gutter={16}>
-                    <Col span={8}>
+                    <Col span={8} offset={2}>
                         <Button onClick={addContact}>Dodaj nowy kontakt</Button>
                     </Col>
                 </Row>
 
-                <Divider>Dane techniczne</Divider>
+                <Divider>Dane techniczne:</Divider>
                 <Row gutter={16}>
-                    <Col span={16}>
+                    <Col span={16} offset={2}>
                         <Form.Item label="Adresy IP serwerów, inne">
                             <Input.TextArea value={model.DaneTechniczne} placeholder="Adresy IP serwerów, inne" onChange={onChangeMemo((m, v) => m.DaneTechniczne = v)} />
                         </Form.Item>

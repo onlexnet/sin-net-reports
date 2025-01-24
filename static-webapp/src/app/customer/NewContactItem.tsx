@@ -26,7 +26,7 @@ export const NewContactItem: React.FC<NewContactItemProps> = props => {
 
     return (
         <Row gutter={16}>
-            <Col span={4}>
+            <Col span={4} offset={2}>
                 <Input placeholder="Imię" value={firstName} onChange={handler((m, v) => m.firstName = v)} />
             </Col>
             <Col span={4}>
@@ -39,7 +39,7 @@ export const NewContactItem: React.FC<NewContactItemProps> = props => {
                 <Input placeholder="email" value={email} onChange={handler((m, v) => m.email = v)} />
             </Col>
             <Col span={4}>
-                <Button onClick={() => props.onRemove(localKey)}>Usuń</Button>
+                <Button danger onClick={() => props.onRemove(localKey)}>Usuń</Button>
             </Col>
         </Row>
     );
