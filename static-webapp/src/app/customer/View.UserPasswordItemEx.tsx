@@ -115,7 +115,7 @@ export const UserPasswordItemExt: React.FC<UserPasswordExtItemProps> = props => 
                     <Input.TextArea value={otpRecoveryKeys} placeholder="TOTP recovery keys" onChange={handler((m, v) => m.otpRecoveryKeys = v)} />
                 </Col>
             </Row>
-            <Row gutter={16}>
+            <Row gutter={16}>1
                 <Col offset={2} span={4}>
                     <Input value={props.changedBy} disabled defaultValue="-" />
                 </Col>
