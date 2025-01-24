@@ -1,5 +1,5 @@
 import React from "react";
-import { Select } from 'antd';
+import { Col, Row, Select } from 'antd';
 import _ from "lodash";
 
 type SECRET_TYPE = 'PORTAL_SWIADCZENIODAWCY'
@@ -78,17 +78,17 @@ export const NewSecret: React.FC<NewAuthorisationProps> = props => {
         .map(it => ({ key: it.key, text: it.text }))
         .value()
     return (
-        <div>
-            <Select
-                placeholder="Dodaj nową autoryzację"
-                style={{ width: '100%' }}
-                onChange={onChangeHandler(props)}
-            >
-                {authorisationType.map(option => (
-                    <Select.Option key={option.key} value={option.key}>{option.text}</Select.Option>
-                ))}
-            </Select>
-        </div>
+        <Row>
+            <Col offset={2}>
+                <Select
+                    placeholder="Dodaj nową autoryzację"
+                    onChange={onChangeHandler(props)}>
+                    {authorisationType.map(option => (
+                        <Select.Option key={option.key} value={option.key}>{option.text}</Select.Option>
+                    ))}
+                </Select>
+            </Col>
+        </Row>
     );
 }
 
