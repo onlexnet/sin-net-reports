@@ -1,4 +1,4 @@
-import { Button, Checkbox, Col, Divider, Form, Input, Row, Select, Space, Spin } from 'antd';
+import { Affix, Button, Checkbox, Col, Divider, Form, Input, Row, Select, Space, Spin } from 'antd';
 import _ from "lodash";
 import React, { MouseEventHandler } from "react";
 import { v1 as uuid } from 'uuid';
@@ -412,7 +412,94 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
                 </Col>
             </Row>
 
+            <Row gutter={16}>
+                <Col span={11} offset={2}>
+                    <Checkbox checked={model.UmowaZNFZ} onChange={onChangeBoolean((m, v) => m.UmowaZNFZ = v)}>Umowa z NFZ</Checkbox>
+                </Col>
+                <Col span={11}>
+                    <Checkbox checked={model.MaFilie} onChange={onChangeBoolean((m, v) => m.MaFilie = v)}>Posiada filię</Checkbox>
+                </Col>
+            </Row>
+            <Row gutter={16}>
+                <Col span={11} offset={2}>
+                    <Checkbox checked={model.Lekarz} onChange={onChangeBoolean((m, v) => m.Lekarz = v)}>L Lekarz</Checkbox>
+                </Col>
+                <Col span={11}>
+                    <Checkbox checked={model.PielegniarkaSrodowiskowa} onChange={onChangeBoolean((m, v) => m.PielegniarkaSrodowiskowa = v)}>PS Pielęgniarka Środowiskowa</Checkbox>
+                </Col>
+            </Row>
+            <Row gutter={16}>
+                <Col span={11} offset={2}>
+                    <Checkbox checked={model.Polozna} onChange={onChangeBoolean((m, v) => m.Polozna = v)}>O Położna</Checkbox>
+                </Col>
+                <Col span={11}>
+                    <Checkbox checked={model.MedycynaSzkolna} onChange={onChangeBoolean((m, v) => m.MedycynaSzkolna = v)}>MPSZ Medycyna Szkolna</Checkbox>
+                </Col>
+            </Row>
+            <Row gutter={16}>
+                <Col span={11} offset={2}>
+                    <Checkbox checked={model.TransportSanitarny} onChange={onChangeBoolean((m, v) => m.TransportSanitarny = v)}>Transport Sanitarny</Checkbox>
+                </Col>
+                <Col span={11}>
+                    <Checkbox checked={model.NocnaPomocLekarska} onChange={onChangeBoolean((m, v) => m.NocnaPomocLekarska = v)}>NPL Nocna pomoc lekarska</Checkbox>
+                </Col>
+            </Row>
+            <Row gutter={16}>
+                <Col span={11} offset={2}>
+                    <Checkbox checked={model.AmbulatoryjnaOpiekaSpecjalistyczna} onChange={onChangeBoolean((m, v) => m.AmbulatoryjnaOpiekaSpecjalistyczna = v)}>AOS Ambulatoryjna opieka specjalistyczna</Checkbox>
+                </Col>
+                <Col span={11}>
+                    <Checkbox checked={model.Rehabilitacja} onChange={onChangeBoolean((m, v) => m.Rehabilitacja = v)}>REH Rehabilitacja</Checkbox>
+                </Col>
+            </Row>
+            <Row gutter={16}>
+                <Col span={11} offset={2}>
+                    <Checkbox checked={model.Stomatologia} onChange={onChangeBoolean((m, v) => m.Stomatologia = v)}>STM Stomatologia</Checkbox>
+                </Col>
+                <Col span={11}>
+                    <Checkbox checked={model.Psychiatria} onChange={onChangeBoolean((m, v) => m.Psychiatria = v)}>PSY Psychiatria</Checkbox>
+                </Col>
+            </Row>
+            <Row gutter={16}>
+                <Col span={11} offset={2}>
+                    <Checkbox checked={model.Szpitalnictwo} onChange={onChangeBoolean((m, v) => m.Szpitalnictwo = v)}>SZP Szpitalnictwo</Checkbox>
+                </Col>
+                <Col span={11}>
+                    <Checkbox checked={model.ProgramyProfilaktyczne} onChange={onChangeBoolean((m, v) => m.ProgramyProfilaktyczne = v)}>PROF Programy profilaktyczne</Checkbox>
+                </Col>
+            </Row>
+            <Row gutter={16}>
+                <Col span={11} offset={2}>
+                    <Checkbox checked={model.ZaopatrzenieOrtopedyczne} onChange={onChangeBoolean((m, v) => m.ZaopatrzenieOrtopedyczne = v)}>ZOP Zaopatrzenie ortopedyczne i pomocniczne</Checkbox>
+                </Col>
+                <Col span={11}>
+                    <Checkbox checked={model.OpiekaDlugoterminowa} onChange={onChangeBoolean((m, v) => m.OpiekaDlugoterminowa = v)}>OPD Opieka długoterminowa</Checkbox>
+                </Col>
+            </Row>
             <Divider orientation='left'>NFZ</Divider>
+            <Row gutter={16}>
+                <Col span={22} offset={2}>
+                    <Space style={{ width: '100%' }} direction='vertical'>
+                        <label>Notatki NFZ:</label>
+                        <Input.TextArea value={model.NfzNotatki} placeholder="Notatki NFZ" onChange={onChangeMemo((m, v) => m.NfzNotatki = v)} />
+                    </Space>
+                </Col>
+            </Row>
+
+            <Divider>Komercja</Divider>
+            <Row gutter={16}>
+                <Col span={8} offset={2}>
+                    <Checkbox checked={model.Komercja} onChange={onChangeBoolean((m, v) => m.Komercja = v)}>Komercja</Checkbox>
+                </Col>
+            </Row>
+            <Row gutter={16}>
+                <Col span={22} offset={2}>
+                    <Space style={{ width: '100%' }} direction='vertical'>
+                        <label>Dane opisowe:</label>
+                        <Input.TextArea value={model.KomercjaNotatki} placeholder="Dane opisowe" onChange={onChangeMemo((m, v) => m.KomercjaNotatki = v)} />
+                    </Space>
+                </Col>
+            </Row>
             <Row gutter={16}>
                 <Col span={22} offset={2}>
                     <Space style={{ width: '100%' }} direction='vertical'>
@@ -420,73 +507,9 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
                     </Space>
                 </Col>
             </Row>
-            <Row gutter={16}>
-                <Col span={8}>
-                    <Checkbox checked={model.UmowaZNFZ} onChange={onChangeBoolean((m, v) => m.UmowaZNFZ = v)}>Umowa z NFZ</Checkbox>
-                </Col>
-                <Col span={8}>
-                    <Checkbox checked={model.MaFilie} onChange={onChangeBoolean((m, v) => m.MaFilie = v)}>Posiada filię</Checkbox>
-                </Col>
-                <Col span={8}>
-                    <Checkbox checked={model.Lekarz} onChange={onChangeBoolean((m, v) => m.Lekarz = v)}>L Lekarz</Checkbox>
-                </Col>
-                <Col span={8}>
-                    <Checkbox checked={model.PielegniarkaSrodowiskowa} onChange={onChangeBoolean((m, v) => m.PielegniarkaSrodowiskowa = v)}>PS Pielęgniarka Środowiskowa</Checkbox>
-                </Col>
-                <Col span={8}>
-                    <Checkbox checked={model.Polozna} onChange={onChangeBoolean((m, v) => m.Polozna = v)}>O Położna</Checkbox>
-                </Col>
-                <Col span={8}>
-                    <Checkbox checked={model.MedycynaSzkolna} onChange={onChangeBoolean((m, v) => m.MedycynaSzkolna = v)}>MPSZ Medycyna Szkolna</Checkbox>
-                </Col>
-                <Col span={8}>
-                    <Checkbox checked={model.TransportSanitarny} onChange={onChangeBoolean((m, v) => m.TransportSanitarny = v)}>Transport Sanitarny</Checkbox>
-                </Col>
-                <Col span={8}>
-                    <Checkbox checked={model.NocnaPomocLekarska} onChange={onChangeBoolean((m, v) => m.NocnaPomocLekarska = v)}>NPL Nocna pomoc lekarska</Checkbox>
-                </Col>
-                <Col span={8}>
-                    <Checkbox checked={model.AmbulatoryjnaOpiekaSpecjalistyczna} onChange={onChangeBoolean((m, v) => m.AmbulatoryjnaOpiekaSpecjalistyczna = v)}>AOS Ambulatoryjna opieka specjalistyczna</Checkbox>
-                </Col>
-                <Col span={8}>
-                    <Checkbox checked={model.Rehabilitacja} onChange={onChangeBoolean((m, v) => m.Rehabilitacja = v)}>REH Rehabilitacja</Checkbox>
-                </Col>
-                <Col span={8}>
-                    <Checkbox checked={model.Stomatologia} onChange={onChangeBoolean((m, v) => m.Stomatologia = v)}>STM Stomatologia</Checkbox>
-                </Col>
-                <Col span={8}>
-                    <Checkbox checked={model.Psychiatria} onChange={onChangeBoolean((m, v) => m.Psychiatria = v)}>PSY Psychiatria</Checkbox>
-                </Col>
-                <Col span={8}>
-                    <Checkbox checked={model.Szpitalnictwo} onChange={onChangeBoolean((m, v) => m.Szpitalnictwo = v)}>SZP Szpitalnictwo</Checkbox>
-                </Col>
-                <Col span={8}>
-                    <Checkbox checked={model.ProgramyProfilaktyczne} onChange={onChangeBoolean((m, v) => m.ProgramyProfilaktyczne = v)}>PROF Programy profilaktyczne</Checkbox>
-                </Col>
-                <Col span={8}>
-                    <Checkbox checked={model.ZaopatrzenieOrtopedyczne} onChange={onChangeBoolean((m, v) => m.ZaopatrzenieOrtopedyczne = v)}>ZOP Zaopatrzenie ortopedyczne i pomocniczne</Checkbox>
-                </Col>
-                <Col span={8}>
-                    <Checkbox checked={model.OpiekaDlugoterminowa} onChange={onChangeBoolean((m, v) => m.OpiekaDlugoterminowa = v)}>OPD Opieka długoterminowa</Checkbox>
-                </Col>
-                <Col span={16}>
-                    <Form.Item label="Notatki NFZ">
-                        <Input.TextArea value={model.NfzNotatki} placeholder="Notatki NFZ" onChange={onChangeMemo((m, v) => m.NfzNotatki = v)} />
-                    </Form.Item>
-                </Col>
-            </Row>
-            <Divider>Komercja</Divider>
-            <Row gutter={16}>
-                <Col span={8}>
-                    <Checkbox checked={model.Komercja} onChange={onChangeBoolean((m, v) => m.Komercja = v)}>Komercja</Checkbox>
-                </Col>
-                <Col span={16}>
-                    <Form.Item label="Dane opisowe">
-                        <Input.TextArea value={model.KomercjaNotatki} placeholder="Dane opisowe" onChange={onChangeMemo((m, v) => m.KomercjaNotatki = v)} />
-                    </Form.Item>
-                </Col>
-            </Row>
-            <Divider>Autoryzacje</Divider>
+
+            <Divider orientation='left'>Autoryzacje</Divider>
+            
             {model.AutoryzacjeEx.map(item => (
                 <UserPasswordItemExt
                     model={item}
