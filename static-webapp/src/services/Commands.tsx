@@ -1,17 +1,19 @@
 import * as React from 'react';
-import { CommandBar, ICommandBarItemProps, IButtonProps } from "@fluentui/react";
+import { Menu, Button } from "antd";
 import { Dispatch } from 'redux';
 import { connect, ConnectedProps } from 'react-redux';
 import { RootState } from '../store/reducers';
 import { previousPeriodCommand, nextPeriodCommand } from '../store/viewcontext/actions';
-import { useNewActionMutation } from '../Components/.generated/components';
+import { useNewActionMutation } from '../components/.generated/components';
 import { asDtoDate } from '../api/Mapper';
 import { EntityId } from '../store/actions/ServiceModel';
 import { ActionEditUpdated, VIEWCONTEXT_ACTION_EDIT_UPDATED } from '../store/viewcontext/types';
 import { LocalDate } from '../store/viewcontext/TimePeriod';
 import { Redirect } from 'react-router-dom';
 
-const overflowProps: IButtonProps = { ariaLabel: 'More commands' };
+import { FileTextOutlined, LeftOutlined, PlusOutlined, RightOutlined } from '@ant-design/icons';
+
+import './Commands.css';
 
 const mapStateToProps = (state: RootState) => {
   if (state.appState.empty) {
@@ -95,7 +97,7 @@ const ServiceCommandBarView: React.FC<ServiceCommandBarProps> = (props) => {
         projectId: props.selectedProjectId,
         when: dateFrom
       }
-    }).then(r => {
+    }).then((r: any) => {
       var createdEntityId = r.data?.Actions.newAction;
       if (!createdEntityId) return;
       setWaitingResult(createdEntityId);
@@ -104,48 +106,43 @@ const ServiceCommandBarView: React.FC<ServiceCommandBarProps> = (props) => {
     })
   }
 
+  interface MenuItem {
+    key: string;
+    label: string;
+    icon?: React.ReactNode
+    onClick: () => void;
+  }
 
-  const _items: ICommandBarItemProps[] = [
+  const menuItems: MenuItem[] = [
     {
       key: 'newService',
-      text: 'Nowa usługa',
-      split: true,
-      iconProps: { iconName: 'Add' },
+      label: 'Nowa usługa',
+      icon: <PlusOutlined />,
       onClick: () => newService()
     },
     {
       key: 'prevMonth',
-      text: 'Poprzedni miesiąc',
-      split: true,
-      iconProps: { iconName: 'Previous' },
+      label: 'Poprzedni miesiąc',
+      icon: <LeftOutlined />,
       onClick: props.onPreviousMonthRequested
     },
     {
       key: 'nextMonth',
-      text: 'Następny miesiąc',
-      split: true,
-      iconProps: { iconName: 'Next' },
+      label: 'Następny miesiąc',
+      icon: <RightOutlined />,
       onClick: props.onNextMonthRequested
     },
     {
       key: 'navigateToReports',
-      text: 'Raporty',
-      split: true,
-      iconProps: { iconName: 'ZipFolder' },
+      label: 'Raporty',
+      icon: <FileTextOutlined />,
       onClick: props.onReportsViewRequested
     },
-
   ];
 
   return (
-    <div>
-      <CommandBar
-        items={_items}
-        overflowButtonProps={overflowProps}
-      />
-    </div>
+    <Menu theme='light' items={menuItems} mode="horizontal" className="menu-item"/>
   );
 };
-
 
 export const ServiceCommandBar = connect(mapStateToProps, mapDispatchToProps)(ServiceCommandBarView);

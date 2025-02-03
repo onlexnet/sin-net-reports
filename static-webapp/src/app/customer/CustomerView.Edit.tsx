@@ -4,7 +4,7 @@ import { RootState } from "../../store/reducers";
 import { Dispatch } from "redux";
 import { connect, ConnectedProps } from "react-redux";
 import { ContactDetails, CustomerView, CustomerViewEntry, SecretExModel, SecretModel } from "./CustomerView";
-import { useGetCustomerQuery } from "../../Components/.generated/components";
+import { useGetCustomerQuery } from "../../components/.generated/components";
 import _ from "lodash";
 import { v1 as uuid } from 'uuid';
 import { SecretsTimestamp } from "./SecretsTimestamp";

@@ -4,7 +4,7 @@ import { Dispatch } from "redux";
 import { connect, ConnectedProps } from "react-redux";
 import { RouteComponentProps } from "react-router-dom";
 import ActionViewEdit from "./ActionView.Edit";
-import { useGetActionQuery } from "../../Components/.generated/components";
+import { useGetActionQuery } from "../../components/.generated/components";
 import { toActionModel } from "../../api/DtoMapper";
 import { routing } from "../../Routing";
 
