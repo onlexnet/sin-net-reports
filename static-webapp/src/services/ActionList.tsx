@@ -16,6 +16,7 @@ import { ActionEditItem, VIEWCONTEXT_ACTION_EDIT_START } from "../store/viewcont
 import { Duration } from "./ActionList.Duration";
 import { ServiceListModel } from "./ServiceListModel";
 import { ColumnType } from "antd/es/table";
+import styles from './services.module.css'
 
 const { Text } = Typography;
 
@@ -112,11 +113,13 @@ const ConnectedContent: React.FC<PropsFromRedux> = props => {
       dataIndex: "duration",
       key: "duration",
       render: (text: number) => <Duration duration={text} />,
+      width: '80px'
     },
     {
       title: "Dojazd",
       dataIndex: "distance",
       key: "distance",
+      width: '80px'
     }
   ];
 
@@ -220,6 +223,7 @@ const ConnectedContent: React.FC<PropsFromRedux> = props => {
       </Space>
       <div>
       <Table
+        rowClassName={() => styles.hideextra }
         columns={initialColumns}
         dataSource={items}
         pagination={false}
