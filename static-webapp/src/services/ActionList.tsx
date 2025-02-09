@@ -88,7 +88,8 @@ const ConnectedContent: React.FC<PropsFromRedux> = props => {
       key: "servicemanEmail",
       render: (value: string, record: ServiceListModel) => {
         return <Link to={`/actions/${record.projectId}/${record.entityId}/${record.entityVersion}`}>{value}</Link>;
-      }
+      },
+      width: '200px'
     },
     {
       title: "Data",
@@ -97,16 +98,19 @@ const ConnectedContent: React.FC<PropsFromRedux> = props => {
       sorter: true,
       sortOrder: dateSortedDescending ? 'descend' : 'ascend',
       render: (text: LocalDate) => <LocalDateView item={text} />,
+      width: '120px'
     },
     {
       title: "Klient",
       dataIndex: "customerName",
       key: "customerName",
+      width: "30%"
     },
     {
       title: "Usługa",
       dataIndex: "description",
       key: "description",
+      width: "60%"
     },
     {
       title: "Czas",
