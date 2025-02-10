@@ -1,4 +1,4 @@
-import { Col, Select } from "antd";
+import { Select } from "antd";
 import React, { useCallback } from "react";
 
 export interface FilteredComboBoxProps {
@@ -7,7 +7,7 @@ export interface FilteredComboBoxProps {
   /** List of available options */
   items: { key: string, text: string }[]
   onChange: (key?: string) => void,
-  onPendingValueChanged: (value: string) => void,
+  onSearch: (value: string) => void,
 }
 
 /**
@@ -15,18 +15,19 @@ export interface FilteredComboBoxProps {
  */
 export const FilteredComboBox: React.FC<FilteredComboBoxProps> = props => {
 
-  const { selectedKey, items, onChange, onPendingValueChanged } = props;
+  const { selectedKey, items, onChange, onSearch } = props;
 
   const onChangeLocal = useCallback((value: string) => {
     onChange(value);
   }, [onChange]);
 
   const onSearchLocal = useCallback((value: string) => {
-    onPendingValueChanged(value);
-  }, [onPendingValueChanged])
+    onSearch(value);
+  }, [onSearch])
 
   return (
       <Select style={{ width: '100%' }}
+        filterOption={false} // it is already filtered, so no a need to filter it once again by Select component
         value={selectedKey}
         options={items.map(item => ({ value: item.key, label: item.text }))}
         showSearch

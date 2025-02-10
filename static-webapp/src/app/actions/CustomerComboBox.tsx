@@ -49,7 +49,6 @@ export const CustomerComboBox: React.FC<CustomerComboBoxProps> = props => {
       .value()
   }
 
-
   const renderAfterLostLoad = useRef(0);
   if (renderAfterLostLoad.current === 0 && data) {
     renderAfterLostLoad.current = renderAfterLostLoad.current + 1;
@@ -62,7 +61,7 @@ export const CustomerComboBox: React.FC<CustomerComboBoxProps> = props => {
   }
 
 
-  const onPendingValueChanged = (value: string) => {
+  const onSearch = (value: string) => {
     // we have rerender issue, so let change value only of different from current value
     const filtered = filteredElements(value);
     if (_.isEqual(filtered, filteredCustomers)) return;
@@ -74,6 +73,6 @@ export const CustomerComboBox: React.FC<CustomerComboBoxProps> = props => {
     selectedKey={props.customerId}
     items={filteredCustomers}
     onChange={props.onSelected}
-    onPendingValueChanged={onPendingValueChanged} />
+    onSearch={onSearch} />
 }
 
