@@ -93,7 +93,7 @@ export const UserPasswordItem: React.FC<UserPasswordItemProps> = props => {
             </Row>
             <Row gutter={16}>
                 <Col offset={2}>
-                    <Input value={otpDesc} disabled />
+                    <Input value={otpDesc} readOnly={true} />
                 </Col>
                 <Col>
                     <Input value={expiresDesc} disabled />
