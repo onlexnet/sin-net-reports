@@ -3,7 +3,7 @@ import { RootState } from "../../store/reducers";
 import { Dispatch } from "redux";
 import { connect, ConnectedProps } from "react-redux";
 import _ from "lodash";
-import { Select, Button, Input, Space, Row, Flex, Col } from "antd";
+import { Select, Button, Input, Space, Row, Flex, Col, Divider } from "antd";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { AppDatePicker } from "../../services/ActionList.DatePicker";
 import { LocalDate } from "../../store/viewcontext/TimePeriod";
@@ -279,7 +279,7 @@ export const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
 
             <PaddedRow>
                 <LabelCol span={2} text="Czas" />
-                <Col span={9}>
+                <Col span={10}>
                     <Input
                         placeholder="0:00"
                         value={durationAsText}
@@ -289,7 +289,7 @@ export const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
                     {durationError && <div className="ant-form-item-explain-error">{durationError}</div>}
                 </Col>
                 <LabelCol span={2} text="Dojazd:" />
-                <Col span={9}>
+                <Col span={10}>
                     <Input
                         value={distance}
                         onChange={onChangeDistance}
@@ -298,18 +298,24 @@ export const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
                 </Col>
             </PaddedRow>
 
+            <Col span={24}>
+                <Divider orientation="center"></Divider>
+            </Col>
+
             <PaddedRow>
-                <Col>
-                    <Space>
-                        <Button type="primary" disabled={updateActionInProgress || (customerId === undefined)}
-                            onClick={() => {
-                                updateAction();
-                            }}>Aktualizuj</Button>
-                        <Button onClick={() => cancelEdit()}>Wyjdź</Button>
-                        <Button disabled={updateActionInProgress || removeConfirmed} onClick={removeAndExit1}>Usuń i wyjdź</Button>
-                        <Button disabled={updateActionInProgress || !removeConfirmed} onClick={removeAndExit2}>Tak, Usuń i wyjdź</Button>
-                    </Space>
+                <Col span={2}>
+                    <Button type="primary" style={{ width: "100%" }}
+                        disabled={updateActionInProgress || (customerId === undefined)}
+                        onClick={() => {
+                            updateAction();
+                        }}>Aktualizuj</Button>
                 </Col>
+                <Col span={2}>
+                    <Button style={{ width: "100%" }} onClick={() => cancelEdit()}>Wyjdź</Button></Col>
+                <Col span={2}>
+                    <Button style={{ width: "100%" }} disabled={updateActionInProgress || removeConfirmed} onClick={removeAndExit1}>Usuń i wyjdź</Button></Col>
+                <Col span={2}>
+                    <Button style={{ width: "100%" }} disabled={updateActionInProgress || !removeConfirmed} onClick={removeAndExit2}>Tak, Usuń i wyjdź</Button></Col>
             </PaddedRow>
 
         </>
