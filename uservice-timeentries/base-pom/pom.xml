@@ -198,8 +198,11 @@
           </dependencies>
 
           <configuration>
+            <!--
+            Configuration elements: https://maven.apache.org/plugins/maven-checkstyle-plugin/check-mojo.html#inputEncoding
+            -->
             <configLocation>../.checkstyle/checkstyle.xml</configLocation>
-            <encoding>UTF-8</encoding>
+            <inputEncoding>UTF-8</inputEncoding>
             <consoleOutput>true</consoleOutput>
             <failsOnError>true</failsOnError>
             <excludes>**/gen/**/*</excludes>
