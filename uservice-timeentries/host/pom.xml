@@ -13,6 +13,7 @@
     <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/../${aggregate.report.dir}</sonar.coverage.jacoco.xmlReportPaths>
     <archunit-junit5.version>1.3.0</archunit-junit5.version>
     <modelmapper.version>3.2.0</modelmapper.version>
+    <cucumber-bom.version>7.21.1</cucumber-bom.version>
   </properties>
 
   <dependencies>
@@ -171,7 +172,7 @@
       <dependency>
         <groupId>io.cucumber</groupId>
         <artifactId>cucumber-bom</artifactId>
-        <version>7.17.0</version>
+        <version>${cucumber-bom.version}</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
