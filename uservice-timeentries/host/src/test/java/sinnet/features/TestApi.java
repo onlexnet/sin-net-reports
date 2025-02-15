@@ -33,6 +33,7 @@ import sinnet.models.ProjectId;
 import sinnet.models.ValName;
 import sinnet.project.events.ProjectCreatedEvent;
 
+/** Test api allows to invoke well-defined methods available in the system, and updates properly cntext related of the invoking client. */
 @RequiredArgsConstructor
 @Component
 public class TestApi {

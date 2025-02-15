@@ -69,6 +69,10 @@ public class ClientContext {
     return email;
   }
 
+  /** 
+   * Local understanding of system data from perspective of the user. It contains everything what should exists based on user's actions.
+   * For instance, if user created a new customer, the customer is expected to exists and so that will be located here in {@link KnownFacts#customers}
+   */
   @Getter
   @Accessors(fluent = true, chain = false)
   class KnownFacts {
