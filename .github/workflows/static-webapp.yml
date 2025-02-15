@@ -24,8 +24,8 @@ on:
       - /uservice-webapi/api.graphql/**
       - .github/workflows/static-webapp.yml
 
-jobs:
 
+jobs:
   
   Build:
     runs-on: ubuntu-22.04
