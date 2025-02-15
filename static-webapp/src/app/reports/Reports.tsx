@@ -1,14 +1,13 @@
 import React, { useState } from "react";
-import { TextField, PrimaryButton, Separator, DetailsList, IColumn } from "@fluentui/react";
+import { Input, Button, Divider, Table } from "antd";
 import { Link, RouteComponentProps } from "react-router-dom";
 import { routing } from "../../Routing";
-import { HorizontalSeparatorStack } from "../../Components/HorizontalSeparatorStack";
+import { HorizontalSeparatorStack } from "../../components/HorizontalSeparatorStack";
 import { useListCustomers, ListCustomersItem } from "../../api/useListCustomers";
 import { RootState } from "../../store/reducers";
 import { Dispatch } from "redux";
 import { connect, ConnectedProps } from "react-redux";
 import _ from "lodash";
-
 
 const mapStateToProps = (state: RootState) => {
     if (state.appState.empty) {
@@ -30,20 +29,17 @@ interface ReportsProps extends PropsFromRedux, RouteComponentProps {
 
 const Reports: React.FC<ReportsProps> = (props) => {
 
-    interface TypedColumn extends IColumn {
-        fieldName: keyof ListCustomersItem;
-    }
-
     const items = useListCustomers(props.appState.projectId);
     const [searchPhrase, setSearchPhrase] = useState<string | undefined>('');
 
-    const columns: TypedColumn[] = [
+    const columns = [
         {
-            key: "column1", name: "Klient", fieldName: "name", minWidth: 70, maxWidth: 90, isResizable: true, isCollapsible: true, data: "string",
-            onRender: (item: ListCustomersItem) => {
-                return <Link to={`/customers/${item.customerId.projectId}/${item.customerId.entityId}/${item.customerId.entityVersion}`}>{item.name}</Link>;
-            },
-            isPadded: true
+            title: "Klient",
+            dataIndex: "name",
+            key: "name",
+            render: (text: string, item: ListCustomersItem) => (
+                <Link to={`/customers/${item.customerId.projectId}/${item.customerId.entityId}/${item.customerId.entityVersion}`}>{text}</Link>
+            )
         }
     ];
 
@@ -68,38 +64,21 @@ const Reports: React.FC<ReportsProps> = (props) => {
         .value();
 
     return (
-        <div className="ms-Grid">
+        <div>
             <HorizontalSeparatorStack >
-                <div className="ms-Grid-row">
-                    <div className="ms-Grid-col ms-sm3">
-                        <PrimaryButton text="Dodaj nowego klienta" onClick={() => props.history.push(routing.newCustomer)} />
-                    </div>
+                <div>
+                    <Button type="primary" onClick={() => props.history.push(routing.newCustomer)}>Dodaj nowego klienta</Button>
                 </div>
-                <div className="ms-Grid-row">
-                    <div className="ms-Grid-col ms-sm12">
-                        <TextField placeholder="Wprowadź fragment nazwy klienta ..."value={searchPhrase} onChange={(e, v) => setSearchPhrase(v)} />
-                    </div>
+                <div>
+                    <Input placeholder="Wprowadź fragment nazwy klienta ..." value={searchPhrase} onChange={(e) => setSearchPhrase(e.target.value)} />
                 </div>
-
-                <div className="ms-Grid-row">
-
-                    <Separator alignContent="start"></Separator>
-
-                    <div className="ms-Grid-col ms-sm12">
-                        <DetailsList
-                            items={sortedItems}
-                            compact={true}
-                            columns={columns}
-                            setKey="none"
-                            isHeaderVisible={true}
-                        />
-                    </div>
+                <div>
+                    <Divider />
+                    <Table dataSource={sortedItems} columns={columns} pagination={false} scroll={{ y: `calc(100vh - 250px)` }} />
                 </div>
-
             </HorizontalSeparatorStack>
-        </div >
+        </div>
     )
 }
-
 
 export const Customers = connect(mapStateToProps, mapDispatchToProps)(Reports);

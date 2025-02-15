@@ -37,7 +37,16 @@
   }
 }
 
+.layout-container {
+  /* max-width: 1200px; Maximum width */
+  width: 100%; /* Full width */
+  height: 100vh; /* Full height */
+  margin: 0 auto; /* Center horizontally */
+  display: flex;
+}
+
 body {
   margin: 0;
   height: 100vh;
+  overflow-y: hidden;
 }

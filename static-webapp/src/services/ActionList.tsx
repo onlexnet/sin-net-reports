@@ -1,4 +1,4 @@
-import { DetailsList, DetailsListLayoutMode, IColumn, IDetailsColumnRenderTooltipProps, IDetailsHeaderProps, IRenderFunction, IStackTokens, ScrollablePane, ScrollbarVisibility, SelectionMode, Stack, Sticky, StickyPositionType, TextField, Toggle, TooltipHost } from "@fluentui/react";
+import { Table, Tooltip, Input, Switch, Row, Col, Typography, Space } from "antd";
 import _ from "lodash";
 import * as React from "react";
 import { useState } from "react";
@@ -8,33 +8,24 @@ import { Dispatch } from "redux";
 import { toActionModel } from "../api/DtoMapper";
 import { asDtoDates } from "../api/Mapper";
 import { LocalDateView } from "../app/LocalDateView";
-import { useFetchServicesQuery } from "../Components/.generated/components";
+import { useFetchServicesQuery } from "../components/.generated/components";
 import { ServiceAppModel } from "../store/actions/ServiceModel";
 import { RootState } from "../store/reducers";
-import { TimePeriod } from "../store/viewcontext/TimePeriod";
+import { LocalDate, TimePeriod } from "../store/viewcontext/TimePeriod";
 import { ActionEditItem, VIEWCONTEXT_ACTION_EDIT_START } from "../store/viewcontext/types";
 import { Duration } from "./ActionList.Duration";
 import { ServiceListModel } from "./ServiceListModel";
+import { ColumnType } from "antd/es/table";
+import styles from './services.module.css'
+
+const { Text } = Typography;
 
 const controlStyles = {
-  root: {
-    margin: "0 30px 20px 0",
-    maxWidth: "300px"
-  }
+  margin: "0 30px 20px 0",
+  maxWidth: "300px"
 };
 
-export interface IContentState {
-  columns: IColumn[];
-  items: IDocument[];
-  isModalSelection: boolean;
-  announcedMessage?: string;
-}
-
 export interface IDocument extends ServiceListModel {
-}
-
-export interface TypedColumn extends IColumn {
-  fieldName: keyof IDocument;
 }
 
 export interface ContentProps {
@@ -64,45 +55,75 @@ type PropsFromRedux = ConnectedProps<typeof connector>
 
 const ConnectedContent: React.FC<PropsFromRedux> = props => {
 
+
+  // dev hack
+  // https://stackoverflow.com/questions/75774800/how-to-stop-resizeobserver-loop-limit-exceeded-error-from-appearing-in-react-a
+  // when removed you can see an exception on UI when clicking multiple times 'Tylko moje' button
+  React.useEffect(() => {
+    window.addEventListener('error', e => {
+        //if (e.message === 'ResizeObserver loop completed with undelivered notifications') {
+        if (e.message.startsWith('ResizeObserver loop')) {
+            const resizeObserverErrDiv = document.getElementById(
+                'webpack-dev-server-client-overlay-div'
+            );
+            const resizeObserverErr = document.getElementById(
+                'webpack-dev-server-client-overlay'
+            );
+            if (resizeObserverErr) {
+                resizeObserverErr.setAttribute('style', 'display: none');
+            }
+            if (resizeObserverErrDiv) {
+                resizeObserverErrDiv.setAttribute('style', 'display: none');
+            }
+        }
+    });
+  }, []);
+
   const [dateSortedDescending, setDateSortedDescending] = useState(true);
 
-  const initialColumns: TypedColumn[] = [
+  const initialColumns: ColumnType<ServiceListModel>[] = [
     {
-      key: "column4", name: "Pracownik", fieldName: "servicemanEmail", minWidth: 70, maxWidth: 90, isResizable: true, isCollapsible: true, data: "string",
-      onRender: (item: IDocument) => {
-        return <Link to={`/actions/${item.projectId}/${item.entityId}/${item.entityVersion}`}>{item.servicemanEmail}</Link>;
+      title: "Pracownik",
+      dataIndex: "servicemanEmail",
+      key: "servicemanEmail",
+      render: (value: string, record: ServiceListModel) => {
+        return <Link to={`/actions/${record.projectId}/${record.entityId}/${record.entityVersion}`}>{value}</Link>;
       },
-      isPadded: true
+      width: '200px'
     },
     {
-      key: "column3", name: "Data", fieldName: "when", minWidth: 70, maxWidth: 90, isResizable: true,
-      data: "date",
-      isSorted: true,
-      isSortedDescending: dateSortedDescending,
-      onColumnClick: () => { setDateSortedDescending(!dateSortedDescending) },
-      onRender: (item: IDocument) => {
-        return <LocalDateView item={item.when} />
-      },
-      isPadded: true
+      title: "Data",
+      dataIndex: "when",
+      key: "when",
+      sorter: true,
+      sortOrder: dateSortedDescending ? 'descend' : 'ascend',
+      render: (text: LocalDate) => <LocalDateView item={text} />,
+      width: '120px'
     },
     {
-      key: "column2", name: "Klient", fieldName: "customerName", minWidth: 210, maxWidth: 350, isRowHeader: true, isResizable: true,
-      data: "string",
-      isPadded: true
+      title: "Klient",
+      dataIndex: "customerName",
+      key: "customerName",
+      width: "30%"
     },
     {
-      key: "column6", name: "Usługa", fieldName: "description", minWidth: 300, maxWidth: 300, isResizable: true, isCollapsible: true,
-      data: "number",
+      title: "Usługa",
+      dataIndex: "description",
+      key: "description",
+      width: "60%"
     },
     {
-      key: "column5", name: "Czas", fieldName: "duration", minWidth: 70, maxWidth: 90, isResizable: true, isCollapsible: true, data: "number",
-      onRender: (item: IDocument) => <Duration duration={item.duration} />
+      title: "Czas",
+      dataIndex: "duration",
+      key: "duration",
+      render: (text: number) => <Duration duration={text} />,
+      width: '80px'
     },
     {
-      key: "column7", name: "Dojazd", fieldName: "distance", minWidth: 70, maxWidth: 90, isResizable: true, isCollapsible: true, data: "number",
-      onRender: (item: IDocument) => {
-        return <span>{item.distance}</span>;
-      }
+      title: "Dojazd",
+      dataIndex: "distance",
+      key: "distance",
+      width: '80px'
     }
   ];
 
@@ -173,70 +194,52 @@ const ConnectedContent: React.FC<PropsFromRedux> = props => {
     return hours + ':' + ('00' + minutes).substr(-2);
   };
 
-  const stackTokens: IStackTokens = { padding: "10px" };
-
-
-
   const [currentPeriod, setCurrentPeriod] = useState<TimePeriod | null>(null);
   if (currentPeriod !== props.period) {
     setCurrentPeriod(props.period);
   }
 
-
-  const onRenderDetailsHeader: IRenderFunction<IDetailsHeaderProps> = (props, defaultRender) => {
-    if (!props) {
-      return null;
-    }
-    const onRenderColumnHeaderTooltip: IRenderFunction<IDetailsColumnRenderTooltipProps> = tooltipHostProps => (
-      <TooltipHost {...tooltipHostProps} />
-    );
-    return (
-      <Sticky stickyPosition={StickyPositionType.Header} isScrollSynced>
-        {defaultRender!({
-          ...props,
-          onRenderColumnHeaderTooltip,
-        })}
-      </Sticky>
-    );
-  };
-
-
-
   return (
-    <Stack verticalFill>
-      <Stack.Item>
-        <Stack horizontal tokens={stackTokens}>
-            <Toggle
-              label="Tylko moje dane"
-              checked={onlyMyData}
-              onChange={(e, v) => setOnlyMyData(v ?? true)}
-              onText="Tylko moje"
-              offText="Wszystkie"
-              styles={controlStyles}
-            />
-            <TextField label="Tylko dzień:" value={onlyDay} onChange={(e, v) => setOnlyDay(v)} styles={controlStyles} />
-            <TextField label="Kontrahent:" styles={controlStyles} value={onlyCustomer} onChange={(e, v) => setOnlyCustomer(v)} />
-            <TextField borderless readOnly label="Suma godzin" value={totalTime()} />
-        </Stack>
-      </Stack.Item>
-      <Stack.Item verticalFill>
-        <div style={{ position: "relative", height: "100%" }}>
-          <ScrollablePane scrollbarVisibility={ScrollbarVisibility.auto}>
-            <DetailsList
-              onRenderDetailsHeader={onRenderDetailsHeader}
-              items={items}
-              compact={true}
-              columns={initialColumns}
-              selectionMode={SelectionMode.none}
-              setKey="none"
-              layoutMode={DetailsListLayoutMode.justified}
-              isHeaderVisible={true}
-            />
-          </ScrollablePane>
+    <div>
+      <Space direction="horizontal" align="baseline" size="middle">
+        <Switch
+          checkedChildren="Tylko moje"
+          unCheckedChildren="Wszystkie"
+          checked={onlyMyData}
+          onChange={setOnlyMyData}
+        />
+        <Input
+          placeholder="Tylko dzień"
+          value={onlyDay}
+          onChange={(e) => setOnlyDay(e.target.value)}
+          style={controlStyles}
+        />
+        <Input
+          placeholder="Kontrahent"
+          value={onlyCustomer}
+          onChange={(e) => setOnlyCustomer(e.target.value)}
+          style={controlStyles}
+        />
+        <div style={{ ...controlStyles, display: 'flex', alignItems: 'center' }}>
+          <Text>Suma godzin: </Text>
+          <Text style={{ marginLeft: '8px' }}>{totalTime()}</Text>
         </div>
-      </Stack.Item>
-    </Stack>
-
+      </Space>
+      <div>
+      <Table
+        rowClassName={() => styles.hideextra }
+        columns={initialColumns}
+        dataSource={items}
+        pagination={false}
+        // https://medium.com/@anjantalatatam/antd-table-fixed-and-sticky-header-999812b4916a
+        scroll={{ y: `calc(100vh - 250px)` }}
+        rowKey="entityId"
+        onChange={(pagination, filters, sorter) => {
+          setDateSortedDescending(!dateSortedDescending);
+        }}
+      />
+      </div>
+    </div>
   );
 }
 

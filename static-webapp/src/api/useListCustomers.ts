@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { useState } from 'react';
-import { ListCustomersQuery, useListCustomersQuery } from '../Components/.generated/components';
+import { ListCustomersQuery, useListCustomersQuery } from '../components/.generated/components';
 import { EntityId } from '../store/actions/ServiceModel';
 
 export interface ListCustomersItem {

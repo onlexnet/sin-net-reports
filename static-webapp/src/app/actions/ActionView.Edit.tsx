@@ -3,16 +3,20 @@ import { RootState } from "../../store/reducers";
 import { Dispatch } from "redux";
 import { connect, ConnectedProps } from "react-redux";
 import _ from "lodash";
-import { ComboBox, DefaultButton, IComboBox, IComboBoxOption, PrimaryButton, Stack, TextField } from "@fluentui/react";
+import { Select, Button, Input, Space, Row, Flex, Col, Divider } from "antd";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { AppDatePicker } from "../../services/ActionList.DatePicker";
 import { LocalDate } from "../../store/viewcontext/TimePeriod";
 import { useGetUsers } from "../../api/useGetUsers";
-import { useRemoveActionMutation, useUpdateActionMutation } from "../../Components/.generated/components";
+import { useRemoveActionMutation, useUpdateActionMutation } from "../../components/.generated/components";
 import CustomerView from "./ActionView.Edit.CustomerView"
 import { CustomerComboBox } from "./CustomerComboBox";
 import { asDtoDate } from "../../api/Mapper";
-import { useListCustomersQuery } from "../../Components/.generated/components"
+import { useListCustomersQuery } from "../../components/.generated/components"
+import PaddedRow from "../../components/PaddedRow";
+import LabelCol from "../../components/LabelCol";
+
+const { Option } = Select;
 
 const mapStateToProps = (state: RootState) => {
     if (state.appState.empty) {
@@ -66,7 +70,7 @@ export const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
     const defaultServicemanName = item?.servicemanName;
     const [servicemanName, setServicemanName] = useState(defaultServicemanName);
     const onChangeServicemanName = useCallback(
-        (ev: React.FormEvent<IComboBox>, option?: IComboBoxOption) => {
+        (ev, option) => {
             const a = option?.key as string;
             setServicemanName(a);
         },
@@ -79,10 +83,8 @@ export const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
         setActionDate(initialValue);
     }, [initialValue, propsEntityId, propsEntityVersion, propsProjectId]);
     const onChangeDate = useCallback(
-        (newValue: LocalDate) => {
-            setActionDate(newValue);
-        },
-        [ ],
+        (newValue: LocalDate) => setActionDate(newValue),
+        [],
     );
 
     const defaultCustomerId = item?.customer?.id.entityId;
@@ -98,61 +100,72 @@ export const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
         setDescription(propsDescription)
     }, [propsDescription]);
     const onChangeDescription = useCallback(
-        (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
-            var value = newValue ?? '';
+        (event: React.FormEvent<HTMLTextAreaElement>) => {
+            var value = event.currentTarget.value ?? '';
             setDescription(value);
             var errorMessage = value.length > 4000
                 ? 'Za długi opis'
                 : '';
             if (errorMessage !== descriptionError) setDescriptionError(errorMessage);
         },
-        [],
+        [descriptionError],
     );
 
 
+    const timeToText = (value: number) => {
+        const hours = Math.floor(value / 60);
+        const minutes = value - hours * 60;
+        return hours + ':' + ('00' + minutes).substr(-2);
+    }
+    const textToTime = (value: string) => {
 
-    const [durationAsText, setDurationAsText] = useState("0:00");
-    const durationRef = useRef(0);
+
+        const tested = value.trim();
+        const pattern = /^\d{1,3}:\d{2}$/;
+        if (!(pattern.test(tested))) {
+            return NaN
+        }
+
+        const [hoursAsText, minutesAsText] = value.split(":")
+        const hours = Number(hoursAsText);
+        const minutes = Number(minutesAsText);
+        const result = hours * 60 + minutes;
+        return result;
+    }
+
+    const [durationAsText, setDurationAsText] = useState(timeToText(props.item.duration ?? 0));
     const [durationError, setDurationError] = useState("");
-    useEffect(() => {
-        const duration = props.item.duration ?? 0;
-        var hours = Math.floor(duration / 60);
-        var minutes = duration - hours * 60;
-        setDurationAsText(hours + ':' + ('00' + minutes).substr(-2));
-        durationRef.current = duration;
-    }, versionedProps);
-    const onChangeDuration = useCallback(
-        (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
-            const newDurationAsText = newValue ?? "0:00";
-            const [hoursAsText, minutesAsText] = newDurationAsText.split(":")
-            const hours = Number(hoursAsText);
-            const minutes = Number(minutesAsText);
-            const newDuration = hours * 60 + minutes;
 
+
+    const onChangeDuration = useCallback((event: React.FormEvent<HTMLInputElement>) => {
+
+        const newDurationAsText = event.currentTarget.value ?? "0:00";
+        console.log(`Split: ${newDurationAsText}`)
+
+        const time = textToTime(newDurationAsText)
+        const newDuration = timeToText(time)
+
+
+        setDurationAsText(newDurationAsText);
+        if (isNaN(time)) {
+            setDurationError(`Nieprawidłowy czas: ${newDurationAsText}`)
+        } else {
             setDurationAsText(newDurationAsText);
-            if (isNaN(newDuration)) {
-                setDurationError(`Nieprawidłowy czas: ${newDurationAsText}`)
-            } else {
-                durationRef.current = newDuration;
-                setDurationError("");
-            }
-        },
-        versionedProps,
+            setDurationError("");
+        }
+    },
+        [],
     );
 
     const propsDistance = "" + item?.distance;
     const [distance, setDistance] = useState(propsDistance);
-    useEffect(() => {
-        setDistance(propsDistance)
-    }, versionedProps);
     const onChangeDistance = useCallback(
-        (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
-            setDistance(newValue ?? "0");
+        (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+            var value = event.currentTarget.value
+            setDistance(value ?? "0");
         },
         [],
     );
-
-    const stackTokens = { childrenGap: 8 }
 
     const users = useGetUsers(projectId);
 
@@ -204,7 +217,7 @@ export const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
                 entityId,
                 entityVersion,
                 distance: Number(distance),
-                duration: durationRef.current,
+                duration: textToTime(durationAsText),
                 what: description,
                 when: dtoDate,
                 who: servicemanName,
@@ -213,82 +226,99 @@ export const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
         })
     };
 
-    const btnStyles = {
-        rootHovered: {
-            backgroundColor: "#d83b01"
-        }
-    };
-
-
     return (
-        <div className="ms-Grid" dir="ltr">
-            <div className="ms-Grid-row">
-                <div className="ms-Grid-col ms-sm6 ms-md8 ms-lg10">
+        <>
+            <PaddedRow>
+                <LabelCol span={3} text="Pracownik:" />
+                <Col span={9}>
+                    <Select style={{ width: '100%' }} id="selectServiceman" onChange={onChangeServicemanName} defaultValue={servicemanName}>
+                        {comboBoxBasicOptions.map((option) => (
+                            <Option key={option.key} value={option.text}>
+                                {option.text}
+                            </Option>
+                        ))}
+                    </Select>
+                </Col>
 
-                    <Stack tokens={stackTokens}>
-                        <div className="ms-Grid-row">
-                            <div className="ms-Grid-col ms-sm4">
-                                <div className="ms-Grid-row">
-                                    <div className="ms-Grid-col ms-sm12">
-                                        <ComboBox label="Pracownik" selectedKey={servicemanName} options={comboBoxBasicOptions} autoComplete="on" onChange={onChangeServicemanName}
-                                        />
-                                        <div className="ms-Grid-row">
-                                            <CustomerView projectId={projectId} customerId={customerId} />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="ms-Grid-col ms-sm2">
-                                <AppDatePicker
-                                    gotoTodayText='Idź do aktualnego miesiąca'
-                                    onSelectDate={value => onChangeDate(value)}
-                                    current={actionDate} />
-                            </div>
-                        </div>
+                <LabelCol span={3} text="Data:" />
+                <Col span={9}>
+                    <AppDatePicker
+                        gotoTodayText='Idź do aktualnego miesiąca'
+                        onSelectDate={value => onChangeDate(value)}
+                        current={actionDate} />
+                </Col>
+            </PaddedRow>
+            <PaddedRow>
+                <LabelCol span={3} text="Wybór klienta:" />
+                <Col span={9}>
+                    <CustomerComboBox
+                        projectId={projectId}
+                        customerId={customerId}
+                        onSelected={onChangeCustomerId}
+                        useListCustomersQuery={useListCustomersQuery}
+                    />
+                </Col>
+                <Col span={12}>
+                    <Input.TextArea
+                        value={description}
+                        onChange={onChangeDescription}
+                        autoSize={{ minRows: 3 }}
+                        status={descriptionError ? 'error' : ''}
+                    />
+                    {descriptionError && <div className="ant-form-item-explain-error">{descriptionError}</div>}
+                </Col>
+            </PaddedRow>
 
-                        <div className="ms-Grid-row">
-                            <div className="ms-Grid-col ms-sm4">
-                                <CustomerComboBox
-                                    projectId={projectId}
-                                    customerId={customerId}
-                                    onSelected={onChangeCustomerId}
-                                    useListCustomersQuery={useListCustomersQuery}
-                                     />
-                            </div>
-                            <div className="ms-Grid-col ms-sm6">
-                                <TextField label="Usługa" multiline={true} value={description} errorMessage={descriptionError} onChange={onChangeDescription}
-                                />
-                            </div>
-                        </div>
+            <PaddedRow>
+                <Col span={12}>
+                    <CustomerView projectId={projectId} customerId={customerId} />
+                </Col>
+                <Col span={12}>
+                </Col>
+            </PaddedRow>
 
-                        <div className="ms-Grid-row">
-                            <div className="ms-Grid-col ms-sm4">
-                                <TextField label="Czas" placeholder="0:00" value={durationAsText} errorMessage={durationError} onChange={onChangeDuration} />
-                            </div>
-                            <div className="ms-Grid-col ms-sm2">
-                                <TextField label="Dojazd" value={distance} onChange={onChangeDistance}
-                                />
-                            </div>
-                        </div>
+            <PaddedRow>
+                <LabelCol span={2} text="Czas" />
+                <Col span={10}>
+                    <Input
+                        placeholder="0:00"
+                        value={durationAsText}
+                        onChange={onChangeDuration}
+                        status={durationError ? 'error' : ''}
+                    />
+                    {durationError && <div className="ant-form-item-explain-error">{durationError}</div>}
+                </Col>
+                <LabelCol span={2} text="Dojazd:" />
+                <Col span={10}>
+                    <Input
+                        value={distance}
+                        onChange={onChangeDistance}
+                    />
 
-                        <div className="ms-Grid-row">
-                            <div className="ms-Grid-col ms-sm12">
-                                <Stack horizontal tokens={stackTokens}>
-                                    <PrimaryButton disabled={updateActionInProgress || (customerId === undefined)} text="Aktualizuj"
-                                        onClick={() => {
-                                            updateAction();
-                                        }} />
-                                    <DefaultButton onClick={() => cancelEdit()} text="Wyjdź" />
-                                    <DefaultButton text="Usuń i wyjdź" disabled={updateActionInProgress || removeConfirmed} styles={btnStyles} onClick={removeAndExit1} />
-                                    <DefaultButton text="Tak, Usuń i wyjdź" disabled={updateActionInProgress || !removeConfirmed} styles={btnStyles} onClick={removeAndExit2} />
-                                </Stack>
-                            </div>
-                        </div>
-                    </Stack>
+                </Col>
+            </PaddedRow>
 
-                </div>
-            </div>
-        </div>
+            <Col span={24}>
+                <Divider orientation="center"></Divider>
+            </Col>
+
+            <PaddedRow>
+                <Col span={2}>
+                    <Button type="primary" style={{ width: "100%" }}
+                        disabled={updateActionInProgress || (customerId === undefined)}
+                        onClick={() => {
+                            updateAction();
+                        }}>Aktualizuj</Button>
+                </Col>
+                <Col span={2}>
+                    <Button style={{ width: "100%" }} onClick={() => cancelEdit()}>Wyjdź</Button></Col>
+                <Col span={2}>
+                    <Button style={{ width: "100%" }} disabled={updateActionInProgress || removeConfirmed} onClick={removeAndExit1}>Usuń i wyjdź</Button></Col>
+                <Col span={2}>
+                    <Button style={{ width: "100%" }} disabled={updateActionInProgress || !removeConfirmed} onClick={removeAndExit2}>Tak, Usuń i wyjdź</Button></Col>
+            </PaddedRow>
+
+        </>
     );
 }
 

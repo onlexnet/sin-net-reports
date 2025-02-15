@@ -1,11 +1,11 @@
-import { InteractionStatus, InteractionType, PopupRequest, RedirectRequest, SsoSilentRequest } from "@azure/msal-browser";
+import { InteractionStatus, InteractionType } from "@azure/msal-browser";
 import { useMsal, useMsalAuthentication } from "@azure/msal-react";
-import { Spinner, Stack } from "@fluentui/react";
 import React from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { Dispatch } from "redux";
 import { graphQlClient } from "../api";
 import { InitiateSessionFinishedAction, INITIATE_SESSION_FINISHED } from "../store/session/types";
+import { Col, Row, Spin } from "antd";
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
   return {
@@ -52,13 +52,11 @@ const View: React.FC<ViewProps> = props => {
   }
 
   return (
-    <Stack >
-      <Stack.Item align="center">
-        <span>
-          <Spinner label="Pracowite sprawdzanie kim jesteś ;) ..." ariaLive="assertive" labelPosition="right" />
-        </span>
-      </Stack.Item>
-    </Stack>
+    <Row justify="center" align="middle" style={{ height: '100vh' }}>
+      <Col>
+        <Spin tip="Pracowite sprawdzanie kim jesteś ;) ..." />
+      </Col>
+    </Row>
   );
 }
 

@@ -1,4 +1,4 @@
-import { Stack, TextField } from "@fluentui/react";
+import { Input, Row, Col } from "antd";
 import React, { useState } from "react";
 
 interface PeriodSelectorProps {
@@ -9,26 +9,25 @@ interface PeriodSelectorProps {
     onMonthChanged: (value?: number) => void,
 }
 
-
 export const PeriodSelector: React.FC<PeriodSelectorProps> = props => {
 
     const yearRe = /^(19|20)\d{2}$/;
     const monthRe = /^(0?[1-9]|1[012])$/;
   
-    const onChangeYear = (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
+    const onChangeYear = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const newValue = e.target.value;
       setYearText(newValue);
   
-      const newValueAsString = newValue ?? "";
-      const newValueAsInt = yearRe.test(newValueAsString) ? parseInt(newValueAsString) : undefined;
+      const newValueAsInt = yearRe.test(newValue) ? parseInt(newValue) : undefined;
       if (newValueAsInt === props.year) return;
       props.onYearChanged(newValueAsInt);
     }
   
-    const onChangeMonth = (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
+    const onChangeMonth = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const newValue = e.target.value;
       setMonthText(newValue);
   
-      const newValueAsString = newValue ?? "";
-      const newValueAsInt = monthRe.test(newValueAsString) ? parseInt(newValueAsString) : undefined;
+      const newValueAsInt = monthRe.test(newValue) ? parseInt(newValue) : undefined;
       if (newValueAsInt === props.month) return;
       props.onMonthChanged(newValueAsInt);
     }
@@ -36,13 +35,14 @@ export const PeriodSelector: React.FC<PeriodSelectorProps> = props => {
     const [yearText, setYearText] = useState<string | undefined>((props.year ?? '').toString());
     const [monthText, setMonthText] = useState<string | undefined>((props.month ?? '').toString());
   
-    return (<Stack horizontal>
-        <Stack.Item>
-            <TextField label={`Rok ${props.suffix}`} value={yearText} onChange={onChangeYear} />
-        </Stack.Item>
-        <Stack.Item>
-            <TextField label={`Miesiąc ${props.suffix}`} value={monthText} onChange={onChangeMonth} />
-        </Stack.Item>
-    </Stack>);
-
+    return (
+      <Row gutter={16}>
+        <Col>
+          <Input addonBefore={`Rok ${props.suffix}`} value={yearText} onChange={onChangeYear} />
+        </Col>
+        <Col>
+          <Input addonBefore={`Miesiąc ${props.suffix}`} value={monthText} onChange={onChangeMonth} />
+        </Col>
+      </Row>
+    );
 }

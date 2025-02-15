@@ -1,19 +1,17 @@
-import { Stack } from "@fluentui/react";
 import React from "react";
 import packageJson from '../package.json';
+import { Col, Row } from "antd";
 
 
 export const Home: React.FC<{}> = (props) => {
-    const stackTokens = { childrenGap: 8 }
-
     return (
-        <Stack tokens={stackTokens}>
-            <Stack.Item>
+        <Row gutter={[0, 8]}>
+            <Col span={24}>
                 <h1>Witaj w systemie ewidencji usług.</h1>
-            </Stack.Item>
-            <Stack.Item>
+            </Col>
+            <Col span={24}>
                 <p>version: {packageJson.version}</p>
-            </Stack.Item>
-        </Stack >
+            </Col>
+        </Row>
     )
 }

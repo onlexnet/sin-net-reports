@@ -1,9 +1,10 @@
-import { DetailsList, IColumn, PrimaryButton, Separator, TextField } from "@fluentui/react";
+import { Table, Button, Input, Divider, Col } from "antd";
 import { Link } from "react-router-dom";
 import _ from "lodash";
 import { useState } from "react";
-import { HorizontalSeparatorStack } from "../../Components/HorizontalSeparatorStack";
+import { HorizontalSeparatorStack } from "../../components/HorizontalSeparatorStack";
 import { ListCustomersItem } from "../../api/useListCustomers";
+import PaddedRow from "../../components/PaddedRow";
 
 interface CustomersProps {
     givenProjectId: string,
@@ -11,23 +12,17 @@ interface CustomersProps {
     listCustomers: (projectId: string) => ListCustomersItem[];
 }
 
-
 export const CustomersView: React.FC<CustomersProps> = (props) => {
-
-    interface TypedColumn extends IColumn {
-        fieldName: keyof ListCustomersItem;
-    }
 
     const items = props.listCustomers(props.givenProjectId);
     const [searchPhrase, setSearchPhrase] = useState<string | undefined>('');
 
-    const columns: TypedColumn[] = [
+    const columns = [
         {
-            key: "column1", name: "Klient", fieldName: "name", minWidth: 70, maxWidth: 90, isResizable: true, isCollapsible: true, data: "string",
-            onRender: (item: ListCustomersItem) => {
-                return <Link to={`/customers/${item.customerId.projectId}/${item.customerId.entityId}/${item.customerId.entityVersion}`}>{item.name}</Link>;
-            },
-            isPadded: true
+            title: "Klient",
+            dataIndex: "name",
+            key: "name",
+            render: (text: string, record: ListCustomersItem) => <Link to={`/customers/${record.customerId.projectId}/${record.customerId.entityId}/${record.customerId.entityVersion}`}>{text}</Link>,
         }
     ];
 
@@ -52,35 +47,25 @@ export const CustomersView: React.FC<CustomersProps> = (props) => {
         .value();
 
     return (
-        <div className="ms-Grid">
-            <HorizontalSeparatorStack >
-                <div className="ms-Grid-row">
-                    <div className="ms-Grid-col ms-sm3" style={{ padding: 10 }}>
-                        <PrimaryButton text="Dodaj nowego klienta" onClick={() => props.onNewClientCommand()} />
-                    </div>
-                </div>
-                <div className="ms-Grid-row">
-                    <div className="ms-Grid-col ms-sm12">
-                        <TextField placeholder="Wprowadź fragment nazwy klienta ..." value={searchPhrase} onChange={e => setSearchPhrase((e.target as any).value)} />
-                    </div>
-                </div>
-
-                <div className="ms-Grid-row">
-
-                    <Separator alignContent="start"></Separator>
-
-                    <div className="ms-Grid-col ms-sm12">
-                        <DetailsList
-                            items={sortedItems}
-                            compact={true}
-                            columns={columns}
-                            setKey="none"
-                            isHeaderVisible={true}
-                        />
-                    </div>
-                </div>
-
-            </HorizontalSeparatorStack>
-        </div >
+        <>
+            <PaddedRow>
+                <Col span={24}>
+                    <Button type="primary" onClick={() => props.onNewClientCommand()}>Dodaj nowego klienta</Button>
+                </Col>
+            </PaddedRow>
+            <PaddedRow>
+                <Col span={24}>
+                    <Input style={{ width: '100%'}} placeholder="Wprowadź fragment nazwy klienta ..." value={searchPhrase} onChange={e => setSearchPhrase(e.target.value)} />
+                </Col>
+            </PaddedRow>
+            <PaddedRow>
+                <Table
+                    dataSource={sortedItems}
+                    columns={columns}
+                    pagination={false}
+                    scroll={{ y: `calc(100vh - 250px)` }}
+                />
+            </PaddedRow >
+        </>
     )
 }

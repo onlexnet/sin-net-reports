@@ -1,7 +1,8 @@
-import { Label, Separator } from "@fluentui/react"
 import _ from "lodash";
 import React from "react"
-import { useGetCustomerQuery } from "../../Components/.generated/components";
+import { useGetCustomerQuery } from "../../components/.generated/components";
+import { Col, Row, Divider, Typography } from "antd";
+const { Text } = Typography
 
 interface ViewProps {
   projectId: string | undefined,
@@ -17,30 +18,38 @@ const View: React.FC<ViewProps> = props => {
         entityId: customerId!
     }});
 
-  if (!data) return null;
+  const it = data
+    ? data.Customers.get!
+    : {
+      data: {
+        customerName: '...',
+        customerCityName: '...',
+        customerAddress: '...',
+        operatorEmail: '...',
+        distance: '...'
+      },
+      secretsEx: [ ]
+    }
 
-  const it = data.Customers.get!;
   const { customerName, customerCityName, customerAddress, operatorEmail, distance } = it.data ;
   const specialAuth = _.chain(it.secretsEx).filter(it => it.location === 'Portal świadczeniodawcy').first().value();
   const specialAuthValue = specialAuth?.entityCode;
 
   return (
-    <div className="ms-Grid-col ms-sm12">
-      <div className="ms-Grid-row">
-        <div className="ms-Grid-col ms-sm12">
-          <Separator alignContent="center">Dane wybranego klienta:</Separator>
-        </div>
-        <div className="ms-Grid-col ms-sm12">
-          <Label>Nazwa: {customerName} </Label>
-          <Label>Miejscowość: {customerCityName ?? '---'} </Label>
-          <Label>Adres: {customerAddress ?? '---'} </Label>
-          <Label>Operator: {operatorEmail ?? '---'}</Label>
-          <Label>Dystans: {distance ?? '---'}</Label>
-          <Label>Kod świadczeniodawcy (z Portalu): {specialAuthValue ?? '---'}</Label>
-        </div>
-      </div>
-    </div>
-  )
+    <Row gutter={[8, 8]}>
+      <Col span={24}>
+        <Divider orientation="center">Dane wybranego klienta:</Divider>
+      </Col>
+      <Col span={24}>
+        <Text strong>Nazwa: </Text><Text>{customerName}</Text><br />
+        <Text strong>Miejscowość: </Text><Text>{customerCityName ?? '---'}</Text><br />
+        <Text strong>Adres: </Text><Text>{customerAddress ?? '---'}</Text><br />
+        <Text strong>Operator: </Text><Text>{operatorEmail ?? '---'}</Text><br />
+        <Text strong>Dystans: </Text><Text>{distance ?? '---'}</Text><br />
+        <Text strong>Kod świadczeniodawcy (z Portalu): </Text><Text>{specialAuthValue ?? '---'}</Text>
+      </Col>
+    </Row>
+  );
 }
 
 export default View;

@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { useState } from 'react';
-import { useGetUsersQuery } from '../Components/.generated/components';
+import { useGetUsersQuery } from '../components/.generated/components';
 
 export const useGetUsers = (projectId: string) => {
   const { data } = useGetUsersQuery({

@@ -1,15 +1,14 @@
 import React from "react";
-import { Label, PrimaryButton, Stack } from "@fluentui/react";
 import packageJson from '../../package.json';
+import { Button, Space, Typography } from "antd";
+
+const { Text } = Typography;
 
 export const View: React.FC<{ login: () => void }> = ({ login }) => {
-  const stackTokens = { childrenGap: 8 }
   return (
-    <Stack tokens={stackTokens}>
-      <Stack.Item align="center">
-        <PrimaryButton onClick={login}>Zaloguj się do aplikacji ...</PrimaryButton>
-        <Label>{packageJson.version}</Label>
-      </Stack.Item>
-    </Stack>
+    <Space direction="vertical" align="center" size="middle">
+      <Button type="primary" onClick={login}>Zaloguj się do aplikacji ...</Button>
+      <Text>{packageJson.version}</Text>
+    </Space>
   );
 };

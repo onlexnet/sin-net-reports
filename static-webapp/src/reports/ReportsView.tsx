@@ -1,16 +1,16 @@
-import { Link, Stack } from "@fluentui/react";
+import { Typography, Layout, Button, Space } from "antd";
 import React, { useState } from "react";
 import { addressProvider } from "../addressProvider";
 import { LocalDate } from "../store/viewcontext/TimePeriod";
 import { PeriodSelector } from "./PeriodSelector";
 
-const stackTokens = { childrenGap: 8 }
+const { Title } = Typography;
+const { Content } = Layout;
 
 interface ReportsViewProps {
   projectId: string;
   from: LocalDate;
 }
-
 
 export const ReportsView: React.FC<ReportsViewProps> = props => {
   const { projectId, from } = props;
@@ -25,37 +25,40 @@ export const ReportsView: React.FC<ReportsViewProps> = props => {
   const [toMonth, setToMonth] = useState<number | undefined>(from.month);
 
   return (
-    <Stack verticalFill style={{ padding: 10 }}>
-      <Stack.Item>
-        <Stack tokens={stackTokens}>
-          <h1>Raporty</h1>
-          <PeriodSelector suffix="OD:" year={fromYear} month={fromMonth} onYearChanged={setFromYear} onMonthChanged={setFromMonth}/>
-          <PeriodSelector suffix="DO:" year={toYear} month={toMonth} onYearChanged={setToYear} onMonthChanged={setToMonth}/>
+    <Layout style={{ padding: 10 }}>
+      <Content>
+        <Title level={1}>Raporty</Title>
 
-          <Link
+        <Space direction="vertical">
+          <PeriodSelector suffix="OD:" year={fromYear} month={fromMonth} onYearChanged={setFromYear} onMonthChanged={setFromMonth} />
+          <PeriodSelector suffix="DO:" year={toYear} month={toMonth} onYearChanged={setToYear} onMonthChanged={setToMonth} />
+
+          <Button
             disabled={fromYear == null || fromMonth == null}
+            type="link"
             onClick={() => { openInNewTab(addressProvider().host + `/api/raporty/klienci/${projectId}/${fromYear}/${fromMonth}`); }}
           >
             Raport miesięczny - załączniki do faktur
-          </Link>
+          </Button>
 
-
-          <Link onClick={() => {
+          <Button
+            type="link"
+            onClick={() => {
             openInNewTab(addressProvider().host + `/api/raporty/2/${projectId}?yearFrom=${fromYear}&monthFrom=${fromMonth}&yearTo=${toYear}&monthTo=${toMonth}`);
           }}>
             Zestawienie sumaryczne godzin
-          </Link>
+          </Button>
 
-          <Link onClick={() => {
+          <Button
+            type="link"
+            onClick={() => {
             openInNewTab(addressProvider().host + `/api/raporty/3/${projectId}`);
           }}>
             Lista klientów przypisanych do operatorów
-          </Link>
-
-
-        </Stack>
-      </Stack.Item>
-    </Stack>);
-
+          </Button>
+        </Space>
+      </Content>
+    </Layout>
+  );
 };
 

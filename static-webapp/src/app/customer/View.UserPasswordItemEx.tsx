@@ -1,8 +1,8 @@
-import { DefaultButton, IStackTokens, Label, Separator, Stack, TextField } from "@fluentui/react";
+import { Button, Input, Divider, Space, Typography, Col, Row } from "antd";
 import React, { useEffect, useState } from "react";
 import { TOTP } from "totp-generator"
 
-const stackTokens: IStackTokens = { childrenGap: 12 };
+const { Text } = Typography;
 
 interface UserPasswordExtModel {
     // internal ID used by React to identify the element on list of elements
@@ -25,8 +25,6 @@ interface UserPasswordExtItemProps {
     onRemove: (localKey: string) => void
 }
 
-
-
 export const UserPasswordItemExt: React.FC<UserPasswordExtItemProps> = props => {
     const init = new Date()
 
@@ -46,7 +44,7 @@ export const UserPasswordItemExt: React.FC<UserPasswordExtItemProps> = props => 
 
     const { localKey, location, username, password, entityName, entityCode, otpSecret, otpRecoveryKeys } = props.model;
     const handler = (action: (m: UserPasswordExtModel, v?: string) => void) => {
-        return (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
+        return (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
             var newModel: UserPasswordExtModel = {
                 localKey,
                 location,
@@ -57,14 +55,11 @@ export const UserPasswordItemExt: React.FC<UserPasswordExtItemProps> = props => 
                 otpSecret,
                 otpRecoveryKeys
             };
-            action(newModel, newValue);
+            action(newModel, event.target.value);
             props.onChange(newModel);
         }
     }
 
-    const width80 = { width: "80px" }
-    const extendedWidth1 = { minWidth: "300px" }
-    const extendedWidth2 = { minWidth: "492px" }
     let otpDesc = "TOTP nie zdefiniowany"
     let expiresDesc = "-"
     const period = 30
@@ -87,30 +82,48 @@ export const UserPasswordItemExt: React.FC<UserPasswordExtItemProps> = props => 
     }
 
     return (
-        <div className="ms-Grid-row">
-            <div className="ms-Grid-col ms-smPush1">
-                <Separator alignContent="start"><Label>{props.model.location}</Label></Separator>
-                <Stack tokens={stackTokens}>
-                    <Stack horizontal tokens={stackTokens}>
-                        <TextField placeholder="Oddział NFZ" value={entityName} onChange={handler((m, v) => m.entityName = v)} />
-                        <TextField placeholder="kod świadczeniodawcy" value={entityCode} onChange={handler((m, v) => m.entityCode = v)} />
-                        <TextField style={extendedWidth1} placeholder="Użytkownik" value={username} onChange={handler((m, v) => m.username = v)} />
-                        <TextField style={extendedWidth1} placeholder="Hasło" value={password} onChange={handler((m, v) => m.password = v)} />
-                        <DefaultButton text="Usuń" onClick={() => props.onRemove(props.model.localKey)} />
-                    </Stack>
-                    <Stack horizontal tokens={stackTokens}>
-                        <TextField value={otpDesc} disabled />
-                        <TextField value={expiresDesc} disabled />
-                        <TextField style={extendedWidth1} placeholder="TOTP secret" value={otpSecret} onChange={handler((m, v) => m.otpSecret = v)} />
-                        <TextField style={extendedWidth1} multiline placeholder="TOTP recovery keys" value={otpRecoveryKeys} onChange={handler((m, v) => m.otpRecoveryKeys = v)} />
-                    </Stack>
-                    <Stack horizontal tokens={stackTokens}>
-                        <TextField value={props.changedBy} disabled defaultValue="-" />
-                        <TextField value={props.changedWhen} disabled defaultValue="-" />
-                    </Stack>
-                </Stack>
-            </div>
-        </div>
+        <>
+            <Divider orientation="left"><Text>{props.model.location}</Text></Divider>
+            <Row gutter={16}>
+                <Col offset={2} span={4}>
+                    <Input placeholder="Oddział NFZ" value={entityName} onChange={handler((m, v) => m.entityName = v)} />
+                </Col>
+                <Col span={4}>
+                    <Input placeholder="kod świadczeniodawcy" value={entityCode} onChange={handler((m, v) => m.entityCode = v)} />
+                </Col>
+                <Col span={6}>
+                    <Input placeholder="Użytkownik" value={username} onChange={handler((m, v) => m.username = v)} />
+                </Col>
+                <Col span={6}>
+                    <Input placeholder="Hasło" value={password} onChange={handler((m, v) => m.password = v)} />
+                </Col>
+                <Col span={2}>
+                    <Button danger onClick={() => props.onRemove(props.model.localKey)}>Usuń</Button>
+                </Col>
+            </Row>
+            <Row gutter={16}>
+                <Col offset={2} span={4}>
+                    <Input value={otpDesc} readOnly />
+                </Col>
+                <Col span={4}>
+                    <Input value={expiresDesc} disabled />
+                </Col>
+                <Col span={6}>
+                    <Input placeholder="TOTP secret" value={otpSecret} onChange={handler((m, v) => m.otpSecret = v)} />
+                </Col>
+                <Col span={6}>
+                    <Input.TextArea value={otpRecoveryKeys} placeholder="TOTP recovery keys" onChange={handler((m, v) => m.otpRecoveryKeys = v)} />
+                </Col>
+            </Row>
+            <Row gutter={16}>1
+                <Col offset={2} span={4}>
+                    <Input value={props.changedBy} disabled defaultValue="-" />
+                </Col>
+                <Col span={4}>
+                <Input value={props.changedWhen} disabled defaultValue="-" />
+                </Col>
+            </Row>
+        </>
     );
 }
 

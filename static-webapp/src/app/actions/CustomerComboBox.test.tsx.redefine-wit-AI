@@ -1,7 +1,7 @@
 // https://www.robinwieruch.de/react-testing-library/
 import { QueryResult } from '@apollo/client';
 import { render } from '@testing-library/react';
-import { useListCustomersQuery } from '../../Components/.generated/components';
+import { useListCustomersQuery } from '../../components/.generated/components';
 import { CustomerComboBox } from './CustomerComboBox';
 
 describe('CustomerComboBox', () => {
