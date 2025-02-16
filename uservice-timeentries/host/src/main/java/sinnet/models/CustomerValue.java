@@ -8,7 +8,7 @@ import sinnet.domain.model.ValEmail;
  * TBD.
  */
 @Data
-@Accessors(chain = true, fluent = true)
+@Accessors(chain = true)
 public final class CustomerValue {
   private ValEmail operatorEmail;
   private String billingModel;

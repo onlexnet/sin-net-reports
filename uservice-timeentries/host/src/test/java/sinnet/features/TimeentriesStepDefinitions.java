@@ -62,4 +62,29 @@ public class TimeentriesStepDefinitions {
   public void report1_pack_is_returned() {
   }
 
+  @When("create two secrets on the timeentry")
+  public void create_two_secrets_on_the_timeentry() {
+    testApi.addSecretExToLastlyCreatedCustomer(ctx);
+    // Write code here that turns the phrase above into concrete actions
+    throw new io.cucumber.java.PendingException();
+  }
+
+  @Then("update time on secrets is the same")
+  public void update_time_on_secrets_is_the_same() {
+    // Write code here that turns the phrase above into concrete actions
+    throw new io.cucumber.java.PendingException();
+  }
+
+  @Then("update one of the secrets")
+  public void update_one_of_the_secrets() {
+    // Write code here that turns the phrase above into concrete actions
+    throw new io.cucumber.java.PendingException();
+  }
+
+  @Then("update time on secrets is different")
+  public void update_time_on_secrets_is_different() {
+    // Write code here that turns the phrase above into concrete actions
+    throw new io.cucumber.java.PendingException();
+  }
+
 }

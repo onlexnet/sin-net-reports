@@ -21,6 +21,7 @@ import sinnet.grpc.timeentries.TimeEntriesGrpc;
 import sinnet.grpc.timeentries.TimeEntriesGrpc.TimeEntriesBlockingStub;
 import sinnet.grpc.users.UsersGrpc;
 import sinnet.grpc.users.UsersGrpc.UsersBlockingStub;
+import sinnet.models.ValName;
 import sinnet.report1.grpc.Reports1;
 import sinnet.report1.grpc.ReportsGrpc.ReportsBlockingStub;
 
@@ -28,16 +29,43 @@ import sinnet.report1.grpc.ReportsGrpc.ReportsBlockingStub;
 @RequiredArgsConstructor
 public class RpcApi implements ApplicationListener<ApplicationReadyEvent> {
   
+  sealed interface ApiRequestor {
+
+    static ApiRequestor of(ValName name) {
+      return new NameAlias(name.getValue());
+    }
+  }
+
+  enum Continue implements ApiRequestor {
+    INSTANCE
+  }
+
+  record NameAlias(String alias) implements ApiRequestor { }
+  
+  private ApiRequestor current = new NameAlias("Not yet defined!");
+  private void setCurrent(ApiRequestor proposed) {
+    current = switch (proposed) {
+      case Continue ignored -> current;
+      case NameAlias it -> it;
+    };
+  }
+
   private final TestRestTemplate restTemplate;
 
   @Getter
   private UsersBlockingStub users;
 
-  @Getter
   private TimeEntriesBlockingStub timeentries;
+  public TimeEntriesBlockingStub getTimeentries(ApiRequestor requestor) {
+    setCurrent(requestor);
+    return timeentries;
+  }
 
-  @Getter
   private CustomersBlockingStub customers;
+  public CustomersBlockingStub getCustomers(ApiRequestor requestor) {
+    setCurrent(requestor);
+    return customers;
+  }
 
   @Getter
   private ProjectsBlockingStub projects;

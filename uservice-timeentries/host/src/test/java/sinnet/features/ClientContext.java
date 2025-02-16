@@ -32,7 +32,7 @@ class TestBeans {
 
 }
 /**
- * In BDD tests ClientContext represents separated, connected user.
+ * In BDD tests ClientContext represents a separated client
  */
 @Accessors(fluent = true)
 public class ClientContext {
@@ -76,6 +76,7 @@ public class ClientContext {
   @Getter
   @Accessors(fluent = true, chain = false)
   class KnownFacts {
+    private ValName lastlyUpdatedCustomerAlias;
     private final Map<ValName, ValEmail> users = new HashMap<>();
     private final Map<ValName, ProjectId> projects = new HashMap<>();
     private final Map<EntityId, TimeentryContext> timeentries = new HashMap<>();
@@ -101,8 +102,10 @@ public class ClientContext {
     var model = event.cmd().getModel();
     var newId = event.newEntityId();
 
-    known.customers.remove(event.customerAlias());
-    known.customers.put(event.customerAlias(), Tuple.of(newId, model));
+    var customerAlias = event.customerAlias();
+    known.customers.remove(customerAlias);
+    known.customers.put(customerAlias, Tuple.of(newId, model));
+    known.lastlyUpdatedCustomerAlias = customerAlias;
   }
 
   private void onAppEvent(OperatorAssignedAppEvent event) {
@@ -143,6 +146,8 @@ sealed interface AppEvent { }
 record ProjectCreatedAppEvent(ValName projectAlias, ProjectId projectId) implements AppEvent { }
 record CustomerReservedAppEvent(ValName customerAlias, EntityId entityId) implements AppEvent { }
 record CustomerUpdatedAppEvent(ValName customerAlias, EntityId entityId, EntityId newEntityId, UpdateCommand cmd) implements AppEvent { }
+
+/** An Operator has access to project elements after the assignment. */
 record OperatorAssignedAppEvent(ValName operatorAlias, ValName projectAlias) implements AppEvent { }
 
 

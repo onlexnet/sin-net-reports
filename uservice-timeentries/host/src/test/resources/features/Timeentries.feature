@@ -13,3 +13,12 @@ Feature: Manage Timeentries
     When operator1 creates new timeentry for project1
     And operator1 requests report1 pack for project1
     Then report1 pack is returned
+
+  Scenario: Update time on singlle secret
+    When operator1 creates new timeentry for project1
+    And create two secrets on the timeentry
+    Then update time on secrets is the same
+    And update one of the secrets
+    Then update time on secrets is different
+    
+

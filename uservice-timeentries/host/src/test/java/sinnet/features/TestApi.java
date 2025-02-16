@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.assertj.core.api.Assertions;
+import org.instancio.Instancio;
 import org.springframework.stereotype.Component;
 
 import com.google.protobuf.ByteString;
@@ -17,6 +18,7 @@ import sinnet.events.AvroObjectSerializer;
 import sinnet.grpc.common.EntityId;
 import sinnet.grpc.common.UserToken;
 import sinnet.grpc.customers.CustomerModel;
+import sinnet.grpc.customers.CustomerModelMapper;
 import sinnet.grpc.customers.GetRequest;
 import sinnet.grpc.customers.ListRequest;
 import sinnet.grpc.customers.MapperDto;
@@ -70,6 +72,14 @@ public class TestApi {
     var updatedId = result.getEntityId();
 
     ctx.on(new CustomerUpdatedAppEvent(customerAlias, id, updatedId, cmd));
+  }
+
+  static UserToken newUserToken(ClientContext ctx, ValName operatorAlias) {
+    var projectId = "00000000-0000-0000-0001-000000000001";
+    return UserToken.newBuilder()
+        .setProjectId(projectId)
+        .setRequestorEmail(operatorAlias.getValue())
+        .build();
   }
 
   sinnet.models.CustomerModel getCustomer(ClientContext ctx, ValName customerAlias, ValName operatorAliasRequestor) {
@@ -140,6 +150,7 @@ public class TestApi {
         .setWhen(when)
         .build());
     var returnedId = result.getEntityId();
+
     ctx.newTimeentry(returnedId, when);
   }
 
@@ -197,6 +208,23 @@ public class TestApi {
         .build();
     var response = rpcApi.getProjects().list(request);
     return response.getProjectsCount();
+  }
+
+  public void addSecretExToLastlyCreatedCustomer(ClientContext ctx) {
+    var customerAlias = ctx.known().lastlyUpdatedCustomerAlias();
+    var idModelDto = ctx.known().customers().get(customerAlias);
+    var modelDto = idModelDto._2;
+    var asDomain = CustomerModelMapper.INSTANCE.fromDto(modelDto);
+    var newSecret = Instancio.create(CustomerSecret.class);
+    asDomain.getSecrets().add(newSecret);
+
+    var updatedDto = CustomerModelMapper.INSTANCE.toDto(asDomain);
+
+    var updateRequest = UpdateCommand.newBuilder()
+        .setModel(updatedDto)
+        .setUserToken(newUserToken(ctx, operatorAlias))
+        .build();
+    var result = rpcApi.getCustomers().update(updateRequest);
   }
 }
 

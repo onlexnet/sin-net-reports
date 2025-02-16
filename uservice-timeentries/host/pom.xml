@@ -47,17 +47,6 @@
     </dependency>
 
     <dependency>
-			<groupId>org.modelmapper</groupId>
-			<artifactId>modelmapper</artifactId>
-			<version>${modelmapper.version}</version>
-  	</dependency>
-    <dependency>
-        <groupId>org.modelmapper.extensions</groupId>
-        <artifactId>modelmapper-protobuf</artifactId>
-        <version>${modelmapper.version}</version>
-    </dependency>
-    
-    <dependency>
       <!--
         Separate migrations as scope:test part of https://github.com/onlexnet/sin-net-reports/issues/158
       -->
@@ -70,6 +59,15 @@
       <scope>test</scope>
     </dependency>
 
+    <dependency>
+        <groupId>org.instancio</groupId>
+        <artifactId>instancio-junit</artifactId>
+    </dependency>
+
+    <dependency>
+        <groupId>org.mapstruct</groupId>
+        <artifactId>mapstruct</artifactId>
+    </dependency>
 
     <!--
       Optional dependency to see startup time with dependencies
