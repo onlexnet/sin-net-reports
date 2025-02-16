@@ -11,7 +11,8 @@ type SECRET_TYPE = 'PORTAL_SWIADCZENIODAWCY'
     | 'EPUB'
     | 'GUS'
     | 'DILO'
-    | 'RPWDL';
+    | 'RPWDL'
+    | 'e-Zdrowie'
 
 interface NewAuthorisationProps {
     newAuthorisationRequested: (name: string) => void;
@@ -57,7 +58,9 @@ const toHint = (key: SECRET_TYPE): SecretHint => {
             return { key, text: 'DILO', extended: false }
         case 'RPWDL':
             return { key, text: 'RPWDL', extended: false }
-    }
+        case 'e-Zdrowie':
+            return { key, text: 'e-Zdrowie', extended: false }
+        }
 }
 
 const options: SECRET_TYPE[] = [
@@ -70,7 +73,8 @@ const options: SECRET_TYPE[] = [
     "EPUB",
     'GUS',
     'DILO',
-    'RPWDL']
+    'RPWDL',
+    'e-Zdrowie']
 
 export const NewSecret: React.FC<NewAuthorisationProps> = props => {
     const authorisationType = _.chain(options)
