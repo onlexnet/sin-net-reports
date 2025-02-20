@@ -64,9 +64,8 @@ public class TimeentriesStepDefinitions {
 
   @When("create two secrets on the timeentry")
   public void create_two_secrets_on_the_timeentry() {
-    testApi.addSecretExToLastlyCreatedCustomer(ctx);
-    // Write code here that turns the phrase above into concrete actions
-    throw new io.cucumber.java.PendingException();
+    testApi.addSecretExToUpdatedCustomer(ctx);
+    testApi.addSecretExToUpdatedCustomer(ctx);
   }
 
   @Then("update time on secrets is the same")

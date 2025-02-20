@@ -1,5 +1,6 @@
 package sinnet.features;
 
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -34,6 +35,10 @@ public class RpcApi implements ApplicationListener<ApplicationReadyEvent> {
     static ApiRequestor of(ValName name) {
       return new NameAlias(name.getValue());
     }
+
+    static ApiRequestor asIs() {
+      return Continue.INSTANCE;
+    }
   }
 
   enum Continue implements ApiRequestor {
@@ -42,10 +47,24 @@ public class RpcApi implements ApplicationListener<ApplicationReadyEvent> {
 
   record NameAlias(String alias) implements ApiRequestor { }
   
-  private ApiRequestor current = new NameAlias("Not yet defined!");
-  private void setCurrent(ApiRequestor proposed) {
-    current = switch (proposed) {
-      case Continue ignored -> current;
+  private ApiRequestor currentOperator = new NameAlias("Not yet defined!");
+  ValName getCurrentOperator() {
+    return switch(currentOperator) {
+      case NameAlias it -> ValName.of(it.alias());
+      case Continue ignored -> { throw new IllegalStateException("Can't reuse empty operator"); }
+    };
+  }
+
+  void setCurrent(ApiRequestor proposed) {
+    currentOperator = switch (proposed) {
+      case Continue ignored -> {
+        if (currentOperator instanceof NameAlias na) {
+          if (Strings.isEmpty(na.alias())) {
+            throw new IllegalStateException("Can't reuse empty operator");
+          }
+        }
+        yield currentOperator;
+      }
       case NameAlias it -> it;
     };
   }

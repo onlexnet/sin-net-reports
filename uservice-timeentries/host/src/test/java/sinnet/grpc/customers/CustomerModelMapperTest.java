@@ -1,10 +1,12 @@
 package sinnet.grpc.customers;
 
+import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
 import org.assertj.core.api.Assertions;
 import org.instancio.Instancio;
 import org.instancio.Select;
+import org.instancio.generators.TemporalGenerators;
 import org.junit.jupiter.api.Test;
 
 import sinnet.grpc.common.EntityId;
@@ -41,12 +43,20 @@ public class CustomerModelMapperTest {
   }
 
   @Test
-  void shouldMapCustomerModel() {
-    var dto = Instancio.of(CustomerModel.class)
-        .generate(Select.field(LocalDateTime.class, "month"), gen -> gen.ints().range(1, 12))
+  void shouldMapCustomerModelFull() {
+    var expected = Instancio.of(sinnet.models.CustomerModel.class)
+        .supply(Select.all(java.time.LocalDateTime.class), () -> java.time.LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS))
         .create();
-    var model = mapper.fromDto(dto);
-    Assertions.assertThat(model).isNotNull();
-    throw new IllegalArgumentException("Test is not yet finished");
+    var dto = mapper.toDto(expected);
+    var actual = mapper.fromDto(dto);
+    Assertions.assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void shouldMapCustomerModelEmpty() {
+    var expected = Instancio.createBlank(sinnet.models.CustomerModel.class);
+    var dto = mapper.toDto(expected);
+    var actual = mapper.fromDto(dto);
+    Assertions.assertThat(actual).isEqualTo(expected);
   }
 }

@@ -168,12 +168,11 @@
               <artifactId>lombok</artifactId>
               <version>1.18.32</version>
             </path>
-            <path>
-                <groupId>no.entur.mapstruct.spi</groupId>
-                <artifactId>protobuf-spi-impl</artifactId>
-                <version>1.46</version>
-            </path>
-          </annotationProcessorPaths>
+                <path>
+                    <groupId>de.firehead</groupId>
+                    <artifactId>mapstruct-spi-protobuf</artifactId>
+                    <version>1.1.0</version>
+                </path>          </annotationProcessorPaths>
         </configuration>
       </plugin>
 

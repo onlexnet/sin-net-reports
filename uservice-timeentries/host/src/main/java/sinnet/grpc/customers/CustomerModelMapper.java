@@ -1,9 +1,12 @@
 package sinnet.grpc.customers;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
+import org.mapstruct.CollectionMappingStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.NullValueCheckStrategy;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 
@@ -14,8 +17,11 @@ import sinnet.models.ValName;
 
 /** CustomerModel maper DTO <-> domain. */
 @Mapper(
+    collectionMappingStrategy = CollectionMappingStrategy.ADDER_PREFERRED,
+    nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS,
     unmappedSourcePolicy = ReportingPolicy.ERROR,
-    unmappedTargetPolicy = ReportingPolicy.ERROR
+    unmappedTargetPolicy = ReportingPolicy.ERROR,
+    uses = { UuidMapper.class }
 )
 public interface CustomerModelMapper {
   
@@ -41,11 +47,11 @@ public interface CustomerModelMapper {
   }
 
   default String map(ValEmail source) {
-    return source.value();
+    return Optional.ofNullable(source.value()).orElse("");
   }
 
   default String map2(ValName source) {
-    return source.getValue();
+    return Optional.ofNullable(source.getValue()).orElse("");
   }
 
   @Mapping(target = "secretEx", source = "secretsEx")

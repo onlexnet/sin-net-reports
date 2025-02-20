@@ -32,7 +32,7 @@ class TestBeans {
 
 }
 /**
- * In BDD tests ClientContext represents a separated client
+ * In BDD tests ClientContext represents a separated client application
  */
 @Accessors(fluent = true)
 public class ClientContext {
