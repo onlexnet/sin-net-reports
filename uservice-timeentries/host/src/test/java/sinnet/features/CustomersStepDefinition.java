@@ -21,9 +21,9 @@ public class CustomersStepDefinition {
 
   private ValName singleCustomer = ValName.of("example customer");
 
-  @When("{operatorAlias} creates a new customer")
-  public void the_operator_creates_a_new_customer(ValName operatorAlias) {
-    testApi.reserveCustomer(ctx, operatorAlias);
+  @When("{operatorAlias} creates a new customer named {customerAlias}")
+  public void the_operator_creates_a_new_customer(ValName operatorAlias, ValName customerAlias) {
+    testApi.reserveCustomer(ctx, operatorAlias, customerAlias);
   }
 
   @Then("{operatorAlias} is able to change the name of the Customer")

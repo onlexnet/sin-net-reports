@@ -6,6 +6,6 @@ Feature: Manage Customers
     And an operator called operator2 assigned to project called project1
 
   Scenario: Create a new Project
-    When operator1 creates a new customer
+    When operator1 creates a new customer named customer1
     Then operator1 is able to change the name of the Customer
     And operator1 is able to change all properties of the Customer

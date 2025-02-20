@@ -10,6 +10,7 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import sinnet.features.RpcApi.UseAlias;
 import sinnet.models.ValName;
 
 @RequiredArgsConstructor
@@ -70,7 +71,7 @@ public class TimeentriesStepDefinitions {
 
   @Then("update time on secrets is the same")
   public void update_time_on_secrets_is_the_same() {
-    // Write code here that turns the phrase above into concrete actions
+    var customerDto = testApi.getCustomer(ctx, UseAlias.asIs(), UseAlias.asIs());
     throw new io.cucumber.java.PendingException();
   }
 

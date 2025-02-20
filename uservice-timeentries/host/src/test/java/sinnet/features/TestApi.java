@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import sinnet.events.AvroObjectSerializer;
 import sinnet.features.RpcApi.ApiRequestor;
+import sinnet.features.RpcApi.UseAlias;
 import sinnet.grpc.common.EntityId;
 import sinnet.grpc.common.UserToken;
 import sinnet.grpc.customers.CustomerModel;
@@ -46,12 +47,12 @@ public class TestApi {
   // we use the same deserializer as the whole ecosystem in ser / deser events.
   private final AvroObjectSerializer objectSerializer = new AvroObjectSerializer();
 
-  public void reserveCustomer(ClientContext ctx, ValName customerAlias) {
+  public void reserveCustomer(ClientContext ctx, ValName operatorAlias, ValName customerAlias) {
     var projectId = "00000000-0000-0000-0001-000000000001";
     var request = ReserveRequest.newBuilder()
         .setProjectId(projectId)
         .build();
-    var entityId = rpcApi.getCustomers(ApiRequestor.asIs()).reserve(request).getEntityId();
+    var entityId = rpcApi.getCustomers(ApiRequestor.of(operatorAlias)).reserve(request).getEntityId();
     
     ctx.on(new CustomerReservedAppEvent(customerAlias, entityId));
   }
@@ -77,11 +78,18 @@ public class TestApi {
 
   UserToken newUserToken(ClientContext ctx) {
     var projectId = "00000000-0000-0000-0001-000000000001";
-    var operator = rpcApi.getCurrentOperator();
+    var operator = rpcApi.getCurrentOperator(ApiRequestor.asIs());
     return UserToken.newBuilder()
         .setProjectId(projectId)
         .setRequestorEmail(operator.getValue())
         .build();
+  }
+
+
+  sinnet.models.CustomerModel getCustomer(ClientContext ctx, UseAlias customer, UseAlias invokerOperator) {
+    var currentCustomer = rpcApi.getCurrentCustomer(customer);
+    var currentOperator = rpcApi.getCurrentOperator(ApiRequestor.of(invokerOperator));
+    return getCustomer(ctx, currentCustomer, currentOperator);
   }
 
   sinnet.models.CustomerModel getCustomer(ClientContext ctx, ValName customerAlias, ValName invoker) {

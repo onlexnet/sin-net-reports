@@ -29,11 +29,46 @@ import sinnet.report1.grpc.ReportsGrpc.ReportsBlockingStub;
 @Component
 @RequiredArgsConstructor
 public class RpcApi implements ApplicationListener<ApplicationReadyEvent> {
-  
+
+  ValName currentCustomer = ValName.empty();
+  ValName getCurrentCustomer(UseAlias alias) {
+    return switch(alias) {
+      case Alias it -> ValName.of(it.name());
+      case AsIs ignored -> { throw new IllegalStateException("Can't reuse empty operator"); }
+    };
+  }
+
+
+  sealed interface UseAlias {
+
+    static UseAlias asIs() {
+      return AsIs.INSTANCE;
+    }
+
+    static UseAlias of(HasValue alias) {
+      return new Alias(alias.getValue());
+    }
+  }
+
+  enum AsIs implements UseAlias {
+    INSTANCE
+  }
+
+  record Alias(String name) implements UseAlias {
+  }
+
+
   sealed interface ApiRequestor {
 
     static ApiRequestor of(ValName name) {
       return new NameAlias(name.getValue());
+    }
+
+    static ApiRequestor of(UseAlias it) {
+      return switch (it) {
+        case AsIs i -> Continue.INSTANCE;
+        case Alias i -> new NameAlias(i.name());
+      };
     }
 
     static ApiRequestor asIs() {
@@ -47,26 +82,21 @@ public class RpcApi implements ApplicationListener<ApplicationReadyEvent> {
 
   record NameAlias(String alias) implements ApiRequestor { }
   
-  private ApiRequestor currentOperator = new NameAlias("Not yet defined!");
-  ValName getCurrentOperator() {
-    return switch(currentOperator) {
-      case NameAlias it -> ValName.of(it.alias());
-      case Continue ignored -> { throw new IllegalStateException("Can't reuse empty operator"); }
-    };
-  }
-
-  void setCurrent(ApiRequestor proposed) {
-    currentOperator = switch (proposed) {
-      case Continue ignored -> {
-        if (currentOperator instanceof NameAlias na) {
-          if (Strings.isEmpty(na.alias())) {
-            throw new IllegalStateException("Can't reuse empty operator");
-          }
+  private ApiRequestor currentOperator = Continue.INSTANCE;
+  ValName getCurrentOperator(ApiRequestor proposed) {
+    var result = switch(proposed) {
+      case Continue ignored -> { 
+        if (currentOperator instanceof Continue) {
+          throw new IllegalStateException("Can't reuse empty operator");
         }
         yield currentOperator;
       }
-      case NameAlias it -> it;
+      case NameAlias it -> {
+        yield it;
+      }
     };
+    currentOperator = result;
+    return currentCustomer;
   }
 
   private final TestRestTemplate restTemplate;
@@ -76,13 +106,13 @@ public class RpcApi implements ApplicationListener<ApplicationReadyEvent> {
 
   private TimeEntriesBlockingStub timeentries;
   public TimeEntriesBlockingStub getTimeentries(ApiRequestor requestor) {
-    setCurrent(requestor);
+    getCurrentOperator(requestor);
     return timeentries;
   }
 
   private CustomersBlockingStub customers;
   public CustomersBlockingStub getCustomers(ApiRequestor requestor) {
-    setCurrent(requestor);
+    getCurrentOperator(requestor);
     return customers;
   }
 
