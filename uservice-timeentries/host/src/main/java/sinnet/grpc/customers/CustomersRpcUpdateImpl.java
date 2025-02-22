@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import com.google.common.base.Objects;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import sinnet.domain.model.ValEmail;
 import sinnet.grpc.common.Mapper;
 import sinnet.grpc.mapping.RpcCommandHandlerBase;
@@ -19,6 +20,7 @@ import sinnet.grpc.mapping.RpcCommandHandlerBase;
  */
 @Component
 @RequiredArgsConstructor
+@Slf4j
 class CustomersRpcUpdateImpl extends RpcCommandHandlerBase<UpdateCommand, UpdateResult> implements CustomersRpcUpdate {
 
   private final CustomerRepositoryEx repository;
@@ -42,6 +44,9 @@ class CustomersRpcUpdateImpl extends RpcCommandHandlerBase<UpdateCommand, Update
     
     // when we update a Customer, we need to compare secrets and update time on only those wher ewe have new data
     if (model.getId().getVersion() > 0) {
+      var secretsIn = model.getSecrets();
+      var secretsExtIn = model.getSecretsEx();
+      log.info("Customer update, no of secrets: {}, no of secrets ext: {}", secretsIn.size(), secretsExtIn.size());
       var storedModel = repository.get(model.getId());
 
       var secretsToUpdate = newIncomingSecrets(model.getSecrets(), storedModel.get().getSecrets());
@@ -55,6 +60,8 @@ class CustomersRpcUpdateImpl extends RpcCommandHandlerBase<UpdateCommand, Update
         secretEx.setChangedWhen(now);
         secretEx.setChangedWho(emailOfRequestor);
       }
+
+      log.info("Customer update, no of new:  secrets: {}, secrets ext: {}", secretsToUpdate.size(), secretsExToUpdate.size());
     }
 
     var newId = repository.write(model);
