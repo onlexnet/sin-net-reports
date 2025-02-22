@@ -1,5 +1,7 @@
 package sinnet.grpc.customers;
 
+import static java.util.Optional.ofNullable;
+
 import sinnet.domain.model.ValEmail;
 import sinnet.models.CustomerContact;
 import sinnet.models.CustomerModel;
@@ -59,7 +61,7 @@ public interface MapperDbo {
    * TBD.
    */
   default CustomerModel fromDbo(CustomerRepository.CustomerDbo dbo) {
-    var id = ShardedId.of(dbo.getProjectId(), dbo.getEntityId(), dbo.getEntityVersion());
+    var id = ShardedId.of(dbo.getProjectId(), dbo.getEntityId(), ofNullable(dbo.getEntityVersion()).orElse(0L));
     var contacts = dbo.getContacts().stream().map(this::fromDbo).toList();
     var secrets = dbo.getSecrets().stream().map(this::fromDbo).toList();
     var secretsEx = dbo.getSecretsEx().stream().map(this::fromDbo).toList();
@@ -67,28 +69,28 @@ public interface MapperDbo {
         .operatorEmail(ValEmail.of(dbo.getOperatorEmail()))
         .billingModel(dbo.getBillingModel())
         .supportStatus(dbo.getSupportStatus())
-        .distance(dbo.getDistance())
+        .distance(ofNullable(dbo.getDistance()).orElse(0))
         .customerName(ValName.of(dbo.getCustomerName()))
         .customerCityName(ValName.of(dbo.getCustomerCityName()))
         .customerAddress(dbo.getCustomerAddress())
-        .nfzUmowa(dbo.getNfzUmowa())
-        .nfzMaFilie(dbo.getNfzMaFilie())
-        .nfzLekarz(dbo.getNfzLekarz())
-        .nfzPolozna(dbo.getNfzPolozna())
-        .nfzPielegniarkaSrodowiskowa(dbo.getNfzPielegniarkaSrodowiskowa())
-        .nfzMedycynaSzkolna(dbo.getNfzMedycynaSzkolna())
-        .nfzTransportSanitarny(dbo.getNfzTransportSanitarny())
-        .nfzNocnaPomocLekarska(dbo.getNfzNocnaPomocLekarska())
-        .nfzAmbulatoryjnaOpiekaSpecjalistyczna(dbo.getNfzAmbulatoryjnaOpiekaSpecjalistyczna())
-        .nfzRehabilitacja(dbo.getNfzRehabilitacja())
-        .nfzStomatologia(dbo.getNfzStomatologia())
-        .nfzPsychiatria(dbo.getNfzPsychiatria())
-        .nfzSzpitalnictwo(dbo.getNfzSzpitalnictwo())
-        .nfzProgramyProfilaktyczne(dbo.getNfzProgramyProfilaktyczne())
-        .nfzZaopatrzenieOrtopedyczne(dbo.getNfzZaopatrzenieOrtopedyczne())
-        .nfzOpiekaDlugoterminowa(dbo.getNfzOpiekaDlugoterminowa())
+        .nfzUmowa(ofNullable(dbo.getNfzUmowa()).orElse(false))
+        .nfzMaFilie(ofNullable(dbo.getNfzMaFilie()).orElse(false))
+        .nfzLekarz(ofNullable(dbo.getNfzLekarz()).orElse(false))
+        .nfzPolozna(ofNullable(dbo.getNfzPolozna()).orElse(false))
+        .nfzPielegniarkaSrodowiskowa(ofNullable(dbo.getNfzPielegniarkaSrodowiskowa()).orElse(false))
+        .nfzMedycynaSzkolna(ofNullable(dbo.getNfzMedycynaSzkolna()).orElse(false))
+        .nfzTransportSanitarny(ofNullable(dbo.getNfzTransportSanitarny()).orElse(false))
+        .nfzNocnaPomocLekarska(ofNullable(dbo.getNfzNocnaPomocLekarska()).orElse(false))
+        .nfzAmbulatoryjnaOpiekaSpecjalistyczna(ofNullable(dbo.getNfzAmbulatoryjnaOpiekaSpecjalistyczna()).orElse(false))
+        .nfzRehabilitacja(ofNullable(dbo.getNfzRehabilitacja()).orElse(false))
+        .nfzStomatologia(ofNullable(dbo.getNfzStomatologia()).orElse(false))
+        .nfzPsychiatria(ofNullable(dbo.getNfzPsychiatria()).orElse(false))
+        .nfzSzpitalnictwo(ofNullable(dbo.getNfzSzpitalnictwo()).orElse(false))
+        .nfzProgramyProfilaktyczne(ofNullable(dbo.getNfzProgramyProfilaktyczne()).orElse(false))
+        .nfzZaopatrzenieOrtopedyczne(ofNullable(dbo.getNfzZaopatrzenieOrtopedyczne()).orElse(false))
+        .nfzOpiekaDlugoterminowa(ofNullable(dbo.getNfzOpiekaDlugoterminowa()).orElse(false))
         .nfzNotatki(dbo.getNfzNotatki())
-        .komercjaJest(dbo.getKomercjaJest())
+        .komercjaJest(ofNullable(dbo.getKomercjaJest()).orElse(false))
         .komercjaNotatki(dbo.getKomercjaNotatki())
         .daneTechniczne(dbo.getDaneTechniczne());
     return new CustomerModel().setId(id).setValue(value).setContacts(contacts).setSecrets(secrets).setSecretsEx(secretsEx);
