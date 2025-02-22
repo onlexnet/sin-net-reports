@@ -23,34 +23,39 @@ import sinnet.grpc.timeentries.TimeEntriesGrpc.TimeEntriesBlockingStub;
 import sinnet.grpc.users.UsersGrpc;
 import sinnet.grpc.users.UsersGrpc.UsersBlockingStub;
 import sinnet.models.ValName;
-import sinnet.report1.grpc.Reports1;
 import sinnet.report1.grpc.ReportsGrpc.ReportsBlockingStub;
 
 @Component
 @RequiredArgsConstructor
 public class RpcApi implements ApplicationListener<ApplicationReadyEvent> {
 
-  ValName currentCustomer = ValName.empty();
-  ValName getCurrentCustomer(UseAlias alias) {
-    return switch(alias) {
-      case Alias it -> ValName.of(it.name());
-      case AsIs ignored -> { throw new IllegalStateException("Can't reuse empty operator"); }
+  private UseAlias currentCustomer = Current.INSTANCE;
+
+  public ValName getCurrentCustomer(UseAlias alias) {
+    var selected = switch(alias) {
+      case Alias it -> it;
+      case Current ignored -> switch (currentCustomer) {
+        case Current ignored2 -> { throw new IllegalStateException("Can't reuse empty Customer"); }
+        case Alias a -> a;
+      };
     };
+    currentCustomer = selected;
+    return ValName.of(selected.name());
   }
 
 
   sealed interface UseAlias {
 
-    static UseAlias asIs() {
-      return AsIs.INSTANCE;
+    static UseAlias current() {
+      return Current.INSTANCE;
     }
 
-    static UseAlias of(HasValue alias) {
+    static UseAlias of(ValName alias) {
       return new Alias(alias.getValue());
     }
   }
 
-  enum AsIs implements UseAlias {
+  enum Current implements UseAlias {
     INSTANCE
   }
 
@@ -58,45 +63,21 @@ public class RpcApi implements ApplicationListener<ApplicationReadyEvent> {
   }
 
 
-  sealed interface ApiRequestor {
-
-    static ApiRequestor of(ValName name) {
-      return new NameAlias(name.getValue());
-    }
-
-    static ApiRequestor of(UseAlias it) {
-      return switch (it) {
-        case AsIs i -> Continue.INSTANCE;
-        case Alias i -> new NameAlias(i.name());
-      };
-    }
-
-    static ApiRequestor asIs() {
-      return Continue.INSTANCE;
-    }
-  }
-
-  enum Continue implements ApiRequestor {
-    INSTANCE
-  }
-
-  record NameAlias(String alias) implements ApiRequestor { }
-  
-  private ApiRequestor currentOperator = Continue.INSTANCE;
-  ValName getCurrentOperator(ApiRequestor proposed) {
+  private UseAlias currentOperator = Current.INSTANCE;
+  ValName getCurrentOperator(UseAlias proposed) {
     var result = switch(proposed) {
-      case Continue ignored -> { 
-        if (currentOperator instanceof Continue) {
-          throw new IllegalStateException("Can't reuse empty operator");
-        }
-        yield currentOperator;
+      case Current ignored -> { 
+        yield switch(currentOperator) {
+          case Current ignored2 -> { throw new IllegalStateException("Can't reuse empty operator"); }
+          case Alias a -> a;
+        };
       }
-      case NameAlias it -> {
+      case Alias it -> {
         yield it;
       }
     };
     currentOperator = result;
-    return currentCustomer;
+    return ValName.of(result.name());
   }
 
   private final TestRestTemplate restTemplate;
@@ -105,13 +86,13 @@ public class RpcApi implements ApplicationListener<ApplicationReadyEvent> {
   private UsersBlockingStub users;
 
   private TimeEntriesBlockingStub timeentries;
-  public TimeEntriesBlockingStub getTimeentries(ApiRequestor requestor) {
+  public TimeEntriesBlockingStub getTimeentries(UseAlias requestor) {
     getCurrentOperator(requestor);
     return timeentries;
   }
 
   private CustomersBlockingStub customers;
-  public CustomersBlockingStub getCustomers(ApiRequestor requestor) {
+  public CustomersBlockingStub getCustomers(UseAlias requestor) {
     getCurrentOperator(requestor);
     return customers;
   }

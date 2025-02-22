@@ -24,6 +24,7 @@ public class CustomersStepDefinition {
   @When("{operatorAlias} creates a new customer named {customerAlias}")
   public void the_operator_creates_a_new_customer(ValName operatorAlias, ValName customerAlias) {
     testApi.reserveCustomer(ctx, operatorAlias, customerAlias);
+    testApi.updateReservedCustomer(ctx, customerAlias, new CustomerValue().setCustomerName(ValName.of("name: " + customerAlias.getValue())), List.of(), List.of());
   }
 
   @Then("{operatorAlias} is able to change the name of the Customer")
