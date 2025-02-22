@@ -3,6 +3,8 @@ package sinnet.grpc.customers;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 import org.springframework.stereotype.Component;
@@ -14,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import sinnet.domain.model.ValEmail;
 import sinnet.grpc.common.Mapper;
 import sinnet.grpc.mapping.RpcCommandHandlerBase;
+import sinnet.models.Clone;
 
 /**
  * TBD.
@@ -48,20 +51,10 @@ class CustomersRpcUpdateImpl extends RpcCommandHandlerBase<UpdateCommand, Update
       var secretsExtIn = model.getSecretsEx();
       log.info("Customer update, no of secrets: {}, no of secrets ext: {}", secretsIn.size(), secretsExtIn.size());
       var storedModel = repository.get(model.getId());
-
-      var secretsToUpdate = newIncomingSecrets(model.getSecrets(), storedModel.get().getSecrets());
-      for (var secret : secretsToUpdate) {
-        secret.setChangedWhen(now);
-        secret.setChangedWho(emailOfRequestor);
-      }
-
-      var secretsExToUpdate = newIncomingSecretsEx(model.getSecretsEx(), storedModel.get().getSecretsEx());
-      for (var secretEx : secretsExToUpdate) {
-        secretEx.setChangedWhen(now);
-        secretEx.setChangedWho(emailOfRequestor);
-      }
-
-      log.info("Customer update, no of new:  secrets: {}, secrets ext: {}", secretsToUpdate.size(), secretsExToUpdate.size());
+      var secrets = normalizeSecrets(model.getSecrets(), storedModel.get().getSecrets(), now, emailOfRequestor);
+      var secretsExt = normalizeSecretsExt(model.getSecretsEx(), storedModel.get().getSecretsEx(), now, emailOfRequestor);
+      model.setSecrets(secrets);
+      model.setSecretsEx(secretsExt);
     }
 
     var newId = repository.write(model);
@@ -72,28 +65,70 @@ class CustomersRpcUpdateImpl extends RpcCommandHandlerBase<UpdateCommand, Update
 
   interface EqComparer<T> { boolean equal(T t1, T t2); }
 
-  static List<sinnet.models.CustomerSecret> newIncomingSecrets(List<sinnet.models.CustomerSecret> incoming, List<sinnet.models.CustomerSecret> persisted) {
-    return newIncomingItems(incoming, persisted, CustomersRpcUpdateImpl::equalityComparer);
+  /**
+   * Produces valid list of secrets to be finally stored in DB.
+   * - it updates new secrets with new time and user
+   * - it updates unchanged secrets to its original time and user
+   *
+   * @param incoming - DTO secrets
+   * @param persisted - already in database
+   */
+  static List<sinnet.models.CustomerSecret> normalizeSecrets(List<sinnet.models.CustomerSecret> incoming,
+                                                             List<sinnet.models.CustomerSecret> persisted,
+                                                             java.time.LocalDateTime time,
+                                                             ValEmail requestor) {
+    return normalizeItems(incoming, persisted,
+      CustomersRpcUpdateImpl::equalityComparer,
+      Clone.INSTANCE::of,
+      it -> { 
+        it.setChangedWhen(time);
+        it.setChangedWho(requestor);
+      },
+      (o1, o2) -> {
+        o1.setChangedWhen(o2.getChangedWhen());
+        o1.setChangedWho(o2.getChangedWho());
+      });
   }
 
-  static List<sinnet.models.CustomerSecretEx> newIncomingSecretsEx(List<sinnet.models.CustomerSecretEx> incoming,
-                                                                   List<sinnet.models.CustomerSecretEx> persisted) {
-    return newIncomingItems(incoming, persisted, CustomersRpcUpdateImpl::equalityComparer);
+  static List<sinnet.models.CustomerSecretEx> normalizeSecretsExt(
+         List<sinnet.models.CustomerSecretEx> incoming,
+         List<sinnet.models.CustomerSecretEx> persisted,
+         java.time.LocalDateTime time, ValEmail requestor) {
+                                  
+    return normalizeItems(incoming, persisted,
+      CustomersRpcUpdateImpl::equalityComparer,
+      Clone.INSTANCE::of,
+      it -> {
+        it.setChangedWhen(time);
+        it.setChangedWho(requestor);
+      },
+      (o1, o2) -> {
+        o1.setChangedWhen(o2.getChangedWhen());
+        o1.setChangedWho(o2.getChangedWho());
+      });
   }
 
-  static <T> List<T> newIncomingItems(List<T> incoming, List<T> persisted, EqComparer<T> eqComparer) {
-    var incomingUnchanged = new ArrayList<T>();
-    var used = new ArrayList<>();
+  static <T> List<T> normalizeItems(List<T> incoming, List<T> persisted, 
+                                 EqComparer<T> eqComparer,
+                                 Function<T, T> clone,
+                                 Consumer<T> normalizeNewItem,
+                                 BiConsumer<T, T> normalizeExistingItem) {
+    var used = new ArrayList<T>();
+    var result = new ArrayList<T>();
 
-    for (var inc : incoming) {
-      var exists = persisted.stream().filter(it -> eqComparer.equal(inc, it) && !used.contains(it)).findAny();
-      if (exists.isPresent()) {
-        incomingUnchanged.add(inc);
-        used.add(exists);
+    for (var inc1 : incoming) {
+      var cloned = clone.apply(inc1);
+      var maybeExisting = persisted.stream().filter(it -> eqComparer.equal(cloned, it) && !used.contains(it)).findAny();
+      if (maybeExisting.isPresent()) {
+        var existing = maybeExisting.get();
+        normalizeExistingItem.accept(cloned, existing);
+        used.add(existing);
+      } else {
+        normalizeNewItem.accept(cloned);
       }
+      result.add(cloned);
     }
-
-    return incoming.stream().filter(it -> !incomingUnchanged.contains(it)).toList();
+    return result;
   }
 
   static <T, U> boolean fieldComparer(T o1, T o2, Function<T, U> getter) {
