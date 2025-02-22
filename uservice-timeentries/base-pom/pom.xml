@@ -16,6 +16,8 @@
     <dapr.version>1.7.0</dapr.version>
     <guava.version>32.0.0-jre</guava.version>
     <jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
+    <org.mapstruct.version>1.6.3</org.mapstruct.version>
+    <instancio-junit.version>5.3.0</instancio-junit.version>
   </properties>
 
   <dependencies>
@@ -116,6 +118,20 @@
           <artifactId>mssql-jdbc</artifactId>
           <version>12.2.0.jre11</version>
       </dependency>
+
+      <dependency>
+          <groupId>org.mapstruct</groupId>
+          <artifactId>mapstruct</artifactId>
+          <version>${org.mapstruct.version}</version>
+      </dependency>
+
+      <dependency>
+          <groupId>org.instancio</groupId>
+          <artifactId>instancio-junit</artifactId>
+          <version>${instancio-junit.version}</version>
+          <scope>test</scope>
+      </dependency>
+
     </dependencies>
   </dependencyManagement>
 
@@ -142,8 +158,6 @@
         <version>3.13.0</version>
         <configuration>
           <release>21</release>
-          <!-- https://stackoverflow.com/questions/46878649/maven-compilation-issue-with-java-9 -->
-          <forceJavacCompilerUse>true</forceJavacCompilerUse>
           <compilerArgs>
             <arg>-Werror</arg>
             <arg>-parameters</arg> <!-- so that @Param is not required in JPA -->
@@ -154,7 +168,11 @@
               <artifactId>lombok</artifactId>
               <version>1.18.32</version>
             </path>
-          </annotationProcessorPaths>
+                <path>
+                    <groupId>de.firehead</groupId>
+                    <artifactId>mapstruct-spi-protobuf</artifactId>
+                    <version>1.1.0</version>
+                </path>          </annotationProcessorPaths>
         </configuration>
       </plugin>
 
@@ -198,8 +216,11 @@
           </dependencies>
 
           <configuration>
+            <!--
+            Configuration elements: https://maven.apache.org/plugins/maven-checkstyle-plugin/check-mojo.html#inputEncoding
+            -->
             <configLocation>../.checkstyle/checkstyle.xml</configLocation>
-            <encoding>UTF-8</encoding>
+            <inputEncoding>UTF-8</inputEncoding>
             <consoleOutput>true</consoleOutput>
             <failsOnError>true</failsOnError>
             <excludes>**/gen/**/*</excludes>
