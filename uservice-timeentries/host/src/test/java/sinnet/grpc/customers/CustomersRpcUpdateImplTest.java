@@ -16,7 +16,7 @@ public class CustomersRpcUpdateImplTest {
 
       var incoming = List.of(secret1, secret2, secret3);
       var persisted = List.of(secret1, secret2, secret3);
-      var toChange = CustomersRpcUpdateImpl.newIncomingItems(incoming, persisted);
+      var toChange = CustomersRpcUpdateImpl.newIncomingSecrets(incoming, persisted);
       Assertions.assertThat(toChange).isEmpty();
     }
 
@@ -29,7 +29,7 @@ public class CustomersRpcUpdateImplTest {
       var secret2Updated = Instancio.create(sinnet.models.CustomerSecret.class);
       var incoming = List.of(secret1, secret2Updated, secret3);
       var persisted = List.of(secret1, secret2, secret3);
-      var toChange = CustomersRpcUpdateImpl.newIncomingItems(incoming, persisted);
+      var toChange = CustomersRpcUpdateImpl.newIncomingSecrets(incoming, persisted);
       Assertions.assertThat(toChange).containsExactly(secret2Updated);
     }
   }
