@@ -15,7 +15,7 @@ import sinnet.grpc.common.EntityId;
 import sinnet.models.ShardedId;
 import sinnet.models.ValName;
 
-/** CustomerModel maper DTO <-> domain. */
+/** CustomerModel maper DTO <-> PROTO. */
 @Mapper(
     collectionMappingStrategy = CollectionMappingStrategy.ADDER_PREFERRED,
     nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS,
