@@ -18,6 +18,7 @@
     <jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
     <instancio-junit5.version>5.4.0</instancio-junit5.version>
     <org.mapstruct.version>1.6.3</org.mapstruct.version>
+    <sonar-maven-plugin.version>3.7.0.1746</sonar-maven-plugin.version>
   </properties>
 
   <dependencies>
@@ -169,11 +170,12 @@
               <artifactId>lombok</artifactId>
               <version>1.18.32</version>
             </path>
-                <path>
-                    <groupId>de.firehead</groupId>
-                    <artifactId>mapstruct-spi-protobuf</artifactId>
-                    <version>1.1.0</version>
-                </path>          </annotationProcessorPaths>
+            <path>
+              <groupId>de.firehead</groupId>
+              <artifactId>mapstruct-spi-protobuf</artifactId>
+              <version>1.1.0</version>
+            </path>
+          </annotationProcessorPaths>
         </configuration>
       </plugin>
 
@@ -189,7 +191,7 @@
         <plugin>
           <groupId>org.sonarsource.scanner.maven</groupId>
           <artifactId>sonar-maven-plugin</artifactId>
-          <version>3.7.0.1746</version>
+          <version>${sonar-maven-plugin.version}</version>
         </plugin>
         <plugin>
           <groupId>org.jacoco</groupId>
