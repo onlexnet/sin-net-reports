@@ -11,8 +11,9 @@ public final class SqlServerDbRunner {
 
   private static final String TESTCONTAINERS = "testcontainers";
   private static final String DBPASSWORD = "A_Str0ng_Required_Password";
-  static JdbcDatabaseContainer database = new MSSQLServerContainer()
-      .acceptLicense();
+  static JdbcDatabaseContainer database = (JdbcDatabaseContainer) new MSSQLServerContainer()
+      .acceptLicense()
+      .withPrivilegedMode(true);
 
   /** Will be described. */
   public SafeAutoCloseable start() {

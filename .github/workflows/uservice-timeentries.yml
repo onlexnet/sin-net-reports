@@ -25,7 +25,9 @@ on:
 
 jobs:
   Build:
-    runs-on: ubuntu-22.04
+    # MSSQL tests fails on ubuntu-20.04
+    # https://github.com/actions/runner-images/issues/10649#issuecomment-2378502934
+    runs-on: ubuntu-20.04
 
     outputs:
       uservice_timeentries_image_name: ${{ steps.BuildDockerImage.outputs.image_name }}
@@ -100,7 +102,7 @@ jobs:
     name: Deploy to PRD01
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed' && github.event.ref == 'refs/heads/main')
     needs: [ Build ]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     environment: prd01
     steps:
       - name: Log in to Azure
