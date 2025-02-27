@@ -1,6 +1,5 @@
 package sinnet.features;
 
-import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -22,80 +21,23 @@ import sinnet.grpc.timeentries.TimeEntriesGrpc;
 import sinnet.grpc.timeentries.TimeEntriesGrpc.TimeEntriesBlockingStub;
 import sinnet.grpc.users.UsersGrpc;
 import sinnet.grpc.users.UsersGrpc.UsersBlockingStub;
-import sinnet.models.ValName;
+import sinnet.report1.grpc.Reports1;
 import sinnet.report1.grpc.ReportsGrpc.ReportsBlockingStub;
 
 @Component
 @RequiredArgsConstructor
 public class RpcApi implements ApplicationListener<ApplicationReadyEvent> {
-
-  private UseAlias currentCustomer = Current.INSTANCE;
-
-  public ValName getCurrentCustomer(UseAlias alias) {
-    var selected = switch(alias) {
-      case Alias it -> it;
-      case Current ignored -> switch (currentCustomer) {
-        case Current ignored2 -> { throw new IllegalStateException("Can't reuse empty Customer"); }
-        case Alias a -> a;
-      };
-    };
-    currentCustomer = selected;
-    return ValName.of(selected.name());
-  }
-
-
-  sealed interface UseAlias {
-
-    static UseAlias current() {
-      return Current.INSTANCE;
-    }
-
-    static UseAlias of(ValName alias) {
-      return new Alias(alias.getValue());
-    }
-  }
-
-  enum Current implements UseAlias {
-    INSTANCE
-  }
-
-  record Alias(String name) implements UseAlias {
-  }
-
-
-  private UseAlias currentOperator = Current.INSTANCE;
-  ValName getCurrentOperator(UseAlias proposed) {
-    var result = switch(proposed) {
-      case Current ignored -> { 
-        yield switch(currentOperator) {
-          case Current ignored2 -> { throw new IllegalStateException("Can't reuse empty operator"); }
-          case Alias a -> a;
-        };
-      }
-      case Alias it -> {
-        yield it;
-      }
-    };
-    currentOperator = result;
-    return ValName.of(result.name());
-  }
-
+  
   private final TestRestTemplate restTemplate;
 
   @Getter
   private UsersBlockingStub users;
 
+  @Getter
   private TimeEntriesBlockingStub timeentries;
-  public TimeEntriesBlockingStub getTimeentries(UseAlias requestor) {
-    getCurrentOperator(requestor);
-    return timeentries;
-  }
 
+  @Getter
   private CustomersBlockingStub customers;
-  public CustomersBlockingStub getCustomers(UseAlias requestor) {
-    getCurrentOperator(requestor);
-    return customers;
-  }
 
   @Getter
   private ProjectsBlockingStub projects;

@@ -4,10 +4,8 @@ import static sinnet.grpc.timeentries.ReserveCommand.newBuilder;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.IntStream;
 
 import org.assertj.core.api.Assertions;
-import org.instancio.Instancio;
 import org.springframework.stereotype.Component;
 
 import com.google.protobuf.ByteString;
@@ -16,11 +14,9 @@ import io.dapr.v1.DaprAppCallbackProtos.TopicEventRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import sinnet.events.AvroObjectSerializer;
-import sinnet.features.RpcApi.UseAlias;
 import sinnet.grpc.common.EntityId;
 import sinnet.grpc.common.UserToken;
 import sinnet.grpc.customers.CustomerModel;
-import sinnet.grpc.customers.CustomerModelMapper;
 import sinnet.grpc.customers.GetRequest;
 import sinnet.grpc.customers.ListRequest;
 import sinnet.grpc.customers.MapperDto;
@@ -37,23 +33,21 @@ import sinnet.models.ProjectId;
 import sinnet.models.ValName;
 import sinnet.project.events.ProjectCreatedEvent;
 
-/** Test api allows to invoke well-defined methods available in the system, and updates properly cntext related of the invoking client. */
 @RequiredArgsConstructor
 @Component
 public class TestApi {
 
-  public final RpcApi rpcApi;
+  private final RpcApi rpcApi;
 
   // we use the same deserializer as the whole ecosystem in ser / deser events.
   private final AvroObjectSerializer objectSerializer = new AvroObjectSerializer();
 
-  public void reserveCustomer(ClientContext ctx, ValName operatorAlias, ValName customerAlias) {
+  public void reserveCustomer(ClientContext ctx, ValName customerAlias) {
     var projectId = "00000000-0000-0000-0001-000000000001";
     var request = ReserveRequest.newBuilder()
         .setProjectId(projectId)
         .build();
-    var entityId = rpcApi.getCustomers(UseAlias.of(operatorAlias)).reserve(request).getEntityId();
-    rpcApi.getCurrentCustomer(UseAlias.of(customerAlias));
+    var entityId = rpcApi.getCustomers().reserve(request).getEntityId();
     
     ctx.on(new CustomerReservedAppEvent(customerAlias, entityId));
   }
@@ -71,50 +65,23 @@ public class TestApi {
           .addAllSecrets(secretsDto)
           .addAllSecretEx(secretsExtDto))
         .build();
-    var result = rpcApi.getCustomers(UseAlias.current()).update(cmd);
+    var result = rpcApi.getCustomers().update(cmd);
     var updatedId = result.getEntityId();
 
     ctx.on(new CustomerUpdatedAppEvent(customerAlias, id, updatedId, cmd));
   }
 
-  public void updateCustomer(ClientContext ctx, ValName customerAlias, sinnet.models.CustomerModel customer) {
-    var customerDto = CustomerModelMapper.INSTANCE.toDto(customer);
-    var id = customerDto.getId();
-    var cmd = UpdateCommand.newBuilder()
-      .setModel(customerDto).build();
-    var result = rpcApi.getCustomers(UseAlias.current()).update(cmd);
-    var updatedId = result.getEntityId();
-
-    ctx.on(new CustomerUpdatedAppEvent(customerAlias, id, updatedId, cmd));
-}
-
-  UserToken newUserToken(ClientContext ctx) {
-    var projectId = "00000000-0000-0000-0001-000000000001";
-    var operator = rpcApi.getCurrentOperator(UseAlias.current());
-    return UserToken.newBuilder()
-        .setProjectId(projectId)
-        .setRequestorEmail(operator.getValue())
-        .build();
-  }
-
-
-  sinnet.models.CustomerModel getCustomer(ClientContext ctx, UseAlias customer, UseAlias invokerOperator) {
-    var currentCustomer = rpcApi.getCurrentCustomer(customer);
-    var currentOperator = rpcApi.getCurrentOperator(invokerOperator);
-    return getCustomer(ctx, currentCustomer, currentOperator);
-  }
-
-  sinnet.models.CustomerModel getCustomer(ClientContext ctx, ValName customerAlias, ValName invoker) {
+  sinnet.models.CustomerModel getCustomer(ClientContext ctx, ValName customerAlias, ValName operatorAliasRequestor) {
     var id = ctx.reservedCustomer;
     var projectId = "00000000-0000-0000-0001-000000000001";
-    var operatorId = ctx.getOperatorId(invoker).value();
+    var operatorId = ctx.getOperatorId(operatorAliasRequestor).value();
     var query = GetRequest.newBuilder()
         .setEntityId(id)
         .setUserToken(UserToken.newBuilder()
           .setProjectId(projectId)
           .setRequestorEmail(operatorId))
         .build();
-    var result = rpcApi.getCustomers(UseAlias.of(invoker)).get(query);
+    var result = rpcApi.getCustomers().get(query);
     var customerModel = MapperDto.fromDto(result.getModel());
     return customerModel;
   }
@@ -160,26 +127,24 @@ public class TestApi {
     ctx.on(new OperatorAssignedAppEvent(operatorAlias, projectAlias));
   }
 
-  void createEntry(ClientContext ctx, UseAlias operatorAlias, ValName projectAlias) {
+  void createEntry(ClientContext ctx, ValName projectAlias, ValName operatorAlias) {
     var projectId = ctx.getProjectId(projectAlias);
-    var operatorName = rpcApi.getCurrentOperator(operatorAlias);
-    var operatorId = ctx.getOperatorId(operatorName);
+    var operatorId = ctx.known().users().get(operatorAlias);
     var invoker = UserToken.newBuilder()
         .setProjectId(projectId.getId().toString())
         .setRequestorEmail(operatorId.value());
     var when = ctx.todayAsDto;
-    var result = rpcApi.getTimeentries(operatorAlias).reserve(newBuilder()
+    var result = rpcApi.getTimeentries().reserve(newBuilder()
         .setInvoker(invoker)
         .setWhen(when)
         .build());
     var returnedId = result.getEntityId();
-
     ctx.newTimeentry(returnedId, when);
   }
 
   List<EntityId> listTimeentries(ClientContext ctx, ValName projectAlias, LocalDate singleDay) {
     var projectId = ctx.getProjectId(projectAlias);
-    var result = rpcApi.getTimeentries(UseAlias.current()).search(SearchQuery.newBuilder()
+    var result = rpcApi.getTimeentries().search(SearchQuery.newBuilder()
         .setFrom(singleDay)
         .setTo(singleDay)
         .setProjectId(projectId.getId().toString())
@@ -204,7 +169,7 @@ public class TestApi {
         .setProjectId(projectId)
         .setUserToken(UserToken.newBuilder().setProjectId(projectId).setRequestorEmail(operatorId))
         .build();
-    var response = rpcApi.getCustomers(UseAlias.of(operatorAlias)).list(req);
+    var response = rpcApi.getCustomers().list(req);
     var foundElements = response.getCustomersList().stream()
         .filter(it -> it.getValue().getCustomerName().equals(customerName))
         .count();
@@ -221,7 +186,7 @@ public class TestApi {
         .setProjectId(projectId)
         .setUserToken(UserToken.newBuilder().setProjectId(projectId).setRequestorEmail(operatorId))
         .build();
-    var response = rpcApi.getCustomers(UseAlias.of(operatorAlias)).list(req);
+    var response = rpcApi.getCustomers().list(req);
     return response.getCustomersList().stream().map(it -> it.getValue().getCustomerName()).toList();
   }
 
@@ -231,22 +196,6 @@ public class TestApi {
         .build();
     var response = rpcApi.getProjects().list(request);
     return response.getProjectsCount();
-  }
-
-  /**
-   * Adds secrets to lastly updated customer
-   * @param ctx
-   */
-  public void addSecretToUpdatedCustomer(ClientContext ctx, int numberOfSecrets) {
-    var customerAlias = rpcApi.getCurrentCustomer(UseAlias.current());
-    var idModelDto = ctx.known().customers().get(customerAlias);
-    var modelDto = idModelDto._2;
-    var asDomain = CustomerModelMapper.INSTANCE.fromDto(modelDto);
-    IntStream.range(0, numberOfSecrets).forEach(ignored -> {
-      var newSecret = Instancio.create(CustomerSecret.class);
-      asDomain.getSecrets().add(newSecret);
-    });
-    updateCustomer(ctx, customerAlias, asDomain);
   }
 }
 
