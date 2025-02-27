@@ -14,9 +14,4 @@ public class ParameterTypes {
   public ValName operatorAlias(String value) {
     return ValName.of(value);
   }
-
-  @ParameterType(".+")
-  public ValName customerAlias(String value) {
-    return ValName.of(value);
-  }
 }

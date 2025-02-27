@@ -8,12 +8,12 @@ import sinnet.domain.model.ValEmail;
  * TBD.
  */
 @Data
-@Accessors(chain = true)
+@Accessors(chain = true, fluent = true)
 public final class CustomerValue {
-  private ValEmail operatorEmail = ValEmail.empty();
+  private ValEmail operatorEmail;
   private String billingModel;
   private String supportStatus;
-  private int distance;
+  private Integer distance;
   private ValName customerName = ValName.empty();
   private ValName customerCityName = ValName.empty();
   private String customerAddress;
