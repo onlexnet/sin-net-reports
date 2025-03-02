@@ -10,14 +10,14 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 class CustomersRpcListImpl implements CustomersRpcList {
 
-  private final CustomerRepository repository;
+  private final CustomerJdbcRepository repository;
   
   @Override
   public ListReply apply(ListRequest request) {
     var projectId = UUID.fromString(request.getProjectId());
 
     var result = repository.findByProjectId(projectId);
-    var response = result.stream().map(CustomerMapper.INSTANCE::fromDbo2).map(MapperDto::toDto).toList();
+    var response = result.stream().map(CustomerMapper.INSTANCE::fromDbo1).map(MapperDto::toDto).toList();
 
     return ListReply.newBuilder()
         .addAllCustomers(response)
