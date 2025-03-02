@@ -114,7 +114,6 @@ public class ClientContext {
 
   private void onAppEvent(ProjectCreatedAppEvent event) {
     known.projects().put(event.projectAlias(), event.projectId());
-    currentProject = event.projectAlias();
   }
 
   class Build implements EventConsumer {

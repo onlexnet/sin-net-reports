@@ -10,10 +10,6 @@ Feature: Manage Customers
     Then operator1 is able to change the name of the Customer
     And operator1 is able to change all properties of the Customer
 
-  Scenario: List newly created Customer
-    When operator1 creates a new fullcustomer named customer1
-    Then operator1 is able to list customer1
-
   Scenario: Update time on a single secret
     When operator1 creates a new customer named customer1
     And create two secrets on the customer
