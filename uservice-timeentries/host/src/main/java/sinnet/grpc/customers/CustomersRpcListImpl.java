@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
-class CustomersRpcListImpl implements CustomersRpcList, MapperDbo {
+class CustomersRpcListImpl implements CustomersRpcList {
 
   private final CustomerRepository repository;
   
@@ -17,7 +17,7 @@ class CustomersRpcListImpl implements CustomersRpcList, MapperDbo {
     var projectId = UUID.fromString(request.getProjectId());
 
     var result = repository.findByProjectId(projectId);
-    var response = result.stream().map(this::fromDbo).map(MapperDto::toDto).toList();
+    var response = result.stream().map(CustomerMapper.INSTANCE::fromDbo2).map(MapperDto::toDto).toList();
 
     return ListReply.newBuilder()
         .addAllCustomers(response)

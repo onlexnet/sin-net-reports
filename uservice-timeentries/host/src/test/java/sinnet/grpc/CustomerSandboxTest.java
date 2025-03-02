@@ -1,8 +1,13 @@
 package sinnet.grpc;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.Comparator;
 import java.util.UUID;
 
 import org.assertj.core.api.Assertions;
+import org.instancio.Instancio;
+import org.instancio.Select;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
@@ -15,16 +20,23 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.persistence.EntityManager;
+import lombok.extern.slf4j.Slf4j;
 import sinnet.db.SqlServerDbExtension;
 import sinnet.features.ClientContext;
 import sinnet.features.TestApi;
+import sinnet.grpc.customers.CustomerMapper;
 import sinnet.grpc.customers.CustomerRepository;
+import sinnet.grpc.customers.LogAssert;
+import sinnet.models.CustomerModel;
+import sinnet.models.ShardedId;
+import sinnet.models.ValName;
 
 // PLayground for manual testing and observe SQL in logs
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 @ExtendWith(SqlServerDbExtension.class)
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
+@Slf4j
 public class CustomerSandboxTest {
 
   @Nested
@@ -87,6 +99,56 @@ public class CustomerSandboxTest {
       Assertions.assertThat(items).isNotNull();
     }
 
+    @Autowired
+    CustomerRepository customerRepository;
+
+    @Test
+    @Transactional
+    void shouldPersistAndReadCustomer() {
+
+      var expected = Instancio.of(CustomerModel.class)
+          .supply(Select.all(LocalDateTime.class), gen -> LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS))
+          .create();
+      var customerName = UUID.randomUUID().toString();
+      expected.getValue().setCustomerName(ValName.of(customerName));
+      expected.setId(ShardedId.of(projectId, expected.getId().getId(), 0));
+      var expectedDbo = CustomerMapper.INSTANCE.toJpaDbo(expected);
+
+      var logObserver = LogAssert.ofHibernate();
+      int expectedSelects = 0;
+
+      customerRepository.saveAndFlush(expectedDbo);
+      expectedSelects++;
+
+      var customers = customerRepository.findByProjectId(projectId);
+      expectedSelects++;
+      var maybeActual = customers.stream().filter(it -> it.getCustomerName().equals(customerName)).findFirst();
+      Assertions.assertThat(maybeActual).isNotEmpty();
+
+      // revert version to 0 as actual has already 1 after saving
+      var actualDbo = maybeActual.get();
+      actualDbo.setEntityVersion(0L);
+
+      var actual = CustomerMapper.INSTANCE.fromDbo2(actualDbo);
+      
+      // as data is unsorted, we have to sort it for comparison
+      sortItems(actual);
+      sortItems(expected);
+      Assertions.assertThat(actual).isEqualTo(expected);
+
+      LogAssert.assertThat(logObserver)
+        .as("Number of observed SELECTs should bas as expected")
+        .selectOperationsSizeIs(expectedSelects);
+      
+      Assertions.assertThat(customers.size()).isGreaterThan(0);
+    }
+
+  }
+
+  public static void sortItems(CustomerModel dbo) {
+    dbo.getContacts().sort(Comparator.comparing(a -> a.getEmail(), String.CASE_INSENSITIVE_ORDER));
+    dbo.getSecrets().sort(Comparator.comparing(a -> a.getUsername(), String.CASE_INSENSITIVE_ORDER));
+    dbo.getSecretsEx().sort(Comparator.comparing(a -> a.getUsername(), String.CASE_INSENSITIVE_ORDER));
   }
 
 }
