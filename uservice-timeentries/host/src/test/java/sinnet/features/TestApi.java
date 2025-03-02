@@ -30,7 +30,6 @@ import sinnet.grpc.projects.generated.CreateRequest;
 import sinnet.grpc.timeentries.LocalDate;
 import sinnet.grpc.timeentries.SearchQuery;
 import sinnet.grpc.users.IncludeOperatorCommand;
-import sinnet.models.CustomerContact;
 import sinnet.models.CustomerSecret;
 import sinnet.models.CustomerSecretEx;
 import sinnet.models.CustomerValue;
@@ -60,24 +59,15 @@ public class TestApi {
   }
 
   public void updateReservedCustomer(ClientContext ctx, ValName customerAlias, CustomerValue customerValue,
-  List<CustomerSecret> secrets,
-  List<CustomerSecretEx> secretsExt) {
-    updateReservedCustomer(ctx, customerAlias, customerValue, List.of(), secrets, secretsExt);
-  }
-
-  public void updateReservedCustomer(ClientContext ctx, ValName customerAlias, CustomerValue customerValue,
-    List<CustomerContact> contacts,
     List<CustomerSecret> secrets,
     List<CustomerSecretEx> secretsExt) {
     var id = ctx.reservedCustomer;
     var secretsDto = secrets.stream().map(it -> MapperDto.toDto(it)).toList();
     var secretsExtDto = secretsExt.stream().map(it -> MapperDto.toDto(it)).toList();
-    var contactsDto = CustomerModelMapper.INSTANCE.toDtoContacts(contacts);
     var cmd = UpdateCommand.newBuilder()
         .setModel(CustomerModel.newBuilder()
           .setId(id)
           .setValue(MapperDto.toDto(customerValue))
-          .addAllContacts(contactsDto)
           .addAllSecrets(secretsDto)
           .addAllSecretEx(secretsExtDto))
         .build();
@@ -233,17 +223,6 @@ public class TestApi {
         .build();
     var response = rpcApi.getCustomers(UseAlias.of(operatorAlias)).list(req);
     return response.getCustomersList().stream().map(it -> it.getValue().getCustomerName()).toList();
-  }
-
-  public List<CustomerModel> getAllCustomersData(ClientContext ctx, ValName operatorAlias) {
-    var operatorId = ctx.getOperatorId(operatorAlias).value();
-    var projectId = "00000000-0000-0000-0001-000000000001";
-    var req = ListRequest.newBuilder()
-        .setProjectId(projectId)
-        .setUserToken(UserToken.newBuilder().setProjectId(projectId).setRequestorEmail(operatorId))
-        .build();
-    var response = rpcApi.getCustomers(UseAlias.of(operatorAlias)).list(req);
-    return response.getCustomersList();
   }
 
   public int numberOfProjects(ValName operatorAlias) {

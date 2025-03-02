@@ -1,19 +1,13 @@
 package sinnet.features;
 
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
-import org.instancio.Instancio;
-import org.instancio.Select;
 
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import lombok.RequiredArgsConstructor;
-import sinnet.grpc.CustomerSandboxTest;
-import sinnet.grpc.customers.CustomerModelMapper;
-import sinnet.models.CustomerModel;
 import sinnet.models.CustomerSecret;
 import sinnet.models.CustomerSecretEx;
 import sinnet.models.CustomerValue;
@@ -74,37 +68,4 @@ public class CustomersStepDefinition {
 
   }
 
-  @When("{operatorAlias} creates a new fullcustomer named {customerAlias}")
-  public void operator1_creates_a_new_fullcustomer_named_customer1(ValName operatorAlias, ValName customerAlias) {
-      var customer = Instancio.of(CustomerModel.class)
-          .generate(Select.all(LocalDateTime.class), gen -> gen.temporal().localDateTime().future().truncatedTo(ChronoUnit.SECONDS))
-          .create();
-      testApi.reserveCustomer(ctx, operatorAlias, customerAlias);
-      testApi.updateReservedCustomer(ctx, customerAlias, customer.getValue(), customer.getContacts(), customer.getSecrets(), customer.getSecretsEx());
-  }
-
-  @Then("{operatorAlias} is able to list {customerAlias}")
-  public void operator1_is_able_to_list_customer1(ValName operatorAlias, ValName customerAlias) {
-    var expectedDto = ctx.known().customers().get(customerAlias)._2;
-    var expected = CustomerModelMapper.INSTANCE.fromDto(expectedDto);
-
-    var customersInDb = testApi.getAllCustomersData(ctx, operatorAlias);
-    var customerInDb = customersInDb.stream().filter(it -> it.getValue().getCustomerName().equals(expected.getValue().getCustomerName().getValue())).findFirst().get();
-    var actual = CustomerModelMapper.INSTANCE.fromDto(customerInDb);
-
-    actual.setId(expected.getId());
-    CustomerSandboxTest.sortItems(actual);
-    CustomerSandboxTest.sortItems(expected);
-
-    for (int i = 0; i < expected.getSecrets().size(); i++) {
-      expected.getSecrets().get(i).setChangedWhen(actual.getSecrets().get(i).getChangedWhen());
-      expected.getSecrets().get(i).setChangedWho(actual.getSecrets().get(i).getChangedWho());
-    }
-    for (int i = 0; i < expected.getSecretsEx().size(); i++) {
-      expected.getSecretsEx().get(i).setChangedWhen(actual.getSecretsEx().get(i).getChangedWhen());
-      expected.getSecretsEx().get(i).setChangedWho(actual.getSecretsEx().get(i).getChangedWho());
-    }
-
-    Assertions.assertThat(actual).isEqualTo(expected);
-  }
 }

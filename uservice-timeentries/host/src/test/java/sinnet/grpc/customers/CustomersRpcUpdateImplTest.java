@@ -1,5 +1,6 @@
 package sinnet.grpc.customers;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -10,9 +11,12 @@ import org.instancio.Instancio;
 import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import sinnet.domain.model.ValEmail;
 import sinnet.models.Clone;
+import sinnet.models.ValName;
 
 public class CustomersRpcUpdateImplTest {
 
