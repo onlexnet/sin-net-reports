@@ -1,6 +1,7 @@
 package sinnet.grpc.customers;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import org.mapstruct.CollectionMappingStrategy;
@@ -74,5 +75,9 @@ public interface CustomerModelMapper {
   @Mapping(target = "entityId", source = "id")
   @Mapping(target = "entityVersion", source = "version")
   EntityId toDto(ShardedId source);
+
+  @Mapping(target = "secretEx", source = "secretsEx")
+  List<sinnet.grpc.customers.CustomerContact> toDtoContacts(List<sinnet.models.CustomerContact> model);
+
 }
  
