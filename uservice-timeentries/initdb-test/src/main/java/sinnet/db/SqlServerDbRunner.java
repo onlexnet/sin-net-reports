@@ -9,14 +9,12 @@ import org.testcontainers.containers.MSSQLServerContainer;
 /** Will be described. */
 public final class SqlServerDbRunner {
 
-  private static final String TESTCONTAINERS = "testcontainers";
-  private static final String DBPASSWORD = "A_Str0ng_Required_Password";
-  static JdbcDatabaseContainer database = (JdbcDatabaseContainer) new MSSQLServerContainer()
-      .acceptLicense()
-      .withPrivilegedMode(true);
+  static JdbcDatabaseContainer<?> database = new MSSQLServerContainer<>("mcr.microsoft.com/mssql/server:2022-CU17-ubuntu-22.04")
+      .acceptLicense();
 
   /** Will be described. */
   public SafeAutoCloseable start() {
+
     database.start();
     var items = List.of(
         setProperty("DATABASE_HOST", "127.0.0.1"),

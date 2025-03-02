@@ -25,9 +25,7 @@ on:
 
 jobs:
   Build:
-    # MSSQL tests fails on ubuntu-20.04
-    # https://github.com/actions/runner-images/issues/10649#issuecomment-2378502934
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
 
     outputs:
       uservice_timeentries_image_name: ${{ steps.BuildDockerImage.outputs.image_name }}
