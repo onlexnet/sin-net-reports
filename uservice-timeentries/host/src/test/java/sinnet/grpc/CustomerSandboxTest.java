@@ -24,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 import sinnet.db.SqlServerDbExtension;
 import sinnet.features.ClientContext;
 import sinnet.features.TestApi;
+import sinnet.grpc.customers.CustomerJdbcRepository;
 import sinnet.grpc.customers.CustomerMapper;
 import sinnet.grpc.customers.CustomerRepository;
 import sinnet.grpc.customers.LogAssert;
@@ -102,6 +103,9 @@ public class CustomerSandboxTest {
     @Autowired
     CustomerRepository customerRepository;
 
+    @Autowired
+    CustomerJdbcRepository customerJdbcRepository;
+
     @Test
     @Transactional
     void shouldPersistAndReadCustomer() {
@@ -120,7 +124,7 @@ public class CustomerSandboxTest {
       customerRepository.saveAndFlush(expectedDbo);
       expectedSelects++;
 
-      var customers = customerRepository.findByProjectId(projectId);
+      var customers = customerJdbcRepository.findByProjectId(projectId);
       expectedSelects++;
       var maybeActual = customers.stream().filter(it -> it.getCustomerName().equals(customerName)).findFirst();
       Assertions.assertThat(maybeActual).isNotEmpty();
@@ -129,7 +133,7 @@ public class CustomerSandboxTest {
       var actualDbo = maybeActual.get();
       actualDbo.setEntityVersion(0L);
 
-      var actual = CustomerMapper.INSTANCE.fromDbo2(actualDbo);
+      var actual = CustomerMapper.INSTANCE.fromDbo1(actualDbo);
       
       // as data is unsorted, we have to sort it for comparison
       sortItems(actual);
