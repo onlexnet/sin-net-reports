@@ -4,10 +4,7 @@ import static io.restassured.RestAssured.given;
 
 import java.net.URI;
 
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +18,6 @@ import sinnet.db.SqlServerDbExtension;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 @ExtendWith(SqlServerDbExtension.class)
-@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class ActuatorTests {
 
   @Autowired
@@ -35,12 +31,19 @@ class ActuatorTests {
   }
 
   @Test
-  public void getHealth() {
+  public void shouldBeLive() {
     given()
-        .when().get("/actuator/health")
+        .when().get("/healtz")
         .then()
-        .statusCode(200)
-        .body("components.livenessState.status", Matchers.equalTo("UP"));
+        .statusCode(200);
+  }
+
+  @Test
+  public void shouldBeReady() {
+    given()
+        .when().get("/readyz")
+        .then()
+        .statusCode(200);
   }
 
 }
