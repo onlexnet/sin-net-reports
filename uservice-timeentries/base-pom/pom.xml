@@ -20,6 +20,8 @@
     <sonar-maven-plugin.version>3.7.0.1746</sonar-maven-plugin.version>
     <testcontainers.version>1.20.5</testcontainers.version>
     <commons-io.version>2.7</commons-io.version>
+    <spring-boot.version>3.3.3</spring-boot.version>
+    <testcontainers.version>1.20.5</testcontainers.version>
 
     <aggregate.report.dir>report-aggregate/target/site/jacoco-aggregate/jacoco.xml</aggregate.report.dir>
   </properties>
@@ -94,6 +96,28 @@
         <groupId>onlexnet.sinnet</groupId>
         <artifactId>uservice-timeentries-initdb-migrate</artifactId>
         <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-dependencies</artifactId>
+        <version>${spring-boot.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+        <exclusions>
+          <exclusion>
+            <groupId>org.junit.vintage</groupId>
+            <artifactId>junit-vintage-engine</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+  
+      <dependency>
+        <groupId>org.testcontainers</groupId>
+        <artifactId>testcontainers-bom</artifactId>
+        <version>${testcontainers.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
       </dependency>
 
       <dependency>
