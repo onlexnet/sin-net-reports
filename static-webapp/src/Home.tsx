@@ -1,6 +1,6 @@
 import React from "react";
-import packageJson from '../package.json';
 import { Col, Row } from "antd";
+import { getDisplayVersion } from './app/configuration/BuildInfo';
 
 
 export const Home: React.FC<{}> = (props) => {
@@ -10,7 +10,7 @@ export const Home: React.FC<{}> = (props) => {
                 <h1>Witaj w systemie ewidencji usług.</h1>
             </Col>
             <Col span={24}>
-                <p>version: {packageJson.version}</p>
+                <p>version: {getDisplayVersion()}</p>
             </Col>
         </Row>
     )
