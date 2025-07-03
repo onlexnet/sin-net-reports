@@ -39,8 +39,19 @@ jobs:
         with:
           node-version: '22.12.0'
 
+      - name: Generate BUILD_VERSION
+        id: build_version
+        run: |
+          BUILD_DATE=$(date +%Y%m%d)
+          BUILD_SHA=${GITHUB_SHA:0:7}
+          BUILD_VERSION="${BUILD_DATE}-${BUILD_SHA}"
+          echo "BUILD_VERSION=${BUILD_VERSION}" >> $GITHUB_OUTPUT
+          echo "Generated BUILD_VERSION: ${BUILD_VERSION}"
+
       - name: Build and run dev container task
         working-directory: static-webapp
+        env:
+          REACT_APP_BUILD_VERSION: ${{ steps.build_version.outputs.BUILD_VERSION }}
         run: |
             export MY_VERSION=$(cat .version)
             npm config set allow-same-version true
