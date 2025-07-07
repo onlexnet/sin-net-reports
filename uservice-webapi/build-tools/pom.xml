@@ -1,0 +1,6 @@
+<project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>onlexnet.sinnet</groupId>
+  <version>${revision}</version>
+  <artifactId>webapi-build-tools</artifactId>
+</project>
