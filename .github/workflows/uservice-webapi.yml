@@ -34,7 +34,6 @@ jobs:
 
       - uses: actions/checkout@v4
         with:
-          path: checkout # default one is same as repository name so I would like to see 'checkout' to understood dirs structure
           submodules: recursive
           fetch-depth: 0
 
