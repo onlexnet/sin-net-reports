@@ -10,11 +10,16 @@ on:
   # Allow manual triggering for testing
   workflow_dispatch:
 
+# Set concurrency to prevent multiple runs
+concurrency:
+  group: "cyclic-build"
+  cancel-in-progress: false
+
 jobs:
   build-java-components:
     name: Build Java Components
     runs-on: ubuntu-24.04
-    
+
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -49,31 +54,35 @@ jobs:
           pushd .
           cd host/src/main/resources/applicationinsights
           export APPLICATIONINSIGHTS_AGENT_VERSION=3.7.0
-          wget --no-verbose https://github.com/microsoft/ApplicationInsights-Java/releases/download/${APPLICATIONINSIGHTS_AGENT_VERSION}/applicationinsights-agent-${APPLICATIONINSIGHTS_AGENT_VERSION}.jar
-          mv applicationinsights-agent-${APPLICATIONINSIGHTS_AGENT_VERSION}.jar applicationinsights-agent.jar
+          wget --no-verbose \
+            https://github.com/microsoft/ApplicationInsights-Java/releases/download/${APPLICATIONINSIGHTS_AGENT_VERSION}/applicationinsights-agent-${APPLICATIONINSIGHTS_AGENT_VERSION}.jar
+          mv applicationinsights-agent-${APPLICATIONINSIGHTS_AGENT_VERSION}.jar \
+            applicationinsights-agent.jar
           popd
-          
+
           export SEMVERSION=$(cat .version || echo "1.0.0-SNAPSHOT")
           mvn -ntp clean install -pl host -am
 
-      - name: Build WebAPI Service  
+      - name: Build WebAPI Service
         working-directory: uservice-webapi
         run: |
           # Download ApplicationInsights agent for build validation
           pushd .
           cd host/src/main/resources/applicationinsights
           export APPLICATIONINSIGHTS_AGENT_VERSION=3.7.0
-          wget --no-verbose https://github.com/microsoft/ApplicationInsights-Java/releases/download/${APPLICATIONINSIGHTS_AGENT_VERSION}/applicationinsights-agent-${APPLICATIONINSIGHTS_AGENT_VERSION}.jar
-          mv applicationinsights-agent-${APPLICATIONINSIGHTS_AGENT_VERSION}.jar applicationinsights-agent.jar
+          wget --no-verbose \
+            https://github.com/microsoft/ApplicationInsights-Java/releases/download/${APPLICATIONINSIGHTS_AGENT_VERSION}/applicationinsights-agent-${APPLICATIONINSIGHTS_AGENT_VERSION}.jar
+          mv applicationinsights-agent-${APPLICATIONINSIGHTS_AGENT_VERSION}.jar \
+            applicationinsights-agent.jar
           popd
-          
+
           export SEMVERSION=$(cat .semversion || echo "1.0.0-SNAPSHOT")
           mvn -ntp clean install -Drevision=$SEMVERSION
 
   build-static-webapp:
     name: Build Static WebApp
     runs-on: ubuntu-22.04
-    
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -110,7 +119,7 @@ jobs:
   check-dependencies:
     name: Check Dependencies
     runs-on: ubuntu-24.04
-    
+
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -143,4 +152,9 @@ jobs:
       - name: Check for dependency updates in webapi
         run: mvn versions:display-dependency-updates -ntp
         working-directory: uservice-webapi
+        continue-on-error: true
+
+      - name: Check for plugin updates in libs-java
+        run: mvn versions:display-plugin-updates -ntp
+        working-directory: libs-java
         continue-on-error: true
