@@ -1,0 +1,160 @@
+name: Cyclic Build (No Deployment)
+
+# This workflow runs periodic builds to detect dependency-related build failures
+# without performing any deployments. It helps catch issues early.
+
+on:
+  # Run every day at 02:00 UTC to avoid peak hours
+  schedule:
+    - cron: '0 2 * * *'
+  # Allow manual triggering for testing
+  workflow_dispatch:
+
+# Set concurrency to prevent multiple runs
+concurrency:
+  group: "cyclic-build"
+  cancel-in-progress: false
+
+jobs:
+  build-java-components:
+    name: Build Java Components
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'zulu'
+          cache: maven
+
+      - name: Cache Maven dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Build gRPC API Client Java
+        run: mvn -ntp clean install
+        working-directory: api/client-java
+
+      - name: Build Java Libraries
+        run: mvn -ntp clean install
+        working-directory: libs-java
+
+      - name: Build Timeentries Service
+        working-directory: uservice-timeentries
+        run: |
+          # Download ApplicationInsights agent for build validation
+          pushd .
+          cd host/src/main/resources/applicationinsights
+          export APPLICATIONINSIGHTS_AGENT_VERSION=3.7.0
+          wget --no-verbose \
+            https://github.com/microsoft/ApplicationInsights-Java/releases/download/${APPLICATIONINSIGHTS_AGENT_VERSION}/applicationinsights-agent-${APPLICATIONINSIGHTS_AGENT_VERSION}.jar
+          mv applicationinsights-agent-${APPLICATIONINSIGHTS_AGENT_VERSION}.jar \
+            applicationinsights-agent.jar
+          popd
+
+          export SEMVERSION=$(cat .version || echo "1.0.0-SNAPSHOT")
+          mvn -ntp clean install -pl host -am
+
+      - name: Build WebAPI Service
+        working-directory: uservice-webapi
+        run: |
+          # Download ApplicationInsights agent for build validation
+          pushd .
+          cd host/src/main/resources/applicationinsights
+          export APPLICATIONINSIGHTS_AGENT_VERSION=3.7.0
+          wget --no-verbose \
+            https://github.com/microsoft/ApplicationInsights-Java/releases/download/${APPLICATIONINSIGHTS_AGENT_VERSION}/applicationinsights-agent-${APPLICATIONINSIGHTS_AGENT_VERSION}.jar
+          mv applicationinsights-agent-${APPLICATIONINSIGHTS_AGENT_VERSION}.jar \
+            applicationinsights-agent.jar
+          popd
+
+          export SEMVERSION=$(cat .semversion || echo "1.0.0-SNAPSHOT")
+          mvn -ntp clean install -Drevision=$SEMVERSION
+
+  build-static-webapp:
+    name: Build Static WebApp
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 22.12.0
+        uses: actions/setup-node@v3
+        with:
+          node-version: '22.12.0'
+          cache: 'npm'
+          cache-dependency-path: static-webapp/package-lock.json
+
+      - name: Generate BUILD_VERSION
+        id: build_version
+        run: |
+          BUILD_DATE=$(date +%Y%m%d)
+          BUILD_SHA=${GITHUB_SHA:0:7}
+          BUILD_VERSION="${BUILD_DATE}-${BUILD_SHA}"
+          echo "BUILD_VERSION=${BUILD_VERSION}" >> $GITHUB_OUTPUT
+          echo "Generated BUILD_VERSION: ${BUILD_VERSION}"
+
+      - name: Build Static WebApp
+        working-directory: static-webapp
+        env:
+          REACT_APP_BUILD_VERSION: ${{ steps.build_version.outputs.BUILD_VERSION }}
+        run: |
+          export MY_VERSION=$(cat .version || echo "1.0.0")
+          npm config set allow-same-version true
+          npm version $MY_VERSION
+          npm install
+          npm run generate
+          npm run build
+
+  # Optional: Run dependency vulnerability checks
+  check-dependencies:
+    name: Check Dependencies
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'zulu'
+          cache: maven
+
+      - name: Cache Maven dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Check for dependency updates in libs-java
+        run: mvn versions:display-dependency-updates -ntp
+        working-directory: libs-java
+        continue-on-error: true
+
+      - name: Check for dependency updates in timeentries
+        run: mvn versions:display-dependency-updates -ntp
+        working-directory: uservice-timeentries
+        continue-on-error: true
+
+      - name: Check for dependency updates in webapi
+        run: mvn versions:display-dependency-updates -ntp
+        working-directory: uservice-webapi
+        continue-on-error: true
+
+      - name: Check for plugin updates in libs-java
+        run: mvn versions:display-plugin-updates -ntp
+        working-directory: libs-java
+        continue-on-error: true
