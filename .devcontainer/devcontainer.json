@@ -9,6 +9,8 @@
 		},
 		"ghcr.io/devcontainers/features/java:1": {
 			"installMaven": true,
+			"installGradle": false,
+			"installAnt": false,
 			"version": "21.0.7.crac",
 			"jdkDistro": "librca",
 			"mavenVersion": "3.9.9"
