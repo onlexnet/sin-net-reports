@@ -9,7 +9,7 @@
   <packaging>pom</packaging>
 
   <properties>
-    <grpc.version>1.53.0</grpc.version>
+    <grpc.version>1.54.2</grpc.version>
 
     <!--
       Disable warning
