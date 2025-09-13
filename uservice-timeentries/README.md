@@ -6,10 +6,25 @@ We support some profiles in backend code to allow run them with different config
 - prod - ready for deployment, mssql database
 
 ## build project
+
+### Simple one-command build (recommended)
+```bash
+./build.sh
+```
+This script automatically builds all required dependencies (api/client-java and libs-java) before building this service. Tests are skipped by default as they require external services.
+
+To run with tests:
+```bash
+./build.sh -Dtest=SomeSpecificTest  # Run specific test
+# or pass any other Maven arguments
+```
+
+### Manual build (legacy)
+If you prefer to build dependencies manually:
 ```bash
 mvn -f ../api/client-java install -ntp
 mvn -f ../libs-java install -ntp
-mvn clean install -ntp
+mvn clean install -ntp -DskipTests
 ```
 
 ## Good development practices
