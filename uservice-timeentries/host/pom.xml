@@ -10,7 +10,33 @@
   <artifactId>uservice-timeentries-host</artifactId>
 
   <properties>
+    <!-- Sonar properties -> https://docs.sonarqube.org/latest/analysis/analysis-parameters/ -->
+    <sonar.organization>onlexnet</sonar.organization>
+    <sonar.projectKey>sin-net-reports-timeentries</sonar.projectKey>
+    <sonar.projectName>SinNet Reports TimeEntries</sonar.projectName>
+    <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+    <!-- Environment variable is already defined in CICD as SONAR_TOKEN -->
+    <sonar.login>${env.SONAR_TOKEN}</sonar.login>
+    
+    <!-- Jacoco coverage report path -->
     <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/../${aggregate.report.dir}</sonar.coverage.jacoco.xmlReportPaths>
+    
+    <!-- Java source and test source directories -->
+    <sonar.sources>src/main/java</sonar.sources>
+    <sonar.tests>src/test/java</sonar.tests>
+    
+    <!-- Exclude generated files and specific directories -->
+    <sonar.exclusions>**/target/**,**/generated/**,**/*.jar</sonar.exclusions>
+
+    <!--
+      Disable error:
+      [ERROR] .NET Assembly Analyzer could not be initialized and at least one 'exe' or 'dll' was
+      scanned. The 'dotnet' executable could not be found on the path; either disable the Assembly
+      Analyzer or add the path to dotnet core in the configuration.
+      [ERROR] The dotnet 6.0 core runtime or SDK is required to analyze assemblies
+    -->
+    <analyzer.assembly.enabled>false</analyzer.assembly.enabled>
+
     <archunit-junit5.version>1.3.0</archunit-junit5.version>
     <modelmapper.version>3.2.0</modelmapper.version>
     <cucumber-bom.version>7.21.1</cucumber-bom.version>
@@ -217,6 +243,17 @@
           </execution>
         </executions>
       </plugin>
+
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+      </plugin>
+
+      <plugin>
+        <groupId>org.sonarsource.scanner.maven</groupId>
+        <artifactId>sonar-maven-plugin</artifactId>
+      </plugin>
+
     </plugins>
   </build>
 
