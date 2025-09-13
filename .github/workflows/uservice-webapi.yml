@@ -53,13 +53,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
       
-      - name: Build with Maven gRpc API
-        run: mvn -ntp install
-        working-directory: api/client-java
-      - name: Build with Maven base package
-        run: mvn -ntp install
-        working-directory: libs-java
-
       - name: Build with Maven Webapi
         run: |
           # download latest version of applicationinsights to folder expected to be included into target image
