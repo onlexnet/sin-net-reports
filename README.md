@@ -10,30 +10,18 @@
 
 
 ## Goal
-- Small project created for [Sin.Net](http://www.sin.net.pl/)
-- My testing sandbox to use any technology to improve my tech skills
+- A small project created for [Sin.Net](http://www.sin.net.pl/)
+- My testing sandbox for experimenting with various technologies
 
 ## Business
-Project allows register service actions provided for some customers, and produce summarized reports in form of small PDF attachments for invoices..
+This project allows users to register service actions provided to customers and produce summarized reports in the form of small PDF attachments for invoices.
 
 In scope:
 - [x] Integrate login with Azure B2C
-- [x] Register time and distance of provided service through Web site
-- [x] Define list of clients
-- [x] Create PDF attachments per client for given period on demand
+- [x] Register time and distance of provided services through the website
+- [x] Define a list of clients
+- [x] Create PDF attachments per client for a given period on demand
 
-## Prepare dev environment
-* Use WSL2
-* Install VSCode
-* Install java 11 using SDKMAN
-* install npm using [nvm](https://github.com/nvm-sh/nvm)
-
-## To run locally for tests
-
-- run docker
-- run docker-compose (to start database)
-- run backend
-- run frontend
 ## Used articles
 - [https://code.visualstudio.com/docs/devcontainers/create-dev-container]
 - [How to export OpenTelemetry to Application Insight](https://docs.dapr.io/operations/monitoring/tracing/open-telemetry-collector-appinsights/)
@@ -44,8 +32,3 @@ In scope:
 - https://codewithhugo.com/docker-compose-local-https/
 - https://itnext.io/cluster-recipe-external-proxy-for-kubernetes-ingress-or-docker-compose-ingress-with-haproxy-on-f81e3adee5ef
 
-## Run locally the whole stack
-```bash
-docker-compose up --build # (to rebuild used initdb modeules)
-# docker-compose up to run faster last configuration
-```
