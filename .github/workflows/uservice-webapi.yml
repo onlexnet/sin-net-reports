@@ -61,6 +61,9 @@ jobs:
         working-directory: libs-java
 
       - name: Build with Maven Webapi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
           # download latest version of applicationinsights to folder expected to be included into target image
           # as we known, the copied file will be located finally in /workspaces/BOOT-INFO/classes/applicationinsights.
@@ -73,6 +76,9 @@ jobs:
 
           export SEMVERSION=$(cat .semversion)
           mvn -ntp install -Drevision=$SEMVERSION
+          
+          # Run Sonar analysis
+          mvn -ntp sonar:sonar -Drevision=$SEMVERSION -pl host
         working-directory: uservice-webapi
       
       - id: BuildDockerImage
