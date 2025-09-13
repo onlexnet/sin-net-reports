@@ -8,13 +8,6 @@
 | Helm | [![Build Status](https://dev.azure.com/onlex/sinnet/_apis/build/status/onlex-sinnet-helm?branchName=master)](https://dev.azure.com/onlex/sinnet/_build/latest?definitionId=12&branchName=master) |
 | Deploy| [![Build Status](https://dev.azure.com/onlex/sinnet/_apis/build/status/onlex-sinnet-deploy?branchName=master)](https://dev.azure.com/onlex/sinnet/_build/latest?definitionId=15&branchName=master) |
 
-## Code Quality
-
-| Service | Quality Gate | Coverage | Maintainability | Reliability | Security |
-|---------|--------------|----------|-----------------|-------------|----------|
-| WebAPI | [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=sin-net-reports-webapi&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=sin-net-reports-webapi) | [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=sin-net-reports-webapi&metric=coverage)](https://sonarcloud.io/summary/new_code?id=sin-net-reports-webapi) | [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=sin-net-reports-webapi&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=sin-net-reports-webapi) | [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=sin-net-reports-webapi&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=sin-net-reports-webapi) | [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=sin-net-reports-webapi&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=sin-net-reports-webapi) |
-| TimeEntries | [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=sin-net-reports-timeentries&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=sin-net-reports-timeentries) | [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=sin-net-reports-timeentries&metric=coverage)](https://sonarcloud.io/summary/new_code?id=sin-net-reports-timeentries) | [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=sin-net-reports-timeentries&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=sin-net-reports-timeentries) | [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=sin-net-reports-timeentries&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=sin-net-reports-timeentries) | [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=sin-net-reports-timeentries&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=sin-net-reports-timeentries) |
-
 
 ## Goal
 - A small project created for [Sin.Net](http://www.sin.net.pl/)
