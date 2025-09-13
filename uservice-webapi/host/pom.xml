@@ -10,20 +10,23 @@
   <version>${revision}</version>
 
   <properties>
-    <!--
-    <aggregate.report.dir>report-aggregate/target/site/jacoco-aggregate/jacoco.xml</aggregate.report.dir> -->
-    <sonar.projectKey>sin-net-reports:${project.artifactId}</sonar.projectKey>
-    <!-- sonar properties -> https://docs.sonarqube.org/latest/analysis/analysis-parameters/ -->
+    <!-- Sonar properties -> https://docs.sonarqube.org/latest/analysis/analysis-parameters/ -->
     <sonar.organization>onlexnet</sonar.organization>
     <sonar.projectKey>sin-net-reports</sonar.projectKey>
-    <sonar.projectName>SinNet Reports</sonar.projectName>
+    <sonar.projectName>SinNet Reports WebAPI</sonar.projectName>
     <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     <!-- Environment variable is already defined in CICD as SONAR_TOKEN -->
     <sonar.login>${env.SONAR_TOKEN}</sonar.login>
-
-    <!--
-    <aggregate.report.dir>report-aggregate/target/site/jacoco-aggregate/jacoco.xml</aggregate.report.dir> -->
-    <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/../${aggregate.report.dir}</sonar.coverage.jacoco.xmlReportPaths>
+    
+    <!-- Jacoco coverage report path -->
+    <sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+    
+    <!-- Java source and test source directories -->
+    <sonar.sources>src/main/java</sonar.sources>
+    <sonar.tests>src/test/java</sonar.tests>
+    
+    <!-- Exclude generated files and specific directories -->
+    <sonar.exclusions>**/target/**,**/generated/**,**/*.jar</sonar.exclusions>
 
     <!--
       Disable error:
@@ -205,6 +208,11 @@
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
+      </plugin>
+
+      <plugin>
+        <groupId>org.sonarsource.scanner.maven</groupId>
+        <artifactId>sonar-maven-plugin</artifactId>
       </plugin>
 
       <plugin>
