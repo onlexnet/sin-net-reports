@@ -1,4 +1,4 @@
-import { Typography, Layout } from "antd";
+import { Typography, Layout, message } from "antd";
 import React from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { RouteComponentProps } from "react-router-dom";
@@ -24,6 +24,10 @@ interface MainProps extends PropsFromRedux, RouteComponentProps {
 
 const MainView: React.FC<MainProps> = (props) => {
 
+  const handleExcelExport = () => {
+    message.info('Obecnie operacja ta nie jest obsługiwana, to tylko ładna ikonka.');
+  };
+
   return (
     <Layout style={{ height: "100%" }}>
       <Header style={{ background: "#fff" }}>
@@ -32,6 +36,7 @@ const MainView: React.FC<MainProps> = (props) => {
         const url = routing.reports;
         props.history.push(url);
           }}
+          onExcelExportRequested={handleExcelExport}
         />
       </Header>
       <AntContent style={{ padding: "10px" }}>
