@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Menu, Button } from "antd";
+import { Menu } from "antd";
 import { Dispatch } from 'redux';
 import { connect, ConnectedProps } from 'react-redux';
 import { RootState } from '../store/reducers';
@@ -11,7 +11,7 @@ import { ActionEditUpdated, VIEWCONTEXT_ACTION_EDIT_UPDATED } from '../store/vie
 import { LocalDate } from '../store/viewcontext/TimePeriod';
 import { Redirect } from 'react-router-dom';
 
-import { FileTextOutlined, LeftOutlined, PlusOutlined, RightOutlined } from '@ant-design/icons';
+import { FileTextOutlined, LeftOutlined, PlusOutlined, RightOutlined, DownloadOutlined } from '@ant-design/icons';
 
 import './Commands.css';
 
@@ -50,9 +50,8 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>
 
 interface ServiceCommandBarProps extends PropsFromRedux {
-  onPreviousMonthRequested: () => void;
-  onNextMonthRequested: () => void;
   onReportsViewRequested: () => void;
+  onExcelExportRequested: () => void;
 }
 
 enum WaitingState {
@@ -137,6 +136,12 @@ const ServiceCommandBarView: React.FC<ServiceCommandBarProps> = (props) => {
       label: 'Raporty',
       icon: <FileTextOutlined />,
       onClick: props.onReportsViewRequested
+    },
+    {
+      key: 'exportToExcel',
+      label: 'Excel',
+      icon: <DownloadOutlined />,
+      onClick: props.onExcelExportRequested
     },
   ];
 
