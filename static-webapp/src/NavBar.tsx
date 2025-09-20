@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { RouteComponentProps } from "react-router-dom";
 import { routing } from './Routing';
-import _ from 'lodash';
 import { Menu } from 'antd';
 import { HomeOutlined, UserOutlined, BugOutlined } from '@ant-design/icons';
 
