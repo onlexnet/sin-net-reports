@@ -67,7 +67,7 @@ class ProjectsGrpcFacadeImpl implements ProjectsGrpcFacade {
     return stub.list(request)
         .getProjectsList()
         .stream()
-        .map(mapper::apply)
+        .map(mapper)
         .toList();
   }
 
