@@ -6,6 +6,7 @@
   <packaging>pom</packaging>
 
   <modules>
+    <module>build-tools</module>
     <module>host</module>
     <module>gql-test</module>
     <module>gql-model</module>
