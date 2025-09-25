@@ -33,6 +33,8 @@
       [ERROR] The dotnet 6.0 core runtime or SDK is required to analyze assemblies
     -->
     <analyzer.assembly.enabled>false</analyzer.assembly.enabled>
+
+    <org.apache.poi.version>5.4.0</org.apache.poi.version>
   </properties>
 
 
@@ -97,12 +99,12 @@
     <dependency>
       <groupId>org.apache.poi</groupId>
       <artifactId>poi</artifactId>
-      <version>5.2.4</version>
+      <version>${org.apache.poi.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.poi</groupId>
       <artifactId>poi-ooxml</artifactId>
-      <version>5.4.0</version>
+      <version>${org.apache.poi.version}</version>
     </dependency>
 
     <dependency>
