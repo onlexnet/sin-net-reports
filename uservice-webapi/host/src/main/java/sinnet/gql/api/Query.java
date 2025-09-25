@@ -6,12 +6,16 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 
 import lombok.RequiredArgsConstructor;
+import sinnet.gql.model.FileDownloadResult;
+import sinnet.gql.service.FileGenerationService;
 import sinnet.grpc.common.UserToken;
 import sinnet.web.AuthenticationToken;
 
 @Controller
 @RequiredArgsConstructor
 class Query {
+
+  private final FileGenerationService fileGenerationService;
   
   @QueryMapping("Projects")
   ProjectsQuery projects() {
@@ -47,5 +51,17 @@ class Query {
         .setRequestorEmail(primaryEmail)
         .build();
     return new CustomersQuery(userToken);
+  }
+
+  @QueryMapping("downloadFile")
+  FileDownloadResult downloadFile(@Argument String parameter) {
+    String base64Content = fileGenerationService.generateEmptyExcelAsBase64(parameter);
+    String fileName = fileGenerationService.generateLogicalFileName(parameter);
+    
+    return FileDownloadResult.builder()
+        .fileName(fileName)
+        .content(base64Content)
+        .contentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+        .build();
   }
 }
