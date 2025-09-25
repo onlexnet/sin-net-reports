@@ -16,6 +16,7 @@ import sinnet.gql.models.CustomerEntityGql;
 import sinnet.gql.models.CustomerInput;
 import sinnet.gql.models.CustomerSecretExInput;
 import sinnet.gql.models.CustomerSecretInput;
+import sinnet.gql.models.FileDownloadResultGql;
 import sinnet.gql.models.ProjectEntityGql;
 import sinnet.gql.models.ServiceModelGql;
 import sinnet.gql.models.ServicesSearchResultGql;
@@ -162,6 +163,15 @@ public class AppApi {
         .execute()
         .path("Actions.get")
         .entity(ServiceModelGql.class);
+  }
+
+  /** Downloads Actions list as Excel. */
+  public Entity<FileDownloadResultGql, ?> downloadFile(String projectId) {
+    return tester.documentName("downloadFile")
+        .variable("projectId", projectId.toString())
+        .execute()
+        .path("downloadFile")
+        .entity(FileDownloadResultGql.class);
   }
 
 }

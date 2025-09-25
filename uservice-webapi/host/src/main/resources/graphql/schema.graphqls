@@ -5,6 +5,7 @@ type Query {
   Users(projectId: ID!): UsersQuery!
   getPrincipal: PrincipalModel!
   test: PrincipalModel!
+  downloadFile(projectId: ID!): FileDownloadResult!
 }
 
 type Mutation {
@@ -171,6 +172,12 @@ type User {
 type UsersQuery {
   projectId: String
   search: [User!]!
+}
+
+type FileDownloadResult {
+  fileName: String!
+  content: String!
+  contentType: String!
 }
 
 "Scalar for Long"

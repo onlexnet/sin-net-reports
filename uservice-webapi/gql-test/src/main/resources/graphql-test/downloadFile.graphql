@@ -1,0 +1,7 @@
+query downloadFile($projectId: ID!) {
+  downloadFile(projectId: $projectId) {
+    fileName
+    content
+    contentType
+  }
+}

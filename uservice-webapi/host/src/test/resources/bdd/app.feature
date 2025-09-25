@@ -45,3 +45,8 @@ Feature: An example
     When Actions get query is sent
     Then Actions get query is returned
 
+  @export-actions
+  Scenario: User downloads list of Actions as Excel
+    When Actions export query is send
+    Then Actions export result is returned
+

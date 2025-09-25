@@ -298,7 +298,22 @@ public class StepDefinitions {
   public void customer_save_result_is_verified() {
   }
 
+  @When("Actions export query is send")
+  public void actions_export_query_is_send() {
+    var projectId = UUID.randomUUID();
+    var projectIdStr = projectId.toString();
 
+    var file = appApi.downloadFile(projectIdStr).get();
+    Assertions.assertThat(file).isNotNull();
+    Assertions.assertThat(file.getFileName()).isEqualTo("export.xlsx");
+    Assertions.assertThat(file.getContentType()).isEqualTo("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+    Assertions.assertThat(file.getContent()).isNotEmpty();
+  }
+
+  @Then("Actions export result is returned")
+  public void actions_export_result_is_returned() {
+
+  }
 
 }
 
