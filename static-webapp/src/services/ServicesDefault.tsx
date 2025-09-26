@@ -7,6 +7,8 @@ import { routing } from "../Routing";
 import { RootState } from "../store/reducers";
 import { Content } from "./ActionList";
 import { ServiceCommandBar } from "./Commands";
+import { useDownloadFile } from "../api/useDownloadFile";
+import { downloadBase64File } from "../utils/fileDownloadUtils";
 
 const { Text } = Typography;
 const { Header, Content: AntContent } = Layout;
@@ -23,9 +25,45 @@ interface MainProps extends PropsFromRedux, RouteComponentProps {
 }
 
 const MainView: React.FC<MainProps> = (props) => {
+  const { downloadFile, loading: downloadLoading, error: downloadError, data: downloadData } = useDownloadFile();
+
+  React.useEffect(() => {
+    if (downloadData) {
+      try {
+        downloadBase64File({
+          fileName: downloadData.fileName,
+          content: downloadData.content,
+          contentType: downloadData.contentType,
+        });
+        message.success('Plik został pobrany pomyślnie');
+      } catch (error) {
+        message.error('Błąd podczas pobierania pliku: ' + (error as Error).message);
+      }
+    }
+  }, [downloadData]);
+
+  React.useEffect(() => {
+    if (downloadError) {
+      message.error('Błąd podczas pobierania pliku: ' + downloadError.message);
+    }
+  }, [downloadError]);
 
   const handleExcelExport = () => {
-    message.info('Obecnie operacja ta nie jest obsługiwana, to tylko ładna ikonka.');
+    if (downloadLoading) {
+      message.info('Pobieranie w toku...');
+      return;
+    }
+
+    if (!props.appState.empty) {
+      downloadFile({
+        variables: {
+          projectId: props.appState.projectId,
+        },
+      });
+      message.info('Inicjowanie pobierania pliku...');
+    } else {
+      message.error('Nie wybrano projektu');
+    }
   };
 
   return (
