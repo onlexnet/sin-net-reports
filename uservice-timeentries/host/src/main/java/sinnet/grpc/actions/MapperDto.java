@@ -11,6 +11,7 @@ import sinnet.models.ActionDuration;
 import sinnet.models.ActionValue;
 import sinnet.models.Distance;
 import sinnet.models.Entity;
+import sinnet.models.EntityVersion;
 import sinnet.models.ShardedId;
 
 /**
@@ -47,7 +48,7 @@ public interface MapperDto {
         .setWhat(dto.getDescription())
         .setHowLong(ActionDuration.of(dto.getDuration()))
         .setHowFar(Distance.of(dto.getDistance()));
-    return value.withId(projectId, entityId, entityVersion);
+    return value.withId(projectId, entityId, EntityVersion.of(entityVersion));
   }
 
   /**
