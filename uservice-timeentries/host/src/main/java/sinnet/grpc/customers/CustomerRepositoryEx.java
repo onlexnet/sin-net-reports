@@ -15,7 +15,6 @@ import sinnet.models.CustomerContact;
 import sinnet.models.CustomerModel;
 import sinnet.models.CustomerSecret;
 import sinnet.models.CustomerSecretEx;
-import sinnet.models.EntityVersion;
 import sinnet.models.ShardedId;
 
 /**
@@ -34,7 +33,7 @@ public final class CustomerRepositoryEx implements MapperDbo {
    * @param id if of the requested model.
    */
   public Optional<CustomerModel> get(ShardedId id) {
-    var probe = new CustomerDbo().setProjectId(id.projectId()).setEntityId(id.id()).setEntityVersion(EntityVersion.toDbo(id.version()));
+    var probe = new CustomerDbo().setProjectId(id.getProjectId()).setEntityId(id.getId()).setEntityVersion(id.getVersion());
     var example = Example.of(probe);
     var maybeResult = repository.findOne(example);
     return maybeResult.map(this::fromDbo);
@@ -52,15 +51,15 @@ public final class CustomerRepositoryEx implements MapperDbo {
     var secrets = model.getSecrets();
     var secretsEx = model.getSecretsEx();
     var contacts = model.getContacts();
-    var projectId = eid.projectId();
-    var entityId = eid.id();
-    var version = eid.version();
+    var projectId = eid.getProjectId();
+    var entityId = eid.getId();
+    var version = eid.getVersion();
     var dbo = repository.findByProjectIdAndEntityId(projectId, entityId);
     if (dbo == null) {
       dbo = new CustomerDbo();
       dbo.setProjectId(projectId);
       dbo.setEntityId(entityId);
-      dbo.setEntityVersion(EntityVersion.toDbo(version));
+      dbo.setEntityVersion(version);
     }
     dbo.setCustomerName(value.getCustomerName().getValue())
         .setCustomerCityName(value.getCustomerCityName().getValue())
@@ -134,9 +133,9 @@ public final class CustomerRepositoryEx implements MapperDbo {
    * TBD.
    */
   public Boolean remove(ShardedId id) {
-    var projectId = id.projectId();
-    var eid = id.id();
-    var etag = EntityVersion.toDbo(id.version());
+    var projectId = id.getProjectId();
+    var eid = id.getId();
+    var etag = id.getVersion();
     repository.deleteByProjectIdAndEntityIdAndEntityVersion(projectId, eid, etag);
     return true;
   }

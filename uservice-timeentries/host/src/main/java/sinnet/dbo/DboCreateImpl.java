@@ -17,9 +17,11 @@ class DboCreateImpl implements DboCreate {
   @Override
   public CreateResult create(CreateContent entry) {
     var requestedId = entry.getRequestedId();
+    var initialEtag = 1L; //well-known ID set by hibernate locking mechanism
     var emailAsString = entry.getEmailOfOwner().value();
     var newEntityTemplate = new ProjectDbo()
         .setEntityId(requestedId.value())
+        .setVersion(initialEtag)
         .setName("-")
         .setEmailOfOwner(emailAsString);
 
@@ -39,7 +41,6 @@ class DboCreateImpl implements DboCreate {
     }
 
     repository.save(newEntityTemplate);
-    var initialEtag = 1L; //well-known ID set by hibernate locking mechanism
     var result = ProjectVid.of(requestedId, initialEtag);
     return new Success(result);
 

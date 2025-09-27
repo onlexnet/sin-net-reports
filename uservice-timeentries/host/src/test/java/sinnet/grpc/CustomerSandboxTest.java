@@ -31,7 +31,7 @@ import sinnet.models.CustomerModel;
 import sinnet.models.ShardedId;
 import sinnet.models.ValName;
 
-// Playground for various database-related tests, and monitoring SQL entries in logs
+// PLayground for manual testing and observe SQL in logs
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 @ExtendWith(SqlServerDbExtension.class)
@@ -111,14 +111,14 @@ public class CustomerSandboxTest {
           .create();
       var customerName = UUID.randomUUID().toString();
       expected.getValue().setCustomerName(ValName.of(customerName));
-      expected.setId(ShardedId.of(projectId, expected.getId().id(), 0));
+      expected.setId(ShardedId.of(projectId, expected.getId().getId(), 0));
       var expectedDbo = CustomerMapper.INSTANCE.toJpaDbo(expected);
 
       var logObserver = LogAssert.ofHibernate();
       int expectedSelects = 0;
 
       customerRepository.saveAndFlush(expectedDbo);
-      // expectedSelects++;
+      expectedSelects++;
 
       var customers = customerRepository.findByProjectId(projectId);
       expectedSelects++;
