@@ -2,24 +2,34 @@ package sinnet.models;
 
 import java.util.UUID;
 
-import lombok.Value;
-
 /**
  * TBD.
  */
-@Value
-public class ShardedId {
+public record ShardedId(UUID projectId, UUID id, EntityVersion version) {
 
-  private UUID projectId;
-  private UUID id;
-  private long version;
+  /**
+   * Makes sure that version is never null.
+   */
+  public ShardedId {
+    if (version == null) {
+      version = EntityVersion.New.INSTANCE;
+    }
+  }
 
+  /**
+   * Creates next version of the same entity.
+   */
   public ShardedId next() {
-    return new ShardedId(this.projectId, this.id, version + 1);
+    var nextVersion = switch (version) {
+      case EntityVersion.New ignored -> new EntityVersion.Existing(1);
+      case EntityVersion.Existing v -> new EntityVersion.Existing(v.value() + 1);
+    };
+    return new ShardedId(projectId, id, nextVersion);
   }
 
   public static ShardedId of(UUID projectId, UUID id, long version) {
-    return new ShardedId(projectId, id, version);
+    // after migration from Spring Boot 3.x -> 3.4+ version==0 is not longer accepter in JPA operations when saving new entity.
+    return new ShardedId(projectId, id, version <= 0 ? EntityVersion.New.INSTANCE : new EntityVersion.Existing(version));
   }
 
   public static ShardedId of(Entity<?> entity) {
@@ -27,7 +37,7 @@ public class ShardedId {
   }
 
   public static ShardedId anyNew(UUID projectId) {
-    return new ShardedId(projectId, UUID.randomUUID(), 0);
+    return new ShardedId(projectId, UUID.randomUUID(), EntityVersion.New.INSTANCE);
   }
 
   public static ShardedId anyNew(ProjectId projectId) {

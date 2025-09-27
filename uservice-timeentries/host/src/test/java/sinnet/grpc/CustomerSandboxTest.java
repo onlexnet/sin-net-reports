@@ -3,6 +3,7 @@ package sinnet.grpc;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
+import java.util.Set;
 import java.util.UUID;
 
 import org.assertj.core.api.Assertions;
@@ -31,7 +32,7 @@ import sinnet.models.CustomerModel;
 import sinnet.models.ShardedId;
 import sinnet.models.ValName;
 
-// PLayground for manual testing and observe SQL in logs
+// Playground for various database-related tests, and monitoring SQL entries in logs
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 @ExtendWith(SqlServerDbExtension.class)
@@ -111,7 +112,7 @@ public class CustomerSandboxTest {
           .create();
       var customerName = UUID.randomUUID().toString();
       expected.getValue().setCustomerName(ValName.of(customerName));
-      expected.setId(ShardedId.of(projectId, expected.getId().getId(), 0));
+      expected.setId(ShardedId.of(projectId, expected.getId().id(), 0));
       var expectedDbo = CustomerMapper.INSTANCE.toJpaDbo(expected);
 
       var logObserver = LogAssert.ofHibernate();

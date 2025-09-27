@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import sinnet.domain.model.ValEmail;
 import sinnet.grpc.mapping.PropsBuilder;
+import sinnet.models.EntityVersion;
 import sinnet.models.ShardedId;
 import sinnet.models.UserToken;
 
@@ -50,9 +51,9 @@ public interface Mapper {
       return null;
     }
     return PropsBuilder.build(sinnet.grpc.common.EntityId.newBuilder())
-        .set(eid.getProjectId(), UUID::toString, b -> b::setProjectId)
-        .set(eid.getId(), UUID::toString, b -> b::setEntityId)
-        .set(eid.getVersion(), b -> b::setEntityVersion)
+        .set(eid.projectId(), UUID::toString, b -> b::setProjectId)
+        .set(eid.id(), UUID::toString, b -> b::setEntityId)
+        .set(eid.version(), EntityVersion::toDto, b -> b::setEntityVersion)
         .done().build();
   }
 

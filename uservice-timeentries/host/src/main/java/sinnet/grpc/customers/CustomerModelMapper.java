@@ -13,6 +13,7 @@ import org.mapstruct.factory.Mappers;
 
 import sinnet.domain.model.ValEmail;
 import sinnet.grpc.common.EntityId;
+import sinnet.models.EntityVersion;
 import sinnet.models.ShardedId;
 import sinnet.models.ValName;
 
@@ -43,6 +44,10 @@ public interface CustomerModelMapper {
   @Mapping(target = "version", source = "entityVersion")
   ShardedId fromDto(EntityId dto);
 
+  default EntityVersion fromDto(long value) {
+    return EntityVersion.of(value);
+  }
+
   default ValName fromDto2(String dto) {
     return ValName.of(dto);
   }
@@ -70,6 +75,10 @@ public interface CustomerModelMapper {
         .setMinute(dto.getMinute())
         .setSecond(dto.getSecond())
         .build();
+  }
+
+  default long toDto(EntityVersion value) {
+    return EntityVersion.toDto(value);
   }
 
   @Mapping(target = "entityId", source = "id")
