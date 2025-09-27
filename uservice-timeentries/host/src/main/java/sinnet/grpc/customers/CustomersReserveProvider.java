@@ -6,7 +6,6 @@ import org.springframework.stereotype.Component;
 
 import io.grpc.stub.StreamObserver;
 import sinnet.grpc.common.EntityId;
-import sinnet.models.EntityVersion;
 
 /**
  * TBD.
@@ -19,9 +18,9 @@ public class CustomersReserveProvider {
     var result = sinnet.models.ShardedId.anyNew(projectId);
     var reply = ReserveReply.newBuilder()
         .setEntityId(EntityId.newBuilder()
-            .setProjectId(result.projectId().toString())
-            .setEntityId(result.id().toString())
-            .setEntityVersion(EntityVersion.toDto(result.version()))
+            .setProjectId(result.getProjectId().toString())
+            .setEntityId(result.getId().toString())
+            .setEntityVersion(result.getVersion())
             .build())
         .build();
     observer.onNext(reply);

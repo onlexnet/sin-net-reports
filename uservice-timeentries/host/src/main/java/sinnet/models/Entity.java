@@ -15,10 +15,10 @@ public class Entity<V> {
   @Deprecated
   private UUID entityId;
   @Deprecated
-  private EntityVersion version;
+  private long version;
 
   public ShardedId getId() {
-    return new ShardedId(projectId, entityId, version);
+    return ShardedId.of(projectId, entityId, version);
   }
 
   private V value;

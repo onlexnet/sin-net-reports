@@ -21,14 +21,6 @@
             },
             "preLaunchTask": "dapr-debug",
             "postDebugTask": "dapr-down"
-        },
-        {
-            // first run mvn -Dmaven.surefire.debug test
-            "type": "java",
-            "name": "Debug Maven Tests",
-            "request": "attach",
-            "hostName": "localhost",
-            "port": 5005
         }
     ]
 }

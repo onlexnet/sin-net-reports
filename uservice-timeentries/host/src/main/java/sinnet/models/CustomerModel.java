@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 /**
- * Customer aggregate.
+ * TBD.
  */
 @Data
 @Accessors(chain = true)

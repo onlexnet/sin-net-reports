@@ -6,7 +6,6 @@ import sinnet.models.ActionDuration;
 import sinnet.models.ActionValue;
 import sinnet.models.Distance;
 import sinnet.models.Entity;
-import sinnet.models.EntityVersion;
 
 /**
  * TBD.
@@ -20,9 +19,9 @@ public interface MapperDbo {
     var id = entity.getId();
     var value = entity.getValue();
     return new ActionDbo()
-      .setProjectId(id.projectId())
-      .setEntityId(id.id())
-      .setEntityVersion(EntityVersion.toDbo(id.version()))
+      .setProjectId(id.getProjectId())
+      .setEntityId(id.getId())
+      .setEntityVersion(id.getVersion())
       .setServicemanEmail(value.getWho().value())
       .setDescription(value.getWhat())
       .setDistance(value.getHowFar().getValue())
@@ -45,7 +44,7 @@ public interface MapperDbo {
       .setWhat(dbo.getDescription())
       .setHowLong(ActionDuration.of(dbo.getDuration()))
       .setHowFar(Distance.of(dbo.getDistance()))
-      .withId(dbo.getProjectId(), dbo.getEntityId(), EntityVersion.of(dbo.getEntityVersion()));
+      .withId(dbo.getProjectId(), dbo.getEntityId(), dbo.getEntityVersion());
   }
 
 }

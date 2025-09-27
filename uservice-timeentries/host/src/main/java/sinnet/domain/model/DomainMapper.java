@@ -2,10 +2,9 @@ package sinnet.domain.model;
 
 import org.mapstruct.Mapper;
 
-import sinnet.models.EntityVersion;
 import sinnet.models.ValName;
 
-/** Mapping definition for shared domain models which can be converted to raw single values. */
+/** Mapping definition for shared domain models. */
 @Mapper
 public interface DomainMapper {
   
@@ -23,18 +22,5 @@ public interface DomainMapper {
 
   default String fromName(ValName source) {
     return source.getValue();
-  }
-
-  /**
-   * Maps a Long value to an EntityVersion.
-   *
-   * @param value the Long value to map
-   * @return the corresponding EntityVersion
-   */
-  default EntityVersion map(Long value) {
-    if (value == null || value == 0) {
-      return EntityVersion.New.INSTANCE;
-    }
-    return new EntityVersion.Existing(value);
   }
 }

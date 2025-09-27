@@ -6,7 +6,6 @@ import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 
 import sinnet.domain.model.DomainMapper;
-import sinnet.models.EntityVersion;
 
 /** Dbo <-> domain mapper. */
 @Mapper(
@@ -16,11 +15,6 @@ import sinnet.models.EntityVersion;
 public interface CustomerMapper {
 
   CustomerMapper INSTANCE = Mappers.getMapper(CustomerMapper.class);
-
-  default Long fromVersion(EntityVersion source) {
-    return EntityVersion.toDbo(source);
-  }
-
 
   @Mapping(target = "entityId", source = "id.id")
   @Mapping(source = "id.version", target = "entityVersion")
