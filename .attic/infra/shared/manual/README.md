@@ -1,2 +1,0 @@
-we need manually created STG and PRD environments to use to expose them (with its kubernetes instance) as Azure Arc kubernetes. Each environment will be represented as a seperated environment in Azure.
-Also we need to create services for such environments to allow remote access to the environments using the services.

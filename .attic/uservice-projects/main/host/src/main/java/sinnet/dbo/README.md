@@ -1,1 +1,0 @@
-Pure databse operations with invoking participants.
