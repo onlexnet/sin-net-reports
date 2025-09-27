@@ -34,7 +34,7 @@ public final class CustomerRepositoryEx implements MapperDbo {
    * @param id if of the requested model.
    */
   public Optional<CustomerModel> get(ShardedId id) {
-    var probe = new CustomerDbo().setProjectId(id.projectId()).setEntityId(id.id()).setEntityVersion(EntityVersion.toDto(id.version()));
+    var probe = new CustomerDbo().setProjectId(id.projectId()).setEntityId(id.id()).setEntityVersion(EntityVersion.toDbo(id.version()));
     var example = Example.of(probe);
     var maybeResult = repository.findOne(example);
     return maybeResult.map(this::fromDbo);

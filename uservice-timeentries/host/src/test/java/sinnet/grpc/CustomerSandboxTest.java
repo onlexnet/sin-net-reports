@@ -3,7 +3,6 @@ package sinnet.grpc;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
-import java.util.Set;
 import java.util.UUID;
 
 import org.assertj.core.api.Assertions;
@@ -119,7 +118,7 @@ public class CustomerSandboxTest {
       int expectedSelects = 0;
 
       customerRepository.saveAndFlush(expectedDbo);
-      expectedSelects++;
+      // expectedSelects++;
 
       var customers = customerRepository.findByProjectId(projectId);
       expectedSelects++;

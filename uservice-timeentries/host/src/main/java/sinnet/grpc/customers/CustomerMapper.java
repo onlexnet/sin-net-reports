@@ -17,8 +17,8 @@ public interface CustomerMapper {
 
   CustomerMapper INSTANCE = Mappers.getMapper(CustomerMapper.class);
 
-  default long fromVersion(EntityVersion source) {
-    return EntityVersion.toDto(source);
+  default Long fromVersion(EntityVersion source) {
+    return EntityVersion.toDbo(source);
   }
 
 
