@@ -20,7 +20,7 @@
     <sonar-maven-plugin.version>3.7.0.1746</sonar-maven-plugin.version>
     <testcontainers.version>1.20.5</testcontainers.version>
     <commons-io.version>2.20.0</commons-io.version>
-    <spring-boot.version>3.5.6</spring-boot.version>
+    <spring-boot.version>3.4.10</spring-boot.version>
     <testcontainers.version>1.20.5</testcontainers.version>
 
     <aggregate.report.dir>report-aggregate/target/site/jacoco-aggregate/jacoco.xml</aggregate.report.dir>
