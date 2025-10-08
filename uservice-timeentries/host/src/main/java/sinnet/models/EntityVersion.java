@@ -7,8 +7,9 @@ public sealed interface EntityVersion {
 
   /**
    * Indicates a new entity that has not been persisted yet.
+   * NUmerically represented (if required) as -1
    */
-  enum New implements EntityVersion {
+  enum Reserved implements EntityVersion {
     INSTANCE
   }
 
@@ -22,7 +23,7 @@ public sealed interface EntityVersion {
      */
     public Existing {
       // After migration from Spring Boot 3.x -> 3.4+ version==0 is not longer accepted in JPA operations when saving new entity.
-      if (value <= 0) {
+      if (value < 0) {
         throw new IllegalArgumentException("version must be positive");
       }
     }
@@ -36,7 +37,7 @@ public sealed interface EntityVersion {
    */
   static long toDto(EntityVersion version) {
     return switch (version) {
-      case New ignored -> 0L;
+      case Reserved ignored -> -1L;
       case Existing e -> e.value();
     };
   }
@@ -49,7 +50,7 @@ public sealed interface EntityVersion {
    */
   static Long toDbo(EntityVersion version) {
     return switch (version) {
-      case New ignored -> null;
+      case Reserved ignored -> null;
       case Existing e -> e.value();
     };
   }
@@ -61,7 +62,7 @@ public sealed interface EntityVersion {
    * @return the corresponding EntityVersion instance
    */
   static EntityVersion of(long version) {
-    return version == 0 ? New.INSTANCE : new Existing(version);
+    return version < 0 ? Reserved.INSTANCE : new Existing(version);
   }
 
 }

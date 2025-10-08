@@ -1,14 +1,13 @@
 # Dev notes
 
 ## Profiles
-We support some profiles in backend code to allow run them with different configurations:
+We support profiles in backend code to allow run them with different configurations:
 - dev - no security
 - prod - ready for deployment, mssql database
 
+
 ## build project
 ```bash
-mvn -f ../api/client-java install -ntp
-mvn -f ../libs-java install -ntp
 mvn clean install -ntp
 ```
 

@@ -16,7 +16,7 @@ public class CustomersReserveProvider {
 
   void query(ReserveRequest request, StreamObserver<ReserveReply> observer) {
     var projectId = UUID.fromString(request.getProjectId());
-    var result = sinnet.models.ShardedId.anyNew(projectId);
+    var result = sinnet.models.ShardedId.reserved(projectId);
     var reply = ReserveReply.newBuilder()
         .setEntityId(EntityId.newBuilder()
             .setProjectId(result.projectId().toString())

@@ -111,7 +111,7 @@ public class CustomerSandboxTest {
           .create();
       var customerName = UUID.randomUUID().toString();
       expected.getValue().setCustomerName(ValName.of(customerName));
-      expected.setId(ShardedId.of(projectId, expected.getId().id(), 0));
+      expected.setId(ShardedId.of(projectId, expected.getId().id(), -1));
       var expectedDbo = CustomerMapper.INSTANCE.toJpaDbo(expected);
 
       var logObserver = LogAssert.ofHibernate();
@@ -125,15 +125,15 @@ public class CustomerSandboxTest {
       var maybeActual = customers.stream().filter(it -> it.getCustomerName().equals(customerName)).findFirst();
       Assertions.assertThat(maybeActual).isNotEmpty();
 
-      // revert version to 0 as actual has already 1 after saving
       var actualDbo = maybeActual.get();
-      actualDbo.setEntityVersion(0L);
 
       var actual = CustomerMapper.INSTANCE.fromDbo2(actualDbo);
       
       // as data is unsorted, we have to sort it for comparison
-      sortItems(actual);
-      sortItems(expected);
+      sortSubcollections(actual);
+      sortSubcollections(expected);
+      // set version on initial model to same as we should have returned from DB
+      expected.setId(expected.getId().next());
       Assertions.assertThat(actual).isEqualTo(expected);
 
       LogAssert.assertThat(logObserver)
@@ -145,7 +145,7 @@ public class CustomerSandboxTest {
 
   }
 
-  public static void sortItems(CustomerModel dbo) {
+  public static void sortSubcollections(CustomerModel dbo) {
     dbo.getContacts().sort(Comparator.comparing(a -> a.getEmail(), String.CASE_INSENSITIVE_ORDER));
     dbo.getSecrets().sort(Comparator.comparing(a -> a.getUsername(), String.CASE_INSENSITIVE_ORDER));
     dbo.getSecretsEx().sort(Comparator.comparing(a -> a.getUsername(), String.CASE_INSENSITIVE_ORDER));

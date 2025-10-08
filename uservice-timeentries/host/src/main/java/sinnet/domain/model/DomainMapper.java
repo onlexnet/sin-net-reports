@@ -32,8 +32,8 @@ public interface DomainMapper {
    * @return the corresponding EntityVersion
    */
   default EntityVersion map(Long value) {
-    if (value == null || value == 0) {
-      return EntityVersion.New.INSTANCE;
+    if (value == null || value < 0) {
+      return EntityVersion.Reserved.INSTANCE;
     }
     return new EntityVersion.Existing(value);
   }

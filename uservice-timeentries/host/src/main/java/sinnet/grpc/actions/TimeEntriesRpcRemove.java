@@ -21,7 +21,7 @@ public class TimeEntriesRpcRemove extends RpcCommandHandlerBase<RemoveCommand, R
   @Override
   public RemoveResult apply(RemoveCommand request) {
     var id = Mapper.fromDto(request.getEntityId());
-    var result = actionService.remove(id);
+    var result = actionService.remove1(id);
     return RemoveResult.newBuilder()
         .setResult(result)
         .build();

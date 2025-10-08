@@ -41,7 +41,7 @@ class CustomersRpcUpdateImpl extends RpcCommandHandlerBase<UpdateCommand, Update
 
     // when the first time we store Customer data, all secrets should have date same as creation time
     switch (model.getId().version()) {
-      case EntityVersion.New it -> {
+      case EntityVersion.Reserved it -> {
         for (var secret : model.getSecrets()) {
           secret.setChangedWhen(now);
         }
@@ -54,7 +54,7 @@ class CustomersRpcUpdateImpl extends RpcCommandHandlerBase<UpdateCommand, Update
     
     // when we update a Customer, we need to compare secrets and update time on only those wher ewe have new data
     switch (model.getId().version()) {
-      case EntityVersion.New it -> {
+      case EntityVersion.Reserved it -> {
         // handled above
       }
       case EntityVersion.Existing existingVersion -> {
