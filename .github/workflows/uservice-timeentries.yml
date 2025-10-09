@@ -11,14 +11,12 @@ on:
   push:
     branches: [ main ]
     paths: 
-      - libs-java/**
       - api/**
       - uservice-timeentries/**
       - .github/workflows/uservice-timeentries.yml
   pull_request:
     branches: [ main ]
     paths: 
-      - libs-java/**
       - api/**
       - uservice-timeentries/**
       - .github/workflows/uservice-timeentries.yml

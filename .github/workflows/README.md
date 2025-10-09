@@ -29,7 +29,6 @@ The `cyclic-build.yml` workflow was created to address dependency-related build 
 ### Components Tested
 1. **Java Components**:
    - gRPC API Client (`api/client-java`)
-   - Shared Java Libraries (`libs-java`) 
    - Timeentries Service (`uservice-timeentries`)
    - WebAPI Service (`uservice-webapi`)
 

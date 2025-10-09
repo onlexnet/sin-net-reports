@@ -34,13 +34,7 @@ docker compose version
 Build all components in this exact order. NEVER CANCEL builds - they may take longer than expected but will complete:
 
 ```bash
-# 1. Build gRPC API client libraries (~45 seconds - NEVER CANCEL)
-mvn -ntp install -f api/client-java
-
-# 2. Build shared Java libraries (~20 seconds - NEVER CANCEL)  
-mvn -ntp install -f libs-java
-
-# 3. Download ApplicationInsights agent for timeentries service
+# 1. Download ApplicationInsights agent for timeentries service
 cd uservice-timeentries
 pushd .
 cd host/src/main/resources/applicationinsights
@@ -49,12 +43,12 @@ wget --no-verbose https://github.com/microsoft/ApplicationInsights-Java/releases
 mv applicationinsights-agent-${APPLICATIONINSIGHTS_AGENT_VERSION}.jar applicationinsights-agent.jar
 popd
 
-# 4. Build timeentries microservice (~15 seconds - NEVER CANCEL)
+# 2. Build timeentries microservice (~15 seconds - NEVER CANCEL)
 export SEMVERSION=$(cat .version)
 mvn -ntp install -pl host -am -DskipTests
 cd ..
 
-# 5. Download ApplicationInsights agent for webapi service
+# 3. Download ApplicationInsights agent for webapi service
 cd uservice-webapi
 pushd .
 cd host/src/main/resources/applicationinsights
@@ -63,12 +57,12 @@ wget --no-verbose https://github.com/microsoft/ApplicationInsights-Java/releases
 mv applicationinsights-agent-${APPLICATIONINSIGHTS_AGENT_VERSION}.jar applicationinsights-agent.jar
 popd
 
-# 6. Build webapi microservice (~40 seconds - NEVER CANCEL)
+# 4. Build webapi microservice (~40 seconds - NEVER CANCEL)
 export SEMVERSION=$(cat .semversion)
 mvn -ntp install -Drevision=$SEMVERSION -DskipTests
 cd ..
 
-# 7. Build React frontend (~65 seconds total - NEVER CANCEL)
+# 5. Build React frontend (~65 seconds total - NEVER CANCEL)
 cd static-webapp
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
@@ -128,7 +122,6 @@ Always run these steps after making code changes:
 ```bash
 # 1. Validate Java services compile without errors
 mvn clean compile -f api/client-java
-mvn clean compile -f libs-java  
 mvn clean compile -pl host -f uservice-timeentries
 mvn clean compile -pl host -f uservice-webapi
 
@@ -184,7 +177,6 @@ npm start
 ```bash
 # Full build pipeline without tests (~3 minutes total)
 mvn -ntp install -f api/client-java && \
-mvn -ntp install -f libs-java && \
 (cd uservice-timeentries && export SEMVERSION=$(cat .version) && mvn -ntp install -pl host -am -DskipTests) && \
 (cd uservice-webapi && export SEMVERSION=$(cat .semversion) && mvn -ntp install -Drevision=$SEMVERSION -DskipTests) && \
 (cd static-webapp && npm install && npm run generate && npm run build)
@@ -216,7 +208,6 @@ Each component has its own version file:
 - **static-webapp**: React TypeScript frontend
 - **test-webapi**: BDD integration tests using Cucumber
 - **api/client-java**: Shared gRPC client libraries
-- **libs-java**: Shared Java utilities and Spring Boot parent POMs
 
 ### Key Dependencies
 - **Java 21**: Runtime for all backend services
@@ -227,20 +218,11 @@ Each component has its own version file:
 - **Azure B2C**: Authentication provider
 - **Testcontainers**: Integration testing (may fail in some environments)
 
-### Build Timing Reference
-Use these timeouts for automation (50% buffer included):
-- API client build: 60 seconds timeout
-- Libs-java build: 30 seconds timeout  
-- Java service builds: 60 seconds timeout each
-- React npm install: 45 seconds timeout
-- React build: 90 seconds timeout
-- Docker image builds: 90 seconds timeout each
-
 ## Troubleshooting
 
 ### Common Issues
 
-**Maven dependency issues**: Run `mvn clean install` on dependencies in order (api/client-java, then libs-java)
+**Maven dependency issues**: Run `mvn clean install` on dependencies in order (api/client-java)
 
 **Node.js version mismatch**: Ensure Node.js 22.12.0 is active with `nvm use 22.12.0`
 
