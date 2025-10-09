@@ -1,16 +1,12 @@
 <project>
   <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>onlexnet.sinnet</groupId>
-    <artifactId>uservice-spring-parent</artifactId>
-    <version>0.1.3</version>
-    <relativePath />
-  </parent>
+  <groupId>onlexnet.sinnet</groupId>
   <artifactId>uservice-timeentries-base</artifactId>
   <version>${revision}</version>
   <packaging>pom</packaging>
 
   <properties>
+    <spring-boot.version>3.5.5</spring-boot.version>
     <api.version>0.1.3</api.version>
     <dapr.version>1.7.0</dapr.version>
     <guava.version>32.0.0-jre</guava.version>
@@ -20,7 +16,6 @@
     <sonar-maven-plugin.version>3.7.0.1746</sonar-maven-plugin.version>
     <testcontainers.version>1.20.5</testcontainers.version>
     <commons-io.version>2.20.0</commons-io.version>
-    <spring-boot.version>3.5.5</spring-boot.version>
     <testcontainers.version>1.20.5</testcontainers.version>
 
     <aggregate.report.dir>report-aggregate/target/site/jacoco-aggregate/jacoco.xml</aggregate.report.dir>
