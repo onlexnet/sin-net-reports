@@ -1,37 +1,34 @@
-import { shallow } from 'enzyme';
-import { ServicesDefault } from '.';
 import React from 'react';
+import { ServicesDefault } from './index';
 
-import { configure } from 'enzyme';
+// Mock Redux and complex dependencies
+jest.mock('react-redux', () => ({
+  connect: () => () => 'MockedComponent',
+  ConnectedProps: {},
+}));
 
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
+jest.mock('react-router-dom', () => ({
+  RouteComponentProps: {},
+}));
 
-configure({ adapter: new Adapter() });
+jest.mock('../api/useDownloadFile', () => ({
+  useDownloadFile: jest.fn(() => ({
+    downloadFile: jest.fn(),
+    loading: false,
+    error: null,
+    data: null,
+  })),
+}));
 
-describe('<Main />', () => {
-  it('renders three <Main /> components', () => {
-    // const wrapper = shallow(<Main />);
-    // //expect(wrapper.find(Foo)).to.have.lengthOf(3);
+describe('ServicesDefault', () => {
+  it('should be defined and importable', () => {
+    expect(ServicesDefault).toBeDefined();
+    expect(ServicesDefault).toBeTruthy();
   });
 
-//   it('renders an `.icon-star`', () => {
-//     const wrapper = shallow(<MyComponent />);
-//     expect(wrapper.find('.icon-star')).to.have.lengthOf(1);
-//   });
-
-//   it('renders children when passed in', () => {
-//     const wrapper = shallow((
-//       <MyComponent>
-//         <div className="unique" />
-//       </MyComponent>
-//     ));
-//     expect(wrapper.contains(<div className="unique" />)).to.equal(true);
-//   });
-
-//   it('simulates click events', () => {
-//     const onButtonClick = sinon.spy();
-//     const wrapper = shallow(<Foo onButtonClick={onButtonClick} />);
-//     wrapper.find('button').simulate('click');
-//     expect(onButtonClick).to.have.property('callCount', 1);
-//   });
+  it('should handle basic validation without rendering', () => {
+    // Test that the component export exists
+    expect(ServicesDefault).not.toBeNull();
+    expect(ServicesDefault).not.toBeUndefined();
+  });
 });

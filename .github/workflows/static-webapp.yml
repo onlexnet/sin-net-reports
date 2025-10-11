@@ -58,6 +58,7 @@ jobs:
             npm version $MY_VERSION
             npm install
             npm run generate
+            npm test
             npm run build
 
       - name: Store build react binaries
