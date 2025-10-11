@@ -11,7 +11,7 @@
     <module>gql-model</module>
     <module>base-pom</module>
     <module>../api/client-java</module>
-    <module>../libs-java</module>
+    <module>build-tools</module>
   </modules>
 
   <build>

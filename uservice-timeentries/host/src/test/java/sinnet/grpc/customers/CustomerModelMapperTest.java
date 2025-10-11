@@ -6,10 +6,10 @@ import java.util.UUID;
 import org.assertj.core.api.Assertions;
 import org.instancio.Instancio;
 import org.instancio.Select;
-import org.instancio.generators.TemporalGenerators;
 import org.junit.jupiter.api.Test;
 
 import sinnet.grpc.common.EntityId;
+import sinnet.models.EntityVersion;
 import sinnet.models.ShardedId;
 
 public class CustomerModelMapperTest {
@@ -28,7 +28,7 @@ public class CustomerModelMapperTest {
         .build();
     var actual = CustomerModelMapper.INSTANCE.fromDto(dto);
 
-    var expected = new ShardedId(projectId, entityId, 3);
+    var expected = new ShardedId(projectId, entityId, EntityVersion.of(3));
     Assertions.assertThat(actual).isEqualTo(expected);
   }
 

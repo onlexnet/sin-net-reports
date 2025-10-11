@@ -1,2 +1,0 @@
-CREATE ROLE uservice_customers_role_name WITH LOGIN PASSWORD 'uservice_customers_role_password';
-CREATE SCHEMA uservice_customers AUTHORIZATION uservice_customers_role_name;

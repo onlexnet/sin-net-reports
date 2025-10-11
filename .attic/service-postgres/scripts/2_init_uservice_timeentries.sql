@@ -1,2 +1,0 @@
-CREATE ROLE uservice_timeentries_role_name WITH LOGIN PASSWORD 'uservice_timeentries_role_password';
-CREATE SCHEMA uservice_timeentries AUTHORIZATION uservice_timeentries_role_name;

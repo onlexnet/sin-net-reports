@@ -1,3 +1,0 @@
-CREATE SCHEMA sinnet;
-CREATE ROLE sinnet;
-

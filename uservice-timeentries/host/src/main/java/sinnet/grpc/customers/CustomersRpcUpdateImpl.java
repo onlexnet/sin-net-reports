@@ -11,50 +11,66 @@ import org.springframework.stereotype.Component;
 
 import com.google.common.base.Objects;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import sinnet.domain.model.ValEmail;
 import sinnet.grpc.common.Mapper;
 import sinnet.grpc.mapping.RpcCommandHandlerBase;
 import sinnet.models.Clone;
+import sinnet.models.EntityVersion;
 
 /**
  * TBD.
  */
 @Component
-@RequiredArgsConstructor
 @Slf4j
 class CustomersRpcUpdateImpl extends RpcCommandHandlerBase<UpdateCommand, UpdateResult> implements CustomersRpcUpdate {
 
   private final CustomerRepositoryEx repository;
 
+  public CustomersRpcUpdateImpl(CustomerRepositoryEx repository) {
+    this.repository = repository;
+  }
+
   @Override
   public UpdateResult apply(UpdateCommand cmd) {
+
     var emailOfRequestor = ValEmail.of(cmd.getUserToken().getRequestorEmail());
     var model = MapperDto.fromDto(cmd.getModel());
 
     var now = java.time.LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
 
     // when the first time we store Customer data, all secrets should have date same as creation time
-    if (model.getId().getVersion() == 0) {
-      for (var secret : model.getSecrets()) {
-        secret.setChangedWhen(now);
+    switch (model.getId().version()) {
+      case EntityVersion.Reserved it -> {
+        for (var secret : model.getSecrets()) {
+          secret.setChangedWhen(now);
+        }
+        for (var secret : model.getSecretsEx()) {
+          secret.setChangedWhen(now);
+        }
       }
-      for (var secret : model.getSecretsEx()) {
-        secret.setChangedWhen(now);
-      }
+      case EntityVersion.Existing existingVersion -> { }
     }
     
     // when we update a Customer, we need to compare secrets and update time on only those wher ewe have new data
-    if (model.getId().getVersion() > 0) {
-      var secretsIn = model.getSecrets();
-      var secretsExtIn = model.getSecretsEx();
-      log.info("Customer update, no of secrets: {}, no of secrets ext: {}", secretsIn.size(), secretsExtIn.size());
-      var storedModel = repository.get(model.getId());
-      var secrets = normalizeSecrets(model.getSecrets(), storedModel.get().getSecrets(), now, emailOfRequestor);
-      var secretsExt = normalizeSecretsExt(model.getSecretsEx(), storedModel.get().getSecretsEx(), now, emailOfRequestor);
-      model.setSecrets(secrets);
-      model.setSecretsEx(secretsExt);
+    switch (model.getId().version()) {
+      case EntityVersion.Reserved it -> {
+        // handled above
+      }
+      case EntityVersion.Existing existingVersion -> {
+        var secretsIn = model.getSecrets();
+        var secretsExtIn = model.getSecretsEx();
+        log.info("Customer update, no of secrets: {}, no of secrets ext: {}", secretsIn.size(), secretsExtIn.size());
+        var storedModel = repository.get(model.getId());
+        if (storedModel.isEmpty()) {
+          log.warn("Customer with id {} not found, cannot update secrets", model.getId());
+        }
+        log.info("Stored model has no of secrets: {}, no of secrets ext: {}", storedModel.get().getSecrets().size(), storedModel.get().getSecretsEx().size());
+        var secrets = normalizeSecrets(model.getSecrets(), storedModel.get().getSecrets(), now, emailOfRequestor);
+        var secretsExt = normalizeSecretsExt(model.getSecretsEx(), storedModel.get().getSecretsEx(), now, emailOfRequestor);
+        model.setSecrets(secrets);
+        model.setSecretsEx(secretsExt);
+      }
     }
 
     var newId = repository.write(model);
