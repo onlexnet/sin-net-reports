@@ -13,11 +13,11 @@ import sinnet.models.ShardedId;
  */
 public interface ActionRepositoryEx {
 
-  Boolean save(ShardedId entityId, ActionValue entity);
+  ShardedId save(UUID projectId, UUID id, ActionValue entity);
 
-  ShardedId update(Entity<ActionValue> entity);
+  ShardedId update1(Entity<ActionValue> entity);
 
-  Boolean remove(ShardedId id);
+  Boolean remove1(ShardedId id);
 
   List<Entity<ActionValue>> list(UUID projectId, LocalDate from, LocalDate to);
 

@@ -1,16 +1,12 @@
 <project>
   <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>onlexnet.sinnet</groupId>
-    <artifactId>uservice-spring-parent</artifactId>
-    <version>0.1.3</version>
-    <relativePath />
-  </parent>
+  <groupId>onlexnet.sinnet</groupId>
   <artifactId>uservice-timeentries-base</artifactId>
   <version>${revision}</version>
   <packaging>pom</packaging>
 
   <properties>
+    <spring-boot.version>3.5.5</spring-boot.version>
     <api.version>0.1.3</api.version>
     <dapr.version>1.7.0</dapr.version>
     <guava.version>32.0.0-jre</guava.version>
@@ -20,18 +16,25 @@
     <sonar-maven-plugin.version>3.7.0.1746</sonar-maven-plugin.version>
     <testcontainers.version>1.20.5</testcontainers.version>
     <commons-io.version>2.20.0</commons-io.version>
-    <spring-boot.version>3.3.3</spring-boot.version>
     <testcontainers.version>1.20.5</testcontainers.version>
 
     <aggregate.report.dir>report-aggregate/target/site/jacoco-aggregate/jacoco.xml</aggregate.report.dir>
   </properties>
 
   <dependencies>
+
+    <dependency>
+        <groupId>org.jspecify</groupId>
+        <artifactId>jspecify</artifactId>
+    </dependency>
+
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
       <version>1.18.26</version>
+      <scope>provided</scope>
     </dependency>
+
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
@@ -99,6 +102,12 @@
       </dependency>
 
       <dependency>
+          <groupId>org.jspecify</groupId>
+          <artifactId>jspecify</artifactId>
+          <version>1.0.0</version>
+      </dependency>
+
+      <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-dependencies</artifactId>
         <version>${spring-boot.version}</version>
@@ -160,20 +169,69 @@
           <version>${org.mapstruct.version}</version>
       </dependency>
 
-      <dependency>
-        <groupId>org.testcontainers</groupId>
-        <artifactId>testcontainers-bom</artifactId>
-        <version>${testcontainers.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-
     </dependencies>
 
   </dependencyManagement>
 
   <build>
     <plugins>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <version>3.3.1</version>
+        <executions>
+          <execution>
+            <phase>process-sources</phase>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <configLocation>build-checkstyle/google_checks_customized.xml</configLocation>
+          <violationSeverity>warning</violationSeverity>
+          <failOnViolation>true</failOnViolation>
+        </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>com.puppycrawl.tools</groupId>
+            <artifactId>checkstyle</artifactId>
+            <version>10.16.0</version>
+          </dependency>
+          <dependency>
+            <groupId>onlexnet.sinnet</groupId>
+            <artifactId>build-tools</artifactId>
+            <version>${revision}</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+      
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>flatten-maven-plugin</artifactId>
+        <version>1.4.1</version>
+        <configuration>
+          <updatePomFile>true</updatePomFile>
+          <flattenMode>resolveCiFriendliesOnly</flattenMode>
+        </configuration>
+        <executions>
+          <execution>
+            <id>flatten</id>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>flatten</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>flatten.clean</id>
+            <phase>clean</phase>
+            <goals>
+              <goal>clean</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
 
       <!-- 
         Without the plugin spring-boot:run is not able to compile dependencies
@@ -195,20 +253,49 @@
         <version>3.13.0</version>
         <configuration>
           <release>21</release>
+          <fork>true</fork>
           <compilerArgs>
-            <arg>-Werror</arg>
-            <arg>-parameters</arg> <!-- so that @Param is not required in JPA -->
+            <arg>-parameters</arg>
+            <arg>-XDcompilePolicy=simple</arg>
+            <arg>-Xplugin:ErrorProne -XepDisableAllChecks -XepOpt:NullAway:OnlyNullMarked=true -Xep:NullAway:ERROR</arg>
+            <!-- <arg>-Xplugin:ErrorProne -XepDisableAllChecks -XepOpt:NullAway:OnlyNullMarked=true -XepOpt:NullAway:ERROR</arg> -->
+            <!-- <arg>-Xplugin:ErrorProne -XepDisableAllChecks -XepOpt:NullAway:OnlyNullMarked=true -Xep:NullAway:ERROR -XepOpt:NullAway:JSpecifyMode=true</arg> -->
+            <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED</arg>
+            <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED</arg>
+            <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED</arg>
+            <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.model=ALL-UNNAMED</arg>
+            <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED</arg>
+            <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED</arg>
+            <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED</arg>
+            <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED</arg>
+            <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED</arg>
+            <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED</arg>
           </compilerArgs>
           <annotationProcessorPaths>
             <path>
+              <groupId>org.springframework.boot</groupId>
+              <artifactId>spring-boot-configuration-processor</artifactId>
+              <version>${spring-boot.version}</version>
+            </path>
+            <path>
               <groupId>org.projectlombok</groupId>
               <artifactId>lombok</artifactId>
-              <version>1.18.32</version>
+              <version>1.18.30</version>
             </path>
             <path>
               <groupId>de.firehead</groupId>
               <artifactId>mapstruct-spi-protobuf</artifactId>
               <version>1.1.0</version>
+            </path>
+            <path>
+              <groupId>com.google.errorprone</groupId>
+              <artifactId>error_prone_core</artifactId>
+              <version>2.24.1</version>
+            </path>
+            <path>
+              <groupId>com.uber.nullaway</groupId>
+              <artifactId>nullaway</artifactId>
+              <version>0.12.10</version>
             </path>
           </annotationProcessorPaths>
         </configuration>

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import sinnet.models.ActionValue;
 import sinnet.models.Entity;
+import sinnet.models.EntityVersion;
 import sinnet.models.ShardedId;
 import sinnet.write.ActionRepositoryEx;
 
@@ -22,20 +23,21 @@ public class ActionRepositoryExImpl implements ActionRepositoryEx, MapperDbo {
   private final ActionRepository repository;
 
   @Override
-  public Boolean save(ShardedId entityId, ActionValue entity) {
+  public ShardedId save(UUID projectId, UUID id, ActionValue entity) {
+    var entityId = new ShardedId(projectId, id, null);
     var model = entity.withId(entityId);
     var dbModel = toDbo(model);
     repository.save(dbModel);
-    return true;
+    return entityId.next();
   }
 
 
   @Override
-  public ShardedId update(Entity<ActionValue> entity) {
+  public ShardedId update1(Entity<ActionValue> entity) {
     var desired = entity;
     var template = toDbo(desired);
     var id = entity.getId();
-    var actual = repository.findByProjectIdAndEntityIdAndEntityVersion(id.getProjectId(), id.getId(), id.getVersion());
+    var actual = repository.findByProjectIdAndEntityIdAndEntityVersion(id.projectId(), id.id(), EntityVersion.toDbo(id.version()));
     actual.setServicemanEmail(template.getServicemanEmail());
     actual.setDescription(template.getDescription());
     actual.setDistance(template.getDistance());
@@ -47,10 +49,10 @@ public class ActionRepositoryExImpl implements ActionRepositoryEx, MapperDbo {
   }
 
   @Override
-  public Boolean remove(ShardedId id) {
-    var projectId = id.getProjectId();
-    var entityId = id.getId();
-    var version = id.getVersion();
+  public Boolean remove1(ShardedId id) {
+    var projectId = id.projectId();
+    var entityId = id.id();
+    var version = EntityVersion.toDbo(id.version());
     repository.deleteByProjectIdAndEntityIdAndEntityVersion(projectId, entityId, version);
     return true;
   }

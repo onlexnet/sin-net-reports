@@ -43,10 +43,6 @@ jobs:
         run: mvn -ntp clean install
         working-directory: api/client-java
 
-      - name: Build Java Libraries
-        run: mvn -ntp clean install
-        working-directory: libs-java
-
       - name: Build Timeentries Service
         working-directory: uservice-timeentries
         run: |
@@ -139,11 +135,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
 
-      - name: Check for dependency updates in libs-java
-        run: mvn versions:display-dependency-updates -ntp
-        working-directory: libs-java
-        continue-on-error: true
-
       - name: Check for dependency updates in timeentries
         run: mvn versions:display-dependency-updates -ntp
         working-directory: uservice-timeentries
@@ -154,7 +145,3 @@ jobs:
         working-directory: uservice-webapi
         continue-on-error: true
 
-      - name: Check for plugin updates in libs-java
-        run: mvn versions:display-plugin-updates -ntp
-        working-directory: libs-java
-        continue-on-error: true

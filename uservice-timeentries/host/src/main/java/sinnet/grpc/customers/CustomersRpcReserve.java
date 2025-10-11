@@ -18,7 +18,7 @@ public class CustomersRpcReserve {
 
   void command(ReserveRequest request, StreamObserver<ReserveReply> responseObserver) {
     var projectId = UUID.fromString(request.getProjectId());
-    var entity = ShardedId.anyNew(projectId);
+    var entity = ShardedId.reserved(projectId);
 
     var result = ReserveReply.newBuilder()
         .setEntityId(Mapper.toDto(entity))

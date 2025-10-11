@@ -93,8 +93,8 @@ public class CustomersStepDefinition {
     var actual = CustomerModelMapper.INSTANCE.fromDto(customerInDb);
 
     actual.setId(expected.getId());
-    CustomerSandboxTest.sortItems(actual);
-    CustomerSandboxTest.sortItems(expected);
+    CustomerSandboxTest.sortSubcollections(actual);
+    CustomerSandboxTest.sortSubcollections(expected);
 
     for (int i = 0; i < expected.getSecrets().size(); i++) {
       expected.getSecrets().get(i).setChangedWhen(actual.getSecrets().get(i).getChangedWhen());

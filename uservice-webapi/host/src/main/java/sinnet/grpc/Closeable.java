@@ -2,12 +2,9 @@ package sinnet.grpc;
 
 import java.util.function.Consumer;
 
-import lombok.Value;
-import lombok.experimental.Accessors;
-
 /** 
  * Simple wrapper for non-closeable beans, managed by DI.
- * Allows to close beans whrn ApplicationConext is closing.
+ * Allows to close beans when ApplicationConext is closing.
  */
 public interface Closeable {
   
@@ -20,11 +17,7 @@ public interface Closeable {
   }
 
   /** The wrapper. */
-  @Value
-  @Accessors(fluent = true)
-  class Of<T> implements AutoCloseable {
-    private T item;
-    private AutoCloseable onClose;
+  record Of<T>(T item, AutoCloseable onClose) implements AutoCloseable {
 
     @Override
     public void close() throws Exception {

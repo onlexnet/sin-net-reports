@@ -27,7 +27,7 @@ public class TimeEntriesRpcUpdate extends RpcCommandHandlerBase<UpdateCommand, U
     var entryDto = cmd.getModel();
     var entry = MapperDto.fromDto(entryDto);
 
-    actionService.update(entry);
+    actionService.update1(entry);
     return UpdateResult.newBuilder().setSuccess(true).build();
   }
 

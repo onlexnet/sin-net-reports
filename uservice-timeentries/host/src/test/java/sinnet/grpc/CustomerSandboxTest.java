@@ -31,7 +31,7 @@ import sinnet.models.CustomerModel;
 import sinnet.models.ShardedId;
 import sinnet.models.ValName;
 
-// PLayground for manual testing and observe SQL in logs
+// Playground for various database-related tests, and monitoring SQL entries in logs
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 @ExtendWith(SqlServerDbExtension.class)
@@ -111,29 +111,29 @@ public class CustomerSandboxTest {
           .create();
       var customerName = UUID.randomUUID().toString();
       expected.getValue().setCustomerName(ValName.of(customerName));
-      expected.setId(ShardedId.of(projectId, expected.getId().getId(), 0));
+      expected.setId(ShardedId.of(projectId, expected.getId().id(), -1));
       var expectedDbo = CustomerMapper.INSTANCE.toJpaDbo(expected);
 
       var logObserver = LogAssert.ofHibernate();
       int expectedSelects = 0;
 
       customerRepository.saveAndFlush(expectedDbo);
-      expectedSelects++;
+      // expectedSelects++;
 
       var customers = customerRepository.findByProjectId(projectId);
       expectedSelects++;
       var maybeActual = customers.stream().filter(it -> it.getCustomerName().equals(customerName)).findFirst();
       Assertions.assertThat(maybeActual).isNotEmpty();
 
-      // revert version to 0 as actual has already 1 after saving
       var actualDbo = maybeActual.get();
-      actualDbo.setEntityVersion(0L);
 
       var actual = CustomerMapper.INSTANCE.fromDbo2(actualDbo);
       
       // as data is unsorted, we have to sort it for comparison
-      sortItems(actual);
-      sortItems(expected);
+      sortSubcollections(actual);
+      sortSubcollections(expected);
+      // set version on initial model to same as we should have returned from DB
+      expected.setId(expected.getId().next());
       Assertions.assertThat(actual).isEqualTo(expected);
 
       LogAssert.assertThat(logObserver)
@@ -145,7 +145,7 @@ public class CustomerSandboxTest {
 
   }
 
-  public static void sortItems(CustomerModel dbo) {
+  public static void sortSubcollections(CustomerModel dbo) {
     dbo.getContacts().sort(Comparator.comparing(a -> a.getEmail(), String.CASE_INSENSITIVE_ORDER));
     dbo.getSecrets().sort(Comparator.comparing(a -> a.getUsername(), String.CASE_INSENSITIVE_ORDER));
     dbo.getSecretsEx().sort(Comparator.comparing(a -> a.getUsername(), String.CASE_INSENSITIVE_ORDER));

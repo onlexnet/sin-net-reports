@@ -12,6 +12,7 @@ import sinnet.models.CustomerModel;
 import sinnet.models.CustomerSecret;
 import sinnet.models.CustomerSecretEx;
 import sinnet.models.CustomerValue;
+import sinnet.models.EntityVersion;
 import sinnet.models.ValName;
 
 /**
@@ -25,9 +26,9 @@ public interface MapperDto extends Mapper {
   static sinnet.grpc.customers.CustomerModel toDto(CustomerModel it) {
     return sinnet.grpc.customers.CustomerModel.newBuilder()
         .setId(PropsBuilder.build(sinnet.grpc.common.EntityId.newBuilder())
-            .set(it.getId().getProjectId().toString(), b -> b::setProjectId)
-            .set(it.getId().getId().toString(), b -> b::setEntityId)
-            .set(it.getId().getVersion(), b -> b::setEntityVersion)
+            .set(it.getId().projectId().toString(), b -> b::setProjectId)
+            .set(it.getId().id().toString(), b -> b::setEntityId)
+            .set(it.getId().version(), EntityVersion::toDto, b -> b::setEntityVersion)
             .done().build())
         .setValue(toDto(it.getValue()))
         .addAllSecrets(it.getSecrets().stream().map(MapperDto::toDto).toList())

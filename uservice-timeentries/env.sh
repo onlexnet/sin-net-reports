@@ -1,0 +1,8 @@
+export DAPR_GRPC_PORT=50001
+export DAPR_HTTP_PORT=3601
+
+export DATABASE_HOST=localhost
+export DATABASE_PORT=1433
+export DATABASE_NAME=tempdb
+export DATABASE_USERNAME=sa
+export DATABASE_PASSWORD=password123!
