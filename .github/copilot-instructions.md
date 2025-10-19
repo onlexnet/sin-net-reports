@@ -38,7 +38,7 @@ Build all components in this exact order. NEVER CANCEL builds - they may take lo
 cd uservice-timeentries
 pushd .
 cd host/src/main/resources/applicationinsights
-export APPLICATIONINSIGHTS_AGENT_VERSION=3.7.0
+export APPLICATIONINSIGHTS_AGENT_VERSION=3.7.4
 wget --no-verbose https://github.com/microsoft/ApplicationInsights-Java/releases/download/${APPLICATIONINSIGHTS_AGENT_VERSION}/applicationinsights-agent-${APPLICATIONINSIGHTS_AGENT_VERSION}.jar
 mv applicationinsights-agent-${APPLICATIONINSIGHTS_AGENT_VERSION}.jar applicationinsights-agent.jar
 popd
@@ -52,7 +52,7 @@ cd ..
 cd uservice-webapi
 pushd .
 cd host/src/main/resources/applicationinsights
-export APPLICATIONINSIGHTS_AGENT_VERSION=3.7.0
+export APPLICATIONINSIGHTS_AGENT_VERSION=3.7.4
 wget --no-verbose https://github.com/microsoft/ApplicationInsights-Java/releases/download/${APPLICATIONINSIGHTS_AGENT_VERSION}/applicationinsights-agent-${APPLICATIONINSIGHTS_AGENT_VERSION}.jar
 mv applicationinsights-agent-${APPLICATIONINSIGHTS_AGENT_VERSION}.jar applicationinsights-agent.jar
 popd

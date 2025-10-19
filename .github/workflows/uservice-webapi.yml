@@ -57,7 +57,7 @@ jobs:
           # as we known, the copied file will be located finally in /workspaces/BOOT-INFO/classes/applicationinsights.
           pushd . # remember current working dir
           cd host/src/main/resources/applicationinsights # goto well-known folder designed to be included in target image
-          export APPLICATIONINSIGHTS_AGENT_VERSION=3.7.0
+          export APPLICATIONINSIGHTS_AGENT_VERSION=3.7.4
           wget --no-verbose https://github.com/microsoft/ApplicationInsights-Java/releases/download/${APPLICATIONINSIGHTS_AGENT_VERSION}/applicationinsights-agent-${APPLICATIONINSIGHTS_AGENT_VERSION}.jar # download ...
           mv applicationinsights-agent-${APPLICATIONINSIGHTS_AGENT_VERSION}.jar applicationinsights-agent.jar # ... and rename to unified name applicationinsight agent
           popd # restore working dir

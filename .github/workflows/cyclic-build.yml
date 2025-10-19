@@ -49,7 +49,7 @@ jobs:
           # Download ApplicationInsights agent for build validation
           pushd .
           cd host/src/main/resources/applicationinsights
-          export APPLICATIONINSIGHTS_AGENT_VERSION=3.7.0
+          export APPLICATIONINSIGHTS_AGENT_VERSION=3.7.4
           wget --no-verbose \
             https://github.com/microsoft/ApplicationInsights-Java/releases/download/${APPLICATIONINSIGHTS_AGENT_VERSION}/applicationinsights-agent-${APPLICATIONINSIGHTS_AGENT_VERSION}.jar
           mv applicationinsights-agent-${APPLICATIONINSIGHTS_AGENT_VERSION}.jar \
@@ -65,7 +65,7 @@ jobs:
           # Download ApplicationInsights agent for build validation
           pushd .
           cd host/src/main/resources/applicationinsights
-          export APPLICATIONINSIGHTS_AGENT_VERSION=3.7.0
+          export APPLICATIONINSIGHTS_AGENT_VERSION=3.7.4
           wget --no-verbose \
             https://github.com/microsoft/ApplicationInsights-Java/releases/download/${APPLICATIONINSIGHTS_AGENT_VERSION}/applicationinsights-agent-${APPLICATIONINSIGHTS_AGENT_VERSION}.jar
           mv applicationinsights-agent-${APPLICATIONINSIGHTS_AGENT_VERSION}.jar \
