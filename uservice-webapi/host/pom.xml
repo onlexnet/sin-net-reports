@@ -25,15 +25,6 @@
     <aggregate.report.dir>report-aggregate/target/site/jacoco-aggregate/jacoco.xml</aggregate.report.dir> -->
     <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/../${aggregate.report.dir}</sonar.coverage.jacoco.xmlReportPaths>
 
-    <!--
-      Disable error:
-      [ERROR] .NET Assembly Analyzer could not be initialized and at least one 'exe' or 'dll' was
-      scanned. The 'dotnet' executable could not be found on the path; either disable the Assembly
-      Analyzer or add the path to dotnet core in the configuration.
-      [ERROR] The dotnet 6.0 core runtime or SDK is required to analyze assemblies
-    -->
-    <analyzer.assembly.enabled>false</analyzer.assembly.enabled>
-
     <org.apache.poi.version>5.4.0</org.apache.poi.version>
   </properties>
 
