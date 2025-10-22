@@ -13,10 +13,10 @@ import sinnet.gql.models.CustomerSecretExInput;
 import sinnet.gql.models.CustomerSecretInput;
 import sinnet.gql.models.EntityGql;
 import sinnet.gql.models.SomeEntityGql;
-import sinnet.grpc.CustomersGrpcFacade;
 import sinnet.grpc.customers.CustomerModel;
 import sinnet.grpc.customers.UpdateCommand;
 import sinnet.infra.TimeProvider;
+import sinnet.ports.timeentries.CustomersGrpcFacade;
 
 /** Fixme. */
 @Controller

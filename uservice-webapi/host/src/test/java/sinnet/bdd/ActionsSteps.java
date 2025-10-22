@@ -17,9 +17,9 @@ import sinnet.gql.api.CommonMapper;
 import sinnet.gql.models.ServiceModelGql;
 import sinnet.gql.models.ServicesSearchResultGql;
 import sinnet.gql.models.SomeEntityGql;
-import sinnet.grpc.ActionsGrpcFacade;
 import sinnet.grpc.common.EntityId;
 import sinnet.grpc.timeentries.TimeEntryModel;
+import sinnet.ports.timeentries.ActionsGrpcFacade;
 
 public class ActionsSteps {
 

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Controller;
 import lombok.RequiredArgsConstructor;
 import sinnet.gql.models.ProjectEntityGql;
 import sinnet.gql.models.SomeEntityGql;
-import sinnet.grpc.ProjectsGrpcFacade;
+import sinnet.ports.timeentries.ProjectsGrpcFacade;
 
 @Controller
 @RequiredArgsConstructor

@@ -2,7 +2,10 @@ package sinnet;
 
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
 
+import org.junit.jupiter.api.Test;
+
 import com.tngtech.archunit.core.domain.JavaClass;
+import com.tngtech.archunit.core.importer.ClassFileImporter;
 import com.tngtech.archunit.core.importer.ImportOption;
 import com.tngtech.archunit.junit.AnalyzeClasses;
 import com.tngtech.archunit.junit.ArchTest;
@@ -11,6 +14,7 @@ import com.tngtech.archunit.lang.ArchRule;
 import com.tngtech.archunit.lang.CompositeArchRule;
 import com.tngtech.archunit.lang.ConditionEvents;
 import com.tngtech.archunit.lang.SimpleConditionEvent;
+import com.tngtech.archunit.library.Architectures;
 import com.tngtech.archunit.library.GeneralCodingRules;
 
 @AnalyzeClasses(packages = "sinnet", importOptions = ImportOption.DoNotIncludeTests.class)
@@ -35,14 +39,30 @@ public class AppArchTest {
       .and(GeneralCodingRules.NO_CLASSES_SHOULD_USE_FIELD_INJECTION)
       .because("These are Voilation of general coding rules");
 
-  // @ArchTest
-  // static final ArchRule dboNameAndVisibility = classes().that()
-  //     .areAnnotatedWith(Entity.class)
-  //     .should()
-  //     .bePackagePrivate()
-  //     .andShould()
-  //     .haveSimpleNameEndingWith("Dbo");
+    static final String ROOT_PACKAGE_PORTS = "sinnet.ports..";
+    static final String ROOT_PACKAGE_DOMAIN = "sinnet.domain..";
+    static final String ROOT_PACKAGE_GQL = "sinnet.gql..";
+    static final String ROOT_PACKAGE_APP = "sinnet.app..";
 
+    @Test
+    void shouldSeparateModules() {
+
+      var testedClasses = new ClassFileImporter()
+          .withImportOption(new ImportOption.DoNotIncludeTests())
+          .withImportOption(new ImportOption.DoNotIncludeArchives())
+          .importPackages("sinnet");
+
+      // Ports should not depend on domain
+      var architecture = Architectures.layeredArchitecture()
+          .consideringAllDependencies()
+          .layer("Ports").definedBy(ROOT_PACKAGE_PORTS)
+          .layer("Domain").definedBy(ROOT_PACKAGE_DOMAIN)
+          .layer("GQL").definedBy(ROOT_PACKAGE_GQL)
+          .layer("App").definedBy(ROOT_PACKAGE_APP)
+          .whereLayer("Domain").mayOnlyBeAccessedByLayers("Ports", "App", "GQL");
+
+      architecture.check(testedClasses);
+    }
 }
 
 // Copy of DependencyRules.NO_CLASSES_SHOULD_DEPEND_UPPER_PACKAGES from ArchUnit

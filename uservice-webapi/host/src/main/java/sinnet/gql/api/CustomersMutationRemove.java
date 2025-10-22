@@ -7,8 +7,8 @@ import org.springframework.stereotype.Controller;
 
 import lombok.RequiredArgsConstructor;
 import sinnet.gql.models.EntityGql;
-import sinnet.grpc.CustomersGrpcFacade;
 import sinnet.grpc.customers.RemoveRequest;
+import sinnet.ports.timeentries.CustomersGrpcFacade;
 
 @Controller
 @RequiredArgsConstructor

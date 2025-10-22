@@ -20,7 +20,7 @@ import io.vavr.collection.HashMap;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
 import sinnet.gql.api.CommonMapper;
-import sinnet.grpc.ActionsGrpcFacade;
+import sinnet.ports.timeentries.ActionsGrpcFacade;
 import sinnet.report2.grpc.ReportRequest;
 import sinnet.report2.grpc.ReportsGrpc.ReportsBlockingStub;
 

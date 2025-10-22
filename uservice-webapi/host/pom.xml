@@ -20,7 +20,7 @@
     <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     <!-- Environment variable is already defined in CICD as SONAR_TOKEN -->
     <sonar.login>${env.SONAR_TOKEN}</sonar.login>
-
+    <archunit-junit5.version>1.4.1</archunit-junit5.version>
     <!--
     <aggregate.report.dir>report-aggregate/target/site/jacoco-aggregate/jacoco.xml</aggregate.report.dir> -->
     <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/../${aggregate.report.dir}</sonar.coverage.jacoco.xmlReportPaths>
@@ -106,7 +106,7 @@
     <dependency>
       <groupId>com.tngtech.archunit</groupId>
       <artifactId>archunit-junit5</artifactId>
-      <version>1.2.0</version>
+      <version>${archunit-junit5.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>

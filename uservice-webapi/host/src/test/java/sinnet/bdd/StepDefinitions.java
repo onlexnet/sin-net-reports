@@ -26,10 +26,6 @@ import sinnet.gql.models.CustomerSecretInput;
 import sinnet.gql.models.ProjectEntityGql;
 import sinnet.gql.models.SomeEntityGql;
 import sinnet.gql.models.UserGql;
-import sinnet.grpc.CustomersGrpcFacade;
-import sinnet.grpc.ProjectsGrpcFacade;
-import sinnet.grpc.ProjectsGrpcFacade.StatsResult;
-import sinnet.grpc.UsersGrpcService;
 import sinnet.grpc.common.EntityId;
 import sinnet.grpc.common.UserToken;
 import sinnet.grpc.customers.CustomerModel;
@@ -40,6 +36,10 @@ import sinnet.grpc.customers.UpdateCommand;
 import sinnet.grpc.customers.UpdateResult;
 import sinnet.grpc.users.UsersSearchModel;
 import sinnet.infra.TimeProvider;
+import sinnet.ports.timeentries.CustomersGrpcFacade;
+import sinnet.ports.timeentries.ProjectsGrpcFacade;
+import sinnet.ports.timeentries.UsersGrpcService;
+import sinnet.ports.timeentries.ProjectsGrpcFacade.StatsResult;
 
 public class StepDefinitions {
 

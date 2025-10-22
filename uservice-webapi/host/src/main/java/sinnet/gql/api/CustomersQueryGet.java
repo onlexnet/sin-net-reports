@@ -6,9 +6,9 @@ import org.springframework.stereotype.Controller;
 
 import lombok.RequiredArgsConstructor;
 import sinnet.gql.models.CustomerEntityGql;
-import sinnet.grpc.CustomersGrpcFacade;
 import sinnet.grpc.common.EntityId;
 import sinnet.grpc.customers.GetRequest;
+import sinnet.ports.timeentries.CustomersGrpcFacade;
 
 @Controller
 @RequiredArgsConstructor

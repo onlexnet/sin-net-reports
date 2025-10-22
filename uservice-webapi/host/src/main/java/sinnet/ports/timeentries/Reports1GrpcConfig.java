@@ -1,23 +1,24 @@
-package sinnet.grpc;
+package sinnet.ports.timeentries;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import io.grpc.ManagedChannelBuilder;
-import sinnet.grpc.GrpcProperties.ServiceAddress;
-import sinnet.report2.grpc.ReportsGrpc;
-import sinnet.report2.grpc.ReportsGrpc.ReportsBlockingStub;
+import sinnet.ports.timeentries.Closeable.Of;
+import sinnet.ports.timeentries.GrpcProperties.ServiceAddress;
+import sinnet.report1.grpc.ReportsGrpc;
+import sinnet.report1.grpc.ReportsGrpc.ReportsBlockingStub;
 
 @Configuration
-class Reports2GrpcConfig {
+class Reports1GrpcConfig {
 
   @Bean
-  ReportsBlockingStub reports2BlockingStub(Closeable.Of<ReportsBlockingStub> closeableReports2BlockingStub) {
-    return closeableReports2BlockingStub.item();
+  ReportsBlockingStub reports1BlockingStub(Closeable.Of<ReportsBlockingStub> closeableReports1BlockingStub) {
+    return closeableReports1BlockingStub.item();
   }
 
   @Bean
-  Closeable.Of<ReportsBlockingStub> closeableReports2BlockingStub(GrpcProperties props) {
+  Closeable.Of<ReportsBlockingStub> closeableReports1BlockingStub(GrpcProperties props) {
     return managedChannel(props.getReports());
   }
 

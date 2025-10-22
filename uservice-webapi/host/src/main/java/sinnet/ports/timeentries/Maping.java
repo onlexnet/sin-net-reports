@@ -1,4 +1,4 @@
-package sinnet.grpc;
+package sinnet.ports.timeentries;
 
 import lombok.experimental.UtilityClass;
 import sinnet.gql.api.CommonMapper;

@@ -7,8 +7,8 @@ import org.springframework.stereotype.Controller;
 import io.vavr.collection.Iterator;
 import lombok.RequiredArgsConstructor;
 import sinnet.gql.models.CustomerEntityGql;
-import sinnet.grpc.CustomersGrpcFacade;
 import sinnet.grpc.customers.ListRequest;
+import sinnet.ports.timeentries.CustomersGrpcFacade;
 
 @Controller
 @RequiredArgsConstructor
