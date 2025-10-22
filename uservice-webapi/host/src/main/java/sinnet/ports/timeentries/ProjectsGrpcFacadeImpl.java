@@ -1,10 +1,10 @@
-package sinnet.grpc;
+package sinnet.ports.timeentries;
 
 import java.util.List;
+import java.util.function.Function;
 
 import org.springframework.stereotype.Component;
 
-import io.vavr.Function1;
 import lombok.RequiredArgsConstructor;
 import sinnet.domain.ProjectId;
 import sinnet.gql.models.ProjectEntityGql;
@@ -60,7 +60,7 @@ class ProjectsGrpcFacadeImpl implements ProjectsGrpcFacade {
   }
 
   @Override
-  public List<ProjectEntityGql> list(String requestorEmail, Function1<Project, ProjectEntityGql> mapper) {
+  public List<ProjectEntityGql> list(String requestorEmail, Function<Project, ProjectEntityGql> mapper) {
     var request = ListRequest.newBuilder()
         .setEmailOfRequestor(requestorEmail)
         .build();

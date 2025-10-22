@@ -1,8 +1,8 @@
-package sinnet.grpc;
+package sinnet.ports.timeentries;
 
 import java.util.List;
+import java.util.function.Function;
 
-import io.vavr.Function1;
 import sinnet.domain.ProjectId;
 import sinnet.gql.models.ProjectEntityGql;
 import sinnet.grpc.projects.generated.Project;
@@ -14,7 +14,7 @@ public interface ProjectsGrpcFacade {
 
   ProjectId update(String requestorEmail, ProjectId id, String name, String ownerEmail, List<String> operatorEmail);
 
-  List<ProjectEntityGql> list(String requestorEmail, Function1<Project, ProjectEntityGql> mapper);
+  List<ProjectEntityGql> list(String requestorEmail, Function<Project, ProjectEntityGql> mapper);
 
   StatsResult userStats(String requestorEmail);
 

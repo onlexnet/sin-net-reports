@@ -12,6 +12,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.test.context.ActiveProfiles;
 
 import onlexnet.sinnet.webapi.test.AppApi;
+import sinnet.app.Program;
 
 @SpringBootTest(webEnvironment = RANDOM_PORT, classes = Program.class)
 @ActiveProfiles(Profiles.App.TEST)

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Controller;
 
 import lombok.RequiredArgsConstructor;
 import sinnet.gql.models.SomeEntityGql;
-import sinnet.grpc.ActionsGrpcFacade;
+import sinnet.ports.timeentries.ActionsGrpcFacade;
 
 @Controller
 @RequiredArgsConstructor

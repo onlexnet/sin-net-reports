@@ -10,7 +10,7 @@ import org.springframework.stereotype.Controller;
 import lombok.RequiredArgsConstructor;
 import sinnet.domain.EntityId;
 import sinnet.gql.models.ServiceEntryInputGql;
-import sinnet.grpc.ActionsGrpcFacade;
+import sinnet.ports.timeentries.ActionsGrpcFacade;
 
 @Controller
 @RequiredArgsConstructor

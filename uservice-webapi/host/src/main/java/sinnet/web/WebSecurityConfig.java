@@ -21,7 +21,6 @@ public class WebSecurityConfig {
     return http
         .cors(cors -> cors
             .configurationSource(request -> new CorsConfiguration()
-            
             .applyPermitDefaultValues()))
         .csrf(it -> it.disable())
         .httpBasic(it -> it.disable())

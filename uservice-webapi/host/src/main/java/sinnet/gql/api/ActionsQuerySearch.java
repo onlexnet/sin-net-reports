@@ -12,8 +12,8 @@ import lombok.Cleanup;
 import lombok.RequiredArgsConstructor;
 import sinnet.gql.models.ServiceFilterInputGql;
 import sinnet.gql.models.ServicesSearchResultGql;
-import sinnet.grpc.ActionsGrpcFacade;
-import sinnet.grpc.CustomersGrpcFacade;
+import sinnet.ports.timeentries.ActionsGrpcFacade;
+import sinnet.ports.timeentries.CustomersGrpcFacade;
 
 @Controller
 @RequiredArgsConstructor
