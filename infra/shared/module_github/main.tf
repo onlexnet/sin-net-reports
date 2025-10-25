@@ -70,6 +70,13 @@ resource "github_actions_environment_secret" "ONLEXNET_INFRA_SECRET" {
   plaintext_value = var.ONLEXNET_INFRA_SECRET
 }
 
+// secret REACT_APP_APPLICATIONINSIGHTS_CONNECTION_STRING
+resource "github_actions_environment_secret" "REACT_APP_APPLICATIONINSIGHTS_CONNECTION_STRING" {
+  environment     = github_repository_environment.main.environment
+  repository      = data.github_repository.sinnet.name
+  secret_name     = "REACT_APP_APPLICATIONINSIGHTS_CONNECTION_STRING"
+  plaintext_value = var.REACT_APP_APPLICATIONINSIGHTS_CONNECTION_STRING
+}
 resource "github_actions_environment_variable" "ONLEXNET_SINNET_PRD01_CONTAINERAPP_NAME_TIMEENTRIES" {
   environment   = github_repository_environment.main.environment
   repository    = data.github_repository.sinnet.name

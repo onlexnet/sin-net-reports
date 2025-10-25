@@ -52,6 +52,7 @@ jobs:
         working-directory: static-webapp
         env:
           REACT_APP_BUILD_VERSION: ${{ steps.build_version.outputs.BUILD_VERSION }}
+          REACT_APP_APPLICATIONINSIGHTS_CONNECTION_STRING: ${{ secrets.APPLICATIONINSIGHTS_CONNECTION_STRING }}
         run: |
             export MY_VERSION=$(cat .version)
             npm config set allow-same-version true

@@ -6,6 +6,7 @@ import { Dispatch } from "redux";
 import { graphQlClient } from "../api";
 import { InitiateSessionFinishedAction, INITIATE_SESSION_FINISHED } from "../store/session/types";
 import { Col, Row, Spin } from "antd";
+import { setAuthenticatedUser } from "./configuration/ApplicationInsights";
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
   return {
@@ -16,6 +17,8 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
         email: email
       }
       graphQlClient.setHeader("Authorization", `Bearer ${jwtToken}`);
+      // Set authenticated user context in Application Insights
+      setAuthenticatedUser(email);
       dispatch(action);
     }
   }

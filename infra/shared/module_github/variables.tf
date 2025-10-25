@@ -30,3 +30,7 @@ variable "ONLEXNET_INFRA_CLIENT_ID" {
 variable "ONLEXNET_INFRA_SECRET" {
   sensitive = true
 }
+
+variable "REACT_APP_APPLICATIONINSIGHTS_CONNECTION_STRING" {
+  sensitive = true
+}

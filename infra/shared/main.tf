@@ -32,6 +32,7 @@ module "github" {
   ONLEXNET_INFRA_CLIENT_ID                            = module.keyvault.env.ONLEXNET_INFRA_CLIENT_ID
   ONLEXNET_SINNET_PRD01_CONTAINERAPP_NAME_TIMEENTRIES = module.container_apps_timeentries.containerapp_name
   ONLEXNET_SINNET_PRD01_CONTAINERAPP_NAME_WEBAPI      = module.container_apps_webapi.containerapp_name
+  REACT_APP_APPLICATIONINSIGHTS_CONNECTION_STRING     = module.application_insights.connection_string
 }
 
 locals {
