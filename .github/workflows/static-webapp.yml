@@ -52,7 +52,6 @@ jobs:
         working-directory: static-webapp
         env:
           REACT_APP_BUILD_VERSION: ${{ steps.build_version.outputs.BUILD_VERSION }}
-          REACT_APP_APPLICATIONINSIGHTS_CONNECTION_STRING: ${{ secrets.APPLICATIONINSIGHTS_CONNECTION_STRING }}
         run: |
             export MY_VERSION=$(cat .version)
             npm config set allow-same-version true
@@ -77,12 +76,32 @@ jobs:
       name: prd01
       url: 'https://sinnet.onlex.net'
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
       - name: Restore artifacts from Build
         uses: actions/download-artifact@v4
         with:
           name: ${{ github.run_id }}-webapp-binaries
           # may be any path, but let's reuse original location
           path: static-webapp/build
+          
+      - name: Configure runtime settings
+        working-directory: static-webapp/build/static/js
+        env:
+          APPLICATIONINSIGHTS_CONNECTION_STRING: ${{ secrets.APPLICATIONINSIGHTS_CONNECTION_STRING }}
+        run: |
+          echo "Configuring runtime settings for production..."
+          
+          # Find the main JS bundle
+          MAIN_JS=$(ls main.*.js | head -1)
+          echo "Found main JS bundle: $MAIN_JS"
+          
+          # Replace the JSON configuration in the bundle
+          sed -i 's|{"applicationInsightsConnectionString":"","environment":"development"}|{"applicationInsightsConnectionString":"'"$APPLICATIONINSIGHTS_CONNECTION_STRING"'","environment":"production"}|g' "$MAIN_JS"
+          
+          echo "Production configuration updated in $MAIN_JS"
+          
       - name: Build And Deploy
         id: builddeploy
         # https://learn.microsoft.com/en-us/azure/static-web-apps/build-configuration?tabs=github-actions
@@ -114,12 +133,32 @@ jobs:
       name: prd01
       url: 'https://sinnet-test.onlex.net'
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
       - name: Restore artifacts from Build
         uses: actions/download-artifact@v4
         with:
           name: ${{ github.run_id }}-webapp-binaries
           # may be any path, but let's reuse original location
           path: static-webapp/build
+          
+      - name: Configure runtime settings for test
+        working-directory: static-webapp/build/static/js
+        env:
+          APPLICATIONINSIGHTS_CONNECTION_STRING: ${{ secrets.APPLICATIONINSIGHTS_CONNECTION_STRING }}
+        run: |
+          echo "Configuring runtime settings for test environment..."
+          
+          # Find the main JS bundle
+          MAIN_JS=$(ls main.*.js | head -1)
+          echo "Found main JS bundle: $MAIN_JS"
+          
+          # Replace the JSON configuration in the bundle
+          sed -i 's|{"applicationInsightsConnectionString":"","environment":"development"}|{"applicationInsightsConnectionString":"'"$APPLICATIONINSIGHTS_CONNECTION_STRING"'","environment":"test"}|g' "$MAIN_JS"
+          
+          echo "Test configuration updated in $MAIN_JS"
+          
       - name: Build And Deploy
         # https://learn.microsoft.com/en-us/azure/static-web-apps/build-configuration?tabs=github-actions
         uses: Azure/static-web-apps-deploy@v1
