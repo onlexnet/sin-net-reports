@@ -1,3 +1,13 @@
+terraform {
+  required_version = ">= 1.0"
+  
+  required_providers {
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = "~> 4.50.0" # it means: version: 4.50.*
+    }
+  }
+}
 provider "azurerm" {
 
   subscription_id = var.azure_subscription_id
