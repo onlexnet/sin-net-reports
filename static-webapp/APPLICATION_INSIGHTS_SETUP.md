@@ -119,5 +119,5 @@ Once deployed, you can view operations per user in Azure Portal:
 - **Solution**: Verify the user is successfully logging in through Azure B2C and the email is being passed correctly
 
 ## Additional Resources
-- [Application Insights JavaScript SDK Documentation](https://docs.microsoft.com/en-us/azure/azure-monitor/app/javascript)
-- [Application Insights React Documentation](https://docs.microsoft.com/en-us/azure/azure-monitor/app/javascript-react-plugin)
+- [Application Insights JavaScript SDK Documentation](https://learn.microsoft.com/en-us/azure/azure-monitor/app/javascript)
+- [Application Insights React Documentation](https://learn.microsoft.com/en-us/azure/azure-monitor/app/javascript-react-plugin)
