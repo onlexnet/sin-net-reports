@@ -1,13 +1,15 @@
 import { ApplicationInsights } from '@microsoft/applicationinsights-web';
+import { getRuntimeConfig } from './RuntimeConfig';
 
 let appInsights: ApplicationInsights | null = null;
 
 /**
- * Initializes Application Insights
+ * Initializes Application Insights with runtime configuration
  * @returns The Application Insights instance
  */
 export const initializeApplicationInsights = () => {
-  const connectionString = process.env.REACT_APP_APPLICATIONINSIGHTS_CONNECTION_STRING;
+  const config = getRuntimeConfig();
+  const connectionString = config.applicationInsightsConnectionString;
   
   if (!connectionString) {
     console.warn('Application Insights connection string not configured. Telemetry will not be collected.');
@@ -24,6 +26,7 @@ export const initializeApplicationInsights = () => {
   appInsights.loadAppInsights();
   appInsights.trackPageView();
 
+  console.log('Application Insights initialized successfully');
   return { appInsights };
 };
 
