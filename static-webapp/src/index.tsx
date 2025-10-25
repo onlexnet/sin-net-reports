@@ -7,6 +7,10 @@ import { store } from "./store/store";
 import App from "./app/App";
 
 import { ConfigProvider, theme } from "antd";
+import { initializeApplicationInsights } from "./app/configuration/ApplicationInsights";
+
+// Initialize Application Insights
+initializeApplicationInsights();
 
 const lightToken = theme.getDesignToken({ algorithm: theme.defaultAlgorithm }); 
 
