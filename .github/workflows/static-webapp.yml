@@ -70,7 +70,7 @@ jobs:
 
   DeployProd:
     name: Deploy to PRD01
-    if: (github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')) && github.event.ref == 'refs/heads/main'
+    if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request' && github.event.action != 'closed')) && github.ref == 'refs/heads/main'
     needs: [ Build ]
     runs-on: ubuntu-22.04
     environment:
