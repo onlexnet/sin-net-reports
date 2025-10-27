@@ -20,6 +20,10 @@ export const initializeApplicationInsights = () => {
     config: {
       connectionString: connectionString,
       enableAutoRouteTracking: true,
+      enableCorsCorrelation: true, // Important!
+      enableRequestHeaderTracking: true,
+      enableResponseHeaderTracking: true,
+    correlationHeaderExcludedDomains: [] // Don't exclude your backend
     }
   });
 
