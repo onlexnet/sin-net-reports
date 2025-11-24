@@ -28,3 +28,8 @@ message YearMonth {
   /** Month from 1 to 12 */
   int32 month = 2;
 }
+
+/** About the requestor */
+message UserToken {
+  string requestorEmail = 1;
+}
