@@ -12,7 +12,8 @@ service Reports {
 }
 
 message ReportRequest {
-    repeated ActivityDetails details = 1;
+  repeated ActivityDetails details = 1;
+  reports.UserToken userToken = 2;
 }
 
 message ActivityDetails {
