@@ -48,7 +48,7 @@ class ReportResults {
     };
   }
 
-  private static void asTable(AddLine addLine, List<ActivityDetails> activities) {
+  private static void asTable(AddLine addLine, List<ActivityDetails> activities, String requestorEmail) {
 
     addLine.apply(false,
       new CellParams("Kiedy", TableColumns.col1widthPeriod, HorizontalAlignment.CENTER),
@@ -67,6 +67,12 @@ class ReportResults {
         new CellParams(minutes.asString(), TableColumns.col3widthHours, HorizontalAlignment.RIGHT),
         new CellParams(kilometers.toString(), TableColumns.col4widthKms, HorizontalAlignment.RIGHT));
     }
+
+    addLine.apply(false,
+      new CellParams("Email:", TableColumns.col1widthPeriod, HorizontalAlignment.LEFT),
+      new CellParams(requestorEmail, TableColumns.col2widthPerson, HorizontalAlignment.LEFT),
+      new CellParams("-", TableColumns.col3widthHours, HorizontalAlignment.CENTER),
+      new CellParams("-", TableColumns.col4widthKms, HorizontalAlignment.CENTER));
   }
 
   private static PdfPTable newTable() {
@@ -84,7 +90,7 @@ class ReportResults {
     document.open();
 
     var table1 = newTable();
-    asTable(addLine(table1), request.activities());
+    asTable(addLine(table1), request.activities(), request.requestorEmail());
     document.add(table1);
 
     // We have to invoke close method so that content of the document is written
