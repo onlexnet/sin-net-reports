@@ -9,5 +9,5 @@ import sinnet.models.Distance;
 interface Models {
   record ActivityDetails(YearMonth period, String personName, Distance kilometers, ActionDuration minutes) { }
 
-  record ReportRequest(List<ActivityDetails> activities, String requestorEmail) { }
+  record ReportRequest(List<ActivityDetails> activities) { }
 }

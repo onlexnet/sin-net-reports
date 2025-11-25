@@ -19,9 +19,7 @@ class DtoDomainMapper {
   }
     
   static ReportRequest fromDto(sinnet.report2.grpc.ReportRequest dto) {
-    var activities = dto.getDetailsList().stream().map(it -> fromDto(it)).toList();
-    var requestorEmail = dto.getUserToken().getRequestorEmail();
-    return new ReportRequest(activities, requestorEmail);
+    return new ReportRequest(dto.getDetailsList().stream().map(it -> fromDto(it)).toList());
   }
 
 }

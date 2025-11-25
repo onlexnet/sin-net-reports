@@ -5,7 +5,7 @@ import { RootState } from "../store/reducers";
 import { ReportsView } from "./ReportsView";
 
 const mapStateToProps = (state: RootState) => {
-    return { appState: state.appState, viewContext: state.viewContext, auth: state.auth };
+    return { appState: state.appState, viewContext: state.viewContext };
 }
 const mapDispatchToProps = (dispatch: Dispatch) => {
     return { };
@@ -22,8 +22,7 @@ interface ReportsViewRoutedProps extends PropsFromRedux {
 const ReportsViewRoutedLocal: React.FC<ReportsViewRoutedProps> = props => {
     const projectId = props.appState.projectId;
     const { dateFrom } = props.viewContext.period.getValue();
-    const idToken = props.auth.idToken;
-    return <ReportsView projectId={projectId} from={dateFrom} idToken={idToken} />
+    return <ReportsView projectId={projectId} from={dateFrom} />
 
 }
 
