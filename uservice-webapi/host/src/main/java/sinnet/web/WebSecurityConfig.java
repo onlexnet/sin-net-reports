@@ -20,8 +20,12 @@ public class WebSecurityConfig {
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     return http
         .cors(cors -> cors
-            .configurationSource(request -> new CorsConfiguration()
-            .applyPermitDefaultValues()))
+            .configurationSource(request -> {
+              var config = new CorsConfiguration();
+              config.applyPermitDefaultValues();
+              config.addExposedHeader("Content-Disposition");
+              return config;
+            }))
         .csrf(it -> it.disable())
         .httpBasic(it -> it.disable())
         .addFilterBefore(new CustomAuthenticationFilter(), BasicAuthenticationFilter.class)
