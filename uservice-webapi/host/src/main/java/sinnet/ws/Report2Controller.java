@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +24,8 @@ import sinnet.gql.api.CommonMapper;
 import sinnet.ports.timeentries.ActionsGrpcFacade;
 import sinnet.report2.grpc.ReportRequest;
 import sinnet.report2.grpc.ReportsGrpc.ReportsBlockingStub;
+import sinnet.reports.grpc.UserToken;
+import sinnet.web.AuthenticationToken;
 
 @RestController
 @RequestMapping("/api/raporty")
@@ -38,19 +41,21 @@ class Report2Controller {
       @RequestParam("yearFrom") int yearFrom, @RequestParam("monthFrom") int monthFrom,
       @RequestParam("yearTo") int yearTo, @RequestParam("monthTo") int monthTo) {
 
+    var authentication = (AuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+    var primaryEmail = authentication.getPrincipal();
 
     var dateFrom = LocalDate.of(yearFrom, monthFrom, 1);
     var dateTo = LocalDate.of(yearTo, monthTo, 1).plusMonths(1).minusDays(1);
 
     var entries = getTimeentries(projectId, dateFrom, dateTo);
-    var reportRequest = asReportRequest(entries);
+    var reportRequest = asReportRequest(entries, primaryEmail);
     var data = reportsClient.produce(reportRequest);
     var result = data.toByteArray();
     return Response.asResponseEntity(result, "report " + yearFrom + "-" + monthFrom + ".pdf");
   }
 
   // TODO move such aggregation logic close to data service
-  ReportRequest asReportRequest(List<TimeEntryModel> javaItems) {
+  ReportRequest asReportRequest(List<TimeEntryModel> javaItems, String primaryEmail) {
     var items = io.vavr.collection.List.ofAll(javaItems);
     var map = items
         .map(it -> Tuple.of(it.getServicemanName(), YearMonth.from(it.getWhen()), it.getHowLong(), it.getHowFar()))
@@ -69,6 +74,7 @@ class Report2Controller {
         .setHowLongInMins(v._1)
         .setHowFarInKms(v._2)
         .build());
+    requestBuilder.setUserToken(UserToken.newBuilder().setRequestorEmail(primaryEmail));
     return requestBuilder.build();
   }
 
