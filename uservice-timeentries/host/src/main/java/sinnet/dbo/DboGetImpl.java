@@ -97,4 +97,9 @@ final class DboGetImpl implements DboGet {
     return Iterator.ofAll(projectRepository.findAllById(ids)).map(this::mapToEntity).toJavaList();
   }
 
+  @Override
+  public boolean isOwner(ValEmail email, ValProjectId projectId) {
+    return projectRepository.isOwner(email.value(), projectId.value());
+  }
+
 }

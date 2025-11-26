@@ -22,4 +22,12 @@ interface ProjectRepository extends JpaRepository<ProjectDbo, UUID> {
   List<ProjectDbo> findByEmailOfOwner(String emailOfOwner);
 
   long countByEmailOfOwner(String emailOfOwner);
+
+  @Query("""
+      select case when count(p) > 0 then true else false end
+      from ProjectDbo p
+      where p.emailOfOwner = :emailOfOwner
+      and p.entityId = :entityId
+      """)
+  boolean isOwner(String emailOfOwner, UUID entityId);
 }

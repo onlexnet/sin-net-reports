@@ -14,6 +14,7 @@ service Reports {
 message ReportRequest {
   repeated ActivityDetails details = 1;
   reports.UserToken userToken = 2;
+  string projectId = 3;
 }
 
 message ActivityDetails {

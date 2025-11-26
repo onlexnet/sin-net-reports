@@ -48,14 +48,14 @@ class Report2Controller {
     var dateTo = LocalDate.of(yearTo, monthTo, 1).plusMonths(1).minusDays(1);
 
     var entries = getTimeentries(projectId, dateFrom, dateTo);
-    var reportRequest = asReportRequest(entries, primaryEmail);
+    var reportRequest = asReportRequest(entries, primaryEmail, projectId.toString());
     var data = reportsClient.produce(reportRequest);
     var result = data.toByteArray();
     return Response.asResponseEntity(result, "report " + yearFrom + "-" + monthFrom + ".pdf");
   }
 
   // TODO move such aggregation logic close to data service
-  ReportRequest asReportRequest(List<TimeEntryModel> javaItems, String primaryEmail) {
+  ReportRequest asReportRequest(List<TimeEntryModel> javaItems, String primaryEmail, String projectId) {
     var items = io.vavr.collection.List.ofAll(javaItems);
     var map = items
         .map(it -> Tuple.of(it.getServicemanName(), YearMonth.from(it.getWhen()), it.getHowLong(), it.getHowFar()))
@@ -75,6 +75,7 @@ class Report2Controller {
         .setHowFarInKms(v._2)
         .build());
     requestBuilder.setUserToken(UserToken.newBuilder().setRequestorEmail(primaryEmail));
+    requestBuilder.setProjectId(projectId);
     return requestBuilder.build();
   }
 
