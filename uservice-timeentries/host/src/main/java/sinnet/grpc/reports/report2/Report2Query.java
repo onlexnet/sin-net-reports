@@ -18,15 +18,18 @@ import sinnet.reports.grpc.Response;
 @RequiredArgsConstructor
 class Report2Query implements RpcQueryHandler<ReportRequest, Response> {
 
+  private final DtoDomainMapper mapper;
+
   @Override
   @SneakyThrows
   public Response apply(ReportRequest request) {
-    var domainRequest = DtoDomainMapper.fromDto(request);
+    var domainRequest = mapper.fromDto(request);
     var baos = new ByteArrayOutputStream();
-    var model = ReportResults.apply(domainRequest);
-    var report = model.content();
-    baos.write(report);
-    baos.close();
+    try (baos) {
+      var model = ReportResults.apply(domainRequest);
+      var report = model.content();
+      baos.write(report);
+    }
 
     val binaryData = baos.toByteArray();
     val dtoData = ByteString.copyFrom(binaryData);

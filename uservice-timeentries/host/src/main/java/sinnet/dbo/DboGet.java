@@ -29,6 +29,8 @@ interface DboGet {
 
   List<Project> getAll(Iterator<ValProjectId> projectId);
 
+  boolean isOwner(ValEmail email, ValProjectId projectId);
+
   record StatsResult(int numberOdProjects) {
   }
 }
