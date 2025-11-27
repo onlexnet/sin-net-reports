@@ -11,8 +11,8 @@
 			"installMaven": true,
 			"installGradle": false,
 			"installAnt": false,
-			"version": "21.0.7.crac",
-			"jdkDistro": "librca",
+			"version": "25",
+			"jdkDistro": "tem",
 			"mavenVersion": "3.9.9"
 		},
 		"ghcr.io/dapr/cli/dapr-cli:0": {

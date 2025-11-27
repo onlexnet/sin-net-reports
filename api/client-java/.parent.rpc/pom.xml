@@ -19,7 +19,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
     <!-- Java version used to compile protobuf. -->
-    <java.version>17</java.version>
+    <java.version>25</java.version>
   </properties>
 
   <dependencies>
