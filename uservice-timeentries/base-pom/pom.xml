@@ -6,7 +6,9 @@
   <packaging>pom</packaging>
 
   <properties>
-    <spring-boot.version>3.5.5</spring-boot.version>
+    <java.version>25</java.version>
+    <spring-boot.version>4.0.0</spring-boot.version>
+    <spring-modulith.version>2.0.0</spring-modulith.version>
     <api.version>0.1.3</api.version>
     <dapr.version>1.7.0</dapr.version>
     <guava.version>32.0.0-jre</guava.version>
@@ -16,7 +18,7 @@
     <sonar-maven-plugin.version>3.7.0.1746</sonar-maven-plugin.version>
     <testcontainers.version>1.20.5</testcontainers.version>
     <commons-io.version>2.20.0</commons-io.version>
-    <testcontainers.version>1.20.5</testcontainers.version>
+    <lombok.version>1.18.42</lombok.version>
 
     <aggregate.report.dir>report-aggregate/target/site/jacoco-aggregate/jacoco.xml</aggregate.report.dir>
   </properties>
@@ -31,7 +33,7 @@
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
-      <version>1.18.26</version>
+      <version>${lombok.version}</version>
       <scope>provided</scope>
     </dependency>
 
@@ -120,6 +122,14 @@
           </exclusion>
         </exclusions>
       </dependency>
+
+      <dependency>
+        <groupId>org.springframework.modulith</groupId>
+        <artifactId>spring-modulith-bom</artifactId>
+        <version>${spring-modulith.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
   
       <dependency>
         <groupId>org.testcontainers</groupId>
@@ -160,7 +170,7 @@
       <dependency>
           <groupId>com.microsoft.sqlserver</groupId>
           <artifactId>mssql-jdbc</artifactId>
-          <version>12.2.0.jre11</version>
+          <version>12.10.0.jre11</version>
       </dependency>
 
       <dependency>
@@ -250,26 +260,12 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.13.0</version>
+        <version>3.14.0</version>
         <configuration>
-          <release>21</release>
+          <release>${java.version}</release>
           <fork>true</fork>
           <compilerArgs>
             <arg>-parameters</arg>
-            <arg>-XDcompilePolicy=simple</arg>
-            <arg>-Xplugin:ErrorProne -XepDisableAllChecks -XepOpt:NullAway:OnlyNullMarked=true -Xep:NullAway:ERROR</arg>
-            <!-- <arg>-Xplugin:ErrorProne -XepDisableAllChecks -XepOpt:NullAway:OnlyNullMarked=true -XepOpt:NullAway:ERROR</arg> -->
-            <!-- <arg>-Xplugin:ErrorProne -XepDisableAllChecks -XepOpt:NullAway:OnlyNullMarked=true -Xep:NullAway:ERROR -XepOpt:NullAway:JSpecifyMode=true</arg> -->
-            <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED</arg>
-            <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED</arg>
-            <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED</arg>
-            <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.model=ALL-UNNAMED</arg>
-            <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED</arg>
-            <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED</arg>
-            <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED</arg>
-            <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED</arg>
-            <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED</arg>
-            <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED</arg>
           </compilerArgs>
           <annotationProcessorPaths>
             <path>
@@ -280,22 +276,12 @@
             <path>
               <groupId>org.projectlombok</groupId>
               <artifactId>lombok</artifactId>
-              <version>1.18.30</version>
+              <version>${lombok.version}</version>
             </path>
             <path>
               <groupId>de.firehead</groupId>
               <artifactId>mapstruct-spi-protobuf</artifactId>
               <version>1.1.0</version>
-            </path>
-            <path>
-              <groupId>com.google.errorprone</groupId>
-              <artifactId>error_prone_core</artifactId>
-              <version>2.24.1</version>
-            </path>
-            <path>
-              <groupId>com.uber.nullaway</groupId>
-              <artifactId>nullaway</artifactId>
-              <version>0.12.10</version>
             </path>
           </annotationProcessorPaths>
         </configuration>

@@ -3,9 +3,9 @@ package sinnet.features;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestClient;
 
 import io.dapr.v1.AppCallbackGrpc;
 import io.dapr.v1.AppCallbackGrpc.AppCallbackBlockingStub;
@@ -80,7 +80,10 @@ public class RpcApi implements ApplicationListener<ApplicationReadyEvent> {
     return ValName.of(result.name());
   }
 
-  private final TestRestTemplate restTemplate;
+  private final RestClient.Builder restClientBuilder;
+
+  @Value("${local.server.port:8080}")
+  private int serverPort;
 
   @Getter
   private UsersBlockingStub users;
@@ -116,7 +119,11 @@ public class RpcApi implements ApplicationListener<ApplicationReadyEvent> {
 
   @Override
   public void onApplicationEvent(ApplicationReadyEvent event) {
-    var grpcModel = restTemplate.getForObject("/actuator/grpc", GrpcActuatorModel.class);
+    var restClient = restClientBuilder.baseUrl("http://localhost:" + serverPort).build();
+    var grpcModel = restClient.get()
+        .uri("/actuator/grpc")
+        .retrieve()
+        .body(GrpcActuatorModel.class);
     var grpcPort = grpcModel.getPort();
 
     var channel = ManagedChannelBuilder.forAddress("localhost", grpcPort)
