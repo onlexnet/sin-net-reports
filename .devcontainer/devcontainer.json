@@ -11,7 +11,7 @@
 			"installMaven": true,
 			"installGradle": false,
 			"installAnt": false,
-			"version": "25",
+			"version": "25.0.1",
 			"jdkDistro": "librca",
 			"mavenVersion": "3.9.9"
 		},

@@ -32,7 +32,13 @@ import sinnet.models.ShardedId;
 import sinnet.models.ValName;
 
 // Playground for various database-related tests, and monitoring SQL entries in logs
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+    properties = {
+      // Enable SQL logging to console as the test uses logs to verify number of executed statements
+      "logging.level.org.hibernate.SQL=debug",
+      "logging.level.org.hibernate.type.descriptor.sql=trace"
+    }
+)
 @ActiveProfiles("test")
 @ExtendWith(SqlServerDbExtension.class)
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
