@@ -10,7 +10,7 @@
     <api.version>0.1.3</api.version>
     <dapr.version>1.7.0</dapr.version>
     <guava.version>32.0.0-jre</guava.version>
-    <jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
+    <jacoco-maven-plugin.version>0.8.14</jacoco-maven-plugin.version>
     <instancio-junit5.version>5.4.0</instancio-junit5.version>
     <org.mapstruct.version>1.6.3</org.mapstruct.version>
     <sonar-maven-plugin.version>3.7.0.1746</sonar-maven-plugin.version>
@@ -31,7 +31,7 @@
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
-      <version>1.18.26</version>
+      <version>1.18.38</version>
       <scope>provided</scope>
     </dependency>
 
@@ -252,11 +252,12 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.13.0</version>
         <configuration>
-          <release>21</release>
+          <release>25</release>
           <fork>true</fork>
           <compilerArgs>
             <arg>-parameters</arg>
             <arg>-XDcompilePolicy=simple</arg>
+            <arg>--should-stop=ifError=FLOW</arg>
             <arg>-Xplugin:ErrorProne -XepDisableAllChecks -XepOpt:NullAway:OnlyNullMarked=true -Xep:NullAway:ERROR</arg>
             <!-- <arg>-Xplugin:ErrorProne -XepDisableAllChecks -XepOpt:NullAway:OnlyNullMarked=true -XepOpt:NullAway:ERROR</arg> -->
             <!-- <arg>-Xplugin:ErrorProne -XepDisableAllChecks -XepOpt:NullAway:OnlyNullMarked=true -Xep:NullAway:ERROR -XepOpt:NullAway:JSpecifyMode=true</arg> -->
@@ -270,6 +271,8 @@
             <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED</arg>
             <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED</arg>
             <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED</arg>
+            <!-- Disable Lombok bytecode post-compiler to work around ASM version incompatibility with JDK 25 -->
+            <arg>-J-Dlombok.disablePostCompiler=true</arg>
           </compilerArgs>
           <annotationProcessorPaths>
             <path>
@@ -280,7 +283,7 @@
             <path>
               <groupId>org.projectlombok</groupId>
               <artifactId>lombok</artifactId>
-              <version>1.18.30</version>
+              <version>1.18.38</version>
             </path>
             <path>
               <groupId>de.firehead</groupId>
@@ -290,7 +293,7 @@
             <path>
               <groupId>com.google.errorprone</groupId>
               <artifactId>error_prone_core</artifactId>
-              <version>2.24.1</version>
+              <version>2.39.0</version>
             </path>
             <path>
               <groupId>com.uber.nullaway</groupId>

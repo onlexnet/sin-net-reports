@@ -11,6 +11,7 @@
     <!-- Disable warning
       [WARNING] Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent! -->
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <jacoco-maven-plugin.version>0.8.14</jacoco-maven-plugin.version>
   </properties>
 
   <dependencyManagement>
@@ -69,7 +70,7 @@
         <groupId>org.projectlombok</groupId>
         <artifactId>lombok</artifactId>
         <scope>provided</scope>
-        <version>1.18.30</version>
+        <version>1.18.38</version>
       </dependency>
       <dependency>
         <groupId>org.springframework.boot</groupId>
@@ -180,7 +181,7 @@
         <plugin>
           <groupId>org.jacoco</groupId>
           <artifactId>jacoco-maven-plugin</artifactId>
-          <version>0.8.11</version>
+          <version>${jacoco-maven-plugin.version}</version>
           <configuration>
             <!-- The file is artificially added to resources as it is used by docker image and it
             stops jacoco analysis on CI-->
@@ -193,13 +194,14 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.11.0</version>
         <configuration>
-          <release>21</release>
+          <release>25</release>
           <fork>true</fork>
           <meminitial>128m</meminitial>
           <maxmem>512m</maxmem>
           <compilerArgs>
             <arg>-parameters</arg>
             <arg>-XDcompilePolicy=simple</arg>
+            <arg>--should-stop=ifError=FLOW</arg>
             <arg>-Xplugin:ErrorProne -XepDisableAllChecks -XepOpt:NullAway:OnlyNullMarked=true -Xep:NullAway:ERROR</arg>
             <!-- <arg>-Xplugin:ErrorProne -XepDisableAllChecks -XepOpt:NullAway:OnlyNullMarked=true -XepOpt:NullAway:ERROR</arg> -->
             <!-- <arg>-Xplugin:ErrorProne -XepDisableAllChecks -XepOpt:NullAway:OnlyNullMarked=true -Xep:NullAway:ERROR -XepOpt:NullAway:JSpecifyMode=true</arg> -->
@@ -213,12 +215,14 @@
             <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED</arg>
             <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED</arg>
             <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED</arg>
+            <!-- Disable Lombok bytecode post-compiler to work around ASM version incompatibility with JDK 25 -->
+            <arg>-J-Dlombok.disablePostCompiler=true</arg>
           </compilerArgs>
           <annotationProcessorPaths>
             <path>
               <groupId>org.projectlombok</groupId>
               <artifactId>lombok</artifactId>
-              <version>1.18.30</version>
+              <version>1.18.38</version>
             </path>
             <path>
               <groupId>org.springframework.boot</groupId>
@@ -228,7 +232,7 @@
             <path>
               <groupId>com.google.errorprone</groupId>
               <artifactId>error_prone_core</artifactId>
-              <version>2.24.1</version>
+              <version>2.39.0</version>
             </path>
             <path>
               <groupId>com.uber.nullaway</groupId>
