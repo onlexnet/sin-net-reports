@@ -3,16 +3,16 @@ package sinnet.features;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestClient;
 
 import io.dapr.v1.AppCallbackGrpc;
 import io.dapr.v1.AppCallbackGrpc.AppCallbackBlockingStub;
 import io.grpc.ManagedChannelBuilder;
 import lombok.Data;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
 import sinnet.grpc.customers.CustomersGrpc;
 import sinnet.grpc.customers.CustomersGrpc.CustomersBlockingStub;
@@ -26,7 +26,6 @@ import sinnet.models.ValName;
 import sinnet.report1.grpc.ReportsGrpc.ReportsBlockingStub;
 
 @Component
-@RequiredArgsConstructor
 public class RpcApi implements ApplicationListener<ApplicationReadyEvent> {
 
   private UseAlias currentCustomer = Current.INSTANCE;
@@ -80,7 +79,8 @@ public class RpcApi implements ApplicationListener<ApplicationReadyEvent> {
     return ValName.of(result.name());
   }
 
-  private final TestRestTemplate restTemplate;
+  @LocalServerPort
+  private int serverPort;
 
   @Getter
   private UsersBlockingStub users;
@@ -116,7 +116,13 @@ public class RpcApi implements ApplicationListener<ApplicationReadyEvent> {
 
   @Override
   public void onApplicationEvent(ApplicationReadyEvent event) {
-    var grpcModel = restTemplate.getForObject("/actuator/grpc", GrpcActuatorModel.class);
+    var restClient = RestClient.builder()
+        .baseUrl("http://localhost:" + serverPort)
+        .build();
+    var grpcModel = restClient.get()
+        .uri("/actuator/grpc")
+        .retrieve()
+        .body(GrpcActuatorModel.class);
     var grpcPort = grpcModel.getPort();
 
     var channel = ManagedChannelBuilder.forAddress("localhost", grpcPort)

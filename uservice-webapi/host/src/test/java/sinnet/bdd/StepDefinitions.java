@@ -12,7 +12,7 @@ import org.assertj.core.api.Assertions;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.resttestclient.TestRestTemplate;
 
 import io.cucumber.java.Before;
 import io.cucumber.java.en.Then;
