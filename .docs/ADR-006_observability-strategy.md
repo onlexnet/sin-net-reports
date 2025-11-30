@@ -12,7 +12,7 @@ Reason: Application Insights provides zero-configuration integration with Azure 
 Consequences: 
 - **Positive**: Automatic instrumentation with minimal code changes, end-to-end distributed tracing from React to database, email-based user journey tracking, native Azure integration with zero-config log forwarding, single tool for traces/metrics/logs/alerts
 - **Negative**: Vendor lock-in with Azure ecosystem, limited customization compared to OpenTelemetry flexibility, dependency on GitHub Secrets for connection string management
-- **Implementation**: Frontend uses `@microsoft/applicationinsights-web` v3.3.4 with automatic route tracking and authenticated user context. Backend uses Application Insights Java Agent v3.7.4 with Spring Boot buildpack configuration (`BPE_PREPEND_JAVA_TOOL_OPTIONS`). Infrastructure uses Terraform to provision Application Insights resource and distribute connection strings via Container Apps environment variables
+- **Implementation**: Frontend uses `@microsoft/applicationinsights-web` v3.3.4 with automatic route tracking and authenticated user context. Backend uses Application Insights Java Agent v3.7.6 with Spring Boot buildpack configuration (`BPE_PREPEND_JAVA_TOOL_OPTIONS`). Infrastructure uses Terraform to provision Application Insights resource and distribute connection strings via Container Apps environment variables
 
 Notes:
 - Java agent is downloaded during build process and activated via buildpack environment variables
