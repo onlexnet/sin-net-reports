@@ -12,7 +12,7 @@ import org.assertj.core.api.Assertions;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.resttestclient.TestRestTemplate;
+import org.springframework.boot.test.web.server.LocalServerPort;
 
 import io.cucumber.java.Before;
 import io.cucumber.java.en.Then;
@@ -52,8 +52,8 @@ public class StepDefinitions {
   @Autowired
   UsersGrpcService usersGrpc;
 
-  @Autowired
-  TestRestTemplate restTemplate;
+  @LocalServerPort
+  int serverPort;
 
   @Autowired
   TimeProvider timeProvider;
@@ -64,7 +64,7 @@ public class StepDefinitions {
   @Before
   public void before() {
     requestorEmail = "email@" + UUID.randomUUID();
-    appApi = new AppApi(restTemplate.getRootUri(), requestorEmail);
+    appApi = new AppApi(serverPort, requestorEmail);
     Mockito.clearInvocations(projectsGrpc);
   }
 
