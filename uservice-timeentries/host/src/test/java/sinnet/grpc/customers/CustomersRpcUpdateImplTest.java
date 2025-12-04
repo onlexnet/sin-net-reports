@@ -9,8 +9,6 @@ import org.assertj.core.api.Assertions;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.Test;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import sinnet.domain.model.ValEmail;
 import sinnet.models.Clone;
 
@@ -50,7 +48,7 @@ public class CustomersRpcUpdateImplTest {
     }
 
     @Test
-    void shouldRestoreTimeOnUnchangedSecrets() throws JsonProcessingException {
+    void shouldRestoreTimeOnUnchangedSecrets() {
       var secret = Instancio.create(sinnet.models.CustomerSecret.class);
       var secretClone = Clone.INSTANCE.of(secret);
       Assertions.assertThat(secret)

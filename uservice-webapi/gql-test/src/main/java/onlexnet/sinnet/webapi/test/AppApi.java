@@ -30,7 +30,8 @@ public class AppApi {
 
   /** TBD. */
   @SneakyThrows
-  public AppApi(String rootUri, String email) {
+  public AppApi(int localPort, String email) {
+    var rootUri = "http://localhost:" + localPort;
     final var principalNameHeaderName = "X-MS-CLIENT-PRINCIPAL-NAME";
     final var principalNameHeaderId = "X-MS-CLIENT-PRINCIPAL-ID";
     var client = WebTestClient.bindToServer()

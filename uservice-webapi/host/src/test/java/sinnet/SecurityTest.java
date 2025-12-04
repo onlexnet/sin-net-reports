@@ -6,9 +6,8 @@ import java.util.UUID;
 
 import org.junit.Before;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.ActiveProfiles;
 
 import onlexnet.sinnet.webapi.test.AppApi;
@@ -18,15 +17,15 @@ import sinnet.app.Program;
 @ActiveProfiles(Profiles.App.TEST)
 class GqlTest {
 
-  @Autowired
-  TestRestTemplate restTemplate;
+  @LocalServerPort
+  int serverPort;
 
   AppApi appApi;
 
   @Before
   public void before() {
     var requestorEmail = "email@" + UUID.randomUUID();
-    appApi = new AppApi(restTemplate.getRootUri(), requestorEmail);
+    appApi = new AppApi(serverPort, requestorEmail);
   }
 
   @Test

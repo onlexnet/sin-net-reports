@@ -6,3 +6,5 @@ target/
 .project
 .factorypath
 .flattened-pom.xml
+# ApplicationInsights agent (downloaded during build)
+applicationinsights-agent.jar
