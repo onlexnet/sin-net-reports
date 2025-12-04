@@ -9,14 +9,13 @@
     <spring-boot.version>4.0.0</spring-boot.version>
     <api.version>0.1.3</api.version>
     <dapr.version>1.7.0</dapr.version>
-    <guava.version>32.0.0-jre</guava.version>
+    <guava.version>33.5.0-jre</guava.version>
     <jacoco-maven-plugin.version>0.8.14</jacoco-maven-plugin.version>
     <instancio-junit5.version>5.4.0</instancio-junit5.version>
     <org.mapstruct.version>1.6.3</org.mapstruct.version>
     <sonar-maven-plugin.version>3.7.0.1746</sonar-maven-plugin.version>
-    <testcontainers.version>1.20.5</testcontainers.version>
-    <commons-io.version>2.20.0</commons-io.version>
-    <testcontainers.version>1.20.5</testcontainers.version>
+    <testcontainers.version>2.0.2</testcontainers.version>
+    <commons-io.version>2.21.0</commons-io.version>
 
     <aggregate.report.dir>report-aggregate/target/site/jacoco-aggregate/jacoco.xml</aggregate.report.dir>
   </properties>
@@ -167,13 +166,6 @@
           <groupId>org.mapstruct</groupId>
           <artifactId>mapstruct</artifactId>
           <version>${org.mapstruct.version}</version>
-      </dependency>
-
-      <dependency>
-          <groupId>io.rest-assured</groupId>
-          <artifactId>rest-assured</artifactId>
-          <version>5.5.6</version>
-          <scope>test</scope>
       </dependency>
 
     </dependencies>
