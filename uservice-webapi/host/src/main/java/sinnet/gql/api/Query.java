@@ -54,9 +54,12 @@ class Query {
   }
 
   @QueryMapping("downloadFile")
-  FileDownloadResult downloadFile(@Argument String parameter) {
-    String base64Content = fileGenerationService.generateEmptyExcelAsBase64(parameter);
-    String fileName = fileGenerationService.generateLogicalFileName(parameter);
+  FileDownloadResult downloadFile(
+      @Argument String projectId,
+      @Argument int year,
+      @Argument int month) {
+    String base64Content = fileGenerationService.generateEmptyExcelAsBase64(projectId, year, month);
+    String fileName = fileGenerationService.generateLogicalFileName(projectId, year, month);
     
     return FileDownloadResult.builder()
         .fileName(fileName)

@@ -166,9 +166,11 @@ public class AppApi {
   }
 
   /** Downloads Actions list as Excel. */
-  public Entity<FileDownloadResultGql, ?> downloadFile(String projectId) {
+  public Entity<FileDownloadResultGql, ?> downloadFile(String projectId, int year, int month) {
     return tester.documentName("downloadFile")
         .variable("projectId", projectId.toString())
+        .variable("year", year)
+        .variable("month", month)
         .execute()
         .path("downloadFile")
         .entity(FileDownloadResultGql.class);
