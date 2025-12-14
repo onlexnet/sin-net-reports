@@ -3,8 +3,8 @@ import { QueryDownloadFileArgs, FileDownloadResult } from '../components/.genera
 
 // GraphQL query for downloading files
 const DOWNLOAD_FILE_QUERY = gql`
-  query DownloadFile($projectId: ID!) {
-    downloadFile(projectId: $projectId) {
+  query DownloadFile($projectId: ID!, $year: Int!, $month: Int!) {
+    downloadFile(projectId: $projectId, year: $year, month: $month) {
       fileName
       content
       contentType

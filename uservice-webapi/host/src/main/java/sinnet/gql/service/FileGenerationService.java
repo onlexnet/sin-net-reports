@@ -19,13 +19,14 @@ public class FileGenerationService {
 
   /**
    * Generates an empty Excel file and returns it as base64 string.
-   * The parameter value is currently ignored but can be used for future enhancements.
    *
-   * @param parameter any string parameter (currently ignored)
+   * @param projectId the project ID
+   * @param year the year for the report
+   * @param month the month for the report
    * @return base64 encoded empty Excel file
    */
-  public String generateEmptyExcelAsBase64(String parameter) {
-    log.info("Generating empty Excel file for parameter: {}", parameter);
+  public String generateEmptyExcelAsBase64(String projectId, int year, int month) {
+    log.info("Generating empty Excel file for projectId: {}, year: {}, month: {}", projectId, year, month);
     
     try (XSSFWorkbook workbook = new XSSFWorkbook();
          ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
@@ -50,15 +51,14 @@ public class FileGenerationService {
   }
 
   /**
-   * Generates a logical filename based on the parameter.
-   * The parameter value is currently ignored and returns a default filename.
+   * Generates a logical filename based on the project ID, year, and month.
    *
-   * @param parameter any string parameter (currently ignored)
+   * @param projectId the project ID
+   * @param year the year for the report
+   * @param month the month for the report
    * @return logical filename for the Excel file
    */
-  public String generateLogicalFileName(String parameter) {
-    // For now, return a default filename. The parameter is ignored as requested.
-    // In the future, this could be enhanced to use the parameter value.
-    return "export.xlsx";
+  public String generateLogicalFileName(String projectId, int year, int month) {
+    return String.format("export_%s_%d-%02d.xlsx", projectId, year, month);
   }
 }

@@ -24,10 +24,12 @@ class FileGenerationServiceTest {
   @Test
   void generateEmptyExcelAsBase64_shouldReturnValidBase64() {
     // Given
-    String parameter = "testParameter";
+    String projectId = "testProject";
+    int year = 2024;
+    int month = 12;
 
     // When
-    String result = fileGenerationService.generateEmptyExcelAsBase64(parameter);
+    String result = fileGenerationService.generateEmptyExcelAsBase64(projectId, year, month);
 
     // Then
     assertThat(result).isNotNull();
@@ -44,10 +46,12 @@ class FileGenerationServiceTest {
   @Test
   void generateEmptyExcelAsBase64_shouldReturnValidExcelFile() throws IOException {
     // Given
-    String parameter = "testParameter";
+    String projectId = "testProject";
+    int year = 2024;
+    int month = 12;
 
     // When
-    String base64Result = fileGenerationService.generateEmptyExcelAsBase64(parameter);
+    String base64Result = fileGenerationService.generateEmptyExcelAsBase64(projectId, year, month);
 
     // Then
     byte[] excelBytes = Base64.getDecoder().decode(base64Result);
@@ -65,10 +69,12 @@ class FileGenerationServiceTest {
   @Test
   void generateEmptyExcelAsBase64_shouldWorkWithNullParameter() {
     // Given
-    String parameter = null;
+    String projectId = null;
+    int year = 2024;
+    int month = 12;
 
     // When
-    String result = fileGenerationService.generateEmptyExcelAsBase64(parameter);
+    String result = fileGenerationService.generateEmptyExcelAsBase64(projectId, year, month);
 
     // Then
     assertThat(result).isNotNull();
@@ -78,10 +84,12 @@ class FileGenerationServiceTest {
   @Test
   void generateEmptyExcelAsBase64_shouldWorkWithEmptyParameter() {
     // Given
-    String parameter = "";
+    String projectId = "";
+    int year = 2024;
+    int month = 12;
 
     // When
-    String result = fileGenerationService.generateEmptyExcelAsBase64(parameter);
+    String result = fileGenerationService.generateEmptyExcelAsBase64(projectId, year, month);
 
     // Then
     assertThat(result).isNotNull();
@@ -89,42 +97,48 @@ class FileGenerationServiceTest {
   }
 
   @Test
-  void generateLogicalFileName_shouldReturnDefaultName() {
+  void generateLogicalFileName_shouldReturnFormattedName() {
     // Given
-    String parameter = "anyValue";
+    String projectId = "project123";
+    int year = 2024;
+    int month = 5;
 
     // When
-    String fileName = fileGenerationService.generateLogicalFileName(parameter);
+    String fileName = fileGenerationService.generateLogicalFileName(projectId, year, month);
 
     // Then
-    assertThat(fileName).isEqualTo("export.xlsx");
+    assertThat(fileName).isEqualTo("export_project123_2024-05.xlsx");
   }
 
   @Test
-  void generateLogicalFileName_shouldReturnSameNameForDifferentParameters() {
+  void generateLogicalFileName_shouldReturnDifferentNamesForDifferentParameters() {
     // Given
-    String parameter1 = "parameter1";
-    String parameter2 = "parameter2";
+    String projectId1 = "project1";
+    String projectId2 = "project2";
+    int year = 2024;
+    int month = 12;
 
     // When
-    String fileName1 = fileGenerationService.generateLogicalFileName(parameter1);
-    String fileName2 = fileGenerationService.generateLogicalFileName(parameter2);
+    String fileName1 = fileGenerationService.generateLogicalFileName(projectId1, year, month);
+    String fileName2 = fileGenerationService.generateLogicalFileName(projectId2, year, month);
 
     // Then
-    // Since parameter is currently ignored, both should return the same filename
-    assertThat(fileName1).isEqualTo(fileName2);
-    assertThat(fileName1).isEqualTo("export.xlsx");
+    assertThat(fileName1).isEqualTo("export_project1_2024-12.xlsx");
+    assertThat(fileName2).isEqualTo("export_project2_2024-12.xlsx");
+    assertThat(fileName1).isNotEqualTo(fileName2);
   }
 
   @Test
   void generateLogicalFileName_shouldWorkWithNullParameter() {
     // Given
-    String parameter = null;
+    String projectId = null;
+    int year = 2024;
+    int month = 1;
 
     // When
-    String fileName = fileGenerationService.generateLogicalFileName(parameter);
+    String fileName = fileGenerationService.generateLogicalFileName(projectId, year, month);
 
     // Then
-    assertThat(fileName).isEqualTo("export.xlsx");
+    assertThat(fileName).isEqualTo("export_null_2024-01.xlsx");
   }
 }

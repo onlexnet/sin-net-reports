@@ -5,7 +5,7 @@ type Query {
   Users(projectId: ID!): UsersQuery!
   getPrincipal: PrincipalModel!
   test: PrincipalModel!
-  downloadFile(projectId: ID!): FileDownloadResult!
+  downloadFile(projectId: ID!, year: Int!, month: Int!): FileDownloadResult!
 }
 
 type Mutation {

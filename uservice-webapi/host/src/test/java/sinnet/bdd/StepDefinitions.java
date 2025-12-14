@@ -302,10 +302,12 @@ public class StepDefinitions {
   public void actions_export_query_is_send() {
     var projectId = UUID.randomUUID();
     var projectIdStr = projectId.toString();
+    var year = 2024;
+    var month = 12;
 
-    var file = appApi.downloadFile(projectIdStr).get();
+    var file = appApi.downloadFile(projectIdStr, year, month).get();
     Assertions.assertThat(file).isNotNull();
-    Assertions.assertThat(file.getFileName()).isEqualTo("export.xlsx");
+    Assertions.assertThat(file.getFileName()).isEqualTo(String.format("export_%s_%d-%02d.xlsx", projectIdStr, year, month));
     Assertions.assertThat(file.getContentType()).isEqualTo("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
     Assertions.assertThat(file.getContent()).isNotEmpty();
   }

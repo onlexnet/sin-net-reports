@@ -55,9 +55,12 @@ const MainView: React.FC<MainProps> = (props) => {
     }
 
     if (!props.appState.empty) {
+      const periodValue = props.viewContext.period.getValue();
       downloadFile({
         variables: {
           projectId: props.appState.projectId,
+          year: periodValue.dateFrom.year,
+          month: periodValue.dateFrom.month,
         },
       });
       message.info('Inicjowanie pobierania pliku...');

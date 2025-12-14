@@ -1,5 +1,5 @@
-query downloadFile($projectId: ID!) {
-  downloadFile(projectId: $projectId) {
+query downloadFile($projectId: ID!, $year: Int!, $month: Int!) {
+  downloadFile(projectId: $projectId, year: $year, month: $month) {
     fileName
     content
     contentType
