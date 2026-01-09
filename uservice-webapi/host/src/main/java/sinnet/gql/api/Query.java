@@ -59,7 +59,7 @@ class Query {
       @Argument int year,
       @Argument int month) {
     String base64Content = fileGenerationService.generateEmptyExcelAsBase64(projectId, year, month);
-    String fileName = fileGenerationService.generateLogicalFileName(projectId, year, month);
+    String fileName = fileGenerationService.generateLogicalFileName(year, month);
     
     return FileDownloadResult.builder()
         .fileName(fileName)
