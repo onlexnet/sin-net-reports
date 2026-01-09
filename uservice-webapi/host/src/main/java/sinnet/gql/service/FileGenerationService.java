@@ -51,14 +51,13 @@ public class FileGenerationService {
   }
 
   /**
-   * Generates a logical filename based on the project ID, year, and month.
+   * Generates a logical filename based on the year and month.
    *
-   * @param projectId the project ID
    * @param year the year for the report
    * @param month the month for the report
    * @return logical filename for the Excel file
    */
-  public String generateLogicalFileName(String projectId, int year, int month) {
-    return String.format("export_%s_%d-%02d.xlsx", projectId, year, month);
+  public String generateLogicalFileName(int year, int month) {
+    return String.format("export_%d-%02d.xlsx", year, month);
   }
 }

@@ -307,7 +307,7 @@ public class StepDefinitions {
 
     var file = appApi.downloadFile(projectIdStr, year, month).get();
     Assertions.assertThat(file).isNotNull();
-    Assertions.assertThat(file.getFileName()).isEqualTo(String.format("export_%s_%d-%02d.xlsx", projectIdStr, year, month));
+    Assertions.assertThat(file.getFileName()).isEqualTo(String.format("export_%d-%02d.xlsx", year, month));
     Assertions.assertThat(file.getContentType()).isEqualTo("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
     Assertions.assertThat(file.getContent()).isNotEmpty();
   }

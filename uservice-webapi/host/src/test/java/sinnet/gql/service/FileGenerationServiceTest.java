@@ -99,46 +99,15 @@ class FileGenerationServiceTest {
   @Test
   void generateLogicalFileName_shouldReturnFormattedName() {
     // Given
-    String projectId = "project123";
     int year = 2024;
     int month = 5;
 
     // When
-    String fileName = fileGenerationService.generateLogicalFileName(projectId, year, month);
+    String fileName = fileGenerationService.generateLogicalFileName(year, month);
 
     // Then
-    assertThat(fileName).isEqualTo("export_project123_2024-05.xlsx");
+    assertThat(fileName).isEqualTo("export_2024-05.xlsx");
   }
 
-  @Test
-  void generateLogicalFileName_shouldReturnDifferentNamesForDifferentParameters() {
-    // Given
-    String projectId1 = "project1";
-    String projectId2 = "project2";
-    int year = 2024;
-    int month = 12;
 
-    // When
-    String fileName1 = fileGenerationService.generateLogicalFileName(projectId1, year, month);
-    String fileName2 = fileGenerationService.generateLogicalFileName(projectId2, year, month);
-
-    // Then
-    assertThat(fileName1).isEqualTo("export_project1_2024-12.xlsx");
-    assertThat(fileName2).isEqualTo("export_project2_2024-12.xlsx");
-    assertThat(fileName1).isNotEqualTo(fileName2);
-  }
-
-  @Test
-  void generateLogicalFileName_shouldWorkWithNullParameter() {
-    // Given
-    String projectId = null;
-    int year = 2024;
-    int month = 1;
-
-    // When
-    String fileName = fileGenerationService.generateLogicalFileName(projectId, year, month);
-
-    // Then
-    assertThat(fileName).isEqualTo("export_null_2024-01.xlsx");
-  }
 }
