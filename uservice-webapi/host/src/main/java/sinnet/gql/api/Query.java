@@ -58,8 +58,11 @@ class Query {
       @Argument String projectId,
       @Argument int year,
       @Argument int month) {
-    String base64Content = fileGenerationService.generateEmptyExcelAsBase64(projectId, year, month);
-    String fileName = fileGenerationService.generateLogicalFileName(year, month);
+    var authentication = (AuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+    var primaryEmail = authentication.getPrincipal();
+    
+    var base64Content = fileGenerationService.generateExcelAsBase64(projectId, year, month, primaryEmail);
+    var fileName = fileGenerationService.generateLogicalFileName(year, month);
     
     return FileDownloadResult.builder()
         .fileName(fileName)
