@@ -30,26 +30,17 @@ jobs:
 
     steps:
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      - name: Set up JDK 25
-        uses: actions/setup-java@v5
+      - name: Setup Java Environment
+        uses: ./.github/actions/setup-java-environment
         with:
-          java-version: 25
-          distribution: liberica
-          cache: maven
+          java-version: '25'
+          java-distribution: 'liberica'
 
       - name: Login to Docker 
         run: |
           echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-  
-      - name: cache maven
-        uses: actions/cache@v4
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
       
       - name: Build with Maven Webapi
         run: |

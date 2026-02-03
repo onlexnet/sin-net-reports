@@ -1,0 +1,35 @@
+name: 'Setup Java Environment'
+description: 'Sets up Java environment with consistent configuration across all workflows'
+
+inputs:
+  java-version:
+    description: 'Java version to install'
+    required: false
+    default: '25'
+  java-distribution:
+    description: 'Java distribution (zulu, liberica, temurin, etc)'
+    required: false
+    default: 'temurin'
+  enable-maven-cache:
+    description: 'Enable Maven dependency caching'
+    required: false
+    default: 'true'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Set up JDK ${{ inputs.java-version }}
+      uses: actions/setup-java@v5
+      with:
+        java-version: ${{ inputs.java-version }}
+        distribution: ${{ inputs.java-distribution }}
+        cache: ${{ inputs.enable-maven-cache == 'true' && 'maven' || '' }}
+
+    - name: Cache Maven dependencies
+      if: inputs.enable-maven-cache == 'true'
+      uses: actions/cache@v4
+      with:
+        path: ~/.m2/repository
+        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+        restore-keys: |
+          ${{ runner.os }}-maven-
