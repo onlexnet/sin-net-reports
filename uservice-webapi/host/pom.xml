@@ -25,7 +25,7 @@
     <aggregate.report.dir>report-aggregate/target/site/jacoco-aggregate/jacoco.xml</aggregate.report.dir> -->
     <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/../${aggregate.report.dir}</sonar.coverage.jacoco.xmlReportPaths>
 
-    <org.apache.poi.version>5.4.0</org.apache.poi.version>
+    <org.apache.poi.version>5.5.1</org.apache.poi.version>
   </properties>
 
 
@@ -325,23 +325,38 @@
                 <rules>
                   <rule>
                     <!--
-                      This example requires a line coverage minimum of 50% for every class except test classes
+                      This example requires a line coverage minimum of 80% for every class except test classes
                     -->
                     <element>BUNDLE</element>
                     <excludes>
                       <exclude>*Test</exclude>
+                      <exclude>sinnet.app.Program</exclude>
                     </excludes>
                     <limits>
                       <limit>
                         <counter>INSTRUCTION</counter>
                         <value>COVEREDRATIO</value>
-                        <minimum>0.01</minimum>
+                        <!-- <minimum>0.80</minimum> -->
+                        <minimum>0.64</minimum>
+                      </limit>
+                      <limit>
+                        <counter>BRANCH</counter>
+                        <value>COVEREDRATIO</value>
+                        <!-- <minimum>0.80</minimum> -->
+                        <minimum>0.41</minimum>
+                      </limit>
+                      <limit>
+                        <counter>LINE</counter>
+                        <value>COVEREDRATIO</value>
+                        <!-- <minimum>0.80</minimum> -->
+                        <minimum>0.62</minimum>
                       </limit>
                       <limit>
                         <!-- How many classes are not tested -->
                         <counter>CLASS</counter>
                         <value>MISSEDCOUNT</value>
-                        <maximum>100</maximum>
+                        <!-- <maximum>0</maximum> -->
+                        <maximum>15</maximum>
                       </limit>
                     </limits>
                   </rule>

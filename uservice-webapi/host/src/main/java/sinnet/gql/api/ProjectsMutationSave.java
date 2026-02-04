@@ -27,12 +27,12 @@ class ProjectsMutationSave {
 
     var updatedId = projectsGrpc.update(requestorEmail, createId, name, requestorEmail, List.of());
 
-    return new ProjectEntityGql()
-        .setName(name)
-        .setEntity(new SomeEntityGql()
+    return new ProjectEntityGql(
+        new SomeEntityGql()
           .setEntityId(updatedId.id())
           .setEntityVersion(updatedId.tag())
-          .setProjectId(updatedId.id()));
+          .setProjectId(updatedId.id()),
+        name);
 
   }
 }

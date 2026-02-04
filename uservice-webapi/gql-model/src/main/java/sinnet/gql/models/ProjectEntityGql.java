@@ -1,12 +1,5 @@
 package sinnet.gql.models;
 
-import lombok.Data;
-import lombok.experimental.Accessors;
-
 /** Fixme. */
-@Data
-@Accessors(chain = true)
-public class ProjectEntityGql {
-  private SomeEntityGql entity;
-  private String name;
+public record ProjectEntityGql(SomeEntityGql entity, String name) {
 }
