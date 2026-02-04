@@ -12,6 +12,11 @@
       [WARNING] Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent! -->
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <jacoco-maven-plugin.version>0.8.14</jacoco-maven-plugin.version>
+    <errorprone.version>2.39.0</errorprone.version>
+    <cucumber.version>7.11.2</cucumber.version>
+    <commons-lang3.version>3.12.0</commons-lang3.version>
+    <nullaway.version>0.12.10</nullaway.version>
+    <lombok.version>1.18.38</lombok.version>
   </properties>
 
   <dependencyManagement>
@@ -39,7 +44,7 @@
       <dependency>
         <groupId>io.cucumber</groupId>
         <artifactId>cucumber-bom</artifactId>
-        <version>7.11.2</version>
+        <version>${cucumber.version}</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -64,7 +69,7 @@
         <!-- apache lang3-->
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-lang3</artifactId>
-        <version>3.12.0</version>
+        <version>${commons-lang3.version}</version>
       </dependency>
       <dependency>
         <groupId>org.projectlombok</groupId>
@@ -222,7 +227,7 @@
             <path>
               <groupId>org.projectlombok</groupId>
               <artifactId>lombok</artifactId>
-              <version>1.18.38</version>
+              <version>${lombok.version}</version>
             </path>
             <path>
               <groupId>org.springframework.boot</groupId>
@@ -232,12 +237,12 @@
             <path>
               <groupId>com.google.errorprone</groupId>
               <artifactId>error_prone_core</artifactId>
-              <version>2.39.0</version>
+              <version>${errorprone.version}</version>
             </path>
             <path>
               <groupId>com.uber.nullaway</groupId>
               <artifactId>nullaway</artifactId>
-              <version>0.12.10</version>
+              <version>${nullaway.version}</version>
             </path>
           </annotationProcessorPaths>
         </configuration>

@@ -14,12 +14,12 @@ public interface ProjectsMapper extends CommonMapper {
 
   /** Fixme. */
   public static ProjectEntityGql toDto(Project grpc) {
-    return new ProjectEntityGql()
-      .setEntity(new SomeEntityGql()
+    return new ProjectEntityGql(
+        new SomeEntityGql()
           .setEntityId(grpc.getId().getEId())
           .setProjectId(grpc.getId().getEId())
-          .setEntityVersion(grpc.getId().getETag()))
-      .setName(grpc.getModel().getName());
+          .setEntityVersion(grpc.getId().getETag()),
+        grpc.getModel().getName());
   }
 
   /** Fixme. */

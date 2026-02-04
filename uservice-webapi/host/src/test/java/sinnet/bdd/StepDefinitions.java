@@ -71,12 +71,12 @@ public class StepDefinitions {
   @When("user is requesting list of projects")
   public void user_is_requesting_list_of_projects() {
 
-    var grpcResult = new ProjectEntityGql()
-        .setEntity(new SomeEntityGql()
+    var grpcResult = new ProjectEntityGql(
+        new SomeEntityGql()
             .setEntityId("1")
             .setEntityVersion(2L)
-            .setProjectId("1"))
-        .setName("my name");
+            .setProjectId("1"),
+        "my name");
     Mockito
         .when(projectsGrpc.list(eq(requestorEmail), any()))
         .thenReturn(List.of(grpcResult));
@@ -115,12 +115,12 @@ public class StepDefinitions {
     var saveResult = appApi.createProject(projectNewName);
 
     lastlyCreatedProject = saveResult.get();
-    expectedCreatedProject = new ProjectEntityGql()
-        .setEntity(new SomeEntityGql()
+    expectedCreatedProject = new ProjectEntityGql(
+        new SomeEntityGql()
             .setEntityId("1")
             .setEntityVersion(2L)
-            .setProjectId("1"))
-        .setName(projectNewName);
+            .setProjectId("1"),
+        projectNewName);
   }
 
   @Then("operation result is returned")
