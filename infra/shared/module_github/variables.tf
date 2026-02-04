@@ -1,3 +1,21 @@
+# GitHub App authentication variables
+# See GITHUB_APP_SETUP.md for instructions on how to obtain these values
+variable "github_app_id" {
+  description = "GitHub App ID for Terraform authentication"
+  type        = string
+}
+
+variable "github_app_installation_id" {
+  description = "GitHub App Installation ID"
+  type        = string
+}
+
+variable "github_app_pem" {
+  description = "GitHub App private key in PEM format (content, not path)"
+  type        = string
+  sensitive   = true
+}
+
 variable "environment_name" {
 }
 

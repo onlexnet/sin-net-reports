@@ -24,6 +24,9 @@ module "keyvault" {
 module "github" {
   source                                              = "./module_github"
   environment_name                                    = var.environment_name
+  github_app_id                                       = var.github_app_id
+  github_app_installation_id                          = var.github_app_installation_id
+  github_app_pem                                      = var.github_app_pem
   webapp_prod_api_token                               = module.static_app_prod.static_app_api_key
   webapp_test_api_token                               = module.static_app_test.static_app_api_key
   ONLEXNET_INFRA_SECRET                               = module.keyvault.env.ONLEXNET_INFRA_SECRET
