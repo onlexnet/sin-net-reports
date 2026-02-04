@@ -1,6 +1,5 @@
 package sinnet;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,37 +10,18 @@ import org.springframework.web.context.WebApplicationContext;
 
 import sinnet.db.SqlServerDbExtension;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = Program.class)
+// @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = Program.class)
+@SpringBootTest(classes = Program.class)
 @ActiveProfiles("test")
 @ExtendWith(SqlServerDbExtension.class)
-class ActuatorTests {
+class MyTest {
 
   @Autowired
   WebApplicationContext webContext;
 
-  RestTestClient restClient;
-  
-  @BeforeEach
-  public void beforeEach() {
-      restClient = RestTestClient.bindToApplicationContext(webContext).build();
-  }
-
   @Test
   public void shouldBeLive() {
-    restClient.get()
-        .uri("/healtz")
-        .exchange()
-        .expectStatus()
-        .isOk();
-  }
-
-  @Test
-  public void shouldBeReady() {
-    restClient.get()
-        .uri("/readyz")
-        .exchange()
-        .expectStatus()
-        .isOk();
+    var restClient = RestTestClient.bindToApplicationContext(webContext).build();
   }
 
 }

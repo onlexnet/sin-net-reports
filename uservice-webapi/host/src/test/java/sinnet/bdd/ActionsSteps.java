@@ -7,7 +7,7 @@ import java.util.UUID;
 import org.assertj.core.api.Assertions;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.test.web.server.LocalServerPort;
 
 import io.cucumber.java.Before;
 import io.cucumber.java.en.Then;
@@ -26,8 +26,8 @@ public class ActionsSteps {
   @Autowired
   ActionsGrpcFacade actionsGrpcFacade;
 
-  @Autowired
-  TestRestTemplate restTemplate;
+  @LocalServerPort
+  int serverPort;
 
   String requestorEmail;
   AppApi appApi;
@@ -35,7 +35,7 @@ public class ActionsSteps {
   @Before
   public void before() {
     requestorEmail = "email@" + UUID.randomUUID();
-    appApi = new AppApi(restTemplate.getRootUri(), requestorEmail);
+    appApi = new AppApi(serverPort, requestorEmail);
     Mockito.clearInvocations(actionsGrpcFacade);
   }
   

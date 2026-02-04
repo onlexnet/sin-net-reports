@@ -1,19 +1,24 @@
 package sinnet.features;
 
 import org.apache.logging.log4j.util.Strings;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.boot.web.server.autoconfigure.ServerProperties;
 import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
+import org.springframework.test.web.servlet.client.RestTestClient;
+import org.springframework.util.Assert;
+import org.springframework.web.client.RestClient;
+import org.springframework.web.context.WebApplicationContext;
 
 import io.dapr.v1.AppCallbackGrpc;
 import io.dapr.v1.AppCallbackGrpc.AppCallbackBlockingStub;
 import io.grpc.ManagedChannelBuilder;
 import lombok.Data;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.Accessors;
 import sinnet.grpc.customers.CustomersGrpc;
 import sinnet.grpc.customers.CustomersGrpc.CustomersBlockingStub;
 import sinnet.grpc.projects.generated.ProjectsGrpc;
@@ -26,8 +31,7 @@ import sinnet.models.ValName;
 import sinnet.report1.grpc.ReportsGrpc.ReportsBlockingStub;
 
 @Component
-@RequiredArgsConstructor
-public class RpcApi implements ApplicationListener<ApplicationReadyEvent> {
+public class RpcApi implements ApplicationListener<ContextRefreshedEvent> {
 
   private UseAlias currentCustomer = Current.INSTANCE;
 
@@ -80,8 +84,6 @@ public class RpcApi implements ApplicationListener<ApplicationReadyEvent> {
     return ValName.of(result.name());
   }
 
-  private final TestRestTemplate restTemplate;
-
   @Getter
   private UsersBlockingStub users;
 
@@ -106,17 +108,21 @@ public class RpcApi implements ApplicationListener<ApplicationReadyEvent> {
   @Getter
   private AppCallbackBlockingStub apiCallback;
 
-  @Value("${grpc.server-port}")
-  private int grpcPort;
-
   @Data
   static public class GrpcActuatorModel {
      private Integer port;
   }
 
+  @Autowired WebApplicationContext webContext;
+
   @Override
-  public void onApplicationEvent(ApplicationReadyEvent event) {
-    var grpcModel = restTemplate.getForObject("/actuator/grpc", GrpcActuatorModel.class);
+  public void onApplicationEvent(ContextRefreshedEvent event) {
+    var restClient = RestTestClient.bindToApplicationContext(webContext).build();
+    var grpcModel = restClient.get()
+        .uri("/actuator/grpc")
+        .exchange()
+        .returnResult(GrpcActuatorModel.class)
+        .getResponseBody();
     var grpcPort = grpcModel.getPort();
 
     var channel = ManagedChannelBuilder.forAddress("localhost", grpcPort)
