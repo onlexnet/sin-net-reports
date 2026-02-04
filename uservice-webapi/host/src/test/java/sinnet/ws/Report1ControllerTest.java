@@ -18,8 +18,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.google.protobuf.ByteString;
@@ -44,16 +44,16 @@ class Report1ControllerTest {
   @Autowired
   private MockMvc mockMvc;
 
-  @MockBean
+  @MockitoBean
   private ActionsGrpcFacade actionsGrpcFacade;
 
-  @MockBean
+  @MockitoBean
   private CustomersGrpcFacade customersGrpcFacade;
 
-  @MockBean
+  @MockitoBean
   private Reports1GrpcAdapter reports1GrpcAdapter;
 
-  @MockBean
+  @MockitoBean
   private UsersGrpcService usersGrpcService;
 
   @Test
