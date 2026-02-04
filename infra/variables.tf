@@ -8,6 +8,25 @@ variable "environment_name" {
 variable "azure_subscription_id_prod" {
 }
 
+# GitHub App authentication variables
+# These should be configured in Terraform Cloud workspace
+# See shared/module_github/GITHUB_APP_SETUP.md for setup instructions
+variable "github_app_id" {
+  description = "GitHub App ID for Terraform authentication (app name: onlexnet-psa)"
+  type        = string
+}
+
+variable "github_app_installation_id" {
+  description = "GitHub App Installation ID"
+  type        = string
+}
+
+variable "github_app_pem" {
+  description = "GitHub App private key in PEM format (content, not path)"
+  type        = string
+  sensitive   = true
+}
+
 # Some not-used environment variables just to hide Terraform Cloud warning like:
 # │ Warning: Value for undeclared variable
 # │ 
@@ -21,8 +40,6 @@ variable "azure_subscription_id_prod" {
 # │ certain "global" settings to all configurations in your organization. To
 # │ reduce the verbosity of these warnings, use the -compact-warnings option.
 
-variable GITHUB_TOKEN { // used by Github provider
-}
 variable ARM_CLIENT_SECRET { // used by Azure provider
 }
 variable ARM_TENANT_ID { // used by Azure provider

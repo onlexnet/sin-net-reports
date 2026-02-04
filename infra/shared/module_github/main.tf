@@ -1,7 +1,3 @@
-data "github_user" "current" {
-  username = ""
-}
-
 data "github_repository" "sinnet" {
   full_name = "onlexnet/sin-net-reports"
 }
@@ -9,9 +5,11 @@ data "github_repository" "sinnet" {
 resource "github_repository_environment" "main" {
   environment = var.environment_name
   repository  = data.github_repository.sinnet.name
-  reviewers {
-    # users = [data.github_user.current.id]
-  }
+  
+  # Reviewers can be configured here if needed
+  # reviewers {
+  #   users = [12345]  # GitHub user IDs
+  # }
 
   deployment_branch_policy {
     # Whether only branches with branch protection rules can deploy to this environment.

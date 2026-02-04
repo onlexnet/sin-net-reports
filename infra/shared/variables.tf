@@ -9,6 +9,24 @@ variable "environment_name" {
   type = string
 }
 
+# GitHub App authentication variables for managing GitHub resources
+# See module_github/GITHUB_APP_SETUP.md for setup instructions
+variable "github_app_id" {
+  description = "GitHub App ID for Terraform authentication (app name: onlexnet-psa)"
+  type        = string
+}
+
+variable "github_app_installation_id" {
+  description = "GitHub App Installation ID"
+  type        = string
+}
+
+variable "github_app_pem" {
+  description = "GitHub App private key in PEM format (content, not path)"
+  type        = string
+  sensitive   = true
+}
+
 # # Name of predefined superuser on external postgres server where all
 # # databases are created. In such small project we use single SQL server with multiple databases / schemas.
 # variable "psql_infrauser_name" {
