@@ -26,6 +26,7 @@
     <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/../${aggregate.report.dir}</sonar.coverage.jacoco.xmlReportPaths>
 
     <org.apache.poi.version>5.5.1</org.apache.poi.version>
+    <surefire-plugin.version>3.5.4</surefire-plugin.version>
   </properties>
 
 
@@ -240,7 +241,7 @@
 
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>3.1.2</version>
+        <version>${surefire-plugin.version}</version>
       </plugin>
 
       <plugin>
@@ -378,7 +379,7 @@
       <dependency>
         <groupId>io.cucumber</groupId>
         <artifactId>cucumber-bom</artifactId>
-        <version>7.11.2</version>
+        <version>${cucumber.version}</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -386,7 +387,7 @@
         <groupId>org.projectlombok</groupId>
         <artifactId>lombok</artifactId>
         <scope>provided</scope>
-        <version>1.18.38</version>
+        <version>${lombok.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
