@@ -8,7 +8,7 @@
   <properties>
     <spring-boot.version>3.5.5</spring-boot.version>
     <api.version>0.1.3</api.version>
-    <dapr.version>1.7.0</dapr.version>
+    <dapr.version>1.16.1</dapr.version>
     <guava.version>32.0.0-jre</guava.version>
     <jacoco-maven-plugin.version>0.8.14</jacoco-maven-plugin.version>
     <instancio-junit5.version>5.4.0</instancio-junit5.version>
