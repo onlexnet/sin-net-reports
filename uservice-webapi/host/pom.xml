@@ -338,7 +338,7 @@
                         <counter>INSTRUCTION</counter>
                         <value>COVEREDRATIO</value>
                         <!-- <minimum>0.80</minimum> -->
-                        <minimum>0.64</minimum>
+                        <minimum>0.67</minimum>
                       </limit>
                       <limit>
                         <counter>BRANCH</counter>
@@ -350,14 +350,14 @@
                         <counter>LINE</counter>
                         <value>COVEREDRATIO</value>
                         <!-- <minimum>0.80</minimum> -->
-                        <minimum>0.62</minimum>
+                        <minimum>0.65</minimum>
                       </limit>
                       <limit>
                         <!-- How many classes are not tested -->
                         <counter>CLASS</counter>
                         <value>MISSEDCOUNT</value>
                         <!-- <maximum>0</maximum> -->
-                        <maximum>15</maximum>
+                        <maximum>14</maximum>
                       </limit>
                     </limits>
                   </rule>
