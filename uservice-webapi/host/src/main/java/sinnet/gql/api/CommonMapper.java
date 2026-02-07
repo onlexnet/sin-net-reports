@@ -53,15 +53,10 @@ public interface CommonMapper {
   LocalDateTime toGrpc(java.time.LocalDateTime source);
 
   /** Grpc -> Domain mapping. */
-  default EntityId fromGrpc(sinnet.grpc.common.EntityId dto) {
-    if (dto == null) {
-      return null;
-    }
-    var projectId = UUID.fromString(dto.getProjectId());
-    var entityId = UUID.fromString(dto.getEntityId());
-    var entityTag = dto.getEntityVersion();
-    return new EntityId(projectId, entityId, entityTag);
-  }
+  @Mapping(target = "projectId", source = "projectId")
+  @Mapping(target = "id", source = "entityId")
+  @Mapping(target = "tag", source = "entityVersion")
+  EntityId fromGrpc(sinnet.grpc.common.EntityId source);
 
   /** LocalDate conversion. */
   default java.time.LocalDate fromGrpc(LocalDate whenProvided) {
@@ -69,6 +64,11 @@ public interface CommonMapper {
       return null;
     }
     return java.time.LocalDate.of(whenProvided.getYear(), whenProvided.getMonth(), whenProvided.getDay());
+  }
+
+  default UUID toUuid(String value) {
+    // gRPC strings are never null, but may be empty when unset.
+    return value == null || value.isEmpty() ? null : UUID.fromString(value);
   }
 
 }

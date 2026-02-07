@@ -394,6 +394,22 @@ class CommonMapperTest {
     }
 
     @Test
+    @DisplayName("should map empty string ids to null UUIDs")
+    void shouldMapEmptyStringsToNullUuids() {
+      var source = sinnet.grpc.common.EntityId.newBuilder()
+          // .setProjectId("") default value for strings in gRPC is empty, which should be treated as null UUID
+          // .setEntityId("") as above
+          .setEntityVersion(1L)
+          .build();
+
+      var result = mapper.fromGrpc(source);
+
+      assertThat(result.projectId()).isNull();
+      assertThat(result.id()).isNull();
+      assertThat(result.tag()).isEqualTo(1L);
+    }
+
+    @Test
     @DisplayName("should return null for null gRPC EntityId")
     void shouldReturnNullForNull() {
       assertThat(mapper.fromGrpc((sinnet.grpc.common.EntityId) null)).isNull();
