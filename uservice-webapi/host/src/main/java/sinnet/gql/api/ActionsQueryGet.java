@@ -14,10 +14,12 @@ import sinnet.ports.timeentries.CustomersGrpcFacade;
 
 @Controller
 @RequiredArgsConstructor
-class ActionsQueryGet implements CustomerMapper {
+class ActionsQueryGet {
 
   private final ActionsGrpcFacade service;
   private final CustomersGrpcFacade customerService;
+  private final CustomerMapper customerMapper;
+  private final CommonMapper commonMapper;
 
   @SchemaMapping
   ServiceModelGql get(ActionsQuery self, @Argument String actionId) {
@@ -25,8 +27,8 @@ class ActionsQueryGet implements CustomerMapper {
     var actionIdTyped = UUID.fromString(actionId);
 
     var customerGet = Function1.of((String customerId) -> 
-        customerService.customerGet(self.projectId(), self.primaryEmail(), customerId, this::toGql));
-    var result = service.getAction(projectId, actionIdTyped, customerGet);
+        customerService.customerGet(self.projectId(), self.primaryEmail(), customerId, customerMapper::toGql));
+    var result = service.getAction(projectId, actionIdTyped, customerGet, commonMapper);
 
     return result;
   }

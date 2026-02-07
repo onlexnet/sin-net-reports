@@ -77,6 +77,12 @@
       <artifactId>jspecify</artifactId>
     </dependency>
 
+    <!-- MapStruct for bean mapping -->
+    <dependency>
+      <groupId>org.mapstruct</groupId>
+      <artifactId>mapstruct</artifactId>
+    </dependency>
+
     <dependency>
       <groupId>io.vavr</groupId>
       <artifactId>vavr</artifactId>
@@ -185,6 +191,11 @@
     <dependency>
       <groupId>org.junit.platform</groupId>
       <artifactId>junit-platform-suite</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.instancio</groupId>
+      <artifactId>instancio-junit</artifactId>
       <scope>test</scope>
     </dependency>
 
@@ -338,26 +349,26 @@
                         <counter>INSTRUCTION</counter>
                         <value>COVEREDRATIO</value>
                         <!-- <minimum>0.80</minimum> -->
-                        <minimum>0.66</minimum>
+                          <minimum>0.71</minimum>
                       </limit>
                       <limit>
                         <counter>BRANCH</counter>
                         <value>COVEREDRATIO</value>
                         <!-- <minimum>0.80</minimum> -->
-                        <minimum>0.39</minimum>
+                          <minimum>0.65</minimum>
                       </limit>
                       <limit>
                         <counter>LINE</counter>
                         <value>COVEREDRATIO</value>
                         <!-- <minimum>0.80</minimum> -->
-                        <minimum>0.64</minimum>
+                        <minimum>0.70</minimum>
                       </limit>
                       <limit>
                         <!-- How many classes are not tested -->
                         <counter>CLASS</counter>
                         <value>MISSEDCOUNT</value>
                         <!-- <maximum>0</maximum> -->
-                        <maximum>14</maximum>
+                        <maximum>13</maximum>
                       </limit>
                     </limits>
                   </rule>

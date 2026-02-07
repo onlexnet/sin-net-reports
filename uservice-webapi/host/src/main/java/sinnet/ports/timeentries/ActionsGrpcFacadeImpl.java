@@ -25,13 +25,14 @@ import sinnet.grpc.timeentries.UpdateCommand;
 class ActionsGrpcFacadeImpl implements ActionsGrpcFacade {
 
   private final TimeEntriesBlockingStub stub;
+  private final CommonMapper commonMapper;
 
   @Override
   public List<TimeEntryModel> searchInternal(UUID projectId, LocalDate from, LocalDate to) {
 
     var searchQuery = SearchQuery.newBuilder()
-        .setFrom(CommonMapper.toGrpc(from))
-        .setTo(CommonMapper.toGrpc(to))
+        .setFrom(commonMapper.toGrpc(from))
+        .setTo(commonMapper.toGrpc(to))
         .setProjectId(projectId.toString())
         .build();
 
@@ -47,12 +48,12 @@ class ActionsGrpcFacadeImpl implements ActionsGrpcFacade {
         .setInvoker(UserToken.newBuilder()
           .setProjectId(projectId.toString())
           .setRequestorEmail(requestorEmail))
-        .setWhen(CommonMapper.toGrpc(when))
+        .setWhen(commonMapper.toGrpc(when))
         .build();
 
     var result = stub.reserve(cmd);
 
-    return CommonMapper.fromGrpc(result.getEntityId());
+    return commonMapper.fromGrpc(result.getEntityId());
   }
   
   @Override
@@ -71,8 +72,8 @@ class ActionsGrpcFacadeImpl implements ActionsGrpcFacade {
   @Override
   public boolean update(EntityId entitId, String customerId, String description, int distance, int duration,
                         String servicemanEmail, String servicemanName, LocalDate whenProvided) {
-    var whenProvidedGprc = CommonMapper.toGrpc(whenProvided);
-    var entitIdGrpc = CommonMapper.toGrpc(entitId);
+    var whenProvidedGprc = commonMapper.toGrpc(whenProvided);
+    var entitIdGrpc = commonMapper.toGrpc(entitId);
     var model = TimeEntryModel.newBuilder()
         .setCustomerId(customerId)
         .setDescription(description)

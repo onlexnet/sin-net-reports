@@ -19,8 +19,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mapstruct.factory.Mappers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import sinnet.gql.api.CommonMapper;
@@ -45,6 +47,9 @@ class FileGenerationServiceTest {
   
   @Mock
   private CustomersGrpcFacade customersGrpcFacade;
+
+  @Spy
+  private CommonMapper commonMapper = Mappers.getMapper(CommonMapper.class);
 
   @InjectMocks
   private FileGenerationService fileGenerationService;
@@ -168,7 +173,7 @@ class FileGenerationServiceTest {
         .setDescription(description)
         .setDuration(duration)
         .setDistance(distance)
-        .setWhenProvided(CommonMapper.toGrpc(date))
+        .setWhenProvided(commonMapper.toGrpc(date))
         .setCustomerId(UUID.randomUUID().toString())
         .build();
   }

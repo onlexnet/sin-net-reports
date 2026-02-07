@@ -29,6 +29,9 @@ public class ActionsSteps {
   @Autowired
   TestRestTemplate restTemplate;
 
+  @Autowired
+  CommonMapper commonMapper;
+
   String requestorEmail;
   AppApi appApi;
 
@@ -52,7 +55,7 @@ public class ActionsSteps {
       .thenReturn(List.of(
         TimeEntryModel.newBuilder()
           .setDescription("desc1")
-          .setWhenProvided(CommonMapper.toGrpc(now))
+          .setWhenProvided(commonMapper.toGrpc(now))
           .setDistance(1)
           .setDuration(2)
           .setServicemanName("my-serviceman")
@@ -123,7 +126,7 @@ public class ActionsSteps {
         .setEntityId(EntityId.newBuilder().setEntityId(entityId.toString()).setEntityVersion(42).setProjectId(projectId.toString()))
         .setServicemanEmail("serviceman-email")
         .setServicemanName("serviceman-name")
-        .setWhenProvided(CommonMapper.toGrpc(now))
+        .setWhenProvided(commonMapper.toGrpc(now))
         .build();
     Mockito
       .when(actionsGrpcFacade.getActionInternal(projectId, entityId))

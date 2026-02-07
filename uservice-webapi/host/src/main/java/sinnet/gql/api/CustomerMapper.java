@@ -3,6 +3,8 @@ package sinnet.gql.api;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import org.mapstruct.Mapper;
+
 import io.vavr.collection.Iterator;
 import io.vavr.control.Option;
 import sinnet.gql.models.CustomerContactGql;
@@ -21,8 +23,9 @@ import sinnet.grpc.common.EntityId;
 import sinnet.grpc.customers.CustomerSecretEx;
 import sinnet.grpc.customers.GetReply;
 
-/** FixMe. */
-public interface CustomerMapper extends CommonMapper {
+/** MapStruct mapper for customer conversions between gRPC and GraphQL models. */
+@Mapper(componentModel = "spring", uses = CommonMapper.class)
+public interface CustomerMapper {
 
   // DateTime, created and kept on server-side is UTC only. We can't send data to
   // client because GraphQL does not support Date / Time types.
@@ -30,11 +33,12 @@ public interface CustomerMapper extends CommonMapper {
   // convert them so its
   // proper models for date/time representation
   // reason: https://github.com/onlexnet/sin-net-reports/issues/59
-  static DateTimeFormatter timestampFormatter = DateTimeFormatter.ISO_DATE_TIME;
+  DateTimeFormatter TIMESTAMP_FORMATTER = DateTimeFormatter.ISO_DATE_TIME;
 
   /** DocMe. */
   default LocalDateTime map(sinnet.grpc.customers.LocalDateTime it) {
-    if (it == null) {
+    if (it == null || it.getMonth() == 0) {
+      // Return null for missing/unset protobuf LocalDateTime (default values are 0)
       return null;
     }
     return LocalDateTime.of(it.getYear(), it.getMonth(), it.getDay(), it.getHour(), it.getMinute(), it.getSecond());
@@ -95,9 +99,9 @@ public interface CustomerMapper extends CommonMapper {
         .set(b -> b::setLocation, it.getLocation())
         .set(b -> b::setUsername, it.getUsername())
         .set(b -> b::setPassword, it.getPassword())
-        .set(b -> b::setEntityName, it.getEntityName())
-        .set(b -> b::setEntityCode, it.getEntityCode())
-        .set(b -> b::setChangedWhen, CommonMapper.toGrpc(whenChanged))
+          .set(b -> b::setEntityName, it.getEntityName())
+          .set(b -> b::setEntityCode, it.getEntityCode())
+          .set(b -> b::setChangedWhen, toGrpc(whenChanged))
         .set(b -> b::setOtpSecret, it.getOtpSecret())
         .set(b -> b::setOtpRecoveryKeys, it.getOtpRecoveryKeys())
         .set(b -> b::setChangedWho, whoChanged)
@@ -113,11 +117,26 @@ public interface CustomerMapper extends CommonMapper {
         .set(b -> b::setLocation, it.getLocation())
         .set(b -> b::setUsername, it.getUsername())
         .set(b -> b::setPassword, it.getPassword())
-        .set(b -> b::setChangedWhen, CommonMapper.toGrpc(whenChanged))
+        .set(b -> b::setChangedWhen, toGrpc(whenChanged))
         .set(b -> b::setChangedWho, whoChanged)
         .set(b -> b::setOtpSecret, it.getOtpSecret())
         .set(b -> b::setOtpRecoveryKeys, it.getOtpRecoveryKeys())
         .done().build();
+  }
+
+  /** LocalDateTime conversion for customer gRPC model. */
+  default sinnet.grpc.customers.LocalDateTime toGrpc(LocalDateTime from) {
+    if (from == null) {
+      return null;
+    }
+    return sinnet.grpc.customers.LocalDateTime.newBuilder()
+        .setYear(from.getYear())
+        .setMonth(from.getMonthValue())
+        .setDay(from.getDayOfMonth())
+        .setHour(from.getHour())
+        .setMinute(from.getMinute())
+        .setSecond(from.getSecond())
+        .build();
   }
 
   /** Fixme. */
@@ -168,7 +187,7 @@ public interface CustomerMapper extends CommonMapper {
     result.setPassword(it.getPassword());
     result.setEntityCode(it.getEntityCode());
     result.setEntityName(it.getEntityName());
-    result.setChangedWhen(Option.of(map(it.getChangedWhen())).map(timestampFormatter::format).getOrElse("?"));
+    result.setChangedWhen(Option.of(map(it.getChangedWhen())).map(TIMESTAMP_FORMATTER::format).getOrElse("?"));
     result.setChangedWho(it.getChangedWho());
     result.setOtpSecret(it.getOtpSecret());
     result.setOtpRecoveryKeys(it.getOtpRecoveryKeys());
@@ -184,7 +203,7 @@ public interface CustomerMapper extends CommonMapper {
     result.setLocation(it.getLocation());
     result.setUsername(it.getUsername());
     result.setPassword(it.getPassword());
-    result.setChangedWhen(Option.of(map(it.getChangedWhen())).map(timestampFormatter::format).getOrElse("?"));
+    result.setChangedWhen(Option.of(map(it.getChangedWhen())).map(TIMESTAMP_FORMATTER::format).getOrElse("?"));
     result.setChangedWho(it.getChangedWho());
     result.setOtpSecret(it.getOtpSecret());
     result.setOtpRecoveryKeys(it.getOtpRecoveryKeys());

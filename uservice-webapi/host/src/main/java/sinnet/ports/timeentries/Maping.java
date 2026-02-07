@@ -1,15 +1,21 @@
 package sinnet.ports.timeentries;
 
-import lombok.experimental.UtilityClass;
+import org.springframework.stereotype.Component;
+
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 import sinnet.gql.api.CommonMapper;
 import sinnet.gql.models.CustomerEntityGql;
 import sinnet.gql.models.ServiceModelGql;
 import sinnet.grpc.timeentries.TimeEntryModel;
 
-@UtilityClass
+@Component
+@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 class Maping {
   
-  static ServiceModelGql map(TimeEntryModel model, CustomerEntityGql customer) {
+  private final CommonMapper commonMapper;
+
+  ServiceModelGql map(TimeEntryModel model, CustomerEntityGql customer) {
     return new ServiceModelGql()
         .setCustomer(customer)
         .setDescription(model.getDescription())
@@ -20,7 +26,7 @@ class Maping {
         .setProjectId(model.getEntityId().getProjectId())
         .setServicemanEmail(model.getServicemanEmail())
         .setServicemanName(model.getServicemanName())
-        .setWhenProvided(CommonMapper.fromGrpc(model.getWhenProvided()));
+        .setWhenProvided(commonMapper.fromGrpc(model.getWhenProvided()));
   }
 
 

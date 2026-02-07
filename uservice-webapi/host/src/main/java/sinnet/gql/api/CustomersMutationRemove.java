@@ -12,14 +12,15 @@ import sinnet.ports.timeentries.CustomersGrpcFacade;
 
 @Controller
 @RequiredArgsConstructor
-class CustomersMutationRemove implements CustomerMapper {
+class CustomersMutationRemove {
 
   private final CustomersGrpcFacade service;
+  private final CustomerMapper customerMapper;
 
   @SchemaMapping
   public Boolean remove(CustomersMutation self, @Argument EntityGql id) {
     var cmd = RemoveRequest.newBuilder()
-        .setEntityId(toGrpc(id))
+        .setEntityId(customerMapper.toGrpc(id))
         .setUserToken(self.getUserToken())
         .build();
     var result = service.remove(cmd);

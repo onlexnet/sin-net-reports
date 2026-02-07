@@ -31,18 +31,21 @@ public interface ActionsGrpcFacade {
   /** Fixme. */
   TimeEntryModel getActionInternal(UUID projectId, UUID entityId);
 
-  default ServiceModelGql getAction(UUID projectId, UUID entityId, Function<String, CustomerEntityGql> customerMapper) {
+  default ServiceModelGql getAction(UUID projectId, UUID entityId, Function<String, CustomerEntityGql> customerMapper,
+                                   CommonMapper commonMapper) {
     var dto =  getActionInternal(projectId, entityId);
-    return map(dto, customerMapper);
+    return mapWithMapper(dto, customerMapper, commonMapper);
   }
   
   /** Returns list of actions for requested project, limited result from-to range. */
-  default List<ServiceModelGql> search(UUID projectId, LocalDate from, LocalDate to, Function<String, CustomerEntityGql> customerMapper) {
-    return searchInternal(projectId, from, to).stream().map(it -> map(it, customerMapper)).toList();
+  default List<ServiceModelGql> search(UUID projectId, LocalDate from, LocalDate to, Function<String, CustomerEntityGql> customerMapper,
+                                      CommonMapper commonMapper) {
+    return searchInternal(projectId, from, to).stream().map(it -> mapWithMapper(it, customerMapper, commonMapper)).toList();
   }
 
-  /** Internal mapping. */
-  static ServiceModelGql map(TimeEntryModel model, Function<String, CustomerEntityGql> customerMapper) {
+  /** Internal mapping - requires CommonMapper instance. */
+  default ServiceModelGql mapWithMapper(TimeEntryModel model, Function<String, CustomerEntityGql> customerMapper,
+                                       CommonMapper commonMapper) {
     var customerId = model.getCustomerId();
     var customer = StringUtils.isEmpty(customerId)
         ? null
@@ -58,6 +61,6 @@ public interface ActionsGrpcFacade {
         .setProjectId(model.getEntityId().getProjectId())
         .setServicemanEmail(model.getServicemanEmail())
         .setServicemanName(model.getServicemanName())
-        .setWhenProvided(CommonMapper.fromGrpc(model.getWhenProvided()));
+        .setWhenProvided(commonMapper.fromGrpc(model.getWhenProvided()));
   }
 }

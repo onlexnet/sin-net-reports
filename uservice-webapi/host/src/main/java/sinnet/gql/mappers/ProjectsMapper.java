@@ -2,7 +2,6 @@ package sinnet.gql.mappers;
 
 import java.util.UUID;
 
-import sinnet.gql.api.CommonMapper;
 import sinnet.gql.models.ProjectEntityGql;
 import sinnet.gql.models.ProjectIdGql;
 import sinnet.gql.models.SomeEntityGql;
@@ -10,7 +9,7 @@ import sinnet.grpc.projects.generated.Project;
 import sinnet.grpc.projects.generated.ProjectId;
 
 /** Fixme. */
-public interface ProjectsMapper extends CommonMapper {
+public interface ProjectsMapper {
 
   /** Fixme. */
   public static ProjectEntityGql toDto(Project grpc) {

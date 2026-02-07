@@ -6,7 +6,6 @@ import io.grpc.ClientInterceptor;
 import io.grpc.ManagedChannel;
 import io.grpc.Metadata;
 import io.grpc.stub.MetadataUtils;
-import lombok.val;
 import lombok.experimental.UtilityClass;
 
 /** Some static helper methods around gRpc. Candidate to be moved to shared library. */
@@ -24,14 +23,10 @@ public class GrpcUtils {
 
   // packs non closeable item to AutoCloseable element
   static AutoCloseable asCloseable(ManagedChannel item) {
-    val someNotTestedShutdownForChannelsInSeconds = 3;
+    var someNotTestedShutdownForChannelsInSeconds = 3;
     return () -> {
       item.shutdown();
-      try {
-        item.awaitTermination(someNotTestedShutdownForChannelsInSeconds, TimeUnit.SECONDS);
-      } catch (InterruptedException e) {
-        Thread.currentThread().interrupt();
-      }
+      item.awaitTermination(someNotTestedShutdownForChannelsInSeconds, TimeUnit.SECONDS);
     };
   }
   

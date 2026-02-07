@@ -12,9 +12,10 @@ import sinnet.ports.timeentries.CustomersGrpcFacade;
 
 @Controller
 @RequiredArgsConstructor
-class CustomersQueryGet implements CustomerMapper {
+class CustomersQueryGet {
 
   private final CustomersGrpcFacade service;
+  private final CustomerMapper customerMapper;
 
   @SchemaMapping
   public CustomerEntityGql get(CustomersQuery self, @Argument String entityId) {
@@ -26,7 +27,7 @@ class CustomersQueryGet implements CustomerMapper {
 
     var result = service.get(request);
 
-    return this.toGql(result);
+    return customerMapper.toGql(result);
   }
 
 }

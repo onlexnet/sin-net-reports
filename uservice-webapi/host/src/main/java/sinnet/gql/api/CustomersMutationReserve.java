@@ -10,9 +10,10 @@ import sinnet.ports.timeentries.CustomersGrpcFacade;
 
 @Controller
 @RequiredArgsConstructor
-class CustomersMutationReserve implements CommonMapper {
+class CustomersMutationReserve {
 
   private final CustomersGrpcFacade service;
+  private final CommonMapper commonMapper;
 
   @SchemaMapping
   public EntityGql reserve(CustomersMutation self) {
@@ -20,6 +21,6 @@ class CustomersMutationReserve implements CommonMapper {
         .setProjectId(self.getProjectId())
         .build();
     var result = service.reserve(request);
-    return CommonMapper.toGql(result.getEntityId());
+    return commonMapper.toGql(result.getEntityId());
   }
 }
