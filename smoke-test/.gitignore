@@ -1,0 +1,12 @@
+# Docker volumes and data
+*.log
+logs/
+
+# Test artifacts
+test-results/
+screenshots/
+reports/
+
+# Temporary files
+*.tmp
+.DS_Store
