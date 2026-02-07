@@ -1,14 +1,10 @@
 package sinnet.bdd;
 
-import java.time.LocalDateTime;
-
 import org.mockito.Answers;
 import org.mockito.Mockito;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 
-import sinnet.infra.TimeProvider;
-import sinnet.otp.OtpGeneratorTests;
 import sinnet.ports.timeentries.ActionsGrpcFacade;
 import sinnet.ports.timeentries.CustomersGrpcFacade;
 import sinnet.ports.timeentries.ProjectsGrpcFacade;
@@ -44,17 +40,6 @@ class PortsConfigurer {
   @Primary
   ActionsGrpcFacade actionsGrpcFacade() {
     return Mockito.mock(ActionsGrpcFacade.class, Answers.CALLS_REAL_METHODS);
-  }
-
-  @Bean
-  @Primary
-  TimeProvider timeProvider() {
-    return new TimeProvider() {
-      @Override
-      public LocalDateTime now() {
-        return OtpGeneratorTests.examplePeriod;
-      }
-    };
   }
 
 }
