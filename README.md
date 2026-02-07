@@ -3,6 +3,7 @@
 | Pipeline | Status |
 |----------|--------|
 | WebApp | [![Build Status](https://github.com/onlexnet/sin-net-reports/actions/workflows/static-webapp.yml/badge.svg)](https://github.com/onlexnet/sin-net-reports/actions/workflows/static-webapp.yml?query=branch:main) |
+| Smoke Tests | [![Smoke Tests](https://github.com/onlexnet/sin-net-reports/actions/workflows/smoke-tests.yml/badge.svg)](https://github.com/onlexnet/sin-net-reports/actions/workflows/smoke-tests.yml?query=branch:main) |
 | WebApi | [![Build Status](https://dev.azure.com/onlex/sinnet/_apis/build/status/onlex-sinnet-webapi?branchName=master)](https://dev.azure.com/onlex/sinnet/_build/latest?definitionId=4&branchName=master) |
 | Customers | [![Build Status](https://dev.azure.com/onlex/sinnet/_apis/build/status/onlex-sinnet-customers?branchName=master)](https://dev.azure.com/onlex/sinnet/_build/latest?definitionId=11&branchName=master) |
 | Helm | [![Build Status](https://dev.azure.com/onlex/sinnet/_apis/build/status/onlex-sinnet-helm?branchName=master)](https://dev.azure.com/onlex/sinnet/_build/latest?definitionId=12&branchName=master) |
@@ -21,6 +22,23 @@ In scope:
 - [x] Register time and distance of provided services through the website
 - [x] Define a list of clients
 - [x] Create PDF attachments per client for a given period on demand
+
+## Testing
+
+### Smoke Tests
+Comprehensive smoke tests are available to verify the entire system:
+- Database connectivity (SQL Server)
+- Backend services (timeentries and webapi)
+- GraphQL API functionality
+- Frontend web application
+
+**Quick start:**
+```bash
+cd smoke-test
+./quick-start.sh
+```
+
+See [smoke-test/README.md](smoke-test/README.md) for detailed documentation.
 
 ## Used articles
 - [https://code.visualstudio.com/docs/devcontainers/create-dev-container]
