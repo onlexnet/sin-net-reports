@@ -34,6 +34,7 @@ class Report2Controller {
 
   private final ActionsGrpcFacade timeentries;
   private final ReportsBlockingStub reportsClient;
+  private final CommonMapper commonMapper;
 
 
   @GetMapping("/2/{projectId}")
@@ -93,7 +94,7 @@ class Report2Controller {
     var data = timeentries.searchInternal(projectId, from, to).stream()
         .map(it -> new TimeEntryModel(it.getCustomerId(),
         it.getDescription(),
-        CommonMapper.fromGrpc(it.getWhenProvided()),
+        commonMapper.fromGrpc(it.getWhenProvided()),
         it.getServicemanName(),
         it.getDistance(),
         it.getDuration()))

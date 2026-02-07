@@ -2,94 +2,61 @@ package sinnet.gql.api;
 
 import java.util.UUID;
 
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+
 import sinnet.domain.EntityId;
 import sinnet.gql.models.EntityGql;
-import sinnet.gql.utils.PropsBuilder;
 import sinnet.grpc.customers.LocalDateTime;
 import sinnet.grpc.projects.generated.ProjectId;
 import sinnet.grpc.timeentries.LocalDate;
 
-/** Mappings. */
+/** MapStruct mapper for common conversions between gRPC, GraphQL, and domain models. */
+@Mapper(componentModel = "spring")
 public interface CommonMapper {
 
   /** Grpc -> Gql mapping. */
-  public static EntityGql toGql(ProjectId it) {
-    if (it == null) {
-      return null;
-    }
-    var result = new EntityGql();
-    result.setProjectId(it.getEId());
-    result.setEntityId(it.getEId());
-    result.setEntityVersion(it.getETag());
-    return result;
-  }
+  @Mapping(target = "projectId", source = "EId")
+  @Mapping(target = "entityId", source = "EId")
+  @Mapping(target = "entityVersion", source = "ETag")
+  EntityGql toGql(ProjectId source);
 
   /** Grpc -> Gql mapping. */
-  public static EntityGql toGql(sinnet.grpc.common.EntityId it) {
-    if (it == null) {
-      return null;
-    }
-    var result = new EntityGql();
-    result.setProjectId(it.getProjectId());
-    result.setEntityId(it.getEntityId());
-    result.setEntityVersion(it.getEntityVersion());
-    return result;
-  }
+  @Mapping(target = "projectId", source = "projectId")
+  @Mapping(target = "entityId", source = "entityId")
+  @Mapping(target = "entityVersion", source = "entityVersion")
+  EntityGql toGql(sinnet.grpc.common.EntityId source);
 
   /** Gql -> Grpc mapping. */
-  public static ProjectId toGrpc(EntityGql it) {
-    if (it == null) {
-      return null;
-    }
-    return PropsBuilder.build(ProjectId.newBuilder())
-        .set(b -> b::setEId, it.getEntityId())
-        .set(b -> b::setETag, it.getEntityVersion())
-        .done().build();
-  }
+  @Mapping(target = "EId", source = "entityId")
+  @Mapping(target = "ETag", source = "entityVersion")
+  ProjectId toGrpc(EntityGql source);
 
   /** Domain -> Grpc mapping. */
-  public static sinnet.grpc.common.EntityId toGrpc(EntityId it) {
-    if (it == null) {
-      return null;
-    }
-    return PropsBuilder.build(sinnet.grpc.common.EntityId.newBuilder())
-        .set(b -> b::setProjectId, it.projectId().toString())
-        .set(b -> b::setEntityId, it.id().toString())
-        .set(b -> b::setEntityVersion, it.tag())
-        .done().build();
-  }
-
+  @Mapping(target = "projectId", expression = "java(source.projectId().toString())")
+  @Mapping(target = "entityId", expression = "java(source.id().toString())")
+  @Mapping(target = "entityVersion", source = "tag")
+  sinnet.grpc.common.EntityId toGrpc(EntityId source);
 
   /** LocalDate conversion. */
-  public static LocalDate toGrpc(java.time.LocalDate from) {
-    if (from == null) {
+  @Mapping(target = "year", source = "year")
+  @Mapping(target = "month", source = "monthValue")
+  @Mapping(target = "day", source = "dayOfMonth")
+  LocalDate toGrpc(java.time.LocalDate source);
+
+  /** LocalDateTime conversion. */
+  @Mapping(target = "year", source = "year")
+  @Mapping(target = "month", source = "monthValue")
+  @Mapping(target = "day", source = "dayOfMonth")
+  @Mapping(target = "hour", source = "hour")
+  @Mapping(target = "minute", source = "minute")
+  LocalDateTime toGrpc(java.time.LocalDateTime source);
+
+  /** Grpc -> Domain mapping. */
+  default EntityId fromGrpc(sinnet.grpc.common.EntityId dto) {
+    if (dto == null) {
       return null;
     }
-
-    return LocalDate.newBuilder()
-        .setYear(from.getYear())
-        .setMonth(from.getMonthValue())
-        .setDay(from.getDayOfMonth())
-        .build();
-  }
-
-  /** LocalDate conversion. */
-  public static LocalDateTime toGrpc(java.time.LocalDateTime from) {
-    if (from == null) {
-      return null;
-    }
-
-    return LocalDateTime.newBuilder()
-        .setYear(from.getYear())
-        .setMonth(from.getMonthValue())
-        .setDay(from.getDayOfMonth())
-        .setHour(from.getHour())
-        .setMinute(from.getMinute())
-        .build();
-  }
-
-  /** Fixme. */
-  public static EntityId fromGrpc(sinnet.grpc.common.EntityId dto) {
     var projectId = UUID.fromString(dto.getProjectId());
     var entityId = UUID.fromString(dto.getEntityId());
     var entityTag = dto.getEntityVersion();
@@ -97,11 +64,10 @@ public interface CommonMapper {
   }
 
   /** LocalDate conversion. */
-  public static java.time.LocalDate fromGrpc(LocalDate whenProvided) {
+  default java.time.LocalDate fromGrpc(LocalDate whenProvided) {
     if (whenProvided == null) {
       return null;
     }
-
     return java.time.LocalDate.of(whenProvided.getYear(), whenProvided.getMonth(), whenProvided.getDay());
   }
 

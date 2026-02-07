@@ -58,6 +58,9 @@ public class StepDefinitions {
   @Autowired
   TimeProvider timeProvider;
 
+  @Autowired
+  CommonMapper commonMapper;
+
   String requestorEmail;
   AppApi appApi;
 
@@ -277,7 +280,7 @@ public class StepDefinitions {
             .setOtpSecret("my secret 1")
             .setOtpRecoveryKeys("my key 1")
             .setChangedWho(requestorEmail)
-            .setChangedWhen(CommonMapper.toGrpc(timeProvider.now())))
+            .setChangedWhen(commonMapper.toGrpc(timeProvider.now())))
           .addSecretEx(CustomerSecretEx.newBuilder()
             .setEntityCode("entity code 2")
             .setEntityName("entity name 2")
@@ -287,7 +290,7 @@ public class StepDefinitions {
             .setOtpSecret("my secret 2")
             .setOtpRecoveryKeys("my key 2")
             .setChangedWho(requestorEmail)
-            .setChangedWhen(CommonMapper.toGrpc(timeProvider.now())))
+            .setChangedWhen(commonMapper.toGrpc(timeProvider.now())))
           .setValue(CustomerValue.newBuilder()))
         .build();
     Assertions.assertThat(argumentCaptor.getValue())

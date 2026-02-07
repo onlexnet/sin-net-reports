@@ -32,6 +32,7 @@ public class FileGenerationService {
 
   private final ActionsGrpcFacade actionsGrpcFacade;
   private final CustomersGrpcFacade customersGrpcFacade;
+  private final CommonMapper commonMapper;
 
   /**
    * Generates an Excel file with time entries for the logged-in user and returns it as base64 string.
@@ -85,7 +86,7 @@ public class FileGenerationService {
         var entry = userEntries.get(i);
         var row = sheet.createRow(i + 1);
         
-        var date = CommonMapper.fromGrpc(entry.getWhenProvided());
+        var date = commonMapper.fromGrpc(entry.getWhenProvided());
         var customerName = customerLookup.getOrDefault(entry.getCustomerId(), "(unknown)");
         var durationFormatted = formatDuration(entry.getDuration());
         

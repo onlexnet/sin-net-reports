@@ -21,11 +21,12 @@ import sinnet.ports.timeentries.CustomersGrpcFacade;
 /** Fixme. */
 @Controller
 @RequiredArgsConstructor
-class CustomersMutationSave implements CustomerMapper {
+class CustomersMutationSave {
 
   private final TimeProvider timeProvider;
 
   private final CustomersGrpcFacade service;
+  private final CustomerMapper customerMapper;
 
   @SchemaMapping
   public SomeEntityGql save(CustomersMutation self,
@@ -41,15 +42,15 @@ class CustomersMutationSave implements CustomerMapper {
     var request = UpdateCommand.newBuilder()
         .setUserToken(self.getUserToken())
         .setModel(CustomerModel.newBuilder()
-            .setId(toGrpc(id))
-            .setValue(toGrpc(entry))
-            .addAllSecrets(secrets.stream().map(it -> this.toGrpc(it, changedWhen, changedWho)).toList())
-            .addAllSecretEx(secretsEx.stream().map(it -> this.toGrpc(it, changedWhen, changedWho)).toList())
-            .addAllContacts(contacts.stream().map(this::toGrpc).toList())
+            .setId(customerMapper.toGrpc(id))
+            .setValue(customerMapper.toGrpc(entry))
+            .addAllSecrets(secrets.stream().map(it -> customerMapper.toGrpc(it, changedWhen, changedWho)).toList())
+            .addAllSecretEx(secretsEx.stream().map(it -> customerMapper.toGrpc(it, changedWhen, changedWho)).toList())
+            .addAllContacts(contacts.stream().map(customerMapper::toGrpc).toList())
             .build())
         .build();
     var result = service.update(request);
-    return this.toGql(result.getEntityId());
+    return customerMapper.toGql(result.getEntityId());
   }
 
 }

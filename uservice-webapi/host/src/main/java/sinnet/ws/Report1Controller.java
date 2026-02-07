@@ -19,7 +19,6 @@ import io.vavr.control.Option;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
 import sinnet.gql.api.CommonMapper;
-import sinnet.gql.api.CustomerMapper;
 import sinnet.grpc.common.UserToken;
 import sinnet.grpc.users.SearchRequest;
 import sinnet.ports.timeentries.ActionsGrpcFacade;
@@ -35,12 +34,13 @@ import sinnet.reports.grpc.Date;
 @RestController
 @RequestMapping("/api/raporty")
 @RequiredArgsConstructor
-class Report1Controller implements CustomerMapper {
+class Report1Controller {
 
   private final ActionsGrpcFacade timeentries;
   private final CustomersGrpcFacade customersClient;
   private final Reports1GrpcAdapter reportsClient;
   private final UsersGrpcService usersService;
+  private final CommonMapper commonMapper;
 
   @GetMapping("/klienci/{projectId}/{year}/{month}")
   public ResponseEntity<byte[]> downloadPdfFile(@PathVariable UUID projectId, @PathVariable int year, @PathVariable int month) {
@@ -64,7 +64,7 @@ class Report1Controller implements CustomerMapper {
     return timeentries.searchInternal(projectIdTyped, from, to).stream()
         .map(it -> new TimeEntryModel(it.getCustomerId(),
         it.getDescription(),
-        CommonMapper.fromGrpc(it.getWhenProvided()),
+        commonMapper.fromGrpc(it.getWhenProvided()),
         it.getServicemanName(),
         it.getDistance(),
         it.getDuration()))

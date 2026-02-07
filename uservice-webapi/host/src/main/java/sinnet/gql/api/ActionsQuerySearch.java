@@ -17,10 +17,12 @@ import sinnet.ports.timeentries.CustomersGrpcFacade;
 
 @Controller
 @RequiredArgsConstructor
-class ActionsQuerySearch implements CustomerMapper {
+class ActionsQuerySearch {
 
   private final ActionsGrpcFacade service;
   private final CustomersGrpcFacade customerService;
+  private final CustomerMapper customerMapper;
+  private final CommonMapper commonMapper;
 
   @SchemaMapping
   ServicesSearchResultGql search(ActionsQuery self, @Argument ServiceFilterInputGql filter) {
@@ -31,12 +33,12 @@ class ActionsQuerySearch implements CustomerMapper {
     var requestorEmail = self.primaryEmail();
     var projectId = UUID.fromString(self.projectId());
 
-    var customerList = customerService.customerList(self.projectId(), requestorEmail, this::toGql);
+    var customerList = customerService.customerList(self.projectId(), requestorEmail, customerMapper::toGql);
 
     var customerGet = Function1.of((String customerId) -> customerList.stream()
         .filter(it -> Objects.equals(customerId, it.getId().getEntityId())).findAny().orElse(null));
 
-    var result = service.search(projectId, filter.getFrom(), filter.getTo(), customerGet);
+    var result = service.search(projectId, filter.getFrom(), filter.getTo(), customerGet, commonMapper);
     return new ServicesSearchResultGql()
         .setItems(result);
   }
