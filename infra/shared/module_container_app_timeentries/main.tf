@@ -118,6 +118,9 @@ resource "azurerm_container_app" "default" {
       cpu    = 0.25
       memory = "0.5Gi"
 
+      # Downloads Application Insights Java agent at container startup
+      # Note: For enhanced security, consider adding SHA256 checksum validation
+      # to verify the integrity of the downloaded agent JAR file
       command = [
         "/bin/sh",
         "-c",
