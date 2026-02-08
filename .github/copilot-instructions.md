@@ -34,21 +34,15 @@ docker compose version
 Build all components in this exact order. NEVER CANCEL builds - they may take longer than expected but will complete:
 
 ```bash
-# 1. Download ApplicationInsights agent for timeentries service
+# 1. Build timeentries microservice (~15 seconds - NEVER CANCEL)
+# Note: Application Insights agent is NO LONGER included in the Docker image.
+# It's now loaded at runtime via init container in Azure Container Apps.
 cd uservice-timeentries
-pushd .
-cd host/src/main/resources/applicationinsights
-export APPLICATIONINSIGHTS_AGENT_VERSION=3.7.6
-wget --no-verbose https://github.com/microsoft/ApplicationInsights-Java/releases/download/${APPLICATIONINSIGHTS_AGENT_VERSION}/applicationinsights-agent-${APPLICATIONINSIGHTS_AGENT_VERSION}.jar
-mv applicationinsights-agent-${APPLICATIONINSIGHTS_AGENT_VERSION}.jar applicationinsights-agent.jar
-popd
-
-# 2. Build timeentries microservice (~15 seconds - NEVER CANCEL)
 export SEMVERSION=$(cat .version)
 mvn -ntp install -pl host -am -DskipTests
 cd ..
 
-# 3. Download ApplicationInsights agent for webapi service
+# 2. Download ApplicationInsights agent for webapi service
 cd uservice-webapi
 pushd .
 cd host/src/main/resources/applicationinsights
@@ -57,12 +51,12 @@ wget --no-verbose https://github.com/microsoft/ApplicationInsights-Java/releases
 mv applicationinsights-agent-${APPLICATIONINSIGHTS_AGENT_VERSION}.jar applicationinsights-agent.jar
 popd
 
-# 4. Build webapi microservice (~40 seconds - NEVER CANCEL)
+# 3. Build webapi microservice (~40 seconds - NEVER CANCEL)
 export SEMVERSION=$(cat .semversion)
 mvn -ntp install -Drevision=$SEMVERSION -DskipTests
 cd ..
 
-# 5. Build React frontend (~65 seconds total - NEVER CANCEL)
+# 4. Build React frontend (~65 seconds total - NEVER CANCEL)
 cd static-webapp
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
@@ -226,7 +220,7 @@ Each component has its own version file:
 
 **Node.js version mismatch**: Ensure Node.js 22.12.0 is active with `nvm use 22.12.0`
 
-**ApplicationInsights agent missing**: Download manually using wget commands shown above
+**ApplicationInsights agent missing**: For timeentries service, agent is loaded via init container at runtime in Azure Container Apps. For local development, download manually if needed. For webapi service, download manually using wget commands shown above
 
 **Testcontainers failures**: Use `-DskipTests` flag for builds - tests require specific Docker setup
 
