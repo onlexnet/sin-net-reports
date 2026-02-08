@@ -1,0 +1,108 @@
+name: Local Stack Build
+
+on:
+  push:
+    branches: [ main, develop, local-stack-for-e2e-testing ]
+  pull_request:
+    branches: [ main, develop ]
+  workflow_dispatch:
+
+jobs:
+  build-stack:
+    name: Build Complete Local Stack
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Java Environment
+        uses: ./.github/actions/setup-java-environment
+        with:
+          java-version: '25'
+          java-distribution: 'liberica'
+
+      - name: Set up Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.12.0'
+          cache: 'npm'
+          cache-dependency-path: static-webapp/package-lock.json
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build API client library
+        working-directory: api/client-java
+        run: mvn clean install -B -ntp -DskipTests
+
+      - name: Build TimeEntries service
+        working-directory: uservice-timeentries
+        run: |
+          export SEMVERSION=$(cat .version)
+          mvn clean install -pl host -am -DskipTests -B -ntp
+
+      - name: Download ApplicationInsights agent for WebAPI
+        working-directory: uservice-webapi
+        run: |
+          mkdir -p host/src/main/resources/applicationinsights
+          cd host/src/main/resources/applicationinsights
+          export APPLICATIONINSIGHTS_AGENT_VERSION=3.7.6
+          wget --no-verbose https://github.com/microsoft/ApplicationInsights-Java/releases/download/${APPLICATIONINSIGHTS_AGENT_VERSION}/applicationinsights-agent-${APPLICATIONINSIGHTS_AGENT_VERSION}.jar
+          mv applicationinsights-agent-${APPLICATIONINSIGHTS_AGENT_VERSION}.jar applicationinsights-agent.jar
+
+      - name: Build WebAPI service
+        working-directory: uservice-webapi
+        run: |
+          export SEMVERSION=$(cat .semversion)
+          mvn clean install -Drevision=$SEMVERSION -DskipTests -B -ntp
+
+      - name: Build Static WebApp
+        working-directory: static-webapp
+        run: |
+          npm ci
+          npm run generate
+          export MY_VERSION=$(cat .version)
+          npm config set allow-same-version true
+          npm version $MY_VERSION
+          npm run build
+
+      - name: Build Docker images
+        run: |
+          # Build timeentries image
+          docker buildx build \
+            --cache-from type=gha \
+            --cache-to type=gha,mode=max \
+            -t sinnet-timeentries:latest \
+            -f uservice-timeentries/Dockerfile \
+            uservice-timeentries
+
+          # Build webapi image
+          docker buildx build \
+            --cache-from type=gha \
+            --cache-to type=gha,mode=max \
+            -t sinnet-webapi:latest \
+            -f Dockerfile.webapi \
+            .
+
+          # Build static-webapp image
+          docker buildx build \
+            --cache-from type=gha \
+            --cache-to type=gha,mode=max \
+            -t sinnet-webapp:latest \
+            -f static-webapp/Dockerfile \
+            .
+
+      - name: Verify Docker Compose configuration
+        run: docker compose config
+
+      - name: Summary
+        run: |
+          echo "✅ All services built successfully!"
+          echo "- TimeEntries service"
+          echo "- WebAPI service"
+          echo "- Static WebApp"
+          echo "- Docker images created"
+          echo ""
+          echo "To run locally: docker compose up --build"

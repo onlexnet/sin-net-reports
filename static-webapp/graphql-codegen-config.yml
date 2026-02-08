@@ -1,4 +1,7 @@
-schema: ../uservice-webapi/**/*.graphqls
+# Schema path works both locally (../) and in Docker (copied to container)
+schema:
+  - ../uservice-webapi/**/*.graphqls
+  - uservice-webapi/**/*.graphqls
 documents: 'src/**/*.graphql'
 generates:
   src/components/.generated/components.tsx:

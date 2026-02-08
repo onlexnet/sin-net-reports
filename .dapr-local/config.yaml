@@ -1,0 +1,9 @@
+apiVersion: dapr.io/v1alpha1
+kind: Configuration
+metadata:
+  name: daprConfig
+  namespace: default
+spec:
+  # Minimal config for local development - no tracing, no pubsub
+  metrics:
+    enabled: true

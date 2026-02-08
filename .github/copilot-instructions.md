@@ -11,7 +11,7 @@ Install the required development tools in this exact order:
 
 ```bash
 # Install Java 21 (required for all services)
-export JAVA_HOME=/usr/lib/jvm/temurin-21-jdk-amd64
+export JAVA_HOME=/usr/lib/jvm/temurin-25-jdk-amd64
 export PATH=$JAVA_HOME/bin:$PATH
 
 # Install Node.js 22.12.0 using nvm
