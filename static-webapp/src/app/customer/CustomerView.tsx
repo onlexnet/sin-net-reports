@@ -1,4 +1,4 @@
-import { Affix, Button, Checkbox, Col, Divider, Form, Input, Row, Select, Space, Spin } from 'antd';
+import { Button, Checkbox, Col, Divider, Form, Input, Row, Select, Space, Spin } from 'antd';
 import _ from "lodash";
 import React, { MouseEventHandler, useEffect, useRef, useState } from "react";
 import { v1 as uuid } from 'uuid';
