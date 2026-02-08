@@ -107,6 +107,29 @@ resource "azurerm_container_app" "default" {
     min_replicas = 1
     max_replicas = 1
 
+    volume {
+      name         = "appinsights-agent"
+      storage_type = "EmptyDir"
+    }
+
+    init_container {
+      name   = "download-appinsights-agent"
+      image  = "busybox:latest"
+      cpu    = 0.25
+      memory = "0.5Gi"
+
+      command = [
+        "/bin/sh",
+        "-c",
+        "wget -O /appinsights/applicationinsights-agent.jar https://github.com/microsoft/ApplicationInsights-Java/releases/download/3.7.6/applicationinsights-agent-3.7.6.jar && echo 'Application Insights agent downloaded successfully'"
+      ]
+
+      volume_mounts {
+        name = "appinsights-agent"
+        path = "/appinsights"
+      }
+    }
+
     container {
 
       name   = "uservice-timeentries"
@@ -117,6 +140,11 @@ resource "azurerm_container_app" "default" {
       # scale - currently not supported
       # https://github.com/hashicorp/terraform-provider-azurerm/issues/20629
       # please manage manually using portal or az tools
+
+      volume_mounts {
+        name = "appinsights-agent"
+        path = "/appinsights"
+      }
 
       env {
         name        = "APPLICATIONINSIGHTS_CONNECTION_STRING"
@@ -164,6 +192,12 @@ resource "azurerm_container_app" "default" {
       env {
         name  = "APP_PORT"
         value = "9000"
+      }
+
+      env {
+        # Configure Java to use Application Insights agent from shared volume
+        name  = "JAVA_TOOL_OPTIONS"
+        value = "-javaagent:/appinsights/applicationinsights-agent.jar"
       }
 
       # readiness_probe {

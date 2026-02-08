@@ -194,18 +194,6 @@
                 - note: we pass value which is equal to default value just to show how-to
               -->
               <BP_JVM_TYPE>JRE</BP_JVM_TYPE>
-
-              <!--
-                the last trick: we have to point out to use agent with application, and we have to ask to include such thing by packeto
-                without packeto it should be straigntforward: https://learn.microsoft.com/en-us/azure/azure-monitor/app/java-get-started-supplemental#containers
-                as we can't modify Packeto image, we use option JAVA_TOOL_OPTIONS=-javaagent:/path/to/applicationinsights-agent.jar
-                together with packeto-native way of providing such env variable (https://stackoverflow.com/a/66605946/1237627)
-                export BPE_DELIM_JAVA_TOOL_OPTIONS=' '
-                export BPE_APPEND_JAVA_TOOL_OPTIONS=-javaagent:/workspace/BOOT-INF/classes/applicationinsights/applicationinsights-agent.jar
-                see also https://github.com/spring-projects/spring-boot/issues/21478#issuecomment-770399524
-              -->
-              <BPE_DELIM_JAVA_TOOL_OPTIONS xml:space="preserve"> </BPE_DELIM_JAVA_TOOL_OPTIONS>
-              <BPE_PREPEND_JAVA_TOOL_OPTIONS>-javaagent:/workspace/BOOT-INF/classes/applicationinsights/applicationinsights-agent.jar</BPE_PREPEND_JAVA_TOOL_OPTIONS>
             </env>
           </image>
         </configuration>
