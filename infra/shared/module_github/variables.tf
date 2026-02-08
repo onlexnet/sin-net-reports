@@ -23,10 +23,6 @@ variable "webapp_prod_api_token" {
   sensitive = true
 }
 
-variable "webapp_test_api_token" {
-  sensitive = true
-}
-
 variable "ONLEXNET_TENANT_ID" {
   sensitive = true
 }

@@ -33,13 +33,6 @@ resource "github_actions_environment_secret" "webapp_prod_api_token" {
   plaintext_value = var.webapp_prod_api_token
 }
 
-resource "github_actions_environment_secret" "webapp_test_api_token" {
-  environment     = github_repository_environment.main.environment
-  repository      = data.github_repository.sinnet.name
-  secret_name     = "WEBAPP_TEST_API_TOKEN"
-  plaintext_value = var.webapp_test_api_token
-}
-
 resource "github_actions_environment_secret" "ONLEXNET_TENANT_ID" {
   environment     = github_repository_environment.main.environment
   repository      = data.github_repository.sinnet.name

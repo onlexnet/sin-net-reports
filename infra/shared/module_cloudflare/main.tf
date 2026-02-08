@@ -30,11 +30,3 @@ resource "cloudflare_record" "webapp_prod" {
   type    = "CNAME"
   ttl     = 300
 }
-
-resource "cloudflare_record" "webapp_test" {
-  zone_id = data.cloudflare_zone.onlexnet.zone_id
-  name    = var.webapp_prefix_test
-  value   = var.webapp_fqdn_test
-  type    = "CNAME"
-  ttl     = 300
-}
