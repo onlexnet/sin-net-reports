@@ -1,0 +1,15 @@
+# Docker volumes and data
+*.log
+logs/
+
+# Test artifacts
+test-results/
+screenshots/
+reports/
+
+# Temporary files
+*.tmp
+.DS_Store
+
+# Environment configuration (use .env.example as template)
+.env
