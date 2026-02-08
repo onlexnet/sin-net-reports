@@ -1,0 +1,23 @@
+FROM alpine:latest
+
+# Install required tools
+RUN apk add --no-cache \
+    curl \
+    wget \
+    bash \
+    jq
+
+# Copy test scripts
+COPY scripts/test-graphql-api.sh /tests/
+COPY scripts/init-database.sh /tests/
+
+# Make scripts executable
+RUN chmod +x /tests/*.sh
+
+# Default entrypoint that runs tests
+COPY docker-test-runner.sh /tests/run-tests.sh
+RUN chmod +x /tests/run-tests.sh
+
+WORKDIR /tests
+
+ENTRYPOINT ["/tests/run-tests.sh"]

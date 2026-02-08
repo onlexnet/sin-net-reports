@@ -1,0 +1,93 @@
+name: Smoke Tests
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  smoke-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Java 21
+      uses: actions/setup-java@v4
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+        cache: 'maven'
+        
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '22.12.0'
+        cache: 'npm'
+        cache-dependency-path: static-webapp/package-lock.json
+        
+    - name: Build API Client
+      run: |
+        cd api/client-java
+        mvn clean install -DskipTests -q
+        
+    - name: Download ApplicationInsights agent for timeentries
+      run: |
+        cd uservice-timeentries/host/src/main/resources/applicationinsights
+        export APPLICATIONINSIGHTS_AGENT_VERSION=3.7.6
+        wget --no-verbose https://github.com/microsoft/ApplicationInsights-Java/releases/download/${APPLICATIONINSIGHTS_AGENT_VERSION}/applicationinsights-agent-${APPLICATIONINSIGHTS_AGENT_VERSION}.jar
+        mv applicationinsights-agent-${APPLICATIONINSIGHTS_AGENT_VERSION}.jar applicationinsights-agent.jar
+        
+    - name: Build Timeentries Service
+      run: |
+        cd uservice-timeentries
+        export SEMVERSION=$(cat .version)
+        mvn -ntp install -pl host -am -DskipTests
+        
+    - name: Download ApplicationInsights agent for webapi
+      run: |
+        cd uservice-webapi/host/src/main/resources/applicationinsights
+        export APPLICATIONINSIGHTS_AGENT_VERSION=3.7.6
+        wget --no-verbose https://github.com/microsoft/ApplicationInsights-Java/releases/download/${APPLICATIONINSIGHTS_AGENT_VERSION}/applicationinsights-agent-${APPLICATIONINSIGHTS_AGENT_VERSION}.jar
+        mv applicationinsights-agent-${APPLICATIONINSIGHTS_AGENT_VERSION}.jar applicationinsights-agent.jar
+        
+    - name: Build WebAPI Service
+      run: |
+        cd uservice-webapi
+        export SEMVERSION=$(cat .semversion)
+        mvn -ntp install -Drevision=$SEMVERSION -DskipTests
+        
+    - name: Build Frontend
+      run: |
+        cd static-webapp
+        npm ci
+        npm run generate
+        npm run build
+        
+    - name: Run Smoke Tests
+      run: |
+        cd smoke-test
+        ./smoke-test.sh --no-wait
+        
+    - name: Upload Test Results
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: smoke-test-results
+        path: |
+          smoke-test/*.log
+          smoke-test/reports/
+        retention-days: 7
+        
+    - name: Cleanup
+      if: always()
+      run: |
+        cd smoke-test
+        docker-compose down -v --remove-orphans || true
