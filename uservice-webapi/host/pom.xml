@@ -226,6 +226,9 @@
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
+        <configuration>
+          <skip>${jacoco.skip}</skip>
+        </configuration>
       </plugin>
 
       <plugin>
