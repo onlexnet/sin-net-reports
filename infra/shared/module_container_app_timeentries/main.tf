@@ -114,14 +114,14 @@ resource "azurerm_container_app" "default" {
 
     init_container {
       name   = "download-appinsights-agent"
-      image  = "busybox:latest"
+      image  = "busybox:1.36"
       cpu    = 0.25
       memory = "0.5Gi"
 
       command = [
         "/bin/sh",
         "-c",
-        "wget -O /appinsights/applicationinsights-agent.jar https://github.com/microsoft/ApplicationInsights-Java/releases/download/3.7.6/applicationinsights-agent-3.7.6.jar && echo 'Application Insights agent downloaded successfully'"
+        "wget -O /appinsights/applicationinsights-agent.jar https://github.com/microsoft/ApplicationInsights-Java/releases/download/${var.applicationinsights_agent_version}/applicationinsights-agent-${var.applicationinsights_agent_version}.jar && echo 'Application Insights agent ${var.applicationinsights_agent_version} downloaded successfully'"
       ]
 
       volume_mounts {

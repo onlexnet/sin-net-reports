@@ -36,12 +36,15 @@ Move the Application Insights agent to an init container that downloads the agen
 **Added:**
 - Volume definition: `appinsights-agent` with `EmptyDir` storage type
 - Init container: `download-appinsights-agent`
-  - Uses `busybox:latest` image
-  - Downloads Application Insights agent 3.7.6 to shared volume
+  - Uses `busybox:1.36` image (pinned version for reproducibility)
+  - Downloads Application Insights agent to shared volume (version parameterized)
   - CPU: 0.25, Memory: 0.5Gi
 - Volume mount in init container: `/appinsights`
 - Volume mount in main container: `/appinsights`
 - Environment variable: `JAVA_TOOL_OPTIONS=-javaagent:/appinsights/applicationinsights-agent.jar`
+
+**Added to variables.tf:**
+- `applicationinsights_agent_version` variable (default: "3.7.6") for easy version updates
 
 **Result:** At runtime, the init container downloads the agent before the main container starts, and the main container loads it from the shared volume.
 
@@ -87,4 +90,6 @@ Move the Application Insights agent to an init container that downloads the agen
 ## Notes
 - The webapi service still includes the agent in its Docker image (different approach not yet migrated)
 - This change only affects the timeentries service
-- The agent version (3.7.6) is hardcoded in the init container command and should be parameterized in future improvements
+- The agent version is parameterized via `applicationinsights_agent_version` variable (default: 3.7.6)
+- The busybox image is pinned to version 1.36 for reproducibility
+- Future improvement: Add SHA256 checksum validation for downloaded agent to enhance security
