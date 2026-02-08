@@ -12,11 +12,12 @@ Reason: Application Insights provides zero-configuration integration with Azure 
 Consequences: 
 - **Positive**: Automatic instrumentation with minimal code changes, end-to-end distributed tracing from React to database, email-based user journey tracking, native Azure integration with zero-config log forwarding, single tool for traces/metrics/logs/alerts
 - **Negative**: Vendor lock-in with Azure ecosystem, limited customization compared to OpenTelemetry flexibility, dependency on GitHub Secrets for connection string management
-- **Implementation**: Frontend uses `@microsoft/applicationinsights-web` v3.3.4 with automatic route tracking and authenticated user context. Backend uses Application Insights Java Agent v3.7.6 with Spring Boot buildpack configuration (`BPE_PREPEND_JAVA_TOOL_OPTIONS`). Infrastructure uses Terraform to provision Application Insights resource and distribute connection strings via Container Apps environment variables
+- **Implementation**: Frontend uses `@microsoft/applicationinsights-web` v3.3.4 with automatic route tracking and authenticated user context. Backend uses Application Insights Java Agent v3.7.6 loaded via init container in Azure Container Apps. Infrastructure uses Terraform to provision Application Insights resource and distribute connection strings via Container Apps environment variables
 
 Notes:
-- Java agent is downloaded during build process and activated via buildpack environment variables
+- Java agent is downloaded at runtime by an init container to an ephemeral volume shared with the main application container
+- The main container activates the agent via JAVA_TOOL_OPTIONS environment variable pointing to the shared volume
 - Connection string is distributed from Terraform → KeyVault → Container Apps for backend, and GitHub Secrets → CI/CD → runtime-config.json for frontend
 - Automatic correlation between React user actions, GraphQL queries, gRPC calls, and database operations
 - Log forwarding: Console output → Container Apps → Log Analytics Workspace → Application Insights
-- Current status: Infrastructure and SDK integration complete, agent activation configured, alerting rules and dashboards pending
+- Current status: Infrastructure and SDK integration complete, agent activation configured via init container, alerting rules and dashboards pending
