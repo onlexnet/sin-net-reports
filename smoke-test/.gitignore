@@ -10,3 +10,6 @@ reports/
 # Temporary files
 *.tmp
 .DS_Store
+
+# Environment configuration (use .env.example as template)
+.env

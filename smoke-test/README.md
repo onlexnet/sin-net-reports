@@ -83,7 +83,14 @@ make down        # or: docker-compose down
 - ✅ Simple `make test` or `docker-compose up` commands
 - ✅ Perfect for CI/CD with exit codes
 
-See [DOCKER_COMMANDS.md](DOCKER_COMMANDS.md) for detailed Docker-based usage.
+**Port conflicts?** If you get "port is already allocated" error:
+```bash
+cp .env.example .env
+# Edit .env and change conflicting ports (e.g., DB_PORT=14330)
+make test
+```
+
+See [DOCKER_COMMANDS.md](DOCKER_COMMANDS.md) for detailed Docker-based usage and [TROUBLESHOOTING.md](TROUBLESHOOTING.md) for common issues.
 
 ### Script-Based Approach (Alternative)
 

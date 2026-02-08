@@ -49,6 +49,35 @@ docker-compose logs -f
 docker-compose ps
 ```
 
+## Configuring Ports
+
+If you have port conflicts (e.g., SQL Server already running on port 1433):
+
+1. Copy the environment template:
+   ```bash
+   cp .env.example .env
+   ```
+
+2. Edit `.env` and change conflicting ports:
+   ```bash
+   DB_PORT=14330        # Default: 1433
+   TIMEENTRIES_PORT=8090  # Default: 8080
+   WEBAPI_PORT=8091      # Default: 8081
+   WEBAPP_PORT=3030      # Default: 3000
+   ```
+
+3. Run tests normally:
+   ```bash
+   make test
+   ```
+
+Or use environment variables inline:
+```bash
+DB_PORT=14330 make test
+```
+
+See [TROUBLESHOOTING.md](TROUBLESHOOTING.md) for more details on port conflicts.
+
 ## Service Profiles
 
 The docker-compose configuration uses profiles to control when tests run:
@@ -136,6 +165,16 @@ docker-compose build test-runner
 
 ## Troubleshooting
 
+### Port Conflicts
+
+If you see "Bind for :::1433 failed: port is already allocated":
+
+1. Create `.env` from template: `cp .env.example .env`
+2. Edit `.env` and change the conflicting port (e.g., `DB_PORT=14330`)
+3. Run tests: `make test`
+
+See [TROUBLESHOOTING.md](TROUBLESHOOTING.md) for comprehensive troubleshooting guide.
+
 ### Services not starting
 
 Check logs:
@@ -154,7 +193,7 @@ docker-compose logs test-runner
 
 ### Port conflicts
 
-If ports 1433, 8080, 8081, or 3000 are already in use, modify the port mappings in docker-compose.yml.
+If ports 1433, 8080, 8081, or 3000 are already in use, create a `.env` file and configure custom ports (see "Configuring Ports" section above).
 
 ### Images not found
 
