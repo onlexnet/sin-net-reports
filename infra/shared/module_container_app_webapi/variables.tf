@@ -27,3 +27,9 @@ variable "env" {
     SINNETAPP_PROD_SECRET                 = string
   })
 }
+
+variable "applicationinsights_agent_version" {
+  type        = string
+  description = "Version of Application Insights Java agent to download"
+  default     = "3.7.6"
+}

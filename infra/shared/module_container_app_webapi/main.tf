@@ -96,6 +96,33 @@ resource "azurerm_container_app" "default" {
     min_replicas = 1
     max_replicas = 1
 
+    volume {
+      name         = "appinsights-agent"
+      storage_type = "EmptyDir"
+    }
+
+    init_container {
+      name   = "download-appinsights-agent"
+      image  = "busybox:1.36"
+      cpu    = 0.25
+      memory = "0.5Gi"
+
+      # Downloads Application Insights Java agent at container startup
+      # The init container exits automatically after download completes
+      # Note: For enhanced security, consider adding SHA256 checksum validation
+      # to verify the integrity of the downloaded agent JAR file
+      command = [
+        "/bin/sh",
+        "-c",
+        "wget -O /appinsights/applicationinsights-agent.jar https://github.com/microsoft/ApplicationInsights-Java/releases/download/${var.applicationinsights_agent_version}/applicationinsights-agent-${var.applicationinsights_agent_version}.jar && echo 'Application Insights agent ${var.applicationinsights_agent_version} downloaded successfully' && exit 0"
+      ]
+
+      volume_mounts {
+        name = "appinsights-agent"
+        path = "/appinsights"
+      }
+    }
+
     container {
 
       name   = "uservice-webapi"
@@ -106,6 +133,11 @@ resource "azurerm_container_app" "default" {
       # scale - currently not supported
       # https://github.com/hashicorp/terraform-provider-azurerm/issues/20629
       # please manage manually using portal or az tools
+
+      volume_mounts {
+        name = "appinsights-agent"
+        path = "/appinsights"
+      }
 
       env {
         name = "APPLICATIONINSIGHTS_CONNECTION_STRING"
@@ -147,6 +179,12 @@ resource "azurerm_container_app" "default" {
         # more: https://github.com/paketo-buildpacks/bellsoft-liberica/issues/68
         name  = "BPL_JVM_THREAD_COUNT"
         value = "20"
+      }
+
+      env {
+        # Configure Java to use Application Insights agent from shared volume
+        name  = "JAVA_TOOL_OPTIONS"
+        value = "-javaagent:/appinsights/applicationinsights-agent.jar"
       }
     }
   }
