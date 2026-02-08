@@ -28,7 +28,6 @@ module "github" {
   github_app_installation_id                          = var.github_app_installation_id
   github_app_pem                                      = var.github_app_pem
   webapp_prod_api_token                               = module.static_app_prod.static_app_api_key
-  webapp_test_api_token                               = module.static_app_test.static_app_api_key
   ONLEXNET_INFRA_SECRET                               = module.keyvault.env.ONLEXNET_INFRA_SECRET
   ONLEXNET_TENANT_ID                                  = module.keyvault.env.ONLEXNET_TENANT_ID
   ONLEXNET_SINNET_PRD01_SUBSCRIPTION_ID               = module.keyvault.env.ONLEXNET_SINNET_PRD01_SUBSCRIPTION_ID
@@ -40,38 +39,27 @@ module "github" {
 
 locals {
   webapp_subdomain_prod = var.environment_name != "prd01" ? "${var.application_name}-${var.environment_name}" : var.application_name
-  webapp_subdomain_test = "${local.webapp_subdomain_prod}-test"
   domain_name           = "onlex.net"
 }
 
 module "static_app_prod" {
   source         = "./module_static_app"
   resource_group = module.resourcegroup.main
-
-  custom_domain = "${local.webapp_subdomain_prod}.onlex.net"
 }
 
-module "static_app_test" {
-  source         = "./module_static_webapp"
-  resource_group = module.resourcegroup.main
-  subdomain      = local.webapp_subdomain_test
+module "static_app_prod_domain" {
+  source            = "./module_static_webapp_custom_domain"
+  domain_name       = "${local.webapp_subdomain_prod}.${local.domain_name}"
+  static_web_app_id = module.static_app_prod.static_web_app_id
+  resource_group    = module.resourcegroup.main
 }
 
 module "cloudflare" {
   source             = "./module_cloudflare"
   webapp_prefix_prod = local.webapp_subdomain_prod
-  webapp_prefix_test = local.webapp_subdomain_test
   webapp_fqdn_prod   = module.static_app_prod.webapp_fqdn
-  webapp_fqdn_test   = module.static_app_test.webapp_fqdn
   webapi_prefix      = "${var.application_name}-${var.environment_name}-api"
   webapi_fqdn        = module.container_apps_webapi.webapi_fqdn
-}
-
-module "static_app_test_domain" {
-  source            = "./module_static_webapp_custom_domain"
-  domain_name       = "${local.webapp_subdomain_test}.${local.domain_name}"
-  static_web_app_id = module.static_app_test.static_web_app_id
-  resource_group    = module.resourcegroup.main
 }
 
 module "container_apps_env" {
