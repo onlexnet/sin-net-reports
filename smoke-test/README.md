@@ -59,7 +59,33 @@ docker compose version
 
 ## Running the Smoke Test
 
-### Quick Start
+### Dockerized Approach (Recommended)
+
+The easiest way to run smoke tests without manually invoking scripts:
+
+```bash
+cd smoke-test
+
+# Option 1: Using Make (simplest)
+make test        # Starts services, runs tests, keeps services running
+make test-ci     # Runs tests and cleans up (for CI/CD)
+
+# Option 2: Using Docker Compose directly
+docker-compose --profile test up --abort-on-container-exit test-runner
+
+# Stop services
+make down        # or: docker-compose down
+```
+
+**Key benefits:**
+- ✅ No manual script execution needed
+- ✅ Tests run in a container (consistent environment)
+- ✅ Simple `make test` or `docker-compose up` commands
+- ✅ Perfect for CI/CD with exit codes
+
+See [DOCKER_COMMANDS.md](DOCKER_COMMANDS.md) for detailed Docker-based usage.
+
+### Script-Based Approach (Alternative)
 
 From the repository root:
 

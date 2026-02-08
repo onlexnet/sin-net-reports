@@ -32,13 +32,21 @@ Comprehensive smoke tests are available to verify the entire system:
 - GraphQL API functionality
 - Frontend web application
 
-**Quick start:**
+**Dockerized approach (no manual scripts):**
 ```bash
 cd smoke-test
-./quick-start.sh
+make test              # Run tests with Make
+# or
+docker-compose --profile test up --abort-on-container-exit test-runner
 ```
 
-See [smoke-test/README.md](smoke-test/README.md) for detailed documentation.
+**Traditional approach:**
+```bash
+cd smoke-test
+./quick-start.sh       # Builds and runs everything
+```
+
+See [smoke-test/README.md](smoke-test/README.md) for detailed documentation and [smoke-test/DOCKER_COMMANDS.md](smoke-test/DOCKER_COMMANDS.md) for Docker-based usage.
 
 ## Used articles
 - [https://code.visualstudio.com/docs/devcontainers/create-dev-container]

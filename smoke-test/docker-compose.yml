@@ -87,6 +87,20 @@ services:
     networks:
       - smoke-test-network
 
+  # Automated Test Runner (runs tests and exits)
+  test-runner:
+    build:
+      context: .
+      dockerfile: Dockerfile.test-runner
+    container_name: smoke-test-runner
+    depends_on:
+      static-webapp:
+        condition: service_healthy
+    networks:
+      - smoke-test-network
+    profiles:
+      - test
+
 networks:
   smoke-test-network:
     driver: bridge
