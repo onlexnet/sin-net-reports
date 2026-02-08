@@ -318,6 +318,9 @@
               <goals>
                 <goal>prepare-agent</goal>
               </goals>
+              <configuration>
+                <skip>${skipTests}</skip>
+              </configuration>
             </execution>
             <execution>
               <id>report</id>
@@ -325,6 +328,9 @@
               <goals>
                 <goal>report</goal>
               </goals>
+              <configuration>
+                <skip>${skipTests}</skip>
+              </configuration>
             </execution>
 
             <execution>
@@ -333,6 +339,7 @@
                 <goal>check</goal>
               </goals>
               <configuration>
+                <skip>${skipTests}</skip>
                 <!-- More: https://www.jacoco.org/jacoco/trunk/doc/check-mojo.html -->
                 <rules>
                   <rule>
