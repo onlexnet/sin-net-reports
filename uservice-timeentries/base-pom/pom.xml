@@ -391,6 +391,9 @@
                 <goals>
                   <goal>prepare-agent</goal>
                 </goals>
+                <configuration>
+                  <skip>${skipTests}</skip>
+                </configuration>
               </execution>
             </executions>
           </plugin>
