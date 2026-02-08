@@ -53,7 +53,7 @@ popd
 
 # 3. Build webapi microservice (~40 seconds - NEVER CANCEL)
 export SEMVERSION=$(cat .semversion)
-mvn -ntp install -Drevision=$SEMVERSION -DskipTests
+mvn -ntp install -Drevision=$SEMVERSION -DskipTests  # -DskipTests also skips JaCoCo
 cd ..
 
 # 4. Build React frontend (~65 seconds total - NEVER CANCEL)
@@ -170,6 +170,7 @@ npm start
 ### Quick Build (Skip Tests)
 ```bash
 # Full build pipeline without tests (~3 minutes total)
+# Note: -DskipTests also skips JaCoCo for webapi service
 mvn -ntp install -f api/client-java && \
 (cd uservice-timeentries && export SEMVERSION=$(cat .version) && mvn -ntp install -pl host -am -DskipTests) && \
 (cd uservice-webapi && export SEMVERSION=$(cat .semversion) && mvn -ntp install -Drevision=$SEMVERSION -DskipTests) && \
