@@ -15,7 +15,6 @@ Successfully implemented a complete containerized local development stack using 
   
 - **[Dockerfile.webapi](Dockerfile.webapi)** - Multi-stage build for WebAPI service
   - Builds api/client-java dependency first
-  - Downloads ApplicationInsights agent
   - Includes webapi build with proper revision handling
   
 - **[static-webapp/Dockerfile](static-webapp/Dockerfile)** - Multi-stage build for React frontend

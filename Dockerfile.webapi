@@ -43,9 +43,6 @@ COPY uservice-webapi/gql-model/src uservice-webapi/gql-model/src
 COPY uservice-webapi/gql-test/src uservice-webapi/gql-test/src
 COPY uservice-webapi/host/src uservice-webapi/host/src
 
-# Note: ApplicationInsights agent is downloaded at runtime via init container in Azure Container Apps
-# Not needed for local development stack
-
 # Build api/client-java with Java 21 override
 RUN --mount=type=cache,target=/root/.m2 \
     cd api/client-java && \

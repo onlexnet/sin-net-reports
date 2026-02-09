@@ -43,16 +43,6 @@ jobs:
       - name: Build WebAPI Service
         working-directory: uservice-webapi
         run: |
-          # Download ApplicationInsights agent for build validation
-          pushd .
-          cd host/src/main/resources/applicationinsights
-          export APPLICATIONINSIGHTS_AGENT_VERSION=3.7.6
-          wget --no-verbose \
-            https://github.com/microsoft/ApplicationInsights-Java/releases/download/${APPLICATIONINSIGHTS_AGENT_VERSION}/applicationinsights-agent-${APPLICATIONINSIGHTS_AGENT_VERSION}.jar
-          mv applicationinsights-agent-${APPLICATIONINSIGHTS_AGENT_VERSION}.jar \
-            applicationinsights-agent.jar
-          popd
-
           export SEMVERSION=$(cat .semversion || echo "1.0.0-SNAPSHOT")
           mvn -ntp clean install -Drevision=$SEMVERSION
 
