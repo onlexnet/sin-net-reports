@@ -76,7 +76,7 @@ jobs:
             --cache-from type=gha \
             --cache-to type=gha,mode=max \
             -t sinnet-webapi:latest \
-            -f Dockerfile.webapi \
+            -f uservice-webapi/Dockerfile \
             .
 
           # Build static-webapp image

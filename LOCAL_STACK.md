@@ -240,15 +240,16 @@ The `.github/workflows/local-stack.yml` workflow builds the entire stack on ever
 ```
 .
 ├── docker-compose.yml              # Main orchestration file
-├── Dockerfile.webapi              # WebAPI multi-stage build
 ├── .dockerignore                  # Build optimization
 ├── .dapr-local/                   # Dapr configuration for local stack
 │   └── config.yaml
+├── static-webapp/
+│   ├── Dockerfile                 # Frontend multi-stage build
+│   └── nginx.conf                 # nginx configuration
 ├── uservice-timeentries/
 │   └── Dockerfile                 # TimeEntries multi-stage build
-└── static-webapp/
-    ├── Dockerfile                 # Frontend multi-stage build
-    └── nginx.conf                 # nginx configuration
+└── uservice-webapi/
+    └── Dockerfile                 # WebAPI multi-stage build
 ```
 
 ## Next Steps

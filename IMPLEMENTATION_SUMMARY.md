@@ -13,7 +13,7 @@ Successfully implemented a complete containerized local development stack using 
   - Runtime stage: Optimized JRE image with health checks
   - Size optimization: Separate build/runtime stages, Maven cache mounts
   
-- **[Dockerfile.webapi](Dockerfile.webapi)** - Multi-stage build for WebAPI service
+- **[uservice-webapi/Dockerfile](uservice-webapi/Dockerfile)** - Multi-stage build for WebAPI service
   - Builds api/client-java dependency first
   - Includes webapi build with proper revision handling
   
@@ -194,7 +194,6 @@ docker compose down -v     # Remove data
 ```
 .
 ├── docker-compose.yml              # Main orchestration (8 services)
-├── Dockerfile.webapi              # WebAPI container build
 ├── .dockerignore                  # Build optimization
 ├── .env.example                   # Environment variables template
 ├── LOCAL_STACK.md                 # Complete documentation
@@ -206,8 +205,10 @@ docker compose down -v     # Remove data
 ├── static-webapp/
 │   ├── Dockerfile                # Frontend container build
 │   └── nginx.conf                # nginx configuration
-└── uservice-timeentries/
-    └── Dockerfile                # TimeEntries container build
+├── uservice-timeentries/
+│   └── Dockerfile                # TimeEntries container build
+└── uservice-webapi/
+    └── Dockerfile                # WebAPI container build
 ```
 
 ## Build Performance

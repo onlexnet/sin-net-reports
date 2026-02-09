@@ -88,7 +88,7 @@ services:
   webapi:
     build:
       context: .
-      dockerfile: Dockerfile.webapi
+      dockerfile: uservice-webapi/Dockerfile
     container_name: sinnet-webapi
     restart: unless-stopped
     depends_on:
