@@ -48,6 +48,17 @@ jobs:
           mvn -ntp install -Drevision=$SEMVERSION
         working-directory: uservice-webapi
       
+      - name: SonarCloud Analysis
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          export SEMVERSION=$(cat .semversion)
+          mvn -ntp sonar:sonar -Drevision=$SEMVERSION
+        working-directory: uservice-webapi
+        continue-on-error: true
+      
       - id: BuildDockerImage
         name: Build Docker Image
         working-directory: uservice-webapi

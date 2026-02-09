@@ -14,4 +14,17 @@
     <module>build-tools</module>
   </modules>
 
+  <properties>
+    <!-- sonar properties -> https://docs.sonarqube.org/latest/analysis/analysis-parameters/ -->
+    <sonar.organization>onlexnet</sonar.organization>
+    <sonar.projectKey>sin-net-reports-webapi</sonar.projectKey>
+    <sonar.projectName>SinNet Reports WebAPI</sonar.projectName>
+    <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+    <!-- Environment variable is expected already to be defined in CI/CD as SONAR_TOKEN -->
+    <sonar.login>${env.SONAR_TOKEN}</sonar.login>
+
+    <!-- disable encoding warning http://maven.apache.org/general.html#encoding-warning -->
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
 </project>
