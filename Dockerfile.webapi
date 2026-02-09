@@ -43,13 +43,8 @@ COPY uservice-webapi/gql-model/src uservice-webapi/gql-model/src
 COPY uservice-webapi/gql-test/src uservice-webapi/gql-test/src
 COPY uservice-webapi/host/src uservice-webapi/host/src
 
-# Download ApplicationInsights agent
-RUN cd uservice-webapi/host/src/main/resources && \
-    mkdir -p applicationinsights && \
-    cd applicationinsights && \
-    export APPLICATIONINSIGHTS_AGENT_VERSION=3.7.6 && \
-    wget --no-verbose https://github.com/microsoft/ApplicationInsights-Java/releases/download/${APPLICATIONINSIGHTS_AGENT_VERSION}/applicationinsights-agent-${APPLICATIONINSIGHTS_AGENT_VERSION}.jar && \
-    mv applicationinsights-agent-${APPLICATIONINSIGHTS_AGENT_VERSION}.jar applicationinsights-agent.jar
+# Note: ApplicationInsights agent is downloaded at runtime via init container in Azure Container Apps
+# Not needed for local development stack
 
 # Build api/client-java with Java 21 override
 RUN --mount=type=cache,target=/root/.m2 \
