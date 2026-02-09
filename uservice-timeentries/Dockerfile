@@ -1,6 +1,6 @@
 # Multi-stage build for uservice-timeentries
 # Stage 1: Build the application
-FROM eclipse-temurin:21-jdk-jammy AS builder
+FROM eclipse-temurin:25-jdk-jammy AS builder
 
 WORKDIR /workspace
 
@@ -40,7 +40,7 @@ RUN chmod +x uservice-timeentries/mvnw
 # Download dependencies (cached layer)
 RUN --mount=type=cache,target=/root/.m2 \
     cd uservice-timeentries && \
-    mvn dependency:go-offline -B -ntp -DskipTests -Djava.version=21 || true
+    mvn dependency:go-offline -B -ntp -DskipTests || true
 
 # Copy source code (only modules with src directories - base-pom has no src, components is empty)
 COPY uservice-timeentries/build-tools/src uservice-timeentries/build-tools/src
@@ -53,16 +53,16 @@ COPY uservice-timeentries/report-aggregate/src uservice-timeentries/report-aggre
 # Build api/client-java with Java 21 override
 RUN --mount=type=cache,target=/root/.m2 \
     cd api/client-java && \
-    mvn clean install -B -ntp -DskipTests -Djava.version=21 || true
+    mvn clean install -B -ntp -DskipTests || true
 
 # Build the application
 RUN --mount=type=cache,target=/root/.m2 \
     cd uservice-timeentries && \
     export SEMVERSION=$(cat .version) && \
-    mvn clean install -pl host -am -DskipTests -B -ntp -Djava.version=21
+    mvn clean install -pl host -am -DskipTests -B -ntp
 
 # Stage 2: Runtime
-FROM eclipse-temurin:21-jre-jammy
+FROM eclipse-temurin:25-jre-jammy
 
 WORKDIR /app
 

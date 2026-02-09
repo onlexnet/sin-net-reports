@@ -1,6 +1,6 @@
 # Multi-stage build for uservice-webapi
 # Stage 1: Build the application
-FROM eclipse-temurin:21-jdk-jammy AS builder
+FROM eclipse-temurin:25-jdk-jammy AS builder
 
 WORKDIR /workspace
 
@@ -35,7 +35,7 @@ COPY uservice-webapi/lombok.config uservice-webapi/
 RUN --mount=type=cache,target=/root/.m2 \
     cd uservice-webapi && \
     export SEMVERSION=$(cat .semversion) && \
-    mvn dependency:go-offline -B -ntp -DskipTests -Drevision=$SEMVERSION -Djava.version=21 || true
+    mvn dependency:go-offline -B -ntp -DskipTests -Drevision=$SEMVERSION || true
 
 # Copy source code (only modules with src directories - base-pom has no src)
 COPY uservice-webapi/build-tools/src uservice-webapi/build-tools/src
@@ -54,15 +54,15 @@ RUN cd uservice-webapi/host/src/main/resources && \
 # Build api/client-java with Java 21 override
 RUN --mount=type=cache,target=/root/.m2 \
     cd api/client-java && \
-    mvn clean install -B -ntp -DskipTests -Djava.version=21 || true
+    mvn clean install -B -ntp -DskipTests || true
 
 # Build webapi
 RUN --mount=type=cache,target=/root/.m2 \
     cd uservice-webapi && \
     export SEMVERSION=$(cat .semversion) && \
-    mvn clean install -Drevision=$SEMVERSION -DskipTests -B -ntp -Djava.version=21
+    mvn clean install -Drevision=$SEMVERSION -DskipTests -B -ntp
 
-FROM eclipse-temurin:21-jre-jammy
+FROM eclipse-temurin:25-jre-jammy
 
 WORKDIR /app
 
