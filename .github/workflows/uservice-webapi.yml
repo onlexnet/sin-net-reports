@@ -42,15 +42,6 @@ jobs:
         run: |
           echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       
-      - name: Download ApplicationInsights agent for WebAPI
-        working-directory: uservice-webapi
-        run: |
-          mkdir -p host/src/main/resources/applicationinsights
-          cd host/src/main/resources/applicationinsights
-          export APPLICATIONINSIGHTS_AGENT_VERSION=3.7.6
-          wget --no-verbose https://github.com/microsoft/ApplicationInsights-Java/releases/download/${APPLICATIONINSIGHTS_AGENT_VERSION}/applicationinsights-agent-${APPLICATIONINSIGHTS_AGENT_VERSION}.jar
-          mv applicationinsights-agent-${APPLICATIONINSIGHTS_AGENT_VERSION}.jar applicationinsights-agent.jar
-      
       - name: Build with Maven Webapi
         run: |
           export SEMVERSION=$(cat .semversion)
