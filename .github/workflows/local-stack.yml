@@ -72,14 +72,16 @@ jobs:
         run: |
           # Build timeentries image
           docker buildx build \
+            --load \
             --cache-from type=gha \
             --cache-to type=gha,mode=max \
             -t sinnet-timeentries:latest \
             -f uservice-timeentries/Dockerfile \
-            uservice-timeentries
+            .
 
           # Build webapi image
           docker buildx build \
+            --load \
             --cache-from type=gha \
             --cache-to type=gha,mode=max \
             -t sinnet-webapi:latest \
@@ -88,6 +90,7 @@ jobs:
 
           # Build static-webapp image
           docker buildx build \
+            --load \
             --cache-from type=gha \
             --cache-to type=gha,mode=max \
             -t sinnet-webapp:latest \
