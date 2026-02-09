@@ -89,6 +89,7 @@ jobs:
             .
 
       - name: Verify Docker Compose configuration
+        working-directory: smoke-test
         run: docker compose config
 
       - name: Summary
@@ -99,4 +100,4 @@ jobs:
           echo "- Static WebApp"
           echo "- Docker images created"
           echo ""
-          echo "To run locally: docker compose up --build"
+          echo "To run locally: cd smoke-test && docker compose up --build"

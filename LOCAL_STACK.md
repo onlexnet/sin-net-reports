@@ -1,6 +1,8 @@
 # Local Development Stack
 
-This directory contains a complete local development stack for the SinNet Reports application, including all microservices, database, and Dapr runtime.
+**Location**: `smoke-test/`
+
+The `smoke-test` directory contains a complete local development stack for the SinNet Reports application, including all microservices, database, and Dapr runtime.
 
 ## Overview
 
@@ -22,6 +24,7 @@ The local stack includes:
 ### Start the entire stack:
 
 ```bash
+cd smoke-test
 docker compose up --build
 ```
 
@@ -43,6 +46,7 @@ This single command will:
 
 ```bash
 # Stop services (keeps data)
+cd smoke-test
 docker compose stop
 
 # Stop and remove containers (keeps data)
@@ -97,6 +101,8 @@ Edit files in:
 ### 2. Rebuild specific service
 
 ```bash
+cd smoke-test
+
 # Rebuild and restart TimeEntries
 docker compose up --build -d timeentries
 
@@ -110,6 +116,8 @@ docker compose up --build -d static-webapp
 ### 3. View logs
 
 ```bash
+cd smoke-test
+
 # All services
 docker compose logs -f
 
@@ -158,13 +166,16 @@ curl http://localhost:3000/health
 ### Connect to SQL Server
 
 ```bash
-docker compose exec sqlserver /opt/mssql-tools/bin/sqlcmd \
-  -S localhost -U sa -P "P@ssw0rd123!"
+cd smoke-test
+docker compose exec sqlserver /opt/mssql-tools18/bin/sqlcmd \
+  -S localhost -U sa -P "P@ssw0rd123!" -C
 ```
 
 ### Reset database
 
 ```bash
+cd smoke-test
+
 # Remove volume to reset database
 docker compose down -v
 docker compose up -d sqlserver
@@ -182,7 +193,7 @@ docker compose up -d sqlserver
 
 1. Wait for SQL Server to be healthy: `docker compose ps`
 2. Check database logs: `docker compose logs sqlserver`
-3. Verify connection: `docker compose exec sqlserver /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "P@ssw0rd123!" -Q "SELECT 1"`
+3. Verify connection: `docker compose exec sqlserver /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "P@ssw0rd123!" -C -Q "SELECT 1"`
 
 ### Dapr sidecar issues
 
@@ -239,10 +250,12 @@ The `.github/workflows/local-stack.yml` workflow builds the entire stack on ever
 
 ```
 .
-├── docker-compose.yml              # Main orchestration file
+├── smoke-test/
+│   ├── docker-compose.yml         # Main orchestration file
+│   ├── dapr-local/                # Dapr configuration for local stack
+│   │   └── config.yaml
+│   └── README.md                  # Smoke test documentation
 ├── .dockerignore                  # Build optimization
-├── .dapr-local/                   # Dapr configuration for local stack
-│   └── config.yaml
 ├── static-webapp/
 │   ├── Dockerfile                 # Frontend multi-stage build
 │   └── nginx.conf                 # nginx configuration

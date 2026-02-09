@@ -29,13 +29,14 @@ In scope:
 Start the complete local stack (all services + database + Dapr) with a single command:
 
 ```bash
+cd smoke-test
 docker compose up --build
 ```
 
 Access the application:
 - **Frontend**: http://localhost:3000
 - **GraphQL API**: http://localhost:11031/graphiql
-- **API Documentation**: See [LOCAL_STACK.md](LOCAL_STACK.md)
+- **API Documentation**: See [LOCAL_STACK.md](LOCAL_STACK.md) or [smoke-test/README.md](smoke-test/README.md)
 
 ### Manual Development
 

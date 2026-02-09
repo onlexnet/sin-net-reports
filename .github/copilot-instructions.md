@@ -6,6 +6,7 @@ Time tracking and reporting microservices application: Java Spring Boot backends
 
 **Single command to run everything:**
 ```bash
+cd smoke-test
 docker compose up --build
 ```
 
@@ -67,7 +68,7 @@ Use `-DskipTests` - Testcontainers tests often fail in containerized dev environ
 **Dev profile** (`SPRING_PROFILES_ACTIVE=dev`):
 - Uses SQL Server with `tempdb` database
 - Relaxed security, auto-schema creation
-- See `docker-compose.yml` environment vars
+- See `smoke-test/docker-compose.yml` environment vars
 
 **Prod profile** (Azure):
 - Full authentication via Azure B2C
@@ -88,12 +89,12 @@ FROM eclipse-temurin:25-jre-jammy
 ```
 
 ### Docker Compose Build Context
-All Dockerfiles use **root context** (`.`) because they need:
+All Dockerfiles use **parent directory context** (`..` from smoke-test/) because they need:
 - `api/client-java` - shared gRPC libraries
 - `api/schema` - proto definitions
 - Service source code
 
-Example: `docker compose up` builds from root, copies dependencies correctly.
+Example: `cd smoke-test && docker compose up` builds from parent, copies dependencies correctly.
 
 ## Deployment & Infrastructure
 
@@ -119,7 +120,8 @@ Example: `docker compose up` builds from root, copies dependencies correctly.
 ## File References
 
 Key files for understanding architecture:
-- `docker-compose.yml` - complete local stack with 8 services
+- `smoke-test/docker-compose.yml` - complete local stack with 8 services
+- `smoke-test/dapr-local/` - Dapr configuration for local development
 - `LOCAL_STACK.md` - comprehensive local development guide
 - `infra/shared/main.tf` - Azure infrastructure modules
 - `api/schema/` - gRPC service definitions
