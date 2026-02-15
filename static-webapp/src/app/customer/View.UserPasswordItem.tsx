@@ -22,7 +22,7 @@ interface UserPasswordItemProps {
 export const UserPasswordItem: React.FC<UserPasswordItemProps> = props => {
     const init = new Date()
 
-    const [date, setDate] = useState(init)
+    const [, setDate] = useState(init)
     const tick = () => {
         setDate(new Date())
     }

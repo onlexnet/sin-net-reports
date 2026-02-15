@@ -1,8 +1,7 @@
-import { Table, Button, Input, Divider, Col } from "antd";
+import { Table, Button, Input, Col } from "antd";
 import { Link } from "react-router-dom";
 import _ from "lodash";
 import { useState } from "react";
-import { HorizontalSeparatorStack } from "../../components/HorizontalSeparatorStack";
 import { ListCustomersItem } from "../../api/useListCustomers";
 import PaddedRow from "../../components/PaddedRow";
 

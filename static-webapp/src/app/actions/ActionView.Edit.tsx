@@ -3,8 +3,8 @@ import { RootState } from "../../store/reducers";
 import { Dispatch } from "redux";
 import { connect, ConnectedProps } from "react-redux";
 import _ from "lodash";
-import { Select, Button, Input, Space, Row, Flex, Col, Divider } from "antd";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import { Select, Button, Input, Col, Divider } from "antd";
+import React, { useCallback, useEffect, useState } from "react";
 import { AppDatePicker } from "../../services/ActionList.DatePicker";
 import { LocalDate } from "../../store/viewcontext/TimePeriod";
 import { useGetUsers } from "../../api/useGetUsers";
@@ -50,7 +50,6 @@ export const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
     const propsProjectId = item?.projectId;
     const propsEntityId = item?.entityId;
     const propsEntityVersion = item?.entityVersion;
-    const versionedProps = [propsEntityId, propsEntityVersion, propsProjectId];
 
     const [projectId,] = useState(propsProjectId);
     useEffect(() => {
@@ -143,8 +142,6 @@ export const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
         console.log(`Split: ${newDurationAsText}`)
 
         const time = textToTime(newDurationAsText)
-        const newDuration = timeToText(time)
-
 
         setDurationAsText(newDurationAsText);
         if (isNaN(time)) {
@@ -183,7 +180,7 @@ export const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
         cancelEdit();
     }
 
-    const [removeActionMutation, { loading: removeActionInProgress, data: data3 }] = useRemoveActionMutation();
+    const [removeActionMutation, { data: data3 }] = useRemoveActionMutation();
     if (data3) {
         actionUpdated({
             projectId: propsProjectId,
