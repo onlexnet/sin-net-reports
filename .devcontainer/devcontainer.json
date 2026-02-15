@@ -16,7 +16,7 @@
 			"mavenVersion": "3.9.9"
 		},
 		"ghcr.io/dapr/cli/dapr-cli:0": {
-			"version": "1.16.8"
+			"version": "1.16.5"
 		},
 		"ghcr.io/devcontainers/features/node:1": {
 			"version": "22.12.0"
