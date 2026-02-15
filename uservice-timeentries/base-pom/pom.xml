@@ -6,7 +6,7 @@
   <packaging>pom</packaging>
 
   <properties>
-    <spring-boot.version>3.5.5</spring-boot.version>
+    <spring-boot.version>3.5.10</spring-boot.version>
     <api.version>0.1.3</api.version>
     <dapr.version>1.7.0</dapr.version>
     <guava.version>32.0.0-jre</guava.version>
@@ -120,14 +120,6 @@
         </exclusions>
       </dependency>
   
-      <dependency>
-        <groupId>org.testcontainers</groupId>
-        <artifactId>testcontainers-bom</artifactId>
-        <version>${testcontainers.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-
       <dependency>
         <groupId>com.maciejwalkowiak.spring</groupId>
         <artifactId>spring-boot-startup-report</artifactId>
@@ -306,6 +298,12 @@
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
         <version>3.2.5</version>
+        <configuration>
+          <environmentVariables>
+            <!-- Force Docker API version for Testcontainers -->
+            <DOCKER_API_VERSION>1.44</DOCKER_API_VERSION>
+          </environmentVariables>
+        </configuration>
       </plugin>
 
     </plugins>
