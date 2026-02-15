@@ -14,9 +14,8 @@
     <instancio-junit5.version>5.4.0</instancio-junit5.version>
     <org.mapstruct.version>1.6.3</org.mapstruct.version>
     <sonar-maven-plugin.version>3.7.0.1746</sonar-maven-plugin.version>
-    <testcontainers.version>1.20.5</testcontainers.version>
+    <testcontainers.version>1.21.0</testcontainers.version>
     <commons-io.version>2.20.0</commons-io.version>
-    <testcontainers.version>1.20.5</testcontainers.version>
 
     <aggregate.report.dir>report-aggregate/target/site/jacoco-aggregate/jacoco.xml</aggregate.report.dir>
   </properties>
