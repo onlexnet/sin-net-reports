@@ -48,3 +48,8 @@ variable "ONLEXNET_INFRA_SECRET" {
 variable "APPLICATIONINSIGHTS_CONNECTION_STRING" {
   sensitive = true
 }
+
+variable "BACKEND_BASE_URL" {
+  description = "The backend WebAPI URL for the static webapp"
+  type        = string
+}

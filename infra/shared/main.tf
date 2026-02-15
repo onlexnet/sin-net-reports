@@ -35,6 +35,7 @@ module "github" {
   ONLEXNET_SINNET_PRD01_CONTAINERAPP_NAME_TIMEENTRIES = module.container_apps_timeentries.containerapp_name
   ONLEXNET_SINNET_PRD01_CONTAINERAPP_NAME_WEBAPI      = module.container_apps_webapi.containerapp_name
   APPLICATIONINSIGHTS_CONNECTION_STRING               = module.application_insights.connection_string
+  BACKEND_BASE_URL                                    = "https://${module.container_apps_webapi.webapi_fqdn}"
 }
 
 locals {
