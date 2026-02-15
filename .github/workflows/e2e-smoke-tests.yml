@@ -23,6 +23,11 @@ on:
     branches: [ main, develop ]
   workflow_dispatch:  # Allow manual trigger
 
+# Limit permissions following the principle of least privilege
+permissions:
+  contents: read  # Read repository contents
+  actions: read   # Read workflow artifacts
+
 jobs:
   e2e-tests:
     name: Run E2E Smoke Tests
