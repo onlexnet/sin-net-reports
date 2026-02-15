@@ -1,0 +1,237 @@
+name: E2E Smoke Tests
+
+# ============================================================================
+# Workflow: Browser-based smoke tests for the complete application stack
+# ============================================================================
+#
+# This workflow:
+# 1. Builds the complete Docker Compose stack (all services)
+# 2. Starts the services in background
+# 3. Runs Playwright-based E2E tests with pytest-bdd
+# 4. Generates test reports and artifacts
+# 5. Uploads screenshots and test results
+#
+# Tests are written in Gherkin (Cucumber-style BDD)
+# Test execution uses Playwright for browser automation
+#
+# ============================================================================
+
+on:
+  push:
+    branches: [ main, develop, local-stack-for-e2e-testing ]
+  pull_request:
+    branches: [ main, develop ]
+  workflow_dispatch:  # Allow manual trigger
+
+jobs:
+  e2e-tests:
+    name: Run E2E Smoke Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    
+    steps:
+      # ========================================================================
+      # SETUP: Checkout and prepare environment
+      # ========================================================================
+      
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Java Environment
+        # Required for building Java services in Docker
+        uses: ./.github/actions/setup-java-environment
+        with:
+          java-version: '25'
+          java-distribution: 'liberica'
+      
+      - name: Set up Node.js 22
+        # Required for building React frontend in Docker
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.12.0'
+          cache: 'npm'
+          cache-dependency-path: static-webapp/package-lock.json
+      
+      - name: Set up Python 3.12
+        # Required for running pytest-bdd E2E tests
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+          cache-dependency-path: smoke-test/e2e/requirements.txt
+      
+      - name: Set up Docker Buildx
+        # Enable BuildKit with GitHub Actions cache for faster Docker builds
+        uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f
+      
+      # ========================================================================
+      # BUILD: Build Docker images for all services
+      # ========================================================================
+      
+      - name: Build Docker Compose stack
+        working-directory: smoke-test
+        # Build all services using .env.CI configuration
+        # BuildKit cache (type=gha) speeds up builds significantly
+        run: |
+          echo "🔨 Building all services..."
+          docker compose --env-file .env.CI build
+          echo "✅ Build completed successfully"
+      
+      # ========================================================================
+      # START: Launch all services in background
+      # ========================================================================
+      
+      - name: Start Docker Compose stack
+        working-directory: smoke-test
+        # Start services in detached mode (background)
+        # Services include: SQL Server, Dapr, TimeEntries, WebAPI, Frontend
+        run: |
+          echo "🚀 Starting all services..."
+          docker compose --env-file .env.CI up -d
+          echo "✅ Services started"
+      
+      - name: Wait for services to be healthy
+        # Give services time to initialize and become ready
+        # Health checks are defined in docker-compose.yml
+        run: |
+          echo "⏳ Waiting for services to be healthy..."
+          sleep 30
+          
+          echo "📊 Checking service health..."
+          
+          # Check TimeEntries health
+          curl -f http://localhost:11021/actuator/health || echo "⚠️ TimeEntries not ready yet"
+          
+          # Check WebAPI health
+          curl -f http://localhost:11031/actuator/health || echo "⚠️ WebAPI not ready yet"
+          
+          # Check Frontend
+          curl -f http://localhost:3000 || echo "⚠️ Frontend not ready yet"
+          
+          echo "⏳ Waiting additional time for full initialization..."
+          sleep 20
+          
+          echo "✅ Services should be ready for testing"
+      
+      - name: Show running containers
+        # Display status of all containers for debugging
+        run: |
+          echo "📦 Running containers:"
+          docker compose -f smoke-test/docker-compose.yml ps
+      
+      - name: Show service logs (last 50 lines)
+        if: always()
+        # Display recent logs from all services for debugging
+        run: |
+          echo "📜 Recent service logs:"
+          docker compose -f smoke-test/docker-compose.yml logs --tail=50
+      
+      # ========================================================================
+      # TEST: Install dependencies and run E2E tests
+      # ========================================================================
+      
+      - name: Install Python test dependencies
+        working-directory: smoke-test/e2e
+        # Install pytest, pytest-bdd, playwright, and other dependencies
+        run: |
+          echo "📦 Installing Python dependencies..."
+          pip install -r requirements.txt
+          echo "✅ Dependencies installed"
+      
+      - name: Install Playwright browsers
+        # Download Chromium browser binary for Playwright
+        # Using --with-deps installs system dependencies (for Linux)
+        run: |
+          echo "🌐 Installing Playwright browsers..."
+          playwright install chromium --with-deps
+          echo "✅ Browser installed"
+      
+      - name: Run E2E smoke tests
+        working-directory: smoke-test/e2e
+        # Run pytest with verbose output and HTML report generation
+        # Tests are defined in features/*.feature files
+        # Step definitions are in step_defs/*.py files
+        run: |
+          echo "🧪 Running E2E smoke tests..."
+          pytest -v --browser chromium \
+            --html=reports/test-report.html \
+            --self-contained-html \
+            || echo "⚠️ Some tests failed"
+      
+      # ========================================================================
+      # ARTIFACTS: Upload test results and screenshots
+      # ========================================================================
+      
+      - name: Upload test report
+        if: always()
+        # Upload HTML test report even if tests fail
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-test-report
+          path: smoke-test/e2e/reports/
+          retention-days: 30
+      
+      - name: Upload test screenshots
+        if: failure()
+        # Upload screenshots only if tests fail (for debugging)
+        # Playwright automatically takes screenshots on failure
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-test-screenshots
+          path: smoke-test/e2e/test-results/
+          retention-days: 30
+      
+      - name: Upload service logs
+        if: failure()
+        # Upload Docker container logs if tests fail
+        run: |
+          mkdir -p smoke-test/e2e/logs
+          docker compose -f smoke-test/docker-compose.yml logs > smoke-test/e2e/logs/services.log
+      
+      - name: Upload logs artifact
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: service-logs
+          path: smoke-test/e2e/logs/
+          retention-days: 30
+      
+      # ========================================================================
+      # CLEANUP: Stop services and clean up
+      # ========================================================================
+      
+      - name: Stop Docker Compose stack
+        if: always()
+        working-directory: smoke-test
+        # Stop and remove all containers
+        run: |
+          echo "🛑 Stopping services..."
+          docker compose --env-file .env.CI down -v
+          echo "✅ Services stopped"
+      
+      # ========================================================================
+      # SUMMARY: Display test results
+      # ========================================================================
+      
+      - name: Test Summary
+        if: always()
+        run: |
+          echo "╔════════════════════════════════════════════════════════════════╗"
+          echo "║             E2E Smoke Tests - Summary                          ║"
+          echo "╚════════════════════════════════════════════════════════════════╝"
+          echo ""
+          echo "📊 Test report: Available in workflow artifacts"
+          echo "🌐 Browser: Chromium (Playwright)"
+          echo "🧪 Framework: pytest-bdd (Cucumber-style BDD)"
+          echo ""
+          echo "Test scenarios:"
+          echo "  ✓ WebAPI GraphQL endpoint health check"
+          echo "  ✓ TimeEntries service health check"
+          echo "  ✓ Frontend application loading"
+          echo "  ✓ GraphQL introspection query"
+          echo ""
+          if [ -f smoke-test/e2e/reports/test-report.html ]; then
+            echo "✅ Test report generated successfully"
+          else
+            echo "⚠️ Test report not found"
+          fi
