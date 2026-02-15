@@ -1,0 +1,45 @@
+# Python cache and compiled files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual environment
+venv/
+env/
+ENV/
+
+# Pytest cache and results
+.pytest_cache/
+test-results/
+reports/
+*.pytest_cache
+
+# Playwright
+playwright/.local-browsers/
+
+# Test artifacts
+screenshots/
+videos/
+traces/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Coverage reports
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+
+# Allure reports
+allure-results/
+allure-report/
