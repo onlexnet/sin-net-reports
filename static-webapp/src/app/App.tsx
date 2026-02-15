@@ -3,14 +3,16 @@ import React from "react";
 
 import { View as AuthenticatedView } from "./AppAuthenticated";
 import { View as UnauthenticatedView } from "./AppUnauthenticated";
+import { View as TestLoginView } from "./AppTestLogin";
 import InProgressView from "./AppInProgress";
 import { Dispatch } from "redux";
 import { connect, ConnectedProps } from "react-redux";
 import { SignInFlow } from "../store/session/types";
-import { initiateSession } from "../store/session/actions";
+import { initiateSession, testLogin } from "../store/session/actions";
 import { RootState } from "../store/reducers";
 import { Configuration, LogLevel, PublicClientApplication } from "@azure/msal-browser";
 import { MsalProvider } from "@azure/msal-react";
+import { getRuntimeConfig } from "./configuration/RuntimeConfig";
 
 import "./App.css"; // Custom styles
 import { Layout } from 'antd';
@@ -23,6 +25,9 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
   return {
     login: () => {
       dispatch(initiateSession());
+    },
+    testLogin: (email: string) => {
+      dispatch(testLogin(email));
     }
   }
 }
@@ -75,10 +80,21 @@ const config: Configuration = {
 const pca = new PublicClientApplication(config);
 
 const App: React.FC<AppProps> = props => {
-
   let content: React.ReactNode;
+  
+  // Get runtime config to check if we should use test login
+  const runtimeConfig = getRuntimeConfig();
+  const useTestLogin = runtimeConfig.useTestLogin;
+
   switch (props.flow) {
     case SignInFlow.Unknown:
+      // In test mode, show test login directly instead of Azure B2C login
+      if (useTestLogin) {
+        content = <TestLoginView login={props.testLogin} />
+      } else {
+        content = (<MsalProvider instance={pca}><InProgressView /></MsalProvider>);
+      }
+      break;
     case SignInFlow.SessionInitiated:
       content = (<MsalProvider instance={pca}><InProgressView /></MsalProvider>);
       break;
@@ -86,7 +102,11 @@ const App: React.FC<AppProps> = props => {
       content =  (<MsalProvider instance={pca}><AuthenticatedView /></MsalProvider>);
       break;
     default:
-      content = <UnauthenticatedView login={props.login} />
+      if (useTestLogin) {
+        content = <TestLoginView login={props.testLogin} />
+      } else {
+        content = <UnauthenticatedView login={props.login} />
+      }
   }
 
   return (<Layout className="layout-container">

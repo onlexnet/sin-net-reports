@@ -2,14 +2,15 @@ import { ApolloClient, ApolloLink, createHttpLink, DefaultOptions, InMemoryCache
 import { GraphQLClient } from 'graphql-request';
 import { addressProvider } from "../addressProvider";
 
-const graphqlUrl = `${addressProvider().host}/graphql`;
+// Lazy getter for GraphQL URL (computed when first accessed, not at module load time)
+const getGraphqlUrl = () => `${addressProvider().host}/graphql`;
 
-export const apolloClientFactory = (jwtToken: string) => {
+export const apolloClientFactory = (jwtToken: string, email?: string) => {
   // configuration below is focused on Authentication
   // https://www.apollographql.com/docs/react/networking/authentication/
 
   const httpLink = createHttpLink({
-    uri: graphqlUrl,
+    uri: getGraphqlUrl(),
 
     // Cookie
     // If your app is browser based and you are using cookies for login and session management with a backend,
@@ -20,13 +21,22 @@ export const apolloClientFactory = (jwtToken: string) => {
   });
 
   const middlewareAuthLink = new ApolloLink((operation, forward) => {
+    const headers: any = {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Credentials": true,
+      "Access-Control-Allow-Methods": "OPTIONS, GET, POST, PUT, PATCH, DELETE",
+      Authorization: `Bearer ${jwtToken}`,
+    };
+    
+    // For test login, add email as X-MS-CLIENT-PRINCIPAL-NAME header
+    // This is used by the backend's CustomAuthenticationFilter
+    if (email) {
+      headers["X-MS-CLIENT-PRINCIPAL-NAME"] = email;
+      headers["X-MS-CLIENT-PRINCIPAL-ID"] = email; // Use email as ID as well for testing
+    }
+    
     operation.setContext({
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Credentials": true,
-        "Access-Control-Allow-Methods": "OPTIONS, GET, POST, PUT, PATCH, DELETE",
-        Authorization: `Bearer ${jwtToken}`,
-      },
+      headers
     });
     return forward(operation);
   });
@@ -49,5 +59,11 @@ export const apolloClientFactory = (jwtToken: string) => {
   });
 };
 
-export const graphQlClient = new GraphQLClient(graphqlUrl);
-export const apolloClient = apolloClientFactory("");
+// Lazy singleton for GraphQL client
+let _graphQlClient: GraphQLClient | null = null;
+export const getGraphQlClient = (): GraphQLClient => {
+  if (!_graphQlClient) {
+    _graphQlClient = new GraphQLClient(getGraphqlUrl());
+  }
+  return _graphQlClient;
+};
