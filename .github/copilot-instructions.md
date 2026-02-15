@@ -1,244 +1,128 @@
-# SinNet Reports Microservices Application
+# SinNet Reports - AI Coding Agent Instructions
 
-SinNet Reports is a microservices-based time tracking and reporting application built with Java Spring Boot backend services, React TypeScript frontend, and comprehensive testing infrastructure. The application manages time entries, customer data, and generates PDF reports.
+Time tracking and reporting microservices application: Java Spring Boot backends + React frontend + Dapr + Azure Container Apps.
 
-Always reference these instructions first and fallback to search or bash commands only when you encounter unexpected information that does not match the info here.
+## Quick Start - Local Development
 
-## Working Effectively
-
-### Prerequisites and Environment Setup
-Install the required development tools in this exact order:
-
+**Single command to run everything:**
 ```bash
-# Install Java 21 (required for all services)
-export JAVA_HOME=/usr/lib/jvm/temurin-21-jdk-amd64
-export PATH=$JAVA_HOME/bin:$PATH
-
-# Install Node.js 22.12.0 using nvm
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-nvm install 22.12.0
-nvm use 22.12.0
-
-# Verify installation
-java -version  # Should show OpenJDK 21
-node --version # Should show v22.12.0
-npm --version  # Should show 10.9.0
-mvn -version   # Should show Maven 3.9+
-docker --version
-docker compose version
+cd smoke-test
+docker compose up --build
 ```
 
-### Core Build Process (NEVER CANCEL - Total time: ~3 minutes)
-Build all components in this exact order. NEVER CANCEL builds - they may take longer than expected but will complete:
+Access points:
+- Frontend: http://localhost:3000
+- GraphQL API: http://localhost:11031/graphiql  
+- TimeEntries health: http://localhost:11021/actuator/health
+- SQL Server: localhost:1433 (sa/P@ssw0rd123!)
 
+See [LOCAL_STACK.md](LOCAL_STACK.md) for detailed local development guide.
+
+## Architecture & Communication Patterns
+
+### Service Communication via Dapr
+Services communicate through **Dapr sidecars**, not direct gRPC:
+- `uservice-timeentries` (port 11021) ← Dapr sidecar → `uservice-webapi` (port 11031)
+- gRPC schemas in `api/schema/uservice-timeentries.rpc/*.proto`
+- Client code generated in `api/client-java` (build this first!)
+
+**In production (Azure Container Apps):**
+- Init containers download ApplicationInsights agent to ephemeral volume
+- Agent loaded at runtime via `JAVA_TOOL_OPTIONS`, NOT bundled in Docker images
+- See `infra/shared/module_container_app_*/main.tf` for init container patterns
+
+### Version Management Pattern
+**Three separate version files** with different formats:
+- `uservice-timeentries/.version` → `SEMVERSION` env var (e.g., "1.0.9")
+- `uservice-webapi/.semversion` → Maven `-Drevision` property (e.g., "0.1.3")
+- `static-webapp/.version` → npm version (e.g., "1.4.3")
+
+Always use `$(cat .version)` pattern, never hardcode versions.
+
+## Critical Build Dependencies
+
+### GraphQL Schema → Frontend Code Generation
+React app **requires generated types** before build:
 ```bash
-# 1. Build timeentries microservice (~15 seconds - NEVER CANCEL)
-# Note: Application Insights agent is NO LONGER included in the Docker image.
-# It's now loaded at runtime via init container in Azure Container Apps.
-cd uservice-timeentries
-export SEMVERSION=$(cat .version)
-mvn -ntp install -pl host -am -DskipTests
-cd ..
-
-# 2. Download ApplicationInsights agent for webapi service
-cd uservice-webapi
-pushd .
-cd host/src/main/resources/applicationinsights
-export APPLICATIONINSIGHTS_AGENT_VERSION=3.7.6
-wget --no-verbose https://github.com/microsoft/ApplicationInsights-Java/releases/download/${APPLICATIONINSIGHTS_AGENT_VERSION}/applicationinsights-agent-${APPLICATIONINSIGHTS_AGENT_VERSION}.jar
-mv applicationinsights-agent-${APPLICATIONINSIGHTS_AGENT_VERSION}.jar applicationinsights-agent.jar
-popd
-
-# 3. Build webapi microservice (~40 seconds - NEVER CANCEL)
-export SEMVERSION=$(cat .semversion)
-mvn -ntp install -Drevision=$SEMVERSION -DskipTests
-cd ..
-
-# 4. Build React frontend (~65 seconds total - NEVER CANCEL)
 cd static-webapp
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-nvm use 22.12.0
-
-# Install dependencies (~20 seconds - NEVER CANCEL)
-npm install
-
-# Generate GraphQL models (~1 second)
-npm run generate
-
-# Build React app (~45 seconds - NEVER CANCEL)
-export MY_VERSION=$(cat .version)
-npm config set allow-same-version true
-npm version $MY_VERSION
+npm run generate  # Reads ../uservice-webapi/**/*.graphqls, outputs to src/components/.generated/
 npm run build
-cd ..
 ```
 
-### Docker Image Creation (~50 seconds each - NEVER CANCEL)
-Build Docker images using Spring Boot buildpacks:
+**Dual schema paths** in `graphql-codegen-config.yml`:
+- `../uservice-webapi/**/*.graphqls` - local dev (parent directory context)
+- `uservice-webapi/**/*.graphqls` - Docker build (schema copied to build context)
 
+### Maven Module Build Order
+Always build in this order (dependencies matter):
 ```bash
-# Build timeentries service image
-cd uservice-timeentries
-mvn spring-boot:build-image -ntp -pl host -DskipTests -Dspring-boot.build-image.imageName=uservice-timeentries
-cd ..
-
-# Build webapi service image  
-cd uservice-webapi
-mvn spring-boot:build-image -ntp -pl host -DskipTests -Dspring-boot.build-image.imageName=uservice-webapi
-cd ..
+mvn install -f api/client-java              # Generates gRPC clients from .proto
+mvn install -pl host -am -f uservice-timeentries  # Uses api/client-java
+mvn install -f uservice-webapi              # Uses api/client-java
 ```
 
-### Running Tests
-**IMPORTANT**: Tests require Testcontainers and may fail in some Docker environments. Use `-DskipTests` for builds.
+Use `-DskipTests` - Testcontainers tests often fail in containerized dev environments.
 
-```bash
-# Run unit tests (may fail due to Testcontainers issues)
-cd uservice-timeentries
-mvn test -pl host
-cd ../uservice-webapi  
-mvn test -pl host
-cd ..
+## Spring Profiles & Database
 
-# Run React tests
-cd static-webapp
-npm test
-cd ..
+**Dev profile** (`SPRING_PROFILES_ACTIVE=dev`):
+- Uses SQL Server with `tempdb` database
+- Relaxed security, auto-schema creation
+- See `smoke-test/docker-compose.yml` environment vars
+
+**Prod profile** (Azure):
+- Full authentication via Azure B2C
+- SQL Server with proper database/schema
+- ApplicationInsights monitoring enabled
+
+## Docker Build Patterns
+
+### Multi-stage Dockerfiles
+All services use multi-stage builds with Maven cache optimization:
+```dockerfile
+# Stage 1: Build with Maven cache mount
+RUN --mount=type=cache,target=/root/.m2 \
+    mvn install -DskipTests
+
+# Stage 2: Runtime with JRE only (not JDK)
+FROM eclipse-temurin:25-jre-jammy
 ```
 
-## Validation
+### Docker Compose Build Context
+All Dockerfiles use **parent directory context** (`..` from smoke-test/) because they need:
+- `api/client-java` - shared gRPC libraries
+- `api/schema` - proto definitions
+- Service source code
 
-### Critical Build Validation Steps
-Always run these steps after making code changes:
+Example: `cd smoke-test && docker compose up` builds from parent, copies dependencies correctly.
 
-```bash
-# 1. Validate Java services compile without errors
-mvn clean compile -f api/client-java
-mvn clean compile -pl host -f uservice-timeentries
-mvn clean compile -pl host -f uservice-webapi
+## Deployment & Infrastructure
 
-# 2. Validate React app builds without errors
-cd static-webapp
-npm run build
-cd ..
+**Target platform:** Azure Container Apps (via Terraform in `infra/`)
+- **NOT Kubernetes** - uses Azure Container Apps native features
+- Deployment triggered by push to `main` branch → PRD01 environment
+- GitHub Actions workflows in `.github/workflows/`
 
-# 3. Check for linting issues (run these before committing)
-# Java services use Checkstyle (automatically run during build)
-# React app uses ESLint (warnings shown during build, errors fail build)
-```
+**Key Terraform modules:**
+- `module_container_app_timeentries` - init container downloads AppInsights agent
+- `module_container_app_webapi` - same pattern
+- `module_static_webapp` - Azure Static Web Apps
 
-### Manual Validation Scenarios
-After making changes, test these scenarios:
+## Critical Non-Obvious Patterns
 
-#### Java Services Validation
-```bash
-# 1. Start timeentries service locally (requires database)
-cd uservice-timeentries/host
-mvn spring-boot:run -Dspring-boot.run.profiles=dev
-# Service should start on http://localhost:8080
-# Check health endpoint: curl http://localhost:8080/actuator/health
+1. **Never bundle ApplicationInsights agent in images** - use init containers in Azure, not in Dockerfile or CI builds
+2. **GraphQL codegen before npm build** - frontend won't compile without generated types
+3. **Dapr service invocation** - services never call each other directly, always via Dapr sidecar
+4. **Three version systems** - timeentries uses `.version`, webapi uses `.semversion`, frontend uses `.version`
+5. **Maven revision property** - webapi requires `-Drevision=$SEMVERSION`, not standard versioning
+6. **Dual-path schemas** - graphql-codegen-config.yml needs both `../` and non-`../` paths for local + Docker
 
-# 2. Start webapi service locally (requires database) 
-cd uservice-webapi/host
-mvn spring-boot:run -Dspring-boot.run.profiles=dev  
-# Service should start and serve GraphQL endpoint
-```
+## File References
 
-#### React Frontend Validation
-```bash
-cd static-webapp
-# Start development server
-npm start
-# Application should start on http://localhost:3000
-# Should display login page (Azure B2C integration)
-# Check browser console for errors
-```
-
-## Docker Compose Local Development
-
-**NOTE**: The docker-compose.yaml references missing directories. Local development currently requires manual service startup.
-
-```bash
-# Current docker-compose.yaml has issues - service-postgres directory missing
-# Use individual service startup instead (see Java Services Validation above)
-```
-
-## Common Tasks
-
-### Quick Build (Skip Tests)
-```bash
-# Full build pipeline without tests (~3 minutes total)
-mvn -ntp install -f api/client-java && \
-(cd uservice-timeentries && export SEMVERSION=$(cat .version) && mvn -ntp install -pl host -am -DskipTests) && \
-(cd uservice-webapi && export SEMVERSION=$(cat .semversion) && mvn -ntp install -Drevision=$SEMVERSION -DskipTests) && \
-(cd static-webapp && npm install && npm run generate && npm run build)
-```
-
-### Development Profiles
-Java services support multiple profiles:
-- `dev` - Development profile with relaxed security
-- `prod` - Production profile with full security and SQL Server database  
-- `test` - Test profile used during testing
-
-```bash
-# Run with development profile
-mvn spring-boot:run -Dspring-boot.run.profiles=dev -pl host -f uservice-timeentries
-```
-
-### Version Management
-Each component has its own version file:
-- `uservice-timeentries/.version` - Current: 1.0.9
-- `uservice-webapi/.semversion` - Current: 0.1.3  
-- `static-webapp/.version` - Current: 1.4.3
-- `api/client-java` - Current: 0.1.3
-
-## Architecture Overview
-
-### Microservices Structure
-- **uservice-timeentries**: Time entry management service
-- **uservice-webapi**: GraphQL API gateway service  
-- **static-webapp**: React TypeScript frontend
-- **test-webapi**: BDD integration tests using Cucumber
-- **api/client-java**: Shared gRPC client libraries
-
-### Key Dependencies
-- **Java 21**: Runtime for all backend services
-- **Spring Boot 3.x**: Framework for microservices
-- **React 17**: Frontend framework  
-- **GraphQL**: API communication between frontend and backend
-- **gRPC**: Inter-service communication
-- **Azure B2C**: Authentication provider
-- **Testcontainers**: Integration testing (may fail in some environments)
-
-## Troubleshooting
-
-### Common Issues
-
-**Maven dependency issues**: Run `mvn clean install` on dependencies in order (api/client-java)
-
-**Node.js version mismatch**: Ensure Node.js 22.12.0 is active with `nvm use 22.12.0`
-
-**ApplicationInsights agent missing**: For timeentries service, agent is loaded via init container at runtime in Azure Container Apps. For local development, download manually if needed. For webapi service, download manually using wget commands shown above
-
-**Testcontainers failures**: Use `-DskipTests` flag for builds - tests require specific Docker setup
-
-**Docker compose failures**: service-postgres directory missing - use individual service startup
-
-**React build warnings**: ESLint warnings shown during build are non-blocking, only errors fail the build
-
-### Environment Variables
-Some tests require Azure credentials and KeyVault access:
-```bash
-# BDD tests need Azure service principal credentials
-# Set via init-vars.sh in test-webapi/main/
-```
-
-## CI/CD Integration
-This repository uses GitHub Actions for CI/CD:
-- `.github/workflows/uservice-timeentries.yml`
-- `.github/workflows/uservice-webapi.yml`  
-- `.github/workflows/static-webapp.yml`
-
-Always ensure local builds match CI requirements before pushing.
+Key files for understanding architecture:
+- `smoke-test/docker-compose.yml` - complete local stack with 8 services
+- `smoke-test/dapr-local/` - Dapr configuration for local development
+- `LOCAL_STACK.md` - comprehensive local development guide
+- `infra/shared/main.tf` - Azure infrastructure modules
+- `api/schema/` - gRPC service definitions
+- `uservice-webapi/host/src/main/resources/graphql/schema.graphqls` - GraphQL schema consumed by frontend

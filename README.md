@@ -22,6 +22,26 @@ In scope:
 - [x] Define a list of clients
 - [x] Create PDF attachments per client for a given period on demand
 
+## Local Development
+
+### Quick Start with Docker Compose
+
+Start the complete local stack (all services + database + Dapr) with a single command:
+
+```bash
+cd smoke-test
+docker compose up --build
+```
+
+Access the application:
+- **Frontend**: http://localhost:3000
+- **GraphQL API**: http://localhost:11031/graphiql
+- **API Documentation**: See [LOCAL_STACK.md](LOCAL_STACK.md) or [smoke-test/README.md](smoke-test/README.md)
+
+### Manual Development
+
+See [Copilot Instructions](.github/copilot-instructions.md) for detailed build instructions and development setup.
+
 ## Used articles
 - [https://code.visualstudio.com/docs/devcontainers/create-dev-container]
 - [How to export OpenTelemetry to Application Insight](https://docs.dapr.io/operations/monitoring/tracing/open-telemetry-collector-appinsights/)

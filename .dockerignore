@@ -1,0 +1,52 @@
+# Git
+.git
+.gitignore
+.github
+
+# Documentation
+*.md
+!README.md
+docs/
+
+# IDE
+.vscode
+.idea
+*.iml
+
+# Build artifacts
+target/
+build/
+dist/
+node_modules/
+
+# Test files (exclude test files but not test directories with source code)
+**/src/test/
+**/*.test.*
+**/*.spec.*
+**/test-results/
+**/coverage/
+
+# Terraform
+infra/
+*.tfstate
+*.tfstate.*
+.terraform/
+
+# Environment
+.env
+.env.*
+*.local
+
+# Logs
+*.log
+logs/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+docker-compose.yml
+!docker-compose.yml
+Dockerfile*
+!Dockerfile

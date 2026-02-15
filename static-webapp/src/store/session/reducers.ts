@@ -13,6 +13,11 @@ export const sessionReducer = (state = initialState, action: SessionAction): Ses
         case 'INITIATE_SESSION_STARTED':
             clone.flow = SignInFlow.SessionInitiated;
             return clone;
+        case 'TEST_LOGIN_STARTED':
+            clone.flow = SignInFlow.SessionEstablished
+            clone.idToken = "test-token";
+            clone.email = action.email;
+            return clone;
         case 'INITIATE_SESSION_FINISHED':
             clone.flow = SignInFlow.SessionEstablished
             clone.idToken = action.jwtToken;

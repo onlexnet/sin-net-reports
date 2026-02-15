@@ -3,7 +3,7 @@ import { useMsal, useMsalAuthentication } from "@azure/msal-react";
 import React from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { Dispatch } from "redux";
-import { graphQlClient } from "../api";
+import { getGraphQlClient } from "../api";
 import { InitiateSessionFinishedAction, INITIATE_SESSION_FINISHED } from "../store/session/types";
 import { Col, Row, Spin } from "antd";
 import { setAuthenticatedUser } from "./configuration/ApplicationInsights";
@@ -16,7 +16,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
         jwtToken: jwtToken,
         email: email
       }
-      graphQlClient.setHeader("Authorization", `Bearer ${jwtToken}`);
+      getGraphQlClient().setHeader("Authorization", `Bearer ${jwtToken}`);
       // Set authenticated user context in Application Insights
       setAuthenticatedUser(email);
       dispatch(action);

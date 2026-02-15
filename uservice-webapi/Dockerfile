@@ -1,0 +1,80 @@
+# Multi-stage build for uservice-webapi
+# Stage 1: Build the application
+FROM eclipse-temurin:25-jdk-jammy AS builder
+
+WORKDIR /workspace
+
+# Install Maven 3.9+ (required by api/client-java maven-enforcer-plugin)
+RUN apt-get update && \
+    apt-get install -y wget && \
+    wget --no-verbose https://archive.apache.org/dist/maven/maven-3/3.9.9/binaries/apache-maven-3.9.9-bin.tar.gz && \
+    tar xzf apache-maven-3.9.9-bin.tar.gz -C /opt/ && \
+    ln -s /opt/apache-maven-3.9.9 /opt/maven && \
+    rm apache-maven-3.9.9-bin.tar.gz && \
+    rm -rf /var/lib/apt/lists/*
+
+ENV MAVEN_HOME=/opt/maven
+ENV PATH=$PATH:$MAVEN_HOME/bin
+
+# Copy pom files for dependency resolution
+# Copy api/client-java dependency (entire structure for Maven modules and schema generation)
+COPY api/client-java api/client-java
+COPY api/schema api/schema
+
+# Copy pom files for dependency resolution
+COPY uservice-webapi/pom.xml uservice-webapi/
+COPY uservice-webapi/.semversion uservice-webapi/
+COPY uservice-webapi/base-pom/pom.xml uservice-webapi/base-pom/
+COPY uservice-webapi/build-tools/pom.xml uservice-webapi/build-tools/
+COPY uservice-webapi/gql-model/pom.xml uservice-webapi/gql-model/
+COPY uservice-webapi/gql-test/pom.xml uservice-webapi/gql-test/
+COPY uservice-webapi/host/pom.xml uservice-webapi/host/
+COPY uservice-webapi/lombok.config uservice-webapi/
+
+# Download dependencies (cached layer)
+RUN --mount=type=cache,target=/root/.m2 \
+    cd uservice-webapi && \
+    export SEMVERSION=$(cat .semversion) && \
+    mvn dependency:go-offline -B -ntp -DskipTests -Drevision=$SEMVERSION || true
+
+# Copy source code (only modules with src directories - base-pom has no src)
+COPY uservice-webapi/build-tools/src uservice-webapi/build-tools/src
+COPY uservice-webapi/gql-model/src uservice-webapi/gql-model/src
+COPY uservice-webapi/gql-test/src uservice-webapi/gql-test/src
+COPY uservice-webapi/host/src uservice-webapi/host/src
+
+# Build api/client-java with Java 21 override
+RUN --mount=type=cache,target=/root/.m2 \
+    cd api/client-java && \
+    mvn clean install -B -ntp -DskipTests || true
+
+# Build webapi
+RUN --mount=type=cache,target=/root/.m2 \
+    cd uservice-webapi && \
+    export SEMVERSION=$(cat .semversion) && \
+    mvn clean install -Drevision=$SEMVERSION -DskipTests -B -ntp
+
+FROM eclipse-temurin:25-jre-jammy
+
+WORKDIR /app
+
+# Install curl for health checks
+RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+
+# Copy the built JAR from builder stage
+COPY --from=builder /workspace/uservice-webapi/host/target/*.jar app.jar
+
+# Create non-root user
+RUN groupadd -r appuser && useradd -r -g appuser appuser
+RUN chown -R appuser:appuser /app
+USER appuser
+
+# Expose ports
+EXPOSE 8080
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=60s --retries=3 \
+    CMD curl -f http://localhost:8080/actuator/health || exit 1
+
+# Run the application
+ENTRYPOINT ["java", "-XX:+UseContainerSupport", "-XX:MaxRAMPercentage=75.0", "-jar", "app.jar"]

@@ -16,10 +16,8 @@
 			"mavenVersion": "3.9.9"
 		},
 		"ghcr.io/dapr/cli/dapr-cli:0": {
-			"version": "latest"
+			"version": "1.16.8"
 		},
-		// # We need node 16 to work
-		// # TODO: migrate to node20
 		"ghcr.io/devcontainers/features/node:1": {
 			"version": "22.12.0"
 		},
@@ -32,7 +30,9 @@
         },
         "ghcr.io/dhoeric/features/terraform-docs:1": {
             "version": "latest"
-        }
+        },
+		// required for MPC from Microsoft
+	    "ghcr.io/devcontainers/features/dotnet:2": {} 
 	},
 
 	"customizations": {

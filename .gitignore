@@ -7,3 +7,10 @@ azagent
 
 # used to keep refs to remove folders in modules
 .links
+
+# Local development
+.env
+.secrets/
+
+# Docker
+.docker/

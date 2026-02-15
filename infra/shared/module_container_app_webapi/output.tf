@@ -8,3 +8,7 @@ output "containerapp_name" {
   value = azurerm_container_app.default.name
 }
 
+output "webapi_url" {
+  description = "The complete URL of the WebAPI service (https://webapi_fqdn)"
+  value       = "https://${azurerm_container_app.default.ingress[0].fqdn}"
+}

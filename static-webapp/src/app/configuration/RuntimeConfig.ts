@@ -1,29 +1,50 @@
-import runtimeConfigData from './runtime-config.json';
-
 /**
  * Runtime configuration interface
  */
 export interface RuntimeConfig {
   applicationInsightsConnectionString: string;
+  backendBaseUrl: string;
   environment: string;
+  useTestLogin: boolean;
 }
 
 /**
- * Runtime configuration loaded from JSON file
- * This file will be replaced during deployment with environment-specific values
+ * Cached runtime configuration
  */
-const runtimeConfig: RuntimeConfig = {
-  ...runtimeConfigData,
-  // Fallback to environment variables for local development
-  applicationInsightsConnectionString: runtimeConfigData.applicationInsightsConnectionString || 
-                                      process.env.REACT_APP_APPLICATIONINSIGHTS_CONNECTION_STRING || '',
-  environment: runtimeConfigData.environment || process.env.NODE_ENV || 'development'
+let cachedRuntimeConfig: RuntimeConfig | null = null;
+
+/**
+ * Loads runtime configuration from /runtime-config.json
+ * This file is required and must be configured during Docker build or GitHub Actions deployment
+ * 
+ * @returns Promise with RuntimeConfig
+ * @throws Error if runtime-config.json is missing or invalid
+ */
+export const loadRuntimeConfig = async (): Promise<RuntimeConfig> => {
+  if (cachedRuntimeConfig) {
+    return cachedRuntimeConfig;
+  }
+
+  const response = await fetch('/runtime-config.json');
+  if (!response.ok) {
+    throw new Error(`Failed to load runtime-config.json: ${response.status}. Ensure the file is configured during container startup.`);
+  }
+  
+  const config: RuntimeConfig = await response.json();
+  cachedRuntimeConfig = config;
+  return config;
 };
 
 /**
- * Gets the runtime configuration
+ * Gets the runtime configuration (synchronous)
+ * Must call loadRuntimeConfig() first during app initialization
+ * 
  * @returns The runtime configuration
+ * @throws Error if configuration hasn't been loaded yet
  */
 export const getRuntimeConfig = (): RuntimeConfig => {
-  return runtimeConfig;
+  if (!cachedRuntimeConfig) {
+    throw new Error('Runtime configuration not loaded. Call loadRuntimeConfig() first.');
+  }
+  return cachedRuntimeConfig;
 };

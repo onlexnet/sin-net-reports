@@ -6,7 +6,7 @@
   <packaging>pom</packaging>
 
   <properties>
-    <spring-boot.version>3.5.5</spring-boot.version>
+    <spring-boot.version>3.5.10</spring-boot.version>
     <api.version>0.1.3</api.version>
     <dapr.version>1.7.0</dapr.version>
     <guava.version>32.0.0-jre</guava.version>
@@ -14,9 +14,8 @@
     <instancio-junit5.version>5.4.0</instancio-junit5.version>
     <org.mapstruct.version>1.6.3</org.mapstruct.version>
     <sonar-maven-plugin.version>3.7.0.1746</sonar-maven-plugin.version>
-    <testcontainers.version>1.20.5</testcontainers.version>
+    <testcontainers.version>2.0.3</testcontainers.version>
     <commons-io.version>2.20.0</commons-io.version>
-    <testcontainers.version>1.20.5</testcontainers.version>
 
     <aggregate.report.dir>report-aggregate/target/site/jacoco-aggregate/jacoco.xml</aggregate.report.dir>
   </properties>
@@ -121,14 +120,6 @@
         </exclusions>
       </dependency>
   
-      <dependency>
-        <groupId>org.testcontainers</groupId>
-        <artifactId>testcontainers-bom</artifactId>
-        <version>${testcontainers.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-
       <dependency>
         <groupId>com.maciejwalkowiak.spring</groupId>
         <artifactId>spring-boot-startup-report</artifactId>
@@ -302,11 +293,6 @@
             </path>
           </annotationProcessorPaths>
         </configuration>
-      </plugin>
-
-      <plugin>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <version>3.2.5</version>
       </plugin>
 
     </plugins>
