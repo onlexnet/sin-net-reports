@@ -18,12 +18,16 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Java Environment
+        # Required for Docker builds: Maven dependencies and gRPC client generation
+        # Java 25 with Liberica distribution as per project standards
         uses: ./.github/actions/setup-java-environment
         with:
           java-version: '25'
           java-distribution: 'liberica'
 
       - name: Set up Node.js 22
+        # Required for Docker builds: npm dependencies and GraphQL codegen
+        # Caches npm packages to speed up static-webapp builds
         uses: actions/setup-node@v4
         with:
           node-version: '22.12.0'
@@ -33,73 +37,29 @@ jobs:
       - name: Set up Docker Buildx
         # Using full commit SHA instead of v3 tag for security
         # SHA 8d2750c68a42422c14e847fe6c8ac0403b4cbd6f is the commit hash for docker/setup-buildx-action@v3
+        # This enables BuildKit features including GitHub Actions cache (type=gha)
         uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f
 
-      - name: Build API client library
-        working-directory: api/client-java
-        run: mvn clean install -B -ntp -DskipTests
-
-      - name: Build TimeEntries service
-        working-directory: uservice-timeentries
-        run: |
-          export SEMVERSION=$(cat .version)
-          mvn clean install -pl host -am -DskipTests -B -ntp
-
-      - name: Build WebAPI service
-        working-directory: uservice-webapi
-        run: |
-          export SEMVERSION=$(cat .semversion)
-          mvn clean install -Drevision=$SEMVERSION -DskipTests -B -ntp
-
-      - name: Build Static WebApp
-        working-directory: static-webapp
-        run: |
-          npm ci
-          npm run generate
-          export MY_VERSION=$(cat .version)
-          npm config set allow-same-version true
-          npm version $MY_VERSION
-          npm run build
-
-      - name: Build Docker images
-        run: |
-          # Build timeentries image
-          docker buildx build \
-            --load \
-            --cache-from type=gha \
-            --cache-to type=gha,mode=max \
-            -t sinnet-timeentries:latest \
-            -f uservice-timeentries/Dockerfile \
-            .
-
-          # Build webapi image
-          docker buildx build \
-            --load \
-            --cache-from type=gha \
-            --cache-to type=gha,mode=max \
-            -t sinnet-webapi:latest \
-            -f uservice-webapi/Dockerfile \
-            .
-
-          # Build static-webapp image
-          docker buildx build \
-            --load \
-            --cache-from type=gha \
-            --cache-to type=gha,mode=max \
-            -t sinnet-webapp:latest \
-            -f static-webapp/Dockerfile \
-            .
+      - name: Build complete stack with Docker Compose
+        working-directory: smoke-test
+        # Load environment variables from .env.CI file for consistent configuration
+        # Docker Compose will use BuildKit cache configured in docker-compose.yml
+        # Cache scopes: timeentries, webapi, webapp - speeds up rebuilds significantly
+        run: docker compose --env-file .env.CI build
 
       - name: Verify Docker Compose configuration
         working-directory: smoke-test
-        run: docker compose config
+        # Validates docker-compose.yml syntax and variable interpolation
+        # Useful for catching configuration errors before deployment
+        run: docker compose --env-file .env.CI config
 
       - name: Summary
+        # Display build results and local development instructions
         run: |
           echo "✅ All services built successfully!"
-          echo "- TimeEntries service"
-          echo "- WebAPI service"
-          echo "- Static WebApp"
-          echo "- Docker images created"
+          echo "- TimeEntries service (Java Spring Boot + Dapr)"
+          echo "- WebAPI service (GraphQL Gateway + Dapr)"
+          echo "- Static WebApp (React + runtime config)"
+          echo "- Docker images created with BuildKit cache"
           echo ""
-          echo "To run locally: cd smoke-test && docker compose up --build"
+          echo "To run locally: cd smoke-test && docker compose --env-file .env.CI up"

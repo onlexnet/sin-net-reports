@@ -1,5 +1,11 @@
 # Docker Compose for local development stack
 # Usage: docker compose up --build
+# With custom env: docker compose --env-file .env.CI up --build
+
+# Environment variables with defaults (can be overridden via .env.CI or shell)
+# WEBAPI_PORT - Port on which the WebAPI service is accessible (default: 11031)
+# WEBAPP_PORT - Port on which the frontend is accessible (default: 3000)
+# DATABASE_* - Database connection parameters (see .env.CI)
 
 services:
   # SQL Server Database
@@ -40,6 +46,13 @@ services:
     build:
       context: ..
       dockerfile: uservice-timeentries/Dockerfile
+      # BuildKit cache configuration for faster builds
+      # In CI: uses GitHub Actions cache (type=gha)
+      # Locally: uses inline cache embedded in image layers
+      cache_from:
+        - type=gha,scope=timeentries
+      cache_to:
+        - type=gha,scope=timeentries,mode=max
     container_name: sinnet-timeentries
     restart: unless-stopped
     depends_on:
@@ -89,6 +102,12 @@ services:
     build:
       context: ..
       dockerfile: uservice-webapi/Dockerfile
+      # BuildKit cache configuration for faster builds
+      # Caches Maven dependencies and compiled classes
+      cache_from:
+        - type=gha,scope=webapi
+      cache_to:
+        - type=gha,scope=webapi,mode=max
     container_name: sinnet-webapi
     restart: unless-stopped
     depends_on:
@@ -97,7 +116,7 @@ services:
     environment:
       - DAPR_GRPC_PORT=50002
     ports:
-      - "11031:8080"
+      - "${WEBAPI_PORT:-11031}:8080"
     networks:
       - sinnet-network
 
@@ -129,12 +148,24 @@ services:
     build:
       context: ..
       dockerfile: static-webapp/Dockerfile
+      args:
+        # Frontend runs in browser, needs host-accessible URL (not container name)
+        - BACKEND_BASE_URL=http://localhost:${WEBAPI_PORT:-11031}
+        - APPLICATIONINSIGHTS_CONNECTION_STRING=
+        - ENVIRONMENT=development
+        - USE_TEST_LOGIN=true
+      # BuildKit cache configuration for faster builds
+      # Caches npm dependencies and compiled React assets
+      cache_from:
+        - type=gha,scope=webapp
+      cache_to:
+        - type=gha,scope=webapp,mode=max
     container_name: sinnet-webapp
     restart: unless-stopped
     depends_on:
       - webapi
     ports:
-      - "${WEBAPP_PORT:-3000}:80"
+      - ${WEBAPP_PORT:-13000}:3000
     networks:
       - sinnet-network
 

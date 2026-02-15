@@ -30,7 +30,9 @@
         },
         "ghcr.io/dhoeric/features/terraform-docs:1": {
             "version": "latest"
-        }
+        },
+		// required for MPC from Microsoft
+	    "ghcr.io/devcontainers/features/dotnet:2": {} 
 	},
 
 	"customizations": {
