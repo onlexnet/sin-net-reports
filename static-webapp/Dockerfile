@@ -28,26 +28,49 @@ RUN npm run generate && \
     npm version $MY_VERSION && \
     npm run build
 
-# Stage 2: Serve with nginx
-FROM nginx:1.25-alpine
+# Stage 2: Configure and serve with Node.js
+FROM node:22.12.0-alpine
 
-WORKDIR /usr/share/nginx/html
+# Build-time configuration arguments
+ARG BACKEND_BASE_URL
+ARG APPLICATIONINSIGHTS_CONNECTION_STRING=""
+ARG ENVIRONMENT="development"
+ARG USE_TEST_LOGIN
 
-# Remove default nginx static assets
-RUN rm -rf ./*
+WORKDIR /app
 
 # Copy built React app from build stage
-COPY --from=build /app/build .
+COPY --from=build /app/build ./build
 
-# Copy custom nginx configuration
-COPY static-webapp/nginx.conf /etc/nginx/conf.d/default.conf
+# Validate required build arguments
+RUN if [ -z "$BACKEND_BASE_URL" ]; then \
+      echo "ERROR: BACKEND_BASE_URL build argument is required" && \
+      exit 1; \
+    fi
 
-# Expose port 80
-EXPOSE 80
+# Validate that runtime-config.json exists in build
+RUN if [ ! -f "build/runtime-config.json" ]; then \
+      echo "ERROR: runtime-config.json not found in build directory" && \
+      exit 1; \
+    fi
+
+# Replace runtime configuration in the JSON file
+RUN sed -i 's|"applicationInsightsConnectionString": ""|"applicationInsightsConnectionString": "'"$APPLICATIONINSIGHTS_CONNECTION_STRING"'"|g' build/runtime-config.json && \
+    sed -i 's|"backendBaseUrl": ""|"backendBaseUrl": "'"$BACKEND_BASE_URL"'"|g' build/runtime-config.json && \
+    sed -i 's|"environment": "development"|"environment": "'"$ENVIRONMENT"'"|g' build/runtime-config.json && \
+    sed -i 's|"useTestLogin": false|"useTestLogin": '"$USE_TEST_LOGIN"'|g' build/runtime-config.json && \
+    echo "Configuration injected into runtime-config.json:" && \
+    cat build/runtime-config.json
+
+# Install serve globally for serving static files
+RUN npm install -g serve
+
+# Expose port 3000
+EXPOSE 3000
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
-    CMD wget --quiet --tries=1 --spider http://localhost/ || exit 1
+    CMD wget --quiet --tries=1 --spider http://localhost:3000/health || exit 1
 
-# Start nginx
-CMD ["nginx", "-g", "daemon off;"]
+# Serve the built app with SPA routing support
+CMD ["serve", "-s", "build", "-l", "3000"]
