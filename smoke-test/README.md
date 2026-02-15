@@ -50,8 +50,35 @@ docker compose down -v
 ## Directory Contents
 
 - `docker-compose.yml` - Main orchestration file for all services
+- `.env.CI` - Environment variables for CI/CD builds
 - `dapr-local/` - Dapr configuration for local development
   - `config.yaml` - Dapr runtime configuration
+- `e2e/` - Browser-based E2E smoke tests (pytest-bdd + Playwright)
+  - See [e2e/README.md](e2e/README.md) for test documentation
+
+## E2E Smoke Tests
+
+Automated browser-based tests for verifying the complete stack:
+
+```bash
+# 1. Start the stack (in one terminal)
+cd smoke-test
+docker compose --env-file .env.CI up
+
+# 2. Run tests (in another terminal)
+cd smoke-test/e2e
+pip install -r requirements.txt
+playwright install
+pytest
+```
+
+Features:
+- **BDD/Cucumber-style tests** using pytest-bdd (Gherkin syntax)
+- **Browser automation** with Playwright (faster than Selenium)
+- **Comprehensive scenarios**: UI tests, API health checks, GraphQL validation
+- **CI/CD ready**: Runs in GitHub Actions with artifact uploads
+
+See [e2e/README.md](e2e/README.md) for detailed test documentation.
 
 ## Build Context
 

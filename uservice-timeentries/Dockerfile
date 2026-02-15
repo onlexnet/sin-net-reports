@@ -38,6 +38,14 @@ COPY uservice-timeentries/lombok.config uservice-timeentries/
 RUN chmod +x uservice-timeentries/mvnw
 
 # Download dependencies (cached layer)
+# CACHE MOUNT: --mount=type=cache,target=/root/.m2
+# This creates a persistent cache volume for Maven local repository
+# Benefits:
+#   - Dependencies are NOT re-downloaded on every build
+#   - Cache persists even when image layers are invalidated
+#   - Shared across all Maven builds on the same Docker host
+#   - Significantly speeds up builds (from minutes to seconds for deps)
+# Note: The "|| true" allows partial downloads to not fail the build
 RUN --mount=type=cache,target=/root/.m2 \
     cd uservice-timeentries && \
     mvn dependency:go-offline -B -ntp -DskipTests || true
@@ -50,12 +58,16 @@ COPY uservice-timeentries/initdb-migrate/src uservice-timeentries/initdb-migrate
 COPY uservice-timeentries/initdb-test/src uservice-timeentries/initdb-test/src
 COPY uservice-timeentries/report-aggregate/src uservice-timeentries/report-aggregate/src
 
-# Build api/client-java with Java 21 override
+# Build api/client-java dependency (required by timeentries service)
+# CACHE MOUNT: Reuses the same Maven cache from previous step
+# This ensures gRPC client generation and compilation uses cached dependencies
 RUN --mount=type=cache,target=/root/.m2 \
     cd api/client-java && \
     mvn clean install -B -ntp -DskipTests || true
 
-# Build the application
+# Build the TimeEntries application
+# CACHE MOUNT: Final build step also benefits from cached Maven dependencies
+# Only source code changes will trigger recompilation, not dependency downloads
 RUN --mount=type=cache,target=/root/.m2 \
     cd uservice-timeentries && \
     export SEMVERSION=$(cat .version) && \
