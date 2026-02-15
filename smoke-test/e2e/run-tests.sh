@@ -127,8 +127,17 @@ echo -e "${GREEN}✓${NC} Python dependencies installed"
 # Install Playwright browsers
 echo ""
 echo -e "${BLUE}Installing Playwright browsers (if not already installed)...${NC}"
-python3 -m playwright install chromium --with-deps > /dev/null 2>&1 || true
-echo -e "${GREEN}✓${NC} Playwright browsers ready"
+if python3 -m playwright install chromium --with-deps 2>&1 | grep -q "Playwright build"; then
+  echo -e "${GREEN}✓${NC} Playwright browsers installed"
+else
+  # Already installed or minor warning - check if it's usable
+  if python3 -m playwright --version > /dev/null 2>&1; then
+    echo -e "${GREEN}✓${NC} Playwright browsers ready"
+  else
+    echo -e "${YELLOW}⚠️  Playwright installation may have issues${NC}"
+    echo -e "${YELLOW}Try running manually: playwright install chromium --with-deps${NC}"
+  fi
+fi
 
 if [ "$SETUP_ONLY" = true ]; then
   echo ""
