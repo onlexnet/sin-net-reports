@@ -42,6 +42,10 @@ WORKDIR /app
 # Copy built React app from build stage
 COPY --from=build /app/build ./build
 
+# Create a non-root user and switch to it
+RUN addgroup -g 1001 -S nodejs && \
+    adduser -S nodejs -u 1001
+
 # Validate required build arguments
 RUN if [ -z "$BACKEND_BASE_URL" ]; then \
       echo "ERROR: BACKEND_BASE_URL build argument is required" && \
@@ -64,6 +68,12 @@ RUN sed -i 's|"applicationInsightsConnectionString": ""|"applicationInsightsConn
 
 # Install serve globally for serving static files
 RUN npm install -g serve
+
+# Set proper ownership of the /app directory
+RUN chown -R nodejs:nodejs /app
+
+# Switch to non-root user
+USER nodejs
 
 # Expose port 3000
 EXPOSE 3000
