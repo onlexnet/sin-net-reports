@@ -295,17 +295,6 @@
         </configuration>
       </plugin>
 
-      <plugin>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <version>3.2.5</version>
-        <configuration>
-          <environmentVariables>
-            <!-- Force Docker API version for Testcontainers -->
-            <DOCKER_API_VERSION>1.44</DOCKER_API_VERSION>
-          </environmentVariables>
-        </configuration>
-      </plugin>
-
     </plugins>
 
     <pluginManagement>
