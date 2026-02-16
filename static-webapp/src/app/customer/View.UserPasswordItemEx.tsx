@@ -1,4 +1,4 @@
-import { Button, Input, Divider, Space, Typography, Col, Row } from "antd";
+import { Button, Input, Divider, Typography, Col, Row } from "antd";
 import React, { useEffect, useState } from "react";
 import { TOTP } from "totp-generator"
 
@@ -28,7 +28,7 @@ interface UserPasswordExtItemProps {
 export const UserPasswordItemExt: React.FC<UserPasswordExtItemProps> = props => {
     const init = new Date()
 
-    const [date, setDate] = useState(init)
+    const [, setDate] = useState(init)
     const tick = () => {
         setDate(new Date())
     }
