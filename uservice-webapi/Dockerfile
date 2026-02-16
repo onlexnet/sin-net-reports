@@ -32,6 +32,9 @@ COPY uservice-webapi/host/pom.xml uservice-webapi/host/
 COPY uservice-webapi/lombok.config uservice-webapi/
 
 # Download dependencies (cached layer)
+# CACHE MOUNT: --mount=type=cache,target=/root/.m2
+# Persistent Maven cache prevents re-downloading dependencies on every build
+# WebAPI has its own version management via .semversion file
 RUN --mount=type=cache,target=/root/.m2 \
     cd uservice-webapi && \
     export SEMVERSION=$(cat .semversion) && \
@@ -43,12 +46,14 @@ COPY uservice-webapi/gql-model/src uservice-webapi/gql-model/src
 COPY uservice-webapi/gql-test/src uservice-webapi/gql-test/src
 COPY uservice-webapi/host/src uservice-webapi/host/src
 
-# Build api/client-java with Java 21 override
+# Build api/client-java dependency (gRPC client for Dapr communication)
+# CACHE MOUNT: Reuses Maven cache, avoiding dependency re-downloads
 RUN --mount=type=cache,target=/root/.m2 \
     cd api/client-java && \
     mvn clean install -B -ntp -DskipTests || true
 
-# Build webapi
+# Build the WebAPI application (GraphQL schema processing + compilation)
+# CACHE MOUNT: Final build step benefits from all previously cached dependencies
 RUN --mount=type=cache,target=/root/.m2 \
     cd uservice-webapi && \
     export SEMVERSION=$(cat .semversion) && \
