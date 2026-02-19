@@ -1,11 +1,21 @@
 name: Local Stack Build
 
 on:
+  workflow_dispatch:
   push:
     branches: [ main ]
+    paths: 
+      - static-webapp/**
+      - uservice-webapi/**
+      - uservice-timeentries/**
+      - smoke-test/**
   pull_request:
     branches: [ main ]
-  workflow_dispatch:
+    paths: 
+      - static-webapp/**
+      - uservice-webapi/**
+      - uservice-timeentries/**
+      - smoke-test/**
 
 jobs:
   build-stack:
