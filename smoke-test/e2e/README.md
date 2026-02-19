@@ -6,7 +6,7 @@ Browser-based smoke tests for SinNet Reports using Playwright and pytest-bdd (BD
 
 ### Prerequisites
 - Python 3.12+
-- Docker and Docker Compose (for running the application stack)
+- k3d local stack (for running the application services)
 - pip (Python package manager)
 
 ### Setup
@@ -26,7 +26,7 @@ Browser-based smoke tests for SinNet Reports using Playwright and pytest-bdd (BD
 3. **Start the application stack:**
    ```bash
    cd ../  # Back to smoke-test directory
-   docker compose --env-file .env.CI up --build
+    ./setup-k3d.sh up
    ```
 
 4. **Run tests (in another terminal):**
@@ -214,10 +214,10 @@ Tests can run in GitHub Actions or any CI system:
 ## ❓ Troubleshooting
 
 ### "Connection refused" errors
-Make sure the docker-compose stack is running:
+Make sure the k3d stack is running:
 ```bash
 cd smoke-test
-docker compose --env-file .env.CI up
+./setup-k3d.sh up
 ```
 
 ### Browser not found

@@ -2,7 +2,7 @@
 // README at: https://github.com/devcontainers/templates/tree/main/src/ubuntu
 {
 	"name": "onlexnet-sinnet",
-	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
+	// Alternative base setup guidance: https://containers.dev/guide/dockerfile
     "image": "mcr.microsoft.com/vscode/devcontainers/base:ubuntu-22.04",
 	"features": {
 		"ghcr.io/devcontainers/features/docker-in-docker:2": {

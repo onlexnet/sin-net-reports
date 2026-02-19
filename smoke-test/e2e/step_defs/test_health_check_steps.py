@@ -32,12 +32,12 @@ FRONTEND_URL = "http://localhost:3000"
 # Given Steps (Preconditions)
 # ============================================================================
 
-@given("the docker-compose stack is running")
-def docker_compose_running():
+@given("the k3d stack is running")
+def k3d_stack_running():
     """
-    Verify that docker-compose stack is running.
+    Verify that k3d stack is running.
     This is a precondition check that can be extended to verify
-    docker containers are actually running.
+    services are actually running.
     """
     # This step is mainly declarative - the actual check happens
     # when we try to connect to services in subsequent steps

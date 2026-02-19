@@ -175,18 +175,13 @@ kubectl get configurations,components -n sinnet
     Your browser/SQL client
 ```
 
-## Key Differences from docker-compose
+## Why k3d for Local Stack
 
-| Feature | docker-compose | k3d |
-|---------|---------------|------|
-| **Dapr sidecars** | Manual config, brittle | Auto-injected via annotations |
-| **Dashboard** | Often broken | Works perfectly |
-| **Service discovery** | DNS only | DNS + Dapr service invocation |
-| **Logs** | `docker logs` | `kubectl logs` (more powerful) |
-| **Resource limits** | Not enforced | Enforced (CPU/memory) |
-| **Production parity** | Low | High (same as Azure Container Apps) |
-| **Startup time** | Fast (~30s) | Medium (~2min cached) |
-| **Memory usage** | ~2GB | ~1GB (k3s is lighter) |
+- **Dapr sidecars** are auto-injected via annotations.
+- **Dashboard** works out of the box on localhost.
+- **Service discovery** uses Kubernetes DNS and Dapr invocation.
+- **Logs/observability** are available via `kubectl logs`, `kubectl describe`, and events.
+- **Production parity** is high (same deployment model family as Azure Container Apps).
 
 ## k3d Characteristics
 

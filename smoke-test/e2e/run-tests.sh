@@ -90,7 +90,7 @@ if ! command -v pip3 &> /dev/null; then
   exit 1
 fi
 
-# Check if docker-compose stack is running
+# Check if k3d stack is running
 echo ""
 echo -e "${BLUE}Checking if services are running...${NC}"
 
@@ -98,9 +98,9 @@ if curl -sf http://localhost:11031/actuator/health > /dev/null 2>&1; then
   echo -e "${GREEN}✓${NC} WebAPI is running on port 11031"
 else
   echo -e "${YELLOW}⚠️  WebAPI is not responding on port 11031${NC}"
-  echo -e "${YELLOW}Please start the docker-compose stack first:${NC}"
+  echo -e "${YELLOW}Please start the k3d stack first:${NC}"
   echo "  cd ../  # Go to smoke-test directory"
-  echo "  docker compose --env-file .env.CI up"
+  echo "  ./setup-k3d.sh up"
   echo ""
   echo -e "${YELLOW}Then run this script again in another terminal.${NC}"
   exit 1
@@ -187,7 +187,7 @@ else
   echo -e "${YELLOW}Debugging tips:${NC}"
   echo "  - Run with --headed to see browser"
   echo "  - Run with --slow to slow down operations"
-  echo "  - Check service logs: docker compose logs"
+  echo "  - Check service logs: cd .. && ./setup-k3d.sh logs"
 fi
 
 exit $TEST_EXIT_CODE

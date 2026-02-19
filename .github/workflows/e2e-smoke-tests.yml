@@ -5,7 +5,7 @@ name: E2E Smoke Tests
 # ============================================================================
 #
 # This workflow:
-# 1. Builds the complete Docker Compose stack (all services)
+# 1. Builds and deploys the complete k3d/k3s stack (all services)
 # 2. Starts the services in background
 # 3. Runs Playwright-based E2E tests with pytest-bdd
 # 4. Generates test reports and artifacts
@@ -64,42 +64,29 @@ jobs:
           cache: 'pip'
           cache-dependency-path: smoke-test/e2e/requirements.txt
       
-      - name: Set up Docker Buildx
-        # Enable BuildKit with GitHub Actions cache for faster Docker builds
-        uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f
-      
-      # ========================================================================
-      # BUILD: Build Docker images for all services
-      # ========================================================================
-      
-      - name: Build Docker Compose stack
+      - name: Install k3d prerequisites
         working-directory: smoke-test
-        # Build all services using .env.CI configuration
-        # BuildKit cache (type=gha) speeds up builds significantly
         run: |
-          echo "🔨 Building all services..."
-          docker compose --env-file .env.CI build
-          echo "✅ Build completed successfully"
+          echo "🔧 Installing k3d prerequisites..."
+          ./install-prerequisites.sh
+          echo "✅ Prerequisites installed"
       
       # ========================================================================
-      # START: Launch all services in background
+      # START: Launch all services in k3d
       # ========================================================================
       
-      - name: Start Docker Compose stack
+      - name: Start k3d stack
         working-directory: smoke-test
-        # Start services in detached mode (background)
-        # Services include: SQL Server, Dapr, TimeEntries, WebAPI, Frontend
         run: |
           echo "🚀 Starting all services..."
-          docker compose --env-file .env.CI up -d
+          ./setup-k3d.sh up
           echo "✅ Services started"
       
       - name: Wait for services to be healthy
         # Give services time to initialize and become ready
-        # Health checks are defined in docker-compose.yml
         run: |
           echo "⏳ Waiting for services to be healthy..."
-          sleep 30
+          sleep 20
           
           echo "📊 Checking service health..."
           
@@ -113,22 +100,24 @@ jobs:
           curl -f http://localhost:3000 || echo "⚠️ Frontend not ready yet"
           
           echo "⏳ Waiting additional time for full initialization..."
-          sleep 20
+          sleep 15
           
           echo "✅ Services should be ready for testing"
       
-      - name: Show running containers
-        # Display status of all containers for debugging
+      - name: Show running pods
+        # Display status of all pods for debugging
         run: |
-          echo "📦 Running containers:"
-          docker compose -f smoke-test/docker-compose.yml ps
+          echo "📦 Running pods:"
+          kubectl get pods -n sinnet -o wide
       
       - name: Show service logs (last 50 lines)
         if: always()
-        # Display recent logs from all services for debugging
+        # Display recent logs from service pods for debugging
         run: |
           echo "📜 Recent service logs:"
-          docker compose -f smoke-test/docker-compose.yml logs --tail=50
+          kubectl logs -n sinnet -l app=timeentries --all-containers=true --tail=50 || true
+          kubectl logs -n sinnet -l app=webapi --all-containers=true --tail=50 || true
+          kubectl logs -n sinnet -l app=static-webapp --all-containers=true --tail=50 || true
       
       # ========================================================================
       # TEST: Install dependencies and run E2E tests
@@ -187,10 +176,14 @@ jobs:
       
       - name: Upload service logs
         if: failure()
-        # Upload Docker container logs if tests fail
+        # Upload Kubernetes pod logs if tests fail
         run: |
           mkdir -p smoke-test/e2e/logs
-          docker compose -f smoke-test/docker-compose.yml logs > smoke-test/e2e/logs/services.log
+          kubectl get pods -n sinnet -o wide > smoke-test/e2e/logs/pods.txt
+          kubectl logs -n sinnet -l app=timeentries --all-containers=true > smoke-test/e2e/logs/timeentries.log || true
+          kubectl logs -n sinnet -l app=webapi --all-containers=true > smoke-test/e2e/logs/webapi.log || true
+          kubectl logs -n sinnet -l app=static-webapp --all-containers=true > smoke-test/e2e/logs/static-webapp.log || true
+          kubectl logs -n sinnet -l app=sqlserver --all-containers=true > smoke-test/e2e/logs/sqlserver.log || true
       
       - name: Upload logs artifact
         if: failure()
@@ -204,13 +197,13 @@ jobs:
       # CLEANUP: Stop services and clean up
       # ========================================================================
       
-      - name: Stop Docker Compose stack
+      - name: Stop k3d stack
         if: always()
         working-directory: smoke-test
-        # Stop and remove all containers
+        # Stop and remove cluster
         run: |
           echo "🛑 Stopping services..."
-          docker compose --env-file .env.CI down -v
+          ./setup-k3d.sh down
           echo "✅ Services stopped"
       
       # ========================================================================

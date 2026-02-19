@@ -1,6 +1,6 @@
 Context: Run local stack of µservices and services locally without touching external environments
 
-Decision: Docker compose to run services, minikube to run application
+Decision: k3d (k3s) to run services and application locally
 
 Hints:
 - When using Minikube whe have actually two docker image sets: one is local (*docker image list*), and the second is internal to Minikube (*minikube ssh docker image list*, or *eval $(minikube docker-env) && docker image list && ... and other operations on the context of the second docker*)
