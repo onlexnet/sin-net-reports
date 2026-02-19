@@ -23,7 +23,7 @@ export const Debug: React.FC<Props> = () => {
 
   return (
     <Content>
-      <Text type="secondary">You are running this application in <b>{process.env.NODE_ENV}</b> mode.</Text>
+      <Text type="secondary">You are running this application in <b>{process.env.NODE_ENV}</b> mode!.</Text>
       {isAuthenticated && <Button onClick={handleLogout}>Logout</Button>}
       <Text>version: {getDisplayVersion()}</Text>
       {buildInfo.buildVersion && <Text type="secondary"> (package: {buildInfo.version})</Text>}
