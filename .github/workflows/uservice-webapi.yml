@@ -55,7 +55,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           export SEMVERSION=$(cat .semversion)
-          mvn -ntp sonar:sonar -Drevision=$SEMVERSION
+          mvn -ntp sonar:sonar -Drevision=$SEMVERSION -Dsonar.exclusions=**/smoke-test/**
         working-directory: uservice-webapi
         continue-on-error: true
       

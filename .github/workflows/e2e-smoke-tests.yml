@@ -20,7 +20,6 @@ on:
   push:
     branches: [ main, develop, local-stack-for-e2e-testing ]
   pull_request:
-    branches: [ main, develop ]
   workflow_dispatch:  # Allow manual trigger
 
 # Limit permissions following the principle of least privilege
