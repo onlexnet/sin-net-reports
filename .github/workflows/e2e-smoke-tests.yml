@@ -18,7 +18,6 @@ name: E2E Smoke Tests
 
 on:
   push:
-    branches: [ main, develop, local-stack-for-e2e-testing ]
   pull_request:
   workflow_dispatch:  # Allow manual trigger
 
