@@ -197,17 +197,17 @@ build_and_deploy_services() {
     
     # Build TimeEntries
     log_info "Building uservice-timeentries..."
-    build_image sinnet/uservice-timeentries:local uservice-timeentries/Dockerfile
+    build_image sinnet/uservice-timeentries:local uservice-timeentries/Dockerfile.e2e
     k3d image import sinnet/uservice-timeentries:local --cluster "${CLUSTER_NAME}"
     
     # Build WebAPI
     log_info "Building uservice-webapi..."
-    build_image sinnet/uservice-webapi:local uservice-webapi/Dockerfile
+    build_image sinnet/uservice-webapi:local uservice-webapi/Dockerfile.e2e
     k3d image import sinnet/uservice-webapi:local --cluster "${CLUSTER_NAME}"
     
     # Build Frontend
     log_info "Building static-webapp..."
-    build_image sinnet/static-webapp:local static-webapp/Dockerfile \
+    build_image sinnet/static-webapp:local static-webapp/Dockerfile.e2e \
         --build-arg BACKEND_BASE_URL=http://localhost:11031 \
         --build-arg USE_TEST_LOGIN=true \
         --build-arg ENVIRONMENT=development
