@@ -201,7 +201,10 @@ Tests can run in GitHub Actions or any CI system:
     cd smoke-test/e2e
     pip install -r requirements.txt
     playwright install --with-deps chromium
-    pytest --browser chromium --html=reports/test-report.html
+        pytest --browser chromium \
+            --html=reports/test-report.html \
+            --self-contained-html \
+            --junitxml=reports/junit.xml
 ```
 
 ## 📚 Resources

@@ -20,6 +20,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CLUSTER_NAME="sinnet-local"
 NAMESPACE="sinnet"
 SQLSERVER_WAIT_TIMEOUT="${SQLSERVER_WAIT_TIMEOUT:-900s}"
+DOCKER_BUILD_CACHE_DIR="${DOCKER_BUILD_CACHE_DIR:-}"
 
 # Colors for output
 RED='\033[0;31m'
@@ -173,24 +174,43 @@ build_and_deploy_services() {
     log_info "Building and loading Docker images into k3d..."
     
     cd "${SCRIPT_DIR}/.."
+
+    build_image() {
+        local image_tag="$1"
+        local dockerfile_path="$2"
+        shift 2
+
+        if [[ -n "${DOCKER_BUILD_CACHE_DIR}" ]]; then
+            mkdir -p "${DOCKER_BUILD_CACHE_DIR}"
+            docker buildx build \
+                --load \
+                --cache-from "type=local,src=${DOCKER_BUILD_CACHE_DIR}" \
+                --cache-to "type=local,dest=${DOCKER_BUILD_CACHE_DIR},mode=max" \
+                -t "${image_tag}" \
+                -f "${dockerfile_path}" \
+                "$@" \
+                .
+        else
+            docker build -t "${image_tag}" -f "${dockerfile_path}" "$@" .
+        fi
+    }
     
     # Build TimeEntries
     log_info "Building uservice-timeentries..."
-    docker build -t sinnet/uservice-timeentries:local -f uservice-timeentries/Dockerfile .
+    build_image sinnet/uservice-timeentries:local uservice-timeentries/Dockerfile
     k3d image import sinnet/uservice-timeentries:local --cluster "${CLUSTER_NAME}"
     
     # Build WebAPI
     log_info "Building uservice-webapi..."
-    docker build -t sinnet/uservice-webapi:local -f uservice-webapi/Dockerfile .
+    build_image sinnet/uservice-webapi:local uservice-webapi/Dockerfile
     k3d image import sinnet/uservice-webapi:local --cluster "${CLUSTER_NAME}"
     
     # Build Frontend
     log_info "Building static-webapp..."
-    docker build -t sinnet/static-webapp:local \
+    build_image sinnet/static-webapp:local static-webapp/Dockerfile \
         --build-arg BACKEND_BASE_URL=http://localhost:11031 \
         --build-arg USE_TEST_LOGIN=true \
-        --build-arg ENVIRONMENT=development \
-        -f static-webapp/Dockerfile .
+        --build-arg ENVIRONMENT=development
     k3d image import sinnet/static-webapp:local --cluster "${CLUSTER_NAME}"
     
     log_info "Deploying services..."
