@@ -18,7 +18,9 @@ name: E2E Smoke Tests
 
 on:
   push:
+    branches: [ main ]
   pull_request:
+    branches: [ main ]
   workflow_dispatch:  # Allow manual trigger
 
 # Limit permissions following the principle of least privilege
