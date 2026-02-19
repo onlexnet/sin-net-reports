@@ -6,7 +6,6 @@ This directory contains the complete local development stack for running smoke t
 
 The local stack includes:
 - **SQL Server** - Database for time entries
-- **Dapr Placement Service** - Service discovery for Dapr sidecars
 - **TimeEntries Service** - Core time tracking microservice with Dapr sidecar
 - **WebAPI Service** - GraphQL API gateway with Dapr sidecar
 - **Static WebApp** - React frontend served by nginx
@@ -23,9 +22,8 @@ docker compose up --build
 This single command will:
 1. Build all services from source (~5-10 minutes first time)
 2. Start SQL Server and wait for it to be healthy
-3. Start Dapr placement service
-4. Start TimeEntries and WebAPI services with Dapr sidecars
-5. Start the React frontend
+3. Start TimeEntries and WebAPI services with Dapr sidecars
+4. Start the React frontend
 
 ### Access the services:
 

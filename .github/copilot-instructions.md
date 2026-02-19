@@ -4,19 +4,28 @@ Time tracking and reporting microservices application: Java Spring Boot backends
 
 ## Quick Start - Local Development
 
-**Single command to run everything:**
+**Recommended: k3d (Kubernetes + Dapr with working dashboard)**
+```bash
+cd smoke-test
+./install-prerequisites.sh  # First time only
+./setup-k3d.sh up           # ~2 min (cached images)
+```
+
+**Alternative: docker-compose (faster, no dashboard)**
 ```bash
 cd smoke-test
 docker compose up --build
 ```
 
 Access points:
+- Dapr Dashboard: http://localhost:18080 (k3d only - shows all services!)
 - Frontend: http://localhost:3000
 - GraphQL API: http://localhost:11031/graphiql  
 - TimeEntries health: http://localhost:11021/actuator/health
 - SQL Server: localhost:1433 (sa/P@ssw0rd123!)
 
 See [LOCAL_STACK.md](LOCAL_STACK.md) for detailed local development guide.
+See [K3D_SETUP.md](smoke-test/K3D_SETUP.md) for k3d-specific documentation.
 
 ## Architecture & Communication Patterns
 

@@ -1,0 +1,20 @@
+# ============================================================================
+# Dapr Configuration - Minimal setup for local development
+# ============================================================================
+
+apiVersion: dapr.io/v1alpha1
+kind: Configuration
+metadata:
+  name: dapr-config
+spec:
+  # Enable metrics for monitoring
+  metric:
+    enabled: true
+  # Disable tracing for simplicity
+  tracing:
+    samplingRate: "0"
+  # Log configuration
+  logging:
+    apiLogging:
+      enabled: true
+      obfuscateURLs: false

@@ -2,24 +2,101 @@
 
 **Location**: `smoke-test/`
 
-The `smoke-test` directory contains a complete local development stack for the SinNet Reports application, including all microservices, database, and Dapr runtime.
+The `smoke-test` directory contains two options for local development:
 
-## Overview
+## Option 1: k3d (k3s in Docker) - **RECOMMENDED**
+
+Lightweight Kubernetes environment with Dapr - **Dashboard works perfectly!**
+
+See [K3D_SETUP.md](smoke-test/K3D_SETUP.md) for complete guide.
+
+**Quick start:**
+```bash
+cd smoke-test
+./install-prerequisites.sh  # First time only (installs k3d, kubectl, helm)
+./setup-k3d.sh up           # Start everything (~2 min cached, ~8 min first time)
+```
+
+**Benefits:**
+- ✅ **Fast startup with k3s** - lightweight and ready in seconds
+- ✅ Dapr Dashboard works out-of-the-box
+- ✅ Production parity (Azure Container Apps = Kubernetes)
+- ✅ Better observability (kubectl, proper logs)
+- ✅ Built-in LoadBalancer (no NodePort hacks)
+- ✅ Uses less memory (~800MB vs ~1.5GB)
+
+## Option 2: Docker Compose - Simple but limited
+
+Lightweight option without Kubernetes overhead.
+
+**Quick start:**
+```bash
+cd smoke-test
+docker compose up --build
+```
+
+**Limitations:**
+- ⚠️ No Dapr Dashboard (configuration issues)
+- ⚠️ Manual sidecar management
+- ⚠️ Less production-like
+
+---
+
+## Overview (both options)
 
 The local stack includes:
 - **SQL Server** - Database for time entries
-- **Dapr Placement Service** - Service discovery for Dapr sidecars
+- **Dapr Runtime** - Service mesh for microservices
 - **TimeEntries Service** - Core time tracking microservice with Dapr sidecar
 - **WebAPI Service** - GraphQL API gateway with Dapr sidecar
 - **Static WebApp** - React frontend served by nginx
 
 ## Prerequisites
 
+### For k3d (Option 1)
+- Docker 20.10+
+- 8GB RAM available for Docker
+- kubectl (included in devcontainer)
+- k3d and Helm (installed by `install-prerequisites.sh`)
+
+### For Docker Compose (Option 2)
 - Docker 20.10+ and Docker Compose V2
 - 8GB RAM available for Docker
-- Ports available: 1433, 3000, 11021, 11031, 50006
+- Ports available: 1433, 3000, 11021, 11031
 
-## Quick Start
+---
+
+## k3d Setup (Option 1) - Quick Reference
+
+Full documentation: [K3D_SETUP.md](smoke-test/K3D_SETUP.md)
+
+### Start
+```bash
+cd smoke-test
+./install-prerequisites.sh  # First time only
+./setup-k3d.sh up
+```
+
+### Access
+- **Dapr Dashboard**: http://localhost:18080 ← **Works perfectly!**
+- **Frontend**: http://localhost:3000
+- **WebAPI GraphQL**: http://localhost:11031/graphiql
+- **TimeEntries**: http://localhost:11021/actuator/health
+- **SQL Server**: localhost:1433 (sa / P@ssw0rd123!)
+
+### Logs
+```bash
+./setup-k3d.sh logs
+```
+
+### Stop
+```bash
+./setup-k3d.sh down
+```
+
+---
+
+## Docker Compose Setup (Option 2)
 
 ### Start the entire stack:
 
