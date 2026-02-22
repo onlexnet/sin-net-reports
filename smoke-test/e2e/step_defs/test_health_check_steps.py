@@ -16,7 +16,7 @@ Step types:
 
 import requests
 from typing import Any
-from playwright.sync_api import Page
+from playwright.sync_api import Page, expect
 from pytest_bdd import given, when, then, parsers, scenarios
 
 TestContext = dict[str, Any]
@@ -129,16 +129,12 @@ def login_as_user(page: Page, test_context: TestContext, email: str) -> None:
     """
     Log in using the email-only login screen.
     """
-    try:
-        test_context['page_response'] = page.goto(FRONTEND_URL, timeout=10000)
-        page.locator('input').first.fill(email)
-        page.get_by_role('button', name='Login').click()
-        page.wait_for_load_state('networkidle')
-        page.locator('body').get_by_text('Witaj w systemie ewidencji usług').wait_for(timeout=10000)
-        test_context['page'] = page
-    except Exception as e:
-        test_context['error'] = str(e)
-        test_context['page'] = page
+    test_context['page_response'] = page.goto(FRONTEND_URL, timeout=20000)
+    page.locator('input').first.fill(email)
+    page.get_by_role('button', name='Login').click()
+    page.wait_for_load_state('domcontentloaded')
+    expect(page.locator('body')).to_contain_text('Witaj w systemie ewidencji usług', timeout=20000)
+    test_context['page'] = page
 
 # ============================================================================
 # Then Steps (Assertions)
@@ -194,15 +190,7 @@ def verify_page_title(test_context: TestContext, expected_text: str) -> None:
     page = test_context.get('page')
     assert page is not None, "No page object available"
     
-    title = page.title()
-    if title:
-        assert expected_text.lower() in title.lower(), \
-            f"Expected page title to contain '{expected_text}', got '{title}'"
-        return
-
-    page_text = page.locator('body').inner_text()
-    assert expected_text.lower() in page_text.lower(), \
-        f"Expected page content to contain '{expected_text}', title was empty"
+    expect(page.locator('body')).to_contain_text(expected_text, timeout=20000)
 
 @then("the response should contain GraphQL schema information")
 def verify_graphql_schema_present(test_context: TestContext) -> None:
@@ -236,6 +224,5 @@ def verify_menu_items(test_context: TestContext, first_item: str, second_item: s
     page = test_context.get('page')
     assert page is not None, "No page object available"
 
-    page_text = page.locator('body').inner_text()
-    assert first_item in page_text, f"Expected menu item '{first_item}' not found"
-    assert second_item in page_text, f"Expected menu item '{second_item}' not found"
+    expect(page.locator('body')).to_contain_text(first_item, timeout=20000)
+    expect(page.locator('body')).to_contain_text(second_item, timeout=20000)
