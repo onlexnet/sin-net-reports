@@ -1,9 +1,9 @@
 """
 ============================================================================
-Step Definitions for Health Check Feature
+Step Definitions for E2E Features
 ============================================================================
 
-This module implements the step definitions for the health_check.feature file.
+This module implements the step definitions for E2E feature files.
 It uses pytest-bdd to map Gherkin steps to Python functions.
 
 Step types:
@@ -17,8 +17,8 @@ Step types:
 import requests
 from pytest_bdd import given, when, then, parsers, scenarios
 
-# Load all scenarios from the feature file
-scenarios('../features/health_check.feature')
+# Load all scenarios from feature files
+scenarios('../features')
 
 # ============================================================================
 # Configuration
@@ -119,6 +119,23 @@ def send_graphql_introspection(test_context):
         test_context['error'] = str(e)
         test_context['response'] = None
 
+
+@when(parsers.parse('I login as "{email}"'))
+def login_as_user(page, test_context, email):
+    """
+    Log in using the email-only login screen.
+    """
+    try:
+        test_context['page_response'] = page.goto(FRONTEND_URL, timeout=10000)
+        page.locator('input').first.fill(email)
+        page.get_by_role('button', name='Login').click()
+        page.wait_for_load_state('networkidle')
+        page.locator('body').get_by_text('Witaj w systemie ewidencji usług').wait_for(timeout=10000)
+        test_context['page'] = page
+    except Exception as e:
+        test_context['error'] = str(e)
+        test_context['page'] = page
+
 # ============================================================================
 # Then Steps (Assertions)
 # ============================================================================
@@ -205,3 +222,16 @@ def verify_graphql_type_exists(test_context, type_name):
     query_type = data['data']['__schema']['queryType']['name']
     assert query_type == type_name, \
         f"Expected query type '{type_name}', got '{query_type}'"
+
+
+@then(parsers.parse('the menu should contain "{first_item}" and "{second_item}"'))
+def verify_menu_items(test_context, first_item, second_item):
+    """
+    Verify that the application menu contains required navigation items.
+    """
+    page = test_context.get('page')
+    assert page is not None, "No page object available"
+
+    page_text = page.locator('body').inner_text()
+    assert first_item in page_text, f"Expected menu item '{first_item}' not found"
+    assert second_item in page_text, f"Expected menu item '{second_item}' not found"
