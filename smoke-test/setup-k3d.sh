@@ -233,7 +233,6 @@ build_and_deploy_services() {
     log_info "Building static-webapp..."
     build_image sinnet/static-webapp:local static-webapp/Dockerfile.e2e \
         --build-arg BACKEND_BASE_URL=http://localhost:11031 \
-        --build-arg USE_TEST_LOGIN=true \
         --build-arg ENVIRONMENT=development
     k3d image import sinnet/static-webapp:local --cluster "${CLUSTER_NAME}"
     

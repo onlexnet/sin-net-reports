@@ -182,6 +182,18 @@ jobs:
         run: |
           echo "📦 Running pods:"
           kubectl get pods -n sinnet -o wide
+
+      - name: Verify frontend runtime config for E2E login
+        run: |
+          echo "🔎 Verifying frontend runtime configuration..."
+          curl -sSf http://localhost:3000/runtime-config.json > /tmp/runtime-config.json
+          python3 - <<'PY'
+          import json
+          with open('/tmp/runtime-config.json', 'r', encoding='utf-8') as f:
+              config = json.load(f)
+          assert config.get('useTestLogin') is True, f"Expected useTestLogin=true, got: {config}"
+          print('✅ runtime-config.json has useTestLogin=true')
+          PY
       
       - name: Show service logs (last 50 lines)
         if: always()

@@ -129,11 +129,13 @@ def login_as_user(page: Page, test_context: TestContext, email: str) -> None:
     """
     Log in using the email-only login screen.
     """
-    test_context['page_response'] = page.goto(FRONTEND_URL, timeout=20000)
-    page.locator('input').first.fill(email)
+    test_context['page_response'] = page.goto(FRONTEND_URL, wait_until='domcontentloaded', timeout=30000)
+
+    expect(page.get_by_role('heading', name='Test Login')).to_be_visible(timeout=60000)
+    expect(page.get_by_placeholder('Enter your email')).to_be_visible(timeout=20000)
+    page.get_by_placeholder('Enter your email').fill(email)
     page.get_by_role('button', name='Login').click()
-    page.wait_for_load_state('domcontentloaded')
-    expect(page.locator('body')).to_contain_text('Witaj w systemie ewidencji usług', timeout=20000)
+    expect(page.get_by_role('heading', name='Witaj w systemie ewidencji usług.')).to_be_visible(timeout=60000)
     test_context['page'] = page
 
 # ============================================================================
@@ -190,7 +192,7 @@ def verify_page_title(test_context: TestContext, expected_text: str) -> None:
     page = test_context.get('page')
     assert page is not None, "No page object available"
     
-    expect(page.locator('body')).to_contain_text(expected_text, timeout=20000)
+    expect(page.get_by_text(expected_text, exact=False)).to_be_visible(timeout=60000)
 
 @then("the response should contain GraphQL schema information")
 def verify_graphql_schema_present(test_context: TestContext) -> None:
@@ -224,5 +226,5 @@ def verify_menu_items(test_context: TestContext, first_item: str, second_item: s
     page = test_context.get('page')
     assert page is not None, "No page object available"
 
-    expect(page.locator('body')).to_contain_text(first_item, timeout=20000)
-    expect(page.locator('body')).to_contain_text(second_item, timeout=20000)
+    expect(page.get_by_text(first_item, exact=False)).to_be_visible(timeout=60000)
+    expect(page.get_by_text(second_item, exact=False)).to_be_visible(timeout=60000)
