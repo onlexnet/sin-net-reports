@@ -7,7 +7,7 @@ This module provides pytest fixtures and hooks for the E2E test suite.
 Fixtures are reusable test setup/teardown code.
 
 Key fixtures:
-- context: Shared test context for passing data between steps
+- test_context: Shared test context for passing data between steps
 - browser: Configured Playwright browser instance
 
 ============================================================================
@@ -15,11 +15,12 @@ Key fixtures:
 
 import pytest
 import os
+import re
 from playwright.sync_api import Page
 
 
 @pytest.fixture
-def context():
+def test_context():
     """
     Provide a shared dictionary for passing data between test steps.
     
@@ -27,9 +28,9 @@ def context():
     create our own dictionary that gets injected into step functions.
     
     Usage in step definitions:
-        def my_step(context):
-            context['key'] = 'value'
-            assert context['key'] == 'value'
+        def my_step(test_context):
+            test_context['key'] = 'value'
+            assert test_context['key'] == 'value'
     """
     return {}
 
@@ -93,3 +94,28 @@ def pytest_bdd_step_error(request, feature, scenario, step, step_func, step_func
     print(f"   Feature: {feature.name}")
     print(f"   Scenario: {scenario.name}")
     print(f"   Exception: {exception}")
+
+
+def _safe_name(value: str) -> str:
+    return re.sub(r"[^a-zA-Z0-9._-]+", "-", value).strip("-").lower()
+
+
+@pytest.hookimpl(tryfirst=True)
+def pytest_bdd_after_step(request, feature, scenario, step, step_func, step_func_args):
+    page = step_func_args.get("page")
+    if page is None:
+        return
+
+    reports_dir = os.path.join(os.path.dirname(__file__), "reports", "screenshots")
+    scenario_dir = os.path.join(
+        reports_dir,
+        _safe_name(feature.name),
+        _safe_name(scenario.name),
+    )
+    os.makedirs(scenario_dir, exist_ok=True)
+
+    step_index = getattr(step, "line_number", "step")
+    screenshot_name = f"{step_index:03d}-{_safe_name(step.name)}.png" if isinstance(step_index, int) else f"{step_index}-{_safe_name(step.name)}.png"
+    screenshot_path = os.path.join(scenario_dir, screenshot_name)
+
+    page.screenshot(path=screenshot_path, full_page=True)

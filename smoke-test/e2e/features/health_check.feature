@@ -33,7 +33,7 @@ Feature: Application Health Check
     Given the k3d stack is running
     When I navigate to the frontend URL
     Then the page should load successfully
-    And the page title should contain "SinNet"
+    And the page should contain "Test Login"
 
   @smoke @api
   Scenario: GraphQL introspection query works
