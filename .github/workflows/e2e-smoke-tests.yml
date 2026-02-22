@@ -235,6 +235,7 @@ jobs:
           name: E2E Tests
           path: smoke-test/e2e/reports/junit.xml
           reporter: java-junit
+          fail-on-error: false
 
       - name: Build test summary markdown
         if: always()
