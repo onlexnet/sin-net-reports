@@ -1,17 +1,27 @@
 name: Local Stack Build
 
 on:
-  push:
-    branches: [ main, develop, local-stack-for-e2e-testing ]
-  pull_request:
-    branches: [ main, develop ]
   workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths: 
+      - static-webapp/**
+      - uservice-webapi/**
+      - uservice-timeentries/**
+      - smoke-test/**
+  pull_request:
+    branches: [ main ]
+    paths: 
+      - static-webapp/**
+      - uservice-webapi/**
+      - uservice-timeentries/**
+      - smoke-test/**
 
 jobs:
   build-stack:
     name: Build Complete Local Stack
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
 
     steps:
       - name: Checkout code
@@ -34,24 +44,24 @@ jobs:
           cache: 'npm'
           cache-dependency-path: static-webapp/package-lock.json
 
-      - name: Set up Docker Buildx
-        # Using full commit SHA instead of v3 tag for security
-        # SHA 8d2750c68a42422c14e847fe6c8ac0403b4cbd6f is the commit hash for docker/setup-buildx-action@v3
-        # This enables BuildKit features including GitHub Actions cache (type=gha)
-        uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f
-
-      - name: Build complete stack with Docker Compose
+      - name: Install k3d prerequisites
         working-directory: smoke-test
-        # Load environment variables from .env.CI file for consistent configuration
-        # Docker Compose will use BuildKit cache configured in docker-compose.yml
-        # Cache scopes: timeentries, webapi, webapp - speeds up rebuilds significantly
-        run: docker compose --env-file .env.CI build
+        run: ./install-prerequisites.sh
 
-      - name: Verify Docker Compose configuration
+      - name: Build and deploy stack on k3d
         working-directory: smoke-test
-        # Validates docker-compose.yml syntax and variable interpolation
-        # Useful for catching configuration errors before deployment
-        run: docker compose --env-file .env.CI config
+        run: ./setup-k3d.sh up
+
+      - name: Verify service health endpoints
+        run: |
+          curl -f http://localhost:11021/actuator/health
+          curl -f http://localhost:11031/actuator/health
+          curl -f http://localhost:3000
+
+      - name: Teardown k3d stack
+        if: always()
+        working-directory: smoke-test
+        run: ./setup-k3d.sh down
 
       - name: Summary
         # Display build results and local development instructions
@@ -60,6 +70,6 @@ jobs:
           echo "- TimeEntries service (Java Spring Boot + Dapr)"
           echo "- WebAPI service (GraphQL Gateway + Dapr)"
           echo "- Static WebApp (React + runtime config)"
-          echo "- Docker images created with BuildKit cache"
+          echo "- k3d/k3s deployment and health checks passed"
           echo ""
-          echo "To run locally: cd smoke-test && docker compose --env-file .env.CI up"
+          echo "To run locally: cd smoke-test && ./setup-k3d.sh up"

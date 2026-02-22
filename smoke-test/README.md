@@ -1,72 +1,56 @@
 # Smoke Test - Local Development Stack
 
-This directory contains the complete local development stack for running smoke tests and local development of the SinNet Reports application.
-
-## Overview
-
-The local stack includes:
-- **SQL Server** - Database for time entries
-- **Dapr Placement Service** - Service discovery for Dapr sidecars
-- **TimeEntries Service** - Core time tracking microservice with Dapr sidecar
-- **WebAPI Service** - GraphQL API gateway with Dapr sidecar
-- **Static WebApp** - React frontend served by nginx
+This directory contains the local k3d/k3s setup used for smoke tests and day-to-day development.
 
 ## Quick Start
 
-### Start the entire stack:
-
 ```bash
 cd smoke-test
-docker compose up --build
+./install-prerequisites.sh  # First time only
+./setup-k3d.sh up
 ```
 
-This single command will:
-1. Build all services from source (~5-10 minutes first time)
-2. Start SQL Server and wait for it to be healthy
-3. Start Dapr placement service
-4. Start TimeEntries and WebAPI services with Dapr sidecars
-5. Start the React frontend
+## Access
 
-### Access the services:
-
+- **Dapr Dashboard**: http://localhost:18080
 - **Frontend**: http://localhost:3000
 - **WebAPI GraphQL**: http://localhost:11031/graphiql
-- **TimeEntries**: http://localhost:11021/actuator/health
+- **TimeEntries health**: http://localhost:11021/actuator/health
 - **SQL Server**: localhost:1433 (sa / P@ssw0rd123!)
 
-### Stop the stack:
+## Day-to-day Commands
 
 ```bash
-# Stop services (keeps data)
-docker compose stop
+# Rebuild images and redeploy services
+./setup-k3d.sh deploy
 
-# Stop and remove containers (keeps data)
-docker compose down
+# Stream service logs
+./setup-k3d.sh logs
 
-# Stop and remove containers and volumes (clean slate)
-docker compose down -v
+# Stop and remove the k3d cluster
+./setup-k3d.sh down
 ```
 
 ## Directory Contents
 
-- `docker-compose.yml` - Main orchestration file for all services
-- `dapr-local/` - Dapr configuration for local development
-  - `config.yaml` - Dapr runtime configuration
+- `setup-k3d.sh` - Cluster lifecycle and deployment helper
+- `install-prerequisites.sh` - Installs local tooling (`k3d`, `kubectl`, `helm`)
+- `k8s/` - Kubernetes manifests for SQL Server, Dapr components, and services
+- `dapr-local/` - Dapr local configuration
+- `e2e/` - Browser-based E2E smoke tests (pytest-bdd + Playwright)
 
-## Build Context
+## E2E Smoke Tests
 
-All services are built with the parent directory (`..`) as the build context to access:
-- `api/client-java` - Shared gRPC libraries
-- `api/schema` - Proto definitions
-- Service source code in their respective directories
+```bash
+# 1) Start stack
+cd smoke-test
+./setup-k3d.sh up
 
-## Troubleshooting
+# 2) Run tests in another terminal
+cd smoke-test/e2e
+pip install -r requirements.txt
+playwright install
+pytest
+```
 
-For detailed troubleshooting and service-specific information, see [LOCAL_STACK.md](../LOCAL_STACK.md) in the root directory.
-
-## Environment Details
-
-- Database: SQL Server 2022, using `tempdb` database
-- Spring Profile: `dev` (relaxed security, auto-schema creation)
-- Dapr Version: 1.12.3
-- Network: Bridge network `sinnet-network`
+For test details, see [e2e/README.md](e2e/README.md).

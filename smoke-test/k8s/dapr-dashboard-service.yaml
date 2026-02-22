@@ -1,0 +1,22 @@
+# ============================================================================
+# Dapr Dashboard - LoadBalancer Service for external access
+# ============================================================================
+# Exposes Dapr Dashboard on localhost:18080 via k3d port mapping
+# ============================================================================
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: dapr-dashboard
+  namespace: dapr-system
+  labels:
+    app: dapr-dashboard
+spec:
+  type: LoadBalancer
+  selector:
+    app: dapr-dashboard
+  ports:
+    - port: 30080
+      targetPort: 8080
+      protocol: TCP
+      name: http

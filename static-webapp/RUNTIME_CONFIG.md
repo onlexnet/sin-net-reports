@@ -113,8 +113,8 @@ npm start
 
 The React dev server will serve the configuration file from the `public/` directory.
 
-### With Docker (smoke tests)
-For Docker-based local development, configuration is provided via `docker-compose.yml`:
+### With Docker image builds (smoke tests)
+For Docker-based local development, configuration is provided via build args:
 
 ```yaml
 build:
@@ -149,7 +149,7 @@ RUN sed -i 's|"applicationInsightsConnectionString": ""|"applicationInsightsConn
     sed -i 's|"environment": "development"|"environment": "'"$ENVIRONMENT"'"|g' build/runtime-config.json
 ```
 
-Values are provided in `docker-compose.yml`:
+Values are provided in the image build command (for example via `smoke-test/setup-k3d.sh`):
 
 ```yaml
 build:

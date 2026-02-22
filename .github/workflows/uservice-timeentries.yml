@@ -55,7 +55,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           export SEMVERSION=$(cat .version)
-          mvn -ntp sonar:sonar
+          mvn -ntp sonar:sonar -Dsonar.exclusions=**/smoke-test/**
         working-directory: uservice-timeentries
         continue-on-error: true
       

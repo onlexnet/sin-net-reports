@@ -1,0 +1,81 @@
+# ============================================================================
+# WebAPI GraphQL Gateway - Kubernetes Deployment with Dapr
+# ============================================================================
+# Java Spring Boot service with GraphQL API
+# Uses Dapr to communicate with TimeEntries service
+# ============================================================================
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webapi
+  labels:
+    app: webapi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: webapi
+  template:
+    metadata:
+      labels:
+        app: webapi
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "uservice-webapi"
+        dapr.io/app-port: "8080"
+        dapr.io/app-protocol: "http"
+        dapr.io/log-level: "info"
+        dapr.io/config: "dapr-config"
+    spec:
+      containers:
+        - name: webapi
+          image: sinnet/uservice-webapi:local
+          imagePullPolicy: Never  # Use local image loaded by k3d
+          ports:
+            - containerPort: 8080
+              name: http
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "prod"
+            - name: DAPR_GRPC_PORT
+              value: "50001"
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8080
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 5
+            timeoutSeconds: 3
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "1Gi"
+              cpu: "500m"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: webapi
+  labels:
+    app: webapi
+spec:
+  type: LoadBalancer
+  selector:
+    app: webapi
+  ports:
+    - port: 30031
+      targetPort: 8080
+      protocol: TCP
+      name: http
