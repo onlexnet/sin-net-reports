@@ -58,7 +58,7 @@
     "@graphql-codegen/typescript-operations": "^2.0.1",
     "@graphql-codegen/typescript-react-apollo": "^2.2.1",
     "@testing-library/react": "^8.0.0",
-    "@types/enzyme": "^3.10.7",
+    "@types/enzyme": "^3.10.19",
     "@types/enzyme-adapter-react-16": "^1.0.6",
     "@types/jest": "^24.9.1",
     "@types/lodash": "^4.14.161",
