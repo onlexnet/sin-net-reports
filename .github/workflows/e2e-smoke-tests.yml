@@ -29,6 +29,7 @@ permissions:
   actions: read   # Read workflow artifacts
   checks: write   # Publish test report checks
   issues: write   # Post summary comments on pull requests
+  pull-requests: write  # Interact with pull requests when needed
 
 jobs:
   e2e-python-typing:
