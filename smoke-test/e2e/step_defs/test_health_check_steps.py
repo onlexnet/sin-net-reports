@@ -15,7 +15,11 @@ Step types:
 """
 
 import requests
+from typing import Any
+from playwright.sync_api import Page
 from pytest_bdd import given, when, then, parsers, scenarios
+
+TestContext = dict[str, Any]
 
 # Load all scenarios from feature files
 scenarios('../features')
@@ -33,7 +37,7 @@ FRONTEND_URL = "http://localhost:3000"
 # ============================================================================
 
 @given("the k3d stack is running")
-def k3d_stack_running():
+def k3d_stack_running() -> None:
     """
     Verify that k3d stack is running.
     This is a precondition check that can be extended to verify
@@ -48,7 +52,7 @@ def k3d_stack_running():
 # ============================================================================
 
 @when("I check the WebAPI health endpoint")
-def check_webapi_health(test_context):
+def check_webapi_health(test_context: TestContext) -> None:
     """
     Make HTTP request to WebAPI health endpoint.
     Spring Boot Actuator provides /actuator/health endpoint.
@@ -63,7 +67,7 @@ def check_webapi_health(test_context):
         test_context['response'] = None
 
 @when("I check the TimeEntries health endpoint")
-def check_timeentries_health(test_context):
+def check_timeentries_health(test_context: TestContext) -> None:
     """
     Make HTTP request to TimeEntries health endpoint.
     Spring Boot Actuator provides /actuator/health endpoint.
@@ -78,7 +82,7 @@ def check_timeentries_health(test_context):
         test_context['response'] = None
 
 @when("I navigate to the frontend URL")
-def navigate_to_frontend(page, test_context):
+def navigate_to_frontend(page: Page, test_context: TestContext) -> None:
     """
     Use Playwright to navigate to the frontend application.
     The 'page' fixture is provided by pytest-playwright.
@@ -91,7 +95,7 @@ def navigate_to_frontend(page, test_context):
         test_context['page_response'] = None
 
 @when("I send a GraphQL introspection query")
-def send_graphql_introspection(test_context):
+def send_graphql_introspection(test_context: TestContext) -> None:
     """
     Send GraphQL introspection query to discover schema.
     This query is used by GraphQL tools to explore the API.
@@ -121,7 +125,7 @@ def send_graphql_introspection(test_context):
 
 
 @when(parsers.parse('I login as "{email}"'))
-def login_as_user(page, test_context, email):
+def login_as_user(page: Page, test_context: TestContext, email: str) -> None:
     """
     Log in using the email-only login screen.
     """
@@ -141,7 +145,7 @@ def login_as_user(page, test_context, email):
 # ============================================================================
 
 @then(parsers.parse("the WebAPI should respond with status {status_code:d}"))
-def verify_webapi_status(test_context, status_code):
+def verify_webapi_status(test_context: TestContext, status_code: int) -> None:
     """
     Verify that WebAPI responded with expected HTTP status code.
     """
@@ -151,7 +155,7 @@ def verify_webapi_status(test_context, status_code):
         f"Expected status {status_code}, got {test_context['response'].status_code}"
 
 @then(parsers.parse("the TimeEntries service should respond with status {status_code:d}"))
-def verify_timeentries_status(test_context, status_code):
+def verify_timeentries_status(test_context: TestContext, status_code: int) -> None:
     """
     Verify that TimeEntries service responded with expected HTTP status code.
     """
@@ -161,7 +165,7 @@ def verify_timeentries_status(test_context, status_code):
         f"Expected status {status_code}, got {test_context['response'].status_code}"
 
 @then(parsers.parse('the health status should be "{expected_status}"'))
-def verify_health_status(test_context, expected_status):
+def verify_health_status(test_context: TestContext, expected_status: str) -> None:
     """
     Verify that health endpoint reports expected status.
     Spring Boot Actuator health response: {"status": "UP"}
@@ -173,7 +177,7 @@ def verify_health_status(test_context, expected_status):
         f"Expected health status '{expected_status}', got '{actual_status}'"
 
 @then("the page should load successfully")
-def verify_page_loaded(test_context):
+def verify_page_loaded(test_context: TestContext) -> None:
     """
     Verify that frontend page loaded without errors.
     """
@@ -183,7 +187,7 @@ def verify_page_loaded(test_context):
         f"Page loaded with HTTP error: {test_context['page_response'].status}"
 
 @then(parsers.parse('the page should contain "{expected_text}"'))
-def verify_page_title(test_context, expected_text):
+def verify_page_title(test_context: TestContext, expected_text: str) -> None:
     """
     Verify that page title contains expected text.
     """
@@ -201,7 +205,7 @@ def verify_page_title(test_context, expected_text):
         f"Expected page content to contain '{expected_text}', title was empty"
 
 @then("the response should contain GraphQL schema information")
-def verify_graphql_schema_present(test_context):
+def verify_graphql_schema_present(test_context: TestContext) -> None:
     """
     Verify that GraphQL introspection query returned schema data.
     """
@@ -214,7 +218,7 @@ def verify_graphql_schema_present(test_context):
     assert '__schema' in data['data'], "Schema information not found in response"
 
 @then(parsers.parse('the response should include "{type_name}" type'))
-def verify_graphql_type_exists(test_context, type_name):
+def verify_graphql_type_exists(test_context: TestContext, type_name: str) -> None:
     """
     Verify that GraphQL schema includes expected type.
     """
@@ -225,7 +229,7 @@ def verify_graphql_type_exists(test_context, type_name):
 
 
 @then(parsers.parse('the menu should contain "{first_item}" and "{second_item}"'))
-def verify_menu_items(test_context, first_item, second_item):
+def verify_menu_items(test_context: TestContext, first_item: str, second_item: str) -> None:
     """
     Verify that the application menu contains required navigation items.
     """

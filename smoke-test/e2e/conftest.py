@@ -16,11 +16,12 @@ Key fixtures:
 import pytest
 import os
 import re
+from typing import Any, Generator
 from playwright.sync_api import Page
 
 
 @pytest.fixture
-def test_context():
+def test_context() -> dict[str, Any]:
     """
     Provide a shared dictionary for passing data between test steps.
     
@@ -36,7 +37,7 @@ def test_context():
 
 
 @pytest.fixture(scope="session")
-def browser_context_args(browser_context_args):
+def browser_context_args(browser_context_args: dict[str, Any]) -> dict[str, Any]:
     """
     Configure browser context with custom settings.
     
@@ -56,7 +57,7 @@ def browser_context_args(browser_context_args):
 
 
 @pytest.fixture(scope="function")
-def page(page: Page):
+def page(page: Page) -> Generator[Page, None, None]:
     """
     Configure page-level settings for each test.
     
@@ -75,7 +76,7 @@ def page(page: Page):
     # No explicit cleanup needed here
 
 
-def pytest_configure(config):
+def pytest_configure(config: Any) -> None:
     """
     Hook called before test collection.
     Used for custom pytest configuration.
@@ -85,7 +86,15 @@ def pytest_configure(config):
     os.makedirs(reports_dir, exist_ok=True)
 
 
-def pytest_bdd_step_error(request, feature, scenario, step, step_func, step_func_args, exception):
+def pytest_bdd_step_error(
+    request: Any,
+    feature: Any,
+    scenario: Any,
+    step: Any,
+    step_func: Any,
+    step_func_args: dict[str, Any],
+    exception: Exception,
+) -> None:
     """
     Hook called when a BDD step fails.
     Useful for custom error handling and debugging.
@@ -101,7 +110,14 @@ def _safe_name(value: str) -> str:
 
 
 @pytest.hookimpl(tryfirst=True)
-def pytest_bdd_after_step(request, feature, scenario, step, step_func, step_func_args):
+def pytest_bdd_after_step(
+    request: Any,
+    feature: Any,
+    scenario: Any,
+    step: Any,
+    step_func: Any,
+    step_func_args: dict[str, Any],
+) -> None:
     page = step_func_args.get("page")
     if page is None:
         return
