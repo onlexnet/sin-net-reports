@@ -42,7 +42,7 @@ def _safe_name(value: str) -> str:
     return re.sub(r"[^a-zA-Z0-9._-]+", "-", value).strip("-").lower()
 
 
-def _capture_failure_screenshot(page: Page, label: str) -> str:
+def _capture_failure_screenshot(page: Page, label: str, test_context: TestContext | None = None) -> str:
     reports_dir = os.path.abspath(
         os.path.join(os.path.dirname(__file__), "..", "reports", "screenshots", "assertions")
     )
@@ -50,7 +50,25 @@ def _capture_failure_screenshot(page: Page, label: str) -> str:
     timestamp = datetime.utcnow().strftime("%Y%m%d-%H%M%S-%f")
     screenshot_path = os.path.join(reports_dir, f"{timestamp}-{_safe_name(label)}.png")
     page.screenshot(path=screenshot_path, full_page=True)
+    if test_context is not None:
+        existing_paths = test_context.get('failure_screenshots')
+        if not isinstance(existing_paths, list):
+            existing_paths = []
+            test_context['failure_screenshots'] = existing_paths
+        existing_paths.append(screenshot_path)
     return screenshot_path
+
+
+def _complete_project_selection_if_present(page: Page) -> None:
+    continue_button = page.get_by_role('button', name='Kontynuuj pracę z wybranym projektem')
+    if not continue_button.is_visible():
+        return
+
+    first_project = page.get_by_role('radio').first
+    expect(first_project).to_be_visible(timeout=UI_TIMEOUT_LONG)
+    first_project.check()
+    expect(continue_button).to_be_enabled(timeout=UI_TIMEOUT_SHORT)
+    continue_button.click()
 
 # ============================================================================
 # Given Steps (Preconditions)
@@ -156,6 +174,10 @@ def login_as_user(page: Page, test_context: TestContext, email: str) -> None:
     page.get_by_placeholder('Enter your email').fill(email)
     page.get_by_role('button', name='Login').click()
 
+    _complete_project_selection_if_present(page)
+    expect(page.get_by_text('Usługi', exact=False)).to_be_visible(timeout=UI_TIMEOUT_LONG)
+    expect(page.get_by_text('Klienci', exact=False)).to_be_visible(timeout=UI_TIMEOUT_LONG)
+
     test_context['page'] = page
 
 # ============================================================================
@@ -215,7 +237,7 @@ def verify_page_title(test_context: TestContext, expected_text: str) -> None:
     try:
         expect(page.get_by_text(expected_text, exact=False)).to_be_visible(timeout=UI_TIMEOUT_LONG)
     except AssertionError as e:
-        screenshot_path = _capture_failure_screenshot(page, f"missing-text-{expected_text}")
+        screenshot_path = _capture_failure_screenshot(page, f"missing-text-{expected_text}", test_context)
         raise AssertionError(f"{e}\nScreenshot saved at: {screenshot_path}") from e
 
 @then("the response should contain GraphQL schema information")
