@@ -213,7 +213,7 @@ jobs:
 
       - name: Publish E2E test results
         if: always()
-        uses: dorny/test-reporter@v1
+        uses: dorny/test-reporter@d61b558e8df85cb60d09ca3e5b09653b4477cea7
         with:
           name: E2E Tests
           path: smoke-test/e2e/reports/junit.xml

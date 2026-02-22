@@ -20,6 +20,7 @@
         "/^cd /workspaces/sin-net-reports && python3 - <<'PY'\nimport yaml\np='\\.github/workflows/e2e-smoke-tests\\.yml'\nwith open\\(p,'r',encoding='utf-8'\\) as f:\n    yaml\\.safe_load\\(f\\)\nprint\\('workflow yaml ok'\\)\nPY$/": {
             "approve": true,
             "matchCommandLine": true
-        }
+        },
+        "git ls-remote": true
     }
 }
