@@ -149,6 +149,7 @@ jobs:
         working-directory: smoke-test
         env:
           DOCKER_BUILD_CACHE_DIR: /tmp/.buildx-cache
+          DAPR_CONTROL_PLANE_ENABLED: 'false'
         run: |
           echo "🚀 Starting all services..."
           ./setup-k3d.sh up
@@ -328,7 +329,7 @@ jobs:
                 <p>No HTML report was generated for this run.</p>
               </body>
             </html>
-            HTML
+          HTML
           fi
 
       - name: Configure GitHub Pages
