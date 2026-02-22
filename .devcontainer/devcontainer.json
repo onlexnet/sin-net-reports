@@ -2,7 +2,7 @@
 // README at: https://github.com/devcontainers/templates/tree/main/src/ubuntu
 {
 	"name": "onlexnet-sinnet",
-	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
+	// Alternative base setup guidance: https://containers.dev/guide/dockerfile
     "image": "mcr.microsoft.com/vscode/devcontainers/base:ubuntu-22.04",
 	"features": {
 		"ghcr.io/devcontainers/features/docker-in-docker:2": {
@@ -16,10 +16,12 @@
 			"mavenVersion": "3.9.9"
 		},
 		"ghcr.io/dapr/cli/dapr-cli:0": {
-			"version": "1.16.5"
 		},
 		"ghcr.io/devcontainers/features/node:1": {
 			"version": "22.12.0"
+		},
+		"ghcr.io/devcontainers/features/python:1": {
+			"version": "3.12"
 		},
 		"ghcr.io/devcontainers/features/azure-cli:1": {
 			"installUsingPython": true,
@@ -32,7 +34,9 @@
             "version": "latest"
         },
 		// required for MPC from Microsoft
-	    "ghcr.io/devcontainers/features/dotnet:2": {} 
+	    "ghcr.io/devcontainers/features/dotnet:2": {
+			"version": "10.0.103"
+		} 
 	},
 
 	"customizations": {
@@ -43,7 +47,8 @@
 				"jebbs.plantuml",
 				"vscjava.vscode-java-pack",
 				"vmware.vscode-boot-dev-pack",
-				"github.vscode-github-actions"
+				"github.vscode-github-actions",
+				"ms-python.python"
             ],
             "settings": {
                 "terraform.languageServer": {

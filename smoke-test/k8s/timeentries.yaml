@@ -1,0 +1,131 @@
+# ============================================================================
+# TimeEntries Microservice - Kubernetes Deployment with Dapr
+# ============================================================================
+# Java Spring Boot service with gRPC API
+# Dapr sidecar automatically injected via annotations
+# ============================================================================
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: timeentries-db-secret
+type: Opaque
+stringData:
+  database-host: "sqlserver"
+  database-port: "31433"
+  database-name: "tempdb"
+  database-username: "sa"
+  database-password: "P@ssw0rd123!"
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: timeentries
+  labels:
+    app: timeentries
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: timeentries
+  template:
+    metadata:
+      labels:
+        app: timeentries
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "uservice-timeentries"
+        dapr.io/app-port: "50051"
+        dapr.io/app-protocol: "grpc"
+        dapr.io/log-level: "info"
+        dapr.io/config: "dapr-config"
+    spec:
+      containers:
+        - name: timeentries
+          image: sinnet/uservice-timeentries:local
+          imagePullPolicy: Never  # Use local image loaded by k3d
+          args:
+            - --spring.profiles.active=prod
+          ports:
+            - containerPort: 8080
+              name: http
+            - containerPort: 50051
+              name: grpc
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "prod"
+            - name: DATABASE_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: timeentries-db-secret
+                  key: database-host
+            - name: DATABASE_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: timeentries-db-secret
+                  key: database-port
+            - name: DATABASE_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: timeentries-db-secret
+                  key: database-name
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:sqlserver://$(DATABASE_HOST):$(DATABASE_PORT);database=$(DATABASE_NAME);encrypt=false;trustServerCertificate=true"
+            - name: DATABASE_SCHEMA
+              value: "dbo"
+            - name: DATABASE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: timeentries-db-secret
+                  key: database-username
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: timeentries-db-secret
+                  key: database-password
+            - name: APP_PORT
+              value: "50051"
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8080
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 5
+            timeoutSeconds: 3
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "1Gi"
+              cpu: "500m"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: timeentries
+  labels:
+    app: timeentries
+spec:
+  type: LoadBalancer
+  selector:
+    app: timeentries
+  ports:
+    - port: 30021
+      targetPort: 8080
+      protocol: TCP
+      name: http
+    - port: 50051
+      targetPort: 50051
+      protocol: TCP
+      name: grpc

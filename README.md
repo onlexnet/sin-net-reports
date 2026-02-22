@@ -24,18 +24,20 @@ In scope:
 
 ## Local Development
 
-### Quick Start with Docker Compose
+### Quick Start with k3d (k3s)
 
-Start the complete local stack (all services + database + Dapr) with a single command:
+Start the complete local stack (all services + database + Dapr) with:
 
 ```bash
 cd smoke-test
-docker compose up --build
+./install-prerequisites.sh  # first time only
+./setup-k3d.sh up
 ```
 
 Access the application:
 - **Frontend**: http://localhost:3000
 - **GraphQL API**: http://localhost:11031/graphiql
+- **Dapr Dashboard**: http://localhost:18080
 - **API Documentation**: See [LOCAL_STACK.md](LOCAL_STACK.md) or [smoke-test/README.md](smoke-test/README.md)
 
 ### Manual Development
@@ -49,6 +51,4 @@ See [Copilot Instructions](.github/copilot-instructions.md) for detailed build i
 - https://blog.linuxserver.io/2017/11/28/how-to-setup-a-reverse-proxy-with-letsencrypt-ssl-for-all-your-docker-apps/
 - https://www.digitalocean.com/community/tutorials/how-to-use-traefik-as-a-reverse-proxy-for-docker-containers-on-ubuntu-16-04
 - https://github.com/OfficeDev/office-ui-fabric-react/wiki/Ngrok
-- https://codewithhugo.com/docker-compose-local-https/
-- https://itnext.io/cluster-recipe-external-proxy-for-kubernetes-ingress-or-docker-compose-ingress-with-haproxy-on-f81e3adee5ef
 

@@ -1,3 +1,26 @@
 {
-    "java.compile.nullAnalysis.mode": "automatic"
+    "java.compile.nullAnalysis.mode": "automatic",
+    "chat.tools.terminal.autoApprove": {
+        "kubectl describe": true,
+        "/^cd /workspaces/sin-net-reports/smoke-test && kubectl delete deployment sqlserver -n sinnet --ignore-not-found=true && \\./setup-k3d\\.sh deploy$/": {
+            "approve": true,
+            "matchCommandLine": true
+        },
+        "kubectl scale": true,
+        "kubectl exec": true,
+        "true": true,
+        "kubectl apply": true,
+        "kubectl rollout": true,
+        "kubectl logs": true,
+        "kubectl run": true,
+        "/^cd /workspaces/sin-net-reports && python - <<'PY'\nimport yaml\np='\\.github/workflows/e2e-smoke-tests\\.yml'\nwith open\\(p,'r',encoding='utf-8'\\) as f:\n    yaml\\.safe_load\\(f\\)\nprint\\('workflow yaml ok'\\)\nPY$/": {
+            "approve": true,
+            "matchCommandLine": true
+        },
+        "/^cd /workspaces/sin-net-reports && python3 - <<'PY'\nimport yaml\np='\\.github/workflows/e2e-smoke-tests\\.yml'\nwith open\\(p,'r',encoding='utf-8'\\) as f:\n    yaml\\.safe_load\\(f\\)\nprint\\('workflow yaml ok'\\)\nPY$/": {
+            "approve": true,
+            "matchCommandLine": true
+        },
+        "git ls-remote": true
+    }
 }

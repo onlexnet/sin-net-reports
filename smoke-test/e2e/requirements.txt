@@ -1,0 +1,40 @@
+# ============================================================================
+# Python Dependencies for E2E Smoke Tests
+# ============================================================================
+#
+# FRAMEWORK:
+#   pytest: Modern Python testing framework
+#   pytest-bdd: Behavior-Driven Development (BDD) plugin - Cucumber equivalent
+#   playwright: Modern browser automation (faster and more reliable than Selenium)
+#
+# INSTALLATION:
+#   pip install -r requirements.txt
+#   playwright install  # Downloads browser binaries
+#
+# USAGE:
+#   pytest e2e/tests/  # Run all tests
+#   pytest -v -s       # Verbose output with print statements
+#   pytest --headed    # Run with visible browser (for debugging)
+#
+# ============================================================================
+
+# Testing Framework
+pytest==8.0.0
+pytest-bdd==7.0.1
+
+# Browser Automation (Playwright - modern alternative to Selenium)
+playwright==1.41.0
+pytest-playwright==0.4.4
+
+# HTTP Client for API tests
+requests==2.31.0
+
+# Report Generation
+pytest-html==4.1.1
+allure-pytest==2.13.2
+
+# Utilities
+python-dotenv==1.0.1
+
+# Static typing
+mypy==1.15.0

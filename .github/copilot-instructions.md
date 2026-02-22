@@ -4,19 +4,22 @@ Time tracking and reporting microservices application: Java Spring Boot backends
 
 ## Quick Start - Local Development
 
-**Single command to run everything:**
+**Recommended: k3d (Kubernetes + Dapr with working dashboard)**
 ```bash
 cd smoke-test
-docker compose up --build
+./install-prerequisites.sh  # First time only
+./setup-k3d.sh up           # ~2 min (cached images)
 ```
 
 Access points:
+- Dapr Dashboard: http://localhost:18080
 - Frontend: http://localhost:3000
 - GraphQL API: http://localhost:11031/graphiql  
 - TimeEntries health: http://localhost:11021/actuator/health
 - SQL Server: localhost:1433 (sa/P@ssw0rd123!)
 
-See [LOCAL_STACK.md](LOCAL_STACK.md) for detailed local development guide.
+See [LOCAL_STACK.md](../LOCAL_STACK.md) for detailed local development guide.
+See [K3D_SETUP.md](../smoke-test/K3D_SETUP.md) for k3d-specific documentation.
 
 ## Architecture & Communication Patterns
 
@@ -68,7 +71,7 @@ Use `-DskipTests` - Testcontainers tests often fail in containerized dev environ
 **Dev profile** (`SPRING_PROFILES_ACTIVE=dev`):
 - Uses SQL Server with `tempdb` database
 - Relaxed security, auto-schema creation
-- See `smoke-test/docker-compose.yml` environment vars
+- See `smoke-test/k8s/*.yaml` environment vars
 
 **Prod profile** (Azure):
 - Full authentication via Azure B2C
@@ -88,13 +91,13 @@ RUN --mount=type=cache,target=/root/.m2 \
 FROM eclipse-temurin:25-jre-jammy
 ```
 
-### Docker Compose Build Context
+### Docker Build Context
 All Dockerfiles use **parent directory context** (`..` from smoke-test/) because they need:
 - `api/client-java` - shared gRPC libraries
 - `api/schema` - proto definitions
 - Service source code
 
-Example: `cd smoke-test && docker compose up` builds from parent, copies dependencies correctly.
+Example: `smoke-test/setup-k3d.sh` builds from parent, then imports images into the k3d cluster.
 
 ## Deployment & Infrastructure
 
@@ -120,7 +123,8 @@ Example: `cd smoke-test && docker compose up` builds from parent, copies depende
 ## File References
 
 Key files for understanding architecture:
-- `smoke-test/docker-compose.yml` - complete local stack with 8 services
+- `smoke-test/setup-k3d.sh` - local stack lifecycle + image build/import logic
+- `smoke-test/k8s/` - Kubernetes manifests for local services
 - `smoke-test/dapr-local/` - Dapr configuration for local development
 - `LOCAL_STACK.md` - comprehensive local development guide
 - `infra/shared/main.tf` - Azure infrastructure modules
