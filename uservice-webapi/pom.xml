@@ -22,6 +22,8 @@
     <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     <!-- Environment variable is expected already to be defined in CI/CD as SONAR_TOKEN -->
     <sonar.login>${env.SONAR_TOKEN}</sonar.login>
+    <sonar.projectBaseDir>${project.basedir}</sonar.projectBaseDir>
+    <sonar.exclusions>**/smoke-test/**,../**</sonar.exclusions>
 
     <!-- disable encoding warning http://maven.apache.org/general.html#encoding-warning -->
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
