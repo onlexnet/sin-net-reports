@@ -30,6 +30,8 @@ permissions:
   checks: write   # Publish test report checks
   issues: write   # Post summary comments on pull requests
   pull-requests: write  # Interact with pull requests when needed
+  pages: write  # Publish HTML report to GitHub Pages
+  id-token: write  # Required for GitHub Pages deployment
 
 jobs:
   e2e-python-typing:
@@ -275,9 +277,83 @@ jobs:
             echo "## E2E Smoke Tests" >> "$GITHUB_STEP_SUMMARY"
             echo "" >> "$GITHUB_STEP_SUMMARY"
             echo "No summary generated." >> "$GITHUB_STEP_SUMMARY"
+            fi
+
+      # ========================================================================
+      # ARTIFACTS: Upload test results and screenshots
+      # ========================================================================
+
+      - name: Upload test report
+        if: always()
+        # Upload HTML test report even if tests fail
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-test-report
+          path: smoke-test/e2e/reports/
+          retention-days: 30
+
+      - name: Prepare GitHub Pages report content
+        if: always()
+        run: |
+          mkdir -p smoke-test/e2e/reports-pages
+
+          if [ -f smoke-test/e2e/reports/test-report.html ]; then
+            cp smoke-test/e2e/reports/test-report.html smoke-test/e2e/reports-pages/index.html
+            cp smoke-test/e2e/reports/junit.xml smoke-test/e2e/reports-pages/junit.xml || true
+          else
+            cat > smoke-test/e2e/reports-pages/index.html <<'HTML'
+            <!doctype html>
+            <html lang="en">
+              <head>
+                <meta charset="utf-8" />
+                <meta name="viewport" content="width=device-width, initial-scale=1" />
+                <title>E2E Report Not Available</title>
+              </head>
+              <body>
+                <h1>E2E report is not available</h1>
+                <p>No HTML report was generated for this run.</p>
+              </body>
+            </html>
+            HTML
           fi
 
-      - name: Upsert PR test summary comment
+      - name: Configure GitHub Pages
+        if: always() && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
+        id: pages
+        continue-on-error: true
+        uses: actions/configure-pages@v5
+
+      - name: Upload GitHub Pages artifact
+        if: always() && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
+        continue-on-error: true
+        uses: actions/upload-pages-artifact@v4
+        with:
+          name: github-pages
+          path: smoke-test/e2e/reports-pages
+
+      - name: Deploy E2E report to GitHub Pages
+        if: always() && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
+        id: deploy_pages
+        continue-on-error: true
+        uses: actions/deploy-pages@v4
+        with:
+          artifact_name: github-pages
+
+      - name: Add hosted report link to summary
+        if: always() && steps.deploy_pages.outputs.page_url != ''
+        run: |
+          REPORT_URL="${{ steps.deploy_pages.outputs.page_url }}"
+          {
+            echo ""
+            echo "Hosted HTML report: ${REPORT_URL}"
+          } >> smoke-test/e2e/reports/pr-summary.md
+
+          {
+            echo ""
+            echo "Hosted HTML report: ${REPORT_URL}"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Refresh PR test summary comment with hosted report link
         if: always() && github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
         uses: actions/github-script@v7
         with:
@@ -319,19 +395,6 @@ jobs:
                 body,
               });
             }
-      
-      # ========================================================================
-      # ARTIFACTS: Upload test results and screenshots
-      # ========================================================================
-      
-      - name: Upload test report
-        if: always()
-        # Upload HTML test report even if tests fail
-        uses: actions/upload-artifact@v4
-        with:
-          name: e2e-test-report
-          path: smoke-test/e2e/reports/
-          retention-days: 30
       
       - name: Upload screenshot artifacts
         if: always()
