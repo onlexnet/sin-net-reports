@@ -33,7 +33,7 @@ permissions:
 jobs:
   e2e-tests:
     name: Run E2E Smoke Tests
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     timeout-minutes: 45
     
     steps:
