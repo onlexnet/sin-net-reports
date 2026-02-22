@@ -31,6 +31,36 @@ permissions:
   issues: write   # Post summary comments on pull requests
 
 jobs:
+  e2e-python-typing:
+    name: E2E Python Typing
+    runs-on: ubuntu-22.04
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+          cache-dependency-path: smoke-test/e2e/requirements.txt
+
+      - name: Install Python typing dependencies
+        working-directory: smoke-test/e2e
+        run: |
+          echo "📦 Installing Python dependencies for typing..."
+          pip install -r requirements.txt
+          echo "✅ Dependencies installed"
+
+      - name: Run mypy type checks
+        working-directory: smoke-test/e2e
+        run: |
+          echo "🔎 Running mypy type checks..."
+          mypy --config-file mypy.ini
+          echo "✅ mypy checks passed"
+
   e2e-tests:
     name: Run E2E Smoke Tests
     runs-on: ubuntu-22.04
@@ -68,7 +98,7 @@ jobs:
           cache-dependency-path: smoke-test/e2e/requirements.txt
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f
 
       - name: Restore Docker build cache
         uses: actions/cache@v4
@@ -163,7 +193,7 @@ jobs:
           echo "🌐 Installing Playwright browsers..."
           playwright install chromium --with-deps
           echo "✅ Browser installed"
-      
+
       - name: Run E2E smoke tests
         id: e2e_tests
         continue-on-error: true
