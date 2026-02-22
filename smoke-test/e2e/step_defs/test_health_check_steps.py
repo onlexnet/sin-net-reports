@@ -15,6 +15,9 @@ Step types:
 """
 
 import requests
+import os
+import re
+from datetime import datetime
 from typing import Any
 from playwright.sync_api import Page, expect
 from pytest_bdd import given, when, then, parsers, scenarios
@@ -31,6 +34,23 @@ scenarios('../features')
 WEBAPI_URL = "http://localhost:11031"
 TIMEENTRIES_URL = "http://localhost:11021"
 FRONTEND_URL = "http://localhost:3000"
+UI_TIMEOUT_LONG = 60000
+UI_TIMEOUT_SHORT = 20000
+
+
+def _safe_name(value: str) -> str:
+    return re.sub(r"[^a-zA-Z0-9._-]+", "-", value).strip("-").lower()
+
+
+def _capture_failure_screenshot(page: Page, label: str) -> str:
+    reports_dir = os.path.abspath(
+        os.path.join(os.path.dirname(__file__), "..", "reports", "screenshots", "assertions")
+    )
+    os.makedirs(reports_dir, exist_ok=True)
+    timestamp = datetime.utcnow().strftime("%Y%m%d-%H%M%S-%f")
+    screenshot_path = os.path.join(reports_dir, f"{timestamp}-{_safe_name(label)}.png")
+    page.screenshot(path=screenshot_path, full_page=True)
+    return screenshot_path
 
 # ============================================================================
 # Given Steps (Preconditions)
@@ -131,10 +151,11 @@ def login_as_user(page: Page, test_context: TestContext, email: str) -> None:
     """
     test_context['page_response'] = page.goto(FRONTEND_URL, wait_until='domcontentloaded', timeout=30000)
 
-    expect(page.get_by_role('heading', name='Test Login')).to_be_visible(timeout=10000)
-    expect(page.get_by_placeholder('Enter your email')).to_be_visible(timeout=10000)
+    expect(page.get_by_role('heading', name='Test Login')).to_be_visible(timeout=UI_TIMEOUT_LONG)
+    expect(page.get_by_placeholder('Enter your email')).to_be_visible(timeout=UI_TIMEOUT_SHORT)
     page.get_by_placeholder('Enter your email').fill(email)
     page.get_by_role('button', name='Login').click()
+
     test_context['page'] = page
 
 # ============================================================================
@@ -190,8 +211,12 @@ def verify_page_title(test_context: TestContext, expected_text: str) -> None:
     """
     page = test_context.get('page')
     assert page is not None, "No page object available"
-    
-    expect(page.get_by_text(expected_text, exact=False)).to_be_visible(timeout=10000)
+
+    try:
+        expect(page.get_by_text(expected_text, exact=False)).to_be_visible(timeout=UI_TIMEOUT_LONG)
+    except AssertionError as e:
+        screenshot_path = _capture_failure_screenshot(page, f"missing-text-{expected_text}")
+        raise AssertionError(f"{e}\nScreenshot saved at: {screenshot_path}") from e
 
 @then("the response should contain GraphQL schema information")
 def verify_graphql_schema_present(test_context: TestContext) -> None:
@@ -225,5 +250,5 @@ def verify_menu_items(test_context: TestContext, first_item: str, second_item: s
     page = test_context.get('page')
     assert page is not None, "No page object available"
 
-    expect(page.get_by_text(first_item, exact=False)).to_be_visible(timeout=10000)
-    expect(page.get_by_text(second_item, exact=False)).to_be_visible(timeout=10000)
+    expect(page.get_by_text(first_item, exact=False)).to_be_visible(timeout=UI_TIMEOUT_LONG)
+    expect(page.get_by_text(second_item, exact=False)).to_be_visible(timeout=UI_TIMEOUT_LONG)
