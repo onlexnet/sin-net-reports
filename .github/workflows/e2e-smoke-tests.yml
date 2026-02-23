@@ -281,6 +281,8 @@ jobs:
               f"| Skipped | {skipped} |",
               "",
               f"Run details: {run_url}",
+              "",
+              "Failure evidence artifact: `e2e-failure-evidence`",
           ])
 
           with open(summary_path, "w", encoding="utf-8") as f:
@@ -297,6 +299,17 @@ jobs:
             echo "" >> "$GITHUB_STEP_SUMMARY"
             echo "No summary generated." >> "$GITHUB_STEP_SUMMARY"
             fi
+
+      - name: Upload failure screenshots and traces
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-failure-evidence
+          path: |
+            smoke-test/e2e/reports/screenshots/
+            smoke-test/e2e/test-results/
+          if-no-files-found: warn
+          retention-days: 30
 
       # ========================================================================
       # CLEANUP: Stop services and clean up
