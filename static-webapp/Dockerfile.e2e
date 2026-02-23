@@ -46,7 +46,6 @@ FROM node:22.12.0-alpine
 ARG BACKEND_BASE_URL
 ARG APPLICATIONINSIGHTS_CONNECTION_STRING=""
 ARG ENVIRONMENT="development"
-ARG USE_TEST_LOGIN
 
 WORKDIR /app
 
@@ -73,7 +72,7 @@ RUN if [ ! -f "build/runtime-config.json" ]; then \
 RUN sed -i 's|"applicationInsightsConnectionString": ""|"applicationInsightsConnectionString": "'"$APPLICATIONINSIGHTS_CONNECTION_STRING"'"|g' build/runtime-config.json && \
     sed -i 's|"backendBaseUrl": ""|"backendBaseUrl": "'"$BACKEND_BASE_URL"'"|g' build/runtime-config.json && \
     sed -i 's|"environment": "development"|"environment": "'"$ENVIRONMENT"'"|g' build/runtime-config.json && \
-    sed -i 's|"useTestLogin": false|"useTestLogin": '"$USE_TEST_LOGIN"'|g' build/runtime-config.json && \
+    sed -i 's|"useTestLogin": false|"useTestLogin": true|g' build/runtime-config.json && \
     echo "Configuration injected into runtime-config.json:" && \
     cat build/runtime-config.json
 

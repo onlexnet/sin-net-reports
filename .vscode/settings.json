@@ -21,6 +21,7 @@
             "approve": true,
             "matchCommandLine": true
         },
-        "git ls-remote": true
+        "git ls-remote": true,
+        "pytest": true
     }
 }

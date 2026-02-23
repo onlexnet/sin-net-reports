@@ -16,6 +16,8 @@ Key fixtures:
 import pytest
 import os
 import re
+import base64
+from html import escape
 from typing import Any, Generator
 from playwright.sync_api import Page
 
@@ -135,3 +137,54 @@ def pytest_bdd_after_step(
     screenshot_path = os.path.join(scenario_dir, screenshot_name)
 
     page.screenshot(path=screenshot_path, full_page=True)
+
+
+@pytest.hookimpl(hookwrapper=True)
+def pytest_runtest_makereport(item: Any, call: Any) -> Generator[None, None, None]:
+    outcome = yield
+    if outcome is None:
+        return
+    report = outcome.get_result()
+
+    if report.when != "call" or report.passed:
+        return
+
+    pytest_html = item.config.pluginmanager.getplugin("html")
+    if pytest_html is None:
+        return
+
+    extras = list(getattr(report, "extras", []))
+    screenshot_paths: list[str] = []
+
+    test_context = item.funcargs.get("test_context") if hasattr(item, "funcargs") else None
+    if isinstance(test_context, dict):
+        context_paths = test_context.get("failure_screenshots", [])
+        if isinstance(context_paths, list):
+            screenshot_paths.extend(path for path in context_paths if isinstance(path, str) and path)
+
+    if not screenshot_paths:
+        longrepr_text = getattr(report, "longreprtext", "")
+        screenshot_paths.extend(re.findall(r"Screenshot saved at:\s*(.+)", longrepr_text))
+
+    unique_paths = list(dict.fromkeys(screenshot_paths))
+    base_dir = os.path.dirname(__file__)
+
+    for screenshot_path in unique_paths:
+        resolved_path = screenshot_path if os.path.isabs(screenshot_path) else os.path.abspath(os.path.join(base_dir, screenshot_path))
+        if not os.path.exists(resolved_path):
+            continue
+
+        with open(resolved_path, "rb") as screenshot_file:
+            image_base64 = base64.b64encode(screenshot_file.read()).decode("ascii")
+
+        relative_path = os.path.relpath(resolved_path, base_dir)
+        extras.append(
+            pytest_html.extras.html(
+                "<div>"
+                f"<p><strong>Failure screenshot:</strong> {escape(relative_path)}</p>"
+                f"<img src=\"data:image/png;base64,{image_base64}\" style=\"max-width: 100%; height: auto; border: 1px solid #ddd;\" />"
+                "</div>"
+            )
+        )
+
+    report.extras = extras
