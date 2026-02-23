@@ -21,8 +21,9 @@ applyTo: '**/*.java'
 - **Type Inference**: Use `var` for local variable declarations to improve readability, but only when the type is explicitly clear from the right-hand side of the expression.
 - **Immutability**: Favor immutable objects. Make classes and fields `final` where possible. Use collections from `List.of()`/`Map.of()` for fixed data. Use `Stream.toList()` to create immutable lists.
 - **Streams and Lambdas**: Use the Streams API and lambda expressions for collection processing. Employ method references (e.g., `stream.map(Foo::toBar)`).
-- **Null Handling**: Avoid returning or accepting `null`. Use `Optional<T>` for possibly-absent values and `Objects` utility methods like `equals()` and `requireNonNull()`. Use JSpecify for nullness annotations.
-- **Javadocs** Comment only public methods with proper javadoc. Where javadoc is shorter than 120 characters, make it onliner /** ... */
+- **Null Handling**: Avoid returning or accepting `null`. Use JSpecify for nullness annotations.
+- **Libraries** vavr is considered as a deprecated dependency. Replace to pure, modern java solutions.
+- **Javadocs** Comment only public methods with proper javadoc. Where javadoc is shorter than 120 characters, make it onliner. Use java25 javadoc style.
 
 ### Naming Conventions
 
