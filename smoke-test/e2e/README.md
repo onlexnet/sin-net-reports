@@ -29,11 +29,6 @@ Browser-based smoke tests for SinNet Reports using Playwright and pytest-bdd (BD
     ./setup-k3d.sh up
    ```
 
-    For CI-like smoke checks (without Dapr control plane/dashboard), use:
-    ```bash
-    DAPR_CONTROL_PLANE_ENABLED=false ./setup-k3d.sh up
-    ```
-
 4. **Run tests (in another terminal):**
    ```bash
    cd smoke-test/e2e

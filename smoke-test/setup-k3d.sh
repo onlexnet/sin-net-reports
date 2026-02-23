@@ -13,8 +13,6 @@
 #   ./setup-k3d.sh down   # Destroy cluster
 #   ./setup-k3d.sh logs   # View logs
 #
-# Optional env:
-#   DAPR_CONTROL_PLANE_ENABLED=false ./setup-k3d.sh up  # Skip Dapr control plane/dashboard
 # ============================================================================
 
 set -e
@@ -24,7 +22,6 @@ CLUSTER_NAME="sinnet-local"
 NAMESPACE="sinnet"
 SQLSERVER_WAIT_TIMEOUT="${SQLSERVER_WAIT_TIMEOUT:-900s}"
 DOCKER_BUILD_CACHE_DIR="${DOCKER_BUILD_CACHE_DIR:-}"
-DAPR_CONTROL_PLANE_ENABLED="${DAPR_CONTROL_PLANE_ENABLED:-true}"
 
 # Colors for output
 RED='\033[0;31m'
@@ -42,17 +39,6 @@ log_warn() {
 
 log_error() {
     echo -e "${RED}[ERROR]${NC} $1"
-}
-
-dapr_control_plane_enabled() {
-    case "${DAPR_CONTROL_PLANE_ENABLED,,}" in
-        true|1|yes|y)
-            return 0
-            ;;
-        *)
-            return 1
-            ;;
-    esac
 }
 
 check_prerequisites() {
@@ -106,12 +92,7 @@ cluster_up() {
     log_info "Creating namespace '${NAMESPACE}'..."
     kubectl create namespace "${NAMESPACE}" || true
     
-    if dapr_control_plane_enabled; then
-        install_dapr
-    else
-        log_warn "Dapr control plane installation disabled (DAPR_CONTROL_PLANE_ENABLED=${DAPR_CONTROL_PLANE_ENABLED})"
-        log_warn "Services will run without Dapr sidecars; this mode is intended for E2E and basic health checks."
-    fi
+    install_dapr
     deploy_database
     build_and_deploy_services
     
@@ -121,9 +102,7 @@ cluster_up() {
     log_info "=============================================="
     log_info ""
     log_info "Access points:"
-    if dapr_control_plane_enabled; then
-        log_info "  - Dapr Dashboard:  http://localhost:18080"
-    fi
+    log_info "  - Dapr Dashboard:  http://localhost:18080"
     log_info "  - WebAPI GraphQL:  http://localhost:11031/graphiql"
     log_info "  - TimeEntries:     http://localhost:11021/actuator/health"
     log_info "  - Frontend:        http://localhost:3000"
@@ -132,9 +111,7 @@ cluster_up() {
     log_info "Useful commands:"
     log_info "  kubectl get pods -n ${NAMESPACE}              # View pods"
     log_info "  kubectl logs -n ${NAMESPACE} <pod-name>       # View logs"
-    if dapr_control_plane_enabled; then
-        log_info "  kubectl logs -n ${NAMESPACE} <pod-name> -c daprd  # View Dapr sidecar logs"
-    fi
+    log_info "  kubectl logs -n ${NAMESPACE} <pod-name> -c daprd  # View Dapr sidecar logs"
     log_info "  ./setup-k3d.sh logs                           # Tail all logs"
     log_info "  ./setup-k3d.sh down                           # Destroy cluster"
     log_info ""
@@ -237,11 +214,7 @@ build_and_deploy_services() {
     k3d image import sinnet/static-webapp:local --cluster "${CLUSTER_NAME}"
     
     log_info "Deploying services..."
-    if dapr_control_plane_enabled; then
-        kubectl apply -f "${SCRIPT_DIR}/k8s/dapr-config.yaml" -n "${NAMESPACE}"
-    else
-        log_info "Skipping Dapr configuration deployment (control plane disabled)"
-    fi
+    kubectl apply -f "${SCRIPT_DIR}/k8s/dapr-config.yaml" -n "${NAMESPACE}"
     kubectl apply -f "${SCRIPT_DIR}/k8s/timeentries.yaml" -n "${NAMESPACE}"
     kubectl apply -f "${SCRIPT_DIR}/k8s/webapi.yaml" -n "${NAMESPACE}"
     kubectl apply -f "${SCRIPT_DIR}/k8s/static-webapp.yaml" -n "${NAMESPACE}"
@@ -288,9 +261,7 @@ deploy_only() {
     log_info ""
     log_info "Services deployed successfully!"
     log_info "Access points:"
-    if dapr_control_plane_enabled; then
-        log_info "  - Dapr Dashboard:  http://localhost:18080"
-    fi
+    log_info "  - Dapr Dashboard:  http://localhost:18080"
     log_info "  - WebAPI GraphQL:  http://localhost:11031/graphiql"
     log_info "  - TimeEntries:     http://localhost:11021/actuator/health"
     log_info "  - Frontend:        http://localhost:3000"

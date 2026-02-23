@@ -144,7 +144,6 @@ jobs:
         working-directory: smoke-test
         env:
           DOCKER_BUILD_CACHE_DIR: /tmp/.buildx-cache
-          DAPR_CONTROL_PLANE_ENABLED: 'true'
         run: |
           echo "🚀 Starting all services..."
           ./setup-k3d.sh up
