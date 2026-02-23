@@ -26,7 +26,8 @@
     <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/../${aggregate.report.dir}</sonar.coverage.jacoco.xmlReportPaths>
 
     <org.apache.poi.version>5.5.1</org.apache.poi.version>
-    <surefire-plugin.version>3.5.4</surefire-plugin.version>
+    <surefire-plugin.version>3.5.5</surefire-plugin.version>
+    <vavr.version>0.10.4</vavr.version>
   </properties>
 
 
@@ -86,7 +87,7 @@
     <dependency>
       <groupId>io.vavr</groupId>
       <artifactId>vavr</artifactId>
-      <version>0.10.4</version>
+      <version>${vavr.version}</version>
     </dependency>
     <dependency>
         <groupId>org.apache.commons</groupId>

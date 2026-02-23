@@ -19,6 +19,7 @@
     <nullaway.version>0.12.10</nullaway.version>
     <lombok.version>1.18.42</lombok.version>
     <mapstruct.version>1.6.3</mapstruct.version>
+    <jspecify.version>1.0.0</jspecify.version>
   </properties>
 
   <dependencyManagement>
@@ -27,7 +28,7 @@
       <dependency>
           <groupId>org.jspecify</groupId>
           <artifactId>jspecify</artifactId>
-          <version>1.0.0</version>
+          <version>${jspecify.version}</version>
       </dependency>
 
       <dependency>
