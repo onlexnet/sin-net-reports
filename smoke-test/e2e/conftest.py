@@ -142,6 +142,8 @@ def pytest_bdd_after_step(
 @pytest.hookimpl(hookwrapper=True)
 def pytest_runtest_makereport(item: Any, call: Any) -> Generator[None, None, None]:
     outcome = yield
+    if outcome is None:
+        return
     report = outcome.get_result()
 
     if report.when != "call" or report.passed:
