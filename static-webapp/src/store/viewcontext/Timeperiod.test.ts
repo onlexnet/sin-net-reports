@@ -1,5 +1,4 @@
 import { TimePeriod } from "./TimePeriod";
-import moment from "moment";
 
 describe('TimePeriod', () => {
   it('generate proper dates for February', () => {
