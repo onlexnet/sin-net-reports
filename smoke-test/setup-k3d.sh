@@ -220,9 +220,9 @@ build_and_deploy_services() {
     kubectl apply -f "${SCRIPT_DIR}/k8s/static-webapp.yaml" -n "${NAMESPACE}"
     
     log_info "Waiting for services to be ready..."
-    kubectl wait --for=condition=Ready pod -l app=timeentries -n "${NAMESPACE}" --timeout=10s || log_warn "TimeEntries not ready yet"
-    kubectl wait --for=condition=Ready pod -l app=webapi -n "${NAMESPACE}" --timeout=10s || log_warn "WebAPI not ready yet"
-    kubectl wait --for=condition=Ready pod -l app=static-webapp -n "${NAMESPACE}" --timeout=10s || log_warn "Frontend not ready yet"
+    kubectl wait --for=condition=Ready pod -l app=timeentries -n "${NAMESPACE}" --timeout=300s || log_warn "TimeEntries not ready yet"
+    kubectl wait --for=condition=Ready pod -l app=webapi -n "${NAMESPACE}" --timeout=300s || log_warn "WebAPI not ready yet"
+    kubectl wait --for=condition=Ready pod -l app=static-webapp -n "${NAMESPACE}" --timeout=300s || log_warn "Frontend not ready yet"
     
     log_info "Services deployed"
 }
