@@ -42,14 +42,15 @@
 	"customizations": {
         "vscode": {
             "extensions": [
-                "hashicorp.terraform",
-                "editorconfig.editorconfig",
+				"hashicorp.terraform",
+				"editorconfig.editorconfig",
 				"jebbs.plantuml",
 				"vscjava.vscode-java-pack",
 				"vmware.vscode-boot-dev-pack",
 				"github.vscode-github-actions",
-				"ms-python.python"
-            ],
+				"ms-python.python",
+				"Orta.vscode-jest"
+			],
             "settings": {
                 "terraform.languageServer": {
                     "enabled": true,
