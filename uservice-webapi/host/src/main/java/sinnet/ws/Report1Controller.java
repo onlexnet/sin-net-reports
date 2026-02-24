@@ -102,8 +102,8 @@ class Report1Controller {
     return email -> {
       var customName = emailToName.get(email);
       return customName != null
-        ? customName
-        : "brak danych";
+          ? customName
+          : "brak danych";
     };
   }
 

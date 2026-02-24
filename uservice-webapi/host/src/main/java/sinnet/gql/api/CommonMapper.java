@@ -5,7 +5,7 @@ import java.util.UUID;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-import sinnet.domain.EntityId;
+import sinnet.domain.models.EntityId;
 import sinnet.gql.models.EntityGql;
 import sinnet.grpc.customers.LocalDateTime;
 import sinnet.grpc.projects.generated.ProjectId;

@@ -7,7 +7,7 @@ import java.util.UUID;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
-import sinnet.domain.EntityId;
+import sinnet.domain.models.EntityId;
 import sinnet.gql.api.CommonMapper;
 import sinnet.grpc.common.UserToken;
 import sinnet.grpc.timeentries.GetQuery;

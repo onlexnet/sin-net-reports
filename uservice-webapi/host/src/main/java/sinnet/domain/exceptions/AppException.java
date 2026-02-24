@@ -1,4 +1,4 @@
-package sinnet.domain;
+package sinnet.domain.exceptions;
 
 import lombok.experimental.StandardException;
 

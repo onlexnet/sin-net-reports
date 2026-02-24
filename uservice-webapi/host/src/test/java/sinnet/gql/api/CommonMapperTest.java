@@ -15,7 +15,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mapstruct.factory.Mappers;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import sinnet.domain.EntityId;
+import sinnet.domain.models.EntityId;
 import sinnet.gql.models.EntityGql;
 
 @ExtendWith(MockitoExtension.class)
