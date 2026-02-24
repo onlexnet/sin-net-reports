@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import sinnet.domain.AppException;
+import sinnet.domain.exceptions.AppException;
 import sinnet.gql.api.CommonMapper;
 import sinnet.grpc.customers.CustomerModel;
 import sinnet.ports.timeentries.ActionsGrpcFacade;

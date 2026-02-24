@@ -3,7 +3,7 @@ package sinnet.ports.timeentries;
 import java.util.List;
 import java.util.function.Function;
 
-import sinnet.domain.ProjectId;
+import sinnet.domain.models.ProjectId;
 import sinnet.gql.models.ProjectEntityGql;
 import sinnet.grpc.projects.generated.Project;
 

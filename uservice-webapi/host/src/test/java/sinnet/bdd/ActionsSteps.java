@@ -98,7 +98,7 @@ public class ActionsSteps {
     var entityVersion = 42L;
     Mockito
       .when(actionsGrpcFacade.newAction(requestorEmail, projectId, when))
-      .thenReturn(new sinnet.domain.EntityId(projectId, entityId, entityVersion));
+      .thenReturn(new sinnet.domain.models.EntityId(projectId, entityId, entityVersion));
 
 
     var actual = appApi.newAction(projectId.toString(), when).get();

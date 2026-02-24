@@ -71,7 +71,7 @@ public class AppApi {
   }
 
   /**
-   * Invokes Customers.reserve
+   * Invokes Customers.reserve.
    */
   public Entity<SomeEntityGql, ?> reserveCustomer(String projectId) {
     return tester.documentName("reserveCustomer")
@@ -82,7 +82,7 @@ public class AppApi {
   }
 
   /**
-   * Invokes Customers.reserve
+   * Invokes Customers.reserve.
    */
   public Entity<SomeEntityGql, ?> saveCustomer(UUID projectId, 
                                                SomeEntityGql id,
@@ -103,7 +103,7 @@ public class AppApi {
   }
 
   /**
-   * Invokes Customers.reserve
+   * Invokes Customers.reserve.
    */
   public Entity<List<CustomerEntityGql>, ?> listCustomers(UUID projectId) {
     return tester.documentName("listCustomer")
@@ -114,7 +114,7 @@ public class AppApi {
   }
 
   /**
-   * Invokes Customers.reserve
+   * Invokes Customers.reserve.
    */
   public Entity<CustomerEntityGql, ?> getCustomer(UUID projectId, UUID customerId) {
     return tester.documentName("getCustomer")

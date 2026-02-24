@@ -6,7 +6,7 @@ import java.util.UUID;
 import java.util.function.Function;
 
 import io.micrometer.common.util.StringUtils;
-import sinnet.domain.EntityId;
+import sinnet.domain.models.EntityId;
 import sinnet.gql.api.CommonMapper;
 import sinnet.gql.models.CustomerEntityGql;
 import sinnet.gql.models.ServiceModelGql;
