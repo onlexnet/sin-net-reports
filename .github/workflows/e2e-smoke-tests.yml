@@ -1,3 +1,6 @@
+# This workflow:
+# 1. Builds and deploys the complete k3d/k3s stack (all services)
+# 2. Starts the services in background
 name: E2E Smoke Tests
 
 # ============================================================================
@@ -16,15 +19,6 @@ name: E2E Smoke Tests
 # ============================================================================
 
 on:
-  push:
-    branches: [ main ]
-    paths:
-      - static-webapp/**
-      - uservice-webapi/**
-      - uservice-timeentries/**
-      - smoke-test/**
-      - api/**
-      - .github/workflows/e2e-smoke-tests.yml
   pull_request:
     branches: [ main ]
     paths:
