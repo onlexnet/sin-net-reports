@@ -1,4 +1,4 @@
-package sinnet.ws;
+package sinnet.adapters.ws;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;

@@ -54,16 +54,16 @@ sinnet/
 
 ```bash
 # Build entire project (from uservice-webapi root)
-mvnd clean install
+mvn clean install
 
 # Skip tests during build
-mvnd clean install -DskipTests
+mvn clean install -DskipTests
 
 # Run specific module
-cd host && mvnd clean package
+cd host && mvn clean package
 
 # Run tests with coverage (from host/)
-mvnd clean package
+mvn clean package
 ```
 
 ### Running Locally with Dapr
@@ -87,7 +87,7 @@ mvnd clean package
 ```bash
 # Build and push to local Docker (or minikube)
 eval $(minikube docker-env)  # optional: use minikube images
-mvnd clean install jib:dockerBuild \
+mvn clean install jib:dockerBuild \
   -Dimage=sinnet.azurecr.io/uservice-webapi-host:latest \
   -DskipTests
 ```
@@ -96,10 +96,10 @@ mvnd clean install jib:dockerBuild \
 
 ```bash
 # Run Checkstyle (automatically runs during verify phase)
-mvnd verify
+mvn verify
 
 # Push to SonarCloud manually
-mvnd clean package sonar:sonar
+mvn clean package sonar:sonar
 ```
 
 **Configuration:** Checkstyle rules in `build-tools/src/main/resources/build-checkstyle/google_checks_customized.xml`
@@ -177,7 +177,7 @@ Located in `host/src/test/java/sinnet/bdd/` with features in `host/src/test/reso
 public void userHasProject(String projectName) { ... }
 ```
 
-**Run tests:** `mvnd test` or via IDE (JUnit 5)
+**Run tests:** `mvn test` or via IDE (JUnit 5)
 
 ### GraphQL Integration Tests
 
@@ -194,7 +194,7 @@ Use `gql-test` module utilities:
 
 **Always run after structural changes:**
 ```bash
-mvnd test -Dtest=AppArchTest
+mvn test -Dtest=AppArchTest
 ```
 
 ## Key Files Reference
@@ -217,9 +217,9 @@ mvnd test -Dtest=AppArchTest
 
 | Task | Command |
 |------|---------|
-| Full build | `mvnd clean install` |
-| Build without tests | `mvnd clean install -DskipTests` |
-| Run specific test | `mvnd test -Dtest=ClassName` |
-| Check code style | `mvnd verify` |
-| Generate Docker image | `mvnd jib:dockerBuild -Dimage=<name>` |
+| Full build | `mvn clean install` |
+| Build without tests | `mvn clean install -DskipTests` |
+| Run specific test | `mvn test -Dtest=ClassName` |
+| Check code style | `mvn verify` |
+| Generate Docker image | `mvn jib:dockerBuild -Dimage=<name>` |
 | Start with Dapr | VS Code Task: "dapr-debug" |
