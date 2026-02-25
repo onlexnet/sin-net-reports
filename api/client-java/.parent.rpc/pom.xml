@@ -9,7 +9,7 @@
   <packaging>pom</packaging>
 
   <properties>
-    <grpc.version>1.75.0</grpc.version>
+    <grpc.version>1.79.0</grpc.version>
 
     <!--
       Disable warning
