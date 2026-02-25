@@ -6,7 +6,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import io.cucumber.spring.CucumberContextConfiguration;
 import sinnet.Profiles;
-import sinnet.app.Program;
+import sinnet.host.Program;
 
 @CucumberContextConfiguration
 @ActiveProfiles({Profiles.App.TEST})
