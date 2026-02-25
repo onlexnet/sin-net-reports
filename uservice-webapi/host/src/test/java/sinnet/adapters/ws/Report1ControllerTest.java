@@ -1,4 +1,4 @@
-package sinnet.ws;
+package sinnet.adapters.ws;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -25,6 +25,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.google.protobuf.ByteString;
 
 import sinnet.app.Program;
+import sinnet.app.report1.Report1Flow;
 import sinnet.grpc.timeentries.TimeEntryModel;
 import sinnet.grpc.users.SearchRequest;
 import sinnet.ports.timeentries.ActionsGrpcFacade;
@@ -163,7 +164,7 @@ class Report1ControllerTest {
         .thenReturn(List.of(actionItem));
 
     // Mock customers using CustomerModel
-    var customerModel = new Report1Controller.CustomerModel(
+    var customerModel = new Report1Flow.CustomerModel(
         customerId,
         "Test Customer",
         "Test City",

@@ -4,7 +4,7 @@ Sonar:
 - https://docs.sonarcloud.io/advanced-setup/ci-based-analysis/sonarscanner-for-maven/
 ```
   # push manually sonar result with jacoco coverage:
-  mvnd clean package sonar:sonar
+  mvn clean package sonar:sonar
 ```
 
 Docker:  
@@ -13,7 +13,7 @@ Docker:
   # 1) Optionally change context to work on minikube images
   eval $(minikube docker-env)
   # 2) to build image and push it to local k8s instance
-  mvnd clean install jib:dockerBuild -Dimage=sinnet.azurecr.io/uservice-webapi-host:latest -DskipTests
+  mvn clean install jib:dockerBuild -Dimage=sinnet.azurecr.io/uservice-webapi-host:latest -DskipTests
 
 ```
 

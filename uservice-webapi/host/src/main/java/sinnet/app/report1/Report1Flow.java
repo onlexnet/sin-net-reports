@@ -1,4 +1,4 @@
-package sinnet.ws;
+package sinnet.app.report1;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -7,11 +7,7 @@ import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Component;
 
 import io.vavr.Function1;
 import io.vavr.Tuple;
@@ -21,6 +17,7 @@ import lombok.Value;
 import sinnet.gql.api.CommonMapper;
 import sinnet.grpc.common.UserToken;
 import sinnet.grpc.users.SearchRequest;
+import sinnet.ports.in.Report1PortIn;
 import sinnet.ports.timeentries.ActionsGrpcFacade;
 import sinnet.ports.timeentries.CustomersGrpcFacade;
 import sinnet.ports.timeentries.Reports1GrpcAdapter;
@@ -31,10 +28,10 @@ import sinnet.report1.grpc.ReportRequest;
 import sinnet.report1.grpc.ReportRequests;
 import sinnet.reports.grpc.Date;
 
-@RestController
-@RequestMapping("/api/raporty")
+/** Refactor - shouuld not be public. */
+@Component
 @RequiredArgsConstructor
-class Report1Controller {
+public class Report1Flow implements Report1PortIn {
 
   private final ActionsGrpcFacade timeentries;
   private final CustomersGrpcFacade customersClient;
@@ -42,9 +39,8 @@ class Report1Controller {
   private final UsersGrpcService usersService;
   private final CommonMapper commonMapper;
 
-  @GetMapping("/klienci/{projectId}/{year}/{month}")
-  public ResponseEntity<byte[]> downloadPdfFile(@PathVariable UUID projectId, @PathVariable int year, @PathVariable int month) {
-
+  @Override
+  public byte[] downloadPdfFile(UUID projectId, int year, int month) {
     var dateFrom = LocalDate.of(year, month, 1);
     var dateTo = LocalDate.of(year, month, 1).plusMonths(1).minusDays(1);
     var projectIdAsString = projectId.toString();
@@ -54,8 +50,9 @@ class Report1Controller {
     var reportRequest = asReportRequests(entries, customers, users);
     var data = reportsClient.producePack(reportRequest);
     var result = data.getData().toByteArray();
-    return Response.asResponseEntity(result, "report " + year + "-" + month + ".zip");
+    return result;
   }
+
 
   record TimeEntryModel(String customerId, String what, LocalDate when, String servicemanName, int howFar, int howLong) { }
 
@@ -71,8 +68,9 @@ class Report1Controller {
         .toList();
   }
 
+  /** Refactor: should not be public. */
   @Value
-  static class CustomerModel {
+  public static class CustomerModel {
     String customerId;
     String customerName;
     String customerCity;
@@ -172,5 +170,5 @@ class Report1Controller {
         .foldLeft(ReportRequests.newBuilder(), (acc, v) -> acc.addItems(v))
         .build();
   }
-
+   
 }

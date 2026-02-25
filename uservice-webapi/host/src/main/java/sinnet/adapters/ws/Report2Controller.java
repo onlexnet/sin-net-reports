@@ -1,4 +1,4 @@
-package sinnet.ws;
+package sinnet.adapters.ws;
 
 import static sinnet.reports.grpc.YearMonth.newBuilder;
 
