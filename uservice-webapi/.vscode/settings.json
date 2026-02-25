@@ -12,6 +12,7 @@
     "java.debug.settings.onBuildFailureProceed": true,
     "chat.tools.terminal.autoApprove": {
         "mvn verify": true,
-        "mvn checkstyle:checkstyle": true
+        "mvn checkstyle:checkstyle": true,
+        "mvn install": true
     }
 }

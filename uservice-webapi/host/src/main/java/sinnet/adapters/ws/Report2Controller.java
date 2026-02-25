@@ -20,7 +20,6 @@ import io.vavr.Tuple2;
 import io.vavr.collection.HashMap;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
-import sinnet.gql.api.CommonMapper;
 import sinnet.ports.timeentries.ActionsGrpcFacade;
 import sinnet.report2.grpc.ReportRequest;
 import sinnet.report2.grpc.ReportsGrpc.ReportsBlockingStub;
@@ -34,8 +33,6 @@ class Report2Controller {
 
   private final ActionsGrpcFacade timeentries;
   private final ReportsBlockingStub reportsClient;
-  private final CommonMapper commonMapper;
-
 
   @GetMapping("/2/{projectId}")
   public ResponseEntity<byte[]> downloadPdfFile(@PathVariable UUID projectId,
@@ -92,12 +89,12 @@ class Report2Controller {
 
   private List<TimeEntryModel> getTimeentries(UUID projectId, LocalDate from, LocalDate to) {
     var data = timeentries.searchInternal(projectId, from, to).stream()
-        .map(it -> new TimeEntryModel(it.getCustomerId(),
-        it.getDescription(),
-        commonMapper.fromGrpc(it.getWhenProvided()),
-        it.getServicemanName(),
-        it.getDistance(),
-        it.getDuration()))
+        .map(it -> new TimeEntryModel(it.customerId(),
+        it.description(),
+        it.whenProvided(),
+        it.servicemanName(),
+        it.distance(),
+        it.duration()))
         .toList();
     return data;
 

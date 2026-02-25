@@ -13,12 +13,11 @@ import io.cucumber.java.Before;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import onlexnet.sinnet.webapi.test.AppApi;
+import sinnet.domain.models.TimeEntry;
 import sinnet.gql.api.CommonMapper;
 import sinnet.gql.models.ServiceModelGql;
 import sinnet.gql.models.ServicesSearchResultGql;
 import sinnet.gql.models.SomeEntityGql;
-import sinnet.grpc.common.EntityId;
-import sinnet.grpc.timeentries.TimeEntryModel;
 import sinnet.ports.timeentries.ActionsGrpcFacade;
 
 public class ActionsSteps {
@@ -49,20 +48,13 @@ public class ActionsSteps {
     var now = LocalDate.now();
     var from = now.minusDays(1);
     var to = now.plusDays(1);
+    var entityId = UUID.randomUUID();
 
     Mockito
       .when(actionsGrpcFacade.searchInternal(projectId, from, to))
       .thenReturn(List.of(
-        TimeEntryModel.newBuilder()
-          .setDescription("desc1")
-          .setWhenProvided(commonMapper.toGrpc(now))
-          .setDistance(1)
-          .setDuration(2)
-          .setServicemanName("my-serviceman")
-          .setServicemanEmail("my-serviceman-email")
-          .setEntityId(EntityId.newBuilder().setEntityId("entity-id").setEntityVersion(10).setProjectId("project-id"))
-          .build()
-       ));
+        new TimeEntry(new sinnet.domain.models.EntityId(projectId, entityId, 10),
+        null, "desc1", 1, 2, "my-serviceman-email", "my-serviceman", now)));
 
 
     var actual = appApi.searchActions(projectId, from, to).get();
@@ -77,9 +69,9 @@ public class ActionsSteps {
           .setDuration(2)
           .setServicemanName("my-serviceman")
           .setServicemanEmail("my-serviceman-email")
-          .setEntityId("entity-id")
+          .setEntityId(entityId.toString())
           .setEntityVersion(10)
-          .setProjectId("project-id")
+          .setProjectId(projectId.toString())
         ));
 
     Assertions.assertThat(actual).isEqualTo(expected);
@@ -118,16 +110,7 @@ public class ActionsSteps {
     var customerId = UUID.randomUUID();
     var now = LocalDate.now();
 
-    var result = TimeEntryModel.newBuilder()
-        .setCustomerId(customerId.toString())
-        .setDescription("my-description")
-        .setDistance(1)
-        .setDuration(2)
-        .setEntityId(EntityId.newBuilder().setEntityId(entityId.toString()).setEntityVersion(42).setProjectId(projectId.toString()))
-        .setServicemanEmail("serviceman-email")
-        .setServicemanName("serviceman-name")
-        .setWhenProvided(commonMapper.toGrpc(now))
-        .build();
+    var result = new TimeEntry(new sinnet.domain.models.EntityId(projectId, entityId, 42), customerId.toString(), "my-description", 1, 2, "serviceman-email", "serviceman-name", now);
     Mockito
       .when(actionsGrpcFacade.getActionInternal(projectId, entityId))
       .thenReturn(result);

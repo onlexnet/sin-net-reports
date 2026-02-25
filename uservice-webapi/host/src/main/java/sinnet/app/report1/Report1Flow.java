@@ -9,12 +9,10 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
-import io.vavr.Function1;
 import io.vavr.Tuple;
 import io.vavr.control.Option;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
-import sinnet.gql.api.CommonMapper;
 import sinnet.grpc.common.UserToken;
 import sinnet.grpc.users.SearchRequest;
 import sinnet.ports.in.Report1PortIn;
@@ -27,6 +25,7 @@ import sinnet.report1.grpc.CustomerDetails;
 import sinnet.report1.grpc.ReportRequest;
 import sinnet.report1.grpc.ReportRequests;
 import sinnet.reports.grpc.Date;
+import org.jspecify.annotations.Nullable;
 
 /** Refactor - shouuld not be public. */
 @Component
@@ -37,7 +36,6 @@ public class Report1Flow implements Report1PortIn {
   private final CustomersGrpcFacade customersClient;
   private final Reports1GrpcAdapter reportsClient;
   private final UsersGrpcService usersService;
-  private final CommonMapper commonMapper;
 
   @Override
   public byte[] downloadPdfFile(UUID projectId, int year, int month) {
@@ -54,17 +52,17 @@ public class Report1Flow implements Report1PortIn {
   }
 
 
-  record TimeEntryModel(String customerId, String what, LocalDate when, String servicemanName, int howFar, int howLong) { }
+  record TimeEntryModel(@Nullable String customerId, String what, LocalDate when, String servicemanName, int howFar, int howLong) { }
 
   private java.util.List<TimeEntryModel> getTimeentries(String projectId, LocalDate from, LocalDate to) {
     var projectIdTyped = UUID.fromString(projectId);
     return timeentries.searchInternal(projectIdTyped, from, to).stream()
-        .map(it -> new TimeEntryModel(it.getCustomerId(),
-        it.getDescription(),
-        commonMapper.fromGrpc(it.getWhenProvided()),
-        it.getServicemanName(),
-        it.getDistance(),
-        it.getDuration()))
+        .map(it -> new TimeEntryModel(it.customerId(),
+        it.description(),
+        it.whenProvided(),
+        it.servicemanName(),
+        it.distance(),
+        it.duration()))
         .toList();
   }
 
@@ -166,7 +164,7 @@ public class Report1Flow implements Report1PortIn {
         // key is no longer needed
         .map(kv -> kv._2)
         // unpack Option value to raw value
-        .flatMap(Function1.identity())
+        .flatMap(Function.identity())
         .foldLeft(ReportRequests.newBuilder(), (acc, v) -> acc.addItems(v))
         .build();
   }

@@ -7,16 +7,16 @@ import java.util.function.Function;
 
 import io.micrometer.common.util.StringUtils;
 import sinnet.domain.models.EntityId;
+import sinnet.domain.models.TimeEntry;
 import sinnet.gql.api.CommonMapper;
 import sinnet.gql.models.CustomerEntityGql;
 import sinnet.gql.models.ServiceModelGql;
-import sinnet.grpc.timeentries.TimeEntryModel;
 
 /** GRPC methods related to Actions (aka Services aka Timeentries). */
 public interface ActionsGrpcFacade {
 
   /** REturns list of actions for requested project, limited result from-to range. */
-  List<TimeEntryModel> searchInternal(UUID projectId, LocalDate from, LocalDate to);
+  List<TimeEntry> searchInternal(UUID projectId, LocalDate from, LocalDate to);
 
   /** Fixme. */
   EntityId newAction(String requestorEmail, UUID projectId, LocalDate when);
@@ -29,7 +29,7 @@ public interface ActionsGrpcFacade {
   boolean remove(UUID projectId, UUID entityId, int entityVersion);
 
   /** Fixme. */
-  TimeEntryModel getActionInternal(UUID projectId, UUID entityId);
+  TimeEntry getActionInternal(UUID projectId, UUID entityId);
 
   default ServiceModelGql getAction(UUID projectId, UUID entityId, Function<String, CustomerEntityGql> customerMapper,
                                    CommonMapper commonMapper) {
@@ -44,23 +44,23 @@ public interface ActionsGrpcFacade {
   }
 
   /** Internal mapping - requires CommonMapper instance. */
-  default ServiceModelGql mapWithMapper(TimeEntryModel model, Function<String, CustomerEntityGql> customerMapper,
+  default ServiceModelGql mapWithMapper(TimeEntry model, Function<String, CustomerEntityGql> customerMapper,
                                        CommonMapper commonMapper) {
-    var customerId = model.getCustomerId();
+    var customerId = model.customerId();
     var customer = StringUtils.isEmpty(customerId)
         ? null
         : customerMapper.apply(customerId);
 
     return new ServiceModelGql()
         .setCustomer(customer)
-        .setDescription(model.getDescription())
-        .setDistance(model.getDistance())
-        .setDuration(model.getDuration())
-        .setEntityId(model.getEntityId().getEntityId())
-        .setEntityVersion(model.getEntityId().getEntityVersion())
-        .setProjectId(model.getEntityId().getProjectId())
-        .setServicemanEmail(model.getServicemanEmail())
-        .setServicemanName(model.getServicemanName())
-        .setWhenProvided(commonMapper.fromGrpc(model.getWhenProvided()));
+        .setDescription(model.description())
+        .setDistance(model.distance())
+        .setDuration(model.duration())
+        .setEntityId(model.entityId().id().toString())
+        .setEntityVersion(model.entityId().tag())
+        .setProjectId(model.entityId().projectId().toString())
+        .setServicemanEmail(model.servicemanEmail())
+        .setServicemanName(model.servicemanName())
+        .setWhenProvided(model.whenProvided());
   }
 }

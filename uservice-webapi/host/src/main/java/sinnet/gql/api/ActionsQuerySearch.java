@@ -7,11 +7,11 @@ import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.SchemaMapping;
 import org.springframework.stereotype.Controller;
 
-import io.vavr.Function1;
 import lombok.Cleanup;
 import lombok.RequiredArgsConstructor;
 import sinnet.gql.models.ServiceFilterInputGql;
 import sinnet.gql.models.ServicesSearchResultGql;
+import sinnet.lib.Functions;
 import sinnet.ports.timeentries.ActionsGrpcFacade;
 import sinnet.ports.timeentries.CustomersGrpcFacade;
 
@@ -35,7 +35,7 @@ class ActionsQuerySearch {
 
     var customerList = customerService.customerList(self.projectId(), requestorEmail, customerMapper::toGql);
 
-    var customerGet = Function1.of((String customerId) -> customerList.stream()
+    var customerGet = Functions.of((String customerId) -> customerList.stream()
         .filter(it -> Objects.equals(customerId, it.getId().getEntityId())).findAny().orElse(null));
 
     var result = service.search(projectId, filter.getFrom(), filter.getTo(), customerGet, commonMapper);
