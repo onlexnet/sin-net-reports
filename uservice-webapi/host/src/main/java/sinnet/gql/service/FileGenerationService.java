@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import sinnet.domain.exceptions.AppException;
-import sinnet.gql.api.CommonMapper;
 import sinnet.grpc.customers.CustomerModel;
 import sinnet.ports.timeentries.ActionsGrpcFacade;
 import sinnet.ports.timeentries.CustomersGrpcFacade;
@@ -32,7 +31,6 @@ public class FileGenerationService {
 
   private final ActionsGrpcFacade actionsGrpcFacade;
   private final CustomersGrpcFacade customersGrpcFacade;
-  private final CommonMapper commonMapper;
 
   /**
    * Generates an Excel file with time entries for the logged-in user and returns it as base64 string.
@@ -60,7 +58,7 @@ public class FileGenerationService {
       
       // Filter by logged-in user's email
       var userEntries = allEntries.stream()
-          .filter(entry -> userEmail.equalsIgnoreCase(entry.getServicemanEmail()))
+          .filter(entry -> userEmail.equalsIgnoreCase(entry.servicemanEmail()))
           .collect(Collectors.toList());
       
       log.info("Found {} time entries for user {}", userEntries.size(), userEmail);
@@ -86,16 +84,16 @@ public class FileGenerationService {
         var entry = userEntries.get(i);
         var row = sheet.createRow(i + 1);
         
-        var date = commonMapper.fromGrpc(entry.getWhenProvided());
-        var customerName = customerLookup.getOrDefault(entry.getCustomerId(), "(unknown)");
-        var durationFormatted = formatDuration(entry.getDuration());
+        var date = entry.whenProvided();
+        var customerName = customerLookup.getOrDefault(entry.customerId(), "(unknown)");
+        var durationFormatted = formatDuration(entry.duration());
         
         row.createCell(0).setCellValue(username);
         row.createCell(1).setCellValue(DateTimeFormatter.ISO_LOCAL_DATE.format(date));
         row.createCell(2).setCellValue(customerName);
-        row.createCell(3).setCellValue(entry.getDescription());
+        row.createCell(3).setCellValue(entry.description());
         row.createCell(4).setCellValue(durationFormatted);
-        row.createCell(5).setCellValue(entry.getDistance());
+        row.createCell(5).setCellValue(entry.distance());
       }
       
       // Write workbook to byte array

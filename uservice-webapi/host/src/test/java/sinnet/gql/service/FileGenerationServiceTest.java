@@ -25,8 +25,8 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import sinnet.domain.models.TimeEntry;
 import sinnet.gql.api.CommonMapper;
-import sinnet.grpc.timeentries.TimeEntryModel;
 import sinnet.ports.timeentries.ActionsGrpcFacade;
 import sinnet.ports.timeentries.CustomersGrpcFacade;
 
@@ -167,14 +167,7 @@ class FileGenerationServiceTest {
     }
   }
 
-  private TimeEntryModel createTimeEntry(String email, String description, int duration, int distance, LocalDate date) {
-    return TimeEntryModel.newBuilder()
-        .setServicemanEmail(email)
-        .setDescription(description)
-        .setDuration(duration)
-        .setDistance(distance)
-        .setWhenProvided(commonMapper.toGrpc(date))
-        .setCustomerId(UUID.randomUUID().toString())
-        .build();
+  private TimeEntry createTimeEntry(String email, String description, int duration, int distance, LocalDate date) {
+    return new TimeEntry(null, UUID.randomUUID().toString(), description, distance, duration, email, null, date);
   }
 }

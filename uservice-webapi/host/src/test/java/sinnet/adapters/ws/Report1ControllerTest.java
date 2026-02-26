@@ -24,10 +24,10 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.google.protobuf.ByteString;
 
-import sinnet.app.Program;
 import sinnet.app.report1.Report1Flow;
-import sinnet.grpc.timeentries.TimeEntryModel;
+import sinnet.domain.models.TimeEntry;
 import sinnet.grpc.users.SearchRequest;
+import sinnet.host.Program;
 import sinnet.ports.timeentries.ActionsGrpcFacade;
 import sinnet.ports.timeentries.CustomersGrpcFacade;
 import sinnet.ports.timeentries.Reports1GrpcAdapter;
@@ -147,18 +147,14 @@ class Report1ControllerTest {
     var month = 5;
 
     // Mock time entries
-    var actionItem = TimeEntryModel.newBuilder()
-        .setCustomerId(customerId)
-        .setDescription("Test action")
-        .setWhenProvided(sinnet.grpc.timeentries.LocalDate.newBuilder()
-            .setYear(2024)
-            .setMonth(5)
-            .setDay(15)
-            .build())
-        .setServicemanName("test@example.com")
-        .setDistance(100)
-        .setDuration(120)
-        .build();
+    var actionItem = new TimeEntry(
+        new sinnet.domain.models.EntityId(UUID.randomUUID(), UUID.randomUUID(), 1),
+        customerId,
+        null,
+        100, 120,
+        "test@example.com",
+        "Test action",
+        LocalDate.of(2024, 5, 15));
     
     when(actionsGrpcFacade.searchInternal(any(UUID.class), any(LocalDate.class), any(LocalDate.class)))
         .thenReturn(List.of(actionItem));

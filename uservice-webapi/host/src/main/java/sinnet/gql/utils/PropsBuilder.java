@@ -2,8 +2,8 @@ package sinnet.gql.utils;
 
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
-import io.vavr.Function1;
 import lombok.experimental.UtilityClass;
 
 /** Helper class to map data gt proto as proto is not working with null values in traditional mapping paproach. */
@@ -26,21 +26,21 @@ public class PropsBuilder {
     }
 
     /** Try set. Run setter only if value is not null. */
-    public <U> PropSet<T> set(Function1<T, Consumer<U>> setter, U maybeValue) {
+    public <U> PropSet<T> set(Function<T, Consumer<U>> setter, U maybeValue) {
       return tset(Optional.ofNullable(maybeValue), setter);
     }
 
     /** Try set. Run setter only if value is not null. */
-    public <U1, U2> PropSet<T> set(U1 maybeValue, Function1<U1, U2> map1, Function1<T, Consumer<U2>> setter) {
+    public <U1, U2> PropSet<T> set(U1 maybeValue, Function<U1, U2> map1, Function<T, Consumer<U2>> setter) {
       return tset(Optional.ofNullable(maybeValue).map(map1), setter);
     }
 
-    public <U1, U2, U3> PropSet<T> set(U1 maybeValue, Function1<U1, U2> map1, Function1<U2, U3> map2, Function1<T, Consumer<U3>> setter) {
+    public <U1, U2, U3> PropSet<T> set(U1 maybeValue, Function<U1, U2> map1, Function<U2, U3> map2, Function<T, Consumer<U3>> setter) {
       return tset(Optional.ofNullable(maybeValue).map(map1).map(map2), setter);
     }
 
     /** Try set. Run setter only if value is not null. */
-    public <U> PropSet<T> tset(Optional<U> maybeValue, Function1<T, Consumer<U>> setter) {
+    public <U> PropSet<T> tset(Optional<U> maybeValue, Function<T, Consumer<U>> setter) {
       if (maybeValue.isEmpty()) {
         return this;
       }
@@ -54,11 +54,11 @@ public class PropsBuilder {
     }
   }
 
-  public static <S, U1, U2> Optional<U2> ofNullable(S maybe, Function1<S, U1> map1, Function1<U1, U2> map2) {
+  public static <S, U1, U2> Optional<U2> ofNullable(S maybe, Function<S, U1> map1, Function<U1, U2> map2) {
     return Optional.ofNullable(maybe).map(map1).map(map2);
   }
 
-  public static <S, U1> Optional<U1> ofNullable(S maybe, Function1<S, U1> map1) {
+  public static <S, U1> Optional<U1> ofNullable(S maybe, Function<S, U1> map1) {
     return Optional.ofNullable(maybe).map(map1);
   }
 

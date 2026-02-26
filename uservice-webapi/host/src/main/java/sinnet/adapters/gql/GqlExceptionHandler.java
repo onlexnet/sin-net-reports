@@ -1,4 +1,4 @@
-package sinnet.gql.config;
+package sinnet.adapters.gql;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 

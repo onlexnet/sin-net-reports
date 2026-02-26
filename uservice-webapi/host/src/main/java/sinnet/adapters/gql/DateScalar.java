@@ -1,4 +1,4 @@
-package sinnet.gql.config;
+package sinnet.adapters.gql;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;

@@ -11,7 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
-import sinnet.app.Program;
+import sinnet.host.Program;
 
 /**
  * Unit tests for RootController.

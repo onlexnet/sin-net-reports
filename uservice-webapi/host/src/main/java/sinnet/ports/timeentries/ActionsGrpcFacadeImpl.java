@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
 import sinnet.domain.models.EntityId;
+import sinnet.domain.models.TimeEntry;
 import sinnet.gql.api.CommonMapper;
 import sinnet.grpc.common.UserToken;
 import sinnet.grpc.timeentries.GetQuery;
@@ -27,8 +28,9 @@ class ActionsGrpcFacadeImpl implements ActionsGrpcFacade {
   private final TimeEntriesBlockingStub stub;
   private final CommonMapper commonMapper;
 
+
   @Override
-  public List<TimeEntryModel> searchInternal(UUID projectId, LocalDate from, LocalDate to) {
+  public List<TimeEntry> searchInternal(UUID projectId, LocalDate from, LocalDate to) {
 
     var searchQuery = SearchQuery.newBuilder()
         .setFrom(commonMapper.toGrpc(from))
@@ -36,9 +38,10 @@ class ActionsGrpcFacadeImpl implements ActionsGrpcFacade {
         .setProjectId(projectId.toString())
         .build();
 
-    var result = stub.search(searchQuery);
+    var dto = stub.search(searchQuery);
+    var result = dto.getActivitiesList();
 
-    return result.getActivitiesList();
+    return result.stream().map(TimeEntryModelMapper.apply::fromDto).toList();
   }
 
   @Override
@@ -57,7 +60,7 @@ class ActionsGrpcFacadeImpl implements ActionsGrpcFacade {
   }
   
   @Override
-  public TimeEntryModel getActionInternal(UUID projectId, UUID timeentryId) {
+  public TimeEntry getActionInternal(UUID projectId, UUID timeentryId) {
 
     var query = GetQuery.newBuilder()
         .setProjectId(projectId.toString())
@@ -65,8 +68,9 @@ class ActionsGrpcFacadeImpl implements ActionsGrpcFacade {
         .build();
 
     var result = stub.get(query);
+    var item = result.getItem();
 
-    return result.getItem();
+    return TimeEntryModelMapper.apply.fromDto(item);
   }
 
   @Override
@@ -110,3 +114,4 @@ class ActionsGrpcFacadeImpl implements ActionsGrpcFacade {
   }
 
 }
+

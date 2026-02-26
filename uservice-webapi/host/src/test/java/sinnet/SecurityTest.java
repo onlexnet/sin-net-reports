@@ -4,7 +4,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 
 import java.util.UUID;
 
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,7 +12,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.test.context.ActiveProfiles;
 
 import onlexnet.sinnet.webapi.test.AppApi;
-import sinnet.app.Program;
+import sinnet.host.Program;
 
 @SpringBootTest(webEnvironment = RANDOM_PORT, classes = Program.class)
 @ActiveProfiles(Profiles.App.TEST)
@@ -23,7 +23,7 @@ class GqlTest {
 
   AppApi appApi;
 
-  @Before
+  @BeforeEach
   public void before() {
     var requestorEmail = "email@" + UUID.randomUUID();
     appApi = new AppApi(restTemplate.getRootUri(), requestorEmail);

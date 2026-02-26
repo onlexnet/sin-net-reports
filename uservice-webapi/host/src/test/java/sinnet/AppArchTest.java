@@ -39,6 +39,7 @@ public class AppArchTest {
       .and(GeneralCodingRules.NO_CLASSES_SHOULD_USE_FIELD_INJECTION)
       .because("These are Voilation of general coding rules");
 
+    static final String ROOT_PACKAGE_ADAPTERS = "sinnet.adapters..";
     static final String ROOT_PACKAGE_PORTS = "sinnet.ports..";
     static final String ROOT_PACKAGE_PORTS_IN = "sinnet.ports.in..";
     static final String ROOT_PACKAGE_PORTS_OUT = "sinnet.ports.out..";
@@ -57,13 +58,14 @@ public class AppArchTest {
       // Ports should not depend on domain
       var architecture = Architectures.layeredArchitecture()
           .consideringAllDependencies()
+          .layer("Adapters").definedBy(ROOT_PACKAGE_ADAPTERS)
           .layer("PortsIn").definedBy(ROOT_PACKAGE_PORTS_IN)
           .layer("PortsOut").definedBy(ROOT_PACKAGE_PORTS_OUT)
           .layer("LegacyPorts").definedBy(ROOT_PACKAGE_PORTS)
           .layer("Domain").definedBy(ROOT_PACKAGE_DOMAIN)
           .layer("GQL").definedBy(ROOT_PACKAGE_GQL)
           .layer("App").definedBy(ROOT_PACKAGE_APP)
-          .whereLayer("Domain").mayOnlyBeAccessedByLayers("PortsIn", "PortsOut", "LegacyPorts", "App", "GQL");
+          .whereLayer("Domain").mayOnlyBeAccessedByLayers("Adapters", "PortsIn", "PortsOut", "LegacyPorts", "App", "GQL");
 
       architecture.check(testedClasses);
     }
