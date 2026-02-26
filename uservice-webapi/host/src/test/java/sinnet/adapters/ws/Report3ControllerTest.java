@@ -20,13 +20,13 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.google.protobuf.ByteString;
 
+import sinnet.app.ports.timeentries.CustomersGrpcFacade;
 import sinnet.grpc.common.EntityId;
 import sinnet.grpc.customers.CustomerModel;
 import sinnet.grpc.customers.CustomerValue;
 import sinnet.grpc.customers.ListReply;
 import sinnet.grpc.customers.ListRequest;
-import sinnet.host.Program;
-import sinnet.ports.timeentries.CustomersGrpcFacade;
+import sinnet.infra.Program;
 import sinnet.report3.grpc.ReportRequest;
 import sinnet.report3.grpc.ReportsGrpc.ReportsBlockingStub;
 

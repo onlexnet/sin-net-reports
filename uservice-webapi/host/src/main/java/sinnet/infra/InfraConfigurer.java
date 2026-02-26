@@ -1,11 +1,13 @@
 package sinnet.infra;
 
-import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.context.annotation.ComponentScan;
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
 
-/** Registers components in the package.*/
-@Configurable
-@ComponentScan
-public class InfraConfigurer {
-  
+import sinnet.RootPackageMarker;
+
+@Configuration
+@ConfigurationPropertiesScan(basePackageClasses = RootPackageMarker.class)
+@EnableConfigurationProperties
+class InfraConfigurer {
 }

@@ -25,10 +25,10 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import sinnet.app.ports.timeentries.ActionsGrpcFacade;
+import sinnet.app.ports.timeentries.CustomersGrpcFacade;
 import sinnet.domain.models.TimeEntry;
 import sinnet.gql.api.CommonMapper;
-import sinnet.ports.timeentries.ActionsGrpcFacade;
-import sinnet.ports.timeentries.CustomersGrpcFacade;
 
 /**
  * Unit tests for FileGenerationService.

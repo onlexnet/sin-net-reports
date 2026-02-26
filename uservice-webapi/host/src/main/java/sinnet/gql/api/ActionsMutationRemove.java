@@ -7,7 +7,7 @@ import org.springframework.graphql.data.method.annotation.SchemaMapping;
 import org.springframework.stereotype.Controller;
 
 import lombok.RequiredArgsConstructor;
-import sinnet.ports.timeentries.ActionsGrpcFacade;
+import sinnet.app.ports.timeentries.ActionsGrpcFacade;
 
 @Controller
 @RequiredArgsConstructor

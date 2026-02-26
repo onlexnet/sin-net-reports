@@ -8,10 +8,10 @@ import org.springframework.stereotype.Controller;
 
 import io.vavr.collection.Iterator;
 import lombok.RequiredArgsConstructor;
+import sinnet.app.ports.timeentries.UsersGrpcService;
 import sinnet.gql.models.UserGql;
 import sinnet.grpc.common.UserToken;
 import sinnet.grpc.users.SearchRequest;
-import sinnet.ports.timeentries.UsersGrpcService;
 
 @Controller
 @RequiredArgsConstructor

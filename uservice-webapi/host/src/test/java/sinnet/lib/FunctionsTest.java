@@ -3,6 +3,8 @@ package sinnet.lib;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import sinnet.app.lib.Functions;
+
 public class FunctionsTest {
     
     @Test

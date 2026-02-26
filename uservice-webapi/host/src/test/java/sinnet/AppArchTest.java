@@ -39,10 +39,10 @@ public class AppArchTest {
       .and(GeneralCodingRules.NO_CLASSES_SHOULD_USE_FIELD_INJECTION)
       .because("These are Voilation of general coding rules");
 
-    static final String ROOT_PACKAGE_ADAPTERS = "sinnet.adapters..";
-    static final String ROOT_PACKAGE_PORTS = "sinnet.ports..";
-    static final String ROOT_PACKAGE_PORTS_IN = "sinnet.ports.in..";
-    static final String ROOT_PACKAGE_PORTS_OUT = "sinnet.ports.out..";
+    static final String ROOT_PACKAGE_ADAPTERS = "sinnet.infra.adapters..";
+    static final String ROOT_PACKAGE_PORTS = "sinnet.app.ports..";
+    static final String ROOT_PACKAGE_PORTS_IN = "sinnet.app.ports.in..";
+    static final String ROOT_PACKAGE_PORTS_OUT = "sinnet.app.ports.out..";
     static final String ROOT_PACKAGE_DOMAIN = "sinnet.domain..";
     static final String ROOT_PACKAGE_GQL = "sinnet.gql..";
     static final String ROOT_PACKAGE_APP = "sinnet.app..";

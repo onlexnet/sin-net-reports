@@ -7,9 +7,9 @@ import org.springframework.graphql.data.method.annotation.SchemaMapping;
 import org.springframework.stereotype.Controller;
 
 import lombok.RequiredArgsConstructor;
+import sinnet.app.ports.timeentries.ProjectsGrpcFacade;
 import sinnet.gql.models.ProjectEntityGql;
 import sinnet.gql.models.SomeEntityGql;
-import sinnet.ports.timeentries.ProjectsGrpcFacade;
 
 @Controller
 @RequiredArgsConstructor
