@@ -24,6 +24,19 @@ public class TimeEntryModelMapperTest {
         
     }
 
+
+    @Test
+    void mapMapMinimalProjectWithInvalidDate() {
+
+        var dto = TimeEntryModel.newBuilder().setWhenProvided(sinnet.grpc.timeentries.LocalDate.newBuilder()).build();
+
+        var actual = TimeEntryModelMapper.apply.fromDto(dto);
+
+        var expected = new TimeEntry(null, "", "", 0, 0, "", "", null);
+        Assertions.assertThat(actual).isEqualTo(expected);
+        
+    }
+
     @Test
     void mapFullModel() {
 

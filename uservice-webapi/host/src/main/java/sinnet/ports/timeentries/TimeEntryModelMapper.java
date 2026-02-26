@@ -23,20 +23,7 @@ public interface TimeEntryModelMapper {
   TimeEntry fromDto(TimeEntryModel it);
 
   /** TBD. */
-  default LocalDate map(com.google.protobuf.Timestamp value) {
-    if (value == null) {
-      return null;
-    }
-    return java.time.Instant.ofEpochSecond(value.getSeconds(), value.getNanos())
-        .atZone(java.time.ZoneId.systemDefault())
-        .toLocalDate();
-  }
-
-  /** TBD. */
   default LocalDate map(sinnet.grpc.timeentries.LocalDate value) {
-    if (value == null) {
-      return null;
-    }
     if (value.getMonth() == 0) {
       return null;
     }
