@@ -7,10 +7,10 @@ import org.springframework.graphql.data.method.annotation.SchemaMapping;
 import org.springframework.stereotype.Controller;
 
 import lombok.RequiredArgsConstructor;
+import sinnet.app.lib.Functions;
+import sinnet.app.ports.timeentries.ActionsGrpcFacade;
+import sinnet.app.ports.timeentries.CustomersGrpcFacade;
 import sinnet.gql.models.ServiceModelGql;
-import sinnet.lib.Functions;
-import sinnet.ports.timeentries.ActionsGrpcFacade;
-import sinnet.ports.timeentries.CustomersGrpcFacade;
 
 @Controller
 @RequiredArgsConstructor

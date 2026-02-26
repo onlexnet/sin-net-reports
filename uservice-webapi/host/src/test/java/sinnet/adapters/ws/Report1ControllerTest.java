@@ -24,14 +24,14 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.google.protobuf.ByteString;
 
+import sinnet.app.ports.timeentries.ActionsGrpcFacade;
+import sinnet.app.ports.timeentries.CustomersGrpcFacade;
+import sinnet.app.ports.timeentries.Reports1GrpcAdapter;
+import sinnet.app.ports.timeentries.UsersGrpcService;
 import sinnet.app.report1.Report1Flow;
 import sinnet.domain.models.TimeEntry;
 import sinnet.grpc.users.SearchRequest;
-import sinnet.host.Program;
-import sinnet.ports.timeentries.ActionsGrpcFacade;
-import sinnet.ports.timeentries.CustomersGrpcFacade;
-import sinnet.ports.timeentries.Reports1GrpcAdapter;
-import sinnet.ports.timeentries.UsersGrpcService;
+import sinnet.infra.Program;
 import sinnet.report1.grpc.ReportRequests;
 
 /**

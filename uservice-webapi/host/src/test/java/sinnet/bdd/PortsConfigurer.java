@@ -5,10 +5,10 @@ import org.mockito.Mockito;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 
-import sinnet.ports.timeentries.ActionsGrpcFacade;
-import sinnet.ports.timeentries.CustomersGrpcFacade;
-import sinnet.ports.timeentries.ProjectsGrpcFacade;
-import sinnet.ports.timeentries.UsersGrpcService;
+import sinnet.app.ports.timeentries.ActionsGrpcFacade;
+import sinnet.app.ports.timeentries.CustomersGrpcFacade;
+import sinnet.app.ports.timeentries.ProjectsGrpcFacade;
+import sinnet.app.ports.timeentries.UsersGrpcService;
 
 /**
  * Place where we keep all ports which are mocked as part of all DDD scenarions.
