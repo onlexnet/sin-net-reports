@@ -3,21 +3,20 @@ package sinnet.infra.adapters.grpc;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.Delegate;
+import sinnet.app.ports.out.UsersServicePortOut;
+import sinnet.grpc.users.SearchReply;
+import sinnet.grpc.users.SearchRequest;
 import sinnet.grpc.users.UsersGrpc.UsersBlockingStub;
 
-/** Mockable equivalent of {@link UsersBlockingStub}. */
 @Component
 @RequiredArgsConstructor
-public class UsersGrpcService {
+class UsersGrpcService implements UsersServicePortOut {
 
-  private interface UsersService {
-
-    sinnet.grpc.users.SearchReply search(sinnet.grpc.users.SearchRequest request);
-
-  }
-
-  @Delegate(types = UsersService.class)
   private final UsersBlockingStub stub;
+
+  @Override
+  public SearchReply search(SearchRequest request) {
+    return stub.search(request);
+  }
 
 }
