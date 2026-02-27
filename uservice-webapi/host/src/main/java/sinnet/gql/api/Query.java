@@ -1,5 +1,7 @@
 package sinnet.gql.api;
 
+import java.util.UUID;
+
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -26,7 +28,7 @@ class Query {
   }
 
   @QueryMapping("Users")
-  UsersQuery users(@Argument String projectId) {
+  UsersQuery users(@Argument UUID projectId) {
     var authentication = (AuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
     var primaryEmail = authentication.getPrincipal();
 

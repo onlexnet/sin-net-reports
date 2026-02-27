@@ -1,4 +1,6 @@
 package sinnet.gql.api;
 
+import java.util.UUID;
+
 /** Fixme. */
-public record UsersQuery(String projectId, String primaryEmail) { }
+public record UsersQuery(UUID projectId, String primaryEmail) { }

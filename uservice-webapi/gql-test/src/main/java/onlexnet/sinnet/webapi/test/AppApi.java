@@ -126,9 +126,9 @@ public class AppApi {
   }
 
   /** REturns list of all users (emails) related to given project. */
-  public Entity<List<UserGql>, ?> searchUsers(String projectId) {
+  public Entity<List<UserGql>, ?> searchUsers(UUID projectId) {
     return tester.documentName("usersSearch")
-        .variable("projectId", projectId)
+        .variable("projectId", projectId.toString())
         .execute()
         .path("Users.search")
         .entityList(UserGql.class);
