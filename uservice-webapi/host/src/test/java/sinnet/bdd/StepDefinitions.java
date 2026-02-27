@@ -189,12 +189,12 @@ public class StepDefinitions {
 
   @When("Users list query is send")
   public void Users_list_query_is_send() {
-    var projectId = "projectId [" + UUID.randomUUID() + "]";
+    var projectId = UUID.randomUUID();
 
     var query = sinnet.grpc.users.SearchRequest.newBuilder()
         .setUserToken(UserToken.newBuilder()
             .setRequestorEmail(requestorEmail)
-            .setProjectId(projectId))
+            .setProjectId(projectId.toString()))
         .build();
     var reply = sinnet.grpc.users.SearchReply.newBuilder()
         .addItems(UsersSearchModel.newBuilder()

@@ -8,27 +8,23 @@ import org.springframework.stereotype.Controller;
 
 import io.vavr.collection.Iterator;
 import lombok.RequiredArgsConstructor;
-import sinnet.app.ports.timeentries.UsersGrpcService;
+import sinnet.app.ports.in.UsersSearchPortIn;
 import sinnet.gql.models.UserGql;
-import sinnet.grpc.common.UserToken;
-import sinnet.grpc.users.SearchRequest;
 
 @Controller
 @RequiredArgsConstructor
 class UsersSearch {
 
-  private final UsersGrpcService service;
+  private final UsersSearchPortIn service;
 
   @SchemaMapping
   List<UserGql> search(UsersQuery self) {
-    var request = SearchRequest.newBuilder()
-        .setUserToken(UserToken.newBuilder()
-            .setRequestorEmail(self.primaryEmail())
-            .setProjectId(self.projectId()))
-        .build();
-    var items = service.search(request).getItemsList();
+    var projectId = self.projectId();
+    var primaryEmail = self.primaryEmail();
+
+    var items = service.search(projectId, primaryEmail);
     return Iterator.ofAll(items)
-        .map(it -> new UserGql(it.getEmail(), it.getEntityId()))
+        .map(it -> new UserGql(it.email(), it.entityId()))
         .toJavaList();
   }
 

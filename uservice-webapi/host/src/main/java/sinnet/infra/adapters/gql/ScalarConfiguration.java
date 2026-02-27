@@ -13,6 +13,7 @@ class ScalarConfiguration {
   RuntimeWiringConfigurer configurer() {
     return builder -> builder
       .scalar(ExtendedScalars.Date)
-      .scalar(ExtendedScalars.GraphQLLong);
+      .scalar(ExtendedScalars.GraphQLLong)
+      .scalar(ExtendedScalars.UUID);
   }
 }
