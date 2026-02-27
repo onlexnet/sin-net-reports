@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Value;
 import sinnet.app.ports.in.Report1PortIn;
 import sinnet.app.ports.out.UsersServicePortOut;
+import sinnet.domain.models.Email;
 import sinnet.grpc.common.UserToken;
 import sinnet.grpc.users.SearchRequest;
 import sinnet.infra.adapters.grpc.ActionsGrpcFacade;
@@ -88,10 +89,7 @@ public class Report1Flow implements Report1PortIn {
 
   private Function<String, String> emailToName(UUID projectId) {
 
-    var request = SearchRequest.newBuilder()
-        .setUserToken(UserToken.newBuilder().setProjectId(projectId.toString()).setRequestorEmail("ignored@owner").build())
-        .build();
-    var response = usersService.search(request);
+    var response = usersService.search(projectId, Email.of("ignored@owner"));
     var emailToName = response.getItemsList().stream()
         .collect(Collectors.toMap(it -> it.getEmail(), it -> it.getCustomName()));
 

@@ -19,6 +19,7 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import onlexnet.sinnet.webapi.test.AppApi;
 import sinnet.app.ports.out.UsersServicePortOut;
+import sinnet.domain.models.Email;
 import sinnet.domain.models.ProjectId;
 import sinnet.gql.api.CommonMapper;
 import sinnet.gql.models.CustomerInput;
@@ -191,11 +192,6 @@ public class StepDefinitions {
   public void Users_list_query_is_send() {
     var projectId = UUID.randomUUID();
 
-    var query = sinnet.grpc.users.SearchRequest.newBuilder()
-        .setUserToken(UserToken.newBuilder()
-            .setRequestorEmail(requestorEmail)
-            .setProjectId(projectId.toString()))
-        .build();
     var reply = sinnet.grpc.users.SearchReply.newBuilder()
         .addItems(UsersSearchModel.newBuilder()
           .setEmail("my email")
@@ -203,7 +199,7 @@ public class StepDefinitions {
         .build();
 
     Mockito
-      .when(usersGrpc.search(query))
+      .when(usersGrpc.search(projectId, Email.of(requestorEmail)))
       .thenReturn(reply);
 
     userListValidation = () -> {
