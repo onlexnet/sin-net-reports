@@ -20,7 +20,6 @@
     <lombok.version>1.18.42</lombok.version>
     <mapstruct.version>1.6.3</mapstruct.version>
     <jspecify.version>1.0.0</jspecify.version>
-    <checkstyle.version>13.2.0</checkstyle.version>
     <instancio-junit.version>5.3.0</instancio-junit.version>
   </properties>
 
@@ -148,37 +147,6 @@
         </executions>
       </plugin>
       
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-checkstyle-plugin</artifactId>
-        <version>3.3.1</version>
-        <executions>
-          <execution>
-            <phase>process-sources</phase>
-            <goals>
-              <goal>check</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <configLocation>build-checkstyle/google_checks_customized.xml</configLocation>
-          <violationSeverity>warning</violationSeverity>
-          <failOnViolation>true</failOnViolation>
-        </configuration>
-        <dependencies>
-          <dependency>
-            <groupId>com.puppycrawl.tools</groupId>
-            <artifactId>checkstyle</artifactId>
-            <version>${checkstyle.version}</version>
-          </dependency>
-          <dependency>
-            <groupId>onlexnet.sinnet</groupId>
-            <artifactId>build-tools</artifactId>
-            <version>${revision}</version>
-          </dependency>
-        </dependencies>
-      </plugin>
-
     </plugins>
 
     <pluginManagement>

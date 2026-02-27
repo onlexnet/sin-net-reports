@@ -19,7 +19,6 @@
 ```
 uservice-webapi-build/          (parent aggregator)
 ├── base-pom/                   (dependency management, shared plugins)
-├── build-tools/                (Checkstyle configuration)
 ├── gql-model/                  (GraphQL DTOs - shared between modules)
 ├── gql-test/                   (GraphQL test utilities and .graphql files)
 └── host/                       (main application module)
@@ -95,14 +94,9 @@ mvn clean install jib:dockerBuild \
 ### Code Quality
 
 ```bash
-# Run Checkstyle (automatically runs during verify phase)
-mvn verify
-
 # Push to SonarCloud manually
 mvn clean package sonar:sonar
 ```
-
-**Configuration:** Checkstyle rules in `build-tools/src/main/resources/build-checkstyle/google_checks_customized.xml`
 
 ## GraphQL Development Patterns
 

@@ -7,8 +7,6 @@ applyTo: '**/*.java'
 
 ## General Instructions
 
-- First, prompt the user if they want to integrate static analysis tools (SonarQube, PMD, Checkstyle)
-  into their project setup. If yes, provide guidance on tool selection and configuration.
 - If the user declines static analysis tools or wants to proceed without them, continue with implementing the Best practices, bug patterns and code smell prevention guidelines outlined below.
 - Address code smells proactively during development rather than accumulating technical debt.
 - Focus on readability, maintainability, and performance when refactoring identified issues.
