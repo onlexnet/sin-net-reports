@@ -25,7 +25,6 @@ COPY api/schema api/schema
 COPY uservice-webapi/pom.xml uservice-webapi/
 COPY uservice-webapi/.semversion uservice-webapi/
 COPY uservice-webapi/base-pom/pom.xml uservice-webapi/base-pom/
-COPY uservice-webapi/build-tools/pom.xml uservice-webapi/build-tools/
 COPY uservice-webapi/gql-model/pom.xml uservice-webapi/gql-model/
 COPY uservice-webapi/gql-test/pom.xml uservice-webapi/gql-test/
 COPY uservice-webapi/host/pom.xml uservice-webapi/host/
@@ -41,7 +40,6 @@ RUN --mount=type=cache,target=/root/.m2 \
     mvn dependency:go-offline -B -ntp -DskipTests -Drevision=$SEMVERSION || true
 
 # Copy source code (only modules with src directories - base-pom has no src)
-COPY uservice-webapi/build-tools/src uservice-webapi/build-tools/src
 COPY uservice-webapi/gql-model/src uservice-webapi/gql-model/src
 COPY uservice-webapi/gql-test/src uservice-webapi/gql-test/src
 COPY uservice-webapi/host/src uservice-webapi/host/src
