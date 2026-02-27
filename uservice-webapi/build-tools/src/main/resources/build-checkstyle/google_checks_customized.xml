@@ -49,7 +49,9 @@
   <module name="TreeWalker">
 
     <!-- https://checkstyle.org/checks/imports/unusedimports.html -->
-    <module name="UnusedImports"/>
+    <module name="UnusedImports">
+      <property name="severity" value="error"/>
+    </module>
 
     <module name="OuterTypeFilename"/>
     <module name="IllegalTokenText">

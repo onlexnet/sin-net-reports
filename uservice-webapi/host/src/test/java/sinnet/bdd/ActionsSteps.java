@@ -13,12 +13,12 @@ import io.cucumber.java.Before;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import onlexnet.sinnet.webapi.test.AppApi;
-import sinnet.app.ports.timeentries.ActionsGrpcFacade;
 import sinnet.domain.models.TimeEntry;
 import sinnet.gql.api.CommonMapper;
 import sinnet.gql.models.ServiceModelGql;
 import sinnet.gql.models.ServicesSearchResultGql;
 import sinnet.gql.models.SomeEntityGql;
+import sinnet.infra.adapters.grpc.ActionsGrpcFacade;
 
 public class ActionsSteps {
 

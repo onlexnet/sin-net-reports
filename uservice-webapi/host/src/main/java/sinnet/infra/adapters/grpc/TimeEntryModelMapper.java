@@ -1,4 +1,4 @@
-package sinnet.app.ports.timeentries;
+package sinnet.infra.adapters.grpc;
 
 
 import org.mapstruct.Mapper;

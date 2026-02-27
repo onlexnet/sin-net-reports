@@ -16,10 +16,10 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import sinnet.app.ports.timeentries.ActionsGrpcFacade;
-import sinnet.app.ports.timeentries.CustomersGrpcFacade;
 import sinnet.domain.exceptions.AppException;
 import sinnet.grpc.customers.CustomerModel;
+import sinnet.infra.adapters.grpc.ActionsGrpcFacade;
+import sinnet.infra.adapters.grpc.CustomersGrpcFacade;
 
 /**
  * Service for generating Excel files with time entries and converting them to base64.

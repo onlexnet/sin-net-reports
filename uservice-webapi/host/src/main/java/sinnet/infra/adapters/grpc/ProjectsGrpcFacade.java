@@ -1,4 +1,4 @@
-package sinnet.app.ports.timeentries;
+package sinnet.infra.adapters.grpc;
 
 import java.util.List;
 import java.util.function.Function;

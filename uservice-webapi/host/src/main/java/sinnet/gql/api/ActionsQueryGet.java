@@ -8,9 +8,9 @@ import org.springframework.stereotype.Controller;
 
 import lombok.RequiredArgsConstructor;
 import sinnet.app.lib.Functions;
-import sinnet.app.ports.timeentries.ActionsGrpcFacade;
-import sinnet.app.ports.timeentries.CustomersGrpcFacade;
 import sinnet.gql.models.ServiceModelGql;
+import sinnet.infra.adapters.grpc.ActionsGrpcFacade;
+import sinnet.infra.adapters.grpc.CustomersGrpcFacade;
 
 @Controller
 @RequiredArgsConstructor

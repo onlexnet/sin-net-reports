@@ -1,4 +1,4 @@
-package sinnet.app.ports.timeentries;
+package sinnet.infra.adapters.grpc;
 
 import java.time.LocalDate;
 import java.util.List;

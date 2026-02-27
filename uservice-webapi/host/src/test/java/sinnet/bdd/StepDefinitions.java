@@ -18,10 +18,6 @@ import io.cucumber.java.Before;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import onlexnet.sinnet.webapi.test.AppApi;
-import sinnet.app.ports.timeentries.CustomersGrpcFacade;
-import sinnet.app.ports.timeentries.ProjectsGrpcFacade;
-import sinnet.app.ports.timeentries.UsersGrpcService;
-import sinnet.app.ports.timeentries.ProjectsGrpcFacade.StatsResult;
 import sinnet.domain.models.ProjectId;
 import sinnet.gql.api.CommonMapper;
 import sinnet.gql.models.CustomerInput;
@@ -40,6 +36,10 @@ import sinnet.grpc.customers.UpdateCommand;
 import sinnet.grpc.customers.UpdateResult;
 import sinnet.grpc.users.UsersSearchModel;
 import sinnet.infra.TimeProvider;
+import sinnet.infra.adapters.grpc.CustomersGrpcFacade;
+import sinnet.infra.adapters.grpc.ProjectsGrpcFacade;
+import sinnet.infra.adapters.grpc.UsersGrpcService;
+import sinnet.infra.adapters.grpc.ProjectsGrpcFacade.StatsResult;
 
 public class StepDefinitions {
 
