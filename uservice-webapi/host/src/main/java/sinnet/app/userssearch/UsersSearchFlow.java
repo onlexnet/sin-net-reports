@@ -6,9 +6,9 @@ import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
 import sinnet.app.ports.in.UsersSearchPortIn;
-import sinnet.app.ports.timeentries.UsersGrpcService;
 import sinnet.grpc.common.UserToken;
 import sinnet.grpc.users.SearchRequest;
+import sinnet.infra.adapters.grpc.UsersGrpcService;
 
 @Component
 @RequiredArgsConstructor

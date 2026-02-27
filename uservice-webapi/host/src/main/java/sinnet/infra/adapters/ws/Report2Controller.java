@@ -20,7 +20,7 @@ import io.vavr.Tuple2;
 import io.vavr.collection.HashMap;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
-import sinnet.app.ports.timeentries.ActionsGrpcFacade;
+import sinnet.infra.adapters.grpc.ActionsGrpcFacade;
 import sinnet.report2.grpc.ReportRequest;
 import sinnet.report2.grpc.ReportsGrpc.ReportsBlockingStub;
 import sinnet.reports.grpc.UserToken;

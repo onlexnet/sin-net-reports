@@ -1,13 +1,13 @@
-package sinnet.app.ports.timeentries;
+package sinnet.infra.adapters.grpc;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import io.grpc.ManagedChannelBuilder;
 import lombok.extern.slf4j.Slf4j;
-import sinnet.app.ports.timeentries.GrpcProperties.ServiceAddress;
 import sinnet.grpc.projects.generated.ProjectsGrpc;
 import sinnet.grpc.projects.generated.ProjectsGrpc.ProjectsBlockingStub;
+import sinnet.infra.adapters.grpc.GrpcProperties.ServiceAddress;
 
 @Configuration
 @Slf4j

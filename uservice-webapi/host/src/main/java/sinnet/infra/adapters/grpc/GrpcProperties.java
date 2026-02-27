@@ -1,4 +1,4 @@
-package sinnet.app.ports.timeentries;
+package sinnet.infra.adapters.grpc;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;

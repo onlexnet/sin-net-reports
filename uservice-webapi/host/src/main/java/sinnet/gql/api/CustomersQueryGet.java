@@ -5,10 +5,10 @@ import org.springframework.graphql.data.method.annotation.SchemaMapping;
 import org.springframework.stereotype.Controller;
 
 import lombok.RequiredArgsConstructor;
-import sinnet.app.ports.timeentries.CustomersGrpcFacade;
 import sinnet.gql.models.CustomerEntityGql;
 import sinnet.grpc.common.EntityId;
 import sinnet.grpc.customers.GetRequest;
+import sinnet.infra.adapters.grpc.CustomersGrpcFacade;
 
 @Controller
 @RequiredArgsConstructor

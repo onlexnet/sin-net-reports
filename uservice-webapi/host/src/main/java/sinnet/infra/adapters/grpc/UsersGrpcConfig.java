@@ -1,12 +1,12 @@
-package sinnet.app.ports.timeentries;
+package sinnet.infra.adapters.grpc;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import io.grpc.ManagedChannelBuilder;
-import sinnet.app.ports.timeentries.GrpcProperties.ServiceAddress;
 import sinnet.grpc.users.UsersGrpc;
 import sinnet.grpc.users.UsersGrpc.UsersBlockingStub;
+import sinnet.infra.adapters.grpc.GrpcProperties.ServiceAddress;
 
 @Configuration
 class UsersGrpcConfig {
