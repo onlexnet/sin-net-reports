@@ -6,15 +6,15 @@ import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
 import sinnet.app.ports.in.UsersSearchPortIn;
+import sinnet.app.ports.out.UsersServicePortOut;
 import sinnet.grpc.common.UserToken;
 import sinnet.grpc.users.SearchRequest;
-import sinnet.infra.adapters.grpc.UsersGrpcService;
 
 @Component
 @RequiredArgsConstructor
 class UsersSearchFlow implements UsersSearchPortIn {
 
-  private final UsersGrpcService service;
+  private final UsersServicePortOut service;
 
   @Override
   public Iterable<User> search(UUID projectId, String primaryEmail) {

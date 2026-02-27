@@ -14,12 +14,12 @@ import io.vavr.control.Option;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
 import sinnet.app.ports.in.Report1PortIn;
+import sinnet.app.ports.out.UsersServicePortOut;
 import sinnet.grpc.common.UserToken;
 import sinnet.grpc.users.SearchRequest;
 import sinnet.infra.adapters.grpc.ActionsGrpcFacade;
 import sinnet.infra.adapters.grpc.CustomersGrpcFacade;
 import sinnet.infra.adapters.grpc.Reports1GrpcAdapter;
-import sinnet.infra.adapters.grpc.UsersGrpcService;
 import sinnet.report1.grpc.ActivityDetails;
 import sinnet.report1.grpc.CustomerDetails;
 import sinnet.report1.grpc.ReportRequest;
@@ -35,7 +35,7 @@ public class Report1Flow implements Report1PortIn {
   private final ActionsGrpcFacade timeentries;
   private final CustomersGrpcFacade customersClient;
   private final Reports1GrpcAdapter reportsClient;
-  private final UsersGrpcService usersService;
+  private final UsersServicePortOut usersService;
 
   @Override
   public byte[] downloadPdfFile(UUID projectId, int year, int month) {

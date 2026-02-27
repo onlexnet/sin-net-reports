@@ -24,6 +24,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.google.protobuf.ByteString;
 
+import sinnet.app.ports.out.UsersServicePortOut;
 import sinnet.app.report1.Report1Flow;
 import sinnet.domain.models.TimeEntry;
 import sinnet.grpc.users.SearchRequest;
@@ -31,7 +32,6 @@ import sinnet.infra.Program;
 import sinnet.infra.adapters.grpc.ActionsGrpcFacade;
 import sinnet.infra.adapters.grpc.CustomersGrpcFacade;
 import sinnet.infra.adapters.grpc.Reports1GrpcAdapter;
-import sinnet.infra.adapters.grpc.UsersGrpcService;
 import sinnet.report1.grpc.ReportRequests;
 
 /**
@@ -55,7 +55,7 @@ class Report1ControllerTest {
   private Reports1GrpcAdapter reports1GrpcAdapter;
 
   @MockitoBean
-  private UsersGrpcService usersGrpcService;
+  private UsersServicePortOut usersGrpcService;
 
   @Test
   void downloadPdfFile_shouldReturnZipFileWithCorrectHeaders() throws Exception {
