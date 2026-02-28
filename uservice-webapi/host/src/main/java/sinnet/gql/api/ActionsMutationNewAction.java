@@ -7,6 +7,7 @@ import org.springframework.graphql.data.method.annotation.SchemaMapping;
 import org.springframework.stereotype.Controller;
 
 import lombok.RequiredArgsConstructor;
+import sinnet.app.ports.in.TimeentriesServicePortIn;
 import sinnet.gql.models.SomeEntityGql;
 import sinnet.infra.adapters.grpc.ActionsGrpcFacade;
 
@@ -14,7 +15,7 @@ import sinnet.infra.adapters.grpc.ActionsGrpcFacade;
 @RequiredArgsConstructor
 class ActionsMutationNewAction {
   
-  private final ActionsGrpcFacade actionsGrpc;
+  private final TimeentriesServicePortIn actionsGrpc;
 
   @SchemaMapping 
   SomeEntityGql newAction(ActionsMutation self) {
@@ -23,7 +24,7 @@ class ActionsMutationNewAction {
 
     // no security check as each person can create its own projects
 
-    var createId = actionsGrpc.newAction(requestorEmail, projectId, LocalDate.now());
+    var createId = actionsGrpc.newEntry(requestorEmail, projectId, LocalDate.now());
 
     return new SomeEntityGql()
         .setEntityId(createId.id().toString())
