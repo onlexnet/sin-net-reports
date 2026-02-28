@@ -5,8 +5,6 @@ import java.util.function.Function;
 
 import org.springframework.stereotype.Component;
 
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.Delegate;
 import sinnet.gql.models.CustomerEntityGql;
 import sinnet.grpc.common.EntityId;
 import sinnet.grpc.common.UserToken;
@@ -24,21 +22,34 @@ import sinnet.grpc.customers.UpdateResult;
 
 /** Mockable equivalent of {@link ProjectsGrpcStub}. */
 @Component
-@RequiredArgsConstructor
 public class CustomersGrpcFacade {
 
-  private interface CustomersService {
+  private final CustomersBlockingStub stub;
 
-    ListReply list(ListRequest request);
-    
-    GetReply get(GetRequest request);
-
-    ReserveReply reserve(ReserveRequest request);
-
-    RemoveReply remove(RemoveRequest request);
-
-    UpdateResult update(UpdateCommand request);
+  public CustomersGrpcFacade(CustomersBlockingStub stub) {
+    this.stub = stub;
   }
+
+  public ListReply list(ListRequest request) {
+    return stub.list(request);
+  }
+    
+  public GetReply get(GetRequest request) {
+    return stub.get(request);
+  }
+
+  public ReserveReply reserve(ReserveRequest request) {
+    return stub.reserve(request);
+  }
+
+  public RemoveReply remove(RemoveRequest request) {
+    return stub.remove(request);
+  }
+
+  public UpdateResult update(UpdateCommand request) {
+    return stub.update(request);
+  }
+
 
   /** Doxme. */
   public CustomerEntityGql customerGet(String projectId, String requestorEmail, String customerId, Function<GetReply, CustomerEntityGql> mapper) {
@@ -72,9 +83,5 @@ public class CustomersGrpcFacade {
     var result = list(request).getCustomersList().stream().map(mapper).toList();
     return result;
   }
-
-  @Delegate(types = CustomersService.class)
-  private final CustomersBlockingStub stub;
-
 
 }
