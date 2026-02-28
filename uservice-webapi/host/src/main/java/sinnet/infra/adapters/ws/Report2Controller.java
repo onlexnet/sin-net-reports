@@ -1,5 +1,6 @@
 package sinnet.infra.adapters.ws;
 
+import java.time.YearMonth;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
@@ -24,7 +25,10 @@ class Report2Controller {
       @RequestParam("yearFrom") int yearFrom, @RequestParam("monthFrom") int monthFrom,
       @RequestParam("yearTo") int yearTo, @RequestParam("monthTo") int monthTo) {
 
-    var result = report2PortIn.downloadPdfFile(projectId, yearFrom, monthFrom, yearTo, monthTo);
+    var from = YearMonth.of(yearFrom, monthFrom);
+    var to = YearMonth.of(yearTo, monthTo);
+    var result = report2PortIn.downloadPdfFile(projectId,from, to);
+
     return Response.asResponseEntity(result, "report " + yearFrom + "-" + monthFrom + ".pdf");
   }
 

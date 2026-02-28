@@ -28,13 +28,13 @@ class Report2Flow implements Report2PortIn {
   private final ActionsGrpcFacade timeentries;
   private final ReportsBlockingStub reportsClient;
 
-  public byte[] downloadPdfFile(UUID projectId, int yearFrom, int monthFrom, int yearTo, int monthTo) {
+  public byte[] downloadPdfFile(UUID projectId, YearMonth from, YearMonth to) {
 
     var authentication = (AuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
     var primaryEmail = authentication.getPrincipal();
 
-    var dateFrom = LocalDate.of(yearFrom, monthFrom, 1);
-    var dateTo = LocalDate.of(yearTo, monthTo, 1).plusMonths(1).minusDays(1);
+    var dateFrom = from.atDay(1);
+    var dateTo = to.atDay(1).plusMonths(1).minusDays(1);
 
     var entries = getTimeentries(projectId, dateFrom, dateTo);
     var reportRequest = asReportRequest(entries, primaryEmail, projectId.toString());
@@ -57,7 +57,7 @@ class Report2Flow implements Report2PortIn {
 
     var requestBuilder = ReportRequest.newBuilder();
     map.forEach((k, v) -> requestBuilder.addDetailsBuilder()
-        .setPersonName(k._1 + "")
+        .setPersonName(k._1)
         .setYearMonth(newBuilder().setYear(k._2.getYear()).setMonth(k._2.getMonthValue()))
         .setHowLongInMins(v._1)
         .setHowFarInKms(v._2)
