@@ -1,18 +1,15 @@
-package sinnet.infra.adapters.ws;
+package sinnet.app.flow.reports;
 
 import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Component;
 
 import io.vavr.Tuple;
 import io.vavr.collection.HashMap;
 import io.vavr.collection.List;
 import lombok.RequiredArgsConstructor;
+import sinnet.app.ports.in.Report3PortIn;
 import sinnet.gql.utils.PropsBuilder;
 import sinnet.grpc.customers.ListReply;
 import sinnet.grpc.customers.ListRequest;
@@ -22,16 +19,15 @@ import sinnet.report3.grpc.GroupDetails;
 import sinnet.report3.grpc.ReportRequest;
 import sinnet.report3.grpc.ReportsGrpc.ReportsBlockingStub;
 
-@RestController
-@RequestMapping("/api/raporty")
+@Component
 @RequiredArgsConstructor
-class Report3Controller {
+class Report3Flow implements Report3PortIn {
 
   private final CustomersGrpcFacade customera;
   private final ReportsBlockingStub reportsClient;
   
-  @GetMapping(value = "/3/{projectId}", produces = "application/zip")
-  public ResponseEntity<byte[]> downloadPdfFile(@PathVariable UUID projectId) {
+  @Override
+  public byte[] downloadPdfFile(UUID projectId) {
 
     var projectIdAsString = projectId.toString();
     var listRequest = ListRequest.newBuilder()
@@ -40,10 +36,7 @@ class Report3Controller {
     var customerList = customera.list(listRequest);
     var reportRequest = asReportRequest(customerList);
     var reportData = reportsClient.produce(reportRequest);
-    var result = reportData.getData().toByteArray();
-
-    return Response.asResponseEntity(result, "report-3.pdf");
-        
+    return reportData.getData().toByteArray();
   }
 
   // TODO move aggregation closer to data service

@@ -16,7 +16,7 @@ import sinnet.app.ports.in.Report2PortIn;
 @RestController
 @RequestMapping("/api/raporty")
 @RequiredArgsConstructor
-class Report2Controller {
+class Report2Adapter {
 
   private final Report2PortIn report2PortIn;
 
