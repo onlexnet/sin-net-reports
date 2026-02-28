@@ -1,4 +1,4 @@
-package sinnet.app.report1;
+package sinnet.app.flow.report1;
 
 import java.time.LocalDate;
 import java.util.List;

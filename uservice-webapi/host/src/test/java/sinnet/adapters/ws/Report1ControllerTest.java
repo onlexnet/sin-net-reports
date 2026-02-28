@@ -24,8 +24,8 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.google.protobuf.ByteString;
 
+import sinnet.app.flow.report1.Report1Flow;
 import sinnet.app.ports.out.UsersServicePortOut;
-import sinnet.app.report1.Report1Flow;
 import sinnet.domain.models.Email;
 import sinnet.domain.models.TimeEntry;
 import sinnet.grpc.users.SearchRequest;
