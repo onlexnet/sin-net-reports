@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 import io.vavr.Tuple;
 import io.vavr.control.Option;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
 import sinnet.app.ports.in.Report1PortIn;
 import sinnet.app.ports.out.UsersServicePortOut;
 import sinnet.grpc.common.UserToken;
@@ -67,12 +66,10 @@ public class Report1Flow implements Report1PortIn {
   }
 
   /** Refactor: should not be public. */
-  @Value
-  public static class CustomerModel {
-    String customerId;
-    String customerName;
-    String customerCity;
-    String customerAddress;
+  public record CustomerModel(String customerId,
+                              String customerName,
+                              String customerCity,
+                              String customerAddress) {
   }
 
   private java.util.List<CustomerModel> getCustomers(String projectId) {
@@ -115,10 +112,10 @@ public class Report1Flow implements Report1PortIn {
 
         if (maybeCustomer.isDefined()) {
           var customer = maybeCustomer.get();
-          var customerId = customer.getCustomerId();
-          var customerName = customer.getCustomerName();
-          var customerCity = customer.getCustomerCity();
-          var customerAddress = customer.getCustomerAddress();
+          var customerId = customer.customerId();
+          var customerName = customer.customerName();
+          var customerCity = customer.customerCity();
+          var customerAddress = customer.customerAddress();
           var customerBuilder = CustomerDetails.newBuilder()
               .setCustomerId(customerId.toString());
           Option.of(customerName).forEach(customerBuilder::setCustomerName);
@@ -157,7 +154,7 @@ public class Report1Flow implements Report1PortIn {
         .groupBy(it -> it.customerId())
         .map((k, v) -> {
           var customerId = k;
-          var customer = io.vavr.collection.List.ofAll(customers).find(it -> Objects.equals(customerId, it.getCustomerId()));
+          var customer = io.vavr.collection.List.ofAll(customers).find(it -> Objects.equals(customerId, it.customerId()));
           var newValue = asReportRequest(v, customer, emailToName);
           return Tuple.of(k, newValue);
         })
