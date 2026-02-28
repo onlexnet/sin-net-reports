@@ -24,11 +24,10 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.google.protobuf.ByteString;
 
-import sinnet.app.flow.report1.Report1Flow;
+import sinnet.app.flow.reports.Report1Flow;
 import sinnet.app.ports.out.UsersServicePortOut;
 import sinnet.domain.models.Email;
 import sinnet.domain.models.TimeEntry;
-import sinnet.grpc.users.SearchRequest;
 import sinnet.infra.Program;
 import sinnet.infra.adapters.grpc.ActionsGrpcFacade;
 import sinnet.infra.adapters.grpc.CustomersGrpcFacade;

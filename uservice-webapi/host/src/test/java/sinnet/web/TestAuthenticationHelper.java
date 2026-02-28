@@ -1,7 +1,5 @@
 package sinnet.web;
 
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.request.RequestPostProcessor;
 
 /**
