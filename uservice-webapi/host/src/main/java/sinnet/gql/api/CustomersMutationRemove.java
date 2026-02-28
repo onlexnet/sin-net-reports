@@ -21,7 +21,7 @@ class CustomersMutationRemove {
   public Boolean remove(CustomersMutation self, @Argument EntityGql id) {
     var cmd = RemoveRequest.newBuilder()
         .setEntityId(customerMapper.toGrpc(id))
-        .setUserToken(self.getUserToken())
+        .setUserToken(self.userToken())
         .build();
     var result = service.remove(cmd);
     return result.getSuccess();

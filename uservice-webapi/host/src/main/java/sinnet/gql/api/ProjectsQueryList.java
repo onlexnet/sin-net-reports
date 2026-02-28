@@ -19,14 +19,14 @@ class ProjectsQueryList {
 
   @SchemaMapping
   List<ProjectEntityGql> list(ProjectsQuery self, @Argument String name) {
-    var requestorEmail = self.getRequestorEmail();
+    var requestorEmail = self.requestorEmail();
     var result = service.list(requestorEmail, ProjectsMapper::toDto);
     return result;
   }
 
   @SchemaMapping
   Integer numberOfProjects(ProjectsQuery self) {
-    var requestorEmail = self.getRequestorEmail();
+    var requestorEmail = self.requestorEmail();
     return service.userStats(requestorEmail).numberOfProjects();
   }
 }
