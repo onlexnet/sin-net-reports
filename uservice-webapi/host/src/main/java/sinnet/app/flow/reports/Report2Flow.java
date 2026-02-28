@@ -28,6 +28,7 @@ class Report2Flow implements Report2PortIn {
   private final ActionsGrpcFacade timeentries;
   private final ReportsBlockingStub reportsClient;
 
+  @Override
   public byte[] downloadPdfFile(UUID projectId, YearMonth from, YearMonth to) {
 
     var authentication = (AuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
