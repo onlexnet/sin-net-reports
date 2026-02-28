@@ -24,7 +24,7 @@ class Query {
     var authentication = (AuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
     var primaryEmail = authentication.getPrincipal();
 
-    return ProjectsQuery.of(primaryEmail);
+    return new ProjectsQuery(primaryEmail);
   }
 
   @QueryMapping("Users")

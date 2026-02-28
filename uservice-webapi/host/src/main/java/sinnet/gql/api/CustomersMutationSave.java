@@ -37,10 +37,10 @@ class CustomersMutationSave {
                             @Argument List<CustomerContactInputGql> contacts) {
 
     var changedWhen = timeProvider.now();
-    var changedWho = self.getUserToken().getRequestorEmail();
+    var changedWho = self.userToken().getRequestorEmail();
     
     var request = UpdateCommand.newBuilder()
-        .setUserToken(self.getUserToken())
+        .setUserToken(self.userToken())
         .setModel(CustomerModel.newBuilder()
             .setId(customerMapper.toGrpc(id))
             .setValue(customerMapper.toGrpc(entry))

@@ -19,7 +19,6 @@ import io.vavr.Tuple;
 import io.vavr.Tuple2;
 import io.vavr.collection.HashMap;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
 import sinnet.infra.adapters.grpc.ActionsGrpcFacade;
 import sinnet.report2.grpc.ReportRequest;
 import sinnet.report2.grpc.ReportsGrpc.ReportsBlockingStub;
@@ -56,7 +55,7 @@ class Report2Controller {
   ReportRequest asReportRequest(List<TimeEntryModel> javaItems, String primaryEmail, String projectId) {
     var items = io.vavr.collection.List.ofAll(javaItems);
     var map = items
-        .map(it -> Tuple.of(it.getServicemanName(), YearMonth.from(it.getWhen()), it.getHowLong(), it.getHowFar()))
+        .map(it -> Tuple.of(it.servicemanName(), YearMonth.from(it.when()), it.howLong(), it.howFar()))
         .map(it -> {
           var key = Tuple.of(it._1, it._2);
           return Tuple.of(key, Tuple.of(it._3, it._4));
@@ -77,14 +76,12 @@ class Report2Controller {
     return requestBuilder.build();
   }
 
-  @Value 
-  class TimeEntryModel {
-    String customerId;
-    String what;
-    LocalDate when;
-    String servicemanName;
-    int howFar;
-    int howLong;
+  record TimeEntryModel(String customerId,
+                        String what,
+                        LocalDate when,
+                        String servicemanName,
+                        int howFar,
+                        int howLong) {
   }
 
   private List<TimeEntryModel> getTimeentries(UUID projectId, LocalDate from, LocalDate to) {
