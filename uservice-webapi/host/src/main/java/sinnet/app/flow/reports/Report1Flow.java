@@ -1,4 +1,4 @@
-package sinnet.app.flow.report1;
+package sinnet.app.flow.reports;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -15,8 +15,6 @@ import lombok.RequiredArgsConstructor;
 import sinnet.app.ports.in.Report1PortIn;
 import sinnet.app.ports.out.UsersServicePortOut;
 import sinnet.domain.models.Email;
-import sinnet.grpc.common.UserToken;
-import sinnet.grpc.users.SearchRequest;
 import sinnet.infra.adapters.grpc.ActionsGrpcFacade;
 import sinnet.infra.adapters.grpc.CustomersGrpcFacade;
 import sinnet.infra.adapters.grpc.Reports1GrpcAdapter;

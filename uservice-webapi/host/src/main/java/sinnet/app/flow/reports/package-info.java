@@ -1,2 +1,2 @@
 @org.jspecify.annotations.NullMarked
-package sinnet.app.flow.report1;
+package sinnet.app.flow.reports;
