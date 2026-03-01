@@ -29,6 +29,8 @@ jobs:
 
   Build:
     runs-on: ubuntu-22.04
+    permissions:
+      contents: read
     steps:
 
       - name: Checkout
@@ -71,6 +73,8 @@ jobs:
     if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request' && github.event.action != 'closed')) && github.ref == 'refs/heads/main'
     needs: [ Build ]
     runs-on: ubuntu-22.04
+    permissions:
+      contents: read
     environment:
       name: prd01
       url: 'https://sinnet-time.onlex.net'

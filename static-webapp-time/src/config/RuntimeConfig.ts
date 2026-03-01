@@ -14,7 +14,7 @@ export const loadRuntimeConfig = async (): Promise<RuntimeConfig> => {
 
   const response = await fetch('/runtime-config.json');
   if (!response.ok) {
-    throw new Error(`Failed to load runtime-config.json: ${response.status} ${response.statusText}.`);
+    throw new Error(`Failed to load runtime-config.json: ${response.status} ${response.statusText}`);
   }
 
   const config: RuntimeConfig = await response.json();

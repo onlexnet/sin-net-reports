@@ -11,7 +11,7 @@ This module implements step definitions for the new shadcn-based webapp
 
 import re
 import os
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Any
 from playwright.sync_api import Page, expect
 from pytest_bdd import when, then, parsers, scenarios
@@ -40,7 +40,7 @@ def _capture_failure_screenshot(page: Page, label: str, test_context: TestContex
         os.path.join(os.path.dirname(__file__), "..", "reports", "screenshots", "assertions")
     )
     os.makedirs(reports_dir, exist_ok=True)
-    timestamp = datetime.utcnow().strftime("%Y%m%d-%H%M%S-%f")
+    timestamp = datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S-%f")
     screenshot_path = os.path.join(reports_dir, f"{timestamp}-{_safe_name(label)}.png")
     page.screenshot(path=screenshot_path, full_page=True)
     if test_context is not None:

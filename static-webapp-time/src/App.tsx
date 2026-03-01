@@ -17,13 +17,8 @@ export default function App() {
 
   useEffect(() => {
     loadRuntimeConfig()
-      .then((config) => {
-        if (config.useTestLogin) {
-          setState("login")
-        } else {
-          // In non-test mode, still show login for now
-          setState("login")
-        }
+      .then(() => {
+        setState("login")
       })
       .catch((err: unknown) => {
         const msg = err instanceof Error ? err.message : String(err)
