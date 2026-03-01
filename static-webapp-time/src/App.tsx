@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import { BrowserRouter, Routes, Route } from "react-router-dom"
-import { loadRuntimeConfig, getRuntimeConfig } from "@/config/RuntimeConfig"
+import { loadRuntimeConfig } from "@/config/RuntimeConfig"
 import { TestLogin } from "@/pages/TestLogin"
 import { NavBar } from "@/components/NavBar"
 import { Home } from "@/pages/Home"

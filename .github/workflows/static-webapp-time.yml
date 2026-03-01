@@ -1,0 +1,117 @@
+# CI workflow for static-webapp-time (shadcn-based React application)
+#
+# GitHub Variables Required (set in Settings > Variables):
+# - BACKEND_BASE_URL: The backend WebAPI URL
+#   This value comes from Terraform infrastructure outputs
+
+# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
+concurrency:
+  group: "static-webapp-time"
+  cancel-in-progress: false
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths:
+      - static-webapp-time/**
+      - uservice-webapi/**/*.graphqls
+      - .github/workflows/static-webapp-time.yml
+  pull_request:
+    branches: [ main ]
+    paths:
+      - static-webapp-time/**
+      - uservice-webapi/**/*.graphqls
+      - .github/workflows/static-webapp-time.yml
+
+
+jobs:
+
+  Build:
+    runs-on: ubuntu-22.04
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 22.12.0
+        uses: actions/setup-node@v3
+        with:
+          node-version: '22.12.0'
+
+      - name: Generate BUILD_VERSION
+        id: build_version
+        run: |
+          BUILD_DATE=$(date +%Y%m%d)
+          BUILD_SHA=${GITHUB_SHA:0:7}
+          BUILD_VERSION="${BUILD_DATE}-${BUILD_SHA}"
+          echo "BUILD_VERSION=${BUILD_VERSION}" >> $GITHUB_OUTPUT
+          echo "Generated BUILD_VERSION: ${BUILD_VERSION}"
+
+      - name: Build static-webapp-time
+        working-directory: static-webapp-time
+        env:
+          VITE_BUILD_VERSION: ${{ steps.build_version.outputs.BUILD_VERSION }}
+        run: |
+            export MY_VERSION=$(cat .version)
+            npm config set allow-same-version true
+            npm version $MY_VERSION
+            npm install
+            npm run generate
+            npm run build
+
+      - name: Store build binaries
+        uses: actions/upload-artifact@v6
+        with:
+          name: ${{ github.run_id }}-webapp-time-binaries
+          path: static-webapp-time/dist
+
+  DeployProd:
+    name: Deploy to PRD01
+    if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request' && github.event.action != 'closed')) && github.ref == 'refs/heads/main'
+    needs: [ Build ]
+    runs-on: ubuntu-22.04
+    environment:
+      name: prd01
+      url: 'https://sinnet-time.onlex.net'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Restore artifacts from Build
+        uses: actions/download-artifact@v8
+        with:
+          name: ${{ github.run_id }}-webapp-time-binaries
+          path: static-webapp-time/dist
+
+      - name: Configure runtime settings
+        working-directory: static-webapp-time/dist
+        env:
+          APPLICATIONINSIGHTS_CONNECTION_STRING: ${{ secrets.APPLICATIONINSIGHTS_CONNECTION_STRING }}
+          BACKEND_BASE_URL: ${{ vars.BACKEND_BASE_URL }}
+        run: |
+          echo "Configuring runtime settings for production..."
+
+          if [ ! -f "runtime-config.json" ]; then
+            echo "ERROR: runtime-config.json not found in dist directory"
+            exit 1
+          fi
+
+          echo "Original runtime-config.json:"
+          cat runtime-config.json
+
+          sed -i 's|"applicationInsightsConnectionString": ""|"applicationInsightsConnectionString": "'"$APPLICATIONINSIGHTS_CONNECTION_STRING"'"|g' runtime-config.json
+          sed -i 's|"backendBaseUrl": ""|"backendBaseUrl": "'"$BACKEND_BASE_URL"'"|g' runtime-config.json
+          sed -i 's|"environment": "development"|"environment": "production"|g' runtime-config.json
+
+          echo "Updated runtime-config.json:"
+          cat runtime-config.json
+
+      - name: Build And Deploy
+        id: builddeploy
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ secrets.WEBAPP_TIME_PROD_API_TOKEN }}
+          action: "upload"
+          app_location: /static-webapp-time/dist
+          skip_app_build: true

@@ -79,6 +79,7 @@ cluster_up() {
     # k3d uses k3s and keeps local resource usage low
     k3d cluster create ${CLUSTER_NAME} \
         --port "3000:30000@loadbalancer" \
+        --port "3001:30001@loadbalancer" \
         --port "11031:30031@loadbalancer" \
         --port "11021:30021@loadbalancer" \
         --port "18080:30080@loadbalancer" \
@@ -106,6 +107,7 @@ cluster_up() {
     log_info "  - WebAPI GraphQL:  http://localhost:11031/graphiql"
     log_info "  - TimeEntries:     http://localhost:11021/actuator/health"
     log_info "  - Frontend:        http://localhost:3000"
+    log_info "  - Frontend (time): http://localhost:3001"
     log_info "  - SQL Server:      localhost:1433 (sa/P@ssw0rd123!)"
     log_info ""
     log_info "Useful commands:"
@@ -212,17 +214,26 @@ build_and_deploy_services() {
         --build-arg BACKEND_BASE_URL=http://localhost:11031 \
         --build-arg ENVIRONMENT=development
     k3d image import sinnet/static-webapp:local --cluster "${CLUSTER_NAME}"
-    
+
+    # Build static-webapp-time (shadcn-based frontend)
+    log_info "Building static-webapp-time..."
+    build_image sinnet/static-webapp-time:local static-webapp-time/Dockerfile.e2e \
+        --build-arg BACKEND_BASE_URL=http://localhost:11031 \
+        --build-arg ENVIRONMENT=development
+    k3d image import sinnet/static-webapp-time:local --cluster "${CLUSTER_NAME}"
+
     log_info "Deploying services..."
     kubectl apply -f "${SCRIPT_DIR}/k8s/dapr-config.yaml" -n "${NAMESPACE}"
     kubectl apply -f "${SCRIPT_DIR}/k8s/timeentries.yaml" -n "${NAMESPACE}"
     kubectl apply -f "${SCRIPT_DIR}/k8s/webapi.yaml" -n "${NAMESPACE}"
     kubectl apply -f "${SCRIPT_DIR}/k8s/static-webapp.yaml" -n "${NAMESPACE}"
-    
+    kubectl apply -f "${SCRIPT_DIR}/k8s/static-webapp-time.yaml" -n "${NAMESPACE}"
+
     log_info "Waiting for services to be ready..."
     kubectl wait --for=condition=Ready pod -l app=timeentries -n "${NAMESPACE}" --timeout=300s || log_warn "TimeEntries not ready yet"
     kubectl wait --for=condition=Ready pod -l app=webapi -n "${NAMESPACE}" --timeout=300s || log_warn "WebAPI not ready yet"
     kubectl wait --for=condition=Ready pod -l app=static-webapp -n "${NAMESPACE}" --timeout=300s || log_warn "Frontend not ready yet"
+    kubectl wait --for=condition=Ready pod -l app=static-webapp-time -n "${NAMESPACE}" --timeout=300s || log_warn "Frontend (time) not ready yet"
     
     log_info "Services deployed"
 }
@@ -265,6 +276,7 @@ deploy_only() {
     log_info "  - WebAPI GraphQL:  http://localhost:11031/graphiql"
     log_info "  - TimeEntries:     http://localhost:11021/actuator/health"
     log_info "  - Frontend:        http://localhost:3000"
+    log_info "  - Frontend (time): http://localhost:3001"
     log_info ""
 }
 

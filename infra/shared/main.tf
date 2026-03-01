@@ -28,6 +28,7 @@ module "github" {
   github_app_installation_id                          = var.github_app_installation_id
   github_app_pem                                      = var.github_app_pem
   webapp_prod_api_token                               = module.static_app_prod.static_app_api_key
+  webapp_time_prod_api_token                          = module.static_app_time_prod.static_app_api_key
   ONLEXNET_INFRA_SECRET                               = module.keyvault.env.ONLEXNET_INFRA_SECRET
   ONLEXNET_TENANT_ID                                  = module.keyvault.env.ONLEXNET_TENANT_ID
   ONLEXNET_SINNET_PRD01_SUBSCRIPTION_ID               = module.keyvault.env.ONLEXNET_SINNET_PRD01_SUBSCRIPTION_ID
@@ -39,8 +40,9 @@ module "github" {
 }
 
 locals {
-  webapp_subdomain_prod = var.environment_name != "prd01" ? "${var.application_name}-${var.environment_name}" : var.application_name
-  domain_name           = "onlex.net"
+  webapp_subdomain_prod      = var.environment_name != "prd01" ? "${var.application_name}-${var.environment_name}" : var.application_name
+  webapp_time_subdomain_prod = var.environment_name != "prd01" ? "${var.application_name}-time-${var.environment_name}" : "${var.application_name}-time"
+  domain_name                = "onlex.net"
 }
 
 module "static_app_prod" {
@@ -55,12 +57,27 @@ module "static_app_prod_domain" {
   resource_group    = module.resourcegroup.main
 }
 
+module "static_app_time_prod" {
+  source         = "./module_static_webapp"
+  resource_group = module.resourcegroup.main
+  subdomain      = "webapp-time"
+}
+
+module "static_app_time_prod_domain" {
+  source            = "./module_static_webapp_custom_domain"
+  domain_name       = "${local.webapp_time_subdomain_prod}.${local.domain_name}"
+  static_web_app_id = module.static_app_time_prod.static_web_app_id
+  resource_group    = module.resourcegroup.main
+}
+
 module "cloudflare" {
-  source             = "./module_cloudflare"
-  webapp_prefix_prod = local.webapp_subdomain_prod
-  webapp_fqdn_prod   = module.static_app_prod.webapp_fqdn
-  webapi_prefix      = "${var.application_name}-${var.environment_name}-api"
-  webapi_fqdn        = module.container_apps_webapi.webapi_fqdn
+  source                  = "./module_cloudflare"
+  webapp_prefix_prod      = local.webapp_subdomain_prod
+  webapp_fqdn_prod        = module.static_app_prod.webapp_fqdn
+  webapp_time_prefix_prod = local.webapp_time_subdomain_prod
+  webapp_time_fqdn_prod   = module.static_app_time_prod.webapp_fqdn
+  webapi_prefix           = "${var.application_name}-${var.environment_name}-api"
+  webapi_fqdn             = module.container_apps_webapi.webapi_fqdn
 }
 
 module "container_apps_env" {
