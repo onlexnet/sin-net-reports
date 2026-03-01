@@ -4,15 +4,15 @@ import org.springframework.graphql.data.method.annotation.SchemaMapping;
 import org.springframework.stereotype.Controller;
 
 import lombok.RequiredArgsConstructor;
+import sinnet.app.ports.in.CustomersInPort;
 import sinnet.gql.models.EntityGql;
 import sinnet.grpc.customers.ReserveRequest;
-import sinnet.infra.adapters.grpc.CustomersGrpcFacade;
 
 @Controller
 @RequiredArgsConstructor
 class CustomersMutationReserve {
 
-  private final CustomersGrpcFacade service;
+  private final CustomersInPort service;
   private final CommonMapper commonMapper;
 
   @SchemaMapping

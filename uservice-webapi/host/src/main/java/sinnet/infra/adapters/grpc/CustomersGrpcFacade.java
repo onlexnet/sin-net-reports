@@ -40,6 +40,7 @@ public class CustomersGrpcFacade implements CustomersOutPort {
     return stub.get(request);
   }
 
+  @Override
   public ReserveReply reserve(ReserveRequest request) {
     return stub.reserve(request);
   }

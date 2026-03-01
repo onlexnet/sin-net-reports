@@ -11,19 +11,30 @@ import sinnet.app.ports.out.CustomersOutPort;
 import sinnet.grpc.customers.CustomerModel;
 import sinnet.grpc.customers.RemoveReply;
 import sinnet.grpc.customers.RemoveRequest;
+import sinnet.grpc.customers.ReserveReply;
+import sinnet.grpc.customers.ReserveRequest;
 
 @Component
 @RequiredArgsConstructor
 class CustomersFlow implements CustomersInPort {
 
     private final CustomersOutPort customersOutPort;
+
     @Override
     public <T> List<T> customerList(String projectId, String requestorEmail, Function<CustomerModel, T> mapper) {
         return customersOutPort.customerList(projectId, requestorEmail, mapper);
     }
+
     @Override
     public RemoveReply remove(RemoveRequest request) {
         return customersOutPort.remove(request);
     }
+
+    @Override
+    public ReserveReply reserve(ReserveRequest request) {
+        return customersOutPort.reserve(request);
+    }
+
+    
     
 }

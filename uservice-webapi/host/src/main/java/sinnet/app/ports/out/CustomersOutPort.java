@@ -9,8 +9,12 @@ import sinnet.grpc.customers.ListReply;
 import sinnet.grpc.customers.ListRequest;
 import sinnet.grpc.customers.RemoveReply;
 import sinnet.grpc.customers.RemoveRequest;
+import sinnet.grpc.customers.ReserveReply;
+import sinnet.grpc.customers.ReserveRequest;
 
 public interface CustomersOutPort {
+    
+    ReserveReply reserve(ReserveRequest request);
     
     ListReply list(ListRequest request);
     
