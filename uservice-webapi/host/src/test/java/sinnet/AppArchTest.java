@@ -66,6 +66,7 @@ public class AppArchTest {
           .layer("GQL").definedBy(ROOT_PACKAGE_GQL)
           .layer("App").definedBy(ROOT_PACKAGE_APP)
           .whereLayer("Domain").mayOnlyBeAccessedByLayers("Adapters", "PortsIn", "PortsOut", "LegacyPorts", "App", "GQL");
+          // .whereLayer("Adapters").mayNotBeAccessedByAnyLayer();
 
       architecture.check(testedClasses);
     }

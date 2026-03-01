@@ -7,13 +7,13 @@ import org.springframework.graphql.data.method.annotation.SchemaMapping;
 import org.springframework.stereotype.Controller;
 
 import lombok.RequiredArgsConstructor;
-import sinnet.infra.adapters.grpc.ActionsGrpcFacade;
+import sinnet.app.ports.out.ActionsGrpcPortOut;
 
 @Controller
 @RequiredArgsConstructor
 class ActionsMutationRemove {
   
-  private final ActionsGrpcFacade actionsGrpc;
+  private final ActionsGrpcPortOut actionsGrpc;
 
   @SchemaMapping 
   Boolean remove(ActionsMutation self, @Argument String entityId, @Argument int entityVersion) {

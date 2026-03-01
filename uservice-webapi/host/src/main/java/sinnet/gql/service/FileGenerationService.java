@@ -16,9 +16,9 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import sinnet.app.ports.out.ActionsGrpcPortOut;
 import sinnet.domain.exceptions.AppException;
 import sinnet.grpc.customers.CustomerModel;
-import sinnet.infra.adapters.grpc.ActionsGrpcFacade;
 import sinnet.infra.adapters.grpc.CustomersGrpcFacade;
 
 /**
@@ -29,7 +29,7 @@ import sinnet.infra.adapters.grpc.CustomersGrpcFacade;
 @RequiredArgsConstructor
 public class FileGenerationService {
 
-  private final ActionsGrpcFacade actionsGrpcFacade;
+  private final ActionsGrpcPortOut actionsGrpcFacade;
   private final CustomersGrpcFacade customersGrpcFacade;
 
   /**
