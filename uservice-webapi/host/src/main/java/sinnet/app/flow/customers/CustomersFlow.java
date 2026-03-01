@@ -13,6 +13,8 @@ import sinnet.grpc.customers.RemoveReply;
 import sinnet.grpc.customers.RemoveRequest;
 import sinnet.grpc.customers.ReserveReply;
 import sinnet.grpc.customers.ReserveRequest;
+import sinnet.grpc.customers.UpdateCommand;
+import sinnet.grpc.customers.UpdateResult;
 
 @Component
 @RequiredArgsConstructor
@@ -33,6 +35,11 @@ class CustomersFlow implements CustomersInPort {
     @Override
     public ReserveReply reserve(ReserveRequest request) {
         return customersOutPort.reserve(request);
+    }
+
+    @Override
+    public UpdateResult update(UpdateCommand request) {
+        return customersOutPort.update(request);
     }
 
     

@@ -50,6 +50,7 @@ public class CustomersGrpcFacade implements CustomersOutPort {
     return stub.remove(request);
   }
 
+  @Override
   public UpdateResult update(UpdateCommand request) {
     return stub.update(request);
   }

@@ -7,6 +7,8 @@ import sinnet.grpc.customers.RemoveReply;
 import sinnet.grpc.customers.RemoveRequest;
 import sinnet.grpc.customers.ReserveReply;
 import sinnet.grpc.customers.ReserveRequest;
+import sinnet.grpc.customers.UpdateCommand;
+import sinnet.grpc.customers.UpdateResult;
 
 public interface CustomersInPort {
     
@@ -15,5 +17,7 @@ public interface CustomersInPort {
     <T> List<T> customerList(String projectId, String requestorEmail, Function<sinnet.grpc.customers.CustomerModel, T> mapper);
 
     RemoveReply remove(RemoveRequest request);
+
+    UpdateResult update(UpdateCommand request);
 
 }
