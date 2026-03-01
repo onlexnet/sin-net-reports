@@ -14,10 +14,10 @@ import io.vavr.control.Option;
 import lombok.RequiredArgsConstructor;
 import sinnet.app.ports.in.Report1PortIn;
 import sinnet.app.ports.out.ActionsGrpcPortOut;
+import sinnet.app.ports.out.CustomersOutPort;
 import sinnet.app.ports.out.Report1PortOut;
 import sinnet.app.ports.out.UsersServicePortOut;
 import sinnet.domain.models.Email;
-import sinnet.infra.adapters.grpc.CustomersGrpcFacade;
 import sinnet.report1.grpc.ActivityDetails;
 import sinnet.report1.grpc.CustomerDetails;
 import sinnet.report1.grpc.ReportRequest;
@@ -31,7 +31,7 @@ import org.jspecify.annotations.Nullable;
 public class Report1Flow implements Report1PortIn {
 
   private final ActionsGrpcPortOut timeentries;
-  private final CustomersGrpcFacade customersClient;
+  private final CustomersOutPort customersClient;
   private final Report1PortOut reportsClient;
   private final UsersServicePortOut usersService;
 
@@ -71,7 +71,7 @@ public class Report1Flow implements Report1PortIn {
                               String customerAddress) {
   }
 
-  private java.util.List<CustomerModel> getCustomers(String projectId) {
+  private Iterable<CustomerModel> getCustomers(String projectId) {
     // var authentication = (AuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
     // var primaryEmail = authentication.getPrincipal();
     var reply = customersClient.customerList(projectId, "ignored@owner", it -> new CustomerModel(
@@ -144,7 +144,7 @@ public class Report1Flow implements Report1PortIn {
       });
   }
 
-  ReportRequests asReportRequests(List<TimeEntryModel> items, List<CustomerModel> customers, Function<String, String> emailToName) {
+  ReportRequests asReportRequests(List<TimeEntryModel> items, Iterable<CustomerModel> customers, Function<String, String> emailToName) {
     return io.vavr.collection.List.ofAll(items)
         // lets group actions related to the same customer
         .groupBy(it -> it.customerId())
