@@ -6,15 +6,15 @@ import org.springframework.graphql.data.method.annotation.SchemaMapping;
 import org.springframework.stereotype.Controller;
 
 import lombok.RequiredArgsConstructor;
+import sinnet.app.ports.in.CustomersInPort;
 import sinnet.gql.models.EntityGql;
 import sinnet.grpc.customers.RemoveRequest;
-import sinnet.infra.adapters.grpc.CustomersGrpcFacade;
 
 @Controller
 @RequiredArgsConstructor
 class CustomersMutationRemove {
 
-  private final CustomersGrpcFacade service;
+  private final CustomersInPort service;
   private final CustomerMapper customerMapper;
 
   @SchemaMapping

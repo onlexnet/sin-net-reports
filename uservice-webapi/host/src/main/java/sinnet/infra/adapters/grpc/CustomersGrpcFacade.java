@@ -31,6 +31,7 @@ public class CustomersGrpcFacade implements CustomersOutPort {
     this.stub = stub;
   }
 
+  @Override
   public ListReply list(ListRequest request) {
     return stub.list(request);
   }
@@ -43,6 +44,7 @@ public class CustomersGrpcFacade implements CustomersOutPort {
     return stub.reserve(request);
   }
 
+  @Override
   public RemoveReply remove(RemoveRequest request) {
     return stub.remove(request);
   }
@@ -53,6 +55,7 @@ public class CustomersGrpcFacade implements CustomersOutPort {
 
 
   /** Doxme. */
+  @Override
   public CustomerEntityGql customerGet(String projectId, String requestorEmail, String customerId, Function<GetReply, CustomerEntityGql> mapper) {
     var entityId = EntityId.newBuilder()
         .setEntityId(customerId)

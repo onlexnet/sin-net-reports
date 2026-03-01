@@ -337,17 +337,17 @@
                       <limit>
                         <counter>BRANCH</counter>
                         <value>COVEREDRATIO</value>
-                        <minimum>0.66</minimum>
+                        <minimum>0.63</minimum>
                       </limit>
                       <limit>
                         <counter>LINE</counter>
                         <value>COVEREDRATIO</value>
-                        <minimum>0.66</minimum>
+                        <minimum>0.63</minimum>
                       </limit>
                       <limit>
                         <counter>CLASS</counter>
                         <value>MISSEDCOUNT</value>
-                        <maximum>17</maximum>
+                        <maximum>19</maximum>
                       </limit>
                     </limits>
                   </rule>

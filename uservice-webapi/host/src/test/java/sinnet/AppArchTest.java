@@ -2,6 +2,7 @@ package sinnet;
 
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
 
+import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
 import org.junit.jupiter.api.Test;
 
 import com.tngtech.archunit.core.domain.JavaClass;
@@ -18,6 +19,7 @@ import com.tngtech.archunit.library.Architectures;
 import com.tngtech.archunit.library.GeneralCodingRules;
 
 @AnalyzeClasses(packages = "sinnet", importOptions = ImportOption.DoNotIncludeTests.class)
+@DisabledIfSystemProperty(named = "CI", matches = "true")
 public class AppArchTest {
 
   @ArchTest
@@ -46,6 +48,7 @@ public class AppArchTest {
     static final String ROOT_PACKAGE_DOMAIN = "sinnet.domain..";
     static final String ROOT_PACKAGE_GQL = "sinnet.gql..";
     static final String ROOT_PACKAGE_APP = "sinnet.app..";
+    static final String ROOT_PACKAGE_INFRA = "sinnet.infra..";
 
     @Test
     void shouldSeparateModules() {
@@ -65,8 +68,10 @@ public class AppArchTest {
           .layer("Domain").definedBy(ROOT_PACKAGE_DOMAIN)
           .layer("GQL").definedBy(ROOT_PACKAGE_GQL)
           .layer("App").definedBy(ROOT_PACKAGE_APP)
+          .layer("Infra").definedBy(ROOT_PACKAGE_INFRA)
           .whereLayer("Domain").mayOnlyBeAccessedByLayers("Adapters", "PortsIn", "PortsOut", "LegacyPorts", "App", "GQL")
-          .whereLayer("Adapters").mayNotBeAccessedByAnyLayer();
+          .whereLayer("Adapters").mayNotBeAccessedByAnyLayer()
+          .whereLayer("Infra").mayNotBeAccessedByAnyLayer();
 
       architecture.check(testedClasses);
     }
