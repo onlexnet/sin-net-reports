@@ -26,9 +26,9 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import sinnet.app.ports.out.ActionsGrpcPortOut;
+import sinnet.app.ports.out.CustomersPortOut;
 import sinnet.domain.models.TimeEntry;
 import sinnet.gql.api.CommonMapper;
-import sinnet.infra.adapters.grpc.CustomersGrpcFacade;
 
 /**
  * Unit tests for FileGenerationService.
@@ -46,7 +46,7 @@ class FileGenerationServiceTest {
   private ActionsGrpcPortOut actionsGrpcFacade;
   
   @Mock
-  private CustomersGrpcFacade customersGrpcFacade;
+  private CustomersPortOut customersGrpcFacade;
 
   @Spy
   private CommonMapper commonMapper = Mappers.getMapper(CommonMapper.class);

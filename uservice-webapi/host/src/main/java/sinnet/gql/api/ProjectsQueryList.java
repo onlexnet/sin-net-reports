@@ -7,15 +7,15 @@ import org.springframework.graphql.data.method.annotation.SchemaMapping;
 import org.springframework.stereotype.Controller;
 
 import lombok.RequiredArgsConstructor;
+import sinnet.app.ports.in.ProjectsPortIn;
 import sinnet.gql.mappers.ProjectsMapper;
 import sinnet.gql.models.ProjectEntityGql;
-import sinnet.infra.adapters.grpc.ProjectsGrpcFacade;
 
 @Controller
 @RequiredArgsConstructor
 class ProjectsQueryList {
 
-  private final ProjectsGrpcFacade service;
+  private final ProjectsPortIn service;
 
   @SchemaMapping
   List<ProjectEntityGql> list(ProjectsQuery self, @Argument String name) {

@@ -1,4 +1,4 @@
-package sinnet.infra.adapters.grpc;
+package sinnet.app.ports.in;
 
 import java.util.List;
 import java.util.function.Function;
@@ -7,8 +7,7 @@ import sinnet.domain.models.ProjectId;
 import sinnet.gql.models.ProjectEntityGql;
 import sinnet.grpc.projects.generated.Project;
 
-/** Mockable equivalent of {@link ProjectsGrpcStub}. */
-public interface ProjectsGrpcFacade {
+public interface ProjectsPortIn {
 
   ProjectId create(String requestorEmail);
 

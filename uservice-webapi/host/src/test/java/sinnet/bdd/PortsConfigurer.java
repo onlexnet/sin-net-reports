@@ -6,9 +6,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 
 import sinnet.app.ports.out.ActionsGrpcPortOut;
+import sinnet.app.ports.out.CustomersPortOut;
+import sinnet.app.ports.out.ProjectsPortOut;
 import sinnet.app.ports.out.UsersServicePortOut;
-import sinnet.infra.adapters.grpc.CustomersGrpcFacade;
-import sinnet.infra.adapters.grpc.ProjectsGrpcFacade;
 
 /**
  * Place where we keep all ports which are mocked as part of all DDD scenarions.
@@ -17,15 +17,15 @@ class PortsConfigurer {
 
   @Bean
   @Primary
-  ProjectsGrpcFacade projectsGrpcServiceMocked() {
-    var projectsGrpcService = Mockito.mock(ProjectsGrpcFacade.class);
+  ProjectsPortOut projectsGrpcServiceMocked() {
+    var projectsGrpcService = Mockito.mock(ProjectsPortOut.class);
     return projectsGrpcService;
   }
 
   @Bean
   @Primary
-  CustomersGrpcFacade customersGrpcServiceMocked() {
-    var service = Mockito.mock(CustomersGrpcFacade.class);
+  CustomersPortOut customersGrpcServiceMocked() {
+    var service = Mockito.mock(CustomersPortOut.class);
     return service;
   }
 

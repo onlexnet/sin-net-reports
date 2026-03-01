@@ -15,7 +15,7 @@ import sinnet.grpc.customers.ReserveRequest;
 import sinnet.grpc.customers.UpdateCommand;
 import sinnet.grpc.customers.UpdateResult;
 
-public interface CustomersOutPort {
+public interface CustomersPortOut {
     
     GetReply get(GetRequest request);
     

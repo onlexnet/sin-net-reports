@@ -7,15 +7,15 @@ import org.springframework.graphql.data.method.annotation.SchemaMapping;
 import org.springframework.stereotype.Controller;
 
 import lombok.RequiredArgsConstructor;
+import sinnet.app.ports.in.ProjectsPortIn;
 import sinnet.gql.models.ProjectEntityGql;
 import sinnet.gql.models.SomeEntityGql;
-import sinnet.infra.adapters.grpc.ProjectsGrpcFacade;
 
 @Controller
 @RequiredArgsConstructor
 class ProjectsMutationSave {
   
-  private final ProjectsGrpcFacade projectsGrpc;
+  private final ProjectsPortIn projectsService;
 
   @SchemaMapping 
   ProjectEntityGql save(ProjectsMutation self, @Argument String name) {
@@ -23,9 +23,9 @@ class ProjectsMutationSave {
 
     // no security check as each person can create its own projects
 
-    var createId = projectsGrpc.create(requestorEmail);
+    var createId = projectsService.create(requestorEmail);
 
-    var updatedId = projectsGrpc.update(requestorEmail, createId, name, requestorEmail, List.of());
+    var updatedId = projectsService.update(requestorEmail, createId, name, requestorEmail, List.of());
 
     return new ProjectEntityGql(
         new SomeEntityGql()

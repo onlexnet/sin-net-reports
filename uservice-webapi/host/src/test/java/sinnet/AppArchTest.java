@@ -41,7 +41,6 @@ public class AppArchTest {
       .and(GeneralCodingRules.NO_CLASSES_SHOULD_USE_FIELD_INJECTION)
       .because("These are Voilation of general coding rules");
 
-    static final String ROOT_PACKAGE_ADAPTERS = "sinnet.infra.adapters..";
     static final String ROOT_PACKAGE_PORTS = "sinnet.app.ports..";
     static final String ROOT_PACKAGE_PORTS_IN = "sinnet.app.ports.in..";
     static final String ROOT_PACKAGE_PORTS_OUT = "sinnet.app.ports.out..";
@@ -61,15 +60,20 @@ public class AppArchTest {
       // Ports should not depend on domain
       var architecture = Architectures.layeredArchitecture()
           .consideringAllDependencies()
-          .layer("Adapters").definedBy(ROOT_PACKAGE_ADAPTERS)
+          .layer("Adapters").definedBy("sinnet.infra.adapters..")
           .layer("PortsIn").definedBy(ROOT_PACKAGE_PORTS_IN)
           .layer("PortsOut").definedBy(ROOT_PACKAGE_PORTS_OUT)
           .layer("LegacyPorts").definedBy(ROOT_PACKAGE_PORTS)
           .layer("Domain").definedBy(ROOT_PACKAGE_DOMAIN)
           .layer("GQL").definedBy(ROOT_PACKAGE_GQL)
           .layer("App").definedBy(ROOT_PACKAGE_APP)
+          .layer("AppFlow").definedBy("sinnet.app.flow..")
           .layer("Infra").definedBy(ROOT_PACKAGE_INFRA)
+          .layer("grpc.models").definedBy("sinnet.grpc..")
+          .layer("grpc.adapters").definedBy("sinnet.infra.adapters.grpc..")
           .whereLayer("Domain").mayOnlyBeAccessedByLayers("Adapters", "PortsIn", "PortsOut", "LegacyPorts", "App", "GQL")
+          .whereLayer("PortsOut").mayOnlyBeAccessedByLayers("AppFlow", "Adapters")
+          .whereLayer("grpc.models").mayOnlyAccessLayers("grpc.adapters")
           .whereLayer("Adapters").mayNotBeAccessedByAnyLayer()
           .whereLayer("Infra").mayNotBeAccessedByAnyLayer();
 

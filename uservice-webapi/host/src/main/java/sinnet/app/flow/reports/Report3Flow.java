@@ -10,7 +10,7 @@ import io.vavr.collection.HashMap;
 import io.vavr.collection.List;
 import lombok.RequiredArgsConstructor;
 import sinnet.app.ports.in.Report3PortIn;
-import sinnet.app.ports.out.CustomersOutPort;
+import sinnet.app.ports.out.CustomersPortOut;
 import sinnet.gql.utils.PropsBuilder;
 import sinnet.grpc.customers.ListReply;
 import sinnet.grpc.customers.ListRequest;
@@ -23,7 +23,7 @@ import sinnet.report3.grpc.ReportsGrpc.ReportsBlockingStub;
 @RequiredArgsConstructor
 class Report3Flow implements Report3PortIn {
 
-  private final CustomersOutPort customera;
+  private final CustomersPortOut customera;
   private final ReportsBlockingStub reportsClient;
   
   @Override

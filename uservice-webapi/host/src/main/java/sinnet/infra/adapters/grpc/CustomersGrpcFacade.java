@@ -5,7 +5,7 @@ import java.util.function.Function;
 
 import org.springframework.stereotype.Component;
 
-import sinnet.app.ports.out.CustomersOutPort;
+import sinnet.app.ports.out.CustomersPortOut;
 import sinnet.gql.models.CustomerEntityGql;
 import sinnet.grpc.common.EntityId;
 import sinnet.grpc.common.UserToken;
@@ -23,7 +23,7 @@ import sinnet.grpc.customers.UpdateResult;
 
 /** Mockable equivalent of {@link ProjectsGrpcStub}. */
 @Component
-public class CustomersGrpcFacade implements CustomersOutPort {
+public class CustomersGrpcFacade implements CustomersPortOut {
 
   private final CustomersBlockingStub stub;
 

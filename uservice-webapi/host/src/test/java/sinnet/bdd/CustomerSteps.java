@@ -14,6 +14,7 @@ import io.cucumber.java.Before;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import onlexnet.sinnet.webapi.test.AppApi;
+import sinnet.app.ports.out.CustomersPortOut;
 import sinnet.gql.models.CustomerSecretExGql;
 import sinnet.grpc.customers.CustomerModel;
 import sinnet.grpc.customers.CustomerSecretEx;
@@ -21,12 +22,11 @@ import sinnet.grpc.customers.CustomerValue;
 import sinnet.grpc.customers.GetReply;
 import sinnet.grpc.customers.ListReply;
 import sinnet.grpc.customers.LocalDateTime;
-import sinnet.infra.adapters.grpc.CustomersGrpcFacade;
 
 public class CustomerSteps {
 
   @Autowired
-  CustomersGrpcFacade customersGrpc;
+  CustomersPortOut customersGrpc;
 
   @Autowired
   TestRestTemplate restTemplate;

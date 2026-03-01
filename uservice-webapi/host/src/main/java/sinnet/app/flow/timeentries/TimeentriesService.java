@@ -20,4 +20,9 @@ class TimeentriesService implements TimeentriesServicePortIn {
     public EntityId newEntry(String requestorEmail, UUID projectId, LocalDate now) {
         return actionsGrpc.newAction(requestorEmail, projectId, now);
     }
+
+    @Override
+    public boolean remove(UUID projectId, UUID entityId, int entityVersion) {
+        return actionsGrpc.remove(projectId, entityId, entityVersion);
+    }
 }

@@ -17,9 +17,9 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import sinnet.app.ports.out.ActionsGrpcPortOut;
+import sinnet.app.ports.out.CustomersPortOut;
 import sinnet.domain.exceptions.AppException;
 import sinnet.grpc.customers.CustomerModel;
-import sinnet.infra.adapters.grpc.CustomersGrpcFacade;
 
 /**
  * Service for generating Excel files with time entries and converting them to base64.
@@ -30,7 +30,7 @@ import sinnet.infra.adapters.grpc.CustomersGrpcFacade;
 public class FileGenerationService {
 
   private final ActionsGrpcPortOut actionsGrpcFacade;
-  private final CustomersGrpcFacade customersGrpcFacade;
+  private final CustomersPortOut customersGrpcFacade;
 
   /**
    * Generates an Excel file with time entries for the logged-in user and returns it as base64 string.

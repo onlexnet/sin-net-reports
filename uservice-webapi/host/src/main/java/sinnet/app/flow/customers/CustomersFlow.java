@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
 import sinnet.app.ports.in.CustomersInPort;
-import sinnet.app.ports.out.CustomersOutPort;
+import sinnet.app.ports.out.CustomersPortOut;
 import sinnet.grpc.customers.CustomerModel;
 import sinnet.grpc.customers.GetReply;
 import sinnet.grpc.customers.GetRequest;
@@ -24,7 +24,7 @@ import sinnet.grpc.customers.UpdateResult;
 @RequiredArgsConstructor
 class CustomersFlow implements CustomersInPort {
 
-    private final CustomersOutPort customersOutPort;
+    private final CustomersPortOut customersOutPort;
 
     @Override
     public <T> List<T> customerList(String projectId, String requestorEmail, Function<CustomerModel, T> mapper) {
@@ -55,7 +55,5 @@ class CustomersFlow implements CustomersInPort {
     public ListReply list(ListRequest request) {
         return customersOutPort.list(request);
     }
-
-    
     
 }

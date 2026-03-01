@@ -8,4 +8,6 @@ import sinnet.domain.models.EntityId;
 public interface TimeentriesServicePortIn {
     
     EntityId newEntry(String requestorEmail, UUID projectId, LocalDate entryDate);
+
+    boolean remove(UUID projectId, UUID entityId, int entityVersion);
 }
