@@ -2,11 +2,12 @@ package sinnet.infra.adapters.grpc;
 
 import org.springframework.stereotype.Component;
 
+import sinnet.app.ports.out.Report1PortOut;
 import sinnet.report1.grpc.ReportsGrpc.ReportsBlockingStub;
 
 /** Mockable equivalent of {@link ReportsBlockingStub}. */
 @Component
-public class Reports1GrpcAdapter {
+public class Reports1GrpcAdapter implements Report1PortOut {
 
   private final ReportsBlockingStub stub;
 

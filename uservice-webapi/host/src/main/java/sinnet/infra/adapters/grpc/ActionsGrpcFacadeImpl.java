@@ -7,6 +7,7 @@ import java.util.UUID;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
+import sinnet.app.ports.out.ActionsGrpcPortOut;
 import sinnet.domain.models.EntityId;
 import sinnet.domain.models.TimeEntry;
 import sinnet.gql.api.CommonMapper;
@@ -23,7 +24,7 @@ import sinnet.grpc.timeentries.UpdateCommand;
 /** Mockable equivalent of {@link ProjectsGrpcStub}. */
 @Component
 @RequiredArgsConstructor
-class ActionsGrpcFacadeImpl implements ActionsGrpcFacade {
+class ActionsGrpcFacadeImpl implements ActionsGrpcPortOut {
 
   private final TimeEntriesBlockingStub stub;
   private final CommonMapper commonMapper;

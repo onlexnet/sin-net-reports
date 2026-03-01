@@ -13,11 +13,11 @@ import io.vavr.Tuple;
 import io.vavr.control.Option;
 import lombok.RequiredArgsConstructor;
 import sinnet.app.ports.in.Report1PortIn;
+import sinnet.app.ports.out.ActionsGrpcPortOut;
+import sinnet.app.ports.out.Report1PortOut;
 import sinnet.app.ports.out.UsersServicePortOut;
 import sinnet.domain.models.Email;
-import sinnet.infra.adapters.grpc.ActionsGrpcFacade;
 import sinnet.infra.adapters.grpc.CustomersGrpcFacade;
-import sinnet.infra.adapters.grpc.Reports1GrpcAdapter;
 import sinnet.report1.grpc.ActivityDetails;
 import sinnet.report1.grpc.CustomerDetails;
 import sinnet.report1.grpc.ReportRequest;
@@ -30,9 +30,9 @@ import org.jspecify.annotations.Nullable;
 @RequiredArgsConstructor
 public class Report1Flow implements Report1PortIn {
 
-  private final ActionsGrpcFacade timeentries;
+  private final ActionsGrpcPortOut timeentries;
   private final CustomersGrpcFacade customersClient;
-  private final Reports1GrpcAdapter reportsClient;
+  private final Report1PortOut reportsClient;
   private final UsersServicePortOut usersService;
 
   @Override

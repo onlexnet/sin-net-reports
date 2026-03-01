@@ -8,15 +8,15 @@ import org.springframework.graphql.data.method.annotation.SchemaMapping;
 import org.springframework.stereotype.Controller;
 
 import lombok.RequiredArgsConstructor;
+import sinnet.app.ports.out.ActionsGrpcPortOut;
 import sinnet.domain.models.EntityId;
 import sinnet.gql.models.ServiceEntryInputGql;
-import sinnet.infra.adapters.grpc.ActionsGrpcFacade;
 
 @Controller
 @RequiredArgsConstructor
 class ActionsMutationUpdate {
   
-  private final ActionsGrpcFacade actionsGrpc;
+  private final ActionsGrpcPortOut actionsGrpc;
 
   @SchemaMapping 
   Boolean update(ActionsMutation self, @Argument ServiceEntryInputGql content, @Argument String entityId, @Argument Integer entityVersion) {

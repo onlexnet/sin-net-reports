@@ -5,8 +5,8 @@ import org.mockito.Mockito;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 
+import sinnet.app.ports.out.ActionsGrpcPortOut;
 import sinnet.app.ports.out.UsersServicePortOut;
-import sinnet.infra.adapters.grpc.ActionsGrpcFacade;
 import sinnet.infra.adapters.grpc.CustomersGrpcFacade;
 import sinnet.infra.adapters.grpc.ProjectsGrpcFacade;
 
@@ -38,8 +38,8 @@ class PortsConfigurer {
 
   @Bean
   @Primary
-  ActionsGrpcFacade actionsGrpcFacade() {
-    return Mockito.mock(ActionsGrpcFacade.class, Answers.CALLS_REAL_METHODS);
+  ActionsGrpcPortOut actionsGrpcFacade() {
+    return Mockito.mock(ActionsGrpcPortOut.class, Answers.CALLS_REAL_METHODS);
   }
 
 }

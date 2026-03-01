@@ -1,4 +1,4 @@
-package sinnet.infra.adapters.grpc;
+package sinnet.app.ports.out;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -13,7 +13,7 @@ import sinnet.gql.models.CustomerEntityGql;
 import sinnet.gql.models.ServiceModelGql;
 
 /** GRPC methods related to Actions (aka Services aka Timeentries). */
-public interface ActionsGrpcFacade {
+public interface ActionsGrpcPortOut {
 
   /** REturns list of actions for requested project, limited result from-to range. */
   List<TimeEntry> searchInternal(UUID projectId, LocalDate from, LocalDate to);
