@@ -45,7 +45,7 @@ jobs:
       - name: Build with Maven Webapi
         run: |
           export SEMVERSION=$(cat .semversion)
-          mvn -ntp install -Drevision=$SEMVERSION
+          mvn -ntp install -Drevision=$SEMVERSION -DCI=true
         working-directory: uservice-webapi
       
       - id: BuildDockerImage

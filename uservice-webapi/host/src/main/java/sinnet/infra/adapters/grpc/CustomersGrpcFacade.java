@@ -5,6 +5,7 @@ import java.util.function.Function;
 
 import org.springframework.stereotype.Component;
 
+import sinnet.app.ports.out.CustomersOutPort;
 import sinnet.gql.models.CustomerEntityGql;
 import sinnet.grpc.common.EntityId;
 import sinnet.grpc.common.UserToken;
@@ -22,7 +23,7 @@ import sinnet.grpc.customers.UpdateResult;
 
 /** Mockable equivalent of {@link ProjectsGrpcStub}. */
 @Component
-public class CustomersGrpcFacade {
+public class CustomersGrpcFacade implements CustomersOutPort {
 
   private final CustomersBlockingStub stub;
 
@@ -30,6 +31,7 @@ public class CustomersGrpcFacade {
     this.stub = stub;
   }
 
+  @Override
   public ListReply list(ListRequest request) {
     return stub.list(request);
   }
@@ -38,20 +40,24 @@ public class CustomersGrpcFacade {
     return stub.get(request);
   }
 
+  @Override
   public ReserveReply reserve(ReserveRequest request) {
     return stub.reserve(request);
   }
 
+  @Override
   public RemoveReply remove(RemoveRequest request) {
     return stub.remove(request);
   }
 
+  @Override
   public UpdateResult update(UpdateCommand request) {
     return stub.update(request);
   }
 
 
   /** Doxme. */
+  @Override
   public CustomerEntityGql customerGet(String projectId, String requestorEmail, String customerId, Function<GetReply, CustomerEntityGql> mapper) {
     var entityId = EntityId.newBuilder()
         .setEntityId(customerId)
@@ -71,6 +77,7 @@ public class CustomersGrpcFacade {
   }
 
   /** Doxme. */
+  @Override
   public <T> List<T> customerList(String projectId, String requestorEmail, Function<sinnet.grpc.customers.CustomerModel, T> mapper) {
     var userToken = UserToken.newBuilder()
         .setProjectId(projectId)
