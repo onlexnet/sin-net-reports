@@ -1,4 +1,4 @@
-package sinnet.infra;
+package sinnet.app.lib;
 
 import java.time.LocalDateTime;
 

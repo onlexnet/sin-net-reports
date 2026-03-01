@@ -35,7 +35,8 @@ public class CustomersGrpcFacade implements CustomersOutPort {
   public ListReply list(ListRequest request) {
     return stub.list(request);
   }
-    
+
+  @Override
   public GetReply get(GetRequest request) {
     return stub.get(request);
   }

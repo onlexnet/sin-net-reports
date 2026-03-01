@@ -5,6 +5,7 @@ import java.util.function.Function;
 
 import sinnet.gql.models.CustomerEntityGql;
 import sinnet.grpc.customers.GetReply;
+import sinnet.grpc.customers.GetRequest;
 import sinnet.grpc.customers.ListReply;
 import sinnet.grpc.customers.ListRequest;
 import sinnet.grpc.customers.RemoveReply;
@@ -15,6 +16,8 @@ import sinnet.grpc.customers.UpdateCommand;
 import sinnet.grpc.customers.UpdateResult;
 
 public interface CustomersOutPort {
+    
+    GetReply get(GetRequest request);
     
     ReserveReply reserve(ReserveRequest request);
     
