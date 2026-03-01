@@ -8,7 +8,6 @@ import org.springframework.stereotype.Controller;
 
 import lombok.RequiredArgsConstructor;
 import sinnet.app.ports.in.TimeentriesServicePortIn;
-import sinnet.app.ports.out.ActionsGrpcPortOut;
 import sinnet.gql.models.SomeEntityGql;
 
 @Controller

@@ -9,6 +9,10 @@ import lombok.RequiredArgsConstructor;
 import sinnet.app.ports.in.CustomersInPort;
 import sinnet.app.ports.out.CustomersOutPort;
 import sinnet.grpc.customers.CustomerModel;
+import sinnet.grpc.customers.GetReply;
+import sinnet.grpc.customers.GetRequest;
+import sinnet.grpc.customers.ListReply;
+import sinnet.grpc.customers.ListRequest;
 import sinnet.grpc.customers.RemoveReply;
 import sinnet.grpc.customers.RemoveRequest;
 import sinnet.grpc.customers.ReserveReply;
@@ -40,6 +44,16 @@ class CustomersFlow implements CustomersInPort {
     @Override
     public UpdateResult update(UpdateCommand request) {
         return customersOutPort.update(request);
+    }
+
+    @Override
+    public GetReply get(GetRequest request) {
+        return customersOutPort.get(request);
+    }
+
+    @Override
+    public ListReply list(ListRequest request) {
+        return customersOutPort.list(request);
     }
 
     

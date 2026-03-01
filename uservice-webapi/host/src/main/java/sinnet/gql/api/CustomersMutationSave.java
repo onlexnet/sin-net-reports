@@ -7,6 +7,7 @@ import org.springframework.graphql.data.method.annotation.SchemaMapping;
 import org.springframework.stereotype.Controller;
 
 import lombok.RequiredArgsConstructor;
+import sinnet.app.lib.TimeProvider;
 import sinnet.app.ports.in.CustomersInPort;
 import sinnet.gql.models.CustomerContactInputGql;
 import sinnet.gql.models.CustomerInput;
@@ -16,7 +17,6 @@ import sinnet.gql.models.EntityGql;
 import sinnet.gql.models.SomeEntityGql;
 import sinnet.grpc.customers.CustomerModel;
 import sinnet.grpc.customers.UpdateCommand;
-import sinnet.infra.TimeProvider;
 
 /** Fixme. */
 @Controller

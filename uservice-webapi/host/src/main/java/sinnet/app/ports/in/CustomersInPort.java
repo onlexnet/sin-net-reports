@@ -3,6 +3,10 @@ package sinnet.app.ports.in;
 import java.util.List;
 import java.util.function.Function;
 
+import sinnet.grpc.customers.GetReply;
+import sinnet.grpc.customers.GetRequest;
+import sinnet.grpc.customers.ListReply;
+import sinnet.grpc.customers.ListRequest;
 import sinnet.grpc.customers.RemoveReply;
 import sinnet.grpc.customers.RemoveRequest;
 import sinnet.grpc.customers.ReserveReply;
@@ -11,6 +15,10 @@ import sinnet.grpc.customers.UpdateCommand;
 import sinnet.grpc.customers.UpdateResult;
 
 public interface CustomersInPort {
+    
+    ListReply list(ListRequest request);
+    
+    GetReply get(GetRequest request);
     
     ReserveReply reserve(ReserveRequest request);
 
