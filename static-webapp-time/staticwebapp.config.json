@@ -1,0 +1,6 @@
+{
+  "navigationFallback": {
+    "rewrite": "/index.html",
+    "exclude": ["/runtime-config.json", "*.{png,gif,ico,css,js}"]
+  }
+}

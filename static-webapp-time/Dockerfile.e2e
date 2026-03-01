@@ -1,0 +1,75 @@
+# Multi-stage build for static-webapp-time
+# Stage 1: Build the React application
+FROM node:22.12.0-bookworm AS build
+
+WORKDIR /app
+
+# Copy GraphQL schema files from webapi (needed for codegen)
+COPY uservice-webapi/host/src/main/resources/graphql uservice-webapi/host/src/main/resources/graphql
+
+# Copy package files
+COPY static-webapp-time/package*.json ./
+COPY static-webapp-time/.version ./
+
+# Install npm dependencies
+RUN --mount=type=cache,target=/root/.npm \
+    npm ci
+
+# Copy source code and configuration files
+COPY static-webapp-time/graphql-codegen-config.yml ./
+COPY static-webapp-time/tsconfig.json ./
+COPY static-webapp-time/tsconfig.node.json ./
+COPY static-webapp-time/vite.config.ts ./
+COPY static-webapp-time/tailwind.config.js ./
+COPY static-webapp-time/postcss.config.js ./
+COPY static-webapp-time/index.html ./
+COPY static-webapp-time/public ./public
+COPY static-webapp-time/src ./src
+
+# Build React application
+RUN npm run generate && \
+    npm run build
+
+# Stage 2: Configure and serve with Node.js
+FROM node:22.12.0-alpine
+
+ARG BACKEND_BASE_URL
+ARG APPLICATIONINSIGHTS_CONNECTION_STRING=""
+ARG ENVIRONMENT="development"
+
+WORKDIR /app
+
+COPY --from=build /app/dist ./dist
+
+RUN addgroup -g 1001 -S nodejs && \
+    adduser -S nodejs -u 1001
+
+RUN if [ -z "$BACKEND_BASE_URL" ]; then \
+      echo "ERROR: BACKEND_BASE_URL build argument is required" && \
+      exit 1; \
+    fi
+
+RUN if [ ! -f "dist/runtime-config.json" ]; then \
+      echo "ERROR: runtime-config.json not found in dist directory" && \
+      exit 1; \
+    fi
+
+RUN sed -i 's|"applicationInsightsConnectionString": ""|"applicationInsightsConnectionString": "'"$APPLICATIONINSIGHTS_CONNECTION_STRING"'"|g' dist/runtime-config.json && \
+    sed -i 's|"backendBaseUrl": ""|"backendBaseUrl": "'"$BACKEND_BASE_URL"'"|g' dist/runtime-config.json && \
+    sed -i 's|"environment": "development"|"environment": "'"$ENVIRONMENT"'"|g' dist/runtime-config.json && \
+    sed -i 's|"useTestLogin": false|"useTestLogin": true|g' dist/runtime-config.json && \
+    echo "Configuration injected:" && \
+    cat dist/runtime-config.json
+
+RUN npm install -g serve
+
+RUN chown -R nodejs:nodejs /app
+
+USER nodejs
+
+EXPOSE 3001
+
+HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
+    CMD wget --quiet --tries=1 --spider http://localhost:3001/index.html || exit 1
+
+CMD ["serve", "-s", "dist", "-l", "3001"]
