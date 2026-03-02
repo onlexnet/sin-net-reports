@@ -18,6 +18,7 @@ import io.cucumber.java.Before;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import onlexnet.sinnet.webapi.test.AppApi;
+import sinnet.app.flow.models.CustomerUpdateCommand;
 import sinnet.app.lib.TimeProvider;
 import sinnet.app.ports.out.CustomersPortOut;
 import sinnet.app.ports.out.ProjectsPortOut;
@@ -225,7 +226,7 @@ public class StepDefinitions {
     var entityId = UUID.randomUUID();
     var entityIdStr = entityId.toString();
 
-    var argumentCaptor = ArgumentCaptor.forClass(UpdateCommand.class);
+    var argumentCaptor = ArgumentCaptor.forClass(CustomerUpdateCommand.class);
     Mockito
       .when(customersGrpc.update(argumentCaptor.capture()))
       .thenReturn(UpdateResult.newBuilder()

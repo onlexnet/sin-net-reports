@@ -3,6 +3,7 @@ package sinnet.app.ports.out;
 import java.util.List;
 import java.util.function.Function;
 
+import sinnet.app.flow.models.CustomerUpdateCommand;
 import sinnet.gql.models.CustomerEntityGql;
 import sinnet.grpc.customers.GetReply;
 import sinnet.grpc.customers.GetRequest;
@@ -12,7 +13,6 @@ import sinnet.grpc.customers.RemoveReply;
 import sinnet.grpc.customers.RemoveRequest;
 import sinnet.grpc.customers.ReserveReply;
 import sinnet.grpc.customers.ReserveRequest;
-import sinnet.grpc.customers.UpdateCommand;
 import sinnet.grpc.customers.UpdateResult;
 
 public interface CustomersPortOut {
@@ -29,6 +29,6 @@ public interface CustomersPortOut {
 
     RemoveReply remove(RemoveRequest request);
 
-    UpdateResult update(UpdateCommand request);
+    UpdateResult update(CustomerUpdateCommand request);
 
 }
