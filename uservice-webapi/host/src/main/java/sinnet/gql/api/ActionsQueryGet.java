@@ -8,6 +8,8 @@ import org.springframework.stereotype.Controller;
 
 import lombok.RequiredArgsConstructor;
 import sinnet.app.lib.Functions;
+import sinnet.app.ports.in.CustomersPortIn;
+import sinnet.app.ports.in.TimeentriesServicePortIn;
 import sinnet.app.ports.out.ActionsGrpcPortOut;
 import sinnet.app.ports.out.CustomersPortOut;
 import sinnet.gql.models.ServiceModelGql;
@@ -16,8 +18,8 @@ import sinnet.gql.models.ServiceModelGql;
 @RequiredArgsConstructor
 class ActionsQueryGet {
 
-  private final ActionsGrpcPortOut service;
-  private final CustomersPortOut customerService;
+  private final TimeentriesServicePortIn service;
+  private final CustomersPortIn customerService;
   private final CustomerMapper customerMapper;
   private final CommonMapper commonMapper;
 

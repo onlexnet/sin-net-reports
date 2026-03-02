@@ -3,6 +3,7 @@ package sinnet.app.ports.in;
 import java.util.List;
 import java.util.function.Function;
 
+import sinnet.gql.models.CustomerEntityGql;
 import sinnet.grpc.customers.GetReply;
 import sinnet.grpc.customers.GetRequest;
 import sinnet.grpc.customers.ListReply;
@@ -14,7 +15,9 @@ import sinnet.grpc.customers.ReserveRequest;
 import sinnet.grpc.customers.UpdateCommand;
 import sinnet.grpc.customers.UpdateResult;
 
-public interface CustomersInPort {
+public interface CustomersPortIn {
+    
+    CustomerEntityGql customerGet(String projectId, String requestorEmail, String customerId, Function<GetReply, CustomerEntityGql> mapper);
     
     ListReply list(ListRequest request);
     

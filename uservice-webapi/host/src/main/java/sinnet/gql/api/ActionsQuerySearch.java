@@ -10,7 +10,8 @@ import org.springframework.stereotype.Controller;
 import lombok.Cleanup;
 import lombok.RequiredArgsConstructor;
 import sinnet.app.lib.Functions;
-import sinnet.app.ports.in.CustomersInPort;
+import sinnet.app.ports.in.CustomersPortIn;
+import sinnet.app.ports.in.TimeentriesServicePortIn;
 import sinnet.app.ports.out.ActionsGrpcPortOut;
 import sinnet.gql.models.ServiceFilterInputGql;
 import sinnet.gql.models.ServicesSearchResultGql;
@@ -19,8 +20,8 @@ import sinnet.gql.models.ServicesSearchResultGql;
 @RequiredArgsConstructor
 class ActionsQuerySearch {
 
-  private final ActionsGrpcPortOut service;
-  private final CustomersInPort customerService;
+  private final TimeentriesServicePortIn service;
+  private final CustomersPortIn customerService;
   private final CustomerMapper customerMapper;
   private final CommonMapper commonMapper;
 
