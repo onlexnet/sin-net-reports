@@ -27,6 +27,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import sinnet.app.ports.out.ActionsGrpcPortOut;
 import sinnet.app.ports.out.CustomersPortOut;
+import sinnet.app.service.FileGenerationService;
 import sinnet.domain.models.TimeEntry;
 import sinnet.gql.api.CommonMapper;
 

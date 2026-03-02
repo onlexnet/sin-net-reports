@@ -1,4 +1,4 @@
-package sinnet.gql.service;
+package sinnet.app.service;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -6,7 +6,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -19,7 +18,6 @@ import lombok.extern.slf4j.Slf4j;
 import sinnet.app.ports.out.ActionsGrpcPortOut;
 import sinnet.app.ports.out.CustomersPortOut;
 import sinnet.domain.exceptions.AppException;
-import sinnet.grpc.customers.CustomerModel;
 
 /**
  * Service for generating Excel files with time entries and converting them to base64.
@@ -116,7 +114,7 @@ public class FileGenerationService {
    * Builds a lookup map of customer IDs to customer names.
    */
   private Map<String, String> buildCustomerLookup(String projectId, String userEmail) {
-    List<CustomerModel> customers = customersGrpcFacade.customerList(projectId, userEmail, customer -> customer);
+    var customers = customersGrpcFacade.customerList(projectId, userEmail, customer -> customer);
     
     return customers.stream()
         .collect(Collectors.toMap(

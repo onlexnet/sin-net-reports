@@ -54,7 +54,6 @@ public class AppArchTest {
 
       var testedClasses = new ClassFileImporter()
           .withImportOption(new ImportOption.DoNotIncludeTests())
-          .withImportOption(new ImportOption.DoNotIncludeArchives())
           .importPackages("sinnet");
 
       // Ports should not depend on domain
@@ -68,12 +67,13 @@ public class AppArchTest {
           .layer("GQL").definedBy(ROOT_PACKAGE_GQL)
           .layer("App").definedBy(ROOT_PACKAGE_APP)
           .layer("AppFlow").definedBy("sinnet.app.flow..")
+          .layer("AppServices").definedBy("sinnet.app.service..")
           .layer("Infra").definedBy(ROOT_PACKAGE_INFRA)
           .layer("grpc.models").definedBy("sinnet.grpc..")
           .layer("grpc.adapters").definedBy("sinnet.infra.adapters.grpc..")
           .whereLayer("Domain").mayOnlyBeAccessedByLayers("Adapters", "PortsIn", "PortsOut", "LegacyPorts", "App", "GQL")
-          .whereLayer("PortsOut").mayOnlyBeAccessedByLayers("AppFlow", "Adapters")
-          .whereLayer("grpc.models").mayOnlyAccessLayers("grpc.adapters")
+          .whereLayer("PortsOut").mayOnlyBeAccessedByLayers("AppFlow", "AppServices", "Adapters")
+          .whereLayer("grpc.models").mayOnlyBeAccessedByLayers("grpc.adapters")
           .whereLayer("Adapters").mayNotBeAccessedByAnyLayer()
           .whereLayer("Infra").mayNotBeAccessedByAnyLayer();
 
