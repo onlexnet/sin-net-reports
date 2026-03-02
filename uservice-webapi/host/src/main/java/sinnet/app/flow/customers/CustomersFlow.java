@@ -6,8 +6,9 @@ import java.util.function.Function;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
-import sinnet.app.ports.in.CustomersInPort;
-import sinnet.app.ports.out.CustomersOutPort;
+import sinnet.app.ports.in.CustomersPortIn;
+import sinnet.app.ports.out.CustomersPortOut;
+import sinnet.gql.models.CustomerEntityGql;
 import sinnet.grpc.customers.CustomerModel;
 import sinnet.grpc.customers.GetReply;
 import sinnet.grpc.customers.GetRequest;
@@ -22,9 +23,9 @@ import sinnet.grpc.customers.UpdateResult;
 
 @Component
 @RequiredArgsConstructor
-class CustomersFlow implements CustomersInPort {
+class CustomersFlow implements CustomersPortIn {
 
-    private final CustomersOutPort customersOutPort;
+    private final CustomersPortOut customersOutPort;
 
     @Override
     public <T> List<T> customerList(String projectId, String requestorEmail, Function<CustomerModel, T> mapper) {
@@ -56,6 +57,10 @@ class CustomersFlow implements CustomersInPort {
         return customersOutPort.list(request);
     }
 
-    
+    @Override
+    public CustomerEntityGql customerGet(String projectId, String requestorEmail, String customerId,
+            Function<sinnet.grpc.customers.GetReply, CustomerEntityGql> mapper) {
+        return customersOutPort.customerGet(projectId, requestorEmail, customerId, mapper);
+    }
     
 }

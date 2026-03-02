@@ -26,12 +26,12 @@ import com.google.protobuf.ByteString;
 
 import sinnet.app.flow.reports.Report1Flow;
 import sinnet.app.ports.out.ActionsGrpcPortOut;
+import sinnet.app.ports.out.CustomersPortOut;
+import sinnet.app.ports.out.Report1OutPort;
 import sinnet.app.ports.out.UsersServicePortOut;
 import sinnet.domain.models.Email;
 import sinnet.domain.models.TimeEntry;
 import sinnet.infra.Program;
-import sinnet.infra.adapters.grpc.CustomersGrpcFacade;
-import sinnet.infra.adapters.grpc.Reports1GrpcAdapter;
 import sinnet.report1.grpc.ReportRequests;
 
 /**
@@ -49,10 +49,10 @@ class Report1ControllerTest {
   private ActionsGrpcPortOut actionsGrpcFacade;
 
   @MockitoBean
-  private CustomersGrpcFacade customersGrpcFacade;
+  private CustomersPortOut customersGrpcFacade;
 
   @MockitoBean
-  private Reports1GrpcAdapter reports1GrpcAdapter;
+  private Report1OutPort reports1GrpcAdapter;
 
   @MockitoBean
   private UsersServicePortOut usersGrpcService;

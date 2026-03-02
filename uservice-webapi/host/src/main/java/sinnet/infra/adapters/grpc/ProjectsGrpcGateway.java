@@ -6,6 +6,7 @@ import java.util.function.Function;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
+import sinnet.app.ports.out.ProjectsPortOut;
 import sinnet.domain.models.ProjectId;
 import sinnet.gql.models.ProjectEntityGql;
 import sinnet.grpc.projects.generated.CreateRequest;
@@ -21,7 +22,7 @@ import sinnet.grpc.projects.generated.UserToken;
 /** Mockable equivalent of {@link ProjectsGrpcStub}. */
 @Component
 @RequiredArgsConstructor
-class ProjectsGrpcFacadeImpl implements ProjectsGrpcFacade {
+class ProjectsGrpcGateway implements ProjectsPortOut {
 
   private final ProjectsBlockingStub stub;
 

@@ -16,6 +16,7 @@ import com.tngtech.archunit.lang.CompositeArchRule;
 import com.tngtech.archunit.lang.ConditionEvents;
 import com.tngtech.archunit.lang.SimpleConditionEvent;
 import com.tngtech.archunit.library.Architectures;
+import com.tngtech.archunit.library.Architectures.LayeredArchitecture;
 import com.tngtech.archunit.library.GeneralCodingRules;
 
 @AnalyzeClasses(packages = "sinnet", importOptions = ImportOption.DoNotIncludeTests.class)
@@ -25,6 +26,28 @@ public class AppArchTest {
   @ArchTest
   static final ArchRule noDependencyOnUpperPackage = noClasses().should(new DependOnUpperPackagesCondition())
       .because("that might prevent packages on that level from being split into separate artifacts in a clean way");;
+
+  static final String ROOT_PACKAGE_PORTS = "sinnet.app.ports..";
+  static final String ROOT_PACKAGE_PORTS_OUT = "sinnet.app.ports.out..";
+  static final String ROOT_PACKAGE_DOMAIN = "sinnet.domain..";
+  static final String ROOT_PACKAGE_GQL = "sinnet.gql..";
+  static final String ROOT_PACKAGE_APP = "sinnet.app..";
+  static final String ROOT_PACKAGE_INFRA = "sinnet.infra..";
+
+  static LayeredArchitecture layers = Architectures.layeredArchitecture()
+          .consideringAllDependencies()
+          .layer("Adapters").definedBy("sinnet.infra.adapters..")
+          .layer("PortsIn").definedBy("sinnet.app.ports.in..")
+          .layer("PortsOut").definedBy(ROOT_PACKAGE_PORTS_OUT)
+          .layer("LegacyPorts").definedBy(ROOT_PACKAGE_PORTS)
+          .layer("Domain").definedBy(ROOT_PACKAGE_DOMAIN)
+          .layer("GQL").definedBy(ROOT_PACKAGE_GQL)
+          .layer("App").definedBy(ROOT_PACKAGE_APP)
+          .layer("AppFlow").definedBy("sinnet.app.flow..")
+          .layer("AppServices").definedBy("sinnet.app.service..")
+          .layer("Infra").definedBy(ROOT_PACKAGE_INFRA)
+          .layer("grpc.models").definedBy("sinnet.grpc..")
+          .layer("grpc.adapters").definedBy("sinnet.infra.adapters.grpc..");
 
   // Classes should not access System.in , System.out or System.err
   // Classes should not use java util logging
@@ -41,39 +64,35 @@ public class AppArchTest {
       .and(GeneralCodingRules.NO_CLASSES_SHOULD_USE_FIELD_INJECTION)
       .because("These are Voilation of general coding rules");
 
-    static final String ROOT_PACKAGE_ADAPTERS = "sinnet.infra.adapters..";
-    static final String ROOT_PACKAGE_PORTS = "sinnet.app.ports..";
-    static final String ROOT_PACKAGE_PORTS_IN = "sinnet.app.ports.in..";
-    static final String ROOT_PACKAGE_PORTS_OUT = "sinnet.app.ports.out..";
-    static final String ROOT_PACKAGE_DOMAIN = "sinnet.domain..";
-    static final String ROOT_PACKAGE_GQL = "sinnet.gql..";
-    static final String ROOT_PACKAGE_APP = "sinnet.app..";
-    static final String ROOT_PACKAGE_INFRA = "sinnet.infra..";
 
     @Test
     void shouldSeparateModules() {
 
       var testedClasses = new ClassFileImporter()
           .withImportOption(new ImportOption.DoNotIncludeTests())
-          .withImportOption(new ImportOption.DoNotIncludeArchives())
           .importPackages("sinnet");
 
       // Ports should not depend on domain
-      var architecture = Architectures.layeredArchitecture()
-          .consideringAllDependencies()
-          .layer("Adapters").definedBy(ROOT_PACKAGE_ADAPTERS)
-          .layer("PortsIn").definedBy(ROOT_PACKAGE_PORTS_IN)
-          .layer("PortsOut").definedBy(ROOT_PACKAGE_PORTS_OUT)
-          .layer("LegacyPorts").definedBy(ROOT_PACKAGE_PORTS)
-          .layer("Domain").definedBy(ROOT_PACKAGE_DOMAIN)
-          .layer("GQL").definedBy(ROOT_PACKAGE_GQL)
-          .layer("App").definedBy(ROOT_PACKAGE_APP)
-          .layer("Infra").definedBy(ROOT_PACKAGE_INFRA)
-          .whereLayer("Domain").mayOnlyBeAccessedByLayers("Adapters", "PortsIn", "PortsOut", "LegacyPorts", "App", "GQL")
-          .whereLayer("Adapters").mayNotBeAccessedByAnyLayer()
-          .whereLayer("Infra").mayNotBeAccessedByAnyLayer();
+      layers
+        .whereLayer("Domain").mayOnlyBeAccessedByLayers("Adapters", "PortsIn", "PortsOut", "LegacyPorts", "App", "GQL")
+        .check(testedClasses);
 
-      architecture.check(testedClasses);
+      layers
+        .whereLayer("PortsOut").mayOnlyBeAccessedByLayers("AppFlow", "AppServices", "Adapters")
+        .check(testedClasses);
+      
+      layers
+        .whereLayer("grpc.models").mayOnlyBeAccessedByLayers("grpc.adapters")
+        .check(testedClasses);
+      
+      layers
+        .whereLayer("Adapters").mayNotBeAccessedByAnyLayer()
+        .check(testedClasses);
+      
+      layers
+        .whereLayer("Infra").mayNotBeAccessedByAnyLayer()
+        .check(testedClasses);
+
     }
 }
 

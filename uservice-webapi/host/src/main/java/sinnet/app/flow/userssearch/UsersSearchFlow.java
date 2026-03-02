@@ -1,4 +1,4 @@
-package sinnet.app.userssearch;
+package sinnet.app.flow.userssearch;
 
 import java.util.UUID;
 

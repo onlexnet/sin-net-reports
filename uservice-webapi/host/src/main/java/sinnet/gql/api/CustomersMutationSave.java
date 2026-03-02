@@ -8,7 +8,7 @@ import org.springframework.stereotype.Controller;
 
 import lombok.RequiredArgsConstructor;
 import sinnet.app.lib.TimeProvider;
-import sinnet.app.ports.in.CustomersInPort;
+import sinnet.app.ports.in.CustomersPortIn;
 import sinnet.gql.models.CustomerContactInputGql;
 import sinnet.gql.models.CustomerInput;
 import sinnet.gql.models.CustomerSecretExInput;
@@ -25,7 +25,7 @@ class CustomersMutationSave {
 
   private final TimeProvider timeProvider;
 
-  private final CustomersInPort service;
+  private final CustomersPortIn service;
   private final CustomerMapper customerMapper;
 
   @SchemaMapping

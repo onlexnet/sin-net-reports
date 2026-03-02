@@ -1,4 +1,4 @@
-package sinnet.app.ports.out;
+package sinnet.app.ports.in;
 
 import java.util.List;
 import java.util.function.Function;
@@ -15,17 +15,17 @@ import sinnet.grpc.customers.ReserveRequest;
 import sinnet.grpc.customers.UpdateCommand;
 import sinnet.grpc.customers.UpdateResult;
 
-public interface CustomersOutPort {
+public interface CustomersPortIn {
+    
+    CustomerEntityGql customerGet(String projectId, String requestorEmail, String customerId, Function<GetReply, CustomerEntityGql> mapper);
+    
+    ListReply list(ListRequest request);
     
     GetReply get(GetRequest request);
     
     ReserveReply reserve(ReserveRequest request);
-    
-    ListReply list(ListRequest request);
-    
-    <T> List<T> customerList(String projectId, String requestorEmail, Function<sinnet.grpc.customers.CustomerModel, T> mapper);
 
-    CustomerEntityGql customerGet(String projectId, String requestorEmail, String customerId, Function<GetReply, CustomerEntityGql> mapper);
+    <T> List<T> customerList(String projectId, String requestorEmail, Function<sinnet.grpc.customers.CustomerModel, T> mapper);
 
     RemoveReply remove(RemoveRequest request);
 
