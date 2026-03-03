@@ -20,7 +20,7 @@ class ActionsMutationUpdate {
 
   @SchemaMapping 
   Boolean update(ActionsMutation self, @Argument ServiceEntryInputGql content, @Argument String entityId, @Argument Integer entityVersion) {
-    var projectId = UUID.fromString(self.userToken().getProjectId());
+    var projectId = self.userToken().projectId();
 
     return timeentriesService.update(
         new EntityId(projectId, UUID.fromString(entityId), entityVersion),

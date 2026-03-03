@@ -38,15 +38,11 @@ class Mutation {
   }
 
   @MutationMapping("Actions")
-  ActionsMutation actions(@Argument String projectId) {
+  ActionsMutation actions(@Argument UUID projectId) {
     var authentication = (AuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
     var primaryEmail = authentication.getPrincipal();
 
-    var userToken = UserToken.newBuilder()
-        .setProjectId(projectId)
-        .setRequestorEmail(primaryEmail)
-        .build();
-
+    var userToken = new sinnet.domain.models.UserToken(projectId, primaryEmail);
     return new ActionsMutation(projectId, userToken);
   }
 }

@@ -18,7 +18,7 @@ class ActionsMutationRemove {
   @SchemaMapping 
   Boolean remove(ActionsMutation self, @Argument String entityId, @Argument int entityVersion) {
     var entityIdTyped = UUID.fromString(entityId);
-    var projectId = UUID.fromString(self.userToken().getProjectId());
+    var projectId = self.userToken().projectId();
 
     return actionsGrpc.remove(projectId, entityIdTyped, entityVersion);
   }
