@@ -28,7 +28,7 @@ import sinnet.grpc.customers.UpdateResult;
 /** Mockable equivalent of {@link ProjectsGrpcStub}. */
 @Component
 @RequiredArgsConstructor
-public class CustomersGrpcFacade implements CustomersPortOut {
+class CustomersGateway implements CustomersPortOut {
 
   private final CustomerMapper customerMapper;
 
