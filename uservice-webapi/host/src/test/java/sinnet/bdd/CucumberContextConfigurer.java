@@ -13,6 +13,7 @@ import sinnet.infra.Program;
 @DirtiesContext
 @SpringBootTest(
   webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-  properties = { "DAPR_GRPC_PORT=0" }, classes = { Program.class, PortsConfigurer.class })
+  properties = { "DAPR_GRPC_PORT=0" }, classes = { Program.class, PortsConfigurer.class, ServicesConfigurer.class })
 public class CucumberContextConfigurer {
+
 }

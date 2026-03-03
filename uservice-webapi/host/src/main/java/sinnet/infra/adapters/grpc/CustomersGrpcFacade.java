@@ -5,10 +5,14 @@ import java.util.function.Function;
 
 import org.springframework.stereotype.Component;
 
+import lombok.RequiredArgsConstructor;
+import sinnet.app.flow.request.CustomerUpdateCommand;
 import sinnet.app.ports.out.CustomersPortOut;
+import sinnet.gql.api.CustomerMapper;
 import sinnet.gql.models.CustomerEntityGql;
 import sinnet.grpc.common.EntityId;
 import sinnet.grpc.common.UserToken;
+import sinnet.grpc.customers.CustomerModel;
 import sinnet.grpc.customers.CustomersGrpc.CustomersBlockingStub;
 import sinnet.grpc.customers.GetReply;
 import sinnet.grpc.customers.GetRequest;
@@ -23,13 +27,13 @@ import sinnet.grpc.customers.UpdateResult;
 
 /** Mockable equivalent of {@link ProjectsGrpcStub}. */
 @Component
+@RequiredArgsConstructor
 public class CustomersGrpcFacade implements CustomersPortOut {
+
+  private final CustomerMapper customerMapper;
 
   private final CustomersBlockingStub stub;
 
-  public CustomersGrpcFacade(CustomersBlockingStub stub) {
-    this.stub = stub;
-  }
 
   @Override
   public ListReply list(ListRequest request) {
@@ -52,8 +56,20 @@ public class CustomersGrpcFacade implements CustomersPortOut {
   }
 
   @Override
-  public UpdateResult update(UpdateCommand request) {
-    return stub.update(request);
+  public UpdateResult update(CustomerUpdateCommand request) {
+    var changedWhen = request.changedWhen();
+    var changedWho = request.changedWho();
+    var grpcRequest = UpdateCommand.newBuilder()
+        .setUserToken(request.userToken())
+        .setModel(CustomerModel.newBuilder()
+            .setId(customerMapper.toGrpc(request.id()))
+            .setValue(customerMapper.toGrpc(request.value().entry()))
+            .addAllSecrets(request.value().secrets().stream().map(it -> customerMapper.toGrpc(it, changedWhen, changedWho)).toList())
+            .addAllSecretEx(request.value().secretsEx().stream().map(it -> customerMapper.toGrpc(it, changedWhen, changedWho)).toList())
+            .addAllContacts(request.value().contacts().stream().map(customerMapper::toGrpc).toList())
+            .build())
+        .build();
+    return stub.update(grpcRequest);
   }
 
 

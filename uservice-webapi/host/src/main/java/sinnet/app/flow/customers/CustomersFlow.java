@@ -6,6 +6,7 @@ import java.util.function.Function;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
+import sinnet.app.flow.request.CustomerUpdateCommand;
 import sinnet.app.ports.in.CustomersPortIn;
 import sinnet.app.ports.out.CustomersPortOut;
 import sinnet.gql.models.CustomerEntityGql;
@@ -18,7 +19,6 @@ import sinnet.grpc.customers.RemoveReply;
 import sinnet.grpc.customers.RemoveRequest;
 import sinnet.grpc.customers.ReserveReply;
 import sinnet.grpc.customers.ReserveRequest;
-import sinnet.grpc.customers.UpdateCommand;
 import sinnet.grpc.customers.UpdateResult;
 
 @Component
@@ -43,7 +43,7 @@ class CustomersFlow implements CustomersPortIn {
     }
 
     @Override
-    public UpdateResult update(UpdateCommand request) {
+    public UpdateResult update(CustomerUpdateCommand request) {
         return customersOutPort.update(request);
     }
 

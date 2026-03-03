@@ -7,16 +7,16 @@ import org.springframework.graphql.data.method.annotation.SchemaMapping;
 import org.springframework.stereotype.Controller;
 
 import lombok.RequiredArgsConstructor;
+import sinnet.app.flow.request.CustomerUpdateCommand;
 import sinnet.app.lib.TimeProvider;
 import sinnet.app.ports.in.CustomersPortIn;
+import sinnet.domain.models.CustomerValue;
 import sinnet.gql.models.CustomerContactInputGql;
 import sinnet.gql.models.CustomerInput;
 import sinnet.gql.models.CustomerSecretExInput;
 import sinnet.gql.models.CustomerSecretInput;
 import sinnet.gql.models.EntityGql;
 import sinnet.gql.models.SomeEntityGql;
-import sinnet.grpc.customers.CustomerModel;
-import sinnet.grpc.customers.UpdateCommand;
 
 /** Fixme. */
 @Controller
@@ -38,17 +38,17 @@ class CustomersMutationSave {
 
     var changedWhen = timeProvider.now();
     var changedWho = self.userToken().getRequestorEmail();
-    
-    var request = UpdateCommand.newBuilder()
-        .setUserToken(self.userToken())
-        .setModel(CustomerModel.newBuilder()
-            .setId(customerMapper.toGrpc(id))
-            .setValue(customerMapper.toGrpc(entry))
-            .addAllSecrets(secrets.stream().map(it -> customerMapper.toGrpc(it, changedWhen, changedWho)).toList())
-            .addAllSecretEx(secretsEx.stream().map(it -> customerMapper.toGrpc(it, changedWhen, changedWho)).toList())
-            .addAllContacts(contacts.stream().map(customerMapper::toGrpc).toList())
-            .build())
-        .build();
+
+    var customerVal = new CustomerValue(entry, secrets, secretsEx, contacts);
+    var request = new CustomerUpdateCommand(
+      // user context
+      self.userToken(),
+      // customer data
+      id,
+      customerVal,
+      // change metadata
+      changedWhen,
+      changedWho);
     var result = service.update(request);
     return customerMapper.toGql(result.getEntityId());
   }
