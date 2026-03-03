@@ -6,7 +6,7 @@ import java.util.function.Function;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
-import sinnet.app.flow.models.CustomerUpdateCommand;
+import sinnet.app.flow.request.CustomerUpdateCommand;
 import sinnet.app.ports.in.CustomersPortIn;
 import sinnet.app.ports.out.CustomersPortOut;
 import sinnet.gql.models.CustomerEntityGql;

@@ -1,2 +1,2 @@
 @org.jspecify.annotations.NullMarked
-package sinnet.app.flow.models;
+package sinnet.app.flow.request;

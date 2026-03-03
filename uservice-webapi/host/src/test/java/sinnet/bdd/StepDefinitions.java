@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
@@ -13,33 +14,31 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import io.cucumber.java.Before;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import onlexnet.sinnet.webapi.test.AppApi;
-import sinnet.app.flow.models.CustomerUpdateCommand;
+import sinnet.app.flow.request.CustomerUpdateCommand;
 import sinnet.app.lib.TimeProvider;
 import sinnet.app.ports.out.CustomersPortOut;
 import sinnet.app.ports.out.ProjectsPortOut;
-import sinnet.app.ports.out.UsersServicePortOut;
 import sinnet.app.ports.out.ProjectsPortOut.StatsResult;
+import sinnet.app.ports.out.UsersServicePortOut;
+import sinnet.domain.models.CustomerValue;
 import sinnet.domain.models.Email;
 import sinnet.domain.models.ProjectId;
 import sinnet.gql.api.CommonMapper;
 import sinnet.gql.models.CustomerInput;
 import sinnet.gql.models.CustomerSecretExInput;
 import sinnet.gql.models.CustomerSecretInput;
+import sinnet.gql.models.EntityGql;
 import sinnet.gql.models.ProjectEntityGql;
 import sinnet.gql.models.SomeEntityGql;
 import sinnet.gql.models.UserGql;
 import sinnet.grpc.common.EntityId;
 import sinnet.grpc.common.UserToken;
-import sinnet.grpc.customers.CustomerModel;
-import sinnet.grpc.customers.CustomerSecret;
-import sinnet.grpc.customers.CustomerSecretEx;
-import sinnet.grpc.customers.CustomerValue;
-import sinnet.grpc.customers.UpdateCommand;
 import sinnet.grpc.customers.UpdateResult;
 import sinnet.grpc.users.UsersSearchModel;
 
@@ -58,10 +57,10 @@ public class StepDefinitions {
   TestRestTemplate restTemplate;
 
   @Autowired
-  TimeProvider timeProvider;
+  CommonMapper commonMapper;
 
   @Autowired
-  CommonMapper commonMapper;
+  TimeProvider timeProvider;
 
   String requestorEmail;
   AppApi appApi;
@@ -261,35 +260,17 @@ public class StepDefinitions {
     var expectedResult = new SomeEntityGql().setProjectId(projectIdStr).setEntityId(entityId.toString()).setEntityVersion(43L);
     Assertions.assertThat(actual).isEqualTo(expectedResult);
 
-    var expectedCommand = UpdateCommand.newBuilder()
-        .setUserToken(UserToken.newBuilder()
-          .setProjectId(projectId.toString())
-          .setRequestorEmail(requestorEmail))
-        .setModel(CustomerModel.newBuilder()
-          .setId(EntityId.newBuilder()
-            .setProjectId(projectIdStr)
-            .setEntityId(entityIdStr)
-            .setEntityVersion(42))
-          .addSecrets(CustomerSecret.newBuilder()
-            .setLocation("location 1")
-            .setPassword("password 1")
-            .setUsername("username 1")
-            .setOtpSecret("my secret 1")
-            .setOtpRecoveryKeys("my key 1")
-            .setChangedWho(requestorEmail)
-            .setChangedWhen(commonMapper.toGrpc(timeProvider.now())))
-          .addSecretEx(CustomerSecretEx.newBuilder()
-            .setEntityCode("entity code 2")
-            .setEntityName("entity name 2")
-            .setLocation("location 2")
-            .setPassword("password 2")
-            .setUsername("username 2")
-            .setOtpSecret("my secret 2")
-            .setOtpRecoveryKeys("my key 2")
-            .setChangedWho(requestorEmail)
-            .setChangedWhen(commonMapper.toGrpc(timeProvider.now())))
-          .setValue(CustomerValue.newBuilder()))
-        .build();
+
+    var expectedCommand = new CustomerUpdateCommand(
+        UserToken.newBuilder().setProjectId(projectId.toString()).setRequestorEmail(requestorEmail).build(),
+        new EntityGql(projectIdStr, entityIdStr, 42),
+        new CustomerValue(
+          new CustomerInput(),
+          List.of(secret),
+          List.of(secretExt),
+          List.of()),
+          timeProvider.now(),
+          requestorEmail);
     Assertions.assertThat(argumentCaptor.getValue())
         .isEqualTo(expectedCommand);
   }

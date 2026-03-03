@@ -7,9 +7,10 @@ import org.springframework.graphql.data.method.annotation.SchemaMapping;
 import org.springframework.stereotype.Controller;
 
 import lombok.RequiredArgsConstructor;
-import sinnet.app.flow.models.CustomerUpdateCommand;
+import sinnet.app.flow.request.CustomerUpdateCommand;
 import sinnet.app.lib.TimeProvider;
 import sinnet.app.ports.in.CustomersPortIn;
+import sinnet.domain.models.CustomerValue;
 import sinnet.gql.models.CustomerContactInputGql;
 import sinnet.gql.models.CustomerInput;
 import sinnet.gql.models.CustomerSecretExInput;
@@ -38,15 +39,13 @@ class CustomersMutationSave {
     var changedWhen = timeProvider.now();
     var changedWho = self.userToken().getRequestorEmail();
 
+    var customerVal = new CustomerValue(entry, secrets, secretsEx, contacts);
     var request = new CustomerUpdateCommand(
       // user context
       self.userToken(),
       // customer data
       id,
-      entry,
-      secrets,
-      secretsEx,
-      contacts,
+      customerVal,
       // change metadata
       changedWhen,
       changedWho);

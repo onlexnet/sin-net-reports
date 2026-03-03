@@ -3,7 +3,7 @@ package sinnet.app.ports.out;
 import java.util.List;
 import java.util.function.Function;
 
-import sinnet.app.flow.models.CustomerUpdateCommand;
+import sinnet.app.flow.request.CustomerUpdateCommand;
 import sinnet.gql.models.CustomerEntityGql;
 import sinnet.grpc.customers.GetReply;
 import sinnet.grpc.customers.GetRequest;
