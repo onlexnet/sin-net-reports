@@ -107,7 +107,7 @@ jobs:
         uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f
 
       - name: Restore Docker build cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: /tmp/.buildx-cache
           key: ${{ runner.os }}-e2e-buildx-${{ hashFiles('uservice-timeentries/Dockerfile', 'uservice-timeentries/**/pom.xml', 'uservice-webapi/Dockerfile', 'uservice-webapi/**/pom.xml', 'static-webapp/Dockerfile', 'static-webapp/package-lock.json', 'api/client-java/**/pom.xml', 'api/schema/**/*.proto') }}
@@ -116,7 +116,7 @@ jobs:
 
       - name: Restore Playwright browser cache
         id: playwright-cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ~/.cache/ms-playwright
           key: ${{ runner.os }}-playwright-${{ hashFiles('smoke-test/e2e/requirements.txt') }}
