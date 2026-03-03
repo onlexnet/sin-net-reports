@@ -47,7 +47,10 @@ public class AppArchTest {
           .layer("AppServices").definedBy("sinnet.app.service..")
           .layer("Infra").definedBy(ROOT_PACKAGE_INFRA)
           .layer("grpc.models").definedBy("sinnet.grpc..")
-          .layer("grpc.adapters").definedBy("sinnet.infra.adapters.grpc..");
+          .layer("grpc.adapters").definedBy("sinnet.infra.adapters.grpc..")
+          .layer("gql.models").definedBy("sinnet.gql..")
+          .layer("gql.adapters").definedBy("sinnet.infra.adapters.gql..");
+
 
   // Classes should not access System.in , System.out or System.err
   // Classes should not use java util logging
@@ -84,7 +87,11 @@ public class AppArchTest {
       layers
         .whereLayer("grpc.models").mayOnlyBeAccessedByLayers("grpc.adapters")
         .check(testedClasses);
-      
+
+      layers
+        .whereLayer("gql.models").mayOnlyBeAccessedByLayers("gql.adapters")
+        .check(testedClasses);
+
       layers
         .whereLayer("Adapters").mayNotBeAccessedByAnyLayer()
         .check(testedClasses);
