@@ -18,7 +18,7 @@ class CustomersMutationReserve {
   @SchemaMapping
   public EntityGql reserve(CustomersMutation self) {
     var request = ReserveRequest.newBuilder()
-        .setProjectId(self.projectId())
+        .setProjectId(self.projectId().toString())
         .build();
     var result = service.reserve(request);
     return commonMapper.toGql(result.getEntityId());

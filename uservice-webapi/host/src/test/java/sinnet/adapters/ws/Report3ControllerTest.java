@@ -20,13 +20,13 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.google.protobuf.ByteString;
 
+import sinnet.app.ports.out.CustomersPortOut;
 import sinnet.grpc.common.EntityId;
 import sinnet.grpc.customers.CustomerModel;
 import sinnet.grpc.customers.CustomerValue;
 import sinnet.grpc.customers.ListReply;
 import sinnet.grpc.customers.ListRequest;
 import sinnet.infra.Program;
-import sinnet.infra.adapters.grpc.CustomersGrpcFacade;
 import sinnet.report3.grpc.ReportRequest;
 import sinnet.report3.grpc.ReportsGrpc.ReportsBlockingStub;
 
@@ -42,7 +42,7 @@ class Report3ControllerTest {
   private MockMvc mockMvc;
 
   @MockitoBean
-  private CustomersGrpcFacade customersGrpcFacade;
+  private CustomersPortOut customersPortOut;
 
   @MockitoBean
   private ReportsBlockingStub reportsBlockingStub;
@@ -55,7 +55,7 @@ class Report3ControllerTest {
 
     // Mock customers - return empty list
     var listReply = ListReply.newBuilder().build();
-    when(customersGrpcFacade.list(any(ListRequest.class)))
+    when(customersPortOut.list(any(ListRequest.class)))
         .thenReturn(listReply);
 
     // Mock report generation - return FileResponse with PDF data
@@ -76,7 +76,7 @@ class Report3ControllerTest {
         .andExpect(content().bytes(expectedPdfData));
 
     // Verify interactions
-    verify(customersGrpcFacade).list(any(ListRequest.class));
+    verify(customersPortOut).list(any(ListRequest.class));
     verify(reportsBlockingStub).produce(any(ReportRequest.class));
   }
 
@@ -119,7 +119,7 @@ class Report3ControllerTest {
         .addCustomers(customer2)
         .build();
 
-    when(customersGrpcFacade.list(any(ListRequest.class)))
+    when(customersPortOut.list(any(ListRequest.class)))
         .thenReturn(listReply);
 
     // Mock report generation
@@ -137,7 +137,7 @@ class Report3ControllerTest {
         .andExpect(content().bytes(expectedPdfData));
 
     // Verify both customers were processed
-    verify(customersGrpcFacade).list(any(ListRequest.class));
+    verify(customersPortOut).list(any(ListRequest.class));
     verify(reportsBlockingStub).produce(any(ReportRequest.class));
   }
 
@@ -175,7 +175,7 @@ class Report3ControllerTest {
         .addCustomers(customerWithoutOperator)
         .build();
 
-    when(customersGrpcFacade.list(any(ListRequest.class)))
+    when(customersPortOut.list(any(ListRequest.class)))
         .thenReturn(listReply);
 
     // Mock report generation
@@ -192,7 +192,7 @@ class Report3ControllerTest {
         .andExpect(status().isOk());
 
     // Verify filtering logic - only customer with operator should be in report request
-    verify(customersGrpcFacade).list(any(ListRequest.class));
+    verify(customersPortOut).list(any(ListRequest.class));
     verify(reportsBlockingStub).produce(any(ReportRequest.class));
   }
 
@@ -203,7 +203,7 @@ class Report3ControllerTest {
 
     // Mock empty customer list
     var listReply = ListReply.newBuilder().build();
-    when(customersGrpcFacade.list(any(ListRequest.class)))
+    when(customersPortOut.list(any(ListRequest.class)))
         .thenReturn(listReply);
 
     // Mock report generation for empty list
@@ -221,7 +221,7 @@ class Report3ControllerTest {
         .andExpect(content().bytes(expectedPdfData));
 
     // Verify empty list was handled
-    verify(customersGrpcFacade).list(any(ListRequest.class));
+    verify(customersPortOut).list(any(ListRequest.class));
     verify(reportsBlockingStub).produce(any(ReportRequest.class));
   }
 }

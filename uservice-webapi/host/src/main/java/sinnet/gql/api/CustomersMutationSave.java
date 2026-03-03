@@ -37,7 +37,7 @@ class CustomersMutationSave {
                             @Argument List<CustomerContactInputGql> contacts) {
 
     var changedWhen = timeProvider.now();
-    var changedWho = self.userToken().getRequestorEmail();
+    var changedWho = self.userToken().requestorEmail();
 
     var customerVal = new CustomerValue(entry, secrets, secretsEx, contacts);
     var request = new CustomerUpdateCommand(

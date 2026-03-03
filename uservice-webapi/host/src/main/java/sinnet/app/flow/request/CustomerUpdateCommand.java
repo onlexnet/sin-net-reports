@@ -3,8 +3,8 @@ package sinnet.app.flow.request;
 import java.time.LocalDateTime;
 
 import sinnet.domain.models.CustomerValue;
+import sinnet.domain.models.UserToken;
 import sinnet.gql.models.EntityGql;
-import sinnet.grpc.common.UserToken;
 
 public record CustomerUpdateCommand(
     UserToken userToken,

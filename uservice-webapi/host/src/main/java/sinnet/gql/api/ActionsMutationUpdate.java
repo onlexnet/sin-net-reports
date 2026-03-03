@@ -9,7 +9,6 @@ import org.springframework.stereotype.Controller;
 
 import lombok.RequiredArgsConstructor;
 import sinnet.app.ports.in.TimeentriesServicePortIn;
-import sinnet.app.ports.out.ActionsGrpcPortOut;
 import sinnet.domain.models.EntityId;
 import sinnet.gql.models.ServiceEntryInputGql;
 
@@ -21,7 +20,7 @@ class ActionsMutationUpdate {
 
   @SchemaMapping 
   Boolean update(ActionsMutation self, @Argument ServiceEntryInputGql content, @Argument String entityId, @Argument Integer entityVersion) {
-    var projectId = UUID.fromString(self.userToken().getProjectId());
+    var projectId = self.userToken().projectId();
 
     return timeentriesService.update(
         new EntityId(projectId, UUID.fromString(entityId), entityVersion),

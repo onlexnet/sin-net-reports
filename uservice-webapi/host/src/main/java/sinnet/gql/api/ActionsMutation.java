@@ -1,7 +1,8 @@
 package sinnet.gql.api;
 
-import sinnet.grpc.common.UserToken;
+import java.util.UUID;
 
-/** TBD.  */
-public record ActionsMutation(String projectId, UserToken userToken) {
+import sinnet.domain.models.UserToken;
+
+public record ActionsMutation(UUID projectId, UserToken userToken) {
 }

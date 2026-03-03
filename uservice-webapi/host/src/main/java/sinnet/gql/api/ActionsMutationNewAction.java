@@ -1,7 +1,6 @@
 package sinnet.gql.api;
 
 import java.time.LocalDate;
-import java.util.UUID;
 
 import org.springframework.graphql.data.method.annotation.SchemaMapping;
 import org.springframework.stereotype.Controller;
@@ -18,8 +17,8 @@ class ActionsMutationNewAction {
 
   @SchemaMapping 
   SomeEntityGql newAction(ActionsMutation self) {
-    var requestorEmail = self.userToken().getRequestorEmail();
-    var projectId = UUID.fromString(self.userToken().getProjectId());
+    var requestorEmail = self.userToken().requestorEmail();
+    var projectId = self.userToken().projectId();
 
     // no security check as each person can create its own projects
 

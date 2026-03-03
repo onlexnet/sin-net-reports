@@ -1,5 +1,7 @@
 package sinnet.gql.api;
 
+import java.util.UUID;
+
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,28 +24,25 @@ class Mutation {
   }
 
   @MutationMapping("Customers")
-  CustomersMutation customers(@Argument String projectId) {
+  CustomersMutation customers(@Argument UUID projectId) {
     var authentication = (AuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
     var primaryEmail = authentication.getPrincipal();
 
-    var userToken = UserToken.newBuilder()
-        .setProjectId(projectId)
+    var userToken = new sinnet.domain.models.UserToken(projectId, primaryEmail);
+    var legacyUserToken = UserToken.newBuilder()
+        .setProjectId(projectId.toString())
         .setRequestorEmail(primaryEmail)
         .build();
 
-    return new CustomersMutation(projectId, userToken);
+    return new CustomersMutation(projectId, userToken, legacyUserToken);
   }
 
   @MutationMapping("Actions")
-  ActionsMutation actions(@Argument String projectId) {
+  ActionsMutation actions(@Argument UUID projectId) {
     var authentication = (AuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
     var primaryEmail = authentication.getPrincipal();
 
-    var userToken = UserToken.newBuilder()
-        .setProjectId(projectId)
-        .setRequestorEmail(primaryEmail)
-        .build();
-
+    var userToken = new sinnet.domain.models.UserToken(projectId, primaryEmail);
     return new ActionsMutation(projectId, userToken);
   }
 }
