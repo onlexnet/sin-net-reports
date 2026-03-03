@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
@@ -14,7 +13,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import io.cucumber.java.Before;
 import io.cucumber.java.en.Then;
@@ -38,7 +36,6 @@ import sinnet.gql.models.ProjectEntityGql;
 import sinnet.gql.models.SomeEntityGql;
 import sinnet.gql.models.UserGql;
 import sinnet.grpc.common.EntityId;
-import sinnet.grpc.common.UserToken;
 import sinnet.grpc.customers.UpdateResult;
 import sinnet.grpc.users.UsersSearchModel;
 
@@ -158,7 +155,7 @@ public class StepDefinitions {
 
   @When("Customer creation request is send to backend")
   public void Customer_creation_request_is_send_to_backend() {
-    var projectId = "projectId [" + UUID.randomUUID() + "]";
+    var projectId = UUID.randomUUID().toString();
 
     var projectVersion = 1L;
     var expectedCmd = sinnet.grpc.customers.ReserveRequest.newBuilder()
@@ -262,7 +259,7 @@ public class StepDefinitions {
 
 
     var expectedCommand = new CustomerUpdateCommand(
-        UserToken.newBuilder().setProjectId(projectId.toString()).setRequestorEmail(requestorEmail).build(),
+        new sinnet.domain.models.UserToken(projectId, requestorEmail),
         new EntityGql(projectIdStr, entityIdStr, 42),
         new CustomerValue(
           new CustomerInput(),

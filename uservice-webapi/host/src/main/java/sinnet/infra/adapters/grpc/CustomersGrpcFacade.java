@@ -59,8 +59,9 @@ public class CustomersGrpcFacade implements CustomersPortOut {
   public UpdateResult update(CustomerUpdateCommand request) {
     var changedWhen = request.changedWhen();
     var changedWho = request.changedWho();
+    var userToken = Map.apply.map(request.userToken());
     var grpcRequest = UpdateCommand.newBuilder()
-        .setUserToken(request.userToken())
+        .setUserToken(userToken)
         .setModel(CustomerModel.newBuilder()
             .setId(customerMapper.toGrpc(request.id()))
             .setValue(customerMapper.toGrpc(request.value().entry()))
