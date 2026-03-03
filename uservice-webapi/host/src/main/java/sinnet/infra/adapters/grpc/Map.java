@@ -7,12 +7,18 @@ import org.mapstruct.factory.Mappers;
 
 import sinnet.domain.models.UserToken;
 
-@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE)
+@Mapper(unmappedTargetPolicy = ReportingPolicy.ERROR, unmappedSourcePolicy = ReportingPolicy.ERROR)
 public interface Map {
     
     static final Map apply = Mappers.getMapper(Map.class);
-    
-    @Mapping(source = "projectId", target = "projectId")
-    @Mapping(source = "requestorEmail", target = "requestorEmail")
+
+    @Mapping(target = "mergeFrom", ignore = true)
+    @Mapping(target = "clearField", ignore = true)
+    @Mapping(target = "clearOneof", ignore = true)
+    @Mapping(target = "projectIdBytes", ignore = true)
+    @Mapping(target = "requestorEmailBytes", ignore = true)
+    @Mapping(target = "unknownFields", ignore = true)
+    @Mapping(target = "mergeUnknownFields", ignore = true)
+    @Mapping(target = "allFields", ignore = true)
     sinnet.grpc.common.UserToken map(UserToken it);
 }
