@@ -6,9 +6,9 @@ import org.springframework.graphql.data.method.annotation.SchemaMapping;
 import org.springframework.stereotype.Controller;
 
 import lombok.RequiredArgsConstructor;
+import sinnet.app.flow.request.CustomerRemoveCommand;
 import sinnet.app.ports.in.CustomersPortIn;
 import sinnet.gql.models.EntityGql;
-import sinnet.grpc.customers.RemoveRequest;
 
 @Controller
 @RequiredArgsConstructor
@@ -19,10 +19,9 @@ class CustomersMutationRemove {
 
   @SchemaMapping
   public Boolean remove(CustomersMutation self, @Argument EntityGql id) {
-    var cmd = RemoveRequest.newBuilder()
-        .setEntityId(customerMapper.toGrpc(id))
-        .setUserToken(self.legacyUserToken())
-        .build();
+    var entityId = customerMapper.map(id);
+    var userToken = self.userToken();
+    var cmd = new CustomerRemoveCommand(entityId, userToken);
     var result = service.remove(cmd);
     return result.getSuccess();
   }

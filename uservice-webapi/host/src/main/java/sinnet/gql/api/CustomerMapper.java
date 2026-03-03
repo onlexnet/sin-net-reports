@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 import io.vavr.collection.Iterator;
 import io.vavr.control.Option;
@@ -44,7 +45,10 @@ public interface CustomerMapper {
     return LocalDateTime.of(it.getYear(), it.getMonth(), it.getDay(), it.getHour(), it.getMinute(), it.getSecond());
   }
 
-  /** Dox me. */
+  @Mapping(target = "id", source = "entityId")
+  @Mapping(target = "tag", source = "entityVersion")
+  sinnet.domain.models.EntityId map(EntityGql item);
+
   default EntityId toGrpc(EntityGql item) {
     return EntityId.newBuilder()
       .setEntityId(item.getEntityId())
