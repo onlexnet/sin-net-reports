@@ -26,7 +26,7 @@ class CustomersMutationSave {
   private final TimeProvider timeProvider;
 
   private final CustomersPortIn service;
-  private final CustomerMapper customerMapper;
+  private final CustomerMapper customerMapper = CustomerMapper.INSTANCE;
 
   @SchemaMapping
   public SomeEntityGql save(CustomersMutation self,

@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.factory.Mappers;
 
 import io.vavr.collection.Iterator;
 import io.vavr.control.Option;
@@ -24,8 +26,10 @@ import sinnet.grpc.customers.CustomerSecretEx;
 import sinnet.grpc.customers.GetReply;
 
 /** MapStruct mapper for customer conversions between gRPC and GraphQL models. */
-@Mapper(componentModel = "spring", uses = CommonMapper.class)
+@Mapper(uses = CommonMapper.class)
 public interface CustomerMapper {
+
+  static final CustomerMapper INSTANCE = Mappers.getMapper(CustomerMapper.class);
 
   // DateTime, created and kept on server-side is UTC only. We can't send data to
   // client because GraphQL does not support Date / Time types.
@@ -44,7 +48,10 @@ public interface CustomerMapper {
     return LocalDateTime.of(it.getYear(), it.getMonth(), it.getDay(), it.getHour(), it.getMinute(), it.getSecond());
   }
 
-  /** Dox me. */
+  @Mapping(target = "id", source = "entityId")
+  @Mapping(target = "tag", source = "entityVersion")
+  sinnet.domain.models.EntityId map(EntityGql item);
+
   default EntityId toGrpc(EntityGql item) {
     return EntityId.newBuilder()
       .setEntityId(item.getEntityId())

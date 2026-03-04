@@ -15,7 +15,7 @@ import sinnet.grpc.customers.GetRequest;
 class CustomersQueryGet {
 
   private final CustomersPortIn service;
-  private final CustomerMapper customerMapper;
+  private final CustomerMapper customerMapper = CustomerMapper.INSTANCE;
 
   @SchemaMapping
   public CustomerEntityGql get(CustomersQuery self, @Argument String entityId) {

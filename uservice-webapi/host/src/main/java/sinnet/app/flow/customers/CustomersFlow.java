@@ -6,6 +6,7 @@ import java.util.function.Function;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
+import sinnet.app.flow.request.CustomerRemoveCommand;
 import sinnet.app.flow.request.CustomerUpdateCommand;
 import sinnet.app.ports.in.CustomersPortIn;
 import sinnet.app.ports.out.CustomersPortOut;
@@ -16,7 +17,6 @@ import sinnet.grpc.customers.GetRequest;
 import sinnet.grpc.customers.ListReply;
 import sinnet.grpc.customers.ListRequest;
 import sinnet.grpc.customers.RemoveReply;
-import sinnet.grpc.customers.RemoveRequest;
 import sinnet.grpc.customers.ReserveReply;
 import sinnet.grpc.customers.ReserveRequest;
 import sinnet.grpc.customers.UpdateResult;
@@ -33,8 +33,8 @@ class CustomersFlow implements CustomersPortIn {
     }
 
     @Override
-    public RemoveReply remove(RemoveRequest request) {
-        return customersOutPort.remove(request);
+    public RemoveReply remove(CustomerRemoveCommand request) {
+        return customersOutPort.remove(request.customerId(), request.requestor());
     }
 
     @Override

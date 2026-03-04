@@ -29,9 +29,9 @@ class ProjectsMutationSave {
 
     return new ProjectEntityGql(
         new SomeEntityGql()
-          .setEntityId(updatedId.id())
+          .setEntityId(updatedId.id().toString())
           .setEntityVersion(updatedId.tag())
-          .setProjectId(updatedId.id()),
+          .setProjectId(updatedId.id().toString()),
         name);
 
   }

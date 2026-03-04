@@ -8,7 +8,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 
 import lombok.RequiredArgsConstructor;
-import sinnet.grpc.common.UserToken;
 import sinnet.web.AuthenticationToken;
 
 @Controller
@@ -29,12 +28,7 @@ class Mutation {
     var primaryEmail = authentication.getPrincipal();
 
     var userToken = new sinnet.domain.models.UserToken(projectId, primaryEmail);
-    var legacyUserToken = UserToken.newBuilder()
-        .setProjectId(projectId.toString())
-        .setRequestorEmail(primaryEmail)
-        .build();
-
-    return new CustomersMutation(projectId, userToken, legacyUserToken);
+    return new CustomersMutation(projectId, userToken);
   }
 
   @MutationMapping("Actions")

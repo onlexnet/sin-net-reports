@@ -10,7 +10,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mapstruct.factory.Mappers;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import sinnet.gql.models.EntityGql;
@@ -19,7 +18,7 @@ import sinnet.gql.models.EntityGql;
 @DisplayName("CustomerMapper Tests")
 class CustomerMapperTest {
 
-  private final CustomerMapper mapper = Mappers.getMapper(CustomerMapper.class);
+  private final CustomerMapper mapper = CustomerMapper.INSTANCE;
 
   @Nested
   @DisplayName("gRPC LocalDateTime to Java LocalDateTime Mapping")

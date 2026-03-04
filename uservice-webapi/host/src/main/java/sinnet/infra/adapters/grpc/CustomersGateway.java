@@ -30,9 +30,8 @@ import sinnet.grpc.customers.UpdateResult;
 @RequiredArgsConstructor
 class CustomersGateway implements CustomersPortOut {
 
-  private final CustomerMapper customerMapper;
-
   private final CustomersBlockingStub stub;
+  private final CustomerMapper customerMapper = CustomerMapper.INSTANCE;
 
 
   @Override
@@ -51,8 +50,12 @@ class CustomersGateway implements CustomersPortOut {
   }
 
   @Override
-  public RemoveReply remove(RemoveRequest request) {
-    return stub.remove(request);
+  public RemoveReply remove(sinnet.domain.models.EntityId customerId, sinnet.domain.models.UserToken requestor) {
+    var req = RemoveRequest.newBuilder()
+        .setEntityId(Map.apply.map(customerId))
+        .setUserToken(Map.apply.map(requestor))
+        .build();
+    return stub.remove(req);
   }
 
   @Override
