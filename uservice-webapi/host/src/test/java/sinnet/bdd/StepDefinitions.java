@@ -102,13 +102,14 @@ public class StepDefinitions {
 
   @When("a project is saved")
   public void project_is_saved() {
+    var projectId = UUID.randomUUID();
     var projectNewName = "projectname-" + UUID.randomUUID();
 
-    var projectId1 = new ProjectId("1", 1L);
+    var projectId1 = new ProjectId(projectId, 1L);
     Mockito
         .when(projectsGrpc.create(requestorEmail))
         .thenReturn(projectId1);
-    var projectId2 = new ProjectId("1", 2L);
+    var projectId2 = new ProjectId(projectId, 2L);
     Mockito
         .when(
             projectsGrpc.update(eq(requestorEmail), eq(projectId1), eq(projectNewName), eq(requestorEmail), eq(List.of())))

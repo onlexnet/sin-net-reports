@@ -1,6 +1,7 @@
 package sinnet.infra.adapters.grpc;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.function.Function;
 
 import org.springframework.stereotype.Component;
@@ -38,7 +39,9 @@ class ProjectsGrpcGateway implements ProjectsPortOut {
     var createResult = stub.create(createRequest);
     var id = createResult.getEntityId();
 
-    return new ProjectId(id.getEId(), id.getETag());
+    var projectId = UUID.fromString(id.getEId());
+    var projectTag = id.getETag();
+    return new ProjectId(projectId, projectTag);
   }
 
   @Override
@@ -52,12 +55,12 @@ class ProjectsGrpcGateway implements ProjectsPortOut {
     var updateRequest = UpdateCommand.newBuilder()
         .setUserToken(requestorToken)
         .setEntityId(sinnet.grpc.projects.generated.ProjectId.newBuilder()
-          .setEId(id.id())
+          .setEId(id.id().toString())
           .setETag(id.tag()))
         .setDesired(desired)
         .build();
     var updatedId = stub.update(updateRequest).getEntityId();
-    return new ProjectId(updatedId.getEId(), updatedId.getETag());
+    return new ProjectId(UUID.fromString(updatedId.getEId()), updatedId.getETag());
   }
 
   @Override
