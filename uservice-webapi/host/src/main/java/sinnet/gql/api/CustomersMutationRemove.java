@@ -15,8 +15,7 @@ import sinnet.gql.models.EntityGql;
 class CustomersMutationRemove {
 
   private final CustomersPortIn service;
-  private final CustomerMapper customerMapper;
-
+  private final CustomerMapper customerMapper = CustomerMapper.INSTANCE;
   @SchemaMapping
   public Boolean remove(CustomersMutation self, @Argument EntityGql id) {
     var entityId = customerMapper.map(id);

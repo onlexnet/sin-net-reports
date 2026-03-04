@@ -21,7 +21,7 @@ class ActionsQuerySearch {
 
   private final TimeentriesServicePortIn service;
   private final CustomersPortIn customerService;
-  private final CustomerMapper customerMapper;
+  private final CustomerMapper customerMapper = CustomerMapper.INSTANCE;
   private final CommonMapper commonMapper;
 
   @SchemaMapping

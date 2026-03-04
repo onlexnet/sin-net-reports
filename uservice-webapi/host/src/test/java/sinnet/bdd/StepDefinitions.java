@@ -119,9 +119,9 @@ public class StepDefinitions {
     lastlyCreatedProject = saveResult.get();
     expectedCreatedProject = new ProjectEntityGql(
         new SomeEntityGql()
-            .setEntityId("1")
+            .setEntityId(projectId.toString())
             .setEntityVersion(2L)
-            .setProjectId("1"),
+            .setProjectId(projectId.toString()),
         projectNewName);
   }
 

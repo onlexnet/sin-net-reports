@@ -14,7 +14,7 @@ import sinnet.grpc.customers.ListRequest;
 class CustomersQueryList {
 
   private final CustomersPortIn service;
-  private final CustomerMapper customerMapper;
+  private final CustomerMapper customerMapper = CustomerMapper.INSTANCE;
 
   @SchemaMapping
   public CustomerEntityGql[] list(CustomersQuery self) {

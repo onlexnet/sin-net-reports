@@ -18,8 +18,8 @@ class ActionsQueryGet {
 
   private final TimeentriesServicePortIn service;
   private final CustomersPortIn customerService;
-  private final CustomerMapper customerMapper;
   private final CommonMapper commonMapper;
+  private final CustomerMapper customerMapper = CustomerMapper.INSTANCE;
 
   @SchemaMapping
   ServiceModelGql get(ActionsQuery self, @Argument String actionId) {

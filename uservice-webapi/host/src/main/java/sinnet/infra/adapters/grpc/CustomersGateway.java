@@ -30,9 +30,8 @@ import sinnet.grpc.customers.UpdateResult;
 @RequiredArgsConstructor
 class CustomersGateway implements CustomersPortOut {
 
-  private final CustomerMapper customerMapper;
-
   private final CustomersBlockingStub stub;
+  private final CustomerMapper customerMapper = CustomerMapper.INSTANCE;
 
 
   @Override
