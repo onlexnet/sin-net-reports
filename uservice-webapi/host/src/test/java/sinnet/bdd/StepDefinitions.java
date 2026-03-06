@@ -72,11 +72,15 @@ public class StepDefinitions {
   @When("user is requesting list of projects")
   public void user_is_requesting_list_of_projects() {
 
-    var projectId = UUID.randomUUID();
-    var result = new sinnet.domain.models.Project(new ProjectId(projectId, 2L), "my name");
+    var grpcResult = new ProjectEntityGql(
+        new SomeEntityGql()
+            .setEntityId("1")
+            .setEntityVersion(2L)
+            .setProjectId("1"),
+        "my name");
     Mockito
-        .when(projectsGrpc.list(eq(requestorEmail)))
-        .thenReturn(List.of(result));
+        .when(projectsGrpc.list(eq(requestorEmail), any()))
+        .thenReturn(List.of(grpcResult));
 
     appApi.findProjectByName("spring-framework")
         .hasSizeGreaterThan(0);

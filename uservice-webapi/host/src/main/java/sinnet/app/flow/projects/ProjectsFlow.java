@@ -1,14 +1,16 @@
 package sinnet.app.flow.projects;
 
 import java.util.List;
+import java.util.function.Function;
 
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
 import sinnet.app.ports.in.ProjectsPortIn;
 import sinnet.app.ports.out.ProjectsPortOut;
-import sinnet.domain.models.Project;
 import sinnet.domain.models.ProjectId;
+import sinnet.gql.models.ProjectEntityGql;
+import sinnet.grpc.projects.generated.Project;
 
 @Component
 @RequiredArgsConstructor
@@ -27,8 +29,8 @@ class ProjectsFlow implements ProjectsPortIn {
     }
 
     @Override
-    public List<Project> list(String requestorEmail) {
-        return projectsOutPort.list(requestorEmail);
+    public List<ProjectEntityGql> list(String requestorEmail, Function<Project, ProjectEntityGql> mapper) {
+        return projectsOutPort.list(requestorEmail, mapper);
     }
 
     @Override

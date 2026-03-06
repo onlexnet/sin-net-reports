@@ -8,8 +8,8 @@ import org.springframework.stereotype.Controller;
 
 import lombok.RequiredArgsConstructor;
 import sinnet.app.ports.in.ProjectsPortIn;
+import sinnet.gql.mappers.ProjectsMapper;
 import sinnet.gql.models.ProjectEntityGql;
-import sinnet.infra.adapters.gql.ProjectsMapper;
 
 @Controller
 @RequiredArgsConstructor
@@ -20,8 +20,8 @@ class ProjectsQueryList {
   @SchemaMapping
   List<ProjectEntityGql> list(ProjectsQuery self, @Argument String name) {
     var requestorEmail = self.requestorEmail();
-    var result = service.list(requestorEmail);
-    return result.stream().map(ProjectsMapper::map).toList();
+    var result = service.list(requestorEmail, ProjectsMapper::toDto);
+    return result;
   }
 
   @SchemaMapping
