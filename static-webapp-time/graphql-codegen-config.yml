@@ -1,0 +1,14 @@
+schema:
+  - ../uservice-webapi/**/*.graphqls
+  - uservice-webapi/**/*.graphqls
+documents: 'src/**/*.graphql'
+generates:
+  src/components/.generated/components.tsx:
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-react-apollo
+    config:
+      withHooks: true
+      withComponent: false
+      withHOC: false

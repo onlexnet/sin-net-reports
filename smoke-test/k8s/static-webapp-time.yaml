@@ -1,0 +1,68 @@
+# ============================================================================
+# Static WebApp Time (shadcn-based React Frontend) - Kubernetes Deployment
+# ============================================================================
+# New shadcn-based React application served by Node.js serve
+# No Dapr sidecar needed - frontend communicates directly with WebAPI
+# ============================================================================
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: static-webapp-time
+  labels:
+    app: static-webapp-time
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: static-webapp-time
+  template:
+    metadata:
+      labels:
+        app: static-webapp-time
+    spec:
+      containers:
+        - name: static-webapp-time
+          image: sinnet/static-webapp-time:local
+          imagePullPolicy: Never  # Use local image loaded by k3d
+          ports:
+            - containerPort: 3001
+              name: http
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 3001
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 3
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 3001
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 2
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "200m"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: static-webapp-time
+  labels:
+    app: static-webapp-time
+spec:
+  type: NodePort
+  selector:
+    app: static-webapp-time
+  ports:
+    - port: 3001
+      targetPort: 3001
+      nodePort: 30001
+      name: http
