@@ -64,14 +64,14 @@ class ProjectsGrpcGateway implements ProjectsPortOut {
   }
 
   @Override
-  public List<ProjectEntityGql> list(String requestorEmail, Function<Project, ProjectEntityGql> mapper) {
+  public List<sinnet.domain.models.Project> list(String requestorEmail) {
     var request = ListRequest.newBuilder()
         .setEmailOfRequestor(requestorEmail)
         .build();
     return stub.list(request)
         .getProjectsList()
         .stream()
-        .map(mapper)
+        .map(ProjectsMapper::map)
         .toList();
   }
 
