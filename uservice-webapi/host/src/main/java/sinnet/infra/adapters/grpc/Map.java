@@ -13,7 +13,6 @@ import org.mapstruct.factory.Mappers;
 import sinnet.domain.models.EntityId;
 import sinnet.domain.models.ProjectId;
 import sinnet.domain.models.UserToken;
-import sinnet.gql.models.ProjectIdGql;
 
 @Mapper(unmappedTargetPolicy = ReportingPolicy.ERROR, unmappedSourcePolicy = ReportingPolicy.ERROR)
 public interface Map {

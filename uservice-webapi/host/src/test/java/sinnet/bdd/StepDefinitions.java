@@ -26,6 +26,7 @@ import sinnet.app.ports.out.ProjectsPortOut.StatsResult;
 import sinnet.app.ports.out.UsersServicePortOut;
 import sinnet.domain.models.CustomerValue;
 import sinnet.domain.models.Email;
+import sinnet.domain.models.Project;
 import sinnet.domain.models.ProjectId;
 import sinnet.gql.api.CommonMapper;
 import sinnet.gql.models.CustomerInput;
@@ -42,7 +43,7 @@ import sinnet.grpc.users.UsersSearchModel;
 public class StepDefinitions {
 
   @Autowired
-  ProjectsPortOut projectsGrpc;
+  ProjectsPortOut projects;
 
   @Autowired
   CustomersPortOut customersGrpc;
@@ -66,21 +67,17 @@ public class StepDefinitions {
   public void before() {
     requestorEmail = "email@" + UUID.randomUUID();
     appApi = new AppApi(restTemplate.getRootUri(), requestorEmail);
-    Mockito.clearInvocations(projectsGrpc);
+    Mockito.clearInvocations(projects);
   }
 
   @When("user is requesting list of projects")
   public void user_is_requesting_list_of_projects() {
 
-    var grpcResult = new ProjectEntityGql(
-        new SomeEntityGql()
-            .setEntityId("1")
-            .setEntityVersion(2L)
-            .setProjectId("1"),
-        "my name");
+    var projectId = UUID.randomUUID();
+    var result = new Project(projectId, 2L, "my name");
     Mockito
-        .when(projectsGrpc.list(eq(requestorEmail), any()))
-        .thenReturn(List.of(grpcResult));
+        .when(projects.list(eq(requestorEmail)))
+        .thenReturn(List.of(result));
 
     appApi.findProjectByName("spring-framework")
         .hasSizeGreaterThan(0);
@@ -107,12 +104,12 @@ public class StepDefinitions {
 
     var projectId1 = new ProjectId(projectId, 1L);
     Mockito
-        .when(projectsGrpc.create(requestorEmail))
+        .when(projects.create(requestorEmail))
         .thenReturn(projectId1);
     var projectId2 = new ProjectId(projectId, 2L);
     Mockito
         .when(
-            projectsGrpc.update(eq(requestorEmail), eq(projectId1), eq(projectNewName), eq(requestorEmail), eq(List.of())))
+            projects.update(eq(requestorEmail), eq(projectId1), eq(projectNewName), eq(requestorEmail), eq(List.of())))
         .thenReturn(projectId2);
     var saveResult = appApi.createProject(projectNewName);
 
@@ -136,7 +133,7 @@ public class StepDefinitions {
 
     expectedNumberOfProjects = new Random().nextInt();
     Mockito
-        .when(projectsGrpc.userStats(requestorEmail))
+        .when(projects.userStats(requestorEmail))
         .thenReturn(new StatsResult(expectedNumberOfProjects));
   }
 
@@ -145,7 +142,7 @@ public class StepDefinitions {
     var numberOfProjects = appApi.numberOfProjects().get();
 
     Mockito
-        .verify(projectsGrpc)
+        .verify(projects)
         .userStats(requestorEmail);
 
     assertThat(numberOfProjects)

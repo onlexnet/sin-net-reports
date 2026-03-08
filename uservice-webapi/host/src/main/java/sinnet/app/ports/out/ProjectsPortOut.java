@@ -1,11 +1,9 @@
 package sinnet.app.ports.out;
 
 import java.util.List;
-import java.util.function.Function;
 
+import sinnet.domain.models.Project;
 import sinnet.domain.models.ProjectId;
-import sinnet.gql.models.ProjectEntityGql;
-import sinnet.grpc.projects.generated.Project;
 
 /** Mockable equivalent of {@link ProjectsGrpcStub}. */
 public interface ProjectsPortOut {
@@ -14,7 +12,7 @@ public interface ProjectsPortOut {
 
   ProjectId update(String requestorEmail, ProjectId id, String name, String ownerEmail, List<String> operatorEmail);
 
-  List<ProjectEntityGql> list(String requestorEmail, Function<Project, ProjectEntityGql> mapper);
+  List<Project> list(String requestorEmail);
 
   StatsResult userStats(String requestorEmail);
 
