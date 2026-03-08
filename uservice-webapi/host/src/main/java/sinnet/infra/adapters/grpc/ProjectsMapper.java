@@ -2,18 +2,16 @@ package sinnet.infra.adapters.grpc;
 
 import java.util.UUID;
 
+import sinnet.domain.models.Project;
 import sinnet.domain.models.ProjectId;
-import sinnet.grpc.projects.generated.Project;
 
 /** Fixme. */
-public interface ProjectsMapper {
+interface ProjectsMapper {
 
   /** Fixme. */
-  public static sinnet.domain.models.Project map(Project grpc) {
-    return new sinnet.domain.models.Project(
-      new ProjectId(UUID.fromString(grpc.getId().getEId()), grpc.getId().getETag()),
-      grpc.getModel().getName()
-    );
+  public static Project map(sinnet.grpc.projects.generated.Project project) {
+    return new Project(
+        new ProjectId(UUID.fromString(project.getId().getEId()), project.getId().getETag()),
+        project.getModel().getName());
   }
-
 }

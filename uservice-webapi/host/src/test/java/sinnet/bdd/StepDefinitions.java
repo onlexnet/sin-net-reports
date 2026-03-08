@@ -26,6 +26,7 @@ import sinnet.app.ports.out.ProjectsPortOut.StatsResult;
 import sinnet.app.ports.out.UsersServicePortOut;
 import sinnet.domain.models.CustomerValue;
 import sinnet.domain.models.Email;
+import sinnet.domain.models.Project;
 import sinnet.domain.models.ProjectId;
 import sinnet.gql.api.CommonMapper;
 import sinnet.gql.models.CustomerInput;
@@ -73,10 +74,12 @@ public class StepDefinitions {
   public void user_is_requesting_list_of_projects() {
 
     var projectId = UUID.randomUUID();
-    var result = new sinnet.domain.models.Project(new ProjectId(projectId, 2L), "my name");
+    var grpcResult = new Project(
+      new ProjectId(projectId, 2),
+      "my name");
     Mockito
         .when(projectsGrpc.list(eq(requestorEmail)))
-        .thenReturn(List.of(result));
+        .thenReturn(List.of(grpcResult));
 
     appApi.findProjectByName("spring-framework")
         .hasSizeGreaterThan(0);

@@ -8,11 +8,11 @@ import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
 import sinnet.app.ports.out.ProjectsPortOut;
+import sinnet.domain.models.Project;
 import sinnet.domain.models.ProjectId;
 import sinnet.gql.models.ProjectEntityGql;
 import sinnet.grpc.projects.generated.CreateRequest;
 import sinnet.grpc.projects.generated.ListRequest;
-import sinnet.grpc.projects.generated.Project;
 import sinnet.grpc.projects.generated.ProjectModel;
 import sinnet.grpc.projects.generated.ProjectsGrpc.ProjectsBlockingStub;
 import sinnet.grpc.projects.generated.UpdateCommand;
@@ -64,7 +64,7 @@ class ProjectsGrpcGateway implements ProjectsPortOut {
   }
 
   @Override
-  public List<sinnet.domain.models.Project> list(String requestorEmail) {
+  public List<Project> list(String requestorEmail) {
     var request = ListRequest.newBuilder()
         .setEmailOfRequestor(requestorEmail)
         .build();

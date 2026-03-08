@@ -1,21 +1,20 @@
 package sinnet.infra.adapters.gql;
 
-import java.util.UUID;
-
-import sinnet.domain.models.ProjectId;
+import sinnet.domain.models.Project;
 import sinnet.gql.models.ProjectEntityGql;
 import sinnet.gql.models.SomeEntityGql;
 
 /** Fixme. */
 public interface ProjectsMapper {
 
-  public static ProjectEntityGql map(sinnet.domain.models.Project project) {
+  /** Fixme. */
+  public static ProjectEntityGql map(Project model) {
     return new ProjectEntityGql(
         new SomeEntityGql()
-          .setEntityId(project.id().toString())
-          .setProjectId(project.id().toString())
-          .setEntityVersion(project.id().tag()),
-        project.name());
+            .setEntityId(model.id().id().toString())
+            .setProjectId(model.id().id().toString())
+            .setEntityVersion(model.id().tag()),
+        model.name());
   }
 
 }
