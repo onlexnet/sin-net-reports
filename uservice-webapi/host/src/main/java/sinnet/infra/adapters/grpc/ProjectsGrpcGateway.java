@@ -2,17 +2,14 @@ package sinnet.infra.adapters.grpc;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.function.Function;
 
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
 import sinnet.app.ports.out.ProjectsPortOut;
 import sinnet.domain.models.ProjectId;
-import sinnet.gql.models.ProjectEntityGql;
 import sinnet.grpc.projects.generated.CreateRequest;
 import sinnet.grpc.projects.generated.ListRequest;
-import sinnet.grpc.projects.generated.Project;
 import sinnet.grpc.projects.generated.ProjectModel;
 import sinnet.grpc.projects.generated.ProjectsGrpc.ProjectsBlockingStub;
 import sinnet.grpc.projects.generated.UpdateCommand;
@@ -64,14 +61,14 @@ class ProjectsGrpcGateway implements ProjectsPortOut {
   }
 
   @Override
-  public List<ProjectEntityGql> list(String requestorEmail, Function<Project, ProjectEntityGql> mapper) {
+  public List<sinnet.domain.models.Project> list(String requestorEmail) {
     var request = ListRequest.newBuilder()
         .setEmailOfRequestor(requestorEmail)
         .build();
     return stub.list(request)
         .getProjectsList()
         .stream()
-        .map(mapper)
+        .map(ProjectMapper::map)
         .toList();
   }
 
