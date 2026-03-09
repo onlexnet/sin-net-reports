@@ -24,7 +24,7 @@ permissions:
   packages: write
 
 jobs:
-  publish:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -40,8 +40,15 @@ jobs:
           server-username: GITHUB_ACTOR
           server-password: GITHUB_TOKEN
 
+      - name: Build
+        run: mvn -ntp verify
+        working-directory: api/client-java
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Publish to GitHub Packages
-        run: mvn -ntp deploy
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: mvn -ntp deploy -DskipTests
         working-directory: api/client-java
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
