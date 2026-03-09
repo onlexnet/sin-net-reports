@@ -69,18 +69,13 @@
     </plugins>
   </build>
 
-  <!-- <distributionManagement>
+  <distributionManagement>
     <repository>
-      <id>sinnet</id>
-      <url>https://pkgs.dev.azure.com/onlexnet/sinnet/_packaging/sinnet/maven/v1</url>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
+      <id>github</id>
+      <name>GitHub Packages</name>
+      <url>https://maven.pkg.github.com/onlexnet/sin-net-reports</url>
     </repository>
-  </distributionManagement> -->
+  </distributionManagement>
 
 
 </project>
