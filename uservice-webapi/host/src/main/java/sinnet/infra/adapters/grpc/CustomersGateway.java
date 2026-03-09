@@ -6,6 +6,10 @@ import java.util.function.Function;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
+import sinnet.app.flow.request.CustomerGetQuery;
+import sinnet.app.flow.request.CustomerGetResult;
+import sinnet.app.flow.request.CustomerListQuery;
+import sinnet.app.flow.request.CustomerListResult;
 import sinnet.app.flow.request.CustomerUpdateCommand;
 import sinnet.app.ports.out.CustomersPortOut;
 import sinnet.gql.api.CustomerMapper;
@@ -16,7 +20,6 @@ import sinnet.grpc.customers.CustomerModel;
 import sinnet.grpc.customers.CustomersGrpc.CustomersBlockingStub;
 import sinnet.grpc.customers.GetReply;
 import sinnet.grpc.customers.GetRequest;
-import sinnet.grpc.customers.ListReply;
 import sinnet.grpc.customers.ListRequest;
 import sinnet.grpc.customers.RemoveReply;
 import sinnet.grpc.customers.RemoveRequest;
@@ -35,13 +38,26 @@ class CustomersGateway implements CustomersPortOut {
 
 
   @Override
-  public ListReply list(ListRequest request) {
-    return stub.list(request);
+  public CustomerListResult list(CustomerListQuery query) {
+    var request = ListRequest.newBuilder()
+        .setProjectId(query.userToken().projectId().toString())
+        .setUserToken(Map.apply.map(query.userToken()))
+        .build();
+    var reply = stub.list(request);
+    return new CustomerListResult(reply.getCustomersList());
   }
 
   @Override
-  public GetReply get(GetRequest request) {
-    return stub.get(request);
+  public CustomerGetResult get(CustomerGetQuery query) {
+    var request = GetRequest.newBuilder()
+        .setEntityId(EntityId.newBuilder()
+            .setProjectId(query.userToken().projectId().toString())
+            .setEntityId(query.entityId())
+            .build())
+        .setUserToken(Map.apply.map(query.userToken()))
+        .build();
+    var reply = stub.get(request);
+    return new CustomerGetResult(reply.getModel());
   }
 
   @Override
@@ -93,7 +109,7 @@ class CustomersGateway implements CustomersPortOut {
         .setEntityId(entityId)
         .setUserToken(userToken)
         .build();
-    var result = get(request);
+    var result = stub.get(request);
     return mapper.apply(result);
   }
 
@@ -108,7 +124,7 @@ class CustomersGateway implements CustomersPortOut {
         .setProjectId(projectId)
         .setUserToken(userToken)
         .build();
-    var result = list(request).getCustomersList().stream().map(mapper).toList();
+    var result = stub.list(request).getCustomersList().stream().map(mapper).toList();
     return result;
   }
 

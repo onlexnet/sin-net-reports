@@ -14,11 +14,11 @@ import io.vavr.Tuple;
 import io.vavr.Tuple2;
 import io.vavr.collection.HashMap;
 import lombok.RequiredArgsConstructor;
+import sinnet.domain.models.UserToken;
 import sinnet.app.ports.in.Report2PortIn;
 import sinnet.app.ports.out.ActionsGrpcPortOut;
 import sinnet.report2.grpc.ReportRequest;
 import sinnet.report2.grpc.ReportsGrpc.ReportsBlockingStub;
-import sinnet.reports.grpc.UserToken;
 import sinnet.web.AuthenticationToken;
 
 @Component
@@ -38,13 +38,13 @@ class Report2Flow implements Report2PortIn {
     var dateTo = to.atDay(1).plusMonths(1).minusDays(1);
 
     var entries = getTimeentries(projectId, dateFrom, dateTo);
-    var reportRequest = asReportRequest(entries, primaryEmail, projectId.toString());
+    var reportRequest = asReportRequest(entries, primaryEmail, projectId);
     var data = reportsClient.produce(reportRequest);
     return data.toByteArray();
   }
 
   // TODO move such aggregation logic close to data service
-  ReportRequest asReportRequest(List<TimeEntryModel> javaItems, String primaryEmail, String projectId) {
+  ReportRequest asReportRequest(List<TimeEntryModel> javaItems, String primaryEmail, UUID projectId) {
     var items = io.vavr.collection.List.ofAll(javaItems);
     var map = items
         .map(it -> Tuple.of(it.servicemanName(), YearMonth.from(it.when()), it.howLong(), it.howFar()))
@@ -63,8 +63,11 @@ class Report2Flow implements Report2PortIn {
         .setHowLongInMins(v._1)
         .setHowFarInKms(v._2)
         .build());
-    requestBuilder.setUserToken(UserToken.newBuilder().setRequestorEmail(primaryEmail));
-    requestBuilder.setProjectId(projectId);
+    var userToken = new UserToken(projectId, primaryEmail);
+    requestBuilder.setUserToken(sinnet.reports.grpc.UserToken.newBuilder()
+      .setRequestorEmail(userToken.requestorEmail())
+      .build());
+    requestBuilder.setProjectId(userToken.projectId().toString());
     return requestBuilder.build();
   }
 

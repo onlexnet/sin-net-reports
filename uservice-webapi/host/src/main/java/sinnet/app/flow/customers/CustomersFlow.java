@@ -6,16 +6,16 @@ import java.util.function.Function;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
+import sinnet.app.flow.request.CustomerGetQuery;
+import sinnet.app.flow.request.CustomerGetResult;
+import sinnet.app.flow.request.CustomerListQuery;
+import sinnet.app.flow.request.CustomerListResult;
 import sinnet.app.flow.request.CustomerRemoveCommand;
 import sinnet.app.flow.request.CustomerUpdateCommand;
 import sinnet.app.ports.in.CustomersPortIn;
 import sinnet.app.ports.out.CustomersPortOut;
 import sinnet.gql.models.CustomerEntityGql;
 import sinnet.grpc.customers.CustomerModel;
-import sinnet.grpc.customers.GetReply;
-import sinnet.grpc.customers.GetRequest;
-import sinnet.grpc.customers.ListReply;
-import sinnet.grpc.customers.ListRequest;
 import sinnet.grpc.customers.RemoveReply;
 import sinnet.grpc.customers.ReserveReply;
 import sinnet.grpc.customers.ReserveRequest;
@@ -48,13 +48,13 @@ class CustomersFlow implements CustomersPortIn {
     }
 
     @Override
-    public GetReply get(GetRequest request) {
-        return customersOutPort.get(request);
+    public CustomerGetResult get(CustomerGetQuery query) {
+        return customersOutPort.get(query);
     }
 
     @Override
-    public ListReply list(ListRequest request) {
-        return customersOutPort.list(request);
+    public CustomerListResult list(CustomerListQuery query) {
+        return customersOutPort.list(query);
     }
 
     @Override

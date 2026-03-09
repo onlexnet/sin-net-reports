@@ -14,13 +14,13 @@ import io.cucumber.java.Before;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import onlexnet.sinnet.webapi.test.AppApi;
+import sinnet.app.flow.request.CustomerGetResult;
+import sinnet.app.flow.request.CustomerListResult;
 import sinnet.app.ports.out.CustomersPortOut;
 import sinnet.gql.models.CustomerSecretExGql;
 import sinnet.grpc.customers.CustomerModel;
 import sinnet.grpc.customers.CustomerSecretEx;
 import sinnet.grpc.customers.CustomerValue;
-import sinnet.grpc.customers.GetReply;
-import sinnet.grpc.customers.ListReply;
 import sinnet.grpc.customers.LocalDateTime;
 
 public class CustomerSteps {
@@ -47,9 +47,7 @@ public class CustomerSteps {
 
     Mockito
       .when(customersGrpc.list(any()))
-      .thenReturn(ListReply
-        .newBuilder()
-        .addAllCustomers(List.of()).build());
+      .thenReturn(new CustomerListResult(List.of()));
 
     appApi.listCustomers(projectId);
   }
@@ -64,16 +62,14 @@ public class CustomerSteps {
   public void customer_read_request_is_send_to_backend() {
     Mockito
       .when(customersGrpc.get(any()) )
-      .thenReturn(GetReply
-        .newBuilder()
-        .setModel(CustomerModel.newBuilder()
-          .setValue(CustomerValue.newBuilder()
-            .setBillingModel("my billing model"))
-          .addSecretEx(CustomerSecretEx.newBuilder()
-            .setChangedWhen(LocalDateTime.newBuilder().setYear(2001).setMonth(2).setDay(3).setHour(4).setMinute(5))
-            .setOtpSecret("my secret")
-            .setOtpRecoveryKeys("my key1")))
-            .build());
+      .thenReturn(new CustomerGetResult(CustomerModel.newBuilder()
+        .setValue(CustomerValue.newBuilder()
+          .setBillingModel("my billing model"))
+        .addSecretEx(CustomerSecretEx.newBuilder()
+          .setChangedWhen(LocalDateTime.newBuilder().setYear(2001).setMonth(2).setDay(3).setHour(4).setMinute(5))
+          .setOtpSecret("my secret")
+          .setOtpRecoveryKeys("my key1"))
+        .build()));
     
     var projectId = UUID.randomUUID();
     var entityId = UUID.randomUUID();
