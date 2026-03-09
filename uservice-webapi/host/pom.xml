@@ -384,8 +384,9 @@
 
   <repositories>
     <repository>
-      <id>sinnet</id>
-      <url>https://pkgs.dev.azure.com/onlexnet/sinnet/_packaging/sinnet/maven/v1</url>
+      <id>github</id>
+      <name>GitHub Packages</name>
+      <url>https://maven.pkg.github.com/onlexnet/sin-net-reports</url>
       <releases>
         <enabled>true</enabled>
       </releases>
@@ -394,18 +395,6 @@
       </snapshots>
     </repository>
   </repositories>
-  <pluginRepositories>
-    <pluginRepository>
-      <id>sinnet</id>
-      <url>https://pkgs.dev.azure.com/onlexnet/sinnet/_packaging/sinnet/maven/v1</url>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-    </pluginRepository>
-  </pluginRepositories>
 
   <profiles>
     <!-- Not invoked currently -->

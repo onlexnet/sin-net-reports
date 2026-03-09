@@ -13,7 +13,6 @@
     <module>initdb-host</module>
     <module>report-aggregate</module>
     <module>build-tools</module>
-    <module>../api/client-java</module>
   </modules>
 
   <properties>
