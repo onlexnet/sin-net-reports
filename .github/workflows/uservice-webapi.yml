@@ -47,6 +47,8 @@ jobs:
           export SEMVERSION=$(cat .semversion)
           mvn -ntp install -Drevision=$SEMVERSION -DCI=true
         working-directory: uservice-webapi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
       - id: BuildDockerImage
         name: Build Docker Image

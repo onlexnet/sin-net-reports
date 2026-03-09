@@ -47,6 +47,8 @@ jobs:
           export SEMVERSION=$(cat .version)
           mvn -ntp install -pl host -am
         working-directory: uservice-timeentries
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
       - id: BuildDockerImage
         name: Build Docker Image

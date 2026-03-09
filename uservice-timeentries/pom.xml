@@ -12,8 +12,6 @@
     <module>initdb-test</module>
     <module>initdb-host</module>
     <module>report-aggregate</module>
-    <module>build-tools</module>
-    <module>../api/client-java</module>
   </modules>
 
   <properties>
@@ -57,5 +55,19 @@
       </plugin>
     </plugins>
   </build>
+
+  <repositories>
+    <repository>
+      <id>github</id>
+      <name>GitHub Packages</name>
+      <url>https://maven.pkg.github.com/onlexnet/sin-net-reports</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
+  </repositories>
 
 </project>
