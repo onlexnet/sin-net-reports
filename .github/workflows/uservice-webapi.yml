@@ -26,7 +26,7 @@ jobs:
     runs-on: ubuntu-latest
 
     outputs:
-      uservice_webapi_image_name: ${{ steps.BuildDockerImage.outputs.image_name }}
+      uservice_webapi_image_name: ${{ steps.PushDockerImage.outputs.image_name }}
 
     steps:
 
@@ -60,6 +60,14 @@ jobs:
 
           # build 'latest' image. 'latest' tag is added automatically by build-image plugin
           mvn spring-boot:build-image -ntp -pl host -Dspring-boot.build-image.imageName=$IMAGE_NAME_HOST -DskipTests
+
+      - id: PushDockerImage
+        name: Push Docker Image
+        if: github.event_name == 'push'
+        working-directory: uservice-webapi
+        run: |
+          export IMAGE_NAME_BASE=ghcr.io/onlexnet/uservice-webapi
+          export IMAGE_NAME_HOST=$IMAGE_NAME_BASE
 
           # add proper ID to distinguish image from other images built in this workflow
           docker tag $IMAGE_NAME_HOST $IMAGE_NAME_HOST:$GITHUB_RUN_ID
