@@ -89,7 +89,7 @@ jobs:
       
       - name: Set up Node.js 22
         # Required for building React frontend in Docker
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: '22.12.0'
           cache: 'npm'
