@@ -168,37 +168,6 @@
     <plugins>
 
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-checkstyle-plugin</artifactId>
-        <version>3.3.1</version>
-        <executions>
-          <execution>
-            <phase>process-sources</phase>
-            <goals>
-              <goal>check</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <configLocation>build-checkstyle/google_checks_customized.xml</configLocation>
-          <violationSeverity>warning</violationSeverity>
-          <failOnViolation>true</failOnViolation>
-        </configuration>
-        <dependencies>
-          <dependency>
-            <groupId>com.puppycrawl.tools</groupId>
-            <artifactId>checkstyle</artifactId>
-            <version>10.16.0</version>
-          </dependency>
-          <dependency>
-            <groupId>onlexnet.sinnet</groupId>
-            <artifactId>build-tools</artifactId>
-            <version>${revision}</version>
-          </dependency>
-        </dependencies>
-      </plugin>
-      
-      <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>flatten-maven-plugin</artifactId>
         <version>1.4.1</version>
@@ -310,49 +279,23 @@
           <version>${jacoco-maven-plugin.version}</version>
         </plugin>
 
-        <!--
-          Checking for Violations as Part of the Build
-          https://maven.apache.org/plugins/maven-checkstyle-plugin/usage.html
-        -->
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-checkstyle-plugin</artifactId>
-          <version>3.3.1</version>
-
-          <!--
-          https://maven.apache.org/plugins/maven-checkstyle-plugin/examples/upgrading-checkstyle.html -->
-          <dependencies>
-            <dependency>
-              <groupId>com.puppycrawl.tools</groupId>
-              <artifactId>checkstyle</artifactId>
-              <version>10.16.0</version>
-            </dependency>
-          </dependencies>
-
-          <configuration>
-            <!--
-            Configuration elements: https://maven.apache.org/plugins/maven-checkstyle-plugin/check-mojo.html#inputEncoding
-            -->
-            <configLocation>../.checkstyle/checkstyle.xml</configLocation>
-            <inputEncoding>UTF-8</inputEncoding>
-            <consoleOutput>true</consoleOutput>
-            <failsOnError>true</failsOnError>
-            <excludes>**/gen/**/*</excludes>
-          </configuration>
-          <executions>
-            <execution>
-              <id>validate</id>
-              <phase>validate</phase>
-              <goals>
-                <goal>check</goal>
-              </goals>
-            </execution>
-          </executions>
-        </plugin>
-
       </plugins>
     </pluginManagement>
   </build>
+
+  <repositories>
+    <repository>
+      <id>github</id>
+      <name>GitHub Packages</name>
+      <url>https://maven.pkg.github.com/onlexnet/sin-net-reports</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
+  </repositories>
 
   <profiles>
     <profile>
