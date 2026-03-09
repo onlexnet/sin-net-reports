@@ -30,21 +30,21 @@ jobs:
           java-version: '25'
           java-distribution: 'liberica'
 
+      - name: Build gRPC API Client Java
+        run: mvn -ntp clean install
+        working-directory: api/client-java
+
       - name: Build Timeentries Service
         working-directory: uservice-timeentries
         run: |
           export SEMVERSION=$(cat .version || echo "1.0.0-SNAPSHOT")
           mvn -ntp clean install -pl host -am
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build WebAPI Service
         working-directory: uservice-webapi
         run: |
           export SEMVERSION=$(cat .semversion || echo "1.0.0-SNAPSHOT")
           mvn -ntp clean install -Drevision=$SEMVERSION
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   build-static-webapp:
     name: Build Static WebApp
