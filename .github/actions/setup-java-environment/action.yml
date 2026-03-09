@@ -24,6 +24,9 @@ runs:
         java-version: ${{ inputs.java-version }}
         distribution: ${{ inputs.java-distribution }}
         cache: ${{ inputs.enable-maven-cache == 'true' && 'maven' || '' }}
+        server-id: github
+        server-username: GITHUB_ACTOR
+        server-password: GITHUB_TOKEN
 
     - name: Cache Maven dependencies
       if: inputs.enable-maven-cache == 'true'
