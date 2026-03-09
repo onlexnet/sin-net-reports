@@ -26,7 +26,6 @@ COPY uservice-timeentries/.mvn uservice-timeentries/.mvn
 COPY uservice-timeentries/pom.xml uservice-timeentries/
 COPY uservice-timeentries/.version uservice-timeentries/
 COPY uservice-timeentries/base-pom/pom.xml uservice-timeentries/base-pom/
-COPY uservice-timeentries/build-tools/pom.xml uservice-timeentries/build-tools/
 COPY uservice-timeentries/host/pom.xml uservice-timeentries/host/
 COPY uservice-timeentries/initdb-host/pom.xml uservice-timeentries/initdb-host/
 COPY uservice-timeentries/initdb-migrate/pom.xml uservice-timeentries/initdb-migrate/
@@ -51,7 +50,6 @@ RUN --mount=type=cache,target=/root/.m2 \
     mvn dependency:go-offline -B -ntp -DskipTests || true
 
 # Copy source code (only modules with src directories - base-pom has no src, components is empty)
-COPY uservice-timeentries/build-tools/src uservice-timeentries/build-tools/src
 COPY uservice-timeentries/host/src uservice-timeentries/host/src
 COPY uservice-timeentries/initdb-host/src uservice-timeentries/initdb-host/src
 COPY uservice-timeentries/initdb-migrate/src uservice-timeentries/initdb-migrate/src
