@@ -10,6 +10,7 @@
     "java.debug.settings.onBuildFailureProceed": true,
     "chat.tools.terminal.autoApprove": {
         "mvn verify": true,
-        "mvn install": true
+        "mvn install": true,
+        "mvn -pl host": true
     }
 }

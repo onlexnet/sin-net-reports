@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
@@ -20,12 +21,12 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.google.protobuf.ByteString;
 
+import sinnet.app.flow.request.CustomerListQuery;
+import sinnet.app.flow.request.CustomerListResult;
 import sinnet.app.ports.out.CustomersPortOut;
 import sinnet.grpc.common.EntityId;
 import sinnet.grpc.customers.CustomerModel;
 import sinnet.grpc.customers.CustomerValue;
-import sinnet.grpc.customers.ListReply;
-import sinnet.grpc.customers.ListRequest;
 import sinnet.infra.Program;
 import sinnet.report3.grpc.ReportRequest;
 import sinnet.report3.grpc.ReportsGrpc.ReportsBlockingStub;
@@ -54,8 +55,8 @@ class Report3ControllerTest {
     var expectedPdfData = new byte[]{0x25, 0x50, 0x44, 0x46}; // PDF signature
 
     // Mock customers - return empty list
-    var listReply = ListReply.newBuilder().build();
-    when(customersPortOut.list(any(ListRequest.class)))
+    var listReply = new CustomerListResult(List.of());
+    when(customersPortOut.list(any(CustomerListQuery.class)))
         .thenReturn(listReply);
 
     // Mock report generation - return FileResponse with PDF data
@@ -76,7 +77,7 @@ class Report3ControllerTest {
         .andExpect(content().bytes(expectedPdfData));
 
     // Verify interactions
-    verify(customersPortOut).list(any(ListRequest.class));
+        verify(customersPortOut).list(any(CustomerListQuery.class));
     verify(reportsBlockingStub).produce(any(ReportRequest.class));
   }
 
@@ -114,12 +115,9 @@ class Report3ControllerTest {
             .build())
         .build();
 
-    var listReply = ListReply.newBuilder()
-        .addCustomers(customer1)
-        .addCustomers(customer2)
-        .build();
+    var listReply = new CustomerListResult(List.of(customer1, customer2));
 
-    when(customersPortOut.list(any(ListRequest.class)))
+    when(customersPortOut.list(any(CustomerListQuery.class)))
         .thenReturn(listReply);
 
     // Mock report generation
@@ -137,7 +135,7 @@ class Report3ControllerTest {
         .andExpect(content().bytes(expectedPdfData));
 
     // Verify both customers were processed
-    verify(customersPortOut).list(any(ListRequest.class));
+        verify(customersPortOut).list(any(CustomerListQuery.class));
     verify(reportsBlockingStub).produce(any(ReportRequest.class));
   }
 
@@ -170,12 +168,9 @@ class Report3ControllerTest {
             .build())
         .build();
 
-    var listReply = ListReply.newBuilder()
-        .addCustomers(customerWithOperator)
-        .addCustomers(customerWithoutOperator)
-        .build();
+    var listReply = new CustomerListResult(List.of(customerWithOperator, customerWithoutOperator));
 
-    when(customersPortOut.list(any(ListRequest.class)))
+    when(customersPortOut.list(any(CustomerListQuery.class)))
         .thenReturn(listReply);
 
     // Mock report generation
@@ -192,7 +187,7 @@ class Report3ControllerTest {
         .andExpect(status().isOk());
 
     // Verify filtering logic - only customer with operator should be in report request
-    verify(customersPortOut).list(any(ListRequest.class));
+        verify(customersPortOut).list(any(CustomerListQuery.class));
     verify(reportsBlockingStub).produce(any(ReportRequest.class));
   }
 
@@ -202,8 +197,8 @@ class Report3ControllerTest {
     var projectId = UUID.randomUUID();
 
     // Mock empty customer list
-    var listReply = ListReply.newBuilder().build();
-    when(customersPortOut.list(any(ListRequest.class)))
+    var listReply = new CustomerListResult(List.of());
+    when(customersPortOut.list(any(CustomerListQuery.class)))
         .thenReturn(listReply);
 
     // Mock report generation for empty list
@@ -221,7 +216,7 @@ class Report3ControllerTest {
         .andExpect(content().bytes(expectedPdfData));
 
     // Verify empty list was handled
-    verify(customersPortOut).list(any(ListRequest.class));
+        verify(customersPortOut).list(any(CustomerListQuery.class));
     verify(reportsBlockingStub).produce(any(ReportRequest.class));
   }
 }

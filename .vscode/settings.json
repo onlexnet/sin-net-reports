@@ -23,5 +23,6 @@
         },
         "git ls-remote": true,
         "pytest": true
-    }
+    },
+    "workbench.browser.enableChatTools": true
 }

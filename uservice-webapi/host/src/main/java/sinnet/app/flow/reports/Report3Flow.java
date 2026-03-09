@@ -9,11 +9,12 @@ import io.vavr.Tuple;
 import io.vavr.collection.HashMap;
 import io.vavr.collection.List;
 import lombok.RequiredArgsConstructor;
+import sinnet.app.flow.request.CustomerListQuery;
+import sinnet.app.flow.request.CustomerListResult;
+import sinnet.domain.models.UserToken;
 import sinnet.app.ports.in.Report3PortIn;
 import sinnet.app.ports.out.CustomersPortOut;
 import sinnet.gql.utils.PropsBuilder;
-import sinnet.grpc.customers.ListReply;
-import sinnet.grpc.customers.ListRequest;
 import sinnet.report3.grpc.CustomerDetails;
 import sinnet.report3.grpc.GroupDetails;
 import sinnet.report3.grpc.ReportRequest;
@@ -23,25 +24,23 @@ import sinnet.report3.grpc.ReportsGrpc.ReportsBlockingStub;
 @RequiredArgsConstructor
 class Report3Flow implements Report3PortIn {
 
+  private static final String REPORT_REQUESTOR_EMAIL = "ignored@owner";
+
   private final CustomersPortOut customera;
   private final ReportsBlockingStub reportsClient;
   
   @Override
   public byte[] downloadPdfFile(UUID projectId) {
-
-    var projectIdAsString = projectId.toString();
-    var listRequest = ListRequest.newBuilder()
-        .setProjectId(projectIdAsString)
-        .build();
-    var customerList = customera.list(listRequest);
+    var userToken = new UserToken(projectId, REPORT_REQUESTOR_EMAIL);
+    var customerList = customera.list(new CustomerListQuery(userToken));
     var reportRequest = asReportRequest(customerList);
     var reportData = reportsClient.produce(reportRequest);
     return reportData.getData().toByteArray();
   }
 
   // TODO move aggregation closer to data service
-  ReportRequest asReportRequest(ListReply reply) {
-    return List.ofAll(reply.getCustomersList())
+  ReportRequest asReportRequest(CustomerListResult reply) {
+    return List.ofAll(reply.customers())
       .filter(it -> StringUtils.isNotBlank(it.getValue().getOperatorEmail()))
       .map(it -> Tuple.of(
           it.getValue().getOperatorEmail(),

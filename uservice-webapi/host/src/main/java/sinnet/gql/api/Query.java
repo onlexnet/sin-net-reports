@@ -9,8 +9,8 @@ import org.springframework.stereotype.Controller;
 
 import lombok.RequiredArgsConstructor;
 import sinnet.app.service.FileGenerationService;
+import sinnet.domain.models.UserToken;
 import sinnet.gql.model.FileDownloadResult;
-import sinnet.grpc.common.UserToken;
 import sinnet.web.AuthenticationToken;
 
 @Controller
@@ -44,14 +44,11 @@ class Query {
   }
 
   @QueryMapping("Customers")
-  CustomersQuery customers(@Argument String projectId) {
+  CustomersQuery customers(@Argument UUID projectId) {
     var authentication = (AuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
     var primaryEmail = authentication.getPrincipal();
 
-    var userToken = UserToken.newBuilder()
-        .setProjectId(projectId)
-        .setRequestorEmail(primaryEmail)
-        .build();
+    var userToken = new UserToken(projectId, primaryEmail);
     return new CustomersQuery(userToken);
   }
 
