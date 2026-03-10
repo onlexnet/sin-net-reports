@@ -39,7 +39,7 @@ class CustomersMutationSave {
     var changedWhen = timeProvider.now();
     var changedWho = self.userToken().requestorEmail();
 
-    var customerVal = new CustomerValue(entry, secrets, secretsEx, contacts);
+    var customerVal = new CustomerValue(customerMapper.toDomain(entry), secrets, secretsEx, contacts);
     var request = new CustomerUpdateCommand(
       // user context
       self.userToken(),

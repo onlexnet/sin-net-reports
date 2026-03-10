@@ -1,0 +1,31 @@
+package sinnet.domain.models;
+
+/** Domain representation of customer data entered from GraphQL input. */
+public record CustomerEntry(
+    String operatorEmail,
+    String billingModel,
+    String supportStatus,
+    int distance,
+    String customerName,
+    String customerCityName,
+    String customerAddress,
+    boolean nfzUmowa,
+    boolean nfzMaFilie,
+    boolean nfzLekarz,
+    boolean nfzPolozna,
+    boolean nfzPielegniarkaSrodowiskowa,
+    boolean nfzMedycynaSzkolna,
+    boolean nfzTransportSanitarny,
+    boolean nfzNocnaPomocLekarska,
+    boolean nfzAmbulatoryjnaOpiekaSpecjalistyczna,
+    boolean nfzRehabilitacja,
+    boolean nfzStomatologia,
+    boolean nfzPsychiatria,
+    boolean nfzSzpitalnictwo,
+    boolean nfzProgramyProfilaktyczne,
+    boolean nfzZaopatrzenieOrtopedyczne,
+    boolean nfzOpiekaDlugoterminowa,
+    String nfzNotatki,
+    boolean komercjaJest,
+    String komercjaNotatki,
+    String daneTechniczne) { }
