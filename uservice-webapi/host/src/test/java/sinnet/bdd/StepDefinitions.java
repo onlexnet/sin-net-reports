@@ -24,6 +24,7 @@ import sinnet.app.ports.out.CustomersPortOut;
 import sinnet.app.ports.out.ProjectsPortOut;
 import sinnet.app.ports.out.ProjectsPortOut.StatsResult;
 import sinnet.app.ports.out.UsersServicePortOut;
+import sinnet.domain.models.CustomerEntry;
 import sinnet.domain.models.CustomerValue;
 import sinnet.domain.models.Email;
 import sinnet.domain.models.Project;
@@ -255,12 +256,40 @@ public class StepDefinitions {
     var expectedResult = new SomeEntityGql().setProjectId(projectIdStr).setEntityId(entityId.toString()).setEntityVersion(43L);
     Assertions.assertThat(actual).isEqualTo(expectedResult);
 
+    var expectedEntry = new CustomerEntry(
+        null,
+        null,
+        null,
+      0,
+        null,
+        null,
+        null,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        null,
+        false,
+        null,
+        null);
 
     var expectedCommand = new CustomerUpdateCommand(
         new sinnet.domain.models.UserToken(projectId, requestorEmail),
         new EntityGql(projectIdStr, entityIdStr, 42),
         new CustomerValue(
-          new CustomerInput(),
+          expectedEntry,
           List.of(secret),
           List.of(secretExt),
           List.of()),

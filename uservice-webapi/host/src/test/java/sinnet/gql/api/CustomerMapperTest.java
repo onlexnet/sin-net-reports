@@ -12,6 +12,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import sinnet.domain.models.CustomerEntry;
+import sinnet.gql.models.CustomerInput;
 import sinnet.gql.models.EntityGql;
 
 @ExtendWith(MockitoExtension.class)
@@ -525,6 +527,235 @@ class CustomerMapperTest {
     @DisplayName("should return null for null CustomerSecret")
     void shouldReturnNullForNull() {
       assertThat(mapper.toGql((sinnet.grpc.customers.CustomerSecret) null)).isNull();
+    }
+  }
+
+  @Nested
+  @DisplayName("Customer Entry Mapping")
+  class CustomerEntryMappingTests {
+
+    @Test
+    @DisplayName("should map minimal gql CustomerInput to domain with false defaults")
+    void shouldMapMinimalGqlToDomain() {
+      var source = new CustomerInput();
+      source.setCustomerName("Minimal Customer");
+
+      var result = mapper.toDomain(source);
+
+        var expected = new CustomerEntry(
+          null,
+          null,
+          null,
+          0,
+          "Minimal Customer",
+          null,
+          null,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          null,
+          false,
+          null,
+          null);
+
+        assertThat(result).isEqualTo(expected);
+    }
+
+    @Test
+    @DisplayName("should map full gql CustomerInput to domain")
+    void shouldMapFullGqlToDomain() {
+      var source = new CustomerInput();
+      source.setOperatorEmail("operator@example.com");
+      source.setBillingModel("subscription");
+      source.setSupportStatus("active");
+      source.setDistance(15);
+      source.setCustomerName("ACME Clinic");
+      source.setCustomerCityName("Warsaw");
+      source.setCustomerAddress("Main St 1");
+      source.setNfzUmowa(true);
+      source.setNfzMaFilie(true);
+      source.setNfzLekarz(true);
+      source.setNfzPolozna(true);
+      source.setNfzPielegniarkaSrodowiskowa(true);
+      source.setNfzMedycynaSzkolna(true);
+      source.setNfzTransportSanitarny(true);
+      source.setNfzNocnaPomocLekarska(true);
+      source.setNfzAmbulatoryjnaOpiekaSpecjalistyczna(true);
+      source.setNfzRehabilitacja(true);
+      source.setNfzStomatologia(true);
+      source.setNfzPsychiatria(true);
+      source.setNfzSzpitalnictwo(true);
+      source.setNfzProgramyProfilaktyczne(true);
+      source.setNfzZaopatrzenieOrtopedyczne(true);
+      source.setNfzOpiekaDlugoterminowa(true);
+      source.setNfzNotatki("NFZ notes");
+      source.setKomercjaJest(true);
+      source.setKomercjaNotatki("Commercial notes");
+      source.setDaneTechniczne("Tech data");
+
+      var result = mapper.toDomain(source);
+
+      assertThat(result).isEqualTo(new CustomerEntry(
+          "operator@example.com",
+          "subscription",
+          "active",
+          15,
+          "ACME Clinic",
+          "Warsaw",
+          "Main St 1",
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          "NFZ notes",
+          true,
+          "Commercial notes",
+          "Tech data"));
+    }
+
+    @Test
+    @DisplayName("should map minimal domain CustomerEntry to grpc CustomerValue")
+    void shouldMapMinimalDomainToGrpc() {
+      var source = new CustomerEntry(
+          null,
+          null,
+          null,
+          0,
+          "Minimal Customer",
+          null,
+          null,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          null,
+          false,
+          null,
+          null);
+
+      var result = mapper.toGrpc(source);
+
+          var expected = sinnet.grpc.customers.CustomerValue.newBuilder()
+            .setCustomerName("Minimal Customer")
+            .build();
+
+          assertThat(result).isEqualTo(expected);
+    }
+
+    @Test
+    @DisplayName("should map full domain CustomerEntry to grpc CustomerValue")
+    void shouldMapFullDomainToGrpc() {
+      var source = new CustomerEntry(
+          "operator@example.com",
+          "subscription",
+          "active",
+          15,
+          "ACME Clinic",
+          "Warsaw",
+          "Main St 1",
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          "NFZ notes",
+          true,
+          "Commercial notes",
+          "Tech data");
+
+      var result = mapper.toGrpc(source);
+
+          var expected = sinnet.grpc.customers.CustomerValue.newBuilder()
+            .setOperatorEmail("operator@example.com")
+            .setBillingModel("subscription")
+            .setSupportStatus("active")
+            .setDistance(15)
+            .setCustomerName("ACME Clinic")
+            .setCustomerCityName("Warsaw")
+            .setCustomerAddress("Main St 1")
+            .setNfzUmowa(true)
+            .setNfzMaFilie(true)
+            .setNfzLekarz(true)
+            .setNfzPolozna(true)
+            .setNfzPielegniarkaSrodowiskowa(true)
+            .setNfzMedycynaSzkolna(true)
+            .setNfzTransportSanitarny(true)
+            .setNfzNocnaPomocLekarska(true)
+            .setNfzAmbulatoryjnaOpiekaSpecjalistyczna(true)
+            .setNfzRehabilitacja(true)
+            .setNfzStomatologia(true)
+            .setNfzPsychiatria(true)
+            .setNfzSzpitalnictwo(true)
+            .setNfzProgramyProfilaktyczne(true)
+            .setNfzZaopatrzenieOrtopedyczne(true)
+            .setNfzOpiekaDlugoterminowa(true)
+            .setNfzNotatki("NFZ notes")
+            .setKomercjaJest(true)
+            .setKomercjaNotatki("Commercial notes")
+            .setDaneTechniczne("Tech data")
+            .build();
+
+          assertThat(result).isEqualTo(expected);
+    }
+
+    @Test
+    @DisplayName("should return null for null gql CustomerInput")
+    void shouldReturnNullForNullGqlInput() {
+      assertThat(mapper.toDomain(null)).isNull();
+    }
+
+    @Test
+    @DisplayName("should return null for null domain CustomerEntry")
+    void shouldReturnNullForNullDomainInput() {
+      assertThat(mapper.toGrpc((CustomerEntry) null)).isNull();
     }
   }
 

@@ -5,10 +5,12 @@ import java.time.format.DateTimeFormatter;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 
 import io.vavr.collection.Iterator;
 import io.vavr.control.Option;
+import sinnet.domain.models.CustomerEntry;
 import sinnet.gql.models.CustomerContactGql;
 import sinnet.gql.models.CustomerContactInputGql;
 import sinnet.gql.models.CustomerEntityGql;
@@ -26,7 +28,9 @@ import sinnet.grpc.customers.CustomerSecretEx;
 import sinnet.grpc.customers.GetReply;
 
 /** MapStruct mapper for customer conversions between gRPC and GraphQL models. */
-@Mapper(uses = CommonMapper.class)
+@Mapper(uses = CommonMapper.class,
+  unmappedTargetPolicy = ReportingPolicy.ERROR,
+  unmappedSourcePolicy = ReportingPolicy.ERROR)
 public interface CustomerMapper {
 
   static final CustomerMapper INSTANCE = Mappers.getMapper(CustomerMapper.class);
@@ -52,6 +56,26 @@ public interface CustomerMapper {
   @Mapping(target = "tag", source = "entityVersion")
   sinnet.domain.models.EntityId map(EntityGql item);
 
+  @Mapping(target = "nfzUmowa", source = "nfzUmowa", defaultValue = "false")
+  @Mapping(target = "nfzMaFilie", source = "nfzMaFilie", defaultValue = "false")
+  @Mapping(target = "nfzLekarz", source = "nfzLekarz", defaultValue = "false")
+  @Mapping(target = "nfzPolozna", source = "nfzPolozna", defaultValue = "false")
+  @Mapping(target = "nfzPielegniarkaSrodowiskowa", source = "nfzPielegniarkaSrodowiskowa", defaultValue = "false")
+  @Mapping(target = "nfzMedycynaSzkolna", source = "nfzMedycynaSzkolna", defaultValue = "false")
+  @Mapping(target = "nfzTransportSanitarny", source = "nfzTransportSanitarny", defaultValue = "false")
+  @Mapping(target = "nfzNocnaPomocLekarska", source = "nfzNocnaPomocLekarska", defaultValue = "false")
+  @Mapping(target = "nfzAmbulatoryjnaOpiekaSpecjalistyczna", source = "nfzAmbulatoryjnaOpiekaSpecjalistyczna", defaultValue = "false")
+  @Mapping(target = "nfzRehabilitacja", source = "nfzRehabilitacja", defaultValue = "false")
+  @Mapping(target = "nfzStomatologia", source = "nfzStomatologia", defaultValue = "false")
+  @Mapping(target = "nfzPsychiatria", source = "nfzPsychiatria", defaultValue = "false")
+  @Mapping(target = "nfzSzpitalnictwo", source = "nfzSzpitalnictwo", defaultValue = "false")
+  @Mapping(target = "nfzProgramyProfilaktyczne", source = "nfzProgramyProfilaktyczne", defaultValue = "false")
+  @Mapping(target = "nfzZaopatrzenieOrtopedyczne", source = "nfzZaopatrzenieOrtopedyczne", defaultValue = "false")
+  @Mapping(target = "nfzOpiekaDlugoterminowa", source = "nfzOpiekaDlugoterminowa", defaultValue = "false")
+  @Mapping(target = "komercjaJest", source = "komercjaJest", defaultValue = "false")
+  @Mapping(target = "distance", source = "distance", defaultValue = "0")
+  CustomerEntry toDomain(CustomerInput item);
+
   default EntityId toGrpc(EntityGql item) {
     return EntityId.newBuilder()
       .setEntityId(item.getEntityId())
@@ -61,38 +85,38 @@ public interface CustomerMapper {
   }
 
   /** Dox me. */
-  default sinnet.grpc.customers.CustomerValue toGrpc(CustomerInput item) {
+  default sinnet.grpc.customers.CustomerValue toGrpc(CustomerEntry item) {
     if (item == null) {
       return null;
     }
     return PropsBuilder.build(sinnet.grpc.customers.CustomerValue.newBuilder())
-      .set(b -> b::setOperatorEmail, item.getOperatorEmail())
-      .set(b -> b::setBillingModel, item.getBillingModel())
-      .set(b -> b::setSupportStatus, item.getSupportStatus())
-      .set(b -> b::setDistance, item.getDistance())
-      .set(b -> b::setCustomerName, item.getCustomerName())
-      .set(b -> b::setCustomerCityName, item.getCustomerCityName())
-      .set(b -> b::setCustomerAddress, item.getCustomerAddress())
-      .set(b -> b::setNfzUmowa, item.getNfzUmowa())
-      .set(b -> b::setNfzMaFilie, item.getNfzMaFilie())
-      .set(b -> b::setNfzLekarz, item.getNfzLekarz())
-      .set(b -> b::setNfzPolozna, item.getNfzPolozna())
-      .set(b -> b::setNfzPielegniarkaSrodowiskowa, item.getNfzPielegniarkaSrodowiskowa())
-      .set(b -> b::setNfzMedycynaSzkolna, item.getNfzMedycynaSzkolna())
-      .set(b -> b::setNfzTransportSanitarny, item.getNfzTransportSanitarny())
-      .set(b -> b::setNfzNocnaPomocLekarska, item.getNfzNocnaPomocLekarska())
-      .set(b -> b::setNfzAmbulatoryjnaOpiekaSpecjalistyczna, item.getNfzAmbulatoryjnaOpiekaSpecjalistyczna())
-      .set(b -> b::setNfzRehabilitacja, item.getNfzRehabilitacja())
-      .set(b -> b::setNfzStomatologia, item.getNfzStomatologia())
-      .set(b -> b::setNfzPsychiatria, item.getNfzPsychiatria())
-      .set(b -> b::setNfzSzpitalnictwo, item.getNfzSzpitalnictwo())
-      .set(b -> b::setNfzProgramyProfilaktyczne, item.getNfzProgramyProfilaktyczne())
-      .set(b -> b::setNfzZaopatrzenieOrtopedyczne, item.getNfzZaopatrzenieOrtopedyczne())
-      .set(b -> b::setNfzOpiekaDlugoterminowa, item.getNfzOpiekaDlugoterminowa())
-      .set(b -> b::setNfzNotatki, item.getNfzNotatki())
-      .set(b -> b::setKomercjaJest, item.getKomercjaJest())
-      .set(b -> b::setKomercjaNotatki, item.getKomercjaNotatki())
-      .set(b -> b::setDaneTechniczne, item.getDaneTechniczne())
+      .set(b -> b::setOperatorEmail, item.operatorEmail())
+      .set(b -> b::setBillingModel, item.billingModel())
+      .set(b -> b::setSupportStatus, item.supportStatus())
+      .set(b -> b::setDistance, item.distance())
+      .set(b -> b::setCustomerName, item.customerName())
+      .set(b -> b::setCustomerCityName, item.customerCityName())
+      .set(b -> b::setCustomerAddress, item.customerAddress())
+      .set(b -> b::setNfzUmowa, item.nfzUmowa())
+      .set(b -> b::setNfzMaFilie, item.nfzMaFilie())
+      .set(b -> b::setNfzLekarz, item.nfzLekarz())
+      .set(b -> b::setNfzPolozna, item.nfzPolozna())
+      .set(b -> b::setNfzPielegniarkaSrodowiskowa, item.nfzPielegniarkaSrodowiskowa())
+      .set(b -> b::setNfzMedycynaSzkolna, item.nfzMedycynaSzkolna())
+      .set(b -> b::setNfzTransportSanitarny, item.nfzTransportSanitarny())
+      .set(b -> b::setNfzNocnaPomocLekarska, item.nfzNocnaPomocLekarska())
+      .set(b -> b::setNfzAmbulatoryjnaOpiekaSpecjalistyczna, item.nfzAmbulatoryjnaOpiekaSpecjalistyczna())
+      .set(b -> b::setNfzRehabilitacja, item.nfzRehabilitacja())
+      .set(b -> b::setNfzStomatologia, item.nfzStomatologia())
+      .set(b -> b::setNfzPsychiatria, item.nfzPsychiatria())
+      .set(b -> b::setNfzSzpitalnictwo, item.nfzSzpitalnictwo())
+      .set(b -> b::setNfzProgramyProfilaktyczne, item.nfzProgramyProfilaktyczne())
+      .set(b -> b::setNfzZaopatrzenieOrtopedyczne, item.nfzZaopatrzenieOrtopedyczne())
+      .set(b -> b::setNfzOpiekaDlugoterminowa, item.nfzOpiekaDlugoterminowa())
+      .set(b -> b::setNfzNotatki, item.nfzNotatki())
+      .set(b -> b::setKomercjaJest, item.komercjaJest())
+      .set(b -> b::setKomercjaNotatki, item.komercjaNotatki())
+      .set(b -> b::setDaneTechniczne, item.daneTechniczne())
       .done().build();
   }
 

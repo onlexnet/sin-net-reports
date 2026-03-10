@@ -44,7 +44,7 @@ jobs:
         working-directory: uservice-webapi
         run: |
           export SEMVERSION=$(cat .semversion || echo "1.0.0-SNAPSHOT")
-          mvn -ntp clean install -Drevision=$SEMVERSION -Dci=true
+          mvn -ntp clean install -Drevision=$SEMVERSION -DCI=true
 
   build-static-webapp:
     name: Build Static WebApp
