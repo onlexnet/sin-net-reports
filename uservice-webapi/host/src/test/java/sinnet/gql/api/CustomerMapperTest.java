@@ -26,7 +26,7 @@ import sinnet.gql.models.EntityGql;
 @DisplayName("CustomerMapper Tests")
 class CustomerMapperTest {
 
-  private final CustomerMapper mapper = CustomerMapper.INSTANCE;
+  private final sinnet.infra.adapters.gql.CustomerMapper mapper = sinnet.infra.adapters.gql.CustomerMapper.INSTANCE;
 
   @Nested
   @DisplayName("gRPC LocalDateTime to Java LocalDateTime Mapping")
@@ -123,7 +123,7 @@ class CustomerMapperTest {
           .set(field(EntityGql::getEntityVersion), 42L)
           .create();
 
-      var result = mapper.toGrpc(source);
+      var result = sinnet.infra.adapters.grpc.CustomerMapper.toGrpc(source);
 
       assertThat(result).isNotNull();
       assertThat(result.getProjectId()).isEqualTo("proj-123");
@@ -139,7 +139,7 @@ class CustomerMapperTest {
           .set(field(EntityGql::getEntityVersion), 1L)
           .create();
 
-      var result = mapper.toGrpc(source);
+      var result = sinnet.infra.adapters.grpc.CustomerMapper.toGrpc(source);
 
       assertThat(result.getEntityId()).isEqualTo("minimal-id");
       assertThat(result.getEntityVersion()).isEqualTo(1L);
@@ -156,7 +156,7 @@ class CustomerMapperTest {
             .set(field(EntityGql::getEntityVersion), version)
             .create();
 
-        var result = mapper.toGrpc(source);
+        var result = sinnet.infra.adapters.grpc.CustomerMapper.toGrpc(source);
         assertThat(result.getEntityVersion()).isEqualTo(version);
       }
     }
@@ -172,7 +172,7 @@ class CustomerMapperTest {
     void shouldMapJavaLocalDateTime() {
       var source = LocalDateTime.of(2024, 12, 25, 14, 30, 45);
 
-      var result = mapper.toGrpc(source);
+      var result = sinnet.infra.adapters.grpc.CustomerMapper.toGrpc(source);
 
       assertThat(result).isNotNull();
       assertThat(result.getYear()).isEqualTo(2024);
@@ -188,7 +188,7 @@ class CustomerMapperTest {
     void shouldHandleMidnight() {
       var source = LocalDateTime.of(2025, 1, 1, 0, 0, 0);
 
-      var result = mapper.toGrpc(source);
+      var result = sinnet.infra.adapters.grpc.CustomerMapper.toGrpc(source);
 
       assertThat(result.getHour()).isZero();
       assertThat(result.getMinute()).isZero();
@@ -200,7 +200,7 @@ class CustomerMapperTest {
     void shouldHandleEndOfDay() {
       var source = LocalDateTime.of(2025, 12, 31, 23, 59, 59);
 
-      var result = mapper.toGrpc(source);
+      var result = sinnet.infra.adapters.grpc.CustomerMapper.toGrpc(source);
 
       assertThat(result.getHour()).isEqualTo(23);
       assertThat(result.getMinute()).isEqualTo(59);
@@ -213,7 +213,7 @@ class CustomerMapperTest {
       var randomDateTimes = Instancio.ofList(LocalDateTime.class).size(10).create();
 
       for (var dateTime : randomDateTimes) {
-        var result = mapper.toGrpc(dateTime);
+        var result = sinnet.infra.adapters.grpc.CustomerMapper.toGrpc(dateTime);
         assertThat(result.getYear()).isEqualTo(dateTime.getYear());
         assertThat(result.getMonth()).isEqualTo(dateTime.getMonthValue());
         assertThat(result.getDay()).isEqualTo(dateTime.getDayOfMonth());
@@ -226,7 +226,7 @@ class CustomerMapperTest {
     @Test
     @DisplayName("should return null for null LocalDateTime")
     void shouldReturnNullForNull() {
-      assertThat(mapper.toGrpc((LocalDateTime) null)).isNull();
+      assertThat(sinnet.infra.adapters.grpc.CustomerMapper.toGrpc((LocalDateTime) null)).isNull();
     }
   }
 
@@ -439,7 +439,7 @@ class CustomerMapperTest {
       var result = mapper.toGql(source);
 
       var expectedDateTime = LocalDateTime.of(2024, 1, 15, 9, 30, 0);
-      var expectedFormatted = CustomerMapper.TIMESTAMP_FORMATTER.format(expectedDateTime);
+      var expectedFormatted = sinnet.infra.adapters.gql.CustomerMapper.TIMESTAMP_FORMATTER.format(expectedDateTime);
       assertThat(result.getChangedWhen()).isEqualTo(expectedFormatted);
     }
 
@@ -676,7 +676,7 @@ class CustomerMapperTest {
           null,
           null);
 
-      var result = mapper.toGrpc(source);
+      var result = sinnet.infra.adapters.grpc.CustomerMapper.toGrpc(source);
 
           var expected = sinnet.grpc.customers.CustomerValue.newBuilder()
             .setCustomerName("Minimal Customer")
@@ -717,7 +717,7 @@ class CustomerMapperTest {
           "Commercial notes",
           "Tech data");
 
-      var result = mapper.toGrpc(source);
+      var result = sinnet.infra.adapters.grpc.CustomerMapper.toGrpc(source);
 
           var expected = sinnet.grpc.customers.CustomerValue.newBuilder()
             .setOperatorEmail("operator@example.com")
@@ -761,7 +761,7 @@ class CustomerMapperTest {
     @Test
     @DisplayName("should return null for null domain CustomerEntry")
     void shouldReturnNullForNullDomainInput() {
-      assertThat(mapper.toGrpc((CustomerEntry) null)).isNull();
+      assertThat(sinnet.infra.adapters.grpc.CustomerMapper.toGrpc((CustomerEntry) null)).isNull();
     }
   }
 
@@ -781,7 +781,7 @@ class CustomerMapperTest {
 
       var changedWhen = LocalDateTime.of(2026, 3, 11, 9, 0, 0);
       var changedWho = "editor@example.com";
-      var grpc = mapper.toGrpc(domain, changedWhen, changedWho);
+      var grpc = sinnet.infra.adapters.grpc.CustomerMapper.toGrpc(domain, changedWhen, changedWho);
 
       var expectedGrpc = sinnet.grpc.customers.CustomerSecret.newBuilder()
           .setLocation("HQ")
@@ -813,7 +813,7 @@ class CustomerMapperTest {
       assertThat(domain).isEqualTo(new CustomerSecret("Datacenter", "ops", "p@ss", "otp", "k1,k2"));
 
       var changedWhen = LocalDateTime.of(2026, 3, 11, 10, 11, 12);
-      var grpc = mapper.toGrpc(domain, changedWhen, "alice@example.com");
+      var grpc = sinnet.infra.adapters.grpc.CustomerMapper.toGrpc(domain, changedWhen, "alice@example.com");
 
       var expectedGrpc = sinnet.grpc.customers.CustomerSecret.newBuilder()
           .setLocation("Datacenter")
@@ -845,7 +845,7 @@ class CustomerMapperTest {
       assertThat(domain).isEqualTo(new CustomerSecretEx("Branch", null, null, null, null, null, null));
 
       var changedWhen = LocalDateTime.of(2026, 3, 11, 11, 0, 0);
-      var grpc = mapper.toGrpc(domain, changedWhen, "bob@example.com");
+      var grpc = sinnet.infra.adapters.grpc.CustomerMapper.toGrpc(domain, changedWhen, "bob@example.com");
 
       var expectedGrpc = sinnet.grpc.customers.CustomerSecretEx.newBuilder()
           .setLocation("Branch")
@@ -879,7 +879,7 @@ class CustomerMapperTest {
       assertThat(domain).isEqualTo(new CustomerSecretEx("HQ", "root", "very-secret", "EHR", "EHR-01", "otp-seed", "r1,r2"));
 
       var changedWhen = LocalDateTime.of(2026, 3, 11, 12, 13, 14);
-      var grpc = mapper.toGrpc(domain, changedWhen, "carol@example.com");
+      var grpc = sinnet.infra.adapters.grpc.CustomerMapper.toGrpc(domain, changedWhen, "carol@example.com");
 
       var expectedGrpc = sinnet.grpc.customers.CustomerSecretEx.newBuilder()
           .setLocation("HQ")
@@ -912,7 +912,7 @@ class CustomerMapperTest {
 
       assertThat(domain).isEqualTo(new CustomerContact("Ada", null, null, null));
 
-      var grpc = mapper.toGrpc(domain);
+      var grpc = sinnet.infra.adapters.grpc.CustomerMapper.toGrpc(domain);
 
       var expectedGrpc = sinnet.grpc.customers.CustomerContact.newBuilder()
           .setFirstName("Ada")
@@ -933,7 +933,7 @@ class CustomerMapperTest {
 
       assertThat(domain).isEqualTo(new CustomerContact("Jan", "Kowalski", "+48123123123", "jan.kowalski@example.com"));
 
-      var grpc = mapper.toGrpc(domain);
+      var grpc = sinnet.infra.adapters.grpc.CustomerMapper.toGrpc(domain);
 
       var expectedGrpc = sinnet.grpc.customers.CustomerContact.newBuilder()
           .setFirstName("Jan")
@@ -955,7 +955,7 @@ class CustomerMapperTest {
       // gRPC LocalDateTime only supports seconds precision, not nanoseconds
       var original = LocalDateTime.of(2024, 12, 25, 14, 30, 45);
 
-      var toGrpc = mapper.toGrpc(original);
+      var toGrpc = sinnet.infra.adapters.grpc.CustomerMapper.toGrpc(original);
       var backToJava = mapper.map(toGrpc);
 
       assertThat(backToJava).isEqualTo(original);
@@ -973,7 +973,7 @@ class CustomerMapperTest {
           .toList();
 
       for (var dateTime : randomDateTimes) {
-        var grpc = mapper.toGrpc(dateTime);
+        var grpc = sinnet.infra.adapters.grpc.CustomerMapper.toGrpc(dateTime);
         var result = mapper.map(grpc);
         assertThat(result).isEqualTo(dateTime);
       }
@@ -985,7 +985,7 @@ class CustomerMapperTest {
       var randomEntities = Instancio.ofList(EntityGql.class).size(3).create();
 
       for (var entity : randomEntities) {
-        var grpc = mapper.toGrpc(entity);
+        var grpc = sinnet.infra.adapters.grpc.CustomerMapper.toGrpc(entity);
         assertThat(grpc).isNotNull();
         assertThat(grpc.getEntityId()).isEqualTo(entity.getEntityId());
         assertThat(grpc.getEntityVersion()).isEqualTo(entity.getEntityVersion());
