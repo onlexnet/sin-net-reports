@@ -12,8 +12,14 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import sinnet.domain.models.CustomerContact;
 import sinnet.domain.models.CustomerEntry;
+import sinnet.domain.models.CustomerSecret;
+import sinnet.domain.models.CustomerSecretEx;
+import sinnet.gql.models.CustomerContactInputGql;
 import sinnet.gql.models.CustomerInput;
+import sinnet.gql.models.CustomerSecretExInput;
+import sinnet.gql.models.CustomerSecretInput;
 import sinnet.gql.models.EntityGql;
 
 @ExtendWith(MockitoExtension.class)
@@ -749,13 +755,193 @@ class CustomerMapperTest {
     @Test
     @DisplayName("should return null for null gql CustomerInput")
     void shouldReturnNullForNullGqlInput() {
-      assertThat(mapper.toDomain(null)).isNull();
+      assertThat(mapper.toDomain((CustomerInput) null)).isNull();
     }
 
     @Test
     @DisplayName("should return null for null domain CustomerEntry")
     void shouldReturnNullForNullDomainInput() {
       assertThat(mapper.toGrpc((CustomerEntry) null)).isNull();
+    }
+  }
+
+  @Nested
+  @DisplayName("GQL <-> Domain <-> gRPC bridge mapping")
+  class GqlDomainGrpcBridgeTests {
+
+    @Test
+    @DisplayName("should map minimal CustomerSecret through gql to domain to grpc")
+    void shouldMapMinimalCustomerSecretBridge() {
+      var gql = new CustomerSecretInput()
+          .setLocation("HQ");
+
+      var domain = mapper.toDomain(gql);
+
+      assertThat(domain).isEqualTo(new CustomerSecret("HQ", null, null, null, null));
+
+      var changedWhen = LocalDateTime.of(2026, 3, 11, 9, 0, 0);
+      var changedWho = "editor@example.com";
+      var grpc = mapper.toGrpc(domain, changedWhen, changedWho);
+
+      var expectedGrpc = sinnet.grpc.customers.CustomerSecret.newBuilder()
+          .setLocation("HQ")
+          .setChangedWhen(sinnet.grpc.customers.LocalDateTime.newBuilder()
+              .setYear(2026)
+              .setMonth(3)
+              .setDay(11)
+              .setHour(9)
+              .setMinute(0)
+              .setSecond(0)
+              .build())
+          .setChangedWho("editor@example.com")
+          .build();
+      assertThat(grpc).isEqualTo(expectedGrpc);
+    }
+
+    @Test
+    @DisplayName("should map full CustomerSecret through gql to domain to grpc")
+    void shouldMapFullCustomerSecretBridge() {
+      var gql = new CustomerSecretInput()
+          .setLocation("Datacenter")
+          .setUsername("ops")
+          .setPassword("p@ss")
+          .setOtpSecret("otp")
+          .setOtpRecoveryKeys("k1,k2");
+
+      var domain = mapper.toDomain(gql);
+
+      assertThat(domain).isEqualTo(new CustomerSecret("Datacenter", "ops", "p@ss", "otp", "k1,k2"));
+
+      var changedWhen = LocalDateTime.of(2026, 3, 11, 10, 11, 12);
+      var grpc = mapper.toGrpc(domain, changedWhen, "alice@example.com");
+
+      var expectedGrpc = sinnet.grpc.customers.CustomerSecret.newBuilder()
+          .setLocation("Datacenter")
+          .setUsername("ops")
+          .setPassword("p@ss")
+          .setChangedWhen(sinnet.grpc.customers.LocalDateTime.newBuilder()
+              .setYear(2026)
+              .setMonth(3)
+              .setDay(11)
+              .setHour(10)
+              .setMinute(11)
+              .setSecond(12)
+              .build())
+          .setChangedWho("alice@example.com")
+          .setOtpSecret("otp")
+          .setOtpRecoveryKeys("k1,k2")
+          .build();
+      assertThat(grpc).isEqualTo(expectedGrpc);
+    }
+
+    @Test
+    @DisplayName("should map minimal CustomerSecretEx through gql to domain to grpc")
+    void shouldMapMinimalCustomerSecretExBridge() {
+      var gql = new CustomerSecretExInput()
+          .setLocation("Branch");
+
+      var domain = mapper.toDomain(gql);
+
+      assertThat(domain).isEqualTo(new CustomerSecretEx("Branch", null, null, null, null, null, null));
+
+      var changedWhen = LocalDateTime.of(2026, 3, 11, 11, 0, 0);
+      var grpc = mapper.toGrpc(domain, changedWhen, "bob@example.com");
+
+      var expectedGrpc = sinnet.grpc.customers.CustomerSecretEx.newBuilder()
+          .setLocation("Branch")
+          .setChangedWhen(sinnet.grpc.customers.LocalDateTime.newBuilder()
+              .setYear(2026)
+              .setMonth(3)
+              .setDay(11)
+              .setHour(11)
+              .setMinute(0)
+              .setSecond(0)
+              .build())
+          .setChangedWho("bob@example.com")
+          .build();
+      assertThat(grpc).isEqualTo(expectedGrpc);
+    }
+
+    @Test
+    @DisplayName("should map full CustomerSecretEx through gql to domain to grpc")
+    void shouldMapFullCustomerSecretExBridge() {
+      var gql = new CustomerSecretExInput()
+          .setLocation("HQ")
+          .setUsername("root")
+          .setPassword("very-secret")
+          .setEntityName("EHR")
+          .setEntityCode("EHR-01")
+          .setOtpSecret("otp-seed")
+          .setOtpRecoveryKeys("r1,r2");
+
+      var domain = mapper.toDomain(gql);
+
+      assertThat(domain).isEqualTo(new CustomerSecretEx("HQ", "root", "very-secret", "EHR", "EHR-01", "otp-seed", "r1,r2"));
+
+      var changedWhen = LocalDateTime.of(2026, 3, 11, 12, 13, 14);
+      var grpc = mapper.toGrpc(domain, changedWhen, "carol@example.com");
+
+      var expectedGrpc = sinnet.grpc.customers.CustomerSecretEx.newBuilder()
+          .setLocation("HQ")
+          .setUsername("root")
+          .setPassword("very-secret")
+          .setEntityName("EHR")
+          .setEntityCode("EHR-01")
+          .setChangedWhen(sinnet.grpc.customers.LocalDateTime.newBuilder()
+              .setYear(2026)
+              .setMonth(3)
+              .setDay(11)
+              .setHour(12)
+              .setMinute(13)
+              .setSecond(14)
+              .build())
+          .setChangedWho("carol@example.com")
+          .setOtpSecret("otp-seed")
+          .setOtpRecoveryKeys("r1,r2")
+          .build();
+      assertThat(grpc).isEqualTo(expectedGrpc);
+    }
+
+    @Test
+    @DisplayName("should map minimal CustomerContact through gql to domain to grpc")
+    void shouldMapMinimalCustomerContactBridge() {
+      var gql = new CustomerContactInputGql();
+      gql.setFirstName("Ada");
+
+      var domain = mapper.toDomain(gql);
+
+      assertThat(domain).isEqualTo(new CustomerContact("Ada", null, null, null));
+
+      var grpc = mapper.toGrpc(domain);
+
+      var expectedGrpc = sinnet.grpc.customers.CustomerContact.newBuilder()
+          .setFirstName("Ada")
+          .build();
+      assertThat(grpc).isEqualTo(expectedGrpc);
+    }
+
+    @Test
+    @DisplayName("should map full CustomerContact through gql to domain to grpc")
+    void shouldMapFullCustomerContactBridge() {
+      var gql = new CustomerContactInputGql();
+      gql.setFirstName("Jan");
+      gql.setLastName("Kowalski");
+      gql.setPhoneNo("+48123123123");
+      gql.setEmail("jan.kowalski@example.com");
+
+      var domain = mapper.toDomain(gql);
+
+      assertThat(domain).isEqualTo(new CustomerContact("Jan", "Kowalski", "+48123123123", "jan.kowalski@example.com"));
+
+      var grpc = mapper.toGrpc(domain);
+
+      var expectedGrpc = sinnet.grpc.customers.CustomerContact.newBuilder()
+          .setFirstName("Jan")
+          .setLastName("Kowalski")
+          .setPhoneNo("+48123123123")
+          .setEmail("jan.kowalski@example.com")
+          .build();
+      assertThat(grpc).isEqualTo(expectedGrpc);
     }
   }
 

@@ -24,6 +24,8 @@ import sinnet.app.ports.out.CustomersPortOut;
 import sinnet.app.ports.out.ProjectsPortOut;
 import sinnet.app.ports.out.ProjectsPortOut.StatsResult;
 import sinnet.app.ports.out.UsersServicePortOut;
+import sinnet.domain.models.CustomerSecret;
+import sinnet.domain.models.CustomerSecretEx;
 import sinnet.domain.models.CustomerEntry;
 import sinnet.domain.models.CustomerValue;
 import sinnet.domain.models.Email;
@@ -290,8 +292,10 @@ public class StepDefinitions {
         new EntityGql(projectIdStr, entityIdStr, 42),
         new CustomerValue(
           expectedEntry,
-          List.of(secret),
-          List.of(secretExt),
+          List.of(new CustomerSecret(secret.getLocation(), secret.getUsername(), secret.getPassword(),
+            secret.getOtpSecret(), secret.getOtpRecoveryKeys())),
+          List.of(new CustomerSecretEx(secretExt.getLocation(), secretExt.getUsername(), secretExt.getPassword(),
+            secretExt.getEntityName(), secretExt.getEntityCode(), secretExt.getOtpSecret(), secretExt.getOtpRecoveryKeys())),
           List.of()),
           timeProvider.now(),
           requestorEmail);
