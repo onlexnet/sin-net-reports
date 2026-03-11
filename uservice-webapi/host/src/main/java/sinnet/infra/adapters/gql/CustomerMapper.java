@@ -1,4 +1,4 @@
-package sinnet.gql.api;
+package sinnet.infra.adapters.gql;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -10,7 +10,9 @@ import org.mapstruct.factory.Mappers;
 
 import io.vavr.collection.Iterator;
 import io.vavr.control.Option;
+import sinnet.domain.models.CustomerContact;
 import sinnet.domain.models.CustomerEntry;
+import sinnet.domain.models.CustomerSecret;
 import sinnet.gql.models.CustomerContactGql;
 import sinnet.gql.models.CustomerContactInputGql;
 import sinnet.gql.models.CustomerEntityGql;
@@ -22,31 +24,20 @@ import sinnet.gql.models.CustomerSecretGql;
 import sinnet.gql.models.CustomerSecretInput;
 import sinnet.gql.models.EntityGql;
 import sinnet.gql.models.SomeEntityGql;
-import sinnet.gql.utils.PropsBuilder;
 import sinnet.grpc.common.EntityId;
-import sinnet.grpc.customers.CustomerSecretEx;
 import sinnet.grpc.customers.GetReply;
 
-/** MapStruct mapper for customer conversions between gRPC and GraphQL models. */
-@Mapper(uses = CommonMapper.class,
-  unmappedTargetPolicy = ReportingPolicy.ERROR,
-  unmappedSourcePolicy = ReportingPolicy.ERROR)
+@Mapper(
+    unmappedTargetPolicy = ReportingPolicy.ERROR,
+    unmappedSourcePolicy = ReportingPolicy.ERROR)
 public interface CustomerMapper {
 
-  static final CustomerMapper INSTANCE = Mappers.getMapper(CustomerMapper.class);
+  CustomerMapper INSTANCE = Mappers.getMapper(CustomerMapper.class);
 
-  // DateTime, created and kept on server-side is UTC only. We can't send data to
-  // client because GraphQL does not support Date / Time types.
-  // So, we send a simple string without implicit contratc so that client may
-  // convert them so its
-  // proper models for date/time representation
-  // reason: https://github.com/onlexnet/sin-net-reports/issues/59
   DateTimeFormatter TIMESTAMP_FORMATTER = DateTimeFormatter.ISO_DATE_TIME;
 
-  /** DocMe. */
   default LocalDateTime map(sinnet.grpc.customers.LocalDateTime it) {
     if (it == null || it.getMonth() == 0) {
-      // Return null for missing/unset protobuf LocalDateTime (default values are 0)
       return null;
     }
     return LocalDateTime.of(it.getYear(), it.getMonth(), it.getDay(), it.getHour(), it.getMinute(), it.getSecond());
@@ -76,125 +67,22 @@ public interface CustomerMapper {
   @Mapping(target = "distance", source = "distance", defaultValue = "0")
   CustomerEntry toDomain(CustomerInput item);
 
-  default EntityId toGrpc(EntityGql item) {
-    return EntityId.newBuilder()
-      .setEntityId(item.getEntityId())
-      .setProjectId(item.getProjectId())
-      .setEntityVersion(item.getEntityVersion())
-      .build();
-  }
+  CustomerSecret toDomain(CustomerSecretInput item);
 
-  /** Dox me. */
-  default sinnet.grpc.customers.CustomerValue toGrpc(CustomerEntry item) {
-    if (item == null) {
-      return null;
-    }
-    return PropsBuilder.build(sinnet.grpc.customers.CustomerValue.newBuilder())
-      .set(b -> b::setOperatorEmail, item.operatorEmail())
-      .set(b -> b::setBillingModel, item.billingModel())
-      .set(b -> b::setSupportStatus, item.supportStatus())
-      .set(b -> b::setDistance, item.distance())
-      .set(b -> b::setCustomerName, item.customerName())
-      .set(b -> b::setCustomerCityName, item.customerCityName())
-      .set(b -> b::setCustomerAddress, item.customerAddress())
-      .set(b -> b::setNfzUmowa, item.nfzUmowa())
-      .set(b -> b::setNfzMaFilie, item.nfzMaFilie())
-      .set(b -> b::setNfzLekarz, item.nfzLekarz())
-      .set(b -> b::setNfzPolozna, item.nfzPolozna())
-      .set(b -> b::setNfzPielegniarkaSrodowiskowa, item.nfzPielegniarkaSrodowiskowa())
-      .set(b -> b::setNfzMedycynaSzkolna, item.nfzMedycynaSzkolna())
-      .set(b -> b::setNfzTransportSanitarny, item.nfzTransportSanitarny())
-      .set(b -> b::setNfzNocnaPomocLekarska, item.nfzNocnaPomocLekarska())
-      .set(b -> b::setNfzAmbulatoryjnaOpiekaSpecjalistyczna, item.nfzAmbulatoryjnaOpiekaSpecjalistyczna())
-      .set(b -> b::setNfzRehabilitacja, item.nfzRehabilitacja())
-      .set(b -> b::setNfzStomatologia, item.nfzStomatologia())
-      .set(b -> b::setNfzPsychiatria, item.nfzPsychiatria())
-      .set(b -> b::setNfzSzpitalnictwo, item.nfzSzpitalnictwo())
-      .set(b -> b::setNfzProgramyProfilaktyczne, item.nfzProgramyProfilaktyczne())
-      .set(b -> b::setNfzZaopatrzenieOrtopedyczne, item.nfzZaopatrzenieOrtopedyczne())
-      .set(b -> b::setNfzOpiekaDlugoterminowa, item.nfzOpiekaDlugoterminowa())
-      .set(b -> b::setNfzNotatki, item.nfzNotatki())
-      .set(b -> b::setKomercjaJest, item.komercjaJest())
-      .set(b -> b::setKomercjaNotatki, item.komercjaNotatki())
-      .set(b -> b::setDaneTechniczne, item.daneTechniczne())
-      .done().build();
-  }
+  sinnet.domain.models.CustomerSecretEx toDomain(CustomerSecretExInput item);
 
-  /** Fixme. */
-  default sinnet.grpc.customers.CustomerSecretEx toGrpc(CustomerSecretExInput it, LocalDateTime whenChanged, String whoChanged) {
-    if (it == null) {
-      return null;
-    }
+  CustomerContact toDomain(CustomerContactInputGql item);
 
-    return PropsBuilder.build(sinnet.grpc.customers.CustomerSecretEx.newBuilder())
-        .set(b -> b::setLocation, it.getLocation())
-        .set(b -> b::setUsername, it.getUsername())
-        .set(b -> b::setPassword, it.getPassword())
-          .set(b -> b::setEntityName, it.getEntityName())
-          .set(b -> b::setEntityCode, it.getEntityCode())
-          .set(b -> b::setChangedWhen, toGrpc(whenChanged))
-        .set(b -> b::setOtpSecret, it.getOtpSecret())
-        .set(b -> b::setOtpRecoveryKeys, it.getOtpRecoveryKeys())
-        .set(b -> b::setChangedWho, whoChanged)
-        .done().build();
-  }
-
-  /** Doc me. */
-  default sinnet.grpc.customers.CustomerSecret toGrpc(CustomerSecretInput it, LocalDateTime whenChanged, String whoChanged) {
-    if (it == null) {
-      return null;
-    }
-    return PropsBuilder.build(sinnet.grpc.customers.CustomerSecret.newBuilder())
-        .set(b -> b::setLocation, it.getLocation())
-        .set(b -> b::setUsername, it.getUsername())
-        .set(b -> b::setPassword, it.getPassword())
-        .set(b -> b::setChangedWhen, toGrpc(whenChanged))
-        .set(b -> b::setChangedWho, whoChanged)
-        .set(b -> b::setOtpSecret, it.getOtpSecret())
-        .set(b -> b::setOtpRecoveryKeys, it.getOtpRecoveryKeys())
-        .done().build();
-  }
-
-  /** LocalDateTime conversion for customer gRPC model. */
-  default sinnet.grpc.customers.LocalDateTime toGrpc(LocalDateTime from) {
-    if (from == null) {
-      return null;
-    }
-    return sinnet.grpc.customers.LocalDateTime.newBuilder()
-        .setYear(from.getYear())
-        .setMonth(from.getMonthValue())
-        .setDay(from.getDayOfMonth())
-        .setHour(from.getHour())
-        .setMinute(from.getMinute())
-        .setSecond(from.getSecond())
-        .build();
-  }
-
-  /** Fixme. */
-  default sinnet.grpc.customers.CustomerContact toGrpc(CustomerContactInputGql it) {
-    if (it == null) {
-      return null;
-    }
-    return PropsBuilder.build(sinnet.grpc.customers.CustomerContact.newBuilder())
-        .set(b -> b::setFirstName, it.getFirstName())
-        .set(b -> b::setLastName, it.getLastName())
-        .set(b -> b::setPhoneNo, it.getPhoneNo())
-        .set(b -> b::setEmail, it.getEmail())
-        .done().build();
-  }
-  
-  /** Doc me. */
   default SomeEntityGql toGql(EntityId id) {
     if (id == null) {
       return null;
     }
     return new SomeEntityGql()
-      .setEntityId(id.getEntityId())
-      .setEntityVersion(id.getEntityVersion())
-      .setProjectId(id.getProjectId());
+        .setEntityId(id.getEntityId())
+        .setEntityVersion(id.getEntityVersion())
+        .setProjectId(id.getProjectId());
   }
 
-  /** Fixme. */
   default CustomerContactGql toGql(sinnet.grpc.customers.CustomerContact it) {
     if (it == null) {
       return null;
@@ -203,12 +91,11 @@ public interface CustomerMapper {
     result.setFirstName(it.getFirstName());
     result.setLastName(it.getLastName());
     result.setPhoneNo(it.getPhoneNo());
-    result.setEmail(it.getEmail());      
+    result.setEmail(it.getEmail());
     return result;
   }
-  
-  /** DocMe. */
-  default CustomerSecretExGql toGql(CustomerSecretEx it) {
+
+  default CustomerSecretExGql toGql(sinnet.grpc.customers.CustomerSecretEx it) {
     if (it == null) {
       return null;
     }
@@ -225,7 +112,6 @@ public interface CustomerMapper {
     return result;
   }
 
-  /** DocMe. */
   default CustomerSecretGql toGql(sinnet.grpc.customers.CustomerSecret it) {
     if (it == null) {
       return null;
@@ -241,7 +127,6 @@ public interface CustomerMapper {
     return result;
   }
 
-  /** FixMe. */
   default CustomerEntityGql toGql(sinnet.grpc.customers.CustomerModel item) {
     if (item == null) {
       return null;
@@ -254,8 +139,7 @@ public interface CustomerMapper {
     result.setContacts(Iterator.ofAll(item.getContactsList()).map(this::toGql).toJavaArray(CustomerContactGql[]::new));
     return result;
   }
-  
-  /** FixMe. */
+
   default CustomerModelGql toGql(sinnet.grpc.customers.CustomerValue item) {
     if (item == null) {
       return null;
@@ -290,14 +174,11 @@ public interface CustomerMapper {
     it.setDaneTechniczne(item.getDaneTechniczne());
     return it;
   }
-   
-  /** FixMe. */
+
   default CustomerEntityGql toGql(GetReply dto) {
     if (dto == null) {
       return null;
     }
-    var item = dto.getModel();
-    return toGql(item);
+    return toGql(dto.getModel());
   }
-
 }

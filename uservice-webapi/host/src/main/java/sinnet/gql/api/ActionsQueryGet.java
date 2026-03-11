@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import sinnet.app.lib.Functions;
 import sinnet.app.ports.in.CustomersPortIn;
 import sinnet.app.ports.in.TimeentriesServicePortIn;
+import sinnet.infra.adapters.gql.CustomerMapper;
 import sinnet.gql.models.ServiceModelGql;
 
 @Controller

@@ -12,7 +12,6 @@ import sinnet.app.flow.request.CustomerListQuery;
 import sinnet.app.flow.request.CustomerListResult;
 import sinnet.app.flow.request.CustomerUpdateCommand;
 import sinnet.app.ports.out.CustomersPortOut;
-import sinnet.gql.api.CustomerMapper;
 import sinnet.gql.models.CustomerEntityGql;
 import sinnet.grpc.common.EntityId;
 import sinnet.grpc.common.UserToken;
@@ -34,7 +33,6 @@ import sinnet.grpc.customers.UpdateResult;
 class CustomersGateway implements CustomersPortOut {
 
   private final CustomersBlockingStub stub;
-  private final CustomerMapper customerMapper = CustomerMapper.INSTANCE;
 
 
   @Override
@@ -82,11 +80,11 @@ class CustomersGateway implements CustomersPortOut {
     var grpcRequest = UpdateCommand.newBuilder()
         .setUserToken(userToken)
         .setModel(CustomerModel.newBuilder()
-            .setId(customerMapper.toGrpc(request.id()))
-            .setValue(customerMapper.toGrpc(request.value().entry()))
-            .addAllSecrets(request.value().secrets().stream().map(it -> customerMapper.toGrpc(it, changedWhen, changedWho)).toList())
-            .addAllSecretEx(request.value().secretsEx().stream().map(it -> customerMapper.toGrpc(it, changedWhen, changedWho)).toList())
-            .addAllContacts(request.value().contacts().stream().map(customerMapper::toGrpc).toList())
+          .setId(CustomerMapper.toGrpc(request.id()))
+          .setValue(CustomerMapper.toGrpc(request.value().entry()))
+          .addAllSecrets(request.value().secrets().stream().map(it -> CustomerMapper.toGrpc(it, changedWhen, changedWho)).toList())
+          .addAllSecretEx(request.value().secretsEx().stream().map(it -> CustomerMapper.toGrpc(it, changedWhen, changedWho)).toList())
+          .addAllContacts(request.value().contacts().stream().map(CustomerMapper::toGrpc).toList())
             .build())
         .build();
     return stub.update(grpcRequest);
