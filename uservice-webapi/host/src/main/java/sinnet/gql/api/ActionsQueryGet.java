@@ -19,7 +19,6 @@ class ActionsQueryGet {
 
   private final TimeentriesServicePortIn service;
   private final CustomersPortIn customerService;
-  private final CommonMapper commonMapper;
   private final CustomerMapper customerMapper = CustomerMapper.INSTANCE;
 
   @SchemaMapping
@@ -29,7 +28,7 @@ class ActionsQueryGet {
 
     var customerGet = Functions.of((String customerId) -> 
         customerService.customerGet(self.projectId(), self.primaryEmail(), customerId, customerMapper::toGql));
-    var result = service.getAction(projectId, actionIdTyped, customerGet, commonMapper);
+    var result = service.getAction(projectId, actionIdTyped, customerGet);
 
     return result;
   }

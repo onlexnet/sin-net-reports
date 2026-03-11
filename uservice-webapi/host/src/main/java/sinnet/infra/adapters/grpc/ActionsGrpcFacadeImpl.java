@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import sinnet.app.ports.out.ActionsGrpcPortOut;
 import sinnet.domain.models.EntityId;
 import sinnet.domain.models.TimeEntry;
-import sinnet.gql.api.CommonMapper;
 import sinnet.grpc.common.UserToken;
 import sinnet.grpc.timeentries.GetQuery;
 import sinnet.grpc.timeentries.RemoveCommand;
@@ -27,15 +26,15 @@ import sinnet.grpc.timeentries.UpdateCommand;
 class ActionsGrpcFacadeImpl implements ActionsGrpcPortOut {
 
   private final TimeEntriesBlockingStub stub;
-  private final CommonMapper commonMapper;
+  private final EntityGrpcMapper entityGrpcMapper = EntityGrpcMapper.INSTANCE;
 
 
   @Override
   public List<TimeEntry> searchInternal(UUID projectId, LocalDate from, LocalDate to) {
 
     var searchQuery = SearchQuery.newBuilder()
-        .setFrom(commonMapper.toGrpc(from))
-        .setTo(commonMapper.toGrpc(to))
+        .setFrom(entityGrpcMapper.toGrpc(from))
+        .setTo(entityGrpcMapper.toGrpc(to))
         .setProjectId(projectId.toString())
         .build();
 
@@ -52,12 +51,12 @@ class ActionsGrpcFacadeImpl implements ActionsGrpcPortOut {
         .setInvoker(UserToken.newBuilder()
           .setProjectId(projectId.toString())
           .setRequestorEmail(requestorEmail))
-        .setWhen(commonMapper.toGrpc(when))
+        .setWhen(entityGrpcMapper.toGrpc(when))
         .build();
 
     var result = stub.reserve(cmd);
 
-    return commonMapper.fromGrpc(result.getEntityId());
+    return entityGrpcMapper.fromGrpc(result.getEntityId());
   }
   
   @Override
@@ -77,8 +76,8 @@ class ActionsGrpcFacadeImpl implements ActionsGrpcPortOut {
   @Override
   public boolean update(EntityId entitId, String customerId, String description, int distance, int duration,
                         String servicemanEmail, String servicemanName, LocalDate whenProvided) {
-    var whenProvidedGprc = commonMapper.toGrpc(whenProvided);
-    var entitIdGrpc = commonMapper.toGrpc(entitId);
+    var whenProvidedGprc = entityGrpcMapper.toGrpc(whenProvided);
+    var entitIdGrpc = entityGrpcMapper.toGrpc(entitId);
     var model = TimeEntryModel.newBuilder()
         .setCustomerId(customerId)
         .setDescription(description)
