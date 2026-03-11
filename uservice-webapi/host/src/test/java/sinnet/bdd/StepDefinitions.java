@@ -1,7 +1,6 @@
 package sinnet.bdd;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 
 import java.util.List;
@@ -31,7 +30,6 @@ import sinnet.domain.models.CustomerValue;
 import sinnet.domain.models.Email;
 import sinnet.domain.models.Project;
 import sinnet.domain.models.ProjectId;
-import sinnet.gql.api.CommonMapper;
 import sinnet.gql.models.CustomerInput;
 import sinnet.gql.models.CustomerSecretExInput;
 import sinnet.gql.models.CustomerSecretInput;
@@ -56,9 +54,6 @@ public class StepDefinitions {
 
   @Autowired
   TestRestTemplate restTemplate;
-
-  @Autowired
-  CommonMapper commonMapper;
 
   @Autowired
   TimeProvider timeProvider;

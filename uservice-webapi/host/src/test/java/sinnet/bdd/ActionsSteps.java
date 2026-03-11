@@ -15,7 +15,6 @@ import io.cucumber.java.en.When;
 import onlexnet.sinnet.webapi.test.AppApi;
 import sinnet.app.ports.out.ActionsGrpcPortOut;
 import sinnet.domain.models.TimeEntry;
-import sinnet.gql.api.CommonMapper;
 import sinnet.gql.models.ServiceModelGql;
 import sinnet.gql.models.ServicesSearchResultGql;
 import sinnet.gql.models.SomeEntityGql;
@@ -27,9 +26,6 @@ public class ActionsSteps {
 
   @Autowired
   TestRestTemplate restTemplate;
-
-  @Autowired
-  CommonMapper commonMapper;
 
   String requestorEmail;
   AppApi appApi;

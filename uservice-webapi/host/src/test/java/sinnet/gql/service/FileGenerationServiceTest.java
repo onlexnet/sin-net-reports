@@ -19,17 +19,14 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mapstruct.factory.Mappers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import sinnet.app.ports.out.ActionsGrpcPortOut;
 import sinnet.app.ports.out.CustomersPortOut;
 import sinnet.app.service.FileGenerationService;
 import sinnet.domain.models.TimeEntry;
-import sinnet.gql.api.CommonMapper;
 
 /**
  * Unit tests for FileGenerationService.
@@ -48,9 +45,6 @@ class FileGenerationServiceTest {
   
   @Mock
   private CustomersPortOut customersGrpcFacade;
-
-  @Spy
-  private CommonMapper commonMapper = Mappers.getMapper(CommonMapper.class);
 
   @InjectMocks
   private FileGenerationService fileGenerationService;
