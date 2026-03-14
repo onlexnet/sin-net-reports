@@ -88,11 +88,6 @@
         <version>${mapstruct.version}</version>
       </dependency>
       <dependency>
-          <groupId>de.firehead</groupId>
-          <artifactId>mapstruct-spi-protobuf</artifactId>
-          <version>${mapstruct-spi-protobuf.version}</version>
-      </dependency>
-      <dependency>
         <groupId>org.instancio</groupId>
         <artifactId>instancio-junit</artifactId>
         <version>${instancio-junit.version}</version>
