@@ -6,10 +6,9 @@ import org.springframework.stereotype.Controller;
 import lombok.RequiredArgsConstructor;
 import sinnet.app.flow.request.CustomerReserveCommand;
 import sinnet.app.ports.in.CustomersPortIn;
+import sinnet.gql.models.EntityGql;
 import sinnet.infra.adapters.gql.EntityGqlMapper;
 import sinnet.infra.adapters.grpc.EntityGrpcMapper;
-import sinnet.gql.models.EntityGql;
-import sinnet.grpc.customers.ReserveRequest;
 
 @Controller
 @RequiredArgsConstructor

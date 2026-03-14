@@ -17,6 +17,8 @@ import io.cucumber.java.Before;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import onlexnet.sinnet.webapi.test.AppApi;
+import sinnet.app.flow.request.CustomerRemoveCommand;
+import sinnet.app.flow.request.CustomerReserveCommand;
 import sinnet.app.flow.request.CustomerUpdateCommand;
 import sinnet.app.lib.TimeProvider;
 import sinnet.app.ports.out.CustomersPortOut;
@@ -47,10 +49,10 @@ public class StepDefinitions {
   ProjectsPortOut projects;
 
   @Autowired
-  CustomersPortOut customersGrpc;
+  CustomersPortOut customersPortOut;
 
   @Autowired
-  UsersServicePortOut usersGrpc;
+  UsersServicePortOut userServicePortOut;
 
   @Autowired
   TestRestTemplate restTemplate;
@@ -151,26 +153,26 @@ public class StepDefinitions {
 
   @When("Customer creation request is send to backend")
   public void Customer_creation_request_is_send_to_backend() {
-    var projectId = UUID.randomUUID().toString();
+    var projectId = UUID.randomUUID();
+    var entityId = UUID.randomUUID();
 
     var projectVersion = 1L;
-    var expectedCmd = sinnet.grpc.customers.ReserveRequest.newBuilder()
-        .setProjectId(projectId)
-        .build();
+    var expectedCmd = new CustomerReserveCommand(projectId);
     var expectedResult = sinnet.grpc.customers.ReserveReply.newBuilder()
         .setEntityId(EntityId.newBuilder()
-            .setEntityId(projectId)
+          .setProjectId(projectId.toString())
+            .setEntityId(entityId.toString())
             .setEntityVersion(projectVersion)
             .build())
         .build();
 
     Mockito
-      .when(customersGrpc.reserve(expectedCmd))
+      .when(customersPortOut.reserve(expectedCmd))
       .thenReturn(expectedResult);
 
     reserveValidation = () -> {
-      var reserveCustomerResult = appApi.reserveCustomer(projectId).get();;
-      assertThat(reserveCustomerResult.getEntityId()).isEqualTo(projectId);
+      var reserveCustomerResult = appApi.reserveCustomer(projectId.toString()).get();;
+      assertThat(reserveCustomerResult.getEntityId()).isEqualTo(entityId.toString());
       assertThat(reserveCustomerResult.getEntityVersion()).isEqualTo(projectVersion);
     };
   }
@@ -192,7 +194,7 @@ public class StepDefinitions {
         .build();
 
     Mockito
-      .when(usersGrpc.search(projectId, Email.of(requestorEmail)))
+      .when(userServicePortOut.search(projectId, Email.of(requestorEmail)))
       .thenReturn(reply);
 
     userListValidation = () -> {
@@ -220,7 +222,7 @@ public class StepDefinitions {
 
     var argumentCaptor = ArgumentCaptor.forClass(CustomerUpdateCommand.class);
     Mockito
-      .when(customersGrpc.update(argumentCaptor.capture()))
+      .when(customersPortOut.update(argumentCaptor.capture()))
       .thenReturn(UpdateResult.newBuilder()
         .setEntityId(EntityId.newBuilder().setProjectId(projectIdStr).setEntityId(entityIdStr).setEntityVersion(42L)
           .setProjectId(projectId.toString())
