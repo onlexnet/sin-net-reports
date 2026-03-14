@@ -5,7 +5,6 @@ import org.springframework.stereotype.Controller;
 
 import lombok.RequiredArgsConstructor;
 import sinnet.app.ports.in.CustomersPortIn;
-import sinnet.domain.models.EntityId;
 import sinnet.infra.adapters.gql.EntityGqlMapper;
 import sinnet.infra.adapters.grpc.EntityGrpcMapper;
 import sinnet.gql.models.EntityGql;
@@ -25,12 +24,6 @@ class CustomersMutationReserve {
         .setProjectId(self.projectId().toString())
         .build();
     var result = service.reserve(request);
-    var domainEntityId = entityGrpcMapper.fromGrpc(result.getEntityId());
-
-    var normalizedEntityId = domainEntityId.projectId() == null
-        ? new EntityId(self.projectId(), domainEntityId.id(), domainEntityId.tag())
-        : domainEntityId;
-
-    return entityGqlMapper.toGql(normalizedEntityId);
+    return entityGqlMapper.toGql(entityGrpcMapper.fromGrpc(result.getEntityId()));
   }
 }
