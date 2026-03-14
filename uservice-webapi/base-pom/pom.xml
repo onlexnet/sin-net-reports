@@ -19,6 +19,7 @@
     <nullaway.version>0.12.10</nullaway.version>
     <lombok.version>1.18.42</lombok.version>
     <mapstruct.version>1.6.3</mapstruct.version>
+    <mapstruct-spi-protobuf.version>1.1.0</mapstruct-spi-protobuf.version>
     <jspecify.version>1.0.0</jspecify.version>
     <instancio-junit.version>5.3.0</instancio-junit.version>
   </properties>
@@ -85,6 +86,11 @@
         <groupId>org.mapstruct</groupId>
         <artifactId>mapstruct</artifactId>
         <version>${mapstruct.version}</version>
+      </dependency>
+      <dependency>
+          <groupId>de.firehead</groupId>
+          <artifactId>mapstruct-spi-protobuf</artifactId>
+          <version>${mapstruct-spi-protobuf.version}</version>
       </dependency>
       <dependency>
         <groupId>org.instancio</groupId>
@@ -216,9 +222,14 @@
           <annotationProcessorPaths>
             <path>
               <groupId>org.mapstruct</groupId>
-              <artifactId>mapstruct-processor</artifactId>
+              <artifactId>mapstruct</artifactId>
               <version>${mapstruct.version}</version>
             </path>
+            <dependency>
+                <groupId>de.firehead</groupId>
+                <artifactId>mapstruct-spi-protobuf</artifactId>
+                <version>${mapstruct-spi-protobuf.version}</version>
+            </dependency>
             <path>
               <groupId>org.projectlombok</groupId>
               <artifactId>lombok</artifactId>

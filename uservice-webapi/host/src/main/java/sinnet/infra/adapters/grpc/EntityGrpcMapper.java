@@ -4,13 +4,16 @@ import java.util.UUID;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 
 import sinnet.domain.models.EntityId;
 import sinnet.grpc.customers.LocalDateTime;
 import sinnet.grpc.timeentries.LocalDate;
 
-@Mapper
+@Mapper(
+    unmappedTargetPolicy = ReportingPolicy.ERROR,
+    unmappedSourcePolicy = ReportingPolicy.ERROR)
 public interface EntityGrpcMapper {
 
   EntityGrpcMapper INSTANCE = Mappers.getMapper(EntityGrpcMapper.class);
@@ -25,17 +28,24 @@ public interface EntityGrpcMapper {
   @Mapping(target = "tag", source = "entityVersion")
   EntityId fromGrpc(sinnet.grpc.common.EntityId source);
 
-  @Mapping(target = "year", source = "year")
-  @Mapping(target = "month", source = "monthValue")
-  @Mapping(target = "day", source = "dayOfMonth")
-  LocalDate toGrpc(java.time.LocalDate source);
+  default LocalDate toGrpc(java.time.LocalDate source) {
+    return LocalDate.newBuilder()
+      .setYear(source.getYear())
+      .setMonth(source.getMonthValue())
+      .setDay(source.getDayOfMonth())
+      .build();
+  }
 
-  @Mapping(target = "year", source = "year")
-  @Mapping(target = "month", source = "monthValue")
-  @Mapping(target = "day", source = "dayOfMonth")
-  @Mapping(target = "hour", source = "hour")
-  @Mapping(target = "minute", source = "minute")
-  LocalDateTime toGrpc(java.time.LocalDateTime source);
+  default LocalDateTime toGrpc(java.time.LocalDateTime source) {
+    return LocalDateTime.newBuilder()
+      .setYear(source.getYear())
+      .setMonth(source.getMonthValue())
+      .setDay(source.getDayOfMonth())
+      .setHour(source.getHour())
+      .setMinute(source.getMinute())
+      .setSecond(source.getSecond())
+      .build();
+  }
 
   default java.time.LocalDate fromGrpc(LocalDate source) {
     if (source == null) {

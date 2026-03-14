@@ -96,5 +96,6 @@ class EntityGrpcMapperTest {
     assertThat(result.getDay()).isEqualTo(11);
     assertThat(result.getHour()).isEqualTo(10);
     assertThat(result.getMinute()).isEqualTo(15);
+    assertThat(result.getSecond()).isEqualTo(20);
   }
 }
