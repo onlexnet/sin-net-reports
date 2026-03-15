@@ -3,17 +3,15 @@ package sinnet.app.ports.in;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
-import java.util.function.Function;
 
 import sinnet.domain.models.EntityId;
-import sinnet.gql.models.CustomerEntityGql;
-import sinnet.gql.models.ServiceModelGql;
+import sinnet.domain.models.TimeEntry;
 
 public interface TimeentriesServicePortIn {
-    
-    List<ServiceModelGql> search(UUID projectId, LocalDate from, LocalDate to, Function<String, CustomerEntityGql> customerMapper);
-                                      
-    ServiceModelGql getAction(UUID projectId, UUID entityId, Function<String, CustomerEntityGql> customerMapper);
+
+    List<TimeEntry> search(UUID projectId, LocalDate from, LocalDate to);
+
+    TimeEntry getAction(UUID projectId, UUID entityId);
     
     boolean update(EntityId entityId, String customerId, String description, int distance, int duration,
                  String servicemanEmail, String servicemanName, LocalDate whenProvided);

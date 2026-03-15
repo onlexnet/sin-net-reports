@@ -10,8 +10,10 @@ import lombok.RequiredArgsConstructor;
 import sinnet.app.lib.Functions;
 import sinnet.app.ports.in.CustomersPortIn;
 import sinnet.app.ports.in.TimeentriesServicePortIn;
-import sinnet.infra.adapters.gql.CustomerMapper;
+import sinnet.domain.models.TimeEntry;
+import sinnet.gql.models.CustomerEntityGql;
 import sinnet.gql.models.ServiceModelGql;
+import sinnet.infra.adapters.gql.CustomerMapper;
 
 @Controller
 @RequiredArgsConstructor
@@ -26,11 +28,30 @@ class ActionsQueryGet {
     var projectId = UUID.fromString(self.projectId());
     var actionIdTyped = UUID.fromString(actionId);
 
-    var customerGet = Functions.of((String customerId) -> 
+    var customerGet = Functions.of((String customerId) ->
         customerService.customerGet(self.projectId(), self.primaryEmail(), customerId, customerMapper::toGql));
-    var result = service.getAction(projectId, actionIdTyped, customerGet);
+    var result = service.getAction(projectId, actionIdTyped);
 
-    return result;
+    return toGql(result, customerGet);
+  }
+
+  private ServiceModelGql toGql(TimeEntry model, java.util.function.Function<String, CustomerEntityGql> customerMapper) {
+    var customerId = model.customerId();
+    var customer = customerId == null || customerId.isBlank()
+        ? null
+        : customerMapper.apply(customerId);
+
+    return new ServiceModelGql()
+        .setCustomer(customer)
+        .setDescription(model.description())
+        .setDistance(model.distance())
+        .setDuration(model.duration())
+        .setEntityId(model.entityId().id().toString())
+        .setEntityVersion(model.entityId().tag())
+        .setProjectId(model.entityId().projectId().toString())
+        .setServicemanEmail(model.servicemanEmail())
+        .setServicemanName(model.servicemanName())
+        .setWhenProvided(model.whenProvided());
   }
 }
 
