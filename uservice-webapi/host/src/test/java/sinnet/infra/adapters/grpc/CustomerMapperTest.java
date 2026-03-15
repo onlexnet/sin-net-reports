@@ -12,10 +12,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import sinnet.domain.models.Customer;
 import sinnet.domain.models.CustomerContact;
 import sinnet.domain.models.CustomerEntry;
 import sinnet.domain.models.CustomerSecret;
 import sinnet.domain.models.CustomerSecretEx;
+import sinnet.domain.models.CustomerValue;
 import sinnet.domain.models.EntityId;
 import sinnet.gql.models.EntityGql;
 
@@ -29,17 +31,21 @@ class CustomerMapperTest {
     @Test
     @DisplayName("should map EntityGql with full fields")
     void shouldMapEntityFull() {
+      var projectId = UUID.randomUUID().toString();
+      var entityId = UUID.randomUUID().toString();
       var source = Instancio.of(EntityGql.class)
-          .set(field(EntityGql::getProjectId), "proj-123")
-          .set(field(EntityGql::getEntityId), "ent-456")
+          .set(field(EntityGql::getProjectId), projectId)
+          .set(field(EntityGql::getEntityId), entityId)
           .set(field(EntityGql::getEntityVersion), 42L)
           .create();
 
       var result = CustomerMapper.toGrpc(source);
 
-      assertThat(result.getProjectId()).isEqualTo("proj-123");
-      assertThat(result.getEntityId()).isEqualTo("ent-456");
-      assertThat(result.getEntityVersion()).isEqualTo(42L);
+      assertThat(result).isEqualTo(sinnet.grpc.common.EntityId.newBuilder()
+          .setProjectId(projectId)
+          .setEntityId(entityId)
+          .setEntityVersion(42L)
+          .build());
     }
   }
 
@@ -54,12 +60,14 @@ class CustomerMapperTest {
 
       var result = CustomerMapper.toGrpc(source);
 
-      assertThat(result.getYear()).isEqualTo(2024);
-      assertThat(result.getMonth()).isEqualTo(12);
-      assertThat(result.getDay()).isEqualTo(25);
-      assertThat(result.getHour()).isEqualTo(14);
-      assertThat(result.getMinute()).isEqualTo(30);
-      assertThat(result.getSecond()).isEqualTo(45);
+      assertThat(result).isEqualTo(sinnet.grpc.customers.LocalDateTime.newBuilder()
+          .setYear(2024)
+          .setMonth(12)
+          .setDay(25)
+          .setHour(14)
+          .setMinute(30)
+          .setSecond(45)
+          .build());
     }
 
     @Test
@@ -179,17 +187,16 @@ class CustomerMapperTest {
 
       var result = CustomerMapper.toDomain(grpcModel);
 
-      assertThat(result).isNotNull();
-      assertThat(result.id()).isEqualTo(new EntityId(projectId, entityId, 3L));
-      assertThat(result.value().entry().customerName()).isEqualTo("ACME Clinic");
-      assertThat(result.value().entry().customerCityName()).isEqualTo("Warsaw");
-      assertThat(result.value().entry().operatorEmail()).isEqualTo("op@example.com");
-      assertThat(result.value().secrets()).hasSize(1);
-      assertThat(result.value().secrets().get(0).location()).isEqualTo("DC");
-      assertThat(result.value().secretsEx()).hasSize(1);
-      assertThat(result.value().secretsEx().get(0).entityCode()).isEqualTo("E-01");
-      assertThat(result.value().contacts()).hasSize(1);
-      assertThat(result.value().contacts().get(0).firstName()).isEqualTo("Jan");
+      assertThat(result).isEqualTo(new Customer(
+          new EntityId(projectId, entityId, 3L),
+          new CustomerValue(
+              new CustomerEntry("op@example.com", "", "", 0, "ACME Clinic", "Warsaw", "Main St 1",
+                  false, false, false, false, false, false, false, false, false, false,
+                  false, false, false, false, false, false,
+                  "", false, "", ""),
+              List.of(new CustomerSecret("DC", "admin", "", "", "")),
+              List.of(new CustomerSecretEx("HQ", "", "", "", "E-01", "", "")),
+              List.of(new CustomerContact("Jan", "", "", "jan@example.com")))));
     }
 
     @Test
@@ -216,10 +223,16 @@ class CustomerMapperTest {
 
       var result = CustomerMapper.toDomain(grpcModel);
 
-      assertThat(result.id()).isEqualTo(new EntityId(projectId, entityId, 0L));
-      assertThat(result.value().secrets()).isEmpty();
-      assertThat(result.value().secretsEx()).isEmpty();
-      assertThat(result.value().contacts()).isEmpty();
+      assertThat(result).isEqualTo(new Customer(
+          new EntityId(projectId, entityId, 0L),
+          new CustomerValue(
+              new CustomerEntry("", "", "", 0, "Minimal", "", "",
+                  false, false, false, false, false, false, false, false, false, false,
+                  false, false, false, false, false, false,
+                  "", false, "", ""),
+              List.of(),
+              List.of(),
+              List.of())));
     }
 
     @Test
