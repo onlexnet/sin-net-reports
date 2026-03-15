@@ -1,15 +1,11 @@
 package sinnet.infra.adapters.gql;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 
 import io.vavr.collection.Iterator;
-import io.vavr.control.Option;
 import sinnet.app.flow.request.CustomerGetResult;
 import sinnet.domain.models.Customer;
 import sinnet.domain.models.CustomerContact;
@@ -27,7 +23,6 @@ import sinnet.gql.models.CustomerSecretGql;
 import sinnet.gql.models.CustomerSecretInput;
 import sinnet.gql.models.EntityGql;
 import sinnet.gql.models.SomeEntityGql;
-import sinnet.grpc.common.EntityId;
 
 @Mapper(
     unmappedTargetPolicy = ReportingPolicy.ERROR,
@@ -35,15 +30,6 @@ import sinnet.grpc.common.EntityId;
 public interface CustomerMapper {
 
   CustomerMapper INSTANCE = Mappers.getMapper(CustomerMapper.class);
-
-  DateTimeFormatter TIMESTAMP_FORMATTER = DateTimeFormatter.ISO_DATE_TIME;
-
-  default LocalDateTime map(sinnet.grpc.customers.LocalDateTime it) {
-    if (it == null || it.getMonth() == 0) {
-      return null;
-    }
-    return LocalDateTime.of(it.getYear(), it.getMonth(), it.getDay(), it.getHour(), it.getMinute(), it.getSecond());
-  }
 
   @Mapping(target = "id", source = "entityId")
   @Mapping(target = "tag", source = "entityVersion")
@@ -75,16 +61,6 @@ public interface CustomerMapper {
 
   CustomerContact toDomain(CustomerContactInputGql item);
 
-  default SomeEntityGql toGql(EntityId id) {
-    if (id == null) {
-      return null;
-    }
-    return new SomeEntityGql()
-        .setEntityId(id.getEntityId())
-        .setEntityVersion(id.getEntityVersion())
-        .setProjectId(id.getProjectId());
-  }
-
   default SomeEntityGql toGql(sinnet.domain.models.EntityId id) {
     if (id == null) {
       return null;
@@ -93,18 +69,6 @@ public interface CustomerMapper {
         .setEntityId(id.id().toString())
         .setEntityVersion(id.tag())
         .setProjectId(id.projectId().toString());
-  }
-
-  default CustomerContactGql toGql(sinnet.grpc.customers.CustomerContact it) {
-    if (it == null) {
-      return null;
-    }
-    var result = new CustomerContactGql();
-    result.setFirstName(it.getFirstName());
-    result.setLastName(it.getLastName());
-    result.setPhoneNo(it.getPhoneNo());
-    result.setEmail(it.getEmail());
-    return result;
   }
 
   default CustomerContactGql toGql(CustomerContact it) {
@@ -116,23 +80,6 @@ public interface CustomerMapper {
     result.setLastName(it.lastName());
     result.setPhoneNo(it.phoneNo());
     result.setEmail(it.email());
-    return result;
-  }
-
-  default CustomerSecretExGql toGql(sinnet.grpc.customers.CustomerSecretEx it) {
-    if (it == null) {
-      return null;
-    }
-    var result = new CustomerSecretExGql();
-    result.setLocation(it.getLocation());
-    result.setUsername(it.getUsername());
-    result.setPassword(it.getPassword());
-    result.setEntityCode(it.getEntityCode());
-    result.setEntityName(it.getEntityName());
-    result.setChangedWhen(Option.of(map(it.getChangedWhen())).map(TIMESTAMP_FORMATTER::format).getOrElse("?"));
-    result.setChangedWho(it.getChangedWho());
-    result.setOtpSecret(it.getOtpSecret());
-    result.setOtpRecoveryKeys(it.getOtpRecoveryKeys());
     return result;
   }
 
@@ -150,21 +97,6 @@ public interface CustomerMapper {
     result.setChangedWho("?");
     result.setOtpSecret(it.otpSecret());
     result.setOtpRecoveryKeys(it.otpRecoveryKeys());
-    return result;
-  }
-
-  default CustomerSecretGql toGql(sinnet.grpc.customers.CustomerSecret it) {
-    if (it == null) {
-      return null;
-    }
-    var result = new CustomerSecretGql();
-    result.setLocation(it.getLocation());
-    result.setUsername(it.getUsername());
-    result.setPassword(it.getPassword());
-    result.setChangedWhen(Option.of(map(it.getChangedWhen())).map(TIMESTAMP_FORMATTER::format).getOrElse("?"));
-    result.setChangedWho(it.getChangedWho());
-    result.setOtpSecret(it.getOtpSecret());
-    result.setOtpRecoveryKeys(it.getOtpRecoveryKeys());
     return result;
   }
 
@@ -207,54 +139,6 @@ public interface CustomerMapper {
     result.setSecretsEx(Iterator.ofAll(item.value().secretsEx()).map(this::toGql).toJavaArray(CustomerSecretExGql[]::new));
     result.setContacts(Iterator.ofAll(item.value().contacts()).map(this::toGql).toJavaArray(CustomerContactGql[]::new));
     return result;
-  }
-
-  default CustomerEntityGql toGql(sinnet.grpc.customers.CustomerModel item) {
-    if (item == null) {
-      return null;
-    }
-    var result = new CustomerEntityGql();
-    result.setId(toGql(item.getId()));
-    result.setData(toGql(item.getValue()));
-    result.setSecrets(Iterator.ofAll(item.getSecretsList()).map(this::toGql).toJavaArray(CustomerSecretGql[]::new));
-    result.setSecretsEx(Iterator.ofAll(item.getSecretExList()).map(this::toGql).toJavaArray(CustomerSecretExGql[]::new));
-    result.setContacts(Iterator.ofAll(item.getContactsList()).map(this::toGql).toJavaArray(CustomerContactGql[]::new));
-    return result;
-  }
-
-  default CustomerModelGql toGql(sinnet.grpc.customers.CustomerValue item) {
-    if (item == null) {
-      return null;
-    }
-    var it = new CustomerModelGql();
-    it.setOperatorEmail(item.getOperatorEmail());
-    it.setBillingModel(item.getBillingModel());
-    it.setSupportStatus(item.getSupportStatus());
-    it.setDistance(item.getDistance());
-    it.setCustomerName(item.getCustomerName());
-    it.setCustomerCityName(item.getCustomerCityName());
-    it.setCustomerAddress(item.getCustomerAddress());
-    it.setNfzUmowa(item.getNfzUmowa());
-    it.setNfzMaFilie(item.getNfzMaFilie());
-    it.setNfzLekarz(item.getNfzLekarz());
-    it.setNfzPolozna(item.getNfzPolozna());
-    it.setNfzPielegniarkaSrodowiskowa(item.getNfzPielegniarkaSrodowiskowa());
-    it.setNfzMedycynaSzkolna(item.getNfzMedycynaSzkolna());
-    it.setNfzTransportSanitarny(item.getNfzTransportSanitarny());
-    it.setNfzNocnaPomocLekarska(item.getNfzNocnaPomocLekarska());
-    it.setNfzAmbulatoryjnaOpiekaSpecjalistyczna(item.getNfzAmbulatoryjnaOpiekaSpecjalistyczna());
-    it.setNfzRehabilitacja(item.getNfzRehabilitacja());
-    it.setNfzStomatologia(item.getNfzStomatologia());
-    it.setNfzPsychiatria(item.getNfzPsychiatria());
-    it.setNfzSzpitalnictwo(item.getNfzSzpitalnictwo());
-    it.setNfzProgramyProfilaktyczne(item.getNfzProgramyProfilaktyczne());
-    it.setNfzZaopatrzenieOrtopedyczne(item.getNfzZaopatrzenieOrtopedyczne());
-    it.setNfzOpiekaDlugoterminowa(item.getNfzOpiekaDlugoterminowa());
-    it.setNfzNotatki(item.getNfzNotatki());
-    it.setKomercjaJest(item.getKomercjaJest());
-    it.setKomercjaNotatki(item.getKomercjaNotatki());
-    it.setDaneTechniczne(item.getDaneTechniczne());
-    return it;
   }
 
   default CustomerModelGql toGql(CustomerValue item) {
