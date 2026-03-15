@@ -41,13 +41,13 @@ class Report3Flow implements Report3PortIn {
   // TODO move aggregation closer to data service
   ReportRequest asReportRequest(CustomerListResult reply) {
     return List.ofAll(reply.customers())
-      .filter(it -> StringUtils.isNotBlank(it.getValue().getOperatorEmail()))
+      .filter(it -> StringUtils.isNotBlank(it.value().entry().operatorEmail()))
       .map(it -> Tuple.of(
-          it.getValue().getOperatorEmail(),
+          it.value().entry().operatorEmail(),
           PropsBuilder.build(CustomerDetails.newBuilder())
-            .set(b -> b::setName, it.getValue().getCustomerName())
-            .set(b -> b::setAddress, it.getValue().getCustomerAddress())
-            .set(b -> b::setCity, it.getValue().getCustomerCityName())
+            .set(b -> b::setName, it.value().entry().customerName())
+            .set(b -> b::setAddress, it.value().entry().customerAddress())
+            .set(b -> b::setCity, it.value().entry().customerCityName())
             .done().build()))
       .foldLeft(
         HashMap.<String, List<CustomerDetails>>empty(),

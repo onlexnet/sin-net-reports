@@ -43,7 +43,8 @@ class CustomersGateway implements CustomersPortOut {
         .setUserToken(Map.apply.map(query.userToken()))
         .build();
     var reply = stub.list(request);
-    return new CustomerListResult(reply.getCustomersList());
+    var customers = reply.getCustomersList().stream().map(CustomerMapper::toDomain).toList();
+    return new CustomerListResult(customers);
   }
 
   @Override
