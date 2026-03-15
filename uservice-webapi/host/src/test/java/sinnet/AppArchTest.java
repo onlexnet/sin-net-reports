@@ -20,7 +20,6 @@ import com.tngtech.archunit.library.Architectures.LayeredArchitecture;
 import com.tngtech.archunit.library.GeneralCodingRules;
 
 @AnalyzeClasses(packages = "sinnet", importOptions = ImportOption.DoNotIncludeTests.class)
-@DisabledIfSystemProperty(named = "CI", matches = "true")
 public class AppArchTest {
 
   @ArchTest
