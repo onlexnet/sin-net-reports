@@ -23,7 +23,6 @@ class ActionsQuerySearch {
   private final TimeentriesServicePortIn service;
   private final CustomersPortIn customerService;
   private final CustomerMapper customerMapper = CustomerMapper.INSTANCE;
-  private final CommonMapper commonMapper;
 
   @SchemaMapping
   ServicesSearchResultGql search(ActionsQuery self, @Argument ServiceFilterInputGql filter) {
@@ -39,7 +38,7 @@ class ActionsQuerySearch {
     var customerGet = Functions.of((String customerId) -> customerList.stream()
         .filter(it -> Objects.equals(customerId, it.getId().getEntityId())).findAny().orElse(null));
 
-    var result = service.search(projectId, filter.getFrom(), filter.getTo(), customerGet, commonMapper);
+    var result = service.search(projectId, filter.getFrom(), filter.getTo(), customerGet);
     return new ServicesSearchResultGql()
         .setItems(result);
   }

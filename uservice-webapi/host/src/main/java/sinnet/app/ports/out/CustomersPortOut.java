@@ -7,19 +7,19 @@ import sinnet.app.flow.request.CustomerGetQuery;
 import sinnet.app.flow.request.CustomerGetResult;
 import sinnet.app.flow.request.CustomerListQuery;
 import sinnet.app.flow.request.CustomerListResult;
+import sinnet.app.flow.request.CustomerReserveCommand;
 import sinnet.app.flow.request.CustomerUpdateCommand;
 import sinnet.domain.models.UserToken;
 import sinnet.gql.models.CustomerEntityGql;
 import sinnet.grpc.customers.RemoveReply;
 import sinnet.grpc.customers.ReserveReply;
-import sinnet.grpc.customers.ReserveRequest;
 import sinnet.grpc.customers.UpdateResult;
 
 public interface CustomersPortOut {
     
     CustomerGetResult get(CustomerGetQuery query);
     
-    ReserveReply reserve(ReserveRequest request);
+    ReserveReply reserve(CustomerReserveCommand request);
     
     CustomerListResult list(CustomerListQuery query);
     

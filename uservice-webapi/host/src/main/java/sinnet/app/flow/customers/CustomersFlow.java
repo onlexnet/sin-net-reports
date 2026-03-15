@@ -11,6 +11,7 @@ import sinnet.app.flow.request.CustomerGetResult;
 import sinnet.app.flow.request.CustomerListQuery;
 import sinnet.app.flow.request.CustomerListResult;
 import sinnet.app.flow.request.CustomerRemoveCommand;
+import sinnet.app.flow.request.CustomerReserveCommand;
 import sinnet.app.flow.request.CustomerUpdateCommand;
 import sinnet.app.ports.in.CustomersPortIn;
 import sinnet.app.ports.out.CustomersPortOut;
@@ -38,8 +39,8 @@ class CustomersFlow implements CustomersPortIn {
     }
 
     @Override
-    public ReserveReply reserve(ReserveRequest request) {
-        return customersOutPort.reserve(request);
+    public ReserveReply reserve(CustomerReserveCommand cmd) {
+        return customersOutPort.reserve(cmd);
     }
 
     @Override

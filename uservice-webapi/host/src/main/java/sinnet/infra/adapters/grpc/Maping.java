@@ -2,18 +2,14 @@ package sinnet.infra.adapters.grpc;
 
 import org.springframework.stereotype.Component;
 
-import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
-import sinnet.gql.api.CommonMapper;
 import sinnet.gql.models.CustomerEntityGql;
 import sinnet.gql.models.ServiceModelGql;
 import sinnet.grpc.timeentries.TimeEntryModel;
 
 @Component
-@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 class Maping {
-  
-  private final CommonMapper commonMapper;
+
+  private final EntityGrpcMapper entityGrpcMapper = EntityGrpcMapper.INSTANCE;
 
   ServiceModelGql map(TimeEntryModel model, CustomerEntityGql customer) {
     return new ServiceModelGql()
@@ -26,7 +22,7 @@ class Maping {
         .setProjectId(model.getEntityId().getProjectId())
         .setServicemanEmail(model.getServicemanEmail())
         .setServicemanName(model.getServicemanName())
-        .setWhenProvided(commonMapper.fromGrpc(model.getWhenProvided()));
+        .setWhenProvided(entityGrpcMapper.fromGrpc(model.getWhenProvided()));
   }
 
 

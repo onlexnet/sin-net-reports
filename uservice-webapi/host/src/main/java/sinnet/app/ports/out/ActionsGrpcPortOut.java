@@ -8,7 +8,6 @@ import java.util.function.Function;
 import io.micrometer.common.util.StringUtils;
 import sinnet.domain.models.EntityId;
 import sinnet.domain.models.TimeEntry;
-import sinnet.gql.api.CommonMapper;
 import sinnet.gql.models.CustomerEntityGql;
 import sinnet.gql.models.ServiceModelGql;
 
@@ -31,21 +30,18 @@ public interface ActionsGrpcPortOut {
   /** Fixme. */
   TimeEntry getActionInternal(UUID projectId, UUID entityId);
 
-  default ServiceModelGql getAction(UUID projectId, UUID entityId, Function<String, CustomerEntityGql> customerMapper,
-                                   CommonMapper commonMapper) {
+  default ServiceModelGql getAction(UUID projectId, UUID entityId, Function<String, CustomerEntityGql> customerMapper) {
     var dto =  getActionInternal(projectId, entityId);
-    return mapWithMapper(dto, customerMapper, commonMapper);
+    return mapWithMapper(dto, customerMapper);
   }
   
   /** Returns list of actions for requested project, limited result from-to range. */
-  default List<ServiceModelGql> search(UUID projectId, LocalDate from, LocalDate to, Function<String, CustomerEntityGql> customerMapper,
-                                      CommonMapper commonMapper) {
-    return searchInternal(projectId, from, to).stream().map(it -> mapWithMapper(it, customerMapper, commonMapper)).toList();
+  default List<ServiceModelGql> search(UUID projectId, LocalDate from, LocalDate to, Function<String, CustomerEntityGql> customerMapper) {
+    return searchInternal(projectId, from, to).stream().map(it -> mapWithMapper(it, customerMapper)).toList();
   }
 
-  /** Internal mapping - requires CommonMapper instance. */
-  default ServiceModelGql mapWithMapper(TimeEntry model, Function<String, CustomerEntityGql> customerMapper,
-                                       CommonMapper commonMapper) {
+  /** Internal mapping. */
+  default ServiceModelGql mapWithMapper(TimeEntry model, Function<String, CustomerEntityGql> customerMapper) {
     var customerId = model.customerId();
     var customer = StringUtils.isEmpty(customerId)
         ? null

@@ -10,6 +10,7 @@ import sinnet.app.flow.request.CustomerGetQuery;
 import sinnet.app.flow.request.CustomerGetResult;
 import sinnet.app.flow.request.CustomerListQuery;
 import sinnet.app.flow.request.CustomerListResult;
+import sinnet.app.flow.request.CustomerReserveCommand;
 import sinnet.app.flow.request.CustomerUpdateCommand;
 import sinnet.app.ports.out.CustomersPortOut;
 import sinnet.gql.models.CustomerEntityGql;
@@ -59,7 +60,10 @@ class CustomersGateway implements CustomersPortOut {
   }
 
   @Override
-  public ReserveReply reserve(ReserveRequest request) {
+  public ReserveReply reserve(CustomerReserveCommand cmd) {
+    var request = ReserveRequest.newBuilder()
+        .setProjectId(cmd.projectId().toString())
+        .build();
     return stub.reserve(request);
   }
 

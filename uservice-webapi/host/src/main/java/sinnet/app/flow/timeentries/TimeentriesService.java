@@ -11,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import sinnet.app.ports.in.TimeentriesServicePortIn;
 import sinnet.app.ports.out.ActionsGrpcPortOut;
 import sinnet.domain.models.EntityId;
-import sinnet.gql.api.CommonMapper;
 import sinnet.gql.models.CustomerEntityGql;
 import sinnet.gql.models.ServiceModelGql;
 
@@ -38,15 +37,14 @@ class TimeentriesService implements TimeentriesServicePortIn {
     }
 
     @Override
-    public ServiceModelGql getAction(UUID projectId, UUID entityId, Function<String, CustomerEntityGql> customerMapper,
-            CommonMapper commonMapper) {
-        return timeentriesGateway.getAction(projectId, entityId, customerMapper, commonMapper);
+    public ServiceModelGql getAction(UUID projectId, UUID entityId, Function<String, CustomerEntityGql> customerMapper) {
+        return timeentriesGateway.getAction(projectId, entityId, customerMapper);
     }
 
     @Override
     public List<ServiceModelGql> search(UUID projectId, LocalDate from, LocalDate to,
-            Function<String, CustomerEntityGql> customerMapper, CommonMapper commonMapper) {
-        return timeentriesGateway.search(projectId, from, to, customerMapper, commonMapper);
+            Function<String, CustomerEntityGql> customerMapper) {
+        return timeentriesGateway.search(projectId, from, to, customerMapper);
     }
 
 }
