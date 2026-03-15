@@ -202,10 +202,10 @@ public interface CustomerMapper {
     }
     var result = new CustomerEntityGql();
     result.setId(toGql(item.id()));
-    result.setData(toGql(item.entry()));
-    result.setSecrets(Iterator.ofAll(item.secrets()).map(this::toGql).toJavaArray(CustomerSecretGql[]::new));
-    result.setSecretsEx(Iterator.ofAll(item.secretsEx()).map(this::toGql).toJavaArray(CustomerSecretExGql[]::new));
-    result.setContacts(Iterator.ofAll(item.contacts()).map(this::toGql).toJavaArray(CustomerContactGql[]::new));
+    result.setData(toGql(item.value().entry()));
+    result.setSecrets(Iterator.ofAll(item.value().secrets()).map(this::toGql).toJavaArray(CustomerSecretGql[]::new));
+    result.setSecretsEx(Iterator.ofAll(item.value().secretsEx()).map(this::toGql).toJavaArray(CustomerSecretExGql[]::new));
+    result.setContacts(Iterator.ofAll(item.value().contacts()).map(this::toGql).toJavaArray(CustomerContactGql[]::new));
     return result;
   }
 

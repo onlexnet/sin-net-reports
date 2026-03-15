@@ -24,10 +24,7 @@ public interface CustomerMapper {
             UUID.fromString(item.getId().getProjectId()),
             UUID.fromString(item.getId().getEntityId()),
             item.getId().getEntityVersion()),
-        toEntry(item.getValue()),
-        item.getSecretsList().stream().map(CustomerMapper::toDomain).toList(),
-        item.getSecretExList().stream().map(CustomerMapper::toDomain).toList(),
-        item.getContactsList().stream().map(CustomerMapper::toDomain).toList());
+        toDomain(item.getValue(), item.getSecretsList(), item.getSecretExList(), item.getContactsList()));
   }
 
   static Customer toDomain(sinnet.grpc.customers.CustomerModel item) {
