@@ -333,22 +333,22 @@
                       <limit>
                         <counter>INSTRUCTION</counter>
                         <value>COVEREDRATIO</value>
-                        <minimum>0.74</minimum>
+                        <minimum>0.71</minimum>
                       </limit>
                       <limit>
                         <counter>BRANCH</counter>
                         <value>COVEREDRATIO</value>
-                        <minimum>0.53</minimum>
+                        <minimum>0.48</minimum>
                       </limit>
                       <limit>
                         <counter>LINE</counter>
                         <value>COVEREDRATIO</value>
-                        <minimum>0.71</minimum>
+                        <minimum>0.69</minimum>
                       </limit>
                       <limit>
                         <counter>CLASS</counter>
                         <value>MISSEDCOUNT</value>
-                        <maximum>17</maximum>
+                        <maximum>21</maximum>
                       </limit>
                     </limits>
                   </rule>

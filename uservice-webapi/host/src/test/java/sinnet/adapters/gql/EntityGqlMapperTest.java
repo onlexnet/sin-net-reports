@@ -7,9 +7,9 @@ import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import sinnet.adapters.gql.EntityGqlMapper;
 import sinnet.domain.models.EntityId;
 import sinnet.gql.models.EntityGql;
-import sinnet.infra.adapters.gql.EntityGqlMapper;
 
 @DisplayName("EntityGqlMapper Tests")
 class EntityGqlMapperTest {

@@ -9,6 +9,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import sinnet.adapters.gql.CustomerMapper;
 import sinnet.app.flow.request.CustomerGetResult;
 import sinnet.domain.models.CustomerContact;
 import sinnet.domain.models.CustomerEntry;
@@ -20,7 +21,6 @@ import sinnet.gql.models.CustomerInput;
 import sinnet.gql.models.CustomerSecretExInput;
 import sinnet.gql.models.CustomerSecretInput;
 import sinnet.gql.models.EntityGql;
-import sinnet.infra.adapters.gql.CustomerMapper;
 
 @DisplayName("CustomerMapper (gql adapter) tests")
 class CustomerMapperTest {

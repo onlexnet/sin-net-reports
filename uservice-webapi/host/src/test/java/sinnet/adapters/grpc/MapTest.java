@@ -6,9 +6,9 @@ import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
 
+import sinnet.adapters.grpc.Map;
 import sinnet.domain.models.EntityId;
 import sinnet.domain.models.UserToken;
-import sinnet.infra.adapters.grpc.Map;
 
 class MapTest {
 
