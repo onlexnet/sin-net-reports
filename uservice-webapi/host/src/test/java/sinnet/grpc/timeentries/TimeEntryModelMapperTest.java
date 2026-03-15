@@ -6,9 +6,9 @@ import java.util.UUID;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import sinnet.adapters.grpc.TimeEntryModelMapper;
 import sinnet.domain.models.EntityId;
 import sinnet.domain.models.TimeEntry;
+import sinnet.infra.adapters.grpc.TimeEntryModelMapper;
 
 public class TimeEntryModelMapperTest {
     

@@ -6,16 +6,14 @@
     "configurations": [
         {
             "type": "java",
-            "name": "Launch Program with Dapr",
+            "name": "Launch Program",
             "request": "launch",
             "mainClass": "sinnet.Program",
             "projectName": "uservice-webapi-host",
             "env": {
                 "DAPR_GRPC_PORT": 11019,
             },
-            "vmArgs": "-Drevision=0.0.0-LOCAL -XX:+UnlockCommercialFeatures -XX:FlightRecorder -XX:StartFlightRecording=duration=200s,filename=$HOME/flight.jfr",
-            "preLaunchTask": "dapr-debug",
-            "postDebugTask": "dapr-down",
+            "vmArgs": "-Drevision=0.0.0-LOCAL -XX:+UnlockCommercialFeatures -XX:FlightRecorder -XX:StartFlightRecording=duration=200s,filename=$HOME/flight.jfr"
         }
     ]
 }

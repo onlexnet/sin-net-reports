@@ -33,7 +33,7 @@ public class AppArchTest {
 
   static LayeredArchitecture layers = Architectures.layeredArchitecture()
           .consideringAllDependencies()
-          .layer("Adapters").definedBy("sinnet.adapters..")
+          .layer("Adapters").definedBy("sinnet.infra.adapters..")
           .layer("PortsIn").definedBy("sinnet.app.ports.in..")
           .layer("PortsOut").definedBy(ROOT_PACKAGE_PORTS_OUT)
           .layer("Domain").definedBy(ROOT_PACKAGE_DOMAIN)
@@ -42,9 +42,9 @@ public class AppArchTest {
           .layer("AppFlow").definedBy("sinnet.app.flow..")
           .layer("AppServices").definedBy("sinnet.app.service..")
           .layer("grpc.models").definedBy("sinnet.grpc..")
-          .layer("grpc.adapters").definedBy("sinnet.adapters.grpc..")
+          .layer("grpc.adapters").definedBy("sinnet.infra.adapters.grpc..")
           .layer("gql.models").definedBy("sinnet.gql..")
-          .layer("gql.adapters").definedBy("sinnet.adapters.gql..");
+          .layer("gql.adapters").definedBy("sinnet.infra.adapters.gql..");
 
 
   // Classes should not access System.in , System.out or System.err

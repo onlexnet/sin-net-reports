@@ -8,6 +8,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @DisplayName("CustomerMapper Tests")
 class CustomerMapperTest {
 
-  private final sinnet.adapters.gql.CustomerMapper mapper = sinnet.adapters.gql.CustomerMapper.INSTANCE;
+  private final sinnet.infra.adapters.gql.CustomerMapper mapper = sinnet.infra.adapters.gql.CustomerMapper.INSTANCE;
 
 }
