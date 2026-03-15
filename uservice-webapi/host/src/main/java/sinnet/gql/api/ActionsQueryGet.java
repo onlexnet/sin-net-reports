@@ -29,7 +29,7 @@ class ActionsQueryGet {
     var actionIdTyped = UUID.fromString(actionId);
 
     var customerGet = Functions.of((String customerId) ->
-        customerService.customerGet(self.projectId(), self.primaryEmail(), customerId, customerMapper::toGql));
+        customerMapper.toGql(customerService.customerGet(self.projectId(), self.primaryEmail(), customerId)));
     var result = service.getAction(projectId, actionIdTyped);
 
     return toGql(result, customerGet);
