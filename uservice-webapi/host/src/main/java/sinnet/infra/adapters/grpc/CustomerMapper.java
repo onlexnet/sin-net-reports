@@ -1,15 +1,108 @@
 package sinnet.infra.adapters.grpc;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
+import sinnet.domain.models.Customer;
 import sinnet.domain.models.CustomerContact;
 import sinnet.domain.models.CustomerEntry;
 import sinnet.domain.models.CustomerSecret;
+import sinnet.domain.models.CustomerValue;
 import sinnet.gql.models.EntityGql;
 import sinnet.gql.utils.PropsBuilder;
 import sinnet.grpc.common.EntityId;
 
 public interface CustomerMapper {
+
+  static Customer toDomain(sinnet.grpc.customers.CustomerModel item) {
+    if (item == null) {
+      return null;
+    }
+    return new Customer(
+        new sinnet.domain.models.EntityId(
+            UUID.fromString(item.getId().getProjectId()),
+            UUID.fromString(item.getId().getEntityId()),
+            item.getId().getEntityVersion()),
+        toDomain(item.getValue(), item.getSecretsList(), item.getSecretExList(), item.getContactsList()));
+  }
+
+  static CustomerValue toDomain(sinnet.grpc.customers.CustomerValue item,
+                                java.util.List<sinnet.grpc.customers.CustomerSecret> secrets,
+                                java.util.List<sinnet.grpc.customers.CustomerSecretEx> secretsEx,
+                                java.util.List<sinnet.grpc.customers.CustomerContact> contacts) {
+    if (item == null) {
+      return null;
+    }
+    return new CustomerValue(
+        new CustomerEntry(
+            item.getOperatorEmail(),
+            item.getBillingModel(),
+            item.getSupportStatus(),
+            item.getDistance(),
+            item.getCustomerName(),
+            item.getCustomerCityName(),
+            item.getCustomerAddress(),
+            item.getNfzUmowa(),
+            item.getNfzMaFilie(),
+            item.getNfzLekarz(),
+            item.getNfzPolozna(),
+            item.getNfzPielegniarkaSrodowiskowa(),
+            item.getNfzMedycynaSzkolna(),
+            item.getNfzTransportSanitarny(),
+            item.getNfzNocnaPomocLekarska(),
+            item.getNfzAmbulatoryjnaOpiekaSpecjalistyczna(),
+            item.getNfzRehabilitacja(),
+            item.getNfzStomatologia(),
+            item.getNfzPsychiatria(),
+            item.getNfzSzpitalnictwo(),
+            item.getNfzProgramyProfilaktyczne(),
+            item.getNfzZaopatrzenieOrtopedyczne(),
+            item.getNfzOpiekaDlugoterminowa(),
+            item.getNfzNotatki(),
+            item.getKomercjaJest(),
+            item.getKomercjaNotatki(),
+            item.getDaneTechniczne()),
+        secrets.stream().map(CustomerMapper::toDomain).toList(),
+        secretsEx.stream().map(CustomerMapper::toDomain).toList(),
+        contacts.stream().map(CustomerMapper::toDomain).toList());
+  }
+
+  static sinnet.domain.models.CustomerSecretEx toDomain(sinnet.grpc.customers.CustomerSecretEx it) {
+    if (it == null) {
+      return null;
+    }
+    return new sinnet.domain.models.CustomerSecretEx(
+        it.getLocation(),
+        it.getUsername(),
+        it.getPassword(),
+        it.getEntityName(),
+        it.getEntityCode(),
+        it.getOtpSecret(),
+        it.getOtpRecoveryKeys());
+  }
+
+  static CustomerSecret toDomain(sinnet.grpc.customers.CustomerSecret it) {
+    if (it == null) {
+      return null;
+    }
+    return new CustomerSecret(
+        it.getLocation(),
+        it.getUsername(),
+        it.getPassword(),
+        it.getOtpSecret(),
+        it.getOtpRecoveryKeys());
+  }
+
+  static CustomerContact toDomain(sinnet.grpc.customers.CustomerContact it) {
+    if (it == null) {
+      return null;
+    }
+    return new CustomerContact(
+        it.getFirstName(),
+        it.getLastName(),
+        it.getPhoneNo(),
+        it.getEmail());
+  }
 
   static EntityId toGrpc(EntityGql item) {
     return EntityId.newBuilder()

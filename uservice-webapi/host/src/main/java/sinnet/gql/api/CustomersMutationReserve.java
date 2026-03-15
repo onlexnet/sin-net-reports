@@ -8,20 +8,18 @@ import sinnet.app.flow.request.CustomerReserveCommand;
 import sinnet.app.ports.in.CustomersPortIn;
 import sinnet.gql.models.EntityGql;
 import sinnet.infra.adapters.gql.EntityGqlMapper;
-import sinnet.infra.adapters.grpc.EntityGrpcMapper;
 
 @Controller
 @RequiredArgsConstructor
 class CustomersMutationReserve {
 
   private final CustomersPortIn service;
-  private final EntityGrpcMapper entityGrpcMapper = EntityGrpcMapper.INSTANCE;
   private final EntityGqlMapper entityGqlMapper = EntityGqlMapper.INSTANCE;
 
   @SchemaMapping
   public EntityGql reserve(CustomersMutation self) {
     var cmd = new CustomerReserveCommand(self.projectId());
     var result = service.reserve(cmd);
-    return entityGqlMapper.toGql(entityGrpcMapper.fromGrpc(result.getEntityId()));
+    return entityGqlMapper.toGql(result.entityId());
   }
 }

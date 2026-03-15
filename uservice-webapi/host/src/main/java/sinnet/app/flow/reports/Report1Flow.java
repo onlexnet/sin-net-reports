@@ -75,10 +75,10 @@ public class Report1Flow implements Report1PortIn {
     // var authentication = (AuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
     // var primaryEmail = authentication.getPrincipal();
     var reply = customersClient.customerList(projectId, "ignored@owner", it -> new CustomerModel(
-        it.getId().getEntityId(), 
-        it.getValue().getCustomerName(),
-        it.getValue().getCustomerCityName(),
-        it.getValue().getCustomerAddress()));
+      it.id().id().toString(), 
+      it.value().entry().customerName(),
+      it.value().entry().customerCityName(),
+      it.value().entry().customerAddress()));
     return reply;
   }
 

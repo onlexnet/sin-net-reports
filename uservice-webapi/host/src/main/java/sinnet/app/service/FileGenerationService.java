@@ -118,8 +118,8 @@ public class FileGenerationService {
     
     return customers.stream()
         .collect(Collectors.toMap(
-            customer -> customer.getId().getEntityId(),
-            customer -> customer.getValue().getCustomerName(),
+        customer -> customer.id().id().toString(),
+        customer -> customer.value().entry().customerName(),
             (existing, replacement) -> existing,
             HashMap::new
         ));

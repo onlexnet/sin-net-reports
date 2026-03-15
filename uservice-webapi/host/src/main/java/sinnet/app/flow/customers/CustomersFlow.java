@@ -12,14 +12,13 @@ import sinnet.app.flow.request.CustomerListQuery;
 import sinnet.app.flow.request.CustomerListResult;
 import sinnet.app.flow.request.CustomerRemoveCommand;
 import sinnet.app.flow.request.CustomerReserveCommand;
+import sinnet.app.flow.request.CustomerReserveResult;
 import sinnet.app.flow.request.CustomerUpdateCommand;
 import sinnet.app.ports.in.CustomersPortIn;
 import sinnet.app.ports.out.CustomersPortOut;
+import sinnet.domain.models.Customer;
 import sinnet.gql.models.CustomerEntityGql;
-import sinnet.grpc.customers.CustomerModel;
 import sinnet.grpc.customers.RemoveReply;
-import sinnet.grpc.customers.ReserveReply;
-import sinnet.grpc.customers.ReserveRequest;
 import sinnet.grpc.customers.UpdateResult;
 
 @Component
@@ -29,7 +28,7 @@ class CustomersFlow implements CustomersPortIn {
     private final CustomersPortOut customersOutPort;
 
     @Override
-    public <T> List<T> customerList(String projectId, String requestorEmail, Function<CustomerModel, T> mapper) {
+    public <T> List<T> customerList(String projectId, String requestorEmail, Function<Customer, T> mapper) {
         return customersOutPort.customerList(projectId, requestorEmail, mapper);
     }
 
@@ -39,7 +38,7 @@ class CustomersFlow implements CustomersPortIn {
     }
 
     @Override
-    public ReserveReply reserve(CustomerReserveCommand cmd) {
+    public CustomerReserveResult reserve(CustomerReserveCommand cmd) {
         return customersOutPort.reserve(cmd);
     }
 

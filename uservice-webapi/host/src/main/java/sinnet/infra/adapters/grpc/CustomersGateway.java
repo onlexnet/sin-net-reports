@@ -11,8 +11,10 @@ import sinnet.app.flow.request.CustomerGetResult;
 import sinnet.app.flow.request.CustomerListQuery;
 import sinnet.app.flow.request.CustomerListResult;
 import sinnet.app.flow.request.CustomerReserveCommand;
+import sinnet.app.flow.request.CustomerReserveResult;
 import sinnet.app.flow.request.CustomerUpdateCommand;
 import sinnet.app.ports.out.CustomersPortOut;
+import sinnet.domain.models.Customer;
 import sinnet.gql.models.CustomerEntityGql;
 import sinnet.grpc.common.EntityId;
 import sinnet.grpc.common.UserToken;
@@ -23,7 +25,6 @@ import sinnet.grpc.customers.GetRequest;
 import sinnet.grpc.customers.ListRequest;
 import sinnet.grpc.customers.RemoveReply;
 import sinnet.grpc.customers.RemoveRequest;
-import sinnet.grpc.customers.ReserveReply;
 import sinnet.grpc.customers.ReserveRequest;
 import sinnet.grpc.customers.UpdateCommand;
 import sinnet.grpc.customers.UpdateResult;
@@ -60,11 +61,12 @@ class CustomersGateway implements CustomersPortOut {
   }
 
   @Override
-  public ReserveReply reserve(CustomerReserveCommand cmd) {
+  public CustomerReserveResult reserve(CustomerReserveCommand cmd) {
     var request = ReserveRequest.newBuilder()
         .setProjectId(cmd.projectId().toString())
         .build();
-    return stub.reserve(request);
+    var reply = stub.reserve(request);
+    return new CustomerReserveResult(EntityGrpcMapper.INSTANCE.fromGrpc(reply.getEntityId()));
   }
 
   @Override
@@ -117,7 +119,7 @@ class CustomersGateway implements CustomersPortOut {
 
   /** Doxme. */
   @Override
-  public <T> List<T> customerList(String projectId, String requestorEmail, Function<sinnet.grpc.customers.CustomerModel, T> mapper) {
+  public <T> List<T> customerList(String projectId, String requestorEmail, Function<Customer, T> mapper) {
     var userToken = UserToken.newBuilder()
         .setProjectId(projectId)
         .setRequestorEmail(requestorEmail)
@@ -126,7 +128,7 @@ class CustomersGateway implements CustomersPortOut {
         .setProjectId(projectId)
         .setUserToken(userToken)
         .build();
-    var result = stub.list(request).getCustomersList().stream().map(mapper).toList();
+    var result = stub.list(request).getCustomersList().stream().map(CustomerMapper::toDomain).map(mapper).toList();
     return result;
   }
 
