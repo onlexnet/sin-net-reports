@@ -11,15 +11,15 @@ import sinnet.app.flow.request.CustomerGetResult;
 import sinnet.app.flow.request.CustomerListQuery;
 import sinnet.app.flow.request.CustomerListResult;
 import sinnet.app.flow.request.CustomerRemoveCommand;
+import sinnet.app.flow.request.CustomerRemoveResult;
 import sinnet.app.flow.request.CustomerReserveCommand;
 import sinnet.app.flow.request.CustomerReserveResult;
 import sinnet.app.flow.request.CustomerUpdateCommand;
+import sinnet.app.flow.request.CustomerUpdateResult;
 import sinnet.app.ports.in.CustomersPortIn;
 import sinnet.app.ports.out.CustomersPortOut;
 import sinnet.domain.models.Customer;
 import sinnet.gql.models.CustomerEntityGql;
-import sinnet.grpc.customers.RemoveReply;
-import sinnet.grpc.customers.UpdateResult;
 
 @Component
 @RequiredArgsConstructor
@@ -33,7 +33,7 @@ class CustomersFlow implements CustomersPortIn {
     }
 
     @Override
-    public RemoveReply remove(CustomerRemoveCommand request) {
+    public CustomerRemoveResult remove(CustomerRemoveCommand request) {
         return customersOutPort.remove(request.customerId(), request.requestor());
     }
 
@@ -43,7 +43,7 @@ class CustomersFlow implements CustomersPortIn {
     }
 
     @Override
-    public UpdateResult update(CustomerUpdateCommand request) {
+    public CustomerUpdateResult update(CustomerUpdateCommand request) {
         return customersOutPort.update(request);
     }
 
@@ -59,7 +59,7 @@ class CustomersFlow implements CustomersPortIn {
 
     @Override
     public CustomerEntityGql customerGet(String projectId, String requestorEmail, String customerId,
-            Function<sinnet.grpc.customers.GetReply, CustomerEntityGql> mapper) {
+            Function<CustomerGetResult, CustomerEntityGql> mapper) {
         return customersOutPort.customerGet(projectId, requestorEmail, customerId, mapper);
     }
     

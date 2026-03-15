@@ -17,10 +17,11 @@ import io.cucumber.java.Before;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import onlexnet.sinnet.webapi.test.AppApi;
-import sinnet.app.flow.request.CustomerRemoveCommand;
 import sinnet.app.flow.request.CustomerReserveCommand;
 import sinnet.app.flow.request.CustomerReserveResult;
 import sinnet.app.flow.request.CustomerUpdateCommand;
+import sinnet.app.flow.request.CustomerUpdateResult;
+import sinnet.app.flow.request.UsersSearchResult;
 import sinnet.app.lib.TimeProvider;
 import sinnet.app.ports.out.CustomersPortOut;
 import sinnet.app.ports.out.ProjectsPortOut;
@@ -36,13 +37,9 @@ import sinnet.domain.models.ProjectId;
 import sinnet.gql.models.CustomerInput;
 import sinnet.gql.models.CustomerSecretExInput;
 import sinnet.gql.models.CustomerSecretInput;
-import sinnet.gql.models.EntityGql;
 import sinnet.gql.models.ProjectEntityGql;
 import sinnet.gql.models.SomeEntityGql;
 import sinnet.gql.models.UserGql;
-import sinnet.grpc.common.EntityId;
-import sinnet.grpc.customers.UpdateResult;
-import sinnet.grpc.users.UsersSearchModel;
 
 public class StepDefinitions {
 
@@ -183,11 +180,8 @@ public class StepDefinitions {
   public void Users_list_query_is_send() {
     var projectId = UUID.randomUUID();
 
-    var reply = sinnet.grpc.users.SearchReply.newBuilder()
-        .addItems(UsersSearchModel.newBuilder()
-          .setEmail("my email")
-          .setEntityId("my entity id"))
-        .build();
+    var reply = new UsersSearchResult(List.of(
+      new UsersSearchResult.Item("my email", "my entity id", "")));
 
     Mockito
       .when(userServicePortOut.search(projectId, Email.of(requestorEmail)))
@@ -219,12 +213,8 @@ public class StepDefinitions {
     var argumentCaptor = ArgumentCaptor.forClass(CustomerUpdateCommand.class);
     Mockito
       .when(customersPortOut.update(argumentCaptor.capture()))
-      .thenReturn(UpdateResult.newBuilder()
-        .setEntityId(EntityId.newBuilder().setProjectId(projectIdStr).setEntityId(entityIdStr).setEntityVersion(42L)
-          .setProjectId(projectId.toString())
-          .setEntityId(entityId.toString())
-          .setEntityVersion(43))
-          .build());
+      .thenReturn(new CustomerUpdateResult(
+          new sinnet.domain.models.EntityId(projectId, entityId, 43L)));
 
       var secret = new CustomerSecretInput()
           .setLocation("location 1")
@@ -282,7 +272,7 @@ public class StepDefinitions {
 
     var expectedCommand = new CustomerUpdateCommand(
         new sinnet.domain.models.UserToken(projectId, requestorEmail),
-        new EntityGql(projectIdStr, entityIdStr, 42),
+        new sinnet.domain.models.EntityId(projectId, entityId, 42),
         new CustomerValue(
           expectedEntry,
           List.of(new CustomerSecret(secret.getLocation(), secret.getUsername(), secret.getPassword(),

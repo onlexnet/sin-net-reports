@@ -49,13 +49,13 @@ class CustomersMutationSave {
       // user context
       self.userToken(),
       // customer data
-      id,
+      customerMapper.map(id),
       customerVal,
       // change metadata
       changedWhen,
       changedWho);
     var result = service.update(request);
-    return customerMapper.toGql(result.getEntityId());
+    return customerMapper.toGql(result.entityId());
   }
 
 }

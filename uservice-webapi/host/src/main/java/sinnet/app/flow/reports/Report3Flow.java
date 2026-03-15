@@ -11,10 +11,10 @@ import io.vavr.collection.List;
 import lombok.RequiredArgsConstructor;
 import sinnet.app.flow.request.CustomerListQuery;
 import sinnet.app.flow.request.CustomerListResult;
+import sinnet.app.lib.PropsBuilder;
 import sinnet.domain.models.UserToken;
 import sinnet.app.ports.in.Report3PortIn;
 import sinnet.app.ports.out.CustomersPortOut;
-import sinnet.gql.utils.PropsBuilder;
 import sinnet.report3.grpc.CustomerDetails;
 import sinnet.report3.grpc.GroupDetails;
 import sinnet.report3.grpc.ReportRequest;
@@ -41,13 +41,13 @@ class Report3Flow implements Report3PortIn {
   // TODO move aggregation closer to data service
   ReportRequest asReportRequest(CustomerListResult reply) {
     return List.ofAll(reply.customers())
-      .filter(it -> StringUtils.isNotBlank(it.getValue().getOperatorEmail()))
+      .filter(it -> StringUtils.isNotBlank(it.value().entry().operatorEmail()))
       .map(it -> Tuple.of(
-          it.getValue().getOperatorEmail(),
+          it.value().entry().operatorEmail(),
           PropsBuilder.build(CustomerDetails.newBuilder())
-            .set(b -> b::setName, it.getValue().getCustomerName())
-            .set(b -> b::setAddress, it.getValue().getCustomerAddress())
-            .set(b -> b::setCity, it.getValue().getCustomerCityName())
+            .set(b -> b::setName, it.value().entry().customerName())
+            .set(b -> b::setAddress, it.value().entry().customerAddress())
+            .set(b -> b::setCity, it.value().entry().customerCityName())
             .done().build()))
       .foldLeft(
         HashMap.<String, List<CustomerDetails>>empty(),

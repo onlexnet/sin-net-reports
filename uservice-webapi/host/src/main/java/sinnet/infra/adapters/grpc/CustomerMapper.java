@@ -3,16 +3,28 @@ package sinnet.infra.adapters.grpc;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import sinnet.app.flow.request.CustomerGetResult;
+import sinnet.app.lib.PropsBuilder;
 import sinnet.domain.models.Customer;
 import sinnet.domain.models.CustomerContact;
 import sinnet.domain.models.CustomerEntry;
 import sinnet.domain.models.CustomerSecret;
 import sinnet.domain.models.CustomerValue;
-import sinnet.gql.models.EntityGql;
-import sinnet.gql.utils.PropsBuilder;
 import sinnet.grpc.common.EntityId;
 
 public interface CustomerMapper {
+
+  static CustomerGetResult toGetResult(sinnet.grpc.customers.CustomerModel item) {
+    if (item == null) {
+      return null;
+    }
+    return new CustomerGetResult(
+        new sinnet.domain.models.EntityId(
+            UUID.fromString(item.getId().getProjectId()),
+            UUID.fromString(item.getId().getEntityId()),
+            item.getId().getEntityVersion()),
+        toDomain(item.getValue(), item.getSecretsList(), item.getSecretExList(), item.getContactsList()));
+  }
 
   static Customer toDomain(sinnet.grpc.customers.CustomerModel item) {
     if (item == null) {
@@ -26,6 +38,47 @@ public interface CustomerMapper {
         toDomain(item.getValue(), item.getSecretsList(), item.getSecretExList(), item.getContactsList()));
   }
 
+  static LocalDateTime toDomain(sinnet.grpc.customers.LocalDateTime it) {
+    if (it == null || it.getMonth() == 0) {
+      return null;
+    }
+    return LocalDateTime.of(it.getYear(), it.getMonth(), it.getDay(), it.getHour(), it.getMinute(), it.getSecond());
+  }
+
+  static CustomerEntry toEntry(sinnet.grpc.customers.CustomerValue item) {
+    if (item == null) {
+      return null;
+    }
+    return new CustomerEntry(
+        item.getOperatorEmail(),
+        item.getBillingModel(),
+        item.getSupportStatus(),
+        item.getDistance(),
+        item.getCustomerName(),
+        item.getCustomerCityName(),
+        item.getCustomerAddress(),
+        item.getNfzUmowa(),
+        item.getNfzMaFilie(),
+        item.getNfzLekarz(),
+        item.getNfzPolozna(),
+        item.getNfzPielegniarkaSrodowiskowa(),
+        item.getNfzMedycynaSzkolna(),
+        item.getNfzTransportSanitarny(),
+        item.getNfzNocnaPomocLekarska(),
+        item.getNfzAmbulatoryjnaOpiekaSpecjalistyczna(),
+        item.getNfzRehabilitacja(),
+        item.getNfzStomatologia(),
+        item.getNfzPsychiatria(),
+        item.getNfzSzpitalnictwo(),
+        item.getNfzProgramyProfilaktyczne(),
+        item.getNfzZaopatrzenieOrtopedyczne(),
+        item.getNfzOpiekaDlugoterminowa(),
+        item.getNfzNotatki(),
+        item.getKomercjaJest(),
+        item.getKomercjaNotatki(),
+        item.getDaneTechniczne());
+  }
+
   static CustomerValue toDomain(sinnet.grpc.customers.CustomerValue item,
                                 java.util.List<sinnet.grpc.customers.CustomerSecret> secrets,
                                 java.util.List<sinnet.grpc.customers.CustomerSecretEx> secretsEx,
@@ -34,34 +87,7 @@ public interface CustomerMapper {
       return null;
     }
     return new CustomerValue(
-        new CustomerEntry(
-            item.getOperatorEmail(),
-            item.getBillingModel(),
-            item.getSupportStatus(),
-            item.getDistance(),
-            item.getCustomerName(),
-            item.getCustomerCityName(),
-            item.getCustomerAddress(),
-            item.getNfzUmowa(),
-            item.getNfzMaFilie(),
-            item.getNfzLekarz(),
-            item.getNfzPolozna(),
-            item.getNfzPielegniarkaSrodowiskowa(),
-            item.getNfzMedycynaSzkolna(),
-            item.getNfzTransportSanitarny(),
-            item.getNfzNocnaPomocLekarska(),
-            item.getNfzAmbulatoryjnaOpiekaSpecjalistyczna(),
-            item.getNfzRehabilitacja(),
-            item.getNfzStomatologia(),
-            item.getNfzPsychiatria(),
-            item.getNfzSzpitalnictwo(),
-            item.getNfzProgramyProfilaktyczne(),
-            item.getNfzZaopatrzenieOrtopedyczne(),
-            item.getNfzOpiekaDlugoterminowa(),
-            item.getNfzNotatki(),
-            item.getKomercjaJest(),
-            item.getKomercjaNotatki(),
-            item.getDaneTechniczne()),
+        toEntry(item),
         secrets.stream().map(CustomerMapper::toDomain).toList(),
         secretsEx.stream().map(CustomerMapper::toDomain).toList(),
         contacts.stream().map(CustomerMapper::toDomain).toList());
@@ -102,14 +128,6 @@ public interface CustomerMapper {
         it.getLastName(),
         it.getPhoneNo(),
         it.getEmail());
-  }
-
-  static EntityId toGrpc(EntityGql item) {
-    return EntityId.newBuilder()
-        .setEntityId(item.getEntityId())
-        .setProjectId(item.getProjectId())
-        .setEntityVersion(item.getEntityVersion())
-        .build();
   }
 
   static sinnet.grpc.customers.CustomerValue toGrpc(CustomerEntry item) {

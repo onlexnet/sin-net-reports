@@ -17,16 +17,14 @@ import onlexnet.sinnet.webapi.test.AppApi;
 import sinnet.app.flow.request.CustomerGetResult;
 import sinnet.app.flow.request.CustomerListResult;
 import sinnet.app.ports.out.CustomersPortOut;
+import sinnet.domain.models.CustomerEntry;
+import sinnet.domain.models.CustomerSecretEx;
 import sinnet.gql.models.CustomerSecretExGql;
-import sinnet.grpc.customers.CustomerModel;
-import sinnet.grpc.customers.CustomerSecretEx;
-import sinnet.grpc.customers.CustomerValue;
-import sinnet.grpc.customers.LocalDateTime;
 
 public class CustomerSteps {
 
   @Autowired
-  CustomersPortOut customersGrpc;
+  CustomersPortOut customersPortOut;
 
   @Autowired
   TestRestTemplate restTemplate;
@@ -38,7 +36,7 @@ public class CustomerSteps {
   public void before() {
     requestorEmail = "email@" + UUID.randomUUID();
     appApi = new AppApi(restTemplate.getRootUri(), requestorEmail);
-    Mockito.clearInvocations(customersGrpc);
+    Mockito.clearInvocations(customersPortOut);
   }
   
   @When("Customer list request is send to backend")
@@ -46,7 +44,7 @@ public class CustomerSteps {
     var projectId = UUID.randomUUID();
 
     Mockito
-      .when(customersGrpc.list(any()))
+      .when(customersPortOut.list(any()))
       .thenReturn(new CustomerListResult(List.of()));
 
     appApi.listCustomers(projectId);
@@ -60,19 +58,53 @@ public class CustomerSteps {
 
   @When("Customer read request is send to backend")
   public void customer_read_request_is_send_to_backend() {
-    Mockito
-      .when(customersGrpc.get(any()) )
-      .thenReturn(new CustomerGetResult(CustomerModel.newBuilder()
-        .setValue(CustomerValue.newBuilder()
-          .setBillingModel("my billing model"))
-        .addSecretEx(CustomerSecretEx.newBuilder()
-          .setChangedWhen(LocalDateTime.newBuilder().setYear(2001).setMonth(2).setDay(3).setHour(4).setMinute(5))
-          .setOtpSecret("my secret")
-          .setOtpRecoveryKeys("my key1"))
-        .build()));
-    
     var projectId = UUID.randomUUID();
     var entityId = UUID.randomUUID();
+
+    Mockito
+      .when(customersPortOut.get(any()) )
+      .thenReturn(new CustomerGetResult(
+        new sinnet.domain.models.EntityId(projectId, entityId, 1L),
+        new sinnet.domain.models.CustomerValue(
+          new CustomerEntry(
+            null,
+            "my billing model",
+            null,
+            0,
+            "my customer",
+            null,
+            null,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            null,
+            false,
+            null,
+            null),
+          List.of(),
+          List.of(new CustomerSecretEx(
+            "",
+            "",
+            "",
+            "",
+            "",
+            "my secret",
+            "my key1")),
+          List.of())));
+
     var response = appApi.getCustomer(projectId, entityId).get();
 
     Assertions.assertThat(response.getData().getBillingModel()).isEqualTo("my billing model");
@@ -82,8 +114,8 @@ public class CustomerSteps {
         .setPassword("")
         .setEntityName("")
         .setEntityCode("")
-        .setChangedWhen("2001-02-03T04:05:00")
-        .setChangedWho("")
+          .setChangedWhen("?")
+          .setChangedWho("?")
         .setOtpSecret("my secret")
         .setOtpRecoveryKeys("my key1"));
   }

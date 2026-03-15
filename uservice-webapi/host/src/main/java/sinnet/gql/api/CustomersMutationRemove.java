@@ -23,6 +23,6 @@ class CustomersMutationRemove {
     var userToken = self.userToken();
     var cmd = new CustomerRemoveCommand(entityId, userToken);
     var result = service.remove(cmd);
-    return result.getSuccess();
+    return result.success();
   }
 }

@@ -1,4 +1,4 @@
-package sinnet.gql.utils;
+package sinnet.app.lib;
 
 import java.util.Optional;
 import java.util.function.Consumer;

@@ -25,6 +25,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.google.protobuf.ByteString;
 
 import sinnet.app.flow.reports.Report1Flow;
+import sinnet.app.flow.request.UsersSearchResult;
 import sinnet.app.ports.out.ActionsGrpcPortOut;
 import sinnet.app.ports.out.CustomersPortOut;
 import sinnet.app.ports.out.Report1OutPort;
@@ -74,7 +75,7 @@ class Report1ControllerTest {
         .thenReturn(List.of());
 
     // Mock users - return empty reply
-    var usersSearchReply = sinnet.grpc.users.SearchReply.newBuilder().build();
+    var usersSearchReply = new UsersSearchResult(List.of());
     when(usersGrpcService.search(any(UUID.class), any(Email.Some.class)))
         .thenReturn(usersSearchReply);
 
@@ -120,7 +121,7 @@ class Report1ControllerTest {
     when(customersGrpcFacade.customerList(anyString(), anyString(), any()))
         .thenReturn(List.of());
     when(usersGrpcService.search(any(), any()))
-        .thenReturn(sinnet.grpc.users.SearchReply.newBuilder().build());
+        .thenReturn(new UsersSearchResult(List.of()));
     when(reports1GrpcAdapter.producePack(any(ReportRequests.class)))
         .thenReturn(sinnet.reports.grpc.Response.newBuilder()
             .setData(ByteString.copyFrom(expectedZipData))
@@ -171,8 +172,7 @@ class Report1ControllerTest {
         .thenReturn(List.of(customerModel));
 
     // Mock users - return empty reply for simplicity
-    var usersReply = sinnet.grpc.users.SearchReply.newBuilder()
-        .build();
+    var usersReply = new UsersSearchResult(List.of(new UsersSearchResult.Item("test@example.com", "id-1", "Test User")));
     when(usersGrpcService.search(any(), any()))
         .thenReturn(usersReply);
 
@@ -208,7 +208,7 @@ class Report1ControllerTest {
     when(customersGrpcFacade.customerList(anyString(), anyString(), any()))
         .thenReturn(List.of());
     when(usersGrpcService.search(any(), any()))
-        .thenReturn(sinnet.grpc.users.SearchReply.newBuilder().build());
+        .thenReturn(new UsersSearchResult(List.of()));
     when(reports1GrpcAdapter.producePack(any(ReportRequests.class)))
         .thenReturn(sinnet.reports.grpc.Response.newBuilder()
             .setData(ByteString.copyFrom(new byte[]{0x01}))

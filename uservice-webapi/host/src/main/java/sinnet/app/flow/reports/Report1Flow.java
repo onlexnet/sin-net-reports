@@ -7,6 +7,7 @@ import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.stereotype.Component;
 
 import io.vavr.Tuple;
@@ -23,7 +24,6 @@ import sinnet.report1.grpc.CustomerDetails;
 import sinnet.report1.grpc.ReportRequest;
 import sinnet.report1.grpc.ReportRequests;
 import sinnet.reports.grpc.Date;
-import org.jspecify.annotations.Nullable;
 
 /** Refactor - shouuld not be public. */
 @Component
@@ -85,8 +85,8 @@ public class Report1Flow implements Report1PortIn {
   private Function<String, String> emailToName(UUID projectId) {
 
     var response = usersService.search(projectId, Email.of("ignored@owner"));
-    var emailToName = response.getItemsList().stream()
-        .collect(Collectors.toMap(it -> it.getEmail(), it -> it.getCustomName()));
+    var emailToName = response.items().stream()
+      .collect(Collectors.toMap(it -> it.email(), it -> it.customName()));
 
     return email -> {
       var customName = emailToName.get(email);

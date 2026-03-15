@@ -1,6 +1,9 @@
 package sinnet.app.flow.request;
 
-import sinnet.grpc.customers.CustomerModel;
+import sinnet.domain.models.CustomerValue;
+import sinnet.domain.models.EntityId;
 
-public record CustomerGetResult(CustomerModel customer) {
+public record CustomerGetResult(
+	EntityId id,
+	CustomerValue value) {
 }

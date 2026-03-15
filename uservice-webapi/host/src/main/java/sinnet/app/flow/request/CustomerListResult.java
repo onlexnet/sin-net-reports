@@ -2,7 +2,7 @@ package sinnet.app.flow.request;
 
 import java.util.List;
 
-import sinnet.grpc.customers.CustomerModel;
+import sinnet.domain.models.Customer;
 
-public record CustomerListResult(List<CustomerModel> customers) {
+public record CustomerListResult(List<Customer> customers) {
 }

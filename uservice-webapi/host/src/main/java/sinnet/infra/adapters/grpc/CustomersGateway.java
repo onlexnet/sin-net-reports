@@ -10,9 +10,11 @@ import sinnet.app.flow.request.CustomerGetQuery;
 import sinnet.app.flow.request.CustomerGetResult;
 import sinnet.app.flow.request.CustomerListQuery;
 import sinnet.app.flow.request.CustomerListResult;
+import sinnet.app.flow.request.CustomerRemoveResult;
 import sinnet.app.flow.request.CustomerReserveCommand;
 import sinnet.app.flow.request.CustomerReserveResult;
 import sinnet.app.flow.request.CustomerUpdateCommand;
+import sinnet.app.flow.request.CustomerUpdateResult;
 import sinnet.app.ports.out.CustomersPortOut;
 import sinnet.domain.models.Customer;
 import sinnet.gql.models.CustomerEntityGql;
@@ -20,14 +22,11 @@ import sinnet.grpc.common.EntityId;
 import sinnet.grpc.common.UserToken;
 import sinnet.grpc.customers.CustomerModel;
 import sinnet.grpc.customers.CustomersGrpc.CustomersBlockingStub;
-import sinnet.grpc.customers.GetReply;
 import sinnet.grpc.customers.GetRequest;
 import sinnet.grpc.customers.ListRequest;
-import sinnet.grpc.customers.RemoveReply;
 import sinnet.grpc.customers.RemoveRequest;
 import sinnet.grpc.customers.ReserveRequest;
 import sinnet.grpc.customers.UpdateCommand;
-import sinnet.grpc.customers.UpdateResult;
 
 /** Mockable equivalent of {@link ProjectsGrpcStub}. */
 @Component
@@ -44,7 +43,8 @@ class CustomersGateway implements CustomersPortOut {
         .setUserToken(Map.apply.map(query.userToken()))
         .build();
     var reply = stub.list(request);
-    return new CustomerListResult(reply.getCustomersList());
+    var customers = reply.getCustomersList().stream().map(CustomerMapper::toDomain).toList();
+    return new CustomerListResult(customers);
   }
 
   @Override
@@ -57,7 +57,7 @@ class CustomersGateway implements CustomersPortOut {
         .setUserToken(Map.apply.map(query.userToken()))
         .build();
     var reply = stub.get(request);
-    return new CustomerGetResult(reply.getModel());
+    return CustomerMapper.toGetResult(reply.getModel());
   }
 
   @Override
@@ -70,36 +70,39 @@ class CustomersGateway implements CustomersPortOut {
   }
 
   @Override
-  public RemoveReply remove(sinnet.domain.models.EntityId customerId, sinnet.domain.models.UserToken requestor) {
+  public CustomerRemoveResult remove(sinnet.domain.models.EntityId customerId, sinnet.domain.models.UserToken requestor) {
     var req = RemoveRequest.newBuilder()
         .setEntityId(Map.apply.map(customerId))
         .setUserToken(Map.apply.map(requestor))
         .build();
-    return stub.remove(req);
+    var reply = stub.remove(req);
+    return new CustomerRemoveResult(reply.getSuccess());
   }
 
   @Override
-  public UpdateResult update(CustomerUpdateCommand request) {
+  public CustomerUpdateResult update(CustomerUpdateCommand request) {
     var changedWhen = request.changedWhen();
     var changedWho = request.changedWho();
     var userToken = Map.apply.map(request.userToken());
     var grpcRequest = UpdateCommand.newBuilder()
         .setUserToken(userToken)
         .setModel(CustomerModel.newBuilder()
-          .setId(CustomerMapper.toGrpc(request.id()))
+          .setId(Map.apply.map(request.id()))
           .setValue(CustomerMapper.toGrpc(request.value().entry()))
           .addAllSecrets(request.value().secrets().stream().map(it -> CustomerMapper.toGrpc(it, changedWhen, changedWho)).toList())
           .addAllSecretEx(request.value().secretsEx().stream().map(it -> CustomerMapper.toGrpc(it, changedWhen, changedWho)).toList())
           .addAllContacts(request.value().contacts().stream().map(CustomerMapper::toGrpc).toList())
             .build())
         .build();
-    return stub.update(grpcRequest);
+    var result = stub.update(grpcRequest);
+    return new CustomerUpdateResult(EntityGrpcMapper.INSTANCE.fromGrpc(result.getEntityId()));
   }
 
 
   /** Doxme. */
   @Override
-  public CustomerEntityGql customerGet(String projectId, String requestorEmail, String customerId, Function<GetReply, CustomerEntityGql> mapper) {
+  public CustomerEntityGql customerGet(String projectId, String requestorEmail, String customerId,
+                                       Function<CustomerGetResult, CustomerEntityGql> mapper) {
     var entityId = EntityId.newBuilder()
         .setEntityId(customerId)
         .setEntityVersion(0)
@@ -114,7 +117,7 @@ class CustomersGateway implements CustomersPortOut {
         .setUserToken(userToken)
         .build();
     var result = stub.get(request);
-    return mapper.apply(result);
+    return mapper.apply(CustomerMapper.toGetResult(result.getModel()));
   }
 
   /** Doxme. */

@@ -7,14 +7,14 @@ import sinnet.app.flow.request.CustomerGetQuery;
 import sinnet.app.flow.request.CustomerGetResult;
 import sinnet.app.flow.request.CustomerListQuery;
 import sinnet.app.flow.request.CustomerListResult;
+import sinnet.app.flow.request.CustomerRemoveResult;
 import sinnet.app.flow.request.CustomerReserveCommand;
 import sinnet.app.flow.request.CustomerReserveResult;
 import sinnet.app.flow.request.CustomerUpdateCommand;
+import sinnet.app.flow.request.CustomerUpdateResult;
 import sinnet.domain.models.Customer;
 import sinnet.domain.models.UserToken;
 import sinnet.gql.models.CustomerEntityGql;
-import sinnet.grpc.customers.RemoveReply;
-import sinnet.grpc.customers.UpdateResult;
 
 public interface CustomersPortOut {
     
@@ -26,10 +26,10 @@ public interface CustomersPortOut {
     
     <T> List<T> customerList(String projectId, String requestorEmail, Function<Customer, T> mapper);
 
-    CustomerEntityGql customerGet(String projectId, String requestorEmail, String customerId, Function<sinnet.grpc.customers.GetReply, CustomerEntityGql> mapper);
+    CustomerEntityGql customerGet(String projectId, String requestorEmail, String customerId, Function<CustomerGetResult, CustomerEntityGql> mapper);
 
-    RemoveReply remove(sinnet.domain.models.EntityId customerId, UserToken requestor);
+    CustomerRemoveResult remove(sinnet.domain.models.EntityId customerId, UserToken requestor);
 
-    UpdateResult update(CustomerUpdateCommand request);
+    CustomerUpdateResult update(CustomerUpdateCommand request);
 
 }
