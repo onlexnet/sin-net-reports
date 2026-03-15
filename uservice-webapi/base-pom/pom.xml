@@ -21,7 +21,7 @@
     <mapstruct.version>1.6.3</mapstruct.version>
     <mapstruct-spi-protobuf.version>1.1.0</mapstruct-spi-protobuf.version>
     <jspecify.version>1.0.0</jspecify.version>
-    <instancio-junit.version>5.3.0</instancio-junit.version>
+    <instancio-junit.version>5.5.1</instancio-junit.version>
   </properties>
 
   <dependencyManagement>
