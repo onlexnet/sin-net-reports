@@ -1,4 +1,4 @@
-package sinnet.gql.api;
+package sinnet.infra.adapters.gql;
 
 import java.util.List;
 
@@ -11,7 +11,6 @@ import sinnet.app.flow.request.CustomerUpdateCommand;
 import sinnet.app.lib.TimeProvider;
 import sinnet.app.ports.in.CustomersPortIn;
 import sinnet.domain.models.CustomerValue;
-import sinnet.infra.adapters.gql.CustomerMapper;
 import sinnet.gql.models.CustomerContactInputGql;
 import sinnet.gql.models.CustomerInput;
 import sinnet.gql.models.CustomerSecretExInput;

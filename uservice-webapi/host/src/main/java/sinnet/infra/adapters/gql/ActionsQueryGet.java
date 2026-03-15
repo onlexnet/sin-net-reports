@@ -1,4 +1,4 @@
-package sinnet.gql.api;
+package sinnet.infra.adapters.gql;
 
 import java.util.UUID;
 
@@ -13,7 +13,6 @@ import sinnet.app.ports.in.TimeentriesServicePortIn;
 import sinnet.domain.models.TimeEntry;
 import sinnet.gql.models.CustomerEntityGql;
 import sinnet.gql.models.ServiceModelGql;
-import sinnet.infra.adapters.gql.CustomerMapper;
 
 @Controller
 @RequiredArgsConstructor

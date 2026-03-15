@@ -1,4 +1,4 @@
-package sinnet.gql.api;
+package sinnet.infra.adapters.gql;
 
 
 import org.springframework.graphql.data.method.annotation.Argument;
@@ -8,7 +8,6 @@ import org.springframework.stereotype.Controller;
 import lombok.RequiredArgsConstructor;
 import sinnet.app.flow.request.CustomerRemoveCommand;
 import sinnet.app.ports.in.CustomersPortIn;
-import sinnet.infra.adapters.gql.CustomerMapper;
 import sinnet.gql.models.EntityGql;
 
 @Controller

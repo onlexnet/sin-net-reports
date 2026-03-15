@@ -1,4 +1,4 @@
-package sinnet.gql.api;
+package sinnet.infra.adapters.gql;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -17,7 +17,6 @@ import sinnet.gql.models.CustomerEntityGql;
 import sinnet.gql.models.ServiceFilterInputGql;
 import sinnet.gql.models.ServiceModelGql;
 import sinnet.gql.models.ServicesSearchResultGql;
-import sinnet.infra.adapters.gql.CustomerMapper;
 
 @Controller
 @RequiredArgsConstructor
