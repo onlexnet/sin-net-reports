@@ -56,6 +56,21 @@ applyTo: '**/*.java'
 | `S109`  | Magic numbers should be replaced with constants        | Improves readability and maintainability.                                     |
 | `S1188` | Catch blocks should not be empty                       | Always log or handle exceptions meaningfully.                                 |
 
+## Testing
+
+- **Assertion library**: Use AssertJ for all assertions (`import static org.assertj.core.api.Assertions.assertThat`).
+- **Single assertion per test**: Prefer one `assertThat(actual).isEqualTo(expected)` comparing the whole result object rather than multiple field-by-field assertions. Construct a full `expected` object and compare it in a single call.
+  ```java
+  // preferred
+  var expected = new CustomerContact("Jan", "Kowalski", "+48123123123", "jan@example.com");
+  assertThat(result).isEqualTo(expected);
+
+  // avoid
+  assertThat(result.getFirstName()).isEqualTo("Jan");
+  assertThat(result.getLastName()).isEqualTo("Kowalski");
+  ```
+- **Exception to single-assertion rule**: Use multiple assertions only when the result type cannot be compared with `equals` (e.g., generated proto, mutable GQL beans without `equals`), or when asserting on a single nullable / sentinel field (e.g., `assertThat(result).isNull()`).
+
 ## Build and Verification
 
 - After adding or modifying code, verify the project continues to build successfully.
