@@ -55,7 +55,7 @@ class CustomersMutationSave {
       changedWhen,
       changedWho);
     var result = service.update(request);
-    return customerMapper.toGql(result.getEntityId());
+    return customerMapper.toGql(result.entityId());
   }
 
 }

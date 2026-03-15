@@ -10,6 +10,7 @@ import org.mapstruct.factory.Mappers;
 
 import io.vavr.collection.Iterator;
 import io.vavr.control.Option;
+import sinnet.app.flow.request.CustomerGetResult;
 import sinnet.domain.models.Customer;
 import sinnet.domain.models.CustomerContact;
 import sinnet.domain.models.CustomerEntry;
@@ -27,7 +28,6 @@ import sinnet.gql.models.CustomerSecretInput;
 import sinnet.gql.models.EntityGql;
 import sinnet.gql.models.SomeEntityGql;
 import sinnet.grpc.common.EntityId;
-import sinnet.grpc.customers.GetReply;
 
 @Mapper(
     unmappedTargetPolicy = ReportingPolicy.ERROR,
@@ -196,6 +196,19 @@ public interface CustomerMapper {
     return result;
   }
 
+  default CustomerEntityGql toGql(CustomerGetResult item) {
+    if (item == null) {
+      return null;
+    }
+    var result = new CustomerEntityGql();
+    result.setId(toGql(item.id()));
+    result.setData(toGql(item.entry()));
+    result.setSecrets(Iterator.ofAll(item.secrets()).map(this::toGql).toJavaArray(CustomerSecretGql[]::new));
+    result.setSecretsEx(Iterator.ofAll(item.secretsEx()).map(this::toGql).toJavaArray(CustomerSecretExGql[]::new));
+    result.setContacts(Iterator.ofAll(item.contacts()).map(this::toGql).toJavaArray(CustomerContactGql[]::new));
+    return result;
+  }
+
   default CustomerEntityGql toGql(sinnet.grpc.customers.CustomerModel item) {
     if (item == null) {
       return null;
@@ -248,7 +261,13 @@ public interface CustomerMapper {
     if (item == null) {
       return null;
     }
-    var entry = item.entry();
+    return toGql(item.entry());
+  }
+
+  default CustomerModelGql toGql(CustomerEntry entry) {
+    if (entry == null) {
+      return null;
+    }
     var it = new CustomerModelGql();
     it.setOperatorEmail(entry.operatorEmail());
     it.setBillingModel(entry.billingModel());
@@ -278,12 +297,5 @@ public interface CustomerMapper {
     it.setKomercjaNotatki(entry.komercjaNotatki());
     it.setDaneTechniczne(entry.daneTechniczne());
     return it;
-  }
-
-  default CustomerEntityGql toGql(GetReply dto) {
-    if (dto == null) {
-      return null;
-    }
-    return toGql(dto.getModel());
   }
 }

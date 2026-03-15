@@ -8,6 +8,8 @@ import org.springframework.stereotype.Controller;
 
 import io.vavr.collection.Iterator;
 import lombok.RequiredArgsConstructor;
+import sinnet.app.flow.request.UsersSearchQuery;
+import sinnet.app.flow.request.UsersSearchResult;
 import sinnet.app.ports.in.UsersSearchPortIn;
 import sinnet.gql.models.UserGql;
 
@@ -19,11 +21,10 @@ class UsersSearch {
 
   @SchemaMapping
   List<UserGql> search(UsersQuery self) {
-    var projectId = self.projectId();
-    var primaryEmail = self.primaryEmail();
+    var query = new UsersSearchQuery(self.projectId(), self.primaryEmail());
 
-    var items = service.search(projectId, primaryEmail);
-    return Iterator.ofAll(items)
+    var result = service.search(query);
+    return Iterator.ofAll(result.items())
         .map(it -> new UserGql(it.email(), it.entityId()))
         .toJavaList();
   }

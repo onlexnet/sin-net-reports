@@ -21,7 +21,7 @@ class CustomersQueryGet {
   public CustomerEntityGql get(CustomersQuery self, @Argument String entityId) {
     var query = new CustomerGetQuery(self.userToken(), entityId);
     var result = service.get(query);
-    return customerMapper.toGql(result.customer());
+    return customerMapper.toGql(result);
   }
 
 }

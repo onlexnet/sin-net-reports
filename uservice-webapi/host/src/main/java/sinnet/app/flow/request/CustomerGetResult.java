@@ -1,6 +1,17 @@
 package sinnet.app.flow.request;
 
-import sinnet.grpc.customers.CustomerModel;
+import java.util.List;
 
-public record CustomerGetResult(CustomerModel customer) {
+import sinnet.domain.models.CustomerContact;
+import sinnet.domain.models.CustomerEntry;
+import sinnet.domain.models.CustomerSecret;
+import sinnet.domain.models.CustomerSecretEx;
+import sinnet.domain.models.EntityId;
+
+public record CustomerGetResult(
+	EntityId id,
+	CustomerEntry entry,
+	List<CustomerSecret> secrets,
+	List<CustomerSecretEx> secretsEx,
+	List<CustomerContact> contacts) {
 }

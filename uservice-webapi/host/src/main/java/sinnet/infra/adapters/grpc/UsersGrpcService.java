@@ -4,10 +4,10 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Component;
 
+import sinnet.app.flow.request.UsersSearchResult;
 import sinnet.app.ports.out.UsersServicePortOut;
 import sinnet.domain.models.Email;
 import sinnet.grpc.common.UserToken;
-import sinnet.grpc.users.SearchReply;
 import sinnet.grpc.users.SearchRequest;
 import sinnet.grpc.users.UsersGrpc.UsersBlockingStub;
 
@@ -21,13 +21,16 @@ class UsersGrpcService implements UsersServicePortOut {
   }
 
   @Override
-  public SearchReply search(UUID projectId, Email requestor) {
+  public UsersSearchResult search(UUID projectId, Email requestor) {
 
     var request = SearchRequest.newBuilder()
         .setUserToken(UserToken.newBuilder().setProjectId(projectId.toString()).setRequestorEmail("ignored@owner").build())
         .build();
 
-    return stub.search(request);
+    var reply = stub.search(request);
+    return new UsersSearchResult(reply.getItemsList().stream()
+      .map(it -> new UsersSearchResult.UsersSearchItem(it.getEmail(), it.getEntityId(), it.getCustomName()))
+        .toList());
   }
 
 }

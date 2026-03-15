@@ -17,6 +17,7 @@ import sinnet.app.ports.out.ActionsGrpcPortOut;
 import sinnet.app.ports.out.CustomersPortOut;
 import sinnet.app.ports.out.Report1OutPort;
 import sinnet.app.ports.out.UsersServicePortOut;
+import sinnet.app.flow.request.UsersSearchResult;
 import sinnet.domain.models.Email;
 import sinnet.report1.grpc.ActivityDetails;
 import sinnet.report1.grpc.CustomerDetails;
@@ -85,8 +86,8 @@ public class Report1Flow implements Report1PortIn {
   private Function<String, String> emailToName(UUID projectId) {
 
     var response = usersService.search(projectId, Email.of("ignored@owner"));
-    var emailToName = response.getItemsList().stream()
-        .collect(Collectors.toMap(it -> it.getEmail(), it -> it.getCustomName()));
+    var emailToName = response.items().stream()
+      .collect(Collectors.toMap(it -> it.email(), it -> it.customName()));
 
     return email -> {
       var customName = emailToName.get(email);
