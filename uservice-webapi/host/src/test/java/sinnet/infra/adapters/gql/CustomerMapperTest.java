@@ -267,7 +267,6 @@ class CustomerMapperTest {
 
       var result = mapper.map(source);
 
-      assertThat(result).isNotNull();
       assertThat(result).isEqualTo(LocalDateTime.of(2024, 12, 25, 14, 30, 45));
     }
 
@@ -285,9 +284,7 @@ class CustomerMapperTest {
 
       var result = mapper.map(source);
 
-      assertThat(result.getHour()).isZero();
-      assertThat(result.getMinute()).isZero();
-      assertThat(result.getSecond()).isZero();
+      assertThat(result).isEqualTo(LocalDateTime.of(2025, 1, 1, 0, 0, 0));
     }
 
     @Test
@@ -321,7 +318,7 @@ class CustomerMapperTest {
 
       var result = mapper.map(source);
 
-      assertThat(result.getSecond()).isZero();
+      assertThat(result).isEqualTo(LocalDateTime.of(2024, 6, 15, 12, 30, 0));
     }
 
     @Test
@@ -338,47 +335,63 @@ class CustomerMapperTest {
     @Test
     @DisplayName("should map EntityGql to gRPC EntityId")
     void shouldMapEntityGql() {
+      var projectId = UUID.randomUUID().toString();
+      var entityId = UUID.randomUUID().toString();
       var source = Instancio.of(EntityGql.class)
-          .set(field(EntityGql::getProjectId), "proj-123")
-          .set(field(EntityGql::getEntityId), "ent-456")
+          .set(field(EntityGql::getProjectId), projectId)
+          .set(field(EntityGql::getEntityId), entityId)
           .set(field(EntityGql::getEntityVersion), 42L)
           .create();
 
       var result = sinnet.infra.adapters.grpc.CustomerMapper.toGrpc(source);
 
-      assertThat(result).isNotNull();
-      assertThat(result.getProjectId()).isEqualTo("proj-123");
-      assertThat(result.getEntityId()).isEqualTo("ent-456");
-      assertThat(result.getEntityVersion()).isEqualTo(42L);
+        assertThat(result).isEqualTo(sinnet.grpc.common.EntityId.newBuilder()
+          .setProjectId(projectId)
+          .setEntityId(entityId)
+          .setEntityVersion(42L)
+          .build());
     }
 
     @Test
     @DisplayName("should handle partial EntityGql")
     void shouldHandlePartialEntityGql() {
-      var source = Instancio.of(EntityGql.class)
-          .set(field(EntityGql::getEntityId), "minimal-id")
+        var projectId = UUID.randomUUID().toString();
+        var entityId = UUID.randomUUID().toString();
+        var source = Instancio.of(EntityGql.class)
+          .set(field(EntityGql::getProjectId), projectId)
+          .set(field(EntityGql::getEntityId), entityId)
           .set(field(EntityGql::getEntityVersion), 1L)
           .create();
 
       var result = sinnet.infra.adapters.grpc.CustomerMapper.toGrpc(source);
 
-      assertThat(result.getEntityId()).isEqualTo("minimal-id");
-      assertThat(result.getEntityVersion()).isEqualTo(1L);
+        assertThat(result).isEqualTo(sinnet.grpc.common.EntityId.newBuilder()
+          .setProjectId(projectId)
+          .setEntityId(entityId)
+          .setEntityVersion(1L)
+          .build());
     }
 
     @Test
     @DisplayName("should handle different version numbers")
     void shouldHandleDifferentVersions() {
+      var projectId = UUID.randomUUID().toString();
+      var entityId = UUID.randomUUID().toString();
       var versions = new long[] {0L, 1L, 100L, Long.MAX_VALUE};
 
       for (var version : versions) {
         var source = Instancio.of(EntityGql.class)
-            .set(field(EntityGql::getEntityId), "test-entity")
+            .set(field(EntityGql::getProjectId), projectId)
+            .set(field(EntityGql::getEntityId), entityId)
             .set(field(EntityGql::getEntityVersion), version)
             .create();
 
         var result = sinnet.infra.adapters.grpc.CustomerMapper.toGrpc(source);
-        assertThat(result.getEntityVersion()).isEqualTo(version);
+        assertThat(result).isEqualTo(sinnet.grpc.common.EntityId.newBuilder()
+          .setProjectId(projectId)
+          .setEntityId(entityId)
+          .setEntityVersion(version)
+          .build());
       }
     }
 
@@ -395,13 +408,14 @@ class CustomerMapperTest {
 
       var result = sinnet.infra.adapters.grpc.CustomerMapper.toGrpc(source);
 
-      assertThat(result).isNotNull();
-      assertThat(result.getYear()).isEqualTo(2024);
-      assertThat(result.getMonth()).isEqualTo(12);
-      assertThat(result.getDay()).isEqualTo(25);
-      assertThat(result.getHour()).isEqualTo(14);
-      assertThat(result.getMinute()).isEqualTo(30);
-      assertThat(result.getSecond()).isEqualTo(45);
+        assertThat(result).isEqualTo(sinnet.grpc.customers.LocalDateTime.newBuilder()
+          .setYear(2024)
+          .setMonth(12)
+          .setDay(25)
+          .setHour(14)
+          .setMinute(30)
+          .setSecond(45)
+          .build());
     }
 
     @Test
@@ -411,9 +425,14 @@ class CustomerMapperTest {
 
       var result = sinnet.infra.adapters.grpc.CustomerMapper.toGrpc(source);
 
-      assertThat(result.getHour()).isZero();
-      assertThat(result.getMinute()).isZero();
-      assertThat(result.getSecond()).isZero();
+        assertThat(result).isEqualTo(sinnet.grpc.customers.LocalDateTime.newBuilder()
+          .setYear(2025)
+          .setMonth(1)
+          .setDay(1)
+          .setHour(0)
+          .setMinute(0)
+          .setSecond(0)
+          .build());
     }
 
     @Test
@@ -423,9 +442,14 @@ class CustomerMapperTest {
 
       var result = sinnet.infra.adapters.grpc.CustomerMapper.toGrpc(source);
 
-      assertThat(result.getHour()).isEqualTo(23);
-      assertThat(result.getMinute()).isEqualTo(59);
-      assertThat(result.getSecond()).isEqualTo(59);
+        assertThat(result).isEqualTo(sinnet.grpc.customers.LocalDateTime.newBuilder()
+          .setYear(2025)
+          .setMonth(12)
+          .setDay(31)
+          .setHour(23)
+          .setMinute(59)
+          .setSecond(59)
+          .build());
     }
 
     @Test
@@ -435,12 +459,14 @@ class CustomerMapperTest {
 
       for (var dateTime : randomDateTimes) {
         var result = sinnet.infra.adapters.grpc.CustomerMapper.toGrpc(dateTime);
-        assertThat(result.getYear()).isEqualTo(dateTime.getYear());
-        assertThat(result.getMonth()).isEqualTo(dateTime.getMonthValue());
-        assertThat(result.getDay()).isEqualTo(dateTime.getDayOfMonth());
-        assertThat(result.getHour()).isEqualTo(dateTime.getHour());
-        assertThat(result.getMinute()).isEqualTo(dateTime.getMinute());
-        assertThat(result.getSecond()).isEqualTo(dateTime.getSecond());
+        assertThat(result).isEqualTo(sinnet.grpc.customers.LocalDateTime.newBuilder()
+          .setYear(dateTime.getYear())
+          .setMonth(dateTime.getMonthValue())
+          .setDay(dateTime.getDayOfMonth())
+          .setHour(dateTime.getHour())
+          .setMinute(dateTime.getMinute())
+          .setSecond(dateTime.getSecond())
+          .build());
       }
     }
 
@@ -458,17 +484,18 @@ class CustomerMapperTest {
     @Test
     @DisplayName("should map gRPC EntityId to SomeEntityGql")
     void shouldMapGrpcEntityId() {
+      var projectId = UUID.randomUUID().toString();
+      var entityId = UUID.randomUUID().toString();
       var source = sinnet.grpc.common.EntityId.newBuilder()
-          .setProjectId("proj-123")
-          .setEntityId("ent-456")
+          .setProjectId(projectId)
+          .setEntityId(entityId)
           .setEntityVersion(42L)
           .build();
 
       var result = mapper.toGql(source);
 
-      assertThat(result).isNotNull();
-      assertThat(result.getProjectId()).isEqualTo("proj-123");
-      assertThat(result.getEntityId()).isEqualTo("ent-456");
+      assertThat(result.getProjectId()).isEqualTo(projectId);
+      assertThat(result.getEntityId()).isEqualTo(entityId);
       assertThat(result.getEntityVersion()).isEqualTo(42L);
     }
 
@@ -510,7 +537,6 @@ class CustomerMapperTest {
 
       var result = mapper.toGql(source);
 
-      assertThat(result).isNotNull();
       assertThat(result.getFirstName()).isEqualTo("Jane");
       assertThat(result.getLastName()).isEqualTo("Smith");
       assertThat(result.getPhoneNo()).isEqualTo("+48987654321");
@@ -585,7 +611,6 @@ class CustomerMapperTest {
 
       var result = mapper.toGql(source);
 
-      assertThat(result).isNotNull();
       assertThat(result.getLocation()).isEqualTo("HQ");
       assertThat(result.getUsername()).isEqualTo("admin");
       assertThat(result.getPassword()).isEqualTo("secret123");
@@ -699,7 +724,6 @@ class CustomerMapperTest {
 
       var result = mapper.toGql(source);
 
-      assertThat(result).isNotNull();
       assertThat(result.getLocation()).isEqualTo("Office");
       assertThat(result.getUsername()).isEqualTo("user123");
       assertThat(result.getPassword()).isEqualTo("pass456");
@@ -1179,7 +1203,6 @@ class CustomerMapperTest {
 
       var result = mapper.toGql(source);
 
-      assertThat(result).isNotNull();
       assertThat(result.getProjectId()).isEqualTo(projectId.toString());
       assertThat(result.getEntityId()).isEqualTo(entityId.toString());
       assertThat(result.getEntityVersion()).isEqualTo(7L);
@@ -1282,7 +1305,6 @@ class CustomerMapperTest {
 
       var result = mapper.toGql(value);
 
-      assertThat(result).isNotNull();
       assertThat(result.getCustomerName()).isEqualTo("ACME Clinic");
       assertThat(result.getCustomerCityName()).isEqualTo("Warsaw");
       assertThat(result.getCustomerAddress()).isEqualTo("Main St 1");
@@ -1323,7 +1345,6 @@ class CustomerMapperTest {
 
       var result = mapper.toGql(customer);
 
-      assertThat(result).isNotNull();
       assertThat(result.getId().getProjectId()).isEqualTo(projectId.toString());
       assertThat(result.getId().getEntityId()).isEqualTo(entityId.toString());
       assertThat(result.getId().getEntityVersion()).isEqualTo(5L);
@@ -1405,9 +1426,11 @@ class CustomerMapperTest {
 
       for (var entity : randomEntities) {
         var grpc = sinnet.infra.adapters.grpc.CustomerMapper.toGrpc(entity);
-        assertThat(grpc).isNotNull();
-        assertThat(grpc.getEntityId()).isEqualTo(entity.getEntityId());
-        assertThat(grpc.getEntityVersion()).isEqualTo(entity.getEntityVersion());
+        assertThat(grpc).isEqualTo(sinnet.grpc.common.EntityId.newBuilder()
+          .setProjectId(entity.getProjectId())
+          .setEntityId(entity.getEntityId())
+          .setEntityVersion(entity.getEntityVersion())
+          .build());
       }
     }
   }
