@@ -1,4 +1,4 @@
-package sinnet.gql.api;
+package sinnet.infra.adapters.gql;
 
 import java.util.List;
 

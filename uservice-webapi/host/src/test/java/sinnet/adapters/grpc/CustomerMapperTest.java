@@ -1,4 +1,4 @@
-package sinnet.infra.adapters.grpc;
+package sinnet.adapters.grpc;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -17,6 +17,7 @@ import sinnet.domain.models.CustomerSecret;
 import sinnet.domain.models.CustomerSecretEx;
 import sinnet.domain.models.CustomerValue;
 import sinnet.domain.models.EntityId;
+import sinnet.infra.adapters.grpc.CustomerMapper;
 
 @DisplayName("CustomerMapper (grpc adapter) Tests")
 class CustomerMapperTest {

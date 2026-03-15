@@ -1,4 +1,4 @@
-package sinnet.gql.api;
+package sinnet.infra.adapters.gql;
 
 import org.springframework.graphql.data.method.annotation.SchemaMapping;
 import org.springframework.stereotype.Controller;
@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import sinnet.app.flow.request.CustomerReserveCommand;
 import sinnet.app.ports.in.CustomersPortIn;
 import sinnet.gql.models.EntityGql;
-import sinnet.infra.adapters.gql.EntityGqlMapper;
 
 @Controller
 @RequiredArgsConstructor

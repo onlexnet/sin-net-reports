@@ -45,7 +45,7 @@ jobs:
       - name: Build with Maven Webapi
         run: |
           export SEMVERSION=$(cat .semversion)
-          mvn -ntp install -Drevision=$SEMVERSION -DCI=true
+          mvn -ntp install -Drevision=$SEMVERSION
         working-directory: uservice-webapi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

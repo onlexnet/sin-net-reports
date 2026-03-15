@@ -1,4 +1,4 @@
-package sinnet.infra.adapters.grpc;
+package sinnet.adapters.grpc;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -10,6 +10,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import sinnet.domain.models.EntityId;
+import sinnet.infra.adapters.grpc.EntityGrpcMapper;
 
 @DisplayName("EntityGrpcMapper Tests")
 class EntityGrpcMapperTest {

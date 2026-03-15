@@ -1,4 +1,4 @@
-package sinnet.gql.api;
+package sinnet.infra.adapters.gql;
 
 import java.util.List;
 
@@ -9,7 +9,6 @@ import org.springframework.stereotype.Controller;
 import lombok.RequiredArgsConstructor;
 import sinnet.app.ports.in.ProjectsPortIn;
 import sinnet.gql.models.ProjectEntityGql;
-import sinnet.infra.adapters.gql.ProjectMapper;
 
 @Controller
 @RequiredArgsConstructor

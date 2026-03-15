@@ -14,12 +14,10 @@ import sinnet.app.flow.request.CustomerReserveResult;
 import sinnet.app.flow.request.CustomerUpdateCommand;
 import sinnet.app.flow.request.CustomerUpdateResult;
 import sinnet.domain.models.Customer;
-import sinnet.gql.models.CustomerEntityGql;
 
 public interface CustomersPortIn {
-    
-    CustomerEntityGql customerGet(String projectId, String requestorEmail, String customerId,
-            Function<CustomerGetResult, CustomerEntityGql> mapper);
+
+    CustomerGetResult customerGet(String projectId, String requestorEmail, String customerId);
     
     CustomerListResult list(CustomerListQuery query);
     

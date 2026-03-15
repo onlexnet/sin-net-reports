@@ -19,7 +19,6 @@ import sinnet.app.flow.request.CustomerUpdateResult;
 import sinnet.app.ports.in.CustomersPortIn;
 import sinnet.app.ports.out.CustomersPortOut;
 import sinnet.domain.models.Customer;
-import sinnet.gql.models.CustomerEntityGql;
 
 @Component
 @RequiredArgsConstructor
@@ -58,9 +57,8 @@ class CustomersFlow implements CustomersPortIn {
     }
 
     @Override
-    public CustomerEntityGql customerGet(String projectId, String requestorEmail, String customerId,
-            Function<CustomerGetResult, CustomerEntityGql> mapper) {
-        return customersOutPort.customerGet(projectId, requestorEmail, customerId, mapper);
+    public CustomerGetResult customerGet(String projectId, String requestorEmail, String customerId) {
+        return customersOutPort.customerGet(projectId, requestorEmail, customerId);
     }
     
 }

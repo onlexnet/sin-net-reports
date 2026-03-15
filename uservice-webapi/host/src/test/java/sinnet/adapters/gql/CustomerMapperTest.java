@@ -1,4 +1,4 @@
-package sinnet.infra.adapters.gql;
+package sinnet.adapters.gql;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -20,6 +20,7 @@ import sinnet.gql.models.CustomerInput;
 import sinnet.gql.models.CustomerSecretExInput;
 import sinnet.gql.models.CustomerSecretInput;
 import sinnet.gql.models.EntityGql;
+import sinnet.infra.adapters.gql.CustomerMapper;
 
 @DisplayName("CustomerMapper (gql adapter) tests")
 class CustomerMapperTest {
