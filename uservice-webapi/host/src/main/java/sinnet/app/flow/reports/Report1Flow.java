@@ -7,6 +7,7 @@ import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.stereotype.Component;
 
 import io.vavr.Tuple;
@@ -17,14 +18,12 @@ import sinnet.app.ports.out.ActionsGrpcPortOut;
 import sinnet.app.ports.out.CustomersPortOut;
 import sinnet.app.ports.out.Report1OutPort;
 import sinnet.app.ports.out.UsersServicePortOut;
-import sinnet.app.flow.request.UsersSearchResult;
 import sinnet.domain.models.Email;
 import sinnet.report1.grpc.ActivityDetails;
 import sinnet.report1.grpc.CustomerDetails;
 import sinnet.report1.grpc.ReportRequest;
 import sinnet.report1.grpc.ReportRequests;
 import sinnet.reports.grpc.Date;
-import org.jspecify.annotations.Nullable;
 
 /** Refactor - shouuld not be public. */
 @Component

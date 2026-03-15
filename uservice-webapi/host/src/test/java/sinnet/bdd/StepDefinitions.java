@@ -182,7 +182,7 @@ public class StepDefinitions {
     var projectId = UUID.randomUUID();
 
     var reply = new UsersSearchResult(List.of(
-      new UsersSearchResult.UsersSearchItem("my email", "my entity id", "")));
+      new UsersSearchResult.Item("my email", "my entity id", "")));
 
     Mockito
       .when(userServicePortOut.search(projectId, Email.of(requestorEmail)))

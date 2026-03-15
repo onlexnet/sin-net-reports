@@ -172,7 +172,7 @@ class Report1ControllerTest {
         .thenReturn(List.of(customerModel));
 
     // Mock users - return empty reply for simplicity
-    var usersReply = new UsersSearchResult(List.of(new UsersSearchResult.UsersSearchItem("test@example.com", "id-1", "Test User")));
+    var usersReply = new UsersSearchResult(List.of(new UsersSearchResult.Item("test@example.com", "id-1", "Test User")));
     when(usersGrpcService.search(any(), any()))
         .thenReturn(usersReply);
 

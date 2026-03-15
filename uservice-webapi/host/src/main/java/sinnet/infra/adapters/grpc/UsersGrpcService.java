@@ -29,7 +29,7 @@ class UsersGrpcService implements UsersServicePortOut {
 
     var reply = stub.search(request);
     return new UsersSearchResult(reply.getItemsList().stream()
-      .map(it -> new UsersSearchResult.UsersSearchItem(it.getEmail(), it.getEntityId(), it.getCustomName()))
+      .map(it -> new UsersSearchResult.Item(it.getEmail(), it.getEntityId(), it.getCustomName()))
         .toList());
   }
 

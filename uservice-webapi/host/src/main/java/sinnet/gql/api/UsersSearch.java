@@ -9,7 +9,6 @@ import org.springframework.stereotype.Controller;
 import io.vavr.collection.Iterator;
 import lombok.RequiredArgsConstructor;
 import sinnet.app.flow.request.UsersSearchQuery;
-import sinnet.app.flow.request.UsersSearchResult;
 import sinnet.app.ports.in.UsersSearchPortIn;
 import sinnet.gql.models.UserGql;
 
