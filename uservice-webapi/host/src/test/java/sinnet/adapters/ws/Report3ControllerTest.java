@@ -24,9 +24,9 @@ import com.google.protobuf.ByteString;
 import sinnet.app.flow.request.CustomerListQuery;
 import sinnet.app.flow.request.CustomerListResult;
 import sinnet.app.ports.out.CustomersPortOut;
-import sinnet.grpc.common.EntityId;
-import sinnet.grpc.customers.CustomerModel;
-import sinnet.grpc.customers.CustomerValue;
+import sinnet.domain.models.Customer;
+import sinnet.domain.models.CustomerEntry;
+import sinnet.domain.models.EntityId;
 import sinnet.infra.Program;
 import sinnet.report3.grpc.ReportRequest;
 import sinnet.report3.grpc.ReportsGrpc.ReportsBlockingStub;
@@ -85,35 +85,21 @@ class Report3ControllerTest {
   void downloadPdfFile_shouldProcessCustomersWithOperators() throws Exception {
     // Given
     var projectId = UUID.randomUUID();
-    var customerId1 = UUID.randomUUID().toString();
-    var customerId2 = UUID.randomUUID().toString();
+    var customerId1 = UUID.randomUUID();
+    var customerId2 = UUID.randomUUID();
 
     // Mock customers with operators
-    var customer1 = CustomerModel.newBuilder()
-        .setId(EntityId.newBuilder()
-            .setProjectId(projectId.toString())
-            .setEntityId(customerId1)
-            .build())
-        .setValue(CustomerValue.newBuilder()
-            .setCustomerName("Customer A")
-            .setCustomerAddress("Address A")
-            .setCustomerCityName("City A")
-            .setOperatorEmail("operator1@example.com")
-            .build())
-        .build();
+    var customer1 = new Customer(
+        new EntityId(projectId, customerId1, 0),
+        new sinnet.domain.models.CustomerValue(
+            newCustomerEntry("Customer A", "Address A", "City A", "operator1@example.com"),
+            List.of(), List.of(), List.of()));
 
-    var customer2 = CustomerModel.newBuilder()
-        .setId(EntityId.newBuilder()
-            .setProjectId(projectId.toString())
-            .setEntityId(customerId2)
-            .build())
-        .setValue(CustomerValue.newBuilder()
-            .setCustomerName("Customer B")
-            .setCustomerAddress("Address B")
-            .setCustomerCityName("City B")
-            .setOperatorEmail("operator2@example.com")
-            .build())
-        .build();
+    var customer2 = new Customer(
+        new EntityId(projectId, customerId2, 0),
+        new sinnet.domain.models.CustomerValue(
+            newCustomerEntry("Customer B", "Address B", "City B", "operator2@example.com"),
+            List.of(), List.of(), List.of()));
 
     var listReply = new CustomerListResult(List.of(customer1, customer2));
 
@@ -139,35 +125,54 @@ class Report3ControllerTest {
     verify(reportsBlockingStub).produce(any(ReportRequest.class));
   }
 
+  static CustomerEntry newCustomerEntry(String customerName, String customerAddress, String customerCityName, String operatorEmail) {
+    return new CustomerEntry(operatorEmail,
+        null,
+        null,
+         0,
+         customerName,
+         customerCityName,
+         customerAddress,
+         false,
+         false,
+         false,
+         false,
+         false,
+         false,
+         false,
+         false,
+         false,
+         false,
+         false,
+         false,
+         false,
+         false,
+         false,
+         false,
+         null,
+         false,
+         null, null);
+  }
+
   @Test
   void downloadPdfFile_shouldFilterCustomersWithoutOperator() throws Exception {
     // Given
     var projectId = UUID.randomUUID();
 
     // Create customer with operator email (should be included)
-    var customerWithOperator = CustomerModel.newBuilder()
-        .setId(EntityId.newBuilder()
-            .setProjectId(projectId.toString())
-            .setEntityId(UUID.randomUUID().toString())
-            .build())
-        .setValue(CustomerValue.newBuilder()
-            .setCustomerName("Customer With Operator")
-            .setOperatorEmail("operator@example.com")
-            .build())
-        .build();
+    var customerWithOperator = new Customer(
+        new EntityId(projectId, UUID.randomUUID(), 0),
+        new sinnet.domain.models.CustomerValue(
+            newCustomerEntry("Customer With Operator", null, null, "operator@example.com"),
+            List.of(), List.of(), List.of()));
 
     // Create customer without operator email (should be filtered)
-    var customerWithoutOperator = CustomerModel.newBuilder()
-        .setId(EntityId.newBuilder()
-            .setProjectId(projectId.toString())
-            .setEntityId(UUID.randomUUID().toString())
-            .build())
-        .setValue(CustomerValue.newBuilder()
-            .setCustomerName("Customer Without Operator")
-            .setOperatorEmail("")  // Empty operator email
-            .build())
-        .build();
-
+    var customerWithoutOperator = new Customer(
+        new EntityId(projectId, UUID.randomUUID(), 0),
+        new sinnet.domain.models.CustomerValue(
+            newCustomerEntry("Customer Without Operator", null, null, "null"),
+            List.of(), List.of(), List.of()));
+            
     var listReply = new CustomerListResult(List.of(customerWithOperator, customerWithoutOperator));
 
     when(customersPortOut.list(any(CustomerListQuery.class)))
