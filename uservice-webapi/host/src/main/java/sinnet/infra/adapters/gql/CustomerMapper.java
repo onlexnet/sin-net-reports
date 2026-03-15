@@ -10,9 +10,11 @@ import org.mapstruct.factory.Mappers;
 
 import io.vavr.collection.Iterator;
 import io.vavr.control.Option;
+import sinnet.domain.models.Customer;
 import sinnet.domain.models.CustomerContact;
 import sinnet.domain.models.CustomerEntry;
 import sinnet.domain.models.CustomerSecret;
+import sinnet.domain.models.CustomerValue;
 import sinnet.gql.models.CustomerContactGql;
 import sinnet.gql.models.CustomerContactInputGql;
 import sinnet.gql.models.CustomerEntityGql;
@@ -83,6 +85,16 @@ public interface CustomerMapper {
         .setProjectId(id.getProjectId());
   }
 
+  default SomeEntityGql toGql(sinnet.domain.models.EntityId id) {
+    if (id == null) {
+      return null;
+    }
+    return new SomeEntityGql()
+        .setEntityId(id.id().toString())
+        .setEntityVersion(id.tag())
+        .setProjectId(id.projectId().toString());
+  }
+
   default CustomerContactGql toGql(sinnet.grpc.customers.CustomerContact it) {
     if (it == null) {
       return null;
@@ -92,6 +104,18 @@ public interface CustomerMapper {
     result.setLastName(it.getLastName());
     result.setPhoneNo(it.getPhoneNo());
     result.setEmail(it.getEmail());
+    return result;
+  }
+
+  default CustomerContactGql toGql(CustomerContact it) {
+    if (it == null) {
+      return null;
+    }
+    var result = new CustomerContactGql();
+    result.setFirstName(it.firstName());
+    result.setLastName(it.lastName());
+    result.setPhoneNo(it.phoneNo());
+    result.setEmail(it.email());
     return result;
   }
 
@@ -112,6 +136,23 @@ public interface CustomerMapper {
     return result;
   }
 
+  default CustomerSecretExGql toGql(sinnet.domain.models.CustomerSecretEx it) {
+    if (it == null) {
+      return null;
+    }
+    var result = new CustomerSecretExGql();
+    result.setLocation(it.location());
+    result.setUsername(it.username());
+    result.setPassword(it.password());
+    result.setEntityCode(it.entityCode());
+    result.setEntityName(it.entityName());
+    result.setChangedWhen("?");
+    result.setChangedWho("?");
+    result.setOtpSecret(it.otpSecret());
+    result.setOtpRecoveryKeys(it.otpRecoveryKeys());
+    return result;
+  }
+
   default CustomerSecretGql toGql(sinnet.grpc.customers.CustomerSecret it) {
     if (it == null) {
       return null;
@@ -124,6 +165,34 @@ public interface CustomerMapper {
     result.setChangedWho(it.getChangedWho());
     result.setOtpSecret(it.getOtpSecret());
     result.setOtpRecoveryKeys(it.getOtpRecoveryKeys());
+    return result;
+  }
+
+  default CustomerSecretGql toGql(CustomerSecret it) {
+    if (it == null) {
+      return null;
+    }
+    var result = new CustomerSecretGql();
+    result.setLocation(it.location());
+    result.setUsername(it.username());
+    result.setPassword(it.password());
+    result.setChangedWhen("?");
+    result.setChangedWho("?");
+    result.setOtpSecret(it.otpSecret());
+    result.setOtpRecoveryKeys(it.otpRecoveryKeys());
+    return result;
+  }
+
+  default CustomerEntityGql toGql(Customer item) {
+    if (item == null) {
+      return null;
+    }
+    var result = new CustomerEntityGql();
+    result.setId(toGql(item.id()));
+    result.setData(toGql(item.value()));
+    result.setSecrets(Iterator.ofAll(item.value().secrets()).map(this::toGql).toJavaArray(CustomerSecretGql[]::new));
+    result.setSecretsEx(Iterator.ofAll(item.value().secretsEx()).map(this::toGql).toJavaArray(CustomerSecretExGql[]::new));
+    result.setContacts(Iterator.ofAll(item.value().contacts()).map(this::toGql).toJavaArray(CustomerContactGql[]::new));
     return result;
   }
 
@@ -172,6 +241,42 @@ public interface CustomerMapper {
     it.setKomercjaJest(item.getKomercjaJest());
     it.setKomercjaNotatki(item.getKomercjaNotatki());
     it.setDaneTechniczne(item.getDaneTechniczne());
+    return it;
+  }
+
+  default CustomerModelGql toGql(CustomerValue item) {
+    if (item == null) {
+      return null;
+    }
+    var entry = item.entry();
+    var it = new CustomerModelGql();
+    it.setOperatorEmail(entry.operatorEmail());
+    it.setBillingModel(entry.billingModel());
+    it.setSupportStatus(entry.supportStatus());
+    it.setDistance(entry.distance());
+    it.setCustomerName(entry.customerName());
+    it.setCustomerCityName(entry.customerCityName());
+    it.setCustomerAddress(entry.customerAddress());
+    it.setNfzUmowa(entry.nfzUmowa());
+    it.setNfzMaFilie(entry.nfzMaFilie());
+    it.setNfzLekarz(entry.nfzLekarz());
+    it.setNfzPolozna(entry.nfzPolozna());
+    it.setNfzPielegniarkaSrodowiskowa(entry.nfzPielegniarkaSrodowiskowa());
+    it.setNfzMedycynaSzkolna(entry.nfzMedycynaSzkolna());
+    it.setNfzTransportSanitarny(entry.nfzTransportSanitarny());
+    it.setNfzNocnaPomocLekarska(entry.nfzNocnaPomocLekarska());
+    it.setNfzAmbulatoryjnaOpiekaSpecjalistyczna(entry.nfzAmbulatoryjnaOpiekaSpecjalistyczna());
+    it.setNfzRehabilitacja(entry.nfzRehabilitacja());
+    it.setNfzStomatologia(entry.nfzStomatologia());
+    it.setNfzPsychiatria(entry.nfzPsychiatria());
+    it.setNfzSzpitalnictwo(entry.nfzSzpitalnictwo());
+    it.setNfzProgramyProfilaktyczne(entry.nfzProgramyProfilaktyczne());
+    it.setNfzZaopatrzenieOrtopedyczne(entry.nfzZaopatrzenieOrtopedyczne());
+    it.setNfzOpiekaDlugoterminowa(entry.nfzOpiekaDlugoterminowa());
+    it.setNfzNotatki(entry.nfzNotatki());
+    it.setKomercjaJest(entry.komercjaJest());
+    it.setKomercjaNotatki(entry.komercjaNotatki());
+    it.setDaneTechniczne(entry.daneTechniczne());
     return it;
   }
 

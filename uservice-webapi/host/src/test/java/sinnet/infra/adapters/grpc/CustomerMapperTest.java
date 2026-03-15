@@ -4,6 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.instancio.Select.field;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
 
 import org.instancio.Instancio;
 import org.junit.jupiter.api.DisplayName;
@@ -14,6 +16,7 @@ import sinnet.domain.models.CustomerContact;
 import sinnet.domain.models.CustomerEntry;
 import sinnet.domain.models.CustomerSecret;
 import sinnet.domain.models.CustomerSecretEx;
+import sinnet.domain.models.EntityId;
 import sinnet.gql.models.EntityGql;
 
 @DisplayName("CustomerMapper (grpc adapter) Tests")
@@ -63,6 +66,166 @@ class CustomerMapperTest {
     @DisplayName("should return null for null LocalDateTime")
     void shouldHandleNullDateTime() {
       assertThat(CustomerMapper.toGrpc((LocalDateTime) null)).isNull();
+    }
+  }
+
+  @Nested
+  @DisplayName("grpc -> domain mappings")
+  class GrpcToDomainTests {
+
+    @Test
+    @DisplayName("should map grpc CustomerContact to domain")
+    void shouldMapGrpcContactToDomain() {
+      var minimal = sinnet.grpc.customers.CustomerContact.newBuilder()
+          .setFirstName("Ada")
+          .build();
+      var full = sinnet.grpc.customers.CustomerContact.newBuilder()
+          .setFirstName("Jan")
+          .setLastName("Kowalski")
+          .setPhoneNo("+48123123123")
+          .setEmail("jan@example.com")
+          .build();
+
+      assertThat(CustomerMapper.toDomain(minimal)).isEqualTo(new CustomerContact("Ada", "", "", ""));
+      assertThat(CustomerMapper.toDomain(full)).isEqualTo(new CustomerContact("Jan", "Kowalski", "+48123123123", "jan@example.com"));
+    }
+
+    @Test
+    @DisplayName("should return null for null grpc CustomerContact")
+    void shouldReturnNullForNullContact() {
+      assertThat(CustomerMapper.toDomain((sinnet.grpc.customers.CustomerContact) null)).isNull();
+    }
+
+    @Test
+    @DisplayName("should map grpc CustomerSecret to domain")
+    void shouldMapGrpcSecretToDomain() {
+      var minimal = sinnet.grpc.customers.CustomerSecret.newBuilder()
+          .setLocation("HQ")
+          .build();
+      var full = sinnet.grpc.customers.CustomerSecret.newBuilder()
+          .setLocation("Datacenter")
+          .setUsername("ops")
+          .setPassword("p@ss")
+          .setOtpSecret("otp")
+          .setOtpRecoveryKeys("k1,k2")
+          .build();
+
+      assertThat(CustomerMapper.toDomain(minimal)).isEqualTo(new CustomerSecret("HQ", "", "", "", ""));
+      assertThat(CustomerMapper.toDomain(full)).isEqualTo(new CustomerSecret("Datacenter", "ops", "p@ss", "otp", "k1,k2"));
+    }
+
+    @Test
+    @DisplayName("should return null for null grpc CustomerSecret")
+    void shouldReturnNullForNullSecret() {
+      assertThat(CustomerMapper.toDomain((sinnet.grpc.customers.CustomerSecret) null)).isNull();
+    }
+
+    @Test
+    @DisplayName("should map grpc CustomerSecretEx to domain")
+    void shouldMapGrpcSecretExToDomain() {
+      var minimal = sinnet.grpc.customers.CustomerSecretEx.newBuilder()
+          .setLocation("Branch")
+          .build();
+      var full = sinnet.grpc.customers.CustomerSecretEx.newBuilder()
+          .setLocation("HQ")
+          .setUsername("root")
+          .setPassword("very-secret")
+          .setEntityName("EHR")
+          .setEntityCode("EHR-01")
+          .setOtpSecret("otp-seed")
+          .setOtpRecoveryKeys("r1,r2")
+          .build();
+
+      assertThat(CustomerMapper.toDomain(minimal)).isEqualTo(new CustomerSecretEx("Branch", "", "", "", "", "", ""));
+      assertThat(CustomerMapper.toDomain(full)).isEqualTo(new CustomerSecretEx("HQ", "root", "very-secret", "EHR", "EHR-01", "otp-seed", "r1,r2"));
+    }
+
+    @Test
+    @DisplayName("should return null for null grpc CustomerSecretEx")
+    void shouldReturnNullForNullSecretEx() {
+      assertThat(CustomerMapper.toDomain((sinnet.grpc.customers.CustomerSecretEx) null)).isNull();
+    }
+
+    @Test
+    @DisplayName("should map full grpc CustomerModel to domain Customer")
+    void shouldMapGrpcCustomerModelToDomain() {
+      var projectId = UUID.randomUUID();
+      var entityId = UUID.randomUUID();
+      var grpcModel = sinnet.grpc.customers.CustomerModel.newBuilder()
+          .setId(sinnet.grpc.common.EntityId.newBuilder()
+              .setProjectId(projectId.toString())
+              .setEntityId(entityId.toString())
+              .setEntityVersion(3L)
+              .build())
+          .setValue(sinnet.grpc.customers.CustomerValue.newBuilder()
+              .setCustomerName("ACME Clinic")
+              .setCustomerCityName("Warsaw")
+              .setCustomerAddress("Main St 1")
+              .setOperatorEmail("op@example.com")
+              .build())
+          .addSecrets(sinnet.grpc.customers.CustomerSecret.newBuilder()
+              .setLocation("DC")
+              .setUsername("admin")
+              .build())
+          .addSecretEx(sinnet.grpc.customers.CustomerSecretEx.newBuilder()
+              .setLocation("HQ")
+              .setEntityCode("E-01")
+              .build())
+          .addContacts(sinnet.grpc.customers.CustomerContact.newBuilder()
+              .setFirstName("Jan")
+              .setEmail("jan@example.com")
+              .build())
+          .build();
+
+      var result = CustomerMapper.toDomain(grpcModel);
+
+      assertThat(result).isNotNull();
+      assertThat(result.id()).isEqualTo(new EntityId(projectId, entityId, 3L));
+      assertThat(result.value().entry().customerName()).isEqualTo("ACME Clinic");
+      assertThat(result.value().entry().customerCityName()).isEqualTo("Warsaw");
+      assertThat(result.value().entry().operatorEmail()).isEqualTo("op@example.com");
+      assertThat(result.value().secrets()).hasSize(1);
+      assertThat(result.value().secrets().get(0).location()).isEqualTo("DC");
+      assertThat(result.value().secretsEx()).hasSize(1);
+      assertThat(result.value().secretsEx().get(0).entityCode()).isEqualTo("E-01");
+      assertThat(result.value().contacts()).hasSize(1);
+      assertThat(result.value().contacts().get(0).firstName()).isEqualTo("Jan");
+    }
+
+    @Test
+    @DisplayName("should return null for null grpc CustomerModel")
+    void shouldReturnNullForNullModel() {
+      assertThat(CustomerMapper.toDomain((sinnet.grpc.customers.CustomerModel) null)).isNull();
+    }
+
+    @Test
+    @DisplayName("should map grpc CustomerModel with empty lists to domain")
+    void shouldMapGrpcCustomerModelWithEmptyLists() {
+      var projectId = UUID.randomUUID();
+      var entityId = UUID.randomUUID();
+      var grpcModel = sinnet.grpc.customers.CustomerModel.newBuilder()
+          .setId(sinnet.grpc.common.EntityId.newBuilder()
+              .setProjectId(projectId.toString())
+              .setEntityId(entityId.toString())
+              .setEntityVersion(0L)
+              .build())
+          .setValue(sinnet.grpc.customers.CustomerValue.newBuilder()
+              .setCustomerName("Minimal")
+              .build())
+          .build();
+
+      var result = CustomerMapper.toDomain(grpcModel);
+
+      assertThat(result.id()).isEqualTo(new EntityId(projectId, entityId, 0L));
+      assertThat(result.value().secrets()).isEmpty();
+      assertThat(result.value().secretsEx()).isEmpty();
+      assertThat(result.value().contacts()).isEmpty();
+    }
+
+    @Test
+    @DisplayName("should return null CustomerValue for null grpc CustomerValue")
+    void shouldReturnNullForNullCustomerValue() {
+      assertThat(CustomerMapper.toDomain(null, List.of(), List.of(), List.of())).isNull();
     }
   }
 

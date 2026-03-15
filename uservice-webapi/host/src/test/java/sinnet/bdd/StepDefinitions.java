@@ -19,6 +19,7 @@ import io.cucumber.java.en.When;
 import onlexnet.sinnet.webapi.test.AppApi;
 import sinnet.app.flow.request.CustomerRemoveCommand;
 import sinnet.app.flow.request.CustomerReserveCommand;
+import sinnet.app.flow.request.CustomerReserveResult;
 import sinnet.app.flow.request.CustomerUpdateCommand;
 import sinnet.app.lib.TimeProvider;
 import sinnet.app.ports.out.CustomersPortOut;
@@ -158,13 +159,8 @@ public class StepDefinitions {
 
     var projectVersion = 1L;
     var expectedCmd = new CustomerReserveCommand(projectId);
-    var expectedResult = sinnet.grpc.customers.ReserveReply.newBuilder()
-        .setEntityId(EntityId.newBuilder()
-          .setProjectId(projectId.toString())
-            .setEntityId(entityId.toString())
-            .setEntityVersion(projectVersion)
-            .build())
-        .build();
+    var expectedResult = new CustomerReserveResult(new sinnet.domain.models.EntityId(
+      projectId, entityId, projectVersion));
 
     Mockito
       .when(customersPortOut.reserve(expectedCmd))

@@ -10,10 +10,16 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+import java.util.UUID;
+
+import sinnet.domain.models.Customer;
 import sinnet.domain.models.CustomerContact;
 import sinnet.domain.models.CustomerEntry;
 import sinnet.domain.models.CustomerSecret;
 import sinnet.domain.models.CustomerSecretEx;
+import sinnet.domain.models.CustomerValue;
+import sinnet.domain.models.EntityId;
 import sinnet.gql.models.CustomerContactInputGql;
 import sinnet.gql.models.CustomerInput;
 import sinnet.gql.models.CustomerSecretExInput;
@@ -1157,6 +1163,204 @@ class CustomerMapperTest {
           .setEmail("jan.kowalski@example.com")
           .build();
       assertThat(grpc).isEqualTo(expectedGrpc);
+    }
+  }
+
+  @Nested
+  @DisplayName("domain -> gql mappings")
+  class DomainToGqlTests {
+
+    @Test
+    @DisplayName("should map domain EntityId to SomeEntityGql")
+    void shouldMapDomainEntityIdToSomeEntityGql() {
+      var projectId = UUID.randomUUID();
+      var entityId = UUID.randomUUID();
+      var source = new EntityId(projectId, entityId, 7L);
+
+      var result = mapper.toGql(source);
+
+      assertThat(result).isNotNull();
+      assertThat(result.getProjectId()).isEqualTo(projectId.toString());
+      assertThat(result.getEntityId()).isEqualTo(entityId.toString());
+      assertThat(result.getEntityVersion()).isEqualTo(7L);
+    }
+
+    @Test
+    @DisplayName("should return null for null domain EntityId")
+    void shouldReturnNullForNullDomainEntityId() {
+      assertThat(mapper.toGql((sinnet.domain.models.EntityId) null)).isNull();
+    }
+
+    @Test
+    @DisplayName("should map domain CustomerContact to gql")
+    void shouldMapDomainContactToGql() {
+      var minimal = new CustomerContact("Ada", null, null, null);
+      var full = new CustomerContact("Jan", "Kowalski", "+48123123123", "jan@example.com");
+
+      var minResult = mapper.toGql(minimal);
+      assertThat(minResult.getFirstName()).isEqualTo("Ada");
+      assertThat(minResult.getLastName()).isNull();
+      assertThat(minResult.getPhoneNo()).isNull();
+      assertThat(minResult.getEmail()).isNull();
+
+      var fullResult = mapper.toGql(full);
+      assertThat(fullResult.getFirstName()).isEqualTo("Jan");
+      assertThat(fullResult.getLastName()).isEqualTo("Kowalski");
+      assertThat(fullResult.getPhoneNo()).isEqualTo("+48123123123");
+      assertThat(fullResult.getEmail()).isEqualTo("jan@example.com");
+    }
+
+    @Test
+    @DisplayName("should return null for null domain CustomerContact")
+    void shouldReturnNullForNullDomainContact() {
+      assertThat(mapper.toGql((CustomerContact) null)).isNull();
+    }
+
+    @Test
+    @DisplayName("should map domain CustomerSecret to gql with placeholder dates")
+    void shouldMapDomainSecretToGql() {
+      var minimal = new CustomerSecret("HQ", null, null, null, null);
+      var full = new CustomerSecret("DC", "ops", "p@ss", "otp", "k1,k2");
+
+      var minResult = mapper.toGql(minimal);
+      assertThat(minResult.getLocation()).isEqualTo("HQ");
+      assertThat(minResult.getChangedWhen()).isEqualTo("?");
+      assertThat(minResult.getChangedWho()).isEqualTo("?");
+
+      var fullResult = mapper.toGql(full);
+      assertThat(fullResult.getLocation()).isEqualTo("DC");
+      assertThat(fullResult.getUsername()).isEqualTo("ops");
+      assertThat(fullResult.getPassword()).isEqualTo("p@ss");
+      assertThat(fullResult.getOtpSecret()).isEqualTo("otp");
+      assertThat(fullResult.getOtpRecoveryKeys()).isEqualTo("k1,k2");
+      assertThat(fullResult.getChangedWhen()).isEqualTo("?");
+    }
+
+    @Test
+    @DisplayName("should return null for null domain CustomerSecret")
+    void shouldReturnNullForNullDomainSecret() {
+      assertThat(mapper.toGql((CustomerSecret) null)).isNull();
+    }
+
+    @Test
+    @DisplayName("should map domain CustomerSecretEx to gql with placeholder dates")
+    void shouldMapDomainSecretExToGql() {
+      var minimal = new CustomerSecretEx("Branch", null, null, null, null, null, null);
+      var full = new CustomerSecretEx("HQ", "root", "very-secret", "EHR", "EHR-01", "otp-seed", "r1,r2");
+
+      var minResult = mapper.toGql(minimal);
+      assertThat(minResult.getLocation()).isEqualTo("Branch");
+      assertThat(minResult.getChangedWhen()).isEqualTo("?");
+      assertThat(minResult.getChangedWho()).isEqualTo("?");
+
+      var fullResult = mapper.toGql(full);
+      assertThat(fullResult.getLocation()).isEqualTo("HQ");
+      assertThat(fullResult.getUsername()).isEqualTo("root");
+      assertThat(fullResult.getPassword()).isEqualTo("very-secret");
+      assertThat(fullResult.getEntityName()).isEqualTo("EHR");
+      assertThat(fullResult.getEntityCode()).isEqualTo("EHR-01");
+      assertThat(fullResult.getOtpSecret()).isEqualTo("otp-seed");
+      assertThat(fullResult.getOtpRecoveryKeys()).isEqualTo("r1,r2");
+    }
+
+    @Test
+    @DisplayName("should return null for null domain CustomerSecretEx")
+    void shouldReturnNullForNullDomainSecretEx() {
+      assertThat(mapper.toGql((sinnet.domain.models.CustomerSecretEx) null)).isNull();
+    }
+
+    @Test
+    @DisplayName("should map domain CustomerValue to CustomerModelGql")
+    void shouldMapDomainCustomerValueToGql() {
+      var entry = new CustomerEntry(
+          "op@example.com", "subscription", "active", 15,
+          "ACME Clinic", "Warsaw", "Main St 1",
+          true, false, true, false, false, false, false, false, false, false,
+          false, false, false, false, false, false,
+          "NFZ notes", true, "Commercial notes", "Tech data");
+      var value = new CustomerValue(entry, List.of(), List.of(), List.of());
+
+      var result = mapper.toGql(value);
+
+      assertThat(result).isNotNull();
+      assertThat(result.getCustomerName()).isEqualTo("ACME Clinic");
+      assertThat(result.getCustomerCityName()).isEqualTo("Warsaw");
+      assertThat(result.getCustomerAddress()).isEqualTo("Main St 1");
+      assertThat(result.getOperatorEmail()).isEqualTo("op@example.com");
+      assertThat(result.getBillingModel()).isEqualTo("subscription");
+      assertThat(result.getSupportStatus()).isEqualTo("active");
+      assertThat(result.getDistance()).isEqualTo(15);
+      assertThat(result.getNfzUmowa()).isTrue();
+      assertThat(result.getNfzLekarz()).isTrue();
+      assertThat(result.getKomercjaJest()).isTrue();
+      assertThat(result.getNfzNotatki()).isEqualTo("NFZ notes");
+      assertThat(result.getKomercjaNotatki()).isEqualTo("Commercial notes");
+      assertThat(result.getDaneTechniczne()).isEqualTo("Tech data");
+    }
+
+    @Test
+    @DisplayName("should return null for null domain CustomerValue")
+    void shouldReturnNullForNullCustomerValue() {
+      assertThat(mapper.toGql((CustomerValue) null)).isNull();
+    }
+
+    @Test
+    @DisplayName("should map domain Customer to CustomerEntityGql with nested collections")
+    void shouldMapDomainCustomerToGql() {
+      var projectId = UUID.randomUUID();
+      var entityId = UUID.randomUUID();
+      var id = new EntityId(projectId, entityId, 5L);
+      var entry = new CustomerEntry(
+          null, null, null, 0, "Clinic", null, null,
+          false, false, false, false, false, false, false, false, false,
+          false, false, false, false, false, false, false,
+          null, false, null, null);
+      var secret = new CustomerSecret("DC", "admin", "pass", null, null);
+      var secretEx = new CustomerSecretEx("HQ", "root", "x", "E", "E-01", null, null);
+      var contact = new CustomerContact("Jan", "Nowak", "+48111222333", "jan@example.com");
+      var value = new CustomerValue(entry, List.of(secret), List.of(secretEx), List.of(contact));
+      var customer = new Customer(id, value);
+
+      var result = mapper.toGql(customer);
+
+      assertThat(result).isNotNull();
+      assertThat(result.getId().getProjectId()).isEqualTo(projectId.toString());
+      assertThat(result.getId().getEntityId()).isEqualTo(entityId.toString());
+      assertThat(result.getId().getEntityVersion()).isEqualTo(5L);
+      assertThat(result.getData().getCustomerName()).isEqualTo("Clinic");
+      assertThat(result.getSecrets()).hasSize(1);
+      assertThat(result.getSecrets()[0].getLocation()).isEqualTo("DC");
+      assertThat(result.getSecretsEx()).hasSize(1);
+      assertThat(result.getSecretsEx()[0].getEntityCode()).isEqualTo("E-01");
+      assertThat(result.getContacts()).hasSize(1);
+      assertThat(result.getContacts()[0].getFirstName()).isEqualTo("Jan");
+    }
+
+    @Test
+    @DisplayName("should return null for null domain Customer")
+    void shouldReturnNullForNullCustomer() {
+      assertThat(mapper.toGql((Customer) null)).isNull();
+    }
+
+    @Test
+    @DisplayName("should map domain Customer with empty collections")
+    void shouldMapCustomerWithEmptyCollections() {
+      var projectId = UUID.randomUUID();
+      var entityId = UUID.randomUUID();
+      var id = new EntityId(projectId, entityId, 0L);
+      var entry = new CustomerEntry(
+          null, null, null, 0, "Empty", null, null,
+          false, false, false, false, false, false, false, false, false,
+          false, false, false, false, false, false, false,
+          null, false, null, null);
+      var value = new CustomerValue(entry, List.of(), List.of(), List.of());
+      var customer = new Customer(id, value);
+
+      var result = mapper.toGql(customer);
+
+      assertThat(result.getSecrets()).isEmpty();
+      assertThat(result.getSecretsEx()).isEmpty();
+      assertThat(result.getContacts()).isEmpty();
     }
   }
 
