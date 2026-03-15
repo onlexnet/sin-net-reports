@@ -2,7 +2,6 @@ package sinnet;
 
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
 
-import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
 import org.junit.jupiter.api.Test;
 
 import com.tngtech.archunit.core.domain.JavaClass;
@@ -31,24 +30,21 @@ public class AppArchTest {
   static final String ROOT_PACKAGE_DOMAIN = "sinnet.domain..";
   static final String ROOT_PACKAGE_GQL = "sinnet.gql..";
   static final String ROOT_PACKAGE_APP = "sinnet.app..";
-  static final String ROOT_PACKAGE_INFRA = "sinnet.infra..";
 
   static LayeredArchitecture layers = Architectures.layeredArchitecture()
           .consideringAllDependencies()
-          .layer("Adapters").definedBy("sinnet.infra.adapters..")
+          .layer("Adapters").definedBy("sinnet.adapters..")
           .layer("PortsIn").definedBy("sinnet.app.ports.in..")
           .layer("PortsOut").definedBy(ROOT_PACKAGE_PORTS_OUT)
-          .layer("LegacyPorts").definedBy(ROOT_PACKAGE_PORTS)
           .layer("Domain").definedBy(ROOT_PACKAGE_DOMAIN)
           .layer("GQL").definedBy(ROOT_PACKAGE_GQL)
           .layer("App").definedBy(ROOT_PACKAGE_APP)
           .layer("AppFlow").definedBy("sinnet.app.flow..")
           .layer("AppServices").definedBy("sinnet.app.service..")
-          .layer("Infra").definedBy(ROOT_PACKAGE_INFRA)
           .layer("grpc.models").definedBy("sinnet.grpc..")
-          .layer("grpc.adapters").definedBy("sinnet.infra.adapters.grpc..")
+          .layer("grpc.adapters").definedBy("sinnet.adapters.grpc..")
           .layer("gql.models").definedBy("sinnet.gql..")
-          .layer("gql.adapters").definedBy("sinnet.infra.adapters.gql..");
+          .layer("gql.adapters").definedBy("sinnet.adapters.gql..");
 
 
   // Classes should not access System.in , System.out or System.err
@@ -76,7 +72,7 @@ public class AppArchTest {
 
       // Ports should not depend on domain
       layers
-        .whereLayer("Domain").mayOnlyBeAccessedByLayers("Adapters", "PortsIn", "PortsOut", "LegacyPorts", "App", "GQL")
+        .whereLayer("Domain").mayOnlyBeAccessedByLayers("Adapters", "PortsIn", "PortsOut", "App", "GQL")
         .check(testedClasses);
 
       layers
@@ -95,10 +91,6 @@ public class AppArchTest {
         .whereLayer("Adapters").mayNotBeAccessedByAnyLayer()
         .check(testedClasses);
       
-      layers
-        .whereLayer("Infra").mayNotBeAccessedByAnyLayer()
-        .check(testedClasses);
-
     }
 }
 

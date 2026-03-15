@@ -1,4 +1,4 @@
-package sinnet.infra.adapters.grpc;
+package sinnet.adapters.grpc;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import sinnet.domain.models.EntityId;
 import sinnet.domain.models.UserToken;
+import sinnet.infra.adapters.grpc.Map;
 
 class MapTest {
 
