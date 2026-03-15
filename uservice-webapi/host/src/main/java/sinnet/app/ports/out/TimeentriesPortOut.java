@@ -8,7 +8,7 @@ import sinnet.domain.models.EntityId;
 import sinnet.domain.models.TimeEntry;
 
 /** GRPC methods related to Actions (aka Services aka Timeentries). */
-public interface ActionsGrpcPortOut {
+public interface TimeentriesPortOut {
 
   /** Returns list of actions for requested project, limited result from-to range. */
   List<TimeEntry> searchInternal(UUID projectId, LocalDate from, LocalDate to);

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
 import sinnet.app.ports.in.TimeentriesServicePortIn;
-import sinnet.app.ports.out.ActionsGrpcPortOut;
+import sinnet.app.ports.out.TimeentriesPortOut;
 import sinnet.domain.models.EntityId;
 import sinnet.domain.models.TimeEntry;
 
@@ -16,7 +16,7 @@ import sinnet.domain.models.TimeEntry;
 @RequiredArgsConstructor
 class TimeentriesService implements TimeentriesServicePortIn {
 
-    private final ActionsGrpcPortOut timeentriesGateway;
+    private final TimeentriesPortOut timeentriesGateway;
     
     @Override
     public EntityId newEntry(String requestorEmail, UUID projectId, LocalDate now) {

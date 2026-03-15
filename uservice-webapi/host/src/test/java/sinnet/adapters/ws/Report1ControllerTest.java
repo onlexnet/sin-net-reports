@@ -26,7 +26,7 @@ import com.google.protobuf.ByteString;
 
 import sinnet.app.flow.reports.Report1Flow;
 import sinnet.app.flow.request.UsersSearchResult;
-import sinnet.app.ports.out.ActionsGrpcPortOut;
+import sinnet.app.ports.out.TimeentriesPortOut;
 import sinnet.app.ports.out.CustomersPortOut;
 import sinnet.app.ports.out.Report1OutPort;
 import sinnet.app.ports.out.UsersServicePortOut;
@@ -47,10 +47,10 @@ class Report1ControllerTest {
   private MockMvc mockMvc;
 
   @MockitoBean
-  private ActionsGrpcPortOut actionsGrpcFacade;
+  private TimeentriesPortOut actionsGrpcFacade;
 
   @MockitoBean
-  private CustomersPortOut customersGrpcFacade;
+  private CustomersPortOut customersPortOut;
 
   @MockitoBean
   private Report1OutPort reports1GrpcAdapter;
@@ -71,7 +71,7 @@ class Report1ControllerTest {
         .thenReturn(List.of());
 
     // Mock customers - return empty list
-    when(customersGrpcFacade.customerList(anyString(), anyString(), any()))
+    when(customersPortOut.customerList(anyString(), anyString(), any()))
         .thenReturn(List.of());
 
     // Mock users - return empty reply
@@ -102,7 +102,7 @@ class Report1ControllerTest {
         eq(LocalDate.of(2024, 3, 1)),
         eq(LocalDate.of(2024, 3, 31))
     );
-    verify(customersGrpcFacade).customerList(eq(projectId.toString()), anyString(), any());
+    verify(customersPortOut).customerList(eq(projectId.toString()), anyString(), any());
     verify(usersGrpcService).search(any(), any());
     verify(reports1GrpcAdapter).producePack(any(ReportRequests.class));
   }
@@ -118,7 +118,7 @@ class Report1ControllerTest {
     // Setup mocks
     when(actionsGrpcFacade.searchInternal(any(UUID.class), any(LocalDate.class), any(LocalDate.class)))
         .thenReturn(List.of());
-    when(customersGrpcFacade.customerList(anyString(), anyString(), any()))
+    when(customersPortOut.customerList(anyString(), anyString(), any()))
         .thenReturn(List.of());
     when(usersGrpcService.search(any(), any()))
         .thenReturn(new UsersSearchResult(List.of()));
@@ -168,7 +168,7 @@ class Report1ControllerTest {
         "Test Address"
     );
     
-    when(customersGrpcFacade.customerList(anyString(), anyString(), any()))
+    when(customersPortOut.customerList(anyString(), anyString(), any()))
         .thenReturn(List.of(customerModel));
 
     // Mock users - return empty reply for simplicity
@@ -190,7 +190,7 @@ class Report1ControllerTest {
 
     // Verify all services were called
     verify(actionsGrpcFacade).searchInternal(any(UUID.class), any(LocalDate.class), any(LocalDate.class));
-    verify(customersGrpcFacade).customerList(anyString(), anyString(), any());
+    verify(customersPortOut).customerList(anyString(), anyString(), any());
     verify(usersGrpcService).search(any(), any());
     verify(reports1GrpcAdapter).producePack(any(ReportRequests.class));
   }
@@ -205,7 +205,7 @@ class Report1ControllerTest {
     // Setup mocks
     when(actionsGrpcFacade.searchInternal(any(UUID.class), any(LocalDate.class), any(LocalDate.class)))
         .thenReturn(List.of());
-    when(customersGrpcFacade.customerList(anyString(), anyString(), any()))
+    when(customersPortOut.customerList(anyString(), anyString(), any()))
         .thenReturn(List.of());
     when(usersGrpcService.search(any(), any()))
         .thenReturn(new UsersSearchResult(List.of()));
