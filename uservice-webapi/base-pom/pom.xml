@@ -14,7 +14,7 @@
     <jacoco-maven-plugin.version>0.8.14</jacoco-maven-plugin.version>
     <sonar-maven-plugin.version>3.7.0.1746</sonar-maven-plugin.version>
     <errorprone.version>2.39.0</errorprone.version>
-    <cucumber.version>7.20.0</cucumber.version>
+    <cucumber.version>7.34.3</cucumber.version>
     <commons-lang3.version>3.12.0</commons-lang3.version>
     <nullaway.version>0.12.10</nullaway.version>
     <lombok.version>1.18.42</lombok.version>
