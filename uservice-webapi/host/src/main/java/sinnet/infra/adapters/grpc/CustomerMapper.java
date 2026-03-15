@@ -4,13 +4,12 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import sinnet.app.flow.request.CustomerGetResult;
+import sinnet.app.lib.PropsBuilder;
 import sinnet.domain.models.Customer;
 import sinnet.domain.models.CustomerContact;
 import sinnet.domain.models.CustomerEntry;
 import sinnet.domain.models.CustomerSecret;
 import sinnet.domain.models.CustomerValue;
-import sinnet.gql.models.EntityGql;
-import sinnet.gql.utils.PropsBuilder;
 import sinnet.grpc.common.EntityId;
 
 public interface CustomerMapper {
@@ -129,14 +128,6 @@ public interface CustomerMapper {
         it.getLastName(),
         it.getPhoneNo(),
         it.getEmail());
-  }
-
-  static EntityId toGrpc(EntityGql item) {
-    return EntityId.newBuilder()
-        .setEntityId(item.getEntityId())
-        .setProjectId(item.getProjectId())
-        .setEntityVersion(item.getEntityVersion())
-        .build();
   }
 
   static sinnet.grpc.customers.CustomerValue toGrpc(CustomerEntry item) {

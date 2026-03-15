@@ -1,13 +1,11 @@
 package sinnet.infra.adapters.grpc;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.instancio.Select.field;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-import org.instancio.Instancio;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -19,35 +17,9 @@ import sinnet.domain.models.CustomerSecret;
 import sinnet.domain.models.CustomerSecretEx;
 import sinnet.domain.models.CustomerValue;
 import sinnet.domain.models.EntityId;
-import sinnet.gql.models.EntityGql;
 
 @DisplayName("CustomerMapper (grpc adapter) Tests")
 class CustomerMapperTest {
-
-  @Nested
-  @DisplayName("EntityGql -> grpc EntityId")
-  class EntityMappingTests {
-
-    @Test
-    @DisplayName("should map EntityGql with full fields")
-    void shouldMapEntityFull() {
-      var projectId = UUID.randomUUID().toString();
-      var entityId = UUID.randomUUID().toString();
-      var source = Instancio.of(EntityGql.class)
-          .set(field(EntityGql::getProjectId), projectId)
-          .set(field(EntityGql::getEntityId), entityId)
-          .set(field(EntityGql::getEntityVersion), 42L)
-          .create();
-
-      var result = CustomerMapper.toGrpc(source);
-
-      assertThat(result).isEqualTo(sinnet.grpc.common.EntityId.newBuilder()
-          .setProjectId(projectId)
-          .setEntityId(entityId)
-          .setEntityVersion(42L)
-          .build());
-    }
-  }
 
   @Nested
   @DisplayName("LocalDateTime -> grpc LocalDateTime")

@@ -87,7 +87,7 @@ class CustomersGateway implements CustomersPortOut {
     var grpcRequest = UpdateCommand.newBuilder()
         .setUserToken(userToken)
         .setModel(CustomerModel.newBuilder()
-          .setId(CustomerMapper.toGrpc(request.id()))
+          .setId(Map.apply.map(request.id()))
           .setValue(CustomerMapper.toGrpc(request.value().entry()))
           .addAllSecrets(request.value().secrets().stream().map(it -> CustomerMapper.toGrpc(it, changedWhen, changedWho)).toList())
           .addAllSecretEx(request.value().secretsEx().stream().map(it -> CustomerMapper.toGrpc(it, changedWhen, changedWho)).toList())

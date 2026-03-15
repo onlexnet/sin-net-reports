@@ -49,7 +49,7 @@ class CustomersMutationSave {
       // user context
       self.userToken(),
       // customer data
-      id,
+      customerMapper.map(id),
       customerVal,
       // change metadata
       changedWhen,

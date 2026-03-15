@@ -37,7 +37,6 @@ import sinnet.domain.models.ProjectId;
 import sinnet.gql.models.CustomerInput;
 import sinnet.gql.models.CustomerSecretExInput;
 import sinnet.gql.models.CustomerSecretInput;
-import sinnet.gql.models.EntityGql;
 import sinnet.gql.models.ProjectEntityGql;
 import sinnet.gql.models.SomeEntityGql;
 import sinnet.gql.models.UserGql;
@@ -273,7 +272,7 @@ public class StepDefinitions {
 
     var expectedCommand = new CustomerUpdateCommand(
         new sinnet.domain.models.UserToken(projectId, requestorEmail),
-        new EntityGql(projectIdStr, entityIdStr, 42),
+        new sinnet.domain.models.EntityId(projectId, entityId, 42),
         new CustomerValue(
           expectedEntry,
           List.of(new CustomerSecret(secret.getLocation(), secret.getUsername(), secret.getPassword(),
