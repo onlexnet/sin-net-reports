@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 
 import sinnet.domain.models.EntityId;
 import sinnet.gql.models.EntityGql;
-import sinnet.infra.adapters.gql.EntityGqlMapper;
 
 @DisplayName("EntityGqlMapper Tests")
 class EntityGqlMapperTest {

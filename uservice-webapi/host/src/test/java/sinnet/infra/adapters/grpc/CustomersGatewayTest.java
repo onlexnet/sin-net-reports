@@ -28,7 +28,6 @@ import sinnet.domain.models.CustomerValue;
 import sinnet.domain.models.EntityId;
 import sinnet.domain.models.UserToken;
 import sinnet.grpc.customers.CustomersGrpc.CustomersBlockingStub;
-import sinnet.infra.adapters.grpc.CustomersGateway;
 import sinnet.grpc.customers.GetReply;
 import sinnet.grpc.customers.ListReply;
 import sinnet.grpc.customers.RemoveReply;

@@ -17,7 +17,6 @@ import sinnet.domain.models.CustomerSecret;
 import sinnet.domain.models.CustomerSecretEx;
 import sinnet.domain.models.CustomerValue;
 import sinnet.domain.models.EntityId;
-import sinnet.infra.adapters.grpc.CustomerMapper;
 
 @DisplayName("CustomerMapper (grpc adapter) Tests")
 class CustomerMapperTest {

@@ -20,7 +20,6 @@ import sinnet.gql.models.CustomerInput;
 import sinnet.gql.models.CustomerSecretExInput;
 import sinnet.gql.models.CustomerSecretInput;
 import sinnet.gql.models.EntityGql;
-import sinnet.infra.adapters.gql.CustomerMapper;
 
 @DisplayName("CustomerMapper (gql adapter) tests")
 class CustomerMapperTest {

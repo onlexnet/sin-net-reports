@@ -10,7 +10,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import sinnet.domain.models.EntityId;
-import sinnet.infra.adapters.grpc.EntityGrpcMapper;
 
 @DisplayName("EntityGrpcMapper Tests")
 class EntityGrpcMapperTest {
