@@ -23,7 +23,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import sinnet.app.ports.out.ActionsGrpcPortOut;
+import sinnet.app.ports.out.TimeentriesPortOut;
 import sinnet.app.ports.out.CustomersPortOut;
 import sinnet.app.service.FileGenerationService;
 import sinnet.domain.models.TimeEntry;
@@ -41,7 +41,7 @@ class FileGenerationServiceTest {
   private static final String SHEET_NAME = "Time Entries";
 
   @Mock
-  private ActionsGrpcPortOut actionsGrpcFacade;
+  private TimeentriesPortOut actionsGrpcFacade;
   
   @Mock
   private CustomersPortOut customersGrpcFacade;

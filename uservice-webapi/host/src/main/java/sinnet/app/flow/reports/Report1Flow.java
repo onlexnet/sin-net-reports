@@ -14,7 +14,7 @@ import io.vavr.Tuple;
 import io.vavr.control.Option;
 import lombok.RequiredArgsConstructor;
 import sinnet.app.ports.in.Report1PortIn;
-import sinnet.app.ports.out.ActionsGrpcPortOut;
+import sinnet.app.ports.out.TimeentriesPortOut;
 import sinnet.app.ports.out.CustomersPortOut;
 import sinnet.app.ports.out.Report1OutPort;
 import sinnet.app.ports.out.UsersServicePortOut;
@@ -30,7 +30,7 @@ import sinnet.reports.grpc.Date;
 @RequiredArgsConstructor
 public class Report1Flow implements Report1PortIn {
 
-  private final ActionsGrpcPortOut timeentries;
+  private final TimeentriesPortOut timeentries;
   private final CustomersPortOut customersClient;
   private final Report1OutPort reportsClient;
   private final UsersServicePortOut usersService;

@@ -3,22 +3,20 @@ package sinnet.app.flow.timeentries;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
-import java.util.function.Function;
 
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
 import sinnet.app.ports.in.TimeentriesServicePortIn;
-import sinnet.app.ports.out.ActionsGrpcPortOut;
+import sinnet.app.ports.out.TimeentriesPortOut;
 import sinnet.domain.models.EntityId;
-import sinnet.gql.models.CustomerEntityGql;
-import sinnet.gql.models.ServiceModelGql;
+import sinnet.domain.models.TimeEntry;
 
 @Component
 @RequiredArgsConstructor
 class TimeentriesService implements TimeentriesServicePortIn {
 
-    private final ActionsGrpcPortOut timeentriesGateway;
+    private final TimeentriesPortOut timeentriesGateway;
     
     @Override
     public EntityId newEntry(String requestorEmail, UUID projectId, LocalDate now) {
@@ -37,14 +35,13 @@ class TimeentriesService implements TimeentriesServicePortIn {
     }
 
     @Override
-    public ServiceModelGql getAction(UUID projectId, UUID entityId, Function<String, CustomerEntityGql> customerMapper) {
-        return timeentriesGateway.getAction(projectId, entityId, customerMapper);
+    public TimeEntry getAction(UUID projectId, UUID entityId) {
+        return timeentriesGateway.getActionInternal(projectId, entityId);
     }
 
     @Override
-    public List<ServiceModelGql> search(UUID projectId, LocalDate from, LocalDate to,
-            Function<String, CustomerEntityGql> customerMapper) {
-        return timeentriesGateway.search(projectId, from, to, customerMapper);
+    public List<TimeEntry> search(UUID projectId, LocalDate from, LocalDate to) {
+        return timeentriesGateway.searchInternal(projectId, from, to);
     }
 
 }

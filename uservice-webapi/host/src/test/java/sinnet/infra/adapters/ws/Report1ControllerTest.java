@@ -1,0 +1,228 @@
+package sinnet.infra.adapters.ws;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.UUID;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.web.servlet.MockMvc;
+
+import com.google.protobuf.ByteString;
+
+import sinnet.app.flow.reports.Report1Flow;
+import sinnet.app.flow.request.UsersSearchResult;
+import sinnet.app.ports.out.TimeentriesPortOut;
+import sinnet.app.ports.out.CustomersPortOut;
+import sinnet.app.ports.out.Report1OutPort;
+import sinnet.app.ports.out.UsersServicePortOut;
+import sinnet.domain.models.Email;
+import sinnet.domain.models.TimeEntry;
+import sinnet.infra.Program;
+import sinnet.report1.grpc.ReportRequests;
+
+/**
+ * Unit tests for Report1Controller using MockMvc to test HTTP layer.
+ */
+@SpringBootTest(classes = Program.class)
+@AutoConfigureMockMvc
+@ActiveProfiles("test")
+class Report1ControllerTest {
+
+  @Autowired
+  private MockMvc mockMvc;
+
+  @MockitoBean
+  private TimeentriesPortOut actionsGrpcFacade;
+
+  @MockitoBean
+  private CustomersPortOut customersPortOut;
+
+  @MockitoBean
+  private Report1OutPort reports1GrpcAdapter;
+
+  @MockitoBean
+  private UsersServicePortOut usersGrpcService;
+
+  @Test
+  void downloadPdfFile_shouldReturnZipFileWithCorrectHeaders() throws Exception {
+    // Given
+    var projectId = UUID.randomUUID();
+    var year = 2024;
+    var month = 3;
+    var expectedZipData = new byte[]{0x50, 0x4B, 0x03, 0x04}; // ZIP file signature
+
+    // Mock actions/time entries - return empty list
+    when(actionsGrpcFacade.searchInternal(any(UUID.class), any(LocalDate.class), any(LocalDate.class)))
+        .thenReturn(List.of());
+
+    // Mock customers - return empty list
+    when(customersPortOut.customerList(anyString(), anyString(), any()))
+        .thenReturn(List.of());
+
+    // Mock users - return empty reply
+    var usersSearchReply = new UsersSearchResult(List.of());
+    when(usersGrpcService.search(any(UUID.class), any(Email.Some.class)))
+        .thenReturn(usersSearchReply);
+
+    // Mock report generation - return Response with zip data
+    var reportResponse = sinnet.reports.grpc.Response.newBuilder()
+        .setData(ByteString.copyFrom(expectedZipData))
+        .build();
+    when(reports1GrpcAdapter.producePack(any(ReportRequests.class)))
+        .thenReturn(reportResponse);
+
+    // When & Then
+    mockMvc.perform(get("/api/raporty/klienci/{projectId}/{year}/{month}", projectId, year, month))
+        .andExpect(status().isOk())
+        .andExpect(content().contentType("application/zip"))
+        .andExpect(header().string("Content-Disposition", "inline; filename=report 2024-3.zip"))
+        .andExpect(header().string("Cache-Control", "no-cache, no-store, must-revalidate"))
+        .andExpect(header().string("Expires", "0"))
+        .andExpect(header().string("Content-Length", String.valueOf(expectedZipData.length)))
+        .andExpect(content().bytes(expectedZipData));
+
+    // Verify interactions
+    verify(actionsGrpcFacade).searchInternal(
+        eq(projectId),
+        eq(LocalDate.of(2024, 3, 1)),
+        eq(LocalDate.of(2024, 3, 31))
+    );
+    verify(customersPortOut).customerList(eq(projectId.toString()), anyString(), any());
+    verify(usersGrpcService).search(any(), any());
+    verify(reports1GrpcAdapter).producePack(any(ReportRequests.class));
+  }
+
+  @Test
+  void downloadPdfFile_shouldHandleFebruaryCorrectly() throws Exception {
+    // Given
+    var projectId = UUID.randomUUID();
+    var year = 2024; // Leap year
+    var month = 2;
+    var expectedZipData = new byte[]{0x01, 0x02, 0x03};
+
+    // Setup mocks
+    when(actionsGrpcFacade.searchInternal(any(UUID.class), any(LocalDate.class), any(LocalDate.class)))
+        .thenReturn(List.of());
+    when(customersPortOut.customerList(anyString(), anyString(), any()))
+        .thenReturn(List.of());
+    when(usersGrpcService.search(any(), any()))
+        .thenReturn(new UsersSearchResult(List.of()));
+    when(reports1GrpcAdapter.producePack(any(ReportRequests.class)))
+        .thenReturn(sinnet.reports.grpc.Response.newBuilder()
+            .setData(ByteString.copyFrom(expectedZipData))
+            .build());
+
+    // When & Then
+    mockMvc.perform(get("/api/raporty/klienci/{projectId}/{year}/{month}", projectId, year, month))
+        .andExpect(status().isOk());
+
+    // Verify date range for February in leap year
+    verify(actionsGrpcFacade).searchInternal(
+        eq(projectId),
+        eq(LocalDate.of(2024, 2, 1)),
+        eq(LocalDate.of(2024, 2, 29)) // Leap year
+    );
+  }
+
+  @Test
+  void downloadPdfFile_shouldProcessTimeEntriesWithCustomers() throws Exception {
+    // Given
+    var projectId = UUID.randomUUID();
+    var customerId = UUID.randomUUID().toString();
+    var year = 2024;
+    var month = 5;
+
+    // Mock time entries
+    var actionItem = new TimeEntry(
+        new sinnet.domain.models.EntityId(UUID.randomUUID(), UUID.randomUUID(), 1),
+        customerId,
+        null,
+        100, 120,
+        "test@example.com",
+        "Test action",
+        LocalDate.of(2024, 5, 15));
+    
+    when(actionsGrpcFacade.searchInternal(any(UUID.class), any(LocalDate.class), any(LocalDate.class)))
+        .thenReturn(List.of(actionItem));
+
+    // Mock customers using CustomerModel
+    var customerModel = new Report1Flow.CustomerModel(
+        customerId,
+        "Test Customer",
+        "Test City",
+        "Test Address"
+    );
+    
+    when(customersPortOut.customerList(anyString(), anyString(), any()))
+        .thenReturn(List.of(customerModel));
+
+    // Mock users - return empty reply for simplicity
+    var usersReply = new UsersSearchResult(List.of(new UsersSearchResult.Item("test@example.com", "id-1", "Test User")));
+    when(usersGrpcService.search(any(), any()))
+        .thenReturn(usersReply);
+
+    // Mock report generation
+    var reportData = new byte[]{0x01, 0x02};
+    when(reports1GrpcAdapter.producePack(any(ReportRequests.class)))
+        .thenReturn(sinnet.reports.grpc.Response.newBuilder()
+            .setData(ByteString.copyFrom(reportData))
+            .build());
+
+    // When & Then
+    mockMvc.perform(get("/api/raporty/klienci/{projectId}/{year}/{month}", projectId, year, month))
+        .andExpect(status().isOk())
+        .andExpect(content().bytes(reportData));
+
+    // Verify all services were called
+    verify(actionsGrpcFacade).searchInternal(any(UUID.class), any(LocalDate.class), any(LocalDate.class));
+    verify(customersPortOut).customerList(anyString(), anyString(), any());
+    verify(usersGrpcService).search(any(), any());
+    verify(reports1GrpcAdapter).producePack(any(ReportRequests.class));
+  }
+
+  @Test
+  void downloadPdfFile_shouldHandleDecember() throws Exception {
+    // Given
+    var projectId = UUID.randomUUID();
+    var year = 2024;
+    var month = 12;
+
+    // Setup mocks
+    when(actionsGrpcFacade.searchInternal(any(UUID.class), any(LocalDate.class), any(LocalDate.class)))
+        .thenReturn(List.of());
+    when(customersPortOut.customerList(anyString(), anyString(), any()))
+        .thenReturn(List.of());
+    when(usersGrpcService.search(any(), any()))
+        .thenReturn(new UsersSearchResult(List.of()));
+    when(reports1GrpcAdapter.producePack(any(ReportRequests.class)))
+        .thenReturn(sinnet.reports.grpc.Response.newBuilder()
+            .setData(ByteString.copyFrom(new byte[]{0x01}))
+            .build());
+
+    // When & Then
+    mockMvc.perform(get("/api/raporty/klienci/{projectId}/{year}/{month}", projectId, year, month))
+        .andExpect(status().isOk());
+
+    // Verify date range for December
+    verify(actionsGrpcFacade).searchInternal(
+        eq(projectId),
+        eq(LocalDate.of(2024, 12, 1)),
+        eq(LocalDate.of(2024, 12, 31))
+    );
+  }
+}

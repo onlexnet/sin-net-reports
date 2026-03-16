@@ -16,7 +16,7 @@ import io.vavr.collection.HashMap;
 import lombok.RequiredArgsConstructor;
 import sinnet.domain.models.UserToken;
 import sinnet.app.ports.in.Report2PortIn;
-import sinnet.app.ports.out.ActionsGrpcPortOut;
+import sinnet.app.ports.out.TimeentriesPortOut;
 import sinnet.report2.grpc.ReportRequest;
 import sinnet.report2.grpc.ReportsGrpc.ReportsBlockingStub;
 import sinnet.web.AuthenticationToken;
@@ -25,7 +25,7 @@ import sinnet.web.AuthenticationToken;
 @RequiredArgsConstructor
 class Report2Flow implements Report2PortIn {
 
-  private final ActionsGrpcPortOut timeentries;
+  private final TimeentriesPortOut timeentries;
   private final ReportsBlockingStub reportsClient;
 
   @Override

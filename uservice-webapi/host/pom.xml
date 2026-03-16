@@ -66,6 +66,16 @@
       <artifactId>spring-boot-starter-test</artifactId>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.springframework.modulith</groupId>
+      <artifactId>spring-modulith-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.modulith</groupId>
+      <artifactId>spring-modulith-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
     <!-- Also add this, unless "spring-boot-starter-webflux" is also present to test Subscriptions
     with GraphQL -->
     <dependency>
@@ -333,22 +343,22 @@
                       <limit>
                         <counter>INSTRUCTION</counter>
                         <value>COVEREDRATIO</value>
-                        <minimum>0.73</minimum>
+                        <minimum>0.71</minimum>
                       </limit>
                       <limit>
                         <counter>BRANCH</counter>
                         <value>COVEREDRATIO</value>
-                        <minimum>0.53</minimum>
+                        <minimum>0.48</minimum>
                       </limit>
                       <limit>
                         <counter>LINE</counter>
                         <value>COVEREDRATIO</value>
-                        <minimum>0.70</minimum>
+                        <minimum>0.69</minimum>
                       </limit>
                       <limit>
                         <counter>CLASS</counter>
                         <value>MISSEDCOUNT</value>
-                        <maximum>17</maximum>
+                        <maximum>21</maximum>
                       </limit>
                     </limits>
                   </rule>

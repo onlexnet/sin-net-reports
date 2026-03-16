@@ -17,7 +17,6 @@ import sinnet.app.flow.request.CustomerUpdateCommand;
 import sinnet.app.flow.request.CustomerUpdateResult;
 import sinnet.app.ports.out.CustomersPortOut;
 import sinnet.domain.models.Customer;
-import sinnet.gql.models.CustomerEntityGql;
 import sinnet.grpc.common.EntityId;
 import sinnet.grpc.common.UserToken;
 import sinnet.grpc.customers.CustomerModel;
@@ -101,8 +100,7 @@ class CustomersGateway implements CustomersPortOut {
 
   /** Doxme. */
   @Override
-  public CustomerEntityGql customerGet(String projectId, String requestorEmail, String customerId,
-                                       Function<CustomerGetResult, CustomerEntityGql> mapper) {
+  public CustomerGetResult customerGet(String projectId, String requestorEmail, String customerId) {
     var entityId = EntityId.newBuilder()
         .setEntityId(customerId)
         .setEntityVersion(0)
@@ -117,7 +115,7 @@ class CustomersGateway implements CustomersPortOut {
         .setUserToken(userToken)
         .build();
     var result = stub.get(request);
-    return mapper.apply(CustomerMapper.toGetResult(result.getModel()));
+    return CustomerMapper.toGetResult(result.getModel());
   }
 
   /** Doxme. */
