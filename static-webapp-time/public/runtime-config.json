@@ -1,0 +1,6 @@
+{
+  "applicationInsightsConnectionString": "",
+  "backendBaseUrl": "",
+  "environment": "development",
+  "useTestLogin": false
+}
