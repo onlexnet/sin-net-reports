@@ -1,5 +1,6 @@
-import { Select } from "antd";
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
+import { Input } from "components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "components/ui/select";
 
 export interface FilteredComboBoxProps {
   /** Key value of just selected option to allow select proper element */
@@ -16,6 +17,7 @@ export interface FilteredComboBoxProps {
 export const FilteredComboBox: React.FC<FilteredComboBoxProps> = props => {
 
   const { selectedKey, items, onChange, onSearch } = props;
+  const [searchText, setSearchText] = useState("");
 
   const onChangeLocal = useCallback((value: string) => {
     onChange(value);
@@ -26,15 +28,26 @@ export const FilteredComboBox: React.FC<FilteredComboBoxProps> = props => {
   }, [onSearch])
 
   return (
-      <Select style={{ width: '100%' }}
-        filterOption={false} // it is already filtered, so no a need to filter it once again by Select component
-        value={selectedKey}
-        options={items.map(item => ({ value: item.key, label: item.text }))}
-        showSearch
-        onChange={onChangeLocal}
-        onSearch={onSearchLocal}
-        allowClear
-      />
+      <div className="w-full flex flex-col gap-2">
+        <Input
+          placeholder="Szukaj..."
+          value={searchText}
+          onChange={(e) => {
+            setSearchText(e.target.value);
+            onSearchLocal(e.target.value);
+          }}
+        />
+        <Select value={selectedKey} onValueChange={onChangeLocal}>
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder="Wybierz..." />
+          </SelectTrigger>
+          <SelectContent>
+            {items.map(item => (
+              <SelectItem key={item.key} value={item.key}>{item.text}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
   );
 
 }

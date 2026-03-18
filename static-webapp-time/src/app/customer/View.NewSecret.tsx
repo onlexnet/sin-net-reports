@@ -1,5 +1,6 @@
 import React from "react";
-import { Col, Row, Select } from 'antd';
+import { Col, Row } from 'antd';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "components/ui/select";
 import _ from "lodash";
 
 type SECRET_TYPE = 'PORTAL_SWIADCZENIODAWCY'
@@ -20,8 +21,8 @@ interface NewAuthorisationProps {
 }
 
 const onChangeHandler = (props: NewAuthorisationProps) => {
-    return (value: SECRET_TYPE) => {
-        const model = toHint(value);
+    return (value: string) => {
+        const model = toHint(value as SECRET_TYPE);
         if (!model.extended) {
             props.newAuthorisationRequested(model.text);
         } else {
@@ -84,12 +85,15 @@ export const NewSecret: React.FC<NewAuthorisationProps> = props => {
     return (
         <Row gutter={32}>
             <Col offset={2}>
-                <Select
-                    placeholder="Dodaj nową autoryzację"
-                    onChange={onChangeHandler(props)}>
-                    {authorisationType.map(option => (
-                        <Select.Option key={option.key} value={option.key}>{option.text}</Select.Option>
-                    ))}
+                <Select onValueChange={onChangeHandler(props)}>
+                    <SelectTrigger className="w-[220px]">
+                        <SelectValue placeholder="Dodaj nową autoryzację" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        {authorisationType.map(option => (
+                            <SelectItem key={option.key} value={option.key}>{option.text}</SelectItem>
+                        ))}
+                    </SelectContent>
                 </Select>
             </Col>
         </Row>

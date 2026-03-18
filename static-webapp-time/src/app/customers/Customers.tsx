@@ -1,10 +1,12 @@
-import { Table, Button, Input, Divider, Col } from "antd";
+import { Table, Divider, Col } from "antd";
 import { Link } from "react-router-dom";
 import _ from "lodash";
 import { useState } from "react";
 import { HorizontalSeparatorStack } from "../../components/HorizontalSeparatorStack";
 import { ListCustomersItem } from "../../api/useListCustomers";
 import PaddedRow from "../../components/PaddedRow";
+import { Button } from "components/ui/button";
+import { Input } from "components/ui/input";
 
 interface CustomersProps {
     givenProjectId: string,
@@ -50,7 +52,7 @@ export const CustomersView: React.FC<CustomersProps> = (props) => {
         <>
             <PaddedRow>
                 <Col span={24}>
-                    <Button type="primary" onClick={() => props.onNewClientCommand()}>Dodaj nowego klienta</Button>
+                    <Button onClick={() => props.onNewClientCommand()}>Dodaj nowego klienta</Button>
                 </Col>
             </PaddedRow>
             <PaddedRow>

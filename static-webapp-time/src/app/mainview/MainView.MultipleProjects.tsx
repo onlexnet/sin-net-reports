@@ -1,5 +1,6 @@
 import React from "react";
-import { Radio, Button, Space } from "antd";
+import { Radio, Space } from "antd";
+import { Button } from "components/ui/button";
 import _ from "lodash";
 
 interface MainViewMultipleProjectsProps {
@@ -26,7 +27,7 @@ export const MainViewMultipleProjects: React.FC<MainViewMultipleProjectsProps> =
                         ))}
                     </Space>
                 </Radio.Group>
-                <Button type="primary" disabled={!selected} onClick={() => props.projectSelected(selected!)}>
+                <Button disabled={!selected} onClick={() => props.projectSelected(selected!)}>
                     Kontynuuj pracę z wybranym projektem
                 </Button>
             </div>

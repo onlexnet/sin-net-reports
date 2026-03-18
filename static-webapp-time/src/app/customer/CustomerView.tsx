@@ -1,17 +1,21 @@
-import { Affix, Button, Checkbox, Col, Divider, Form, Input, Row, Select, Space, Spin } from 'antd';
+import { Col, Row, Space, Spin } from 'antd';
 import _ from "lodash";
 import React, { MouseEventHandler, useEffect, useRef, useState } from "react";
 import { v1 as uuid } from 'uuid';
 import { useGetUsers } from "../../api/useGetUsers";
 import { CustomerContactInput, CustomerInput, CustomerSecretExInput, CustomerSecretInput, useRemoveCustomerMutation, useSaveCustomerMutation } from "../../components/.generated/components";
+import { Button } from "components/ui/button";
+import { Checkbox } from "components/ui/checkbox";
+import { Input } from "components/ui/input";
+import { Textarea } from "components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "components/ui/select";
+import { Separator } from "components/ui/separator";
 import { EntityId } from "../../store/actions/ServiceModel";
 import { NewContactItem } from "./NewContactItem";
 import { SecretsTimestamp } from "./SecretsTimestamp";
 import { NewSecret } from "./View.NewSecret";
 import { UserPasswordItem } from "./View.UserPasswordItem";
 import { UserPasswordItemExt } from "./View.UserPasswordItemEx";
-
-const { Option } = Select;
 
 export interface CustomerViewEntry {
     EmailOfOperator?: string,
@@ -187,9 +191,9 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
     }
 
     const onChangeBoolean = (changer: (m: CustomerViewModel, current: boolean) => void) => {
-        return (e: any) => {
+        return (checked: boolean | 'indeterminate') => {
             const cloned = _.clone(model);
-            changer(cloned, e.target.checked);
+            changer(cloned, checked === true);
             setModel(cloned);
         };
     }
@@ -332,26 +336,37 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
     return (
         <>
             <div ref={topPartRef}>
-                <Divider orientation='left'>Akcje:</Divider>
+                <div className="flex items-center gap-3 my-3">
+                    <span className="text-sm font-semibold text-muted-foreground whitespace-nowrap">Akcje:</span>
+                    <Separator className="flex-1" />
+                </div>
                 <Row gutter={16}>
                     <Col offset={2} span={3}>
-                        <Button type="primary" disabled={actionsDisabled} onClick={saveEndExit}>Zapisz i wyjdź</Button>
+                        <Button disabled={actionsDisabled} onClick={saveEndExit}>Zapisz i wyjdź</Button>
                     </Col>
                     <Col span={3}>
-                        <Button type="default" danger disabled={actionsDisabled} onClick={removeEndExit}>Usuń klienta i wyjdź</Button>
+                        <Button variant="destructive" disabled={actionsDisabled} onClick={removeEndExit}>Usuń klienta i wyjdź</Button>
                     </Col>
                 </Row>
             </div>
             <div style={{ height: `calc(100vh - ${topPartHeight}px)`, overflowY: 'auto' }}>
-                <Divider orientation='left'>Dane ogólne:</Divider>
+                <div className="flex items-center gap-3 my-3">
+                    <span className="text-sm font-semibold text-muted-foreground whitespace-nowrap">Dane ogólne:</span>
+                    <Separator className="flex-1" />
+                </div>
                 <Row gutter={16}>
                     <Col span={22} offset={2}>
                         <Space style={{ width: '100%' }} direction='vertical'>
                             <label>Operator:</label>
-                            <Select style={{ width: '100%' }} defaultValue={model.Operator} onChange={onChangeCombo((m, v) => m.Operator = v)}>
-                                {comboBoxBasicOptions.map(option => (
-                                    <Option key={option.key} value={option.key}>{option.text}</Option>
-                                ))}
+                            <Select defaultValue={model.Operator} onValueChange={onChangeCombo((m, v) => m.Operator = v)}>
+                                <SelectTrigger className="w-full">
+                                    <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {comboBoxBasicOptions.map(option => (
+                                        <SelectItem key={option.key} value={option.key}>{option.text}</SelectItem>
+                                    ))}
+                                </SelectContent>
                             </Select>
                         </Space>
                     </Col>
@@ -360,10 +375,15 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
                     <Col span={22} offset={2}>
                         <Space style={{ width: '100%' }} direction='vertical'>
                             <label>Obsługa:</label>
-                            <Select style={{ width: '100%' }} defaultValue={model.Obsluga} onChange={onChangeCombo((m, v) => m.Obsluga = v)}>
-                                {obsluga.map(option => (
-                                    <Option key={option.key} value={option.key}>{option.text}</Option>
-                                ))}
+                            <Select defaultValue={model.Obsluga} onValueChange={onChangeCombo((m, v) => m.Obsluga = v)}>
+                                <SelectTrigger className="w-full">
+                                    <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {obsluga.map(option => (
+                                        <SelectItem key={option.key} value={option.key}>{option.text}</SelectItem>
+                                    ))}
+                                </SelectContent>
                             </Select>
                         </Space>
                     </Col>
@@ -372,10 +392,15 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
                     <Col span={22} offset={2}>
                         <Space style={{ width: '100%' }} direction='vertical'>
                             <label>Rozliczenie:</label>
-                            <Select style={{ width: '100%' }} defaultValue={model.Rozliczenie} onChange={onChangeCombo((m, v) => m.Rozliczenie = v)}>
-                                {rozliczenia.map(option => (
-                                    <Option key={option.key} value={option.key}>{option.text}</Option>
-                                ))}
+                            <Select defaultValue={model.Rozliczenie} onValueChange={onChangeCombo((m, v) => m.Rozliczenie = v)}>
+                                <SelectTrigger className="w-full">
+                                    <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {rozliczenia.map(option => (
+                                        <SelectItem key={option.key} value={option.key}>{option.text}</SelectItem>
+                                    ))}
+                                </SelectContent>
                             </Select>
                         </Space>
                     </Col>
@@ -389,7 +414,10 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
                     </Col>
                 </Row>
 
-                <Divider orientation='left'>Dane adresowe:</Divider>
+                <div className="flex items-center gap-3 my-3">
+                    <span className="text-sm font-semibold text-muted-foreground whitespace-nowrap">Dane adresowe:</span>
+                    <Separator className="flex-1" />
+                </div>
                 <Row gutter={16}>
                     <Col span={22} offset={2}>
                         <Space style={{ width: '100%' }} direction='vertical'>
@@ -417,93 +445,153 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
 
                 <Row gutter={16}>
                     <Col span={11} offset={2}>
-                        <Checkbox checked={model.UmowaZNFZ} onChange={onChangeBoolean((m, v) => m.UmowaZNFZ = v)}>Umowa z NFZ</Checkbox>
+                        <label className="flex items-center gap-2 cursor-pointer text-sm">
+                            <Checkbox checked={model.UmowaZNFZ} onCheckedChange={onChangeBoolean((m, v) => m.UmowaZNFZ = v)} />
+                            <span>Umowa z NFZ</span>
+                        </label>
                     </Col>
                     <Col span={11}>
-                        <Checkbox checked={model.MaFilie} onChange={onChangeBoolean((m, v) => m.MaFilie = v)}>Posiada filię</Checkbox>
+                        <label className="flex items-center gap-2 cursor-pointer text-sm">
+                            <Checkbox checked={model.MaFilie} onCheckedChange={onChangeBoolean((m, v) => m.MaFilie = v)} />
+                            <span>Posiada filię</span>
+                        </label>
                     </Col>
                 </Row>
                 <Row gutter={16}>
                     <Col span={11} offset={2}>
-                        <Checkbox checked={model.Lekarz} onChange={onChangeBoolean((m, v) => m.Lekarz = v)}>L Lekarz</Checkbox>
+                        <label className="flex items-center gap-2 cursor-pointer text-sm">
+                            <Checkbox checked={model.Lekarz} onCheckedChange={onChangeBoolean((m, v) => m.Lekarz = v)} />
+                            <span>L Lekarz</span>
+                        </label>
                     </Col>
                     <Col span={11}>
-                        <Checkbox checked={model.PielegniarkaSrodowiskowa} onChange={onChangeBoolean((m, v) => m.PielegniarkaSrodowiskowa = v)}>PS Pielęgniarka Środowiskowa</Checkbox>
+                        <label className="flex items-center gap-2 cursor-pointer text-sm">
+                            <Checkbox checked={model.PielegniarkaSrodowiskowa} onCheckedChange={onChangeBoolean((m, v) => m.PielegniarkaSrodowiskowa = v)} />
+                            <span>PS Pielęgniarka Środowiskowa</span>
+                        </label>
                     </Col>
                 </Row>
                 <Row gutter={16}>
                     <Col span={11} offset={2}>
-                        <Checkbox checked={model.Polozna} onChange={onChangeBoolean((m, v) => m.Polozna = v)}>O Położna</Checkbox>
+                        <label className="flex items-center gap-2 cursor-pointer text-sm">
+                            <Checkbox checked={model.Polozna} onCheckedChange={onChangeBoolean((m, v) => m.Polozna = v)} />
+                            <span>O Położna</span>
+                        </label>
                     </Col>
                     <Col span={11}>
-                        <Checkbox checked={model.MedycynaSzkolna} onChange={onChangeBoolean((m, v) => m.MedycynaSzkolna = v)}>MPSZ Medycyna Szkolna</Checkbox>
+                        <label className="flex items-center gap-2 cursor-pointer text-sm">
+                            <Checkbox checked={model.MedycynaSzkolna} onCheckedChange={onChangeBoolean((m, v) => m.MedycynaSzkolna = v)} />
+                            <span>MPSZ Medycyna Szkolna</span>
+                        </label>
                     </Col>
                 </Row>
                 <Row gutter={16}>
                     <Col span={11} offset={2}>
-                        <Checkbox checked={model.TransportSanitarny} onChange={onChangeBoolean((m, v) => m.TransportSanitarny = v)}>Transport Sanitarny</Checkbox>
+                        <label className="flex items-center gap-2 cursor-pointer text-sm">
+                            <Checkbox checked={model.TransportSanitarny} onCheckedChange={onChangeBoolean((m, v) => m.TransportSanitarny = v)} />
+                            <span>Transport Sanitarny</span>
+                        </label>
                     </Col>
                     <Col span={11}>
-                        <Checkbox checked={model.NocnaPomocLekarska} onChange={onChangeBoolean((m, v) => m.NocnaPomocLekarska = v)}>NPL Nocna pomoc lekarska</Checkbox>
+                        <label className="flex items-center gap-2 cursor-pointer text-sm">
+                            <Checkbox checked={model.NocnaPomocLekarska} onCheckedChange={onChangeBoolean((m, v) => m.NocnaPomocLekarska = v)} />
+                            <span>NPL Nocna pomoc lekarska</span>
+                        </label>
                     </Col>
                 </Row>
                 <Row gutter={16}>
                     <Col span={11} offset={2}>
-                        <Checkbox checked={model.AmbulatoryjnaOpiekaSpecjalistyczna} onChange={onChangeBoolean((m, v) => m.AmbulatoryjnaOpiekaSpecjalistyczna = v)}>AOS Ambulatoryjna opieka specjalistyczna</Checkbox>
+                        <label className="flex items-center gap-2 cursor-pointer text-sm">
+                            <Checkbox checked={model.AmbulatoryjnaOpiekaSpecjalistyczna} onCheckedChange={onChangeBoolean((m, v) => m.AmbulatoryjnaOpiekaSpecjalistyczna = v)} />
+                            <span>AOS Ambulatoryjna opieka specjalistyczna</span>
+                        </label>
                     </Col>
                     <Col span={11}>
-                        <Checkbox checked={model.Rehabilitacja} onChange={onChangeBoolean((m, v) => m.Rehabilitacja = v)}>REH Rehabilitacja</Checkbox>
+                        <label className="flex items-center gap-2 cursor-pointer text-sm">
+                            <Checkbox checked={model.Rehabilitacja} onCheckedChange={onChangeBoolean((m, v) => m.Rehabilitacja = v)} />
+                            <span>REH Rehabilitacja</span>
+                        </label>
                     </Col>
                 </Row>
                 <Row gutter={16}>
                     <Col span={11} offset={2}>
-                        <Checkbox checked={model.Stomatologia} onChange={onChangeBoolean((m, v) => m.Stomatologia = v)}>STM Stomatologia</Checkbox>
+                        <label className="flex items-center gap-2 cursor-pointer text-sm">
+                            <Checkbox checked={model.Stomatologia} onCheckedChange={onChangeBoolean((m, v) => m.Stomatologia = v)} />
+                            <span>STM Stomatologia</span>
+                        </label>
                     </Col>
                     <Col span={11}>
-                        <Checkbox checked={model.Psychiatria} onChange={onChangeBoolean((m, v) => m.Psychiatria = v)}>PSY Psychiatria</Checkbox>
+                        <label className="flex items-center gap-2 cursor-pointer text-sm">
+                            <Checkbox checked={model.Psychiatria} onCheckedChange={onChangeBoolean((m, v) => m.Psychiatria = v)} />
+                            <span>PSY Psychiatria</span>
+                        </label>
                     </Col>
                 </Row>
                 <Row gutter={16}>
                     <Col span={11} offset={2}>
-                        <Checkbox checked={model.Szpitalnictwo} onChange={onChangeBoolean((m, v) => m.Szpitalnictwo = v)}>SZP Szpitalnictwo</Checkbox>
+                        <label className="flex items-center gap-2 cursor-pointer text-sm">
+                            <Checkbox checked={model.Szpitalnictwo} onCheckedChange={onChangeBoolean((m, v) => m.Szpitalnictwo = v)} />
+                            <span>SZP Szpitalnictwo</span>
+                        </label>
                     </Col>
                     <Col span={11}>
-                        <Checkbox checked={model.ProgramyProfilaktyczne} onChange={onChangeBoolean((m, v) => m.ProgramyProfilaktyczne = v)}>PROF Programy profilaktyczne</Checkbox>
+                        <label className="flex items-center gap-2 cursor-pointer text-sm">
+                            <Checkbox checked={model.ProgramyProfilaktyczne} onCheckedChange={onChangeBoolean((m, v) => m.ProgramyProfilaktyczne = v)} />
+                            <span>PROF Programy profilaktyczne</span>
+                        </label>
                     </Col>
                 </Row>
                 <Row gutter={16}>
                     <Col span={11} offset={2}>
-                        <Checkbox checked={model.ZaopatrzenieOrtopedyczne} onChange={onChangeBoolean((m, v) => m.ZaopatrzenieOrtopedyczne = v)}>ZOP Zaopatrzenie ortopedyczne i pomocniczne</Checkbox>
+                        <label className="flex items-center gap-2 cursor-pointer text-sm">
+                            <Checkbox checked={model.ZaopatrzenieOrtopedyczne} onCheckedChange={onChangeBoolean((m, v) => m.ZaopatrzenieOrtopedyczne = v)} />
+                            <span>ZOP Zaopatrzenie ortopedyczne i pomocniczne</span>
+                        </label>
                     </Col>
                     <Col span={11}>
-                        <Checkbox checked={model.OpiekaDlugoterminowa} onChange={onChangeBoolean((m, v) => m.OpiekaDlugoterminowa = v)}>OPD Opieka długoterminowa</Checkbox>
+                        <label className="flex items-center gap-2 cursor-pointer text-sm">
+                            <Checkbox checked={model.OpiekaDlugoterminowa} onCheckedChange={onChangeBoolean((m, v) => m.OpiekaDlugoterminowa = v)} />
+                            <span>OPD Opieka długoterminowa</span>
+                        </label>
                     </Col>
                 </Row>
-                <Divider orientation='left'>NFZ:</Divider>
+                <div className="flex items-center gap-3 my-3">
+                    <span className="text-sm font-semibold text-muted-foreground whitespace-nowrap">NFZ:</span>
+                    <Separator className="flex-1" />
+                </div>
                 <Row gutter={16}>
                     <Col span={22} offset={2}>
                         <Space style={{ width: '100%' }} direction='vertical'>
                             <label>Notatki NFZ:</label>
-                            <Input.TextArea value={model.NfzNotatki} placeholder="Notatki NFZ" onChange={onChangeMemo((m, v) => m.NfzNotatki = v)} />
+                            <Textarea value={model.NfzNotatki} placeholder="Notatki NFZ" onChange={onChangeMemo((m, v) => m.NfzNotatki = v)} />
                         </Space>
                     </Col>
                 </Row>
 
-                <Divider orientation='left'>Komercja:</Divider>
+                <div className="flex items-center gap-3 my-3">
+                    <span className="text-sm font-semibold text-muted-foreground whitespace-nowrap">Komercja:</span>
+                    <Separator className="flex-1" />
+                </div>
                 <Row gutter={16}>
                     <Col span={8} offset={2}>
-                        <Checkbox checked={model.Komercja} onChange={onChangeBoolean((m, v) => m.Komercja = v)}>Komercja</Checkbox>
+                        <label className="flex items-center gap-2 cursor-pointer text-sm">
+                            <Checkbox checked={model.Komercja} onCheckedChange={onChangeBoolean((m, v) => m.Komercja = v)} />
+                            <span>Komercja</span>
+                        </label>
                     </Col>
                 </Row>
                 <Row gutter={16}>
                     <Col span={22} offset={2}>
                         <Space style={{ width: '100%' }} direction='vertical'>
-                            <Input.TextArea value={model.KomercjaNotatki} placeholder="Dane opisowe" onChange={onChangeMemo((m, v) => m.KomercjaNotatki = v)} />
+                            <Textarea value={model.KomercjaNotatki} placeholder="Dane opisowe" onChange={onChangeMemo((m, v) => m.KomercjaNotatki = v)} />
                         </Space>
                     </Col>
                 </Row>
 
-                <Divider orientation='left'>Autoryzacje:</Divider>
+                <div className="flex items-center gap-3 my-3">
+                    <span className="text-sm font-semibold text-muted-foreground whitespace-nowrap">Autoryzacje:</span>
+                    <Separator className="flex-1" />
+                </div>
                 {model.AutoryzacjeEx.map(item => (
                     <UserPasswordItemExt
                         model={item}
@@ -566,7 +654,10 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
                         setModel(clone);
                     }}
                 />
-                <Divider orientation='left'>Dane kontaktowe:</Divider>
+                <div className="flex items-center gap-3 my-3">
+                    <span className="text-sm font-semibold text-muted-foreground whitespace-nowrap">Dane kontaktowe:</span>
+                    <Separator className="flex-1" />
+                </div>
                 {model.Kontakty.map(item => (
                     <NewContactItem
                         model={item}
@@ -590,12 +681,17 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
                     </Col>
                 </Row>
 
-                <Divider>Dane techniczne:</Divider>
+                <div className="flex items-center gap-3 my-3">
+                    <Separator className="flex-1" />
+                    <span className="text-sm font-semibold text-muted-foreground whitespace-nowrap">Dane techniczne:</span>
+                    <Separator className="flex-1" />
+                </div>
                 <Row gutter={16}>
                     <Col span={16} offset={2}>
-                        <Form.Item label="Adresy IP serwerów, inne">
-                            <Input.TextArea value={model.DaneTechniczne} placeholder="Adresy IP serwerów, inne" onChange={onChangeMemo((m, v) => m.DaneTechniczne = v)} />
-                        </Form.Item>
+                        <div className="flex flex-col gap-1">
+                            <label className="text-sm font-medium">Adresy IP serwerów, inne</label>
+                            <Textarea value={model.DaneTechniczne} placeholder="Adresy IP serwerów, inne" onChange={onChangeMemo((m, v) => m.DaneTechniczne = v)} />
+                        </div>
                     </Col>
                 </Row>
 

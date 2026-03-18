@@ -1,10 +1,9 @@
 import { useIsAuthenticated, useMsal } from "@azure/msal-react";
-import { Button, Typography, Layout } from "antd";
+import { Layout } from "antd";
 import React from "react";
+import { Button } from "components/ui/button";
 import { getDisplayVersion, getBuildInfo } from '../app/configuration/BuildInfo';
 import { clearAuthenticatedUser } from '../app/configuration/ApplicationInsights';
-
-const { Text } = Typography;
 const { Content } = Layout;
 
 interface Props {
@@ -23,10 +22,11 @@ export const Debug: React.FC<Props> = () => {
 
   return (
     <Content>
-      <Text type="secondary">You are running this application in <b>{process.env.NODE_ENV}</b> mode!.</Text>
+      <p className="text-muted-foreground">You are running this application in <b>{process.env.NODE_ENV}</b> mode!.</p>
       {isAuthenticated && <Button onClick={handleLogout}>Logout</Button>}
-      <Text>version: {getDisplayVersion()}</Text>
-      {buildInfo.buildVersion && <Text type="secondary"> (package: {buildInfo.version})</Text>}
+      <p>version: {getDisplayVersion()}
+        {buildInfo.buildVersion && <span className="text-muted-foreground"> (package: {buildInfo.version})</span>}
+      </p>
     </Content>
   );
 };

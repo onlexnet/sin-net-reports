@@ -1,4 +1,4 @@
-import { Table, Tooltip, Input, Switch, Row, Col, Typography, Space } from "antd";
+import { Table, Tooltip, Switch, Row, Col, Typography, Space } from "antd";
 import _ from "lodash";
 import * as React from "react";
 import { useState } from "react";
@@ -17,6 +17,7 @@ import { Duration } from "./ActionList.Duration";
 import { ServiceListModel } from "./ServiceListModel";
 import { ColumnType } from "antd/es/table";
 import styles from './services.module.css'
+import { Input } from "components/ui/input";
 
 const { Text } = Typography;
 

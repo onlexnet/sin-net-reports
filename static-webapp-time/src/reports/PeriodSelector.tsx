@@ -1,5 +1,6 @@
-import { Input, Row, Col } from "antd";
+import { Row, Col } from "antd";
 import React, { useState } from "react";
+import { Input } from "components/ui/input";
 
 interface PeriodSelectorProps {
     suffix: string,
@@ -38,10 +39,16 @@ export const PeriodSelector: React.FC<PeriodSelectorProps> = props => {
     return (
       <Row gutter={16}>
         <Col>
-          <Input addonBefore={`Rok ${props.suffix}`} value={yearText} onChange={onChangeYear} />
+          <div className="flex items-center gap-2">
+            <label className="text-sm">Rok {props.suffix}</label>
+            <Input value={yearText} onChange={onChangeYear} />
+          </div>
         </Col>
         <Col>
-          <Input addonBefore={`Miesiąc ${props.suffix}`} value={monthText} onChange={onChangeMonth} />
+          <div className="flex items-center gap-2">
+            <label className="text-sm">Miesiąc {props.suffix}</label>
+            <Input value={monthText} onChange={onChangeMonth} />
+          </div>
         </Col>
       </Row>
     );

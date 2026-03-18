@@ -1,6 +1,10 @@
-import { Button, Input, Divider, Space, Typography, Col, Row } from "antd";
+import { Typography, Col, Row } from "antd";
 import React, { useEffect, useState } from "react";
 import { TOTP } from "totp-generator"
+import { Button } from "components/ui/button";
+import { Input } from "components/ui/input";
+import { Textarea } from "components/ui/textarea";
+import { Separator } from "components/ui/separator";
 
 const { Text } = Typography;
 
@@ -83,7 +87,10 @@ export const UserPasswordItemExt: React.FC<UserPasswordExtItemProps> = props => 
 
     return (
         <>
-            <Divider orientation="left"><Text>{props.model.location}</Text></Divider>
+            <div className="flex items-center gap-3 my-3">
+                <Text>{props.model.location}</Text>
+                <Separator className="flex-1" />
+            </div>
             <Row gutter={16}>
                 <Col offset={2} span={4}>
                     <Input placeholder="Oddział NFZ" value={entityName} onChange={handler((m, v) => m.entityName = v)} />
@@ -98,7 +105,7 @@ export const UserPasswordItemExt: React.FC<UserPasswordExtItemProps> = props => 
                     <Input placeholder="Hasło" value={password} onChange={handler((m, v) => m.password = v)} />
                 </Col>
                 <Col span={2}>
-                    <Button danger onClick={() => props.onRemove(props.model.localKey)}>Usuń</Button>
+                    <Button variant="destructive" onClick={() => props.onRemove(props.model.localKey)}>Usuń</Button>
                 </Col>
             </Row>
             <Row gutter={16}>
@@ -112,7 +119,7 @@ export const UserPasswordItemExt: React.FC<UserPasswordExtItemProps> = props => 
                     <Input placeholder="TOTP secret" value={otpSecret} onChange={handler((m, v) => m.otpSecret = v)} />
                 </Col>
                 <Col span={6}>
-                    <Input.TextArea value={otpRecoveryKeys} placeholder="TOTP recovery keys" onChange={handler((m, v) => m.otpRecoveryKeys = v)} />
+                    <Textarea value={otpRecoveryKeys} placeholder="TOTP recovery keys" onChange={handler((m, v) => m.otpRecoveryKeys = v)} />
                 </Col>
             </Row>
             <Row gutter={16}>1

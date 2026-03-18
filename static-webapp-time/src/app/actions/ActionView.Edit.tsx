@@ -3,7 +3,7 @@ import { RootState } from "../../store/reducers";
 import { Dispatch } from "redux";
 import { connect, ConnectedProps } from "react-redux";
 import _ from "lodash";
-import { Select, Button, Input, Space, Row, Flex, Col, Divider } from "antd";
+import { Row, Col, Divider } from "antd";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { AppDatePicker } from "../../services/ActionList.DatePicker";
 import { LocalDate } from "../../store/viewcontext/TimePeriod";
@@ -15,8 +15,10 @@ import { asDtoDate } from "../../api/Mapper";
 import { useListCustomersQuery } from "../../components/.generated/components"
 import PaddedRow from "../../components/PaddedRow";
 import LabelCol from "../../components/LabelCol";
-
-const { Option } = Select;
+import { Button } from "components/ui/button";
+import { Input } from "components/ui/input";
+import { Textarea } from "components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "components/ui/select";
 
 const mapStateToProps = (state: RootState) => {
     if (state.appState.empty) {
@@ -70,10 +72,8 @@ export const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
     const defaultServicemanName = item?.servicemanName;
     const [servicemanName, setServicemanName] = useState(defaultServicemanName);
     const onChangeServicemanName = useCallback(
-        (_value: string, option?: { key?: React.Key } | Array<{ key?: React.Key }>) => {
-            const selectedOption = Array.isArray(option) ? option[0] : option;
-            const a = selectedOption?.key as string;
-            setServicemanName(a);
+        (value: string) => {
+            setServicemanName(value);
         },
         [setServicemanName],
     );
@@ -232,12 +232,17 @@ export const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
             <PaddedRow>
                 <LabelCol span={3} text="Pracownik:" />
                 <Col span={9}>
-                    <Select style={{ width: '100%' }} id="selectServiceman" onChange={onChangeServicemanName} defaultValue={servicemanName}>
-                        {comboBoxBasicOptions.map((option) => (
-                            <Option key={option.key} value={option.text}>
-                                {option.text}
-                            </Option>
-                        ))}
+                    <Select onValueChange={onChangeServicemanName} defaultValue={servicemanName}>
+                        <SelectTrigger id="selectServiceman" className="w-full">
+                            <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {comboBoxBasicOptions.map((option) => (
+                                <SelectItem key={option.key} value={option.text}>
+                                    {option.text}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
                     </Select>
                 </Col>
 
@@ -260,11 +265,10 @@ export const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
                     />
                 </Col>
                 <Col span={12}>
-                    <Input.TextArea
+                    <Textarea
                         value={description}
                         onChange={onChangeDescription}
-                        autoSize={{ minRows: 3 }}
-                        status={descriptionError ? 'error' : ''}
+                        className={descriptionError ? "border-destructive" : undefined}
                     />
                     {descriptionError && <div className="ant-form-item-explain-error">{descriptionError}</div>}
                 </Col>
@@ -285,7 +289,7 @@ export const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
                         placeholder="0:00"
                         value={durationAsText}
                         onChange={onChangeDuration}
-                        status={durationError ? 'error' : ''}
+                        className={durationError ? "border-destructive" : undefined}
                     />
                     {durationError && <div className="ant-form-item-explain-error">{durationError}</div>}
                 </Col>
@@ -305,18 +309,18 @@ export const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
 
             <PaddedRow>
                 <Col span={2}>
-                    <Button type="primary" style={{ width: "100%" }}
+                    <Button className="w-full"
                         disabled={updateActionInProgress || (customerId === undefined)}
                         onClick={() => {
                             updateAction();
                         }}>Aktualizuj</Button>
                 </Col>
                 <Col span={2}>
-                    <Button style={{ width: "100%" }} onClick={() => cancelEdit()}>Wyjdź</Button></Col>
+                    <Button className="w-full" onClick={() => cancelEdit()}>Wyjdź</Button></Col>
                 <Col span={2}>
-                    <Button style={{ width: "100%" }} disabled={updateActionInProgress || removeConfirmed} onClick={removeAndExit1}>Usuń i wyjdź</Button></Col>
+                    <Button className="w-full" disabled={updateActionInProgress || removeConfirmed} onClick={removeAndExit1}>Usuń i wyjdź</Button></Col>
                 <Col span={2}>
-                    <Button style={{ width: "100%" }} disabled={updateActionInProgress || !removeConfirmed} onClick={removeAndExit2}>Tak, Usuń i wyjdź</Button></Col>
+                    <Button className="w-full" disabled={updateActionInProgress || !removeConfirmed} onClick={removeAndExit2}>Tak, Usuń i wyjdź</Button></Col>
             </PaddedRow>
 
         </>

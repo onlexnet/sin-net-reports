@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Input, Button, Divider, Table } from "antd";
+import { Divider, Table } from "antd";
 import { Link, RouteComponentProps } from "react-router-dom";
 import { routing } from "../../Routing";
 import { HorizontalSeparatorStack } from "../../components/HorizontalSeparatorStack";
@@ -8,6 +8,8 @@ import { RootState } from "../../store/reducers";
 import { Dispatch } from "redux";
 import { connect, ConnectedProps } from "react-redux";
 import _ from "lodash";
+import { Button } from "components/ui/button";
+import { Input } from "components/ui/input";
 
 const mapStateToProps = (state: RootState) => {
     if (state.appState.empty) {
@@ -67,7 +69,7 @@ const Reports: React.FC<ReportsProps> = (props) => {
         <div>
             <HorizontalSeparatorStack >
                 <div>
-                    <Button type="primary" onClick={() => props.history.push(routing.newCustomer)}>Dodaj nowego klienta</Button>
+                    <Button onClick={() => props.history.push(routing.newCustomer)}>Dodaj nowego klienta</Button>
                 </div>
                 <div>
                     <Input placeholder="Wprowadź fragment nazwy klienta ..." value={searchPhrase} onChange={(e) => setSearchPhrase(e.target.value)} />

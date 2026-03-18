@@ -1,5 +1,7 @@
-import { Button, Col, Input, Row } from 'antd';
+import { Col, Row } from 'antd';
 import React from "react";
+import { Button } from "components/ui/button";
+import { Input } from "components/ui/input";
 import { ContactDetails } from "./CustomerView";
 
 interface NewContactItemProps {
@@ -39,7 +41,7 @@ export const NewContactItem: React.FC<NewContactItemProps> = props => {
                 <Input placeholder="email" value={email} onChange={handler((m, v) => m.email = v)} />
             </Col>
             <Col span={4}>
-                <Button danger onClick={() => props.onRemove(localKey)}>Usuń</Button>
+                <Button variant="destructive" onClick={() => props.onRemove(localKey)}>Usuń</Button>
             </Col>
         </Row>
     );

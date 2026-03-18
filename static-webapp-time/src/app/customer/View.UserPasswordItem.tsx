@@ -1,6 +1,9 @@
-import { Button, Input, Divider, Row, Col } from "antd";
+import { Row, Col } from "antd";
 import React, { useEffect, useState } from "react";
 import { TOTP } from "totp-generator";
+import { Button } from "components/ui/button";
+import { Input } from "components/ui/input";
+import { Separator } from "components/ui/separator";
 
 interface UserPasswordModel {
     localKey: string,
@@ -79,7 +82,10 @@ export const UserPasswordItem: React.FC<UserPasswordItemProps> = props => {
 
     return (
         <>
-            <Divider orientation="left">{sectionName}</Divider>
+            <div className="flex items-center gap-3 my-3">
+                <span className="text-sm font-semibold text-muted-foreground whitespace-nowrap">{sectionName}</span>
+                <Separator className="flex-1" />
+            </div>
             <Row gutter={16}>
                 <Col offset={2}>
                     <Input placeholder="Użytkownik" value={username} onChange={handler((m, v) => m.username = v)} />
@@ -88,7 +94,7 @@ export const UserPasswordItem: React.FC<UserPasswordItemProps> = props => {
                     <Input placeholder="Hasło" value={password} onChange={handler((m, v) => m.password = v)} />
                 </Col>
                 <Col>
-                    <Button danger onClick={() => props.onRemove(props.model.localKey)}>Usuń</Button>
+                    <Button variant="destructive" onClick={() => props.onRemove(props.model.localKey)}>Usuń</Button>
                 </Col>
             </Row>
             <Row gutter={16}>

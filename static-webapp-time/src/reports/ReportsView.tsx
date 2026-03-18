@@ -1,5 +1,6 @@
-import { Typography, Layout, Button, Space } from "antd";
+import { Typography, Layout } from "antd";
 import React, { useState } from "react";
+import { Button } from "components/ui/button";
 import { addressProvider } from "../addressProvider";
 import { LocalDate } from "../store/viewcontext/TimePeriod";
 import { PeriodSelector } from "./PeriodSelector";
@@ -114,20 +115,20 @@ export const ReportsView: React.FC<ReportsViewProps> = props => {
       <Content>
         <Title level={1}>Raporty</Title>
 
-        <Space direction="vertical">
+        <div className="flex flex-col gap-2">
           <PeriodSelector suffix="OD:" year={fromYear} month={fromMonth} onYearChanged={setFromYear} onMonthChanged={setFromMonth} />
           <PeriodSelector suffix="DO:" year={toYear} month={toMonth} onYearChanged={setToYear} onMonthChanged={setToMonth} />
 
           <Button
             disabled={fromYear == null || fromMonth == null}
-            type="link"
+            variant="link"
             onClick={() => { openInNewTab(addressProvider().host + `/api/raporty/klienci/${projectId}/${fromYear}/${fromMonth}`); }}
           >
             Raport miesięczny - załączniki do faktur
           </Button>
 
           <Button
-            type="link"
+            variant="link"
             onClick={() => {
             downloadWithToken(addressProvider().host + `/api/raporty/2/${projectId}?yearFrom=${fromYear}&monthFrom=${fromMonth}&yearTo=${toYear}&monthTo=${toMonth}`);
           }}>
@@ -135,13 +136,13 @@ export const ReportsView: React.FC<ReportsViewProps> = props => {
           </Button>
 
           <Button
-            type="link"
+            variant="link"
             onClick={() => {
             openInNewTab(addressProvider().host + `/api/raporty/3/${projectId}`);
           }}>
             Lista klientów przypisanych do operatorów
           </Button>
-        </Space>
+        </div>
       </Content>
     </Layout>
   );
