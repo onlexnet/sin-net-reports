@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Divider, Table } from "antd";
 import { Link, RouteComponentProps } from "react-router-dom";
 import { routing } from "../../Routing";
 import { HorizontalSeparatorStack } from "../../components/HorizontalSeparatorStack";
@@ -10,6 +9,8 @@ import { connect, ConnectedProps } from "react-redux";
 import _ from "lodash";
 import { Button } from "components/ui/button";
 import { Input } from "components/ui/input";
+import { Separator } from "components/ui/separator";
+import { TanStackTableView, useTanStackTableAdapter, TableAdapterColumn } from "components/table";
 
 const mapStateToProps = (state: RootState) => {
     if (state.appState.empty) {
@@ -29,21 +30,25 @@ interface ReportsProps extends PropsFromRedux, RouteComponentProps {
 
 }
 
+type SortedCustomerItem = ListCustomersItem & { sortPriority: number };
+
+const reportsCustomerColumns: TableAdapterColumn<SortedCustomerItem>[] = [
+    {
+        key: "name",
+        title: "Klient",
+        dataIndex: "name",
+        render: (value, record) => (
+            <Link to={`/customers/${record.customerId.projectId}/${record.customerId.entityId}/${record.customerId.entityVersion}`}>
+                {String(value ?? "")}
+            </Link>
+        ),
+    },
+];
+
 const Reports: React.FC<ReportsProps> = (props) => {
 
     const items = useListCustomers(props.appState.projectId);
     const [searchPhrase, setSearchPhrase] = useState<string | undefined>('');
-
-    const columns = [
-        {
-            title: "Klient",
-            dataIndex: "name",
-            key: "name",
-            render: (text: string, item: ListCustomersItem) => (
-                <Link to={`/customers/${item.customerId.projectId}/${item.customerId.entityId}/${item.customerId.entityVersion}`}>{text}</Link>
-            )
-        }
-    ];
 
     const similarity = (actual: string, template?: string): number => {
         if (!actual) return 0;
@@ -65,6 +70,11 @@ const Reports: React.FC<ReportsProps> = (props) => {
         .orderBy(it => -it.sortPriority)
         .value();
 
+    const { table } = useTanStackTableAdapter({
+        data: sortedItems,
+        columns: reportsCustomerColumns,
+    });
+
     return (
         <div>
             <HorizontalSeparatorStack >
@@ -75,8 +85,10 @@ const Reports: React.FC<ReportsProps> = (props) => {
                     <Input placeholder="Wprowadź fragment nazwy klienta ..." value={searchPhrase} onChange={(e) => setSearchPhrase(e.target.value)} />
                 </div>
                 <div>
-                    <Divider />
-                    <Table dataSource={sortedItems} columns={columns} pagination={false} scroll={{ y: `calc(100vh - 250px)` }} />
+                    <Separator />
+                    <div className="overflow-y-auto" style={{ maxHeight: "calc(100vh - 250px)" }}>
+                        <TanStackTableView table={table} showPagination={false} />
+                    </div>
                 </div>
             </HorizontalSeparatorStack>
         </div>

@@ -1,4 +1,3 @@
-import { Table, Divider } from "antd";
 import { Link } from "react-router-dom";
 import _ from "lodash";
 import { useState } from "react";
@@ -8,6 +7,7 @@ import PaddedRow from "../../components/PaddedRow";
 import { Button } from "components/ui/button";
 import { Input } from "components/ui/input";
 import { Col } from "components/ui/layout";
+import { TanStackTableView, useTanStackTableAdapter, TableAdapterColumn } from "components/table";
 
 interface CustomersProps {
     givenProjectId: string,
@@ -15,19 +15,25 @@ interface CustomersProps {
     listCustomers: (projectId: string) => ListCustomersItem[];
 }
 
+type SortedCustomerItem = ListCustomersItem & { sortPriority: number };
+
+const customerTableColumns: TableAdapterColumn<SortedCustomerItem>[] = [
+    {
+        key: "name",
+        title: "Klient",
+        dataIndex: "name",
+        render: (value, record) => (
+            <Link to={`/customers/${record.customerId.projectId}/${record.customerId.entityId}/${record.customerId.entityVersion}`}>
+                {String(value ?? "")}
+            </Link>
+        ),
+    },
+];
+
 export const CustomersView: React.FC<CustomersProps> = (props) => {
 
     const items = props.listCustomers(props.givenProjectId);
     const [searchPhrase, setSearchPhrase] = useState<string | undefined>('');
-
-    const columns = [
-        {
-            title: "Klient",
-            dataIndex: "name",
-            key: "name",
-            render: (text: string, record: ListCustomersItem) => <Link to={`/customers/${record.customerId.projectId}/${record.customerId.entityId}/${record.customerId.entityVersion}`}>{text}</Link>,
-        }
-    ];
 
     const similarity = (actual: string, template?: string): number => {
         if (!actual) return 0;
@@ -49,6 +55,11 @@ export const CustomersView: React.FC<CustomersProps> = (props) => {
         .orderBy(it => -it.sortPriority)
         .value();
 
+    const { table } = useTanStackTableAdapter({
+        data: sortedItems,
+        columns: customerTableColumns,
+    });
+
     return (
         <>
             <PaddedRow>
@@ -63,12 +74,9 @@ export const CustomersView: React.FC<CustomersProps> = (props) => {
             </PaddedRow>
             <PaddedRow>
                 <Col span={24}>
-                    <Table
-                        dataSource={sortedItems}
-                        columns={columns}
-                        pagination={false}
-                        scroll={{ y: `calc(100vh - 250px)` }}
-                    />
+                    <div className="overflow-y-auto" style={{ maxHeight: "calc(100vh - 250px)" }}>
+                        <TanStackTableView table={table} showPagination={false} />
+                    </div>
                 </Col>
             </PaddedRow >
         </>

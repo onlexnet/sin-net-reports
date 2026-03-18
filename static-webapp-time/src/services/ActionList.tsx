@@ -1,4 +1,4 @@
-import { Table, Tooltip, Switch, Typography } from "antd";
+import { Switch, Typography } from "antd";
 import _ from "lodash";
 import * as React from "react";
 import { useState } from "react";
@@ -12,13 +12,13 @@ import { LocalDateView } from "../app/LocalDateView";
 import { useFetchServicesQuery } from "../components/.generated/components";
 import { ServiceAppModel } from "../store/actions/ServiceModel";
 import { RootState } from "../store/reducers";
-import { LocalDate, TimePeriod } from "../store/viewcontext/TimePeriod";
+import { TimePeriod } from "../store/viewcontext/TimePeriod";
 import { ActionEditItem, VIEWCONTEXT_ACTION_EDIT_START } from "../store/viewcontext/types";
 import { Duration } from "./ActionList.Duration";
 import { ServiceListModel } from "./ServiceListModel";
-import { ColumnType } from "antd/es/table";
-import styles from './services.module.css'
+import styles from './services.module.css';
 import { Input } from "components/ui/input";
+import { TanStackTableView, useTanStackTableAdapter, TableAdapterColumn } from "components/table";
 
 const { Text } = Typography;
 
@@ -26,6 +26,53 @@ const controlStyles = {
   margin: "0 30px 20px 0",
   maxWidth: "300px"
 };
+
+const serviceTableColumns: TableAdapterColumn<ServiceListModel>[] = [
+  {
+    key: "servicemanEmail",
+    title: "Pracownik",
+    dataIndex: "servicemanEmail",
+    render: (value, record) => (
+      <Link to={`/actions/${record.projectId}/${record.entityId}/${record.entityVersion}`}>
+        {String(value ?? "")}
+      </Link>
+    ),
+    width: "200px",
+  },
+  {
+    key: "when",
+    title: "Data",
+    accessorFn: (row) => row.when.day,
+    render: (_, record) => <LocalDateView item={record.when} />,
+    sortable: true,
+    width: "120px",
+  },
+  {
+    key: "customerName",
+    title: "Klient",
+    dataIndex: "customerName",
+    width: "30%",
+  },
+  {
+    key: "description",
+    title: "Usługa",
+    dataIndex: "description",
+    width: "60%",
+  },
+  {
+    key: "duration",
+    title: "Czas",
+    dataIndex: "duration",
+    render: (value) => <Duration duration={value as number | undefined} />,
+    width: "80px",
+  },
+  {
+    key: "distance",
+    title: "Dojazd",
+    dataIndex: "distance",
+    width: "80px",
+  },
+];
 
 export interface IDocument extends ServiceListModel {
 }
@@ -81,54 +128,6 @@ const ConnectedContent: React.FC<PropsFromRedux> = props => {
     });
   }, []);
 
-  const [dateSortedDescending, setDateSortedDescending] = useState(true);
-
-  const initialColumns: ColumnType<ServiceListModel>[] = [
-    {
-      title: "Pracownik",
-      dataIndex: "servicemanEmail",
-      key: "servicemanEmail",
-      render: (value: string, record: ServiceListModel) => {
-        return <Link to={`/actions/${record.projectId}/${record.entityId}/${record.entityVersion}`}>{value}</Link>;
-      },
-      width: '200px'
-    },
-    {
-      title: "Data",
-      dataIndex: "when",
-      key: "when",
-      sorter: true,
-      sortOrder: dateSortedDescending ? 'descend' : 'ascend',
-      render: (text: LocalDate) => <LocalDateView item={text} />,
-      width: '120px'
-    },
-    {
-      title: "Klient",
-      dataIndex: "customerName",
-      key: "customerName",
-      width: "30%"
-    },
-    {
-      title: "Usługa",
-      dataIndex: "description",
-      key: "description",
-      width: "60%"
-    },
-    {
-      title: "Czas",
-      dataIndex: "duration",
-      key: "duration",
-      render: (text: number) => <Duration duration={text} />,
-      width: '80px'
-    },
-    {
-      title: "Dojazd",
-      dataIndex: "distance",
-      key: "distance",
-      width: '80px'
-    }
-  ];
-
   const [lastTouchedActionId, setlastTouchedActionId] = useState(props.lastTouchedActionId);
 
   const newDataIsComing = props.lastTouchedActionId != null && props.lastTouchedActionId !== lastTouchedActionId;
@@ -171,16 +170,19 @@ const ConnectedContent: React.FC<PropsFromRedux> = props => {
     return false;
   }
 
-  var items: ServiceListModel[] = _.chain(data?.Actions.search.items)
+  const items: ServiceListModel[] = _.chain(data?.Actions.search.items)
     .map(it => toActionModel(it))
     .map(it => toLocalModel(it))
     .filter(it => filterByOnlyMyData(it))
     .filter(it => filterByOnlyDay(it))
     .filter(it => filterByOnlyCustomer(it))
     .value();
-  items.sort((i1, i2) => ('' + i1.customerName).localeCompare('' + i2.customerName));
-  if (!dateSortedDescending) items.sort((i1, i2) => i1.when.day - i2.when.day);
-  if (dateSortedDescending) items.sort((i1, i2) => i2.when.day - i1.when.day);
+
+  const { table } = useTanStackTableAdapter({
+    data: items,
+    columns: serviceTableColumns,
+    initialSorting: [{ id: "when", desc: true }],
+  });
 
   const fold = (reducer: (acc: number, it: number) => number, init: number, xs: number[]) => {
     let acc = init;
@@ -227,19 +229,8 @@ const ConnectedContent: React.FC<PropsFromRedux> = props => {
           <Text style={{ marginLeft: '8px' }}>{totalTime()}</Text>
         </div>
       </Space>
-      <div>
-      <Table
-        rowClassName={() => styles.hideextra }
-        columns={initialColumns}
-        dataSource={items}
-        pagination={false}
-        // https://medium.com/@anjantalatatam/antd-table-fixed-and-sticky-header-999812b4916a
-        scroll={{ y: `calc(100vh - 250px)` }}
-        rowKey="entityId"
-        onChange={(pagination, filters, sorter) => {
-          setDateSortedDescending(!dateSortedDescending);
-        }}
-      />
+      <div className="overflow-y-auto" style={{ maxHeight: "calc(100vh - 250px)" }}>
+        <TanStackTableView table={table} className={styles.hideextra} showPagination={false} />
       </div>
     </div>
   );
