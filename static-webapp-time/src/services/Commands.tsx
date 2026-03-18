@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Menu } from "antd";
 import { Dispatch } from 'redux';
 import { connect, ConnectedProps } from 'react-redux';
 import { RootState } from '../store/reducers';
@@ -10,8 +9,7 @@ import { EntityId } from '../store/actions/ServiceModel';
 import { ActionEditUpdated, VIEWCONTEXT_ACTION_EDIT_UPDATED } from '../store/viewcontext/types';
 import { LocalDate } from '../store/viewcontext/TimePeriod';
 import { Redirect } from 'react-router-dom';
-
-import { FileTextOutlined, LeftOutlined, PlusOutlined, RightOutlined, DownloadOutlined } from '@ant-design/icons';
+import { FileText, ChevronLeft, Plus, ChevronRight, Download } from 'lucide-react';
 
 import './Commands.css';
 
@@ -116,37 +114,48 @@ const ServiceCommandBarView: React.FC<ServiceCommandBarProps> = (props) => {
     {
       key: 'newService',
       label: 'Nowa usługa',
-      icon: <PlusOutlined />,
+      icon: <Plus className="h-4 w-4" />,
       onClick: () => newService()
     },
     {
       key: 'prevMonth',
       label: 'Poprzedni miesiąc',
-      icon: <LeftOutlined />,
+      icon: <ChevronLeft className="h-4 w-4" />,
       onClick: props.onPreviousMonthRequested
     },
     {
       key: 'nextMonth',
       label: 'Następny miesiąc',
-      icon: <RightOutlined />,
+      icon: <ChevronRight className="h-4 w-4" />,
       onClick: props.onNextMonthRequested
     },
     {
       key: 'navigateToReports',
       label: 'Raporty',
-      icon: <FileTextOutlined />,
+      icon: <FileText className="h-4 w-4" />,
       onClick: props.onReportsViewRequested
     },
     {
       key: 'exportToExcel',
       label: 'Excel',
-      icon: <DownloadOutlined />,
+      icon: <Download className="h-4 w-4" />,
       onClick: props.onExcelExportRequested
     },
   ];
 
   return (
-    <Menu theme='light' items={menuItems} mode="horizontal" className="menu-item"/>
+    <div className="flex items-center gap-1 border rounded-md px-1 py-0.5 menu-item">
+      {menuItems.map(item => (
+        <button
+          key={item.key}
+          onClick={item.onClick}
+          className="inline-flex items-center gap-1.5 rounded px-3 py-1.5 text-sm font-medium hover:bg-accent transition-colors"
+        >
+          {item.icon}
+          {item.label}
+        </button>
+      ))}
+    </div>
   );
 };
 

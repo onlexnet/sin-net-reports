@@ -1,5 +1,4 @@
 import React from "react";
-import { Radio } from "antd";
 import { Button } from "components/ui/button";
 import { Space } from "components/ui/layout";
 import _ from "lodash";
@@ -19,15 +18,21 @@ export const MainViewMultipleProjects: React.FC<MainViewMultipleProjectsProps> =
     return (
         <Space direction="vertical" align="center">
             <div className="mt-4 flex flex-col">
-                <Radio.Group onChange={e => setSelected(e.target.value)} style={{ marginBottom: '16px', marginTop: '16px' }} value={selected}>
-                    <Space direction="vertical"> 
-                        {options.map(option => (
-                            <Radio key={option.value} value={option.value}>
-                                {option.label}
-                            </Radio>
-                        ))}
-                    </Space>
-                </Radio.Group>
+                <div className="mb-4 mt-4 flex flex-col gap-2">
+                    {options.map(option => (
+                        <label key={option.value} className="flex items-center gap-2 cursor-pointer text-sm">
+                            <input
+                                type="radio"
+                                name="project"
+                                value={option.value}
+                                checked={selected === option.value}
+                                onChange={() => setSelected(option.value)}
+                                className="h-4 w-4 accent-primary"
+                            />
+                            {option.label}
+                        </label>
+                    ))}
+                </div>
                 <Button disabled={!selected} onClick={() => props.projectSelected(selected!)}>
                     Kontynuuj pracę z wybranym projektem
                 </Button>

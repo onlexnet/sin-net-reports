@@ -5,7 +5,7 @@ import { connect, ConnectedProps } from "react-redux";
 import { Dispatch } from "redux";
 import { getGraphQlClient } from "../api";
 import { InitiateSessionFinishedAction, INITIATE_SESSION_FINISHED } from "../store/session/types";
-import { Spin } from "antd";
+import { Loader2 } from "lucide-react";
 import { setAuthenticatedUser } from "./configuration/ApplicationInsights";
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
@@ -56,7 +56,8 @@ const View: React.FC<ViewProps> = props => {
 
   return (
     <div className="flex h-screen items-center justify-center">
-        <Spin tip="Pracowite sprawdzanie kim jesteś ;) ..." />
+        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+        <span className="ml-2 text-muted-foreground">Pracowite sprawdzanie kim jesteś ;) ...</span>
     </div>
   );
 }

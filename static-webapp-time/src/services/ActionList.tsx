@@ -1,4 +1,3 @@
-import { Switch, Typography } from "antd";
 import _ from "lodash";
 import * as React from "react";
 import { useState } from "react";
@@ -16,11 +15,11 @@ import { TimePeriod } from "../store/viewcontext/TimePeriod";
 import { ActionEditItem, VIEWCONTEXT_ACTION_EDIT_START } from "../store/viewcontext/types";
 import { Duration } from "./ActionList.Duration";
 import { ServiceListModel } from "./ServiceListModel";
-import styles from './services.module.css';
-import { Input } from "components/ui/input";
 import { TanStackTableView, useTanStackTableAdapter, TableAdapterColumn } from "components/table";
+import { Button } from "components/ui/button";
+import { Input } from "components/ui/input";
 
-const { Text } = Typography;
+import styles from './services.module.css';
 
 const controlStyles = {
   margin: "0 30px 20px 0",
@@ -206,12 +205,13 @@ const ConnectedContent: React.FC<PropsFromRedux> = props => {
   return (
     <div>
       <Space direction="horizontal" align="baseline" size="middle">
-        <Switch
-          checkedChildren="Tylko moje"
-          unCheckedChildren="Wszystkie"
-          checked={onlyMyData}
-          onChange={setOnlyMyData}
-        />
+        <Button
+          variant={onlyMyData ? "default" : "outline"}
+          size="sm"
+          onClick={() => setOnlyMyData(!onlyMyData)}
+        >
+          {onlyMyData ? "Tylko moje" : "Wszystkie"}
+        </Button>
         <Input
           placeholder="Tylko dzień"
           value={onlyDay}
@@ -225,8 +225,8 @@ const ConnectedContent: React.FC<PropsFromRedux> = props => {
           style={controlStyles}
         />
         <div style={{ ...controlStyles, display: 'flex', alignItems: 'center' }}>
-          <Text>Suma godzin: </Text>
-          <Text style={{ marginLeft: '8px' }}>{totalTime()}</Text>
+          <span className="text-sm">Suma godzin: </span>
+          <span className="ml-2 text-sm font-medium">{totalTime()}</span>
         </div>
       </Space>
       <div className="overflow-y-auto" style={{ maxHeight: "calc(100vh - 250px)" }}>

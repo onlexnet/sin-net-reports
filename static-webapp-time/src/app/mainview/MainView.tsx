@@ -1,4 +1,4 @@
-import { Spin } from "antd";
+import { Loader2 } from "lucide-react";
 import _ from "lodash";
 import React from "react";
 import { connect, ConnectedProps } from "react-redux";
@@ -51,7 +51,8 @@ const LocalView: React.FC<Props> = (props) => {
     if (!data) {
         return (
             <div className="flex min-h-screen items-center justify-center">
-                    <Spin tip="Ładowanie przydatnych projektów ....." />
+                    <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+                    <span className="ml-2 text-muted-foreground">Ładowanie przydatnych projektów .....</span>
             </div>);
     }
 

@@ -1,4 +1,4 @@
-import { Typography, message } from "antd";
+import { toast } from "sonner";
 import React from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { RouteComponentProps } from "react-router-dom";
@@ -9,8 +9,6 @@ import { Content } from "./ActionList";
 import { ServiceCommandBar } from "./Commands";
 import { useDownloadFile } from "../api/useDownloadFile";
 import { downloadBase64File } from "../utils/fileDownloadUtils";
-
-const { Text } = Typography;
 
 const mapStateToProps = (state: RootState) => {
   return ({ viewContext: state.viewContext, appState: state.appState });
@@ -34,22 +32,22 @@ const MainView: React.FC<MainProps> = (props) => {
           content: downloadData.content,
           contentType: downloadData.contentType,
         });
-        message.success('Plik został pobrany pomyślnie');
+        toast.success('Plik został pobrany pomyślnie');
       } catch (error) {
-        message.error('Błąd podczas pobierania pliku: ' + (error as Error).message);
+        toast.error('Błąd podczas pobierania pliku: ' + (error as Error).message);
       }
     }
   }, [downloadData]);
 
   React.useEffect(() => {
     if (downloadError) {
-      message.error('Błąd podczas pobierania pliku: ' + downloadError.message);
+      toast.error('Błąd podczas pobierania pliku: ' + downloadError.message);
     }
   }, [downloadError]);
 
   const handleExcelExport = () => {
     if (downloadLoading) {
-      message.info('Pobieranie w toku...');
+      toast.info('Pobieranie w toku...');
       return;
     }
 
@@ -62,9 +60,9 @@ const MainView: React.FC<MainProps> = (props) => {
           month: periodValue.dateFrom.month,
         },
       });
-      message.info('Inicjowanie pobierania pliku...');
+      toast.info('Inicjowanie pobierania pliku...');
     } else {
-      message.error('Nie wybrano projektu');
+      toast.error('Nie wybrano projektu');
     }
   };
 
@@ -80,9 +78,9 @@ const MainView: React.FC<MainProps> = (props) => {
         />
       </header>
       <main className="flex-1 overflow-hidden px-2.5 py-2.5">
-        <Text>
+        <span className="text-sm">
           {"Miesiąc: " + props.viewContext.period.toString()}
-        </Text>
+        </span>
         <div style={{ height: "100%", overflowY: "auto", overflowX: "auto" }}>
           <Content />
         </div>
