@@ -1,4 +1,3 @@
-import { Spin } from 'antd';
 import _ from "lodash";
 import React, { MouseEventHandler, useEffect, useRef, useState } from "react";
 import { v1 as uuid } from 'uuid';
@@ -331,7 +330,11 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
     }
 
     if (saveInProgress) {
-        return <Spin size="large" />
+        return (
+            <div className="flex items-center justify-center py-10">
+                <div className="h-8 w-8 animate-spin rounded-full border-4 border-muted border-t-primary" />
+            </div>
+        )
     }
 
     return (

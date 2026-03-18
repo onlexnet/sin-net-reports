@@ -1,9 +1,8 @@
 import _ from "lodash";
 import React from "react"
 import { useGetCustomerQuery } from "../../components/.generated/components";
-import { Divider, Typography } from "antd";
 import { Col, Row } from "components/ui/layout";
-const { Text } = Typography
+import { Separator } from "components/ui/separator";
 
 interface ViewProps {
   projectId: string | undefined,
@@ -39,15 +38,18 @@ const View: React.FC<ViewProps> = props => {
   return (
     <Row gutter={[8, 8]}>
       <Col span={24}>
-        <Divider orientation="center">Dane wybranego klienta:</Divider>
+        <div className="flex items-center gap-3 my-2">
+          <span className="text-sm font-semibold text-muted-foreground whitespace-nowrap">Dane wybranego klienta:</span>
+          <Separator className="flex-1" />
+        </div>
       </Col>
       <Col span={24}>
-        <Text strong>Nazwa: </Text><Text>{customerName}</Text><br />
-        <Text strong>Miejscowość: </Text><Text>{customerCityName ?? '---'}</Text><br />
-        <Text strong>Adres: </Text><Text>{customerAddress ?? '---'}</Text><br />
-        <Text strong>Operator: </Text><Text>{operatorEmail ?? '---'}</Text><br />
-        <Text strong>Dystans: </Text><Text>{distance ?? '---'}</Text><br />
-        <Text strong>Kod świadczeniodawcy (z Portalu): </Text><Text>{specialAuthValue ?? '---'}</Text>
+        <p className="text-sm"><span className="font-semibold">Nazwa: </span><span>{customerName}</span></p>
+        <p className="text-sm"><span className="font-semibold">Miejscowość: </span><span>{customerCityName ?? '---'}</span></p>
+        <p className="text-sm"><span className="font-semibold">Adres: </span><span>{customerAddress ?? '---'}</span></p>
+        <p className="text-sm"><span className="font-semibold">Operator: </span><span>{operatorEmail ?? '---'}</span></p>
+        <p className="text-sm"><span className="font-semibold">Dystans: </span><span>{distance ?? '---'}</span></p>
+        <p className="text-sm"><span className="font-semibold">Kod świadczeniodawcy (z Portalu): </span><span>{specialAuthValue ?? '---'}</span></p>
       </Col>
     </Row>
   );

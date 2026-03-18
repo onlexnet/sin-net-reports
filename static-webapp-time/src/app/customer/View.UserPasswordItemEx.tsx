@@ -1,4 +1,3 @@
-import { Typography } from "antd";
 import React, { useEffect, useState } from "react";
 import { TOTP } from "totp-generator"
 import { Button } from "components/ui/button";
@@ -6,8 +5,6 @@ import { Input } from "components/ui/input";
 import { Col, Row } from "components/ui/layout";
 import { Textarea } from "components/ui/textarea";
 import { Separator } from "components/ui/separator";
-
-const { Text } = Typography;
 
 interface UserPasswordExtModel {
     // internal ID used by React to identify the element on list of elements
@@ -89,7 +86,7 @@ export const UserPasswordItemExt: React.FC<UserPasswordExtItemProps> = props => 
     return (
         <>
             <div className="flex items-center gap-3 my-3">
-                <Text>{props.model.location}</Text>
+                <span className="text-sm font-medium">{props.model.location}</span>
                 <Separator className="flex-1" />
             </div>
             <Row gutter={16}>

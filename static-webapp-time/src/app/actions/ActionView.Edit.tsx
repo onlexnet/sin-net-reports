@@ -3,7 +3,6 @@ import { RootState } from "../../store/reducers";
 import { Dispatch } from "redux";
 import { connect, ConnectedProps } from "react-redux";
 import _ from "lodash";
-import { Divider } from "antd";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { AppDatePicker } from "../../services/ActionList.DatePicker";
 import { LocalDate } from "../../store/viewcontext/TimePeriod";
@@ -20,6 +19,7 @@ import { Input } from "components/ui/input";
 import { Col } from "components/ui/layout";
 import { Textarea } from "components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "components/ui/select";
+import { Separator } from "components/ui/separator";
 
 const mapStateToProps = (state: RootState) => {
     if (state.appState.empty) {
@@ -271,7 +271,7 @@ export const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
                         onChange={onChangeDescription}
                         className={descriptionError ? "border-destructive" : undefined}
                     />
-                    {descriptionError && <div className="ant-form-item-explain-error">{descriptionError}</div>}
+                    {descriptionError && <div className="mt-1 text-sm text-destructive">{descriptionError}</div>}
                 </Col>
             </PaddedRow>
 
@@ -292,7 +292,7 @@ export const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
                         onChange={onChangeDuration}
                         className={durationError ? "border-destructive" : undefined}
                     />
-                    {durationError && <div className="ant-form-item-explain-error">{durationError}</div>}
+                    {durationError && <div className="mt-1 text-sm text-destructive">{durationError}</div>}
                 </Col>
                 <LabelCol span={2} text="Dojazd:" />
                 <Col span={10}>
@@ -305,7 +305,7 @@ export const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
             </PaddedRow>
 
             <Col span={24}>
-                <Divider orientation="center"></Divider>
+                <Separator className="my-2" />
             </Col>
 
             <PaddedRow>

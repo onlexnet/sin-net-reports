@@ -1,11 +1,8 @@
-import { Typography } from "antd";
 import React, { useState } from "react";
 import { Button } from "components/ui/button";
 import { addressProvider } from "../addressProvider";
 import { LocalDate } from "../store/viewcontext/TimePeriod";
 import { PeriodSelector } from "./PeriodSelector";
-
-const { Title } = Typography;
 
 interface ReportsViewProps {
   projectId: string;
@@ -111,7 +108,7 @@ export const ReportsView: React.FC<ReportsViewProps> = props => {
 
   return (
     <div className="space-y-4 p-2.5">
-        <Title level={1}>Raporty</Title>
+        <h1 className="text-3xl font-semibold tracking-tight">Raporty</h1>
 
         <div className="flex flex-col gap-2">
           <PeriodSelector suffix="OD:" year={fromYear} month={fromMonth} onYearChanged={setFromYear} onMonthChanged={setFromMonth} />
