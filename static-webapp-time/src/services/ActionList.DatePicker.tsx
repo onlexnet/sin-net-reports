@@ -1,7 +1,12 @@
-import { DatePicker } from 'antd';
+import React, { useState } from 'react';
+import { format } from 'date-fns';
+import { pl } from 'date-fns/locale';
+import { CalendarIcon } from 'lucide-react';
 import { LocalDate } from '../store/viewcontext/TimePeriod';
-import React from 'react';
-import dayjs from 'dayjs';
+import { Calendar } from 'components/ui/calendar';
+import { Popover, PopoverContent, PopoverTrigger } from 'components/ui/popover';
+import { Button } from 'components/ui/button';
+import { cn } from 'lib/utils';
 
 export interface AppDatePickerProps {
   onSelectDate(value: LocalDate): void;
@@ -10,19 +15,39 @@ export interface AppDatePickerProps {
 }
 
 export const AppDatePicker: React.FC<AppDatePickerProps> = props => {
-
   const { current: currentDate } = props;
+  const [open, setOpen] = useState(false);
 
-  const onSelectDate = (date: dayjs.Dayjs | null) => {
+  const selectedDate = LocalDate.toDate(currentDate) ?? undefined;
+
+  const onDaySelect = (date: Date | undefined) => {
     if (date) {
-      const asLocalDate = LocalDate.of(date.toDate());
-      props.onSelectDate(asLocalDate);
+      props.onSelectDate(LocalDate.of(date));
+      setOpen(false);
     }
   };
 
   return (
-      <DatePicker style={{ width: '100%' }}
-        onChange={onSelectDate}
-        defaultValue={dayjs(LocalDate.toDate(currentDate))} />
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button
+          variant="outline"
+          className={cn('w-full justify-start text-left font-normal', !selectedDate && 'text-muted-foreground')}
+        >
+          <CalendarIcon className="mr-2 h-4 w-4" />
+          {selectedDate ? format(selectedDate, 'dd.MM.yyyy', { locale: pl }) : <span>Wybierz datę</span>}
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-auto p-0">
+        <Calendar
+          mode="single"
+          selected={selectedDate}
+          onSelect={onDaySelect}
+          defaultMonth={selectedDate}
+          locale={pl}
+          initialFocus
+        />
+      </PopoverContent>
+    </Popover>
   );
 };
