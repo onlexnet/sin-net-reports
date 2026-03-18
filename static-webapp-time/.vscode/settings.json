@@ -1,5 +1,6 @@
 {
     "chat.tools.terminal.autoApprove": {
         "npm uninstall": true
-    }
+    },
+    "chat.autopilot.enabled": true
 }
