@@ -1,7 +1,7 @@
-import { Col, Row } from 'antd';
 import React from "react";
 import { Button } from "components/ui/button";
 import { Input } from "components/ui/input";
+import { Col, Row } from "components/ui/layout";
 import { ContactDetails } from "./CustomerView";
 
 interface NewContactItemProps {

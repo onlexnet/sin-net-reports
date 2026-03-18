@@ -15,7 +15,6 @@ import { MsalProvider } from "@azure/msal-react";
 import { getRuntimeConfig } from "./configuration/RuntimeConfig";
 
 import "./App.css"; // Custom styles
-import { Layout } from 'antd';
 
 
 const mapStateToProps = (state: RootState) => {
@@ -109,9 +108,9 @@ const App: React.FC<AppProps> = props => {
       }
   }
 
-  return (<Layout className="layout-container">
+  return (<div className="layout-container">
     {content}
-  </Layout>);
+  </div>);
 };
 
 export default connector(App)

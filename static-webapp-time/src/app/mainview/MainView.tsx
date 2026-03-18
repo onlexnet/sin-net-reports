@@ -1,4 +1,4 @@
-import { Spin, Layout } from "antd";
+import { Spin } from "antd";
 import _ from "lodash";
 import React from "react";
 import { connect, ConnectedProps } from "react-redux";
@@ -50,11 +50,9 @@ const LocalView: React.FC<Props> = (props) => {
 
     if (!data) {
         return (
-            <Layout>
-                <Layout.Content style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <div className="flex min-h-screen items-center justify-center">
                     <Spin tip="Ładowanie przydatnych projektów ....." />
-                </Layout.Content>
-            </Layout>);
+            </div>);
     }
 
     const { list } = data.Projects;
@@ -77,16 +75,14 @@ const LocalView: React.FC<Props> = (props) => {
         return (<p>Set application context ....</p>);
     }
 
-    const { Sider, Content } = Layout;
-
     return (
-        <div style={{ height: "100vh" }}  >
+        <div className="h-screen">
             <Router>
-                <Layout>
-                    <Sider theme="light">
+                <div className="flex h-full">
+                    <aside className="w-64 shrink-0 border-r bg-background">
                         <Route path="/" component={NavBar}/>
-                    </Sider>
-                    <Content>
+                    </aside>
+                    <main className="min-w-0 flex-1 overflow-auto">
                         <Route path={routing.editAction} component={ActionViewRoutedEdit} />
                         <Route path={routing.actions} component={ServicesDefault} exact={true} />
                         <Route path={routing.reports} component={ReportsViewRouted} />
@@ -95,8 +91,8 @@ const LocalView: React.FC<Props> = (props) => {
                         <Route path={routing.customers} component={CustomersRoutedConnectedView} exact={true} />
                         <Route path={routing.debug} render={(localProps) => <Debug {...props} />} />
                         <Route path="/" exact component={Home} />
-                    </Content>
-                </Layout>
+                    </main>
+                </div>
             </Router>
         </div>);
 

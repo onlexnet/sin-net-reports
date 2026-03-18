@@ -3,7 +3,7 @@ import { RootState } from "../../store/reducers";
 import { Dispatch } from "redux";
 import { connect, ConnectedProps } from "react-redux";
 import _ from "lodash";
-import { Row, Col, Divider } from "antd";
+import { Divider } from "antd";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { AppDatePicker } from "../../services/ActionList.DatePicker";
 import { LocalDate } from "../../store/viewcontext/TimePeriod";
@@ -17,6 +17,7 @@ import PaddedRow from "../../components/PaddedRow";
 import LabelCol from "../../components/LabelCol";
 import { Button } from "components/ui/button";
 import { Input } from "components/ui/input";
+import { Col } from "components/ui/layout";
 import { Textarea } from "components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "components/ui/select";
 

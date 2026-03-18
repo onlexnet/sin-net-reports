@@ -1,8 +1,9 @@
-import { Typography, Col, Row } from "antd";
+import { Typography } from "antd";
 import React, { useEffect, useState } from "react";
 import { TOTP } from "totp-generator"
 import { Button } from "components/ui/button";
 import { Input } from "components/ui/input";
+import { Col, Row } from "components/ui/layout";
 import { Textarea } from "components/ui/textarea";
 import { Separator } from "components/ui/separator";
 
@@ -122,7 +123,7 @@ export const UserPasswordItemExt: React.FC<UserPasswordExtItemProps> = props => 
                     <Textarea value={otpRecoveryKeys} placeholder="TOTP recovery keys" onChange={handler((m, v) => m.otpRecoveryKeys = v)} />
                 </Col>
             </Row>
-            <Row gutter={16}>1
+            <Row gutter={16}>
                 <Col offset={2} span={4}>
                     <Input value={props.changedBy} disabled defaultValue="-" />
                 </Col>

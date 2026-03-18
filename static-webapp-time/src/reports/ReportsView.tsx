@@ -1,4 +1,4 @@
-import { Typography, Layout } from "antd";
+import { Typography } from "antd";
 import React, { useState } from "react";
 import { Button } from "components/ui/button";
 import { addressProvider } from "../addressProvider";
@@ -6,7 +6,6 @@ import { LocalDate } from "../store/viewcontext/TimePeriod";
 import { PeriodSelector } from "./PeriodSelector";
 
 const { Title } = Typography;
-const { Content } = Layout;
 
 interface ReportsViewProps {
   projectId: string;
@@ -111,8 +110,7 @@ export const ReportsView: React.FC<ReportsViewProps> = props => {
   const [toMonth, setToMonth] = useState<number | undefined>(from.month);
 
   return (
-    <Layout style={{ padding: 10 }}>
-      <Content>
+    <div className="space-y-4 p-2.5">
         <Title level={1}>Raporty</Title>
 
         <div className="flex flex-col gap-2">
@@ -143,8 +141,7 @@ export const ReportsView: React.FC<ReportsViewProps> = props => {
             Lista klientów przypisanych do operatorów
           </Button>
         </div>
-      </Content>
-    </Layout>
+    </div>
   );
 };
 

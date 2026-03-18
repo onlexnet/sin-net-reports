@@ -1,4 +1,4 @@
-import { Table, Divider, Col } from "antd";
+import { Table, Divider } from "antd";
 import { Link } from "react-router-dom";
 import _ from "lodash";
 import { useState } from "react";
@@ -7,6 +7,7 @@ import { ListCustomersItem } from "../../api/useListCustomers";
 import PaddedRow from "../../components/PaddedRow";
 import { Button } from "components/ui/button";
 import { Input } from "components/ui/input";
+import { Col } from "components/ui/layout";
 
 interface CustomersProps {
     givenProjectId: string,
@@ -61,12 +62,14 @@ export const CustomersView: React.FC<CustomersProps> = (props) => {
                 </Col>
             </PaddedRow>
             <PaddedRow>
-                <Table
-                    dataSource={sortedItems}
-                    columns={columns}
-                    pagination={false}
-                    scroll={{ y: `calc(100vh - 250px)` }}
-                />
+                <Col span={24}>
+                    <Table
+                        dataSource={sortedItems}
+                        columns={columns}
+                        pagination={false}
+                        scroll={{ y: `calc(100vh - 250px)` }}
+                    />
+                </Col>
             </PaddedRow >
         </>
     )

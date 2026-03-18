@@ -1,4 +1,4 @@
-import { Typography, Layout, message } from "antd";
+import { Typography, message } from "antd";
 import React from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { RouteComponentProps } from "react-router-dom";
@@ -11,7 +11,6 @@ import { useDownloadFile } from "../api/useDownloadFile";
 import { downloadBase64File } from "../utils/fileDownloadUtils";
 
 const { Text } = Typography;
-const { Header, Content: AntContent } = Layout;
 
 const mapStateToProps = (state: RootState) => {
   return ({ viewContext: state.viewContext, appState: state.appState });
@@ -70,8 +69,8 @@ const MainView: React.FC<MainProps> = (props) => {
   };
 
   return (
-    <Layout style={{ height: "100%" }}>
-      <Header style={{ background: "#fff" }}>
+    <div className="flex h-full flex-col">
+      <header className="border-b bg-background px-4 py-3">
         <ServiceCommandBar
           onReportsViewRequested={() => {
         const url = routing.reports;
@@ -79,16 +78,16 @@ const MainView: React.FC<MainProps> = (props) => {
           }}
           onExcelExportRequested={handleExcelExport}
         />
-      </Header>
-      <AntContent style={{ padding: "10px" }}>
+      </header>
+      <main className="flex-1 overflow-hidden px-2.5 py-2.5">
         <Text>
           {"Miesiąc: " + props.viewContext.period.toString()}
         </Text>
         <div style={{ height: "100%", overflowY: "auto", overflowX: "auto" }}>
           <Content />
         </div>
-      </AntContent>
-    </Layout>
+      </main>
+    </div>
   );
 };
 

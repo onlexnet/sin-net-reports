@@ -1,5 +1,5 @@
 import React from "react";
-import { Col, Row } from "antd";
+import { Col, Row } from "components/ui/layout";
 import { getDisplayVersion } from './app/configuration/BuildInfo';
 
 

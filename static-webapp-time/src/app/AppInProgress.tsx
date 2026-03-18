@@ -5,7 +5,7 @@ import { connect, ConnectedProps } from "react-redux";
 import { Dispatch } from "redux";
 import { getGraphQlClient } from "../api";
 import { InitiateSessionFinishedAction, INITIATE_SESSION_FINISHED } from "../store/session/types";
-import { Col, Row, Spin } from "antd";
+import { Spin } from "antd";
 import { setAuthenticatedUser } from "./configuration/ApplicationInsights";
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
@@ -55,11 +55,9 @@ const View: React.FC<ViewProps> = props => {
   }
 
   return (
-    <Row justify="center" align="middle" style={{ height: '100vh' }}>
-      <Col>
+    <div className="flex h-screen items-center justify-center">
         <Spin tip="Pracowite sprawdzanie kim jesteś ;) ..." />
-      </Col>
-    </Row>
+    </div>
   );
 }
 

@@ -1,4 +1,4 @@
-import { Col, Row, Space, Spin } from 'antd';
+import { Spin } from 'antd';
 import _ from "lodash";
 import React, { MouseEventHandler, useEffect, useRef, useState } from "react";
 import { v1 as uuid } from 'uuid';
@@ -7,6 +7,7 @@ import { CustomerContactInput, CustomerInput, CustomerSecretExInput, CustomerSec
 import { Button } from "components/ui/button";
 import { Checkbox } from "components/ui/checkbox";
 import { Input } from "components/ui/input";
+import { Col, Row, Space } from "components/ui/layout";
 import { Textarea } from "components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "components/ui/select";
 import { Separator } from "components/ui/separator";

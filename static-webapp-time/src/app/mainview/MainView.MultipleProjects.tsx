@@ -1,6 +1,7 @@
 import React from "react";
-import { Radio, Space } from "antd";
+import { Radio } from "antd";
 import { Button } from "components/ui/button";
+import { Space } from "components/ui/layout";
 import _ from "lodash";
 
 interface MainViewMultipleProjectsProps {
@@ -17,7 +18,7 @@ export const MainViewMultipleProjects: React.FC<MainViewMultipleProjectsProps> =
 
     return (
         <Space direction="vertical" align="center">
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <div className="mt-4 flex flex-col">
                 <Radio.Group onChange={e => setSelected(e.target.value)} style={{ marginBottom: '16px', marginTop: '16px' }} value={selected}>
                     <Space direction="vertical"> 
                         {options.map(option => (

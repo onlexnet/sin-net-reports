@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Col } from 'antd';
+import { Col } from 'components/ui/layout';
 
 type ColSpanType = number | string;
 

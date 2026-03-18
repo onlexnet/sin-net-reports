@@ -1,7 +1,8 @@
-import { Table, Tooltip, Switch, Row, Col, Typography, Space } from "antd";
+import { Table, Tooltip, Switch, Typography } from "antd";
 import _ from "lodash";
 import * as React from "react";
 import { useState } from "react";
+import { Space } from "components/ui/layout";
 import { connect, ConnectedProps } from "react-redux";
 import { Link } from "react-router-dom";
 import { Dispatch } from "redux";

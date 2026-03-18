@@ -1,6 +1,6 @@
 import React from "react";
-import { Col, Row } from 'antd';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "components/ui/select";
+import { Col, Row } from "components/ui/layout";
 import _ from "lodash";
 
 type SECRET_TYPE = 'PORTAL_SWIADCZENIODAWCY'
@@ -84,7 +84,7 @@ export const NewSecret: React.FC<NewAuthorisationProps> = props => {
         .value()
     return (
         <Row gutter={32}>
-            <Col offset={2}>
+            <Col offset={2} span={8}>
                 <Select onValueChange={onChangeHandler(props)}>
                     <SelectTrigger className="w-[220px]">
                         <SelectValue placeholder="Dodaj nową autoryzację" />

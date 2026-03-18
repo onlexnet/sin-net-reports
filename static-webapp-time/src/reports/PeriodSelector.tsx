@@ -1,4 +1,4 @@
-import { Row, Col } from "antd";
+import { Col, Row } from "components/ui/layout";
 import React, { useState } from "react";
 import { Input } from "components/ui/input";
 
@@ -38,13 +38,13 @@ export const PeriodSelector: React.FC<PeriodSelectorProps> = props => {
   
     return (
       <Row gutter={16}>
-        <Col>
+        <Col span={12}>
           <div className="flex items-center gap-2">
             <label className="text-sm">Rok {props.suffix}</label>
             <Input value={yearText} onChange={onChangeYear} />
           </div>
         </Col>
-        <Col>
+        <Col span={12}>
           <div className="flex items-center gap-2">
             <label className="text-sm">Miesiąc {props.suffix}</label>
             <Input value={monthText} onChange={onChangeMonth} />

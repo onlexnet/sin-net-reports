@@ -1,8 +1,8 @@
-import { Row, Col } from "antd";
 import React, { useEffect, useState } from "react";
 import { TOTP } from "totp-generator";
 import { Button } from "components/ui/button";
 import { Input } from "components/ui/input";
+import { Col, Row } from "components/ui/layout";
 import { Separator } from "components/ui/separator";
 
 interface UserPasswordModel {
@@ -87,35 +87,35 @@ export const UserPasswordItem: React.FC<UserPasswordItemProps> = props => {
                 <Separator className="flex-1" />
             </div>
             <Row gutter={16}>
-                <Col offset={2}>
+                <Col offset={2} span={6}>
                     <Input placeholder="Użytkownik" value={username} onChange={handler((m, v) => m.username = v)} />
                 </Col>
-                <Col>
+                <Col span={6}>
                     <Input placeholder="Hasło" value={password} onChange={handler((m, v) => m.password = v)} />
                 </Col>
-                <Col>
+                <Col span={4}>
                     <Button variant="destructive" onClick={() => props.onRemove(props.model.localKey)}>Usuń</Button>
                 </Col>
             </Row>
             <Row gutter={16}>
-                <Col offset={2}>
+                <Col offset={2} span={4}>
                     <Input value={otpDesc} readOnly={true} />
                 </Col>
-                <Col>
+                <Col span={2}>
                     <Input value={expiresDesc} disabled />
                 </Col>
-                <Col>
+                <Col span={6}>
                     <Input placeholder="TOTP secret" value={otpSecret} onChange={handler((m, v) => m.otpSecret = v)} />
                 </Col>
-                <Col>
+                <Col span={8}>
                     <Input placeholder="TOTP recovery keys" value={otpRecoveryKeys} onChange={handler((m, v) => m.otpRecoveryKeys = v)} />
                 </Col>
             </Row>
             <Row gutter={16}>
-                <Col offset={2}>
+                <Col offset={2} span={4}>
                     <Input value={props.changedBy} disabled />
                 </Col>
-                <Col>
+                <Col span={4}>
                     <Input value={props.changedWhen} disabled />
                 </Col>
             </Row>

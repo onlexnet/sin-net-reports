@@ -1,7 +1,8 @@
 import _ from "lodash";
 import React from "react"
 import { useGetCustomerQuery } from "../../components/.generated/components";
-import { Col, Row, Divider, Typography } from "antd";
+import { Divider, Typography } from "antd";
+import { Col, Row } from "components/ui/layout";
 const { Text } = Typography
 
 interface ViewProps {
