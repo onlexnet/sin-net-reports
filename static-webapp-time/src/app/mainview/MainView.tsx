@@ -19,6 +19,7 @@ import { CustomerViewNew } from "../customer/CustomerView.Routed.New";
 import { CustomersRoutedConnectedView } from "../customers/Customers.Routed";
 import { MainViewMultipleProjects } from "./MainView.MultipleProjects";
 import { MainViewNoProjects } from "./MainView.NoProjects";
+import { TopCenteredContainer } from "components/ui/top-centered-container";
 
 const mapStateToProps = (state: RootState) => {
     return { auth: state.auth, appState: state.appState };
@@ -50,12 +51,12 @@ const LocalView: React.FC<Props> = (props) => {
 
     if (!data) {
         return (
-            <div className="flex min-h-screen w-full items-start justify-center pt-8">
+            <TopCenteredContainer>
                 <div className="flex items-center">
                     <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
                     <span className="ml-2 text-muted-foreground">Ładowanie przydatnych projektów .....</span>
                 </div>
-            </div>);
+            </TopCenteredContainer>);
     }
 
     const { list } = data.Projects;
@@ -70,9 +71,9 @@ const LocalView: React.FC<Props> = (props) => {
 
     if (availableProjects.length > 1 && props.appState.empty) {
         return (
-            <div className="flex min-h-screen w-full items-start justify-center pt-8">
+            <TopCenteredContainer>
                 <MainViewMultipleProjects projects={availableProjects} projectSelected={id => props.setProject(id)} />
-            </div>
+            </TopCenteredContainer>
         );
     }
 
