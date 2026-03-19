@@ -93,8 +93,8 @@ class CustomerMapperTest {
       contactInput.setPhoneNo("+48123123123");
       contactInput.setEmail("jan.kowalski@example.com");
 
-      assertThat(mapper.toDomain(secretInput)).isEqualTo(new CustomerSecret("Datacenter", "ops", "p@ss", "otp", "k1,k2"));
-      assertThat(mapper.toDomain(secretExInput)).isEqualTo(new CustomerSecretEx("HQ", "root", "very-secret", "EHR", "EHR-01", "otp-seed", "r1,r2"));
+      assertThat(mapper.toDomain(secretInput)).isEqualTo(new CustomerSecret("Datacenter", "ops", "p@ss", "otp", "k1,k2", null, null));
+      assertThat(mapper.toDomain(secretExInput)).isEqualTo(new CustomerSecretEx("HQ", "root", "very-secret", "EHR", "EHR-01", "otp-seed", "r1,r2", null, null));
       assertThat(mapper.toDomain(contactInput)).isEqualTo(new CustomerContact("Jan", "Kowalski", "+48123123123", "jan.kowalski@example.com"));
     }
 
@@ -121,7 +121,7 @@ class CustomerMapperTest {
     @Test
     @DisplayName("should map customer secret and set unknown audit fields")
     void shouldMapSecretToGql() {
-      var source = new CustomerSecret("Office", "user", "pass", "otp", "k1");
+      var source = new CustomerSecret("Office", "user", "pass", "otp", "k1", null, null);
 
       var result = mapper.toGql(source);
 
@@ -137,7 +137,7 @@ class CustomerMapperTest {
     @Test
     @DisplayName("should map customer secretEx and set unknown audit fields")
     void shouldMapSecretExToGql() {
-      var source = new CustomerSecretEx("HQ", "admin", "secret", "Main", "E-1", "otp2", "k2");
+      var source = new CustomerSecretEx("HQ", "admin", "secret", "Main", "E-1", "otp2", "k2", null, null);
 
       var result = mapper.toGql(source);
 
@@ -184,8 +184,8 @@ class CustomerMapperTest {
                   true,
                   "Commercial notes",
                   "Tech data"),
-              List.of(new CustomerSecret("Office", "user", "pass", "otp", "rk")),
-              List.of(new CustomerSecretEx("HQ", "admin", "secret", "Main", "E-1", "otp2", "rk2")),
+              List.of(new CustomerSecret("Office", "user", "pass", "otp", "rk", null, null)),
+              List.of(new CustomerSecretEx("HQ", "admin", "secret", "Main", "E-1", "otp2", "rk2", null, null)),
               List.of(new CustomerContact("Ada", "Lovelace", "+48123123123", "ada@example.com"))));
 
       var result = mapper.toGql(source);

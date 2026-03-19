@@ -1,5 +1,7 @@
 package sinnet.domain.models;
 
+import java.time.LocalDateTime;
+
 public record CustomerSecretEx(
     String location,
     String username,
@@ -7,4 +9,6 @@ public record CustomerSecretEx(
     String entityName,
     String entityCode,
     String otpSecret,
-    String otpRecoveryKeys) { }
+    String otpRecoveryKeys,
+    String changedWho,
+    LocalDateTime changedWhen) { }

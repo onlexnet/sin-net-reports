@@ -102,7 +102,9 @@ public class CustomerSteps {
             "",
             "",
             "my secret",
-            "my key1")),
+            "my key1",
+            null,
+            null)),
           List.of())));
 
     var response = appApi.getCustomer(projectId, entityId).get();

@@ -104,7 +104,9 @@ public interface CustomerMapper {
         it.getEntityName(),
         it.getEntityCode(),
         it.getOtpSecret(),
-        it.getOtpRecoveryKeys());
+        it.getOtpRecoveryKeys(),
+        it.getChangedWho(),
+        toDomain(it.getChangedWhen()));
   }
 
   static CustomerSecret toDomain(sinnet.grpc.customers.CustomerSecret it) {
@@ -116,7 +118,9 @@ public interface CustomerMapper {
         it.getUsername(),
         it.getPassword(),
         it.getOtpSecret(),
-        it.getOtpRecoveryKeys());
+        it.getOtpRecoveryKeys(),
+        it.getChangedWho(),
+        toDomain(it.getChangedWhen()));
   }
 
   static CustomerContact toDomain(sinnet.grpc.customers.CustomerContact it) {

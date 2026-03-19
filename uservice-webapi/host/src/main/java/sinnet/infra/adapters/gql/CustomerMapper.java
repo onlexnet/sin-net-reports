@@ -1,5 +1,8 @@
 package sinnet.infra.adapters.gql;
 
+import java.time.format.DateTimeFormatter;
+import java.util.Optional;
+
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
@@ -55,8 +58,12 @@ public interface CustomerMapper {
   @Mapping(target = "distance", source = "distance", defaultValue = "0")
   CustomerEntry toDomain(CustomerInput item);
 
+  @Mapping(target = "changedWho", ignore = true)
+  @Mapping(target = "changedWhen", ignore = true)
   CustomerSecret toDomain(CustomerSecretInput item);
 
+  @Mapping(target = "changedWho", ignore = true)
+  @Mapping(target = "changedWhen", ignore = true)
   sinnet.domain.models.CustomerSecretEx toDomain(CustomerSecretExInput item);
 
   CustomerContact toDomain(CustomerContactInputGql item);
@@ -93,12 +100,20 @@ public interface CustomerMapper {
     result.setPassword(it.password());
     result.setEntityCode(it.entityCode());
     result.setEntityName(it.entityName());
-    result.setChangedWhen("??");
-    result.setChangedWho("??");
+    result.setChangedWho(Optional.ofNullable(it.changedWho()).orElse("?"));
+    result.setChangedWhen(Optional.ofNullable(it.changedWhen()).map(TIMESTAMP_FORMATTER::format).orElse("?"));
     result.setOtpSecret(it.otpSecret());
     result.setOtpRecoveryKeys(it.otpRecoveryKeys());
     return result;
   }
+
+  // DateTime, created and kept on server-side is UTC only. We can't send data to
+  // client because GraphQL does not support Date / Time types.
+  // So, we send a simple string without implicit contratc so that client may
+  // convert them so its
+  // proper models for date/time representation
+  // reason: https://github.com/onlexnet/sin-net-reports/issues/59
+  DateTimeFormatter TIMESTAMP_FORMATTER = DateTimeFormatter.ISO_DATE_TIME;
 
   default CustomerSecretGql toGql(CustomerSecret it) {
     if (it == null) {
@@ -108,8 +123,8 @@ public interface CustomerMapper {
     result.setLocation(it.location());
     result.setUsername(it.username());
     result.setPassword(it.password());
-    result.setChangedWhen("??");
-    result.setChangedWho("??");
+    result.setChangedWho(Optional.ofNullable(it.changedWho()).orElse("?"));
+    result.setChangedWhen(Optional.ofNullable(it.changedWhen()).map(TIMESTAMP_FORMATTER::format).orElse("?"));
     result.setOtpSecret(it.otpSecret());
     result.setOtpRecoveryKeys(it.otpRecoveryKeys());
     return result;
