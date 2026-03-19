@@ -93,8 +93,8 @@ public interface CustomerMapper {
     result.setPassword(it.password());
     result.setEntityCode(it.entityCode());
     result.setEntityName(it.entityName());
-    result.setChangedWhen("?");
-    result.setChangedWho("?");
+    result.setChangedWhen("??");
+    result.setChangedWho("??");
     result.setOtpSecret(it.otpSecret());
     result.setOtpRecoveryKeys(it.otpRecoveryKeys());
     return result;
@@ -108,8 +108,8 @@ public interface CustomerMapper {
     result.setLocation(it.location());
     result.setUsername(it.username());
     result.setPassword(it.password());
-    result.setChangedWhen("?");
-    result.setChangedWho("?");
+    result.setChangedWhen("??");
+    result.setChangedWho("??");
     result.setOtpSecret(it.otpSecret());
     result.setOtpRecoveryKeys(it.otpRecoveryKeys());
     return result;
