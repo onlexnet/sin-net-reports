@@ -50,9 +50,11 @@ const LocalView: React.FC<Props> = (props) => {
 
     if (!data) {
         return (
-            <div className="flex min-h-screen items-center justify-center">
+            <div className="flex min-h-screen w-full items-start justify-center pt-8">
+                <div className="flex items-center">
                     <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
                     <span className="ml-2 text-muted-foreground">Ładowanie przydatnych projektów .....</span>
+                </div>
             </div>);
     }
 
@@ -67,7 +69,11 @@ const LocalView: React.FC<Props> = (props) => {
     }
 
     if (availableProjects.length > 1 && props.appState.empty) {
-        return <MainViewMultipleProjects projects={availableProjects} projectSelected={id => props.setProject(id)} />;
+        return (
+            <div className="flex min-h-screen w-full items-start justify-center pt-8">
+                <MainViewMultipleProjects projects={availableProjects} projectSelected={id => props.setProject(id)} />
+            </div>
+        );
     }
 
     if (availableProjects.length === 1 && props.appState.empty) {

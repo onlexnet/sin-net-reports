@@ -55,9 +55,11 @@ const View: React.FC<ViewProps> = props => {
   }
 
   return (
-    <div className="flex h-screen items-center justify-center">
+    <div className="flex min-h-screen w-full items-start justify-center pt-8">
+      <div className="flex items-center">
         <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
         <span className="ml-2 text-muted-foreground">Pracowite sprawdzanie kim jesteś ;) ...</span>
+      </div>
     </div>
   );
 }

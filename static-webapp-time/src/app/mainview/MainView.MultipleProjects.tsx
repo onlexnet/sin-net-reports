@@ -17,10 +17,10 @@ export const MainViewMultipleProjects: React.FC<MainViewMultipleProjectsProps> =
 
     return (
         <Space direction="vertical" align="center">
-            <div className="mt-4 flex flex-col">
-                <div className="mb-4 mt-4 flex flex-col gap-2">
+            <div className="mt-4 flex flex-col items-start">
+                <div className="mb-4 mt-4 flex w-full flex-col items-start gap-2">
                     {options.map(option => (
-                        <label key={option.value} className="flex items-center gap-2 cursor-pointer text-sm">
+                        <label key={option.value} className="flex w-full cursor-pointer items-center justify-start gap-2 text-left text-sm">
                             <input
                                 type="radio"
                                 name="project"
