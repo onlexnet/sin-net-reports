@@ -23,7 +23,7 @@ import sinnet.grpc.timeentries.UpdateCommand;
 /** Mockable equivalent of {@link ProjectsGrpcStub}. */
 @Component
 @RequiredArgsConstructor
-class ActionsGrpcFacadeImpl implements TimeentriesPortOut {
+class TimeentriesGateway implements TimeentriesPortOut {
 
   private final TimeEntriesBlockingStub stub;
   private final EntityGrpcMapper entityGrpcMapper = EntityGrpcMapper.INSTANCE;
