@@ -90,8 +90,8 @@ class CustomerMapperTest {
           .setOtpRecoveryKeys("k1,k2")
           .build();
 
-      assertThat(CustomerMapper.toDomain(minimal)).isEqualTo(new CustomerSecret("HQ", "", "", "", ""));
-      assertThat(CustomerMapper.toDomain(full)).isEqualTo(new CustomerSecret("Datacenter", "ops", "p@ss", "otp", "k1,k2"));
+      assertThat(CustomerMapper.toDomain(minimal)).isEqualTo(new CustomerSecret("HQ", "", "", "", "", "", null));
+      assertThat(CustomerMapper.toDomain(full)).isEqualTo(new CustomerSecret("Datacenter", "ops", "p@ss", "otp", "k1,k2", "", null));
     }
 
     @Test
@@ -116,8 +116,8 @@ class CustomerMapperTest {
           .setOtpRecoveryKeys("r1,r2")
           .build();
 
-      assertThat(CustomerMapper.toDomain(minimal)).isEqualTo(new CustomerSecretEx("Branch", "", "", "", "", "", ""));
-      assertThat(CustomerMapper.toDomain(full)).isEqualTo(new CustomerSecretEx("HQ", "root", "very-secret", "EHR", "EHR-01", "otp-seed", "r1,r2"));
+      assertThat(CustomerMapper.toDomain(minimal)).isEqualTo(new CustomerSecretEx("Branch", "", "", "", "", "", "", "", null));
+      assertThat(CustomerMapper.toDomain(full)).isEqualTo(new CustomerSecretEx("HQ", "root", "very-secret", "EHR", "EHR-01", "otp-seed", "r1,r2", "", null));
     }
 
     @Test
@@ -166,8 +166,8 @@ class CustomerMapperTest {
                   false, false, false, false, false, false, false, false, false, false,
                   false, false, false, false, false, false,
                   "", false, "", ""),
-              List.of(new CustomerSecret("DC", "admin", "", "", "")),
-              List.of(new CustomerSecretEx("HQ", "", "", "", "E-01", "", "")),
+              List.of(new CustomerSecret("DC", "admin", "", "", "", "", null)),
+              List.of(new CustomerSecretEx("HQ", "", "", "", "E-01", "", "", "", null)),
               List.of(new CustomerContact("Jan", "", "", "jan@example.com")))));
     }
 
@@ -269,8 +269,8 @@ class CustomerMapperTest {
     @Test
     @DisplayName("should map minimal and full CustomerSecret")
     void shouldMapCustomerSecret() {
-      var minimal = new CustomerSecret("HQ", null, null, null, null);
-      var full = new CustomerSecret("Datacenter", "ops", "p@ss", "otp", "k1,k2");
+      var minimal = new CustomerSecret("HQ", null, null, null, null, null, null);
+      var full = new CustomerSecret("Datacenter", "ops", "p@ss", "otp", "k1,k2", null, null);
       var when = LocalDateTime.of(2026, 3, 11, 10, 11, 12);
 
       assertThat(CustomerMapper.toGrpc(minimal, when, "editor@example.com")).isEqualTo(
@@ -295,8 +295,8 @@ class CustomerMapperTest {
     @Test
     @DisplayName("should map minimal and full CustomerSecretEx")
     void shouldMapCustomerSecretEx() {
-      var minimal = new CustomerSecretEx("Branch", null, null, null, null, null, null);
-      var full = new CustomerSecretEx("HQ", "root", "very-secret", "EHR", "EHR-01", "otp-seed", "r1,r2");
+      var minimal = new CustomerSecretEx("Branch", null, null, null, null, null, null, null, null);
+      var full = new CustomerSecretEx("HQ", "root", "very-secret", "EHR", "EHR-01", "otp-seed", "r1,r2", null, null);
       var when = LocalDateTime.of(2026, 3, 11, 12, 13, 14);
 
       assertThat(CustomerMapper.toGrpc(minimal, when, "bob@example.com")).isEqualTo(

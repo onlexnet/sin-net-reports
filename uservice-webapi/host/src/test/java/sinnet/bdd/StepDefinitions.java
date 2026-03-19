@@ -276,9 +276,9 @@ public class StepDefinitions {
         new CustomerValue(
           expectedEntry,
           List.of(new CustomerSecret(secret.getLocation(), secret.getUsername(), secret.getPassword(),
-            secret.getOtpSecret(), secret.getOtpRecoveryKeys())),
+            secret.getOtpSecret(), secret.getOtpRecoveryKeys(), null, null)),
           List.of(new CustomerSecretEx(secretExt.getLocation(), secretExt.getUsername(), secretExt.getPassword(),
-            secretExt.getEntityName(), secretExt.getEntityCode(), secretExt.getOtpSecret(), secretExt.getOtpRecoveryKeys())),
+            secretExt.getEntityName(), secretExt.getEntityCode(), secretExt.getOtpSecret(), secretExt.getOtpRecoveryKeys(), null, null)),
           List.of()),
           timeProvider.now(),
           requestorEmail);

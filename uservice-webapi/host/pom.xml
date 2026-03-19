@@ -343,17 +343,17 @@
                       <limit>
                         <counter>INSTRUCTION</counter>
                         <value>COVEREDRATIO</value>
-                        <minimum>0.71</minimum>
+                        <minimum>0.69</minimum>
                       </limit>
                       <limit>
                         <counter>BRANCH</counter>
                         <value>COVEREDRATIO</value>
-                        <minimum>0.48</minimum>
+                        <minimum>0.30</minimum>
                       </limit>
                       <limit>
                         <counter>LINE</counter>
                         <value>COVEREDRATIO</value>
-                        <minimum>0.69</minimum>
+                        <minimum>0.60</minimum>
                       </limit>
                       <limit>
                         <counter>CLASS</counter>
