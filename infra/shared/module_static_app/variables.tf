@@ -4,3 +4,7 @@ variable "resource_group" {
     name     = string
   })
 }
+
+variable "name" {
+  type = string
+}

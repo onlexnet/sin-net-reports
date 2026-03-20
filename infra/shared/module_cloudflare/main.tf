@@ -28,5 +28,6 @@ resource "cloudflare_record" "webapp_prod" {
   name    = var.webapp_prefix_prod
   value   = var.webapp_fqdn_prod
   type    = "CNAME"
+  proxied = false
   ttl     = 300
 }

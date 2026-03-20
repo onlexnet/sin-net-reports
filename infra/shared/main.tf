@@ -45,6 +45,7 @@ locals {
 
 module "static_app_prod" {
   source         = "./module_static_app"
+  name           = "webapp"
   resource_group = module.resourcegroup.main
 }
 
@@ -53,6 +54,7 @@ module "static_app_prod_domain" {
   domain_name       = "${local.webapp_subdomain_prod}.${local.domain_name}"
   static_web_app_id = module.static_app_prod.static_web_app_id
   resource_group    = module.resourcegroup.main
+  depends_on        = [module.cloudflare]
 }
 
 module "cloudflare" {
