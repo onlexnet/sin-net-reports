@@ -153,6 +153,8 @@ export const useTanStackTableAdapter = <TData extends object>(
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    enableSortingRemoval: false,
+    autoResetPageIndex: false,
   });
 
   const setColumnFilterValue = React.useCallback(

@@ -1,6 +1,6 @@
 import _ from "lodash";
 import * as React from "react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Space } from "components/ui/layout";
 import { connect, ConnectedProps } from "react-redux";
 import { Link } from "react-router-dom";
@@ -41,7 +41,7 @@ const serviceTableColumns: TableAdapterColumn<ServiceListModel>[] = [
   {
     key: "when",
     title: "Data",
-    accessorFn: (row) => row.when.day,
+    accessorFn: (row) => row.when.year * 10000 + row.when.month * 100 + row.when.day,
     render: (_, record) => <LocalDateView item={record.when} />,
     sortable: true,
     width: "120px",
@@ -169,13 +169,18 @@ const ConnectedContent: React.FC<PropsFromRedux> = props => {
     return false;
   }
 
-  const items: ServiceListModel[] = _.chain(data?.Actions.search.items)
-    .map(it => toActionModel(it))
-    .map(it => toLocalModel(it))
-    .filter(it => filterByOnlyMyData(it))
-    .filter(it => filterByOnlyDay(it))
-    .filter(it => filterByOnlyCustomer(it))
-    .value();
+  const items: ServiceListModel[] = useMemo(
+    () =>
+      _.chain(data?.Actions.search.items)
+        .map(it => toActionModel(it))
+        .map(it => toLocalModel(it))
+        .filter(it => filterByOnlyMyData(it))
+        .filter(it => filterByOnlyDay(it))
+        .filter(it => filterByOnlyCustomer(it))
+        .value(),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [data?.Actions.search.items, onlyMyData, onlyDay, onlyCustomer, props.currentEmail]
+  );
 
   const { table } = useTanStackTableAdapter({
     data: items,
