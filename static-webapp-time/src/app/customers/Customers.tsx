@@ -1,12 +1,9 @@
 import { Link } from "react-router-dom";
 import _ from "lodash";
 import { useState } from "react";
-import { HorizontalSeparatorStack } from "../../components/HorizontalSeparatorStack";
 import { ListCustomersItem } from "../../api/useListCustomers";
-import PaddedRow from "../../components/PaddedRow";
 import { Button } from "components/ui/button";
 import { Input } from "components/ui/input";
-import { Col } from "components/ui/layout";
 import { TanStackTableView, useTanStackTableAdapter, TableAdapterColumn } from "components/table";
 
 interface CustomersProps {
@@ -61,24 +58,12 @@ export const CustomersView: React.FC<CustomersProps> = (props) => {
     });
 
     return (
-        <>
-            <PaddedRow>
-                <Col span={24}>
-                    <Button onClick={() => props.onNewClientCommand()}>Dodaj nowego klienta</Button>
-                </Col>
-            </PaddedRow>
-            <PaddedRow>
-                <Col span={24}>
-                    <Input style={{ width: '100%'}} placeholder="Wprowadź fragment nazwy klienta ..." value={searchPhrase} onChange={e => setSearchPhrase(e.target.value)} />
-                </Col>
-            </PaddedRow>
-            <PaddedRow>
-                <Col span={24}>
-                    <div className="overflow-y-auto" style={{ maxHeight: "calc(100vh - 250px)" }}>
-                        <TanStackTableView table={table} showPagination={false} />
-                    </div>
-                </Col>
-            </PaddedRow >
-        </>
+        <div className="space-y-3">
+            <Button onClick={() => props.onNewClientCommand()}>Dodaj nowego klienta</Button>
+            <Input placeholder="Wprowadź fragment nazwy klienta ..." value={searchPhrase} onChange={e => setSearchPhrase(e.target.value)} />
+            <div className="overflow-y-auto" style={{ maxHeight: "calc(100vh - 250px)" }}>
+                <TanStackTableView table={table} showPagination={false} />
+            </div>
+        </div>
     )
 }

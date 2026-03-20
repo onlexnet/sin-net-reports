@@ -12,11 +12,10 @@ import CustomerView from "./ActionView.Edit.CustomerView"
 import { CustomerComboBox } from "./CustomerComboBox";
 import { asDtoDate } from "../../api/Mapper";
 import { useListCustomersQuery } from "../../components/.generated/components"
-import PaddedRow from "../../components/PaddedRow";
 import LabelCol from "../../components/LabelCol";
 import { Button } from "components/ui/button";
 import { Input } from "components/ui/input";
-import { Col } from "components/ui/layout";
+import { Col, Row } from "components/ui/layout";
 import { Textarea } from "components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "components/ui/select";
 import { Separator } from "components/ui/separator";
@@ -229,8 +228,8 @@ export const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
     };
 
     return (
-        <>
-            <PaddedRow>
+        <div className="space-y-2">
+            <Row gutter={[8, 8]} align="middle">
                 <LabelCol span={3} text="Pracownik:" />
                 <Col span={9}>
                     <Select onValueChange={onChangeServicemanName} defaultValue={servicemanName}>
@@ -254,8 +253,8 @@ export const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
                         onSelectDate={value => onChangeDate(value)}
                         current={actionDate} />
                 </Col>
-            </PaddedRow>
-            <PaddedRow>
+            </Row>
+            <Row gutter={[8, 8]} align="middle">
                 <LabelCol span={3} text="Wybór klienta:" />
                 <Col span={9}>
                     <CustomerComboBox
@@ -273,17 +272,17 @@ export const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
                     />
                     {descriptionError && <div className="mt-1 text-sm text-destructive">{descriptionError}</div>}
                 </Col>
-            </PaddedRow>
+            </Row>
 
-            <PaddedRow>
+            <Row gutter={[8, 8]} align="middle">
                 <Col span={12}>
                     <CustomerView projectId={projectId} customerId={customerId} />
                 </Col>
                 <Col span={12}>
                 </Col>
-            </PaddedRow>
+            </Row>
 
-            <PaddedRow>
+            <Row gutter={[8, 8]} align="middle">
                 <LabelCol span={2} text="Czas" />
                 <Col span={10}>
                     <Input
@@ -302,13 +301,11 @@ export const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
                     />
 
                 </Col>
-            </PaddedRow>
+            </Row>
 
-            <Col span={24}>
-                <Separator className="my-2" />
-            </Col>
+            <Separator className="my-2" />
 
-            <PaddedRow>
+            <Row gutter={[8, 8]} align="middle">
                 <Col span={2}>
                     <Button className="w-full"
                         disabled={updateActionInProgress || (customerId === undefined)}
@@ -329,4 +326,7 @@ export const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ActionViewEditLocal);
+            </Row>
+
+        </div>
 

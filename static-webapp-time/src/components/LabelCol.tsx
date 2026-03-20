@@ -9,12 +9,10 @@ interface LabelColProps {
     span: ColSpanType
 }
 
-const labelStyle: React.CSSProperties = { textAlign: 'right', paddingRight: '8px' };
-
 const LabelCol: React.FC<LabelColProps> = ({ text, span }) => {
     return (
-        <Col span={span} style={labelStyle}>
-            <label>{text}</label>
+        <Col span={span} className="flex h-9 items-center justify-end pr-2">
+            <label className="text-sm font-medium leading-none">{text}</label>
         </Col>
     );
 };
