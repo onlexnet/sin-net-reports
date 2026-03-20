@@ -19,7 +19,7 @@ export const Debug: React.FC<Props> = () => {
   };
 
   return (
-    <div className="space-y-3 p-4">
+    <div className="space-y-3">
       <p className="text-muted-foreground">You are running this application in <b>{process.env.NODE_ENV}</b> mode!.</p>
       {isAuthenticated && <Button onClick={handleLogout}>Logout</Button>}
       <p>version: {getDisplayVersion()}

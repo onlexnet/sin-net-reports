@@ -90,7 +90,7 @@ const LocalView: React.FC<Props> = (props) => {
                     <aside className="w-64 shrink-0 border-r bg-background">
                         <Route path="/" component={NavBar}/>
                     </aside>
-                    <main className="min-w-0 flex-1 overflow-auto">
+                    <main className="min-w-0 flex-1 overflow-auto p-4">
                         <Route path={routing.editAction} component={ActionViewRoutedEdit} />
                         <Route path={routing.actions} component={ServicesDefault} exact={true} />
                         <Route path={routing.reports} component={ReportsViewRouted} />

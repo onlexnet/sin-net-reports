@@ -107,7 +107,7 @@ export const ReportsView: React.FC<ReportsViewProps> = props => {
   const [toMonth, setToMonth] = useState<number | undefined>(from.month);
 
   return (
-    <div className="space-y-4 p-2.5">
+    <div className="space-y-4">
         <h1 className="text-3xl font-semibold tracking-tight">Raporty</h1>
 
         <div className="flex flex-col gap-2">
