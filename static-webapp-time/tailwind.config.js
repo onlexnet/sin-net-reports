@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  darkMode: ["class"],
+  darkMode: ["media"],
   content: [
     "./src/**/*.{js,jsx,ts,tsx}",
     "./public/index.html"
@@ -36,6 +36,10 @@ module.exports = {
         popover: {
           DEFAULT: "hsl(var(--popover))",
           foreground: "hsl(var(--popover-foreground))"
+        },
+        sidebar: {
+          DEFAULT: "hsl(var(--sidebar))",
+          foreground: "hsl(var(--sidebar-foreground))"
         },
         card: {
           DEFAULT: "hsl(var(--card))",

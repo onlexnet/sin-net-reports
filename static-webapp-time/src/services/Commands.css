@@ -1,5 +1,5 @@
 .menu-item {
-    border: 1px solid #d9d9d9;
+  border: 1px solid hsl(var(--border));
     border-radius: 4px;
     margin: 0px;
     padding: 0px;
