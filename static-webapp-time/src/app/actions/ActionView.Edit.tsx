@@ -319,14 +319,11 @@ export const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
                     <Button className="w-full" disabled={updateActionInProgress || removeConfirmed} onClick={removeAndExit1}>Usuń i wyjdź</Button></Col>
                 <Col span={2}>
                     <Button className="w-full" disabled={updateActionInProgress || !removeConfirmed} onClick={removeAndExit2}>Tak, Usuń i wyjdź</Button></Col>
-            </PaddedRow>
+            </Row>
 
-        </>
+        </div>
     );
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ActionViewEditLocal);
-            </Row>
-
-        </div>
 
