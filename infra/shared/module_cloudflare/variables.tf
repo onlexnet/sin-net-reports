@@ -11,3 +11,11 @@ variable "webapi_fqdn" {
 variable "webapi_prefix" {
   description = "subdomain part of DNS name, eg. 'abc', where the final value is abc.onlex.net"
 }
+
+variable "webapp_fqdn_time" {
+  description = "original full address where the application is located"
+}
+
+variable "webapp_prefix_time" {
+  description = "subdomain part of DNS name, eg. 'abc', where the final value is abc.onlex.net"
+}
