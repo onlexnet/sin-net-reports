@@ -8,6 +8,7 @@ This directory contains automated CI/CD workflows for the sin-net-reports projec
 - **`uservice-timeentries.yml`** - Builds and deploys the timeentries microservice
 - **`uservice-webapi.yml`** - Builds and deploys the webapi microservice  
 - **`static-webapp.yml`** - Builds and deploys the static web application
+- **`app-time.yml`** - Builds and deploys the app-time static web application
 
 ### Maintenance Workflows (no deployment)
 - **`cyclic-build.yml`** - Cyclic build verification without deployment
@@ -34,6 +35,7 @@ The `cyclic-build.yml` workflow was created to address dependency-related build 
 
 2. **Frontend**:
    - Static WebApp (`static-webapp`)
+   - App Time (`app-time`)
 
 3. **Dependency Checks**:
    - Maven dependency updates

@@ -70,8 +70,9 @@ export const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
     const defaultServicemanName = item?.servicemanName;
     const [servicemanName, setServicemanName] = useState(defaultServicemanName);
     const onChangeServicemanName = useCallback(
-        (ev, option) => {
-            const a = option?.key as string;
+        (_value: string, option?: { key?: React.Key } | Array<{ key?: React.Key }>) => {
+            const selectedOption = Array.isArray(option) ? option[0] : option;
+            const a = selectedOption?.key as string;
             setServicemanName(a);
         },
         [setServicemanName],

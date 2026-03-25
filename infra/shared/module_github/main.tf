@@ -88,3 +88,10 @@ resource "github_actions_environment_variable" "BACKEND_BASE_URL" {
   variable_name = "BACKEND_BASE_URL"
   value         = var.BACKEND_BASE_URL
 }
+
+resource "github_actions_environment_secret" "webapp_time_prod_api_token" {
+  environment     = github_repository_environment.main.environment
+  repository      = data.github_repository.sinnet.name
+  secret_name     = "WEBAPP_TIME_PROD_API_TOKEN"
+  plaintext_value = var.webapp_time_prod_api_token
+}

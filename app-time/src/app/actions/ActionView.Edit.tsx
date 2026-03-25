@@ -1,0 +1,329 @@
+import { EntityId, ServiceAppModel } from "../../store/actions/ServiceModel";
+import { RootState } from "../../store/reducers";
+import { Dispatch } from "redux";
+import { connect, ConnectedProps } from "react-redux";
+import _ from "lodash";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { AppDatePicker } from "../../services/ActionList.DatePicker";
+import { LocalDate } from "../../store/viewcontext/TimePeriod";
+import { useGetUsers } from "../../api/useGetUsers";
+import { useRemoveActionMutation, useUpdateActionMutation } from "../../components/.generated/components";
+import CustomerView from "./ActionView.Edit.CustomerView"
+import { CustomerComboBox } from "./CustomerComboBox";
+import { asDtoDate } from "../../api/Mapper";
+import { useListCustomersQuery } from "../../components/.generated/components"
+import LabelCol from "../../components/LabelCol";
+import { Button } from "components/ui/button";
+import { Input } from "components/ui/input";
+import { Col, Row } from "components/ui/layout";
+import { Textarea } from "components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "components/ui/select";
+import { Separator } from "components/ui/separator";
+
+const mapStateToProps = (state: RootState) => {
+    if (state.appState.empty) {
+        throw new Error('Invalid state');
+    }
+    return state;
+}
+
+const mapDispatchToProps = (dispatch: Dispatch) => {
+    return {}
+}
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+
+interface ActionViewEditProps extends PropsFromRedux {
+    item: ServiceAppModel,
+    cancelEdit: () => void,
+    actionUpdated: (entity: EntityId) => void
+}
+
+/**
+ * View used to edit data for a Service.
+ * @param props
+ * @returns 
+ */
+export const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
+    const { item, cancelEdit, actionUpdated } = props;
+
+    const propsProjectId = item?.projectId;
+    const propsEntityId = item?.entityId;
+    const propsEntityVersion = item?.entityVersion;
+    const versionedProps = [propsEntityId, propsEntityVersion, propsProjectId];
+
+    const [projectId,] = useState(propsProjectId);
+    useEffect(() => {
+        setEntityId(propsProjectId);
+    }, [propsEntityId, propsEntityVersion, propsProjectId]);
+
+    const [entityId, setEntityId] = useState(propsEntityId);
+    useEffect(() => {
+        setEntityId(propsEntityId);
+    }, [propsEntityId, propsEntityVersion, propsProjectId]);
+
+    const [entityVersion, setEntityVersion] = useState(propsEntityVersion);
+    useEffect(() => {
+        setEntityVersion(propsEntityVersion);
+    }, [propsEntityId, propsEntityVersion, propsProjectId]);
+
+    const defaultServicemanName = item?.servicemanName;
+    const [servicemanName, setServicemanName] = useState(defaultServicemanName);
+    const onChangeServicemanName = useCallback(
+        (value: string) => {
+            setServicemanName(value);
+        },
+        [setServicemanName],
+    );
+
+    const initialValue = item?.when;
+    const [actionDate, setActionDate] = useState(initialValue);
+    useEffect(() => {
+        setActionDate(initialValue);
+    }, [initialValue, propsEntityId, propsEntityVersion, propsProjectId]);
+    const onChangeDate = useCallback(
+        (newValue: LocalDate) => setActionDate(newValue),
+        [],
+    );
+
+    const defaultCustomerId = item?.customer?.id.entityId;
+    const [customerId, setCustomerId] = useState(defaultCustomerId);
+    const onChangeCustomerId = (id: string | undefined) => {
+        setCustomerId(id);
+    };
+
+    const propsDescription = item?.description;
+    const [description, setDescription] = useState(propsDescription);
+    const [descriptionError, setDescriptionError] = useState('');
+    useEffect(() => {
+        setDescription(propsDescription)
+    }, [propsDescription]);
+    const onChangeDescription = useCallback(
+        (event: React.FormEvent<HTMLTextAreaElement>) => {
+            var value = event.currentTarget.value ?? '';
+            setDescription(value);
+            var errorMessage = value.length > 4000
+                ? 'Za długi opis'
+                : '';
+            if (errorMessage !== descriptionError) setDescriptionError(errorMessage);
+        },
+        [descriptionError],
+    );
+
+
+    const timeToText = (value: number) => {
+        const hours = Math.floor(value / 60);
+        const minutes = value - hours * 60;
+        return hours + ':' + ('00' + minutes).substr(-2);
+    }
+    const textToTime = (value: string) => {
+
+
+        const tested = value.trim();
+        const pattern = /^\d{1,3}:\d{2}$/;
+        if (!(pattern.test(tested))) {
+            return NaN
+        }
+
+        const [hoursAsText, minutesAsText] = value.split(":")
+        const hours = Number(hoursAsText);
+        const minutes = Number(minutesAsText);
+        const result = hours * 60 + minutes;
+        return result;
+    }
+
+    const [durationAsText, setDurationAsText] = useState(timeToText(props.item.duration ?? 0));
+    const [durationError, setDurationError] = useState("");
+
+
+    const onChangeDuration = useCallback((event: React.FormEvent<HTMLInputElement>) => {
+
+        const newDurationAsText = event.currentTarget.value ?? "0:00";
+        console.log(`Split: ${newDurationAsText}`)
+
+        const time = textToTime(newDurationAsText)
+        const newDuration = timeToText(time)
+
+
+        setDurationAsText(newDurationAsText);
+        if (isNaN(time)) {
+            setDurationError(`Nieprawidłowy czas: ${newDurationAsText}`)
+        } else {
+            setDurationAsText(newDurationAsText);
+            setDurationError("");
+        }
+    },
+        [],
+    );
+
+    const propsDistance = "" + item?.distance;
+    const [distance, setDistance] = useState(propsDistance);
+    const onChangeDistance = useCallback(
+        (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+            var value = event.currentTarget.value
+            setDistance(value ?? "0");
+        },
+        [],
+    );
+
+    const users = useGetUsers(projectId);
+
+    const comboBoxBasicOptions = _.chain(users)
+        .map(it => ({ key: it, text: it }))
+        .value();
+
+    const [updateActionMutation, { loading: updateActionInProgress, data: data2 }] = useUpdateActionMutation();
+    if (data2) {
+        actionUpdated({
+            projectId: propsProjectId,
+            entityId: propsEntityId,
+            entityVersion: propsEntityVersion
+        });
+        cancelEdit();
+    }
+
+    const [removeActionMutation, { loading: removeActionInProgress, data: data3 }] = useRemoveActionMutation();
+    if (data3) {
+        actionUpdated({
+            projectId: propsProjectId,
+            entityId: propsEntityId,
+            entityVersion: propsEntityVersion
+        });
+        cancelEdit();
+    }
+
+    const [removeConfirmed, setRemoveConfirmed] = useState(false);
+
+    const removeAndExit1 = () => {
+        setRemoveConfirmed(true);
+    }
+
+    const removeAndExit2 = () => {
+        removeActionMutation({
+            variables: {
+                projectId,
+                entityId,
+                entityVersion
+            }
+        })
+    }
+
+    const updateAction = () => {
+        const dtoDate = asDtoDate(actionDate);
+        updateActionMutation({
+            variables: {
+                projectId,
+                entityId,
+                entityVersion,
+                distance: Number(distance),
+                duration: textToTime(durationAsText),
+                what: description,
+                when: dtoDate,
+                who: servicemanName,
+                customerId: customerId
+            }
+        })
+    };
+
+    return (
+        <div className="space-y-2">
+            <Row gutter={[8, 8]} align="middle">
+                <LabelCol span={3} text="Pracownik:" />
+                <Col span={9}>
+                    <Select onValueChange={onChangeServicemanName} defaultValue={servicemanName}>
+                        <SelectTrigger id="selectServiceman" className="w-full">
+                            <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {comboBoxBasicOptions.map((option) => (
+                                <SelectItem key={option.key} value={option.text}>
+                                    {option.text}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+                </Col>
+
+                <LabelCol span={3} text="Data:" />
+                <Col span={9}>
+                    <AppDatePicker
+                        gotoTodayText='Idź do aktualnego miesiąca'
+                        onSelectDate={value => onChangeDate(value)}
+                        current={actionDate} />
+                </Col>
+            </Row>
+            <Row gutter={[8, 8]} align="middle">
+                <LabelCol span={3} text="Wybór klienta:" />
+                <Col span={9}>
+                    <CustomerComboBox
+                        projectId={projectId}
+                        customerId={customerId}
+                        onSelected={onChangeCustomerId}
+                        useListCustomersQuery={useListCustomersQuery}
+                    />
+                </Col>
+                <Col span={12}>
+                    <Textarea
+                        value={description}
+                        onChange={onChangeDescription}
+                        className={descriptionError ? "border-destructive" : undefined}
+                    />
+                    {descriptionError && <div className="mt-1 text-sm text-destructive">{descriptionError}</div>}
+                </Col>
+            </Row>
+
+            <Row gutter={[8, 8]} align="middle">
+                <Col span={12}>
+                    <CustomerView projectId={projectId} customerId={customerId} />
+                </Col>
+                <Col span={12}>
+                </Col>
+            </Row>
+
+            <Row gutter={[8, 8]} align="middle">
+                <LabelCol span={2} text="Czas" />
+                <Col span={10}>
+                    <Input
+                        placeholder="0:00"
+                        value={durationAsText}
+                        onChange={onChangeDuration}
+                        className={durationError ? "border-destructive" : undefined}
+                    />
+                    {durationError && <div className="mt-1 text-sm text-destructive">{durationError}</div>}
+                </Col>
+                <LabelCol span={2} text="Dojazd:" />
+                <Col span={10}>
+                    <Input
+                        value={distance}
+                        onChange={onChangeDistance}
+                    />
+
+                </Col>
+            </Row>
+
+            <Separator className="my-2" />
+
+            <Row gutter={[8, 8]} align="middle">
+                <Col span={2}>
+                    <Button className="w-full"
+                        disabled={updateActionInProgress || (customerId === undefined)}
+                        onClick={() => {
+                            updateAction();
+                        }}>Aktualizuj</Button>
+                </Col>
+                <Col span={2}>
+                    <Button className="w-full" onClick={() => cancelEdit()}>Wyjdź</Button></Col>
+                <Col span={2}>
+                    <Button className="w-full" disabled={updateActionInProgress || removeConfirmed} onClick={removeAndExit1}>Usuń i wyjdź</Button></Col>
+                <Col span={2}>
+                    <Button className="w-full" disabled={updateActionInProgress || !removeConfirmed} onClick={removeAndExit2}>Tak, Usuń i wyjdź</Button></Col>
+            </Row>
+
+        </div>
+    );
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ActionViewEditLocal);
+

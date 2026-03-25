@@ -53,3 +53,7 @@ variable "BACKEND_BASE_URL" {
   description = "The backend WebAPI URL for the static webapp"
   type        = string
 }
+
+variable "webapp_time_prod_api_token" {
+  sensitive = true
+}

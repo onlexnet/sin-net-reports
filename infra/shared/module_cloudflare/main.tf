@@ -28,5 +28,15 @@ resource "cloudflare_record" "webapp_prod" {
   name    = var.webapp_prefix_prod
   value   = var.webapp_fqdn_prod
   type    = "CNAME"
+  proxied = false
+  ttl     = 300
+}
+
+resource "cloudflare_record" "webapp_time" {
+  zone_id = data.cloudflare_zone.onlexnet.zone_id
+  name    = var.webapp_prefix_time
+  value   = var.webapp_fqdn_time
+  type    = "CNAME"
+  proxied = false
   ttl     = 300
 }

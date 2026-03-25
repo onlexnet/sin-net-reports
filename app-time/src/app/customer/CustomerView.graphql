@@ -1,0 +1,97 @@
+mutation ReserveCustomer($projectId: ID!) {
+  Customers(projectId: $projectId) {
+    reserve {
+      projectId
+      entityId
+      entityVersion
+		}
+  }
+}
+
+mutation SaveCustomer($projectId: ID!, $id: MyEntity!
+                                       $entry: CustomerInput!
+                                       $secrets: [CustomerSecretInput!]!
+                                       $secretsEx: [CustomerSecretExInput!]!
+                                       $contacts: [CustomerContactInput!]!) {
+  Customers(projectId: $projectId) {
+    save(id: $id, entry: $entry, secrets: $secrets, secretsEx: $secretsEx, contacts: $contacts) {
+      projectId
+      entityId
+      entityVersion
+    }
+  }
+}
+
+mutation RemoveCustomer($projectId: ID!, $id: MyEntity!) {
+  Customers(projectId: $projectId) {
+    remove(id: $id)
+  }
+}
+
+query GetCustomer($projectId: ID!, $entityId: ID!) {
+  Customers(projectId:$projectId) {
+    get(entityId: $entityId) {
+      id {
+        projectId
+        entityId
+        entityVersion
+      }
+      data {
+        operatorEmail
+        billingModel
+        supportStatus
+        distance
+        customerName
+        customerCityName
+        customerAddress
+        nfzUmowa
+        nfzMaFilie
+        nfzLekarz
+        nfzPolozna
+        nfzPielegniarkaSrodowiskowa
+        nfzMedycynaSzkolna
+        nfzTransportSanitarny
+        nfzNocnaPomocLekarska
+        nfzAmbulatoryjnaOpiekaSpecjalistyczna
+        nfzRehabilitacja
+        nfzStomatologia
+        nfzPsychiatria
+        nfzSzpitalnictwo
+        nfzProgramyProfilaktyczne
+        nfzZaopatrzenieOrtopedyczne
+        nfzOpiekaDlugoterminowa
+        nfzNotatki
+        komercjaJest
+        komercjaNotatki
+        daneTechniczne
+      }
+      secrets {
+        location
+        username
+        password
+        changedWho
+        changedWhen
+        otpSecret
+        otpRecoveryKeys
+      }
+      secretsEx {
+        location
+        username
+        password
+        entityName
+        entityCode
+        changedWho
+        changedWhen
+        otpSecret
+        otpRecoveryKeys
+      }
+      contacts {
+        firstName
+        lastName
+        phoneNo
+        email
+      }
+
+    }
+  }
+}

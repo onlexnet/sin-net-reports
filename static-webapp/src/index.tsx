@@ -1,5 +1,5 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 import * as serviceWorker from "./serviceWorker";
 
 import { Provider } from "react-redux";
@@ -22,13 +22,18 @@ const initializeApp = async () => {
     initializeApplicationInsights();
     
     // Render the application
-    ReactDOM.render(
+    const appElement = document.getElementById("app");
+    if (!appElement) {
+      throw new Error("App root element not found");
+    }
+
+    const root = createRoot(appElement);
+    root.render(
       <ConfigProvider theme={{ token: lightToken }}>
         <Provider store={store}>
-            <App />
+          <App />
         </Provider>
-      </ConfigProvider>,
-      document.getElementById("app")
+      </ConfigProvider>
     );
   } catch (error) {
     console.error('Failed to initialize application:', error);

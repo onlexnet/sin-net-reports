@@ -11,7 +11,7 @@ interface LabelColProps {
 
 const labelStyle: React.CSSProperties = { textAlign: 'right', paddingRight: '8px' };
 
-const LabelCol: React.FC<LabelColProps> = ({ children, text, span }) => {
+const LabelCol: React.FC<LabelColProps> = ({ text, span }) => {
     return (
         <Col span={span} style={labelStyle}>
             <label>{text}</label>
