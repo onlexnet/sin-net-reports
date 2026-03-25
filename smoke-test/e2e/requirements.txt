@@ -27,7 +27,7 @@ playwright==1.41.0
 pytest-playwright==0.4.4
 
 # HTTP Client for API tests
-requests==2.32.4
+requests==2.33.0
 
 # Report Generation
 pytest-html==4.1.1
