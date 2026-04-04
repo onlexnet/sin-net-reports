@@ -1,7 +1,7 @@
 import _ from "lodash";
 import * as React from "react";
 import { useMemo, useState } from "react";
-import { Space } from "components/ui/layout";
+import { Col, Row, Space } from "components/ui/layout";
 import { connect, ConnectedProps } from "react-redux";
 import { Link } from "react-router-dom";
 import { Dispatch } from "redux";
@@ -22,8 +22,7 @@ import { Input } from "components/ui/input";
 import styles from './services.module.css';
 
 const controlStyles = {
-  margin: "0 30px 20px 0",
-  maxWidth: "300px"
+  width: "100%"
 };
 
 const serviceTableColumns: TableAdapterColumn<ServiceListModel>[] = [
@@ -208,35 +207,46 @@ const ConnectedContent: React.FC<PropsFromRedux> = props => {
   }
 
   return (
-    <div>
-      <Space direction="horizontal" align="baseline" size="middle">
-        <Button
-          variant={onlyMyData ? "default" : "outline"}
-          size="sm"
-          onClick={() => setOnlyMyData(!onlyMyData)}
-        >
-          {onlyMyData ? "Tylko moje" : "Wszystkie"}
-        </Button>
-        <Input
-          placeholder="Tylko dzień"
-          value={onlyDay}
-          onChange={(e) => setOnlyDay(e.target.value)}
-          style={controlStyles}
-        />
-        <Input
-          placeholder="Kontrahent"
-          value={onlyCustomer}
-          onChange={(e) => setOnlyCustomer(e.target.value)}
-          style={controlStyles}
-        />
-        <div style={{ ...controlStyles, display: 'flex', alignItems: 'center' }}>
-          <span className="text-sm">Suma godzin: </span>
-          <span className="ml-2 text-sm font-medium">{totalTime()}</span>
+    <div className="w-full">
+      <Space direction="vertical" size="middle" className="w-full items-stretch">
+        <Row gutter={16} align="middle">
+          <Col span={4}>
+            <Button
+              className="w-auto"
+              variant={onlyMyData ? "default" : "outline"}
+              size="sm"
+              onClick={() => setOnlyMyData(!onlyMyData)}
+            >
+              {onlyMyData ? "Tylko moje" : "Wszystkie"}
+            </Button>
+          </Col>
+          <Col span={8}>
+            <Input
+              placeholder="Tylko dzień"
+              value={onlyDay}
+              onChange={(e) => setOnlyDay(e.target.value)}
+              style={controlStyles}
+            />
+          </Col>
+          <Col span={8}>
+            <Input
+              placeholder="Kontrahent"
+              value={onlyCustomer}
+              onChange={(e) => setOnlyCustomer(e.target.value)}
+              style={controlStyles}
+            />
+          </Col>
+          <Col span={4}>
+            <div className="flex h-full items-center justify-end text-sm">
+              <span>Suma godzin:</span>
+              <span className="ml-2 font-medium">{totalTime()}</span>
+            </div>
+          </Col>
+        </Row>
+        <div className="w-full overflow-y-auto" style={{ maxHeight: "calc(100vh - 250px)" }}>
+          <TanStackTableView table={table} className={styles.hideextra} showPagination={false} />
         </div>
       </Space>
-      <div className="overflow-y-auto" style={{ maxHeight: "calc(100vh - 250px)" }}>
-        <TanStackTableView table={table} className={styles.hideextra} showPagination={false} />
-      </div>
     </div>
   );
 }

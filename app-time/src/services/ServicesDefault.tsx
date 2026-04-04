@@ -68,23 +68,25 @@ const MainView: React.FC<MainProps> = (props) => {
 
   return (
     <div className="flex h-full flex-col">
-      <header className="border-b bg-background px-4 py-3">
-        <ServiceCommandBar
-          onReportsViewRequested={() => {
-        const url = routing.reports;
-        props.history.push(url);
-          }}
-          onExcelExportRequested={handleExcelExport}
-        />
-      </header>
-      <main className="flex-1 overflow-hidden px-2.5 py-2.5">
-        <span className="text-sm">
-          {"Miesiąc: " + props.viewContext.period.toString()}
-        </span>
-        <div style={{ height: "100%", overflowY: "auto", overflowX: "auto" }}>
-          <Content />
-        </div>
-      </main>
+      <div className="flex h-full w-full flex-col pr-4 md:pr-16 lg:pr-64">
+        <header className="border-b bg-background px-4 py-3">
+          <ServiceCommandBar
+            onReportsViewRequested={() => {
+              const url = routing.reports;
+              props.history.push(url);
+            }}
+            onExcelExportRequested={handleExcelExport}
+          />
+        </header>
+        <main className="flex-1 overflow-hidden px-2.5 py-2.5">
+          <span className="text-sm">
+            {"Miesiąc: " + props.viewContext.period.toString()}
+          </span>
+          <div style={{ height: "100%", overflowY: "auto", overflowX: "auto" }}>
+            <Content />
+          </div>
+        </main>
+      </div>
     </div>
   );
 };

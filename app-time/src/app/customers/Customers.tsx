@@ -24,6 +24,7 @@ const customerTableColumns: TableAdapterColumn<SortedCustomerItem>[] = [
                 {String(value ?? "")}
             </Link>
         ),
+        width: "100%",
     },
 ];
 
@@ -58,11 +59,20 @@ export const CustomersView: React.FC<CustomersProps> = (props) => {
     });
 
     return (
-        <div className="space-y-3">
-            <Button onClick={() => props.onNewClientCommand()}>Dodaj nowego klienta</Button>
-            <Input placeholder="Wprowadź fragment nazwy klienta ..." value={searchPhrase} onChange={e => setSearchPhrase(e.target.value)} />
-            <div className="overflow-y-auto" style={{ maxHeight: "calc(100vh - 250px)" }}>
-                <TanStackTableView table={table} showPagination={false} />
+        <div className="w-full pr-4 md:pr-16 lg:pr-64">
+            <div className="w-full space-y-4">
+                <Button className="w-full" onClick={() => props.onNewClientCommand()}>
+                    Dodaj nowego klienta
+                </Button>
+                <Input
+                    className="w-full"
+                    placeholder="Wprowadź fragment nazwy klienta ..."
+                    value={searchPhrase}
+                    onChange={e => setSearchPhrase(e.target.value)}
+                />
+                <div className="w-full overflow-y-auto" style={{ maxHeight: "calc(100vh - 250px)" }}>
+                    <TanStackTableView table={table} showPagination={false} className="w-full" />
+                </div>
             </div>
         </div>
     )
