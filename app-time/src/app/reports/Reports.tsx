@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Link, RouteComponentProps } from "react-router-dom";
 import { routing } from "../../Routing";
-import { HorizontalSeparatorStack } from "../../components/HorizontalSeparatorStack";
 import { useListCustomers, ListCustomersItem } from "../../api/useListCustomers";
 import { RootState } from "../../store/reducers";
 import { Dispatch } from "redux";
@@ -42,6 +41,7 @@ const reportsCustomerColumns: TableAdapterColumn<SortedCustomerItem>[] = [
                 {String(value ?? "")}
             </Link>
         ),
+        width: "100%",
     },
 ];
 
@@ -76,21 +76,22 @@ const Reports: React.FC<ReportsProps> = (props) => {
     });
 
     return (
-        <div>
-            <HorizontalSeparatorStack >
-                <div>
-                    <Button onClick={() => props.history.push(routing.newCustomer)}>Dodaj nowego klienta</Button>
+        <div className="w-full pr-4 md:pr-16 lg:pr-64">
+            <div className="w-full space-y-4">
+                <Button className="w-full" onClick={() => props.history.push(routing.newCustomer)}>
+                    Dodaj nowego klienta
+                </Button>
+                <Input
+                    className="w-full"
+                    placeholder="Wprowadź fragment nazwy klienta ..."
+                    value={searchPhrase}
+                    onChange={(e) => setSearchPhrase(e.target.value)}
+                />
+                <Separator />
+                <div className="w-full overflow-y-auto" style={{ maxHeight: "calc(100vh - 250px)" }}>
+                    <TanStackTableView table={table} showPagination={false} className="w-full" />
                 </div>
-                <div>
-                    <Input placeholder="Wprowadź fragment nazwy klienta ..." value={searchPhrase} onChange={(e) => setSearchPhrase(e.target.value)} />
-                </div>
-                <div>
-                    <Separator />
-                    <div className="overflow-y-auto" style={{ maxHeight: "calc(100vh - 250px)" }}>
-                        <TanStackTableView table={table} showPagination={false} />
-                    </div>
-                </div>
-            </HorizontalSeparatorStack>
+            </div>
         </div>
     )
 }

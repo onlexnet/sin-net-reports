@@ -15,6 +15,7 @@ import {
 } from "@tanstack/react-table";
 import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-react";
 
+import { cn } from "lib/utils";
 import { Button } from "components/ui/button";
 import {
   Table,
@@ -199,8 +200,8 @@ export const TanStackTableView = <TData extends object>({
   showPagination = true,
 }: TanStackTableViewProps<TData>) => {
   return (
-    <div className={className}>
-      <Table>
+    <div className={cn("w-full", className)}>
+      <Table className="w-full table-fixed">
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
