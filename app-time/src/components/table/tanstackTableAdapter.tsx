@@ -64,7 +64,7 @@ const resolveUpdater = <TValue,>(updater: Updater<TValue>, previous: TValue): TV
   return updater;
 };
 
-const defaultTextFilter = <TData extends object>(rowValue: unknown, filterValue: unknown): boolean => {
+const defaultTextFilter = (rowValue: unknown, filterValue: unknown): boolean => {
   if (filterValue == null || filterValue === "") {
     return true;
   }
@@ -80,7 +80,7 @@ export const mapColumnsToTanStack = <TData extends object>(
   return columns.map((column): ColumnDef<TData> => {
     const hasAccessor = !!column.dataIndex || !!column.accessorFn;
     if (!hasAccessor) {
-      throw new Error(`TableAdapter column \"${column.key}\" requires dataIndex or accessorFn.`);
+      throw new Error(`TableAdapter column "${column.key}" requires dataIndex or accessorFn.`);
     }
 
     return {
@@ -91,7 +91,7 @@ export const mapColumnsToTanStack = <TData extends object>(
       enableSorting: !!column.sortable,
       enableColumnFilter: !!column.filterable,
       filterFn: column.filterable
-        ? (row, columnId, filterValue) => defaultTextFilter<TData>(row.getValue(columnId), filterValue)
+        ? (row, columnId, filterValue) => defaultTextFilter(row.getValue(columnId), filterValue)
         : undefined,
       cell: (context) => {
         const value = context.getValue();
@@ -221,7 +221,7 @@ export const TanStackTableView = <TData extends object>({
                       <Button
                         type="button"
                         variant="ghost"
-                        className="h-auto px-0 py-0 font-medium text-muted-foreground"
+                        className="h-auto px-0 py-0 font-semibold text-foreground hover:bg-transparent hover:text-foreground"
                         onClick={header.column.getToggleSortingHandler()}
                         aria-label={`Sortuj po ${String(header.column.id)}`}
                       >
