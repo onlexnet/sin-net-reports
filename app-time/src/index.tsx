@@ -10,6 +10,7 @@ import App from "./app/App";
 import { Toaster } from "sonner";
 import { initializeApplicationInsights } from "./app/configuration/ApplicationInsights";
 import { loadRuntimeConfig } from "./app/configuration/RuntimeConfig";
+import { applyThemeMode, getStoredThemeMode } from "./app/configuration/ThemeMode";
 
 // Initialize application
 const initializeApp = async () => {
@@ -19,6 +20,9 @@ const initializeApp = async () => {
     
     // Initialize Application Insights
     initializeApplicationInsights();
+
+    // Apply the persisted theme selection before the first render
+    applyThemeMode(getStoredThemeMode());
     
     // Render the application
     const appElement = document.getElementById("app");

@@ -17,7 +17,7 @@ type SortedCustomerItem = ListCustomersItem & { sortPriority: number };
 const customerTableColumns: TableAdapterColumn<SortedCustomerItem>[] = [
     {
         key: "name",
-        title: "Klient",
+        title: "Nazwa",
         dataIndex: "name",
         render: (value, record) => (
             <Link to={`/customers/${record.customerId.projectId}/${record.customerId.entityId}/${record.customerId.entityVersion}`}>

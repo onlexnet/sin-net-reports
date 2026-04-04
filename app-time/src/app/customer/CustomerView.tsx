@@ -1,5 +1,5 @@
 import _ from "lodash";
-import React, { MouseEventHandler, useEffect, useRef, useState } from "react";
+import React, { MouseEventHandler } from "react";
 import { v1 as uuid } from 'uuid';
 import { useGetUsers } from "../../api/useGetUsers";
 import { CustomerContactInput, CustomerInput, CustomerSecretExInput, CustomerSecretInput, useRemoveCustomerMutation, useSaveCustomerMutation } from "../../components/.generated/components";
@@ -125,14 +125,6 @@ interface CustomerViewProps {
 
 export const CustomerView: React.FC<CustomerViewProps> = props => {
 
-    const topPartRef = useRef<HTMLDivElement>(null);
-    const [topPartHeight, setTopPartHeight] = useState(0);    
-    useEffect(() => {
-        if (topPartRef.current) {
-            setTopPartHeight(topPartRef.current.clientHeight);
-        }
-    }, []);
-    
     const obsluga = [
         { key: 'Obsługiwany', text: 'Obsługiwany' },
         { key: 'Nie obsługiwany', text: 'Nie obsługiwany' },
@@ -338,8 +330,8 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
     }
 
     return (
-        <>
-            <div ref={topPartRef}>
+        <div className="flex h-full min-h-0 flex-col">
+            <div className="shrink-0">
                 <div className="flex items-center gap-3 my-3">
                     <span className="text-sm font-semibold text-muted-foreground whitespace-nowrap">Akcje:</span>
                     <Separator className="flex-1" />
@@ -353,7 +345,7 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
                     </Col>
                 </Row>
             </div>
-            <div style={{ height: `calc(100vh - ${topPartHeight}px)`, overflowY: 'auto' }}>
+            <div className="min-h-0 flex-1 overflow-y-auto">
                 <div className="flex items-center gap-3 my-3">
                     <span className="text-sm font-semibold text-muted-foreground whitespace-nowrap">Dane ogólne:</span>
                     <Separator className="flex-1" />
@@ -700,5 +692,6 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
                 </Row>
 
             </div>
-        </>);
+        </div>
+    );
 }

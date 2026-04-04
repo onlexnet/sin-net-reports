@@ -11,6 +11,7 @@ import { LocalDate } from '../store/viewcontext/TimePeriod';
 import { Redirect } from 'react-router-dom';
 import { FileText, ChevronLeft, Plus, ChevronRight, Download } from 'lucide-react';
 
+import { Button } from '../components/ui/button';
 import './Commands.css';
 
 const mapStateToProps = (state: RootState) => {
@@ -106,8 +107,9 @@ const ServiceCommandBarView: React.FC<ServiceCommandBarProps> = (props) => {
   interface MenuItem {
     key: string;
     label: string;
-    icon?: React.ReactNode
+    icon?: React.ReactNode;
     onClick: () => void;
+    variant?: React.ComponentProps<typeof Button>["variant"];
   }
 
   const menuItems: MenuItem[] = [
@@ -115,45 +117,53 @@ const ServiceCommandBarView: React.FC<ServiceCommandBarProps> = (props) => {
       key: 'newService',
       label: 'Nowa usługa',
       icon: <Plus className="h-4 w-4" />,
-      onClick: () => newService()
+      onClick: () => newService(),
+      variant: 'default'
     },
     {
       key: 'prevMonth',
       label: 'Poprzedni miesiąc',
       icon: <ChevronLeft className="h-4 w-4" />,
-      onClick: props.onPreviousMonthRequested
+      onClick: props.onPreviousMonthRequested,
+      variant: 'secondary'
     },
     {
       key: 'nextMonth',
       label: 'Następny miesiąc',
       icon: <ChevronRight className="h-4 w-4" />,
-      onClick: props.onNextMonthRequested
+      onClick: props.onNextMonthRequested,
+      variant: 'secondary'
     },
     {
       key: 'navigateToReports',
       label: 'Raporty',
       icon: <FileText className="h-4 w-4" />,
-      onClick: props.onReportsViewRequested
+      onClick: props.onReportsViewRequested,
+      variant: 'secondary'
     },
     {
       key: 'exportToExcel',
       label: 'Excel',
       icon: <Download className="h-4 w-4" />,
-      onClick: props.onExcelExportRequested
+      onClick: props.onExcelExportRequested,
+      variant: 'secondary'
     },
   ];
 
   return (
-    <div className="flex items-center gap-1 border rounded-md px-1 py-0.5 menu-item">
+    <div className="menu-item flex items-center gap-2 rounded-md border px-2 py-1">
       {menuItems.map(item => (
-        <button
+        <Button
           key={item.key}
+          type="button"
+          size="sm"
+          variant={item.variant ?? 'secondary'}
           onClick={item.onClick}
-          className="inline-flex items-center gap-1.5 rounded px-3 py-1.5 text-sm font-medium hover:bg-accent transition-colors"
+          className="gap-1.5"
         >
           {item.icon}
           {item.label}
-        </button>
+        </Button>
       ))}
     </div>
   );
