@@ -9,6 +9,7 @@ import { Content } from "./ActionList";
 import { ServiceCommandBar } from "./Commands";
 import { useDownloadFile } from "../api/useDownloadFile";
 import { downloadBase64File } from "../utils/fileDownloadUtils";
+import { PageContentContainer } from "components/ui/page-content-container";
 
 const mapStateToProps = (state: RootState) => {
   return ({ viewContext: state.viewContext, appState: state.appState });
@@ -68,7 +69,7 @@ const MainView: React.FC<MainProps> = (props) => {
 
   return (
     <div className="flex h-full flex-col">
-      <div className="flex h-full w-full flex-col pr-4 md:pr-16 lg:pr-64">
+      <PageContentContainer className="flex h-full flex-col">
         <header className="border-b bg-background px-4 py-3">
           <ServiceCommandBar
             onReportsViewRequested={() => {
@@ -86,7 +87,7 @@ const MainView: React.FC<MainProps> = (props) => {
             <Content />
           </div>
         </main>
-      </div>
+      </PageContentContainer>
     </div>
   );
 };

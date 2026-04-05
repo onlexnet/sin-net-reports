@@ -14,6 +14,7 @@ import { EntityId } from "../../store/actions/ServiceModel";
 import { NewContactItem } from "./NewContactItem";
 import { SecretsTimestamp } from "./SecretsTimestamp";
 import { NewSecret } from "./View.NewSecret";
+import { PageContentContainer } from "components/ui/page-content-container";
 import { UserPasswordItem } from "./View.UserPasswordItem";
 import { UserPasswordItemExt } from "./View.UserPasswordItemEx";
 
@@ -330,7 +331,7 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
     }
 
     return (
-        <div className="flex h-full min-h-0 w-full flex-col pr-4 md:pr-16 lg:pr-64">
+        <PageContentContainer className="flex h-full min-h-0 flex-col">
             <div className="shrink-0">
                 <div className="flex items-center gap-3 my-3">
                     <span className="text-sm font-semibold text-muted-foreground whitespace-nowrap">Akcje:</span>
@@ -692,6 +693,6 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
                 </Row>
 
             </div>
-        </div>
+        </PageContentContainer>
     );
 }
