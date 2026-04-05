@@ -3,7 +3,8 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
+  :root,
+  :root[data-theme="light"] {
     color-scheme: light;
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
@@ -23,8 +24,8 @@
     --accent-foreground: 222.2 47.4% 11.2%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
+    --border: 215 16% 66%;
+    --input: 215 16% 66%;
     --ring: 222.2 84% 4.9%;
     --radius: 0.5rem;
   }
@@ -49,8 +50,8 @@
     --accent-foreground: 210 40% 98%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 40%;
-    --input: 217.2 32.6% 40%;
+    --border: 217.2 18% 60%;
+    --input: 217.2 18% 60%;
     --ring: 212.7 26.8% 83.9%;
   }
 
@@ -75,8 +76,8 @@
       --accent-foreground: 210 40% 98%;
       --destructive: 0 62.8% 30.6%;
       --destructive-foreground: 210 40% 98%;
-      --border: 217.2 32.6% 40%;
-      --input: 217.2 32.6% 40%;
+      --border: 217.2 18% 60%;
+      --input: 217.2 18% 60%;
       --ring: 212.7 26.8% 83.9%;
     }
   }
