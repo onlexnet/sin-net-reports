@@ -330,7 +330,7 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
     }
 
     return (
-        <div className="flex h-full min-h-0 flex-col">
+        <div className="flex h-full min-h-0 w-full flex-col pr-4 md:pr-16 lg:pr-64">
             <div className="shrink-0">
                 <div className="flex items-center gap-3 my-3">
                     <span className="text-sm font-semibold text-muted-foreground whitespace-nowrap">Akcje:</span>
