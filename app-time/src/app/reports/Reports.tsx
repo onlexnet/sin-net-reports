@@ -10,6 +10,7 @@ import { Button } from "components/ui/button";
 import { Input } from "components/ui/input";
 import { Separator } from "components/ui/separator";
 import { TanStackTableView, useTanStackTableAdapter, TableAdapterColumn } from "components/table";
+import { PageContentContainer } from "components/ui/page-content-container";
 
 const mapStateToProps = (state: RootState) => {
     if (state.appState.empty) {
@@ -76,7 +77,7 @@ const Reports: React.FC<ReportsProps> = (props) => {
     });
 
     return (
-        <div className="w-full pr-4 md:pr-16 lg:pr-64">
+        <PageContentContainer>
             <div className="w-full space-y-4">
                 <Button className="w-full" onClick={() => props.history.push(routing.newCustomer)}>
                     Dodaj nowego klienta
@@ -92,7 +93,7 @@ const Reports: React.FC<ReportsProps> = (props) => {
                     <TanStackTableView table={table} showPagination={false} className="w-full" />
                 </div>
             </div>
-        </div>
+        </PageContentContainer>
     )
 }
 

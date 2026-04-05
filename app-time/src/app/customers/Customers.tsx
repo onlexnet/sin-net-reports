@@ -5,6 +5,7 @@ import { ListCustomersItem } from "../../api/useListCustomers";
 import { Button } from "components/ui/button";
 import { Input } from "components/ui/input";
 import { TanStackTableView, useTanStackTableAdapter, TableAdapterColumn } from "components/table";
+import { PageContentContainer } from "components/ui/page-content-container";
 
 interface CustomersProps {
     givenProjectId: string,
@@ -59,7 +60,7 @@ export const CustomersView: React.FC<CustomersProps> = (props) => {
     });
 
     return (
-        <div className="w-full pr-4 md:pr-16 lg:pr-64">
+        <PageContentContainer>
             <div className="w-full space-y-4">
                 <Button className="w-full" onClick={() => props.onNewClientCommand()}>
                     Dodaj nowego klienta
@@ -74,6 +75,6 @@ export const CustomersView: React.FC<CustomersProps> = (props) => {
                     <TanStackTableView table={table} showPagination={false} className="w-full" />
                 </div>
             </div>
-        </div>
+        </PageContentContainer>
     )
 }
