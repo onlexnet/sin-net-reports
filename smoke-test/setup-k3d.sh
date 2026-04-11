@@ -207,22 +207,22 @@ build_and_deploy_services() {
     k3d image import sinnet/uservice-webapi:local --cluster "${CLUSTER_NAME}"
     
     # Build Frontend
-    log_info "Building static-webapp..."
-    build_image sinnet/static-webapp:local static-webapp/Dockerfile.e2e \
+    log_info "Building app-time..."
+    build_image sinnet/app-time:local app-time/Dockerfile.e2e \
         --build-arg BACKEND_BASE_URL=http://localhost:11031 \
         --build-arg ENVIRONMENT=development
-    k3d image import sinnet/static-webapp:local --cluster "${CLUSTER_NAME}"
+    k3d image import sinnet/app-time:local --cluster "${CLUSTER_NAME}"
     
     log_info "Deploying services..."
     kubectl apply -f "${SCRIPT_DIR}/k8s/dapr-config.yaml" -n "${NAMESPACE}"
     kubectl apply -f "${SCRIPT_DIR}/k8s/timeentries.yaml" -n "${NAMESPACE}"
     kubectl apply -f "${SCRIPT_DIR}/k8s/webapi.yaml" -n "${NAMESPACE}"
-    kubectl apply -f "${SCRIPT_DIR}/k8s/static-webapp.yaml" -n "${NAMESPACE}"
+    kubectl apply -f "${SCRIPT_DIR}/k8s/app-time.yaml" -n "${NAMESPACE}"
     
     log_info "Waiting for services to be ready..."
     kubectl wait --for=condition=Ready pod -l app=timeentries -n "${NAMESPACE}" --timeout=300s || log_warn "TimeEntries not ready yet"
     kubectl wait --for=condition=Ready pod -l app=webapi -n "${NAMESPACE}" --timeout=300s || log_warn "WebAPI not ready yet"
-    kubectl wait --for=condition=Ready pod -l app=static-webapp -n "${NAMESPACE}" --timeout=300s || log_warn "Frontend not ready yet"
+    kubectl wait --for=condition=Ready pod -l app=app-time -n "${NAMESPACE}" --timeout=300s || log_warn "Frontend not ready yet"
     
     log_info "Services deployed"
 }
@@ -235,7 +235,7 @@ cluster_down() {
 
 show_logs() {
     log_info "Tailing logs from all pods in namespace '${NAMESPACE}'..."
-    kubectl logs -f -n "${NAMESPACE}" --all-containers=true --max-log-requests=10 -l "app in (timeentries,webapi,static-webapp,sqlserver)" --prefix=true
+    kubectl logs -f -n "${NAMESPACE}" --all-containers=true --max-log-requests=10 -l "app in (timeentries,webapi,app-time,sqlserver)" --prefix=true
 }
 
 deploy_only() {

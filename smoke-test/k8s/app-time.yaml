@@ -1,0 +1,68 @@
+# ============================================================================
+# App-Time (React Frontend) - Kubernetes Deployment
+# ============================================================================
+# React application served by nginx
+# No Dapr sidecar needed - frontend communicates directly with WebAPI
+# ============================================================================
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-time
+  labels:
+    app: app-time
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app-time
+  template:
+    metadata:
+      labels:
+        app: app-time
+    spec:
+      containers:
+        - name: app-time
+          image: sinnet/app-time:local
+          imagePullPolicy: Never  # Use local image loaded by k3d
+          ports:
+            - containerPort: 3000
+              name: http
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 3000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 3
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 2
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "200m"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: app-time
+  labels:
+    app: app-time
+spec:
+  type: LoadBalancer
+  selector:
+    app: app-time
+  ports:
+    - port: 30000
+      targetPort: 3000
+      protocol: TCP
+      name: http
