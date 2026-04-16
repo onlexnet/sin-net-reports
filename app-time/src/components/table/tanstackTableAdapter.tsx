@@ -116,7 +116,7 @@ export const useTanStackTableAdapter = <TData extends object>(
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(options.initialFilters ?? []);
   const [pagination, setPagination] = React.useState<PaginationState>({
     pageIndex: 0,
-    pageSize: options.initialPageSize ?? 20,
+    pageSize: options.initialPageSize ?? 10000,
   });
 
   const columns = React.useMemo(() => mapColumnsToTanStack(options.columns), [options.columns]);
@@ -201,6 +201,33 @@ export const TanStackTableView = <TData extends object>({
 }: TanStackTableViewProps<TData>) => {
   return (
     <div className={cn("w-full", className)}>
+      {showPagination && table.getPageCount() > 1 ? (
+        <div className="mb-2 flex items-center justify-between">
+          <div className="text-sm text-muted-foreground">
+            Strona {table.getState().pagination.pageIndex + 1} z {table.getPageCount() || 1}
+          </div>
+          <div className="flex items-center gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => table.previousPage()}
+              disabled={!table.getCanPreviousPage()}
+            >
+              Poprzednia
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => table.nextPage()}
+              disabled={!table.getCanNextPage()}
+            >
+              Następna
+            </Button>
+          </div>
+        </div>
+      ) : null}
       <Table className="w-full table-fixed">
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
@@ -255,34 +282,6 @@ export const TanStackTableView = <TData extends object>({
           )}
         </TableBody>
       </Table>
-
-      {showPagination ? (
-        <div className="mt-2 flex items-center justify-between">
-          <div className="text-sm text-muted-foreground">
-            Strona {table.getState().pagination.pageIndex + 1} z {table.getPageCount() || 1}
-          </div>
-          <div className="flex items-center gap-2">
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={() => table.previousPage()}
-              disabled={!table.getCanPreviousPage()}
-            >
-              Poprzednia
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={() => table.nextPage()}
-              disabled={!table.getCanNextPage()}
-            >
-              Następna
-            </Button>
-          </div>
-        </div>
-      ) : null}
     </div>
   );
 };

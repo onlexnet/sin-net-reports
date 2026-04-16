@@ -353,7 +353,7 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
                 </div>
                 <Row gutter={16}>
                     <Col span={22} offset={2}>
-                        <Space style={{ width: '100%' }} direction='vertical'>
+                        <Space style={{ width: '100%' }} direction='vertical' align='start'>
                             <label>Operator:</label>
                             <Select defaultValue={model.Operator} onValueChange={onChangeCombo((m, v) => m.Operator = v)}>
                                 <SelectTrigger className="w-full">
@@ -370,7 +370,7 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
                 </Row>
                 <Row gutter={16}>
                     <Col span={22} offset={2}>
-                        <Space style={{ width: '100%' }} direction='vertical'>
+                        <Space style={{ width: '100%' }} direction='vertical' align='start'>
                             <label>Obsługa:</label>
                             <Select defaultValue={model.Obsluga} onValueChange={onChangeCombo((m, v) => m.Obsluga = v)}>
                                 <SelectTrigger className="w-full">
@@ -387,7 +387,7 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
                 </Row>
                 <Row gutter={16}>
                     <Col span={22} offset={2}>
-                        <Space style={{ width: '100%' }} direction='vertical'>
+                        <Space style={{ width: '100%' }} direction='vertical' align='start'>
                             <label>Rozliczenie:</label>
                             <Select defaultValue={model.Rozliczenie} onValueChange={onChangeCombo((m, v) => m.Rozliczenie = v)}>
                                 <SelectTrigger className="w-full">
@@ -404,7 +404,7 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
                 </Row>
                 <Row gutter={16}>
                     <Col span={4} offset={2}>
-                        <Space style={{ width: '100%' }} direction='vertical'>
+                        <Space style={{ width: '100%' }} direction='vertical' align='start'>
                             <label>Dystans:</label>
                             <Input value={model.Dystans} onChange={onChangeText((m, v) => m.Dystans = v)} />
                         </Space>
@@ -417,7 +417,7 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
                 </div>
                 <Row gutter={16}>
                     <Col span={22} offset={2}>
-                        <Space style={{ width: '100%' }} direction='vertical'>
+                        <Space style={{ width: '100%' }} direction='vertical' align='start'>
                             <label>Nazwa:</label>
                             <Input value={model.Nazwa} placeholder="Nazwa klienta" onChange={onChangeText((m, v) => m.Nazwa = v)} />
                         </Space>
@@ -425,7 +425,7 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
                 </Row>
                 <Row gutter={16}>
                     <Col span={22} offset={2}>
-                        <Space style={{ width: '100%' }} direction='vertical'>
+                        <Space style={{ width: '100%' }} direction='vertical' align='start'>
                             <label>Miejscowość:</label>
                             <Input value={model.Miejscowosc} placeholder="Miejscowość klienta" onChange={onChangeText((m, v) => m.Miejscowosc = v)} />
                         </Space>
@@ -433,7 +433,7 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
                 </Row>
                 <Row gutter={16}>
                     <Col span={22} offset={2}>
-                        <Space style={{ width: '100%' }} direction='vertical'>
+                        <Space style={{ width: '100%' }} direction='vertical' align='start'>
                             <label>Adres:</label>
                             <Input value={model.Adres} placeholder="Adres klienta" onChange={onChangeText((m, v) => m.Adres = v)} />
                         </Space>
@@ -558,7 +558,7 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
                 </div>
                 <Row gutter={16}>
                     <Col span={22} offset={2}>
-                        <Space style={{ width: '100%' }} direction='vertical'>
+                        <Space style={{ width: '100%' }} direction='vertical' align='start'>
                             <label>Notatki NFZ:</label>
                             <Textarea value={model.NfzNotatki} placeholder="Notatki NFZ" onChange={onChangeMemo((m, v) => m.NfzNotatki = v)} />
                         </Space>
@@ -579,7 +579,7 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
                 </Row>
                 <Row gutter={16}>
                     <Col span={22} offset={2}>
-                        <Space style={{ width: '100%' }} direction='vertical'>
+                        <Space style={{ width: '100%' }} direction='vertical' align='start'>
                             <Textarea value={model.KomercjaNotatki} placeholder="Dane opisowe" onChange={onChangeMemo((m, v) => m.KomercjaNotatki = v)} />
                         </Space>
                     </Col>

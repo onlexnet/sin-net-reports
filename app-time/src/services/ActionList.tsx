@@ -244,7 +244,7 @@ const ConnectedContent: React.FC<PropsFromRedux> = props => {
           </Col>
         </Row>
         <div className="w-full overflow-y-auto" style={{ maxHeight: "calc(100vh - 250px)" }}>
-          <TanStackTableView table={table} className={styles.hideextra} showPagination={false} />
+          <TanStackTableView table={table} className={styles.hideextra} showPagination={true} />
         </div>
       </Space>
     </div>
