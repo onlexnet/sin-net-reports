@@ -12,6 +12,7 @@ interface ReportsViewProps {
 
 export const ReportsView: React.FC<ReportsViewProps> = props => {
   const { projectId, from, idToken } = props;
+  const reportLinkClassName = "justify-start px-0 text-foreground hover:text-foreground/90";
   const openInNewTab = (url: string) => {
     window.open(url, '_blank');
   }
@@ -117,6 +118,7 @@ export const ReportsView: React.FC<ReportsViewProps> = props => {
           <Button
             disabled={fromYear == null || fromMonth == null}
             variant="link"
+            className={reportLinkClassName}
             onClick={() => { openInNewTab(addressProvider().host + `/api/raporty/klienci/${projectId}/${fromYear}/${fromMonth}`); }}
           >
             Raport miesięczny - załączniki do faktur
@@ -124,6 +126,7 @@ export const ReportsView: React.FC<ReportsViewProps> = props => {
 
           <Button
             variant="link"
+            className={reportLinkClassName}
             onClick={() => {
             downloadWithToken(addressProvider().host + `/api/raporty/2/${projectId}?yearFrom=${fromYear}&monthFrom=${fromMonth}&yearTo=${toYear}&monthTo=${toMonth}`);
           }}>
@@ -132,6 +135,7 @@ export const ReportsView: React.FC<ReportsViewProps> = props => {
 
           <Button
             variant="link"
+            className={reportLinkClassName}
             onClick={() => {
             openInNewTab(addressProvider().host + `/api/raporty/3/${projectId}`);
           }}>
@@ -141,4 +145,3 @@ export const ReportsView: React.FC<ReportsViewProps> = props => {
     </div>
   );
 };
-
