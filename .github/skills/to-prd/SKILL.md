@@ -17,6 +17,8 @@ Check with the user that these modules match their expectations. Check with the 
 
 3. Write the PRD using the template below and submit it as a GitHub issue.
 
+4. Use English language even when the conversation is in another language (e.g., Polish).
+
 <prd-template>
 
 ## Problem Statement
