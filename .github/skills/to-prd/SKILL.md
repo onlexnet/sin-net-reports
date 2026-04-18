@@ -17,7 +17,7 @@ Check with the user that these modules match their expectations. Check with the 
 
 3. Write the PRD using the template below and submit it as a GitHub issue.
 
-4. Use English language even when the conversation is in another language (e.g., Polish).
+4. Use English even when the conversation is in another language (e.g., Polish).
 
 <prd-template>
 
@@ -36,7 +36,7 @@ A LONG, numbered list of user stories. Each user story should be in the format o
 1. As an <actor>, I want a <feature>, so that <benefit>
 
 <user-story-example>
-1. As a mobile bank customer, I want to see balance on my accounts, so that I can make better informed decisions about my spending
+1. As a mobile bank customer, I want to see the balance on my accounts, so that I can make better informed decisions about my spending
 </user-story-example>
 
 This list of user stories should be extremely extensive and cover all aspects of the feature.
