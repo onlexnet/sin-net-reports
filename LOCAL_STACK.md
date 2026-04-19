@@ -4,6 +4,13 @@
 
 SinNet local development uses **k3d (k3s in Docker) with Dapr**.
 
+## Lightweight Frontend Development
+
+For frontend-only work, run the React app against production without k3d:
+`cd app-time && npm start`. See
+[app-time/RUNTIME_CONFIG.md](app-time/RUNTIME_CONFIG.md) for configuration
+details.
+
 ## Quick Start
 
 ```bash

@@ -13,6 +13,19 @@ The application uses a **unified build-time injection approach** where:
 
 This approach provides a clean separation between the application bundle and configuration.
 
+## Local Frontend Development Against Production Backend
+
+The default `public/runtime-config.json` is configured with the production backend URL, allowing you to run the frontend locally without backend setup:
+
+```bash
+cd app-time
+npm start  # Opens http://localhost:3000
+```
+
+**Requirements**: `http://localhost:3000` must be registered as a redirect URI in Azure B2C, or authentication will fail.
+
+⚠️ **Warning**: This connects to production data. Any mutations affect production.
+
 ## Configuration File
 
 ### `/public/runtime-config.json`
