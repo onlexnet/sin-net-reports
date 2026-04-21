@@ -34,7 +34,7 @@ pytest-html==4.1.1
 allure-pytest==2.13.2
 
 # Utilities
-python-dotenv==1.0.1
+python-dotenv==1.2.2
 
 # Static typing
 mypy==1.15.0
