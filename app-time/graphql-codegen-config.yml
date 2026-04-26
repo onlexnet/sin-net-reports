@@ -2,7 +2,7 @@
 # 1. ../uservice-webapi/**/*.graphqls - for local development (parent directory)
 # 2. uservice-webapi/**/*.graphqls - for Docker build (schema copied to build context)
 # Both paths are needed because:
-# - Local: npm run generate runs from static-webapp/ directory, needs ../
+# - Local: npm run generate runs from app-time/ directory, needs ../
 # - Docker: COPY command in Dockerfile places schema in build context without ../
 schema:
   - ../uservice-webapi/**/*.graphqls

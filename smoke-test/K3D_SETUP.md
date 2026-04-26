@@ -80,7 +80,7 @@ This destroys the cluster and frees all resources.
 
 ### Making changes to code
 
-1. Edit code in `uservice-timeentries/`, `uservice-webapi/`, or `static-webapp/`
+1. Edit code in `uservice-timeentries/`, `uservice-webapi/`, or `app-time/`
 2. Rebuild and reload the image:
 
 ```bash
@@ -149,8 +149,8 @@ kubectl get configurations,components -n sinnet
 │  ┌─────────────────────────────────────────────────┐  │
 │  │  Namespace: sinnet                              │  │
 │  │                                                 │  │
-│  │  Pod: static-webapp-xxx                         │  │
-│  │    └─ Container: static-webapp (nginx)          │  │
+│  │  Pod: app-time-xxx                              │  │
+│  │    └─ Container: app-time (nginx)               │  │
 │  │                                                 │  │
 │  │  Pod: webapi-xxx                                │  │
 │  │    ├─ Container: webapi (Spring Boot)           │  │
@@ -270,7 +270,7 @@ smoke-test/
     ├── sqlserver.yaml          # SQL Server deployment + service
     ├── timeentries.yaml        # TimeEntries + Dapr sidecar
     ├── webapi.yaml             # WebAPI + Dapr sidecar
-    └── static-webapp.yaml      # React frontend
+    └── app-time.yaml           # React frontend
 ```
 
 ## Next Steps
