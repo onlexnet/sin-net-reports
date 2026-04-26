@@ -87,7 +87,7 @@ jobs:
     environment: prd01
     steps:
       - name: Log in to Azure
-        uses: azure/login@v2
+        uses: azure/login@v3
         with:
           # prepare credentials for Azure CLI
           # more: https://github.com/marketplace/actions/azure-login#configure-a-service-principal-with-a-secret
