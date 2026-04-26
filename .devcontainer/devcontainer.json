@@ -5,6 +5,9 @@
 	// Alternative base setup guidance: https://containers.dev/guide/dockerfile
     "image": "mcr.microsoft.com/vscode/devcontainers/base:ubuntu-22.04",
 	"features": {
+		"ghcr.io/devcontainers/features/github-cli:1": {
+			// GitHub CLI
+		},
 		"ghcr.io/devcontainers/features/docker-in-docker:2": {
 		},
 		"ghcr.io/devcontainers/features/java:1": {

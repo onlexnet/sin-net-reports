@@ -1,6 +1,6 @@
 {
   "applicationInsightsConnectionString": "",
-  "backendBaseUrl": "",
+  "backendBaseUrl": "https://sinnet-webapi.wonderfulriver-536309a1.westeurope.azurecontainerapps.io",
   "environment": "development",
   "useTestLogin": false
 }

@@ -1,4 +1,4 @@
-# Multi-stage build for static-webapp
+# Multi-stage build for app-time
 # Stage 1: Build the React application
 FROM node:22.12.0-bookworm AS build
 
@@ -8,8 +8,8 @@ WORKDIR /app
 COPY uservice-webapi/host/src/main/resources/graphql uservice-webapi/host/src/main/resources/graphql
 
 # Copy package files
-COPY static-webapp/package*.json ./
-COPY static-webapp/.version ./
+COPY app-time/package*.json ./
+COPY app-time/.version ./
 
 # Install npm dependencies
 # CACHE MOUNT: --mount=type=cache,target=/root/.npm
@@ -24,10 +24,10 @@ RUN --mount=type=cache,target=/root/.npm \
     npm ci
 
 # Copy source code and configuration files
-COPY static-webapp/graphql-codegen-config.yml ./
-COPY static-webapp/tsconfig.json ./
-COPY static-webapp/public ./public
-COPY static-webapp/src ./src
+COPY app-time/graphql-codegen-config.yml ./
+COPY app-time/tsconfig.json ./
+COPY app-time/public ./public
+COPY app-time/src ./src
 
 # Generate GraphQL types from backend schema and build React application
 # npm run generate: Creates TypeScript types from GraphQL schema (required for build)
@@ -70,7 +70,7 @@ RUN if [ ! -f "build/runtime-config.json" ]; then \
 
 # Replace runtime configuration in the JSON file
 RUN sed -i 's|"applicationInsightsConnectionString": ""|"applicationInsightsConnectionString": "'"$APPLICATIONINSIGHTS_CONNECTION_STRING"'"|g' build/runtime-config.json && \
-    sed -i 's|"backendBaseUrl": ""|"backendBaseUrl": "'"$BACKEND_BASE_URL"'"|g' build/runtime-config.json && \
+    sed -i 's|"backendBaseUrl": "[^"]*"|"backendBaseUrl": "'"$BACKEND_BASE_URL"'"|g' build/runtime-config.json && \
     sed -i 's|"environment": "development"|"environment": "'"$ENVIRONMENT"'"|g' build/runtime-config.json && \
     sed -i 's|"useTestLogin": false|"useTestLogin": true|g' build/runtime-config.json && \
     echo "Configuration injected into runtime-config.json:" && \

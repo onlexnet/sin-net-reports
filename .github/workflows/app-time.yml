@@ -91,7 +91,7 @@ jobs:
           fi
 
           sed -i 's|"applicationInsightsConnectionString": ""|"applicationInsightsConnectionString": "'"$APPLICATIONINSIGHTS_CONNECTION_STRING"'"|g' runtime-config.json
-          sed -i 's|"backendBaseUrl": ""|"backendBaseUrl": "'"$BACKEND_BASE_URL"'"|g' runtime-config.json
+          sed -i 's|"backendBaseUrl": "[^"]*"|"backendBaseUrl": "'"$BACKEND_BASE_URL"'"|g' runtime-config.json
           sed -i 's|"environment": "development"|"environment": "production"|g' runtime-config.json
 
       - name: Build And Deploy
