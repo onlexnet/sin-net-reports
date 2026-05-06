@@ -35,6 +35,7 @@ module "github" {
   ONLEXNET_INFRA_CLIENT_ID                            = module.keyvault.env.ONLEXNET_INFRA_CLIENT_ID
   ONLEXNET_SINNET_PRD01_CONTAINERAPP_NAME_TIMEENTRIES = module.container_apps_timeentries.containerapp_name
   ONLEXNET_SINNET_PRD01_CONTAINERAPP_NAME_WEBAPI      = module.container_apps_webapi.containerapp_name
+  ONLEXNET_SINNET_PRD01_FUNCTION_REPORT1_NAME         = module.fun_report1.function_app_name
   APPLICATIONINSIGHTS_CONNECTION_STRING               = module.application_insights.connection_string
   BACKEND_BASE_URL                                    = "https://${module.container_apps_webapi.webapi_fqdn}"
 }
@@ -59,13 +60,16 @@ module "static_app_prod_domain" {
 }
 
 module "cloudflare" {
-  source             = "./module_cloudflare"
-  webapp_prefix_prod = local.webapp_subdomain_prod
-  webapp_fqdn_prod   = module.static_app_prod.webapp_fqdn
-  webapi_prefix      = "${var.application_name}-${var.environment_name}-api"
-  webapi_fqdn        = module.container_apps_webapi.webapi_fqdn
-  webapp_prefix_time = "time"
-  webapp_fqdn_time   = module.static_app_time.webapp_fqdn
+  source                         = "./module_cloudflare"
+  webapp_prefix_prod             = local.webapp_subdomain_prod
+  webapp_fqdn_prod               = module.static_app_prod.webapp_fqdn
+  webapi_prefix                  = "${var.application_name}-${var.environment_name}-api"
+  webapi_fqdn                    = module.container_apps_webapi.webapi_fqdn
+  webapp_prefix_time             = "time"
+  webapp_fqdn_time               = module.static_app_time.webapp_fqdn
+  report1_prefix                 = "report1"
+  report1_fqdn                   = module.fun_report1.function_app_fqdn
+  report1_domain_verification_id = module.fun_report1.custom_domain_verification_id
 }
 
 module "container_apps_env" {
@@ -131,6 +135,21 @@ module "application_insights" {
   resource_group   = module.resourcegroup.main
   environment_name = var.environment_name
   application_name = var.application_name
+}
+
+module "fun_report1" {
+  source           = "./module_fun_report1"
+  resource_group   = module.resourcegroup.main
+  environment_name = var.environment_name
+  application_name = var.application_name
+}
+
+resource "azurerm_app_service_custom_hostname_binding" "module_fun_report1" {
+  hostname            = "report1.onlex.net"
+  app_service_name    = module.fun_report1.function_app_name
+  resource_group_name = module.resourcegroup.main.name
+
+  depends_on = [module.cloudflare]
 }
 
 module "static_app_time" {

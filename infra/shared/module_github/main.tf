@@ -82,6 +82,13 @@ resource "github_actions_environment_variable" "ONLEXNET_SINNET_PRD01_CONTAINERA
   value         = var.ONLEXNET_SINNET_PRD01_CONTAINERAPP_NAME_WEBAPI
 }
 
+resource "github_actions_environment_variable" "ONLEXNET_SINNET_PRD01_FUNCTIONAPP_NAME_REPORT1" {
+  environment   = github_repository_environment.main.environment
+  repository    = data.github_repository.sinnet.name
+  variable_name = "ONLEXNET_SINNET_PRD01_FUNCTIONAPP_NAME_REPORT1"
+  value         = var.ONLEXNET_SINNET_PRD01_FUNCTION_REPORT1_NAME
+}
+
 resource "github_actions_environment_variable" "BACKEND_BASE_URL" {
   environment   = github_repository_environment.main.environment
   repository    = data.github_repository.sinnet.name
