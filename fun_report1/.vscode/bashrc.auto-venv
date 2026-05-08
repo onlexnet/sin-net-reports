@@ -1,0 +1,15 @@
+# Load the user's normal bash settings first.
+if [ -f "$HOME/.bashrc" ]; then
+  . "$HOME/.bashrc"
+fi
+
+# Only auto-manage venv when opening terminals in this workspace root.
+if [ -f "requirements.txt" ]; then
+  if [ ! -d ".venv" ]; then
+    python3.13 -m venv .venv
+    . .venv/bin/activate
+    pip install -r requirements.txt
+  elif [ -f ".venv/bin/activate" ]; then
+    . .venv/bin/activate
+  fi
+fi

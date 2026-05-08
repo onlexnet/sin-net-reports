@@ -5,7 +5,7 @@ terraform {
   required_providers {
     cloudflare = {
       source  = "cloudflare/cloudflare"
-      version = "~> 3.0"
+      version = "~> 4.0"
     }
   }
 }
@@ -17,7 +17,7 @@ data "cloudflare_zone" "onlexnet" {
 resource "cloudflare_record" "webapi" {
   zone_id = data.cloudflare_zone.onlexnet.zone_id
   name    = var.webapi_prefix
-  value   = var.webapi_fqdn
+  content = var.webapi_fqdn
   type    = "CNAME"
   proxied = false
   ttl     = 300
@@ -26,7 +26,7 @@ resource "cloudflare_record" "webapi" {
 resource "cloudflare_record" "webapp_prod" {
   zone_id = data.cloudflare_zone.onlexnet.zone_id
   name    = var.webapp_prefix_prod
-  value   = var.webapp_fqdn_prod
+  content = var.webapp_fqdn_prod
   type    = "CNAME"
   proxied = false
   ttl     = 300
@@ -35,8 +35,26 @@ resource "cloudflare_record" "webapp_prod" {
 resource "cloudflare_record" "webapp_time" {
   zone_id = data.cloudflare_zone.onlexnet.zone_id
   name    = var.webapp_prefix_time
-  value   = var.webapp_fqdn_time
+  content = var.webapp_fqdn_time
   type    = "CNAME"
+  proxied = false
+  ttl     = 300
+}
+
+resource "cloudflare_record" "report1" {
+  zone_id = data.cloudflare_zone.onlexnet.zone_id
+  name    = var.report1_prefix
+  content = var.report1_fqdn
+  type    = "CNAME"
+  proxied = true
+  ttl     = 1
+}
+
+resource "cloudflare_record" "report1_asuid" {
+  zone_id = data.cloudflare_zone.onlexnet.zone_id
+  name    = "asuid.${var.report1_prefix}"
+  content = var.report1_domain_verification_id
+  type    = "TXT"
   proxied = false
   ttl     = 300
 }

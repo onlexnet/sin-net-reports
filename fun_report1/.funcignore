@@ -1,0 +1,12 @@
+# Python cache and local environments
+__pycache__/
+*.pyc
+.venv/
+
+# Local settings and editor metadata
+local.settings.json
+.vscode/
+
+# Tests and temporary artifacts
+.pytest_cache/
+coverage/
