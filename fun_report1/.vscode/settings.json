@@ -1,0 +1,12 @@
+{
+  "terminal.integrated.profiles.linux": {
+    "bash (auto venv)": {
+      "path": "bash",
+      "args": [
+        "--rcfile",
+        "${workspaceFolder}/.vscode/bashrc.auto-venv"
+      ]
+    }
+  },
+  "terminal.integrated.defaultProfile.linux": "bash (auto venv)"
+}

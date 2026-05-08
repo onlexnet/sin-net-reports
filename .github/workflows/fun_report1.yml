@@ -1,0 +1,92 @@
+name: "CI fun_report1"
+
+concurrency:
+  group: "fun_raport1"
+  cancel-in-progress: false
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths:
+      - fun_report1/**
+      - infra/**
+      - .github/workflows/fun_report1.yml
+  pull_request:
+    branches: [ main ]
+    paths:
+      - fun_report1/**
+      - infra/**
+      - .github/workflows/fun_report1.yml
+
+permissions:
+  contents: read
+
+jobs:
+  Quality:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Lint workflow files with actionlint
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash | bash
+          ./actionlint -color
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+
+      - name: Install dependencies
+        working-directory: fun_report1
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
+          pip install -r requirements.txt
+
+      - name: Ruff
+        working-directory: fun_report1
+        run: ruff check .
+
+      - name: Mypy
+        working-directory: app_raport1
+        run: mypy --config-file mypy.ini
+
+      - name: Pytest with coverage and JUnit
+        working-directory: fun_report1
+        run: |
+          mkdir -p reports
+          pytest --junitxml=reports/junit.xml --cov-report=xml:reports/coverage.xml
+
+      - name: Upload test reports
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: fun_report1-test-reports
+          path: |
+            fun_report1/reports/junit.xml
+            fun_report1/reports/coverage.xml
+          if-no-files-found: warn
+
+  Deploy:
+    name: Deploy to PRD01
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: [ Quality ]
+    runs-on: ubuntu-22.04
+    environment: PRD01
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Log in to Azure
+        uses: azure/login@v2
+        with:
+          creds: '{"clientId":"${{ secrets.ONLEXNET_INFRA_CLIENT_ID }}","clientSecret":"${{ secrets.ONLEXNET_INFRA_SECRET }}","subscriptionId":"${{ secrets.ONLEXNET_SINNET_PRD01_SUBSCRIPTION_ID }}","tenantId":"${{ secrets.ONLEXNET_TENANT_ID }}"}'
+
+      - name: Deploy Azure Function App
+        uses: Azure/functions-action@v1
+        with:
+          app-name: ${{ vars.ONLEXNET_SINNET_PRD01_FUNCTION_REPORT1_NAME }}
+          package: app_raport1

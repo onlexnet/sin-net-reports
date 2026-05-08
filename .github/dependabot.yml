@@ -35,3 +35,13 @@ updates:
    directory: "/static-webapp"
    schedule:
      interval: weekly
+
+ - package-ecosystem: "terraform"
+   directory: "/infra"
+   schedule:
+     interval: weekly
+
+ - package-ecosystem: "pip"
+   directory: "/fun_report1"
+   schedule:
+     interval: weekly

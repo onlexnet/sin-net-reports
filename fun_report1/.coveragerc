@@ -1,0 +1,9 @@
+[run]
+branch = True
+source = function_app
+
+[report]
+fail_under = 90
+show_missing = True
+skip_covered = False
+precision = 2
