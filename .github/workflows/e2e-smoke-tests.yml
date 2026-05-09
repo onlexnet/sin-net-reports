@@ -26,7 +26,8 @@ on:
       - uservice-webapi/**
       - uservice-timeentries/**
       - smoke-test/**
-      - api/**
+      - lib-api-java/**
+      - schema/**
       - .github/workflows/e2e-smoke-tests.yml
   workflow_dispatch:  # Allow manual trigger
 
@@ -110,7 +111,7 @@ jobs:
         uses: actions/cache@v5
         with:
           path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-e2e-buildx-${{ hashFiles('uservice-timeentries/Dockerfile', 'uservice-timeentries/**/pom.xml', 'uservice-webapi/Dockerfile', 'uservice-webapi/**/pom.xml', 'app-time/Dockerfile.e2e', 'app-time/package-lock.json', 'api/client-java/**/pom.xml', 'api/schema/**/*.proto') }}
+          key: ${{ runner.os }}-e2e-buildx-${{ hashFiles('uservice-timeentries/Dockerfile', 'uservice-timeentries/**/pom.xml', 'uservice-webapi/Dockerfile', 'uservice-webapi/**/pom.xml', 'app-time/Dockerfile.e2e', 'app-time/package-lock.json', 'lib-api-java/**/pom.xml', 'schema/**/*.proto') }}
           restore-keys: |
             ${{ runner.os }}-e2e-buildx-
 

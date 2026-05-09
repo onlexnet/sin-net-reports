@@ -4,7 +4,7 @@ FROM eclipse-temurin:25-jdk-jammy AS builder
 
 WORKDIR /workspace
 
-# Install Maven 3.9+ (required by api/client-java maven-enforcer-plugin)
+# Install Maven 3.9+ (required by lib-api-java maven-enforcer-plugin)
 RUN apt-get update && \
     apt-get install -y wget && \
     wget --no-verbose https://archive.apache.org/dist/maven/maven-3/3.9.9/binaries/apache-maven-3.9.9-bin.tar.gz && \
@@ -16,9 +16,9 @@ RUN apt-get update && \
 ENV MAVEN_HOME=/opt/maven
 ENV PATH=$PATH:$MAVEN_HOME/bin
 
-# Copy api/client-java dependency first (needed by timeentries)
-COPY api/client-java api/client-java
-COPY api/schema api/schema
+# Copy lib-api-java dependency first (needed by timeentries)
+COPY lib-api-java lib-api-java
+COPY schema schema
 
 # Copy Maven wrapper and pom files for timeentries
 COPY uservice-timeentries/mvnw uservice-timeentries/
@@ -56,11 +56,11 @@ COPY uservice-timeentries/initdb-migrate/src uservice-timeentries/initdb-migrate
 COPY uservice-timeentries/initdb-test/src uservice-timeentries/initdb-test/src
 COPY uservice-timeentries/report-aggregate/src uservice-timeentries/report-aggregate/src
 
-# Build api/client-java dependency (required by timeentries service)
+# Build lib-api-java dependency (required by timeentries service)
 # CACHE MOUNT: Reuses the same Maven cache from previous step
 # This ensures gRPC client generation and compilation uses cached dependencies
 RUN --mount=type=cache,target=/root/.m2 \
-    cd api/client-java && \
+    cd lib-api-java && \
     mvn clean install -B -ntp -DskipTests || true
 
 # Build the TimeEntries application
