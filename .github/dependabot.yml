@@ -17,7 +17,7 @@ updates:
      interval: weekly
 
  - package-ecosystem: "maven"
-   directory: "/api/client-java"
+   directory: "/lib-api-java"
    schedule:
      interval: weekly
 

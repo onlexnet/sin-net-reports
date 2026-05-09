@@ -3,7 +3,7 @@ name: CI lib-api-java
 # Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
 # However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
 concurrency:
-  group: "api-client-java"
+  group: "lib-api-java"
   cancel-in-progress: false
 
 on:
@@ -13,13 +13,13 @@ on:
     paths:
       - lib-api-java/**
       - schema/**
-      - .github/workflows/api-client-java.yml
+      - .github/workflows/lib-api-java.yml
   pull_request:
     branches: [ main ]
     paths:
       - lib-api-java/**
       - schema/**
-      - .github/workflows/api-client-java.yml
+      - .github/workflows/lib-api-java.yml
 
 permissions:
   contents: read

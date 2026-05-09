@@ -1,7 +1,7 @@
 ---
 name: 'RUG'
 description: 'Pure orchestration agent that decomposes requests, delegates all work to subagents, validates outcomes, and repeats until complete.'
-tools: ['vscode', 'execute', 'read', 'agent', 'edit', 'search', 'web', 'todo']
+tools: ['vscode', 'execute', 'read', 'agent', 'edit', 'search', 'web', 'todo', 'github/issue_read']
 model: Claude Sonnet 4.5 (copilot)
 agents: ['SWE', 'QA']
 ---

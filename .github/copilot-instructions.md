@@ -26,8 +26,8 @@ See [K3D_SETUP.md](../smoke-test/K3D_SETUP.md) for k3d-specific documentation.
 ### Service Communication via Dapr
 Services communicate through **Dapr sidecars**, not direct gRPC:
 - `uservice-timeentries` (port 11021) ← Dapr sidecar → `uservice-webapi` (port 11031)
-- gRPC schemas in `api/schema/uservice-timeentries.rpc/*.proto`
-- Client code generated in `api/client-java` (build this first!)
+- gRPC schemas in `schema/uservice-timeentries.rpc/*.proto`
+- Client code generated in `lib-api-java` (build this first!)
 
 **In production (Azure Container Apps):**
 - Init containers download ApplicationInsights agent to ephemeral volume
@@ -59,9 +59,9 @@ npm run build
 ### Maven Module Build Order
 Always build in this order (dependencies matter):
 ```bash
-mvn install -f api/client-java              # Generates gRPC clients from .proto
-mvn install -pl host -am -f uservice-timeentries  # Uses api/client-java
-mvn install -f uservice-webapi              # Uses api/client-java
+mvn install -f lib-api-java              # Generates gRPC clients from .proto
+mvn install -pl host -am -f uservice-timeentries  # Uses lib-api-java
+mvn install -f uservice-webapi              # Uses lib-api-java
 ```
 
 Use `-DskipTests` - Testcontainers tests often fail in containerized dev environments.
@@ -93,8 +93,8 @@ FROM eclipse-temurin:25-jre-jammy
 
 ### Docker Build Context
 All Dockerfiles use **parent directory context** (`..` from smoke-test/) because they need:
-- `api/client-java` - shared gRPC libraries
-- `api/schema` - proto definitions
+- `lib-api-java` - shared gRPC libraries
+- `schema` - proto definitions
 - Service source code
 
 Example: `smoke-test/setup-k3d.sh` builds from parent, then imports images into the k3d cluster.
@@ -128,5 +128,5 @@ Key files for understanding architecture:
 - `smoke-test/dapr-local/` - Dapr configuration for local development
 - `LOCAL_STACK.md` - comprehensive local development guide
 - `infra/shared/main.tf` - Azure infrastructure modules
-- `api/schema/` - gRPC service definitions
+- `schema/` - gRPC service definitions
 - `uservice-webapi/host/src/main/resources/graphql/schema.graphqls` - GraphQL schema consumed by frontend
