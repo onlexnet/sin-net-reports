@@ -37,7 +37,7 @@ jobs:
           BUILD_DATE=$(date +%Y%m%d)
           BUILD_SHA=${GITHUB_SHA:0:7}
           BUILD_VERSION="${BUILD_DATE}-${BUILD_SHA}"
-          echo "BUILD_VERSION=${BUILD_VERSION}" >> $GITHUB_OUTPUT
+          echo "BUILD_VERSION=${BUILD_VERSION}" >> "$GITHUB_OUTPUT"
           echo "Generated BUILD_VERSION: ${BUILD_VERSION}"
 
       - name: Build app-time
@@ -45,7 +45,8 @@ jobs:
         env:
           REACT_APP_BUILD_VERSION: ${{ steps.build_version.outputs.BUILD_VERSION }}
         run: |
-          export MY_VERSION=$(cat .version)
+          MY_VERSION=$(cat .version)
+          export MY_VERSION
           npm config set allow-same-version true
           npm version $MY_VERSION
           npm install
