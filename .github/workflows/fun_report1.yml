@@ -94,7 +94,7 @@ jobs:
           creds: '{"clientId":"${{ secrets.ONLEXNET_INFRA_CLIENT_ID }}","clientSecret":"${{ secrets.ONLEXNET_INFRA_SECRET }}","subscriptionId":"${{ secrets.ONLEXNET_SINNET_PRD01_SUBSCRIPTION_ID }}","tenantId":"${{ secrets.ONLEXNET_TENANT_ID }}"}'
 
       - name: Setup Python ${{ env.PYTHON_VERSION }} Environment
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v6
         with:
           python-version: ${{ env.PYTHON_VERSION }}
 
