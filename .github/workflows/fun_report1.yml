@@ -32,7 +32,10 @@ jobs:
       - name: Lint workflow files with actionlint
         run: |
           curl -sSfL https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash | bash
-          ./actionlint -color
+          # Extract workflow file path from GITHUB_WORKFLOW_REF (e.g., "owner/repo/.github/workflows/fun_report1.yml@refs/heads/main")
+          # This ensures actionlint only checks the current workflow file, not all workflows
+          WORKFLOW_FILE=$(echo "$GITHUB_WORKFLOW_REF" | sed 's|.*/\(.github/workflows/[^@]*\)@.*|\1|')
+          ./actionlint -color "$WORKFLOW_FILE"
 
       - name: Set up Python 3.13
         uses: actions/setup-python@v6
@@ -51,7 +54,7 @@ jobs:
         run: ruff check .
 
       - name: Mypy
-        working-directory: app_raport1
+        working-directory: fun_report1
         run: mypy --config-file mypy.ini
 
       - name: Pytest with coverage and JUnit
@@ -89,4 +92,4 @@ jobs:
         uses: Azure/functions-action@v1
         with:
           app-name: ${{ vars.ONLEXNET_SINNET_PRD01_FUNCTION_REPORT1_NAME }}
-          package: app_raport1
+          package: fun_raport1
