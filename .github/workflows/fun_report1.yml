@@ -92,5 +92,5 @@ jobs:
       - name: Deploy Azure Function App
         uses: Azure/functions-action@v1
         with:
-          app-name: ${{ vars.ONLEXNET_SINNET_PRD01_FUNCTION_REPORT1_NAME }}
+          app-name: ${{ vars.ONLEXNET_SINNET_PRD01_FUNCTION_REPORT_NAME }}
           package: fun_raport1

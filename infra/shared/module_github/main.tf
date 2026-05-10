@@ -85,7 +85,7 @@ resource "github_actions_environment_variable" "ONLEXNET_SINNET_PRD01_CONTAINERA
 resource "github_actions_environment_variable" "ONLEXNET_SINNET_PRD01_FUNCTIONAPP_NAME_REPORT1" {
   environment   = github_repository_environment.main.environment
   repository    = data.github_repository.sinnet.name
-  variable_name = "ONLEXNET_SINNET_PRD01_FUNCTIONAPP_NAME_REPORT1"
+  variable_name = "ONLEXNET_SINNET_PRD01_FUNCTION_REPORT_NAME"
   value         = var.ONLEXNET_SINNET_PRD01_FUNCTION_REPORT1_NAME
 }
 
