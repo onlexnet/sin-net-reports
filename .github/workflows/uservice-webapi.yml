@@ -46,8 +46,9 @@ jobs:
       
       - name: Build with Maven Webapi
         run: |
-          export SEMVERSION=$(cat .semversion)
-          mvn -ntp install -Drevision=$SEMVERSION
+          SEMVERSION=$(cat .semversion)
+          export SEMVERSION
+          mvn -ntp install -Drevision="$SEMVERSION"
         working-directory: uservice-webapi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -61,7 +62,7 @@ jobs:
           export IMAGE_NAME_HOST=$IMAGE_NAME_BASE
 
           # build 'latest' image. 'latest' tag is added automatically by build-image plugin
-          mvn spring-boot:build-image -ntp -pl host -Dspring-boot.build-image.imageName=$IMAGE_NAME_HOST -DskipTests
+          mvn spring-boot:build-image -ntp -pl host -Dspring-boot.build-image.imageName="$IMAGE_NAME_HOST" -DskipTests
 
       - id: PushDockerImage
         name: Push Docker Image
@@ -72,9 +73,9 @@ jobs:
           export IMAGE_NAME_HOST=$IMAGE_NAME_BASE
 
           # add proper ID to distinguish image from other images built in this workflow
-          docker tag $IMAGE_NAME_HOST $IMAGE_NAME_HOST:$GITHUB_RUN_ID
+          docker tag "$IMAGE_NAME_HOST" "$IMAGE_NAME_HOST:$GITHUB_RUN_ID"
 
-          docker push --all-tags $IMAGE_NAME_HOST
+          docker push --all-tags "$IMAGE_NAME_HOST"
           echo "docker push --all-tags $IMAGE_NAME_HOST"
 
           docker images
@@ -104,5 +105,5 @@ jobs:
         run: |
           echo "image_name: $IMAGE_NAME_INITDB_HOST"
           # TODO replace hardcoded params below with proper values
-          az containerapp update -n $CONTAINERAPP_NAME -g sinnet-env-prd01 --container-name uservice-webapi --image $IMAGE_NAME_INITDB_HOST
+          az containerapp update -n "$CONTAINERAPP_NAME" -g sinnet-env-prd01 --container-name uservice-webapi --image "$IMAGE_NAME_INITDB_HOST"
 

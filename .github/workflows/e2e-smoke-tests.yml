@@ -289,9 +289,11 @@ jobs:
           if [ -f smoke-test/e2e/reports/pr-summary.md ]; then
             cat smoke-test/e2e/reports/pr-summary.md >> "$GITHUB_STEP_SUMMARY"
           else
-            echo "## E2E Smoke Tests" >> "$GITHUB_STEP_SUMMARY"
-            echo "" >> "$GITHUB_STEP_SUMMARY"
-            echo "No summary generated." >> "$GITHUB_STEP_SUMMARY"
+            {
+              echo "## E2E Smoke Tests"
+              echo ""
+              echo "No summary generated."
+            } >> "$GITHUB_STEP_SUMMARY"
             fi
 
       - name: Upload failure screenshots and traces

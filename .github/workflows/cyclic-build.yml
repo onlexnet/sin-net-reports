@@ -46,7 +46,7 @@ jobs:
         run: |
           SEMVERSION=$(cat .semversion || echo "1.0.0-SNAPSHOT")
           export SEMVERSION
-          mvn -ntp clean install -Drevision=$SEMVERSION
+          mvn -ntp clean install -Drevision="$SEMVERSION"
 
   build-static-webapp:
     name: Build Static WebApp
@@ -69,7 +69,7 @@ jobs:
           BUILD_DATE=$(date +%Y%m%d)
           BUILD_SHA="${GITHUB_SHA:0:7}"
           BUILD_VERSION="${BUILD_DATE}-${BUILD_SHA}"
-          echo "BUILD_VERSION=${BUILD_VERSION}" >> $GITHUB_OUTPUT
+          echo "BUILD_VERSION=${BUILD_VERSION}" >> "$GITHUB_OUTPUT"
           echo "Generated BUILD_VERSION: ${BUILD_VERSION}"
 
       - name: Build Static WebApp
@@ -77,9 +77,10 @@ jobs:
         env:
           REACT_APP_BUILD_VERSION: ${{ steps.build_version.outputs.BUILD_VERSION }}
         run: |
-          export MY_VERSION=$(cat .version || echo "1.0.0")
+          MY_VERSION=$(cat .version || echo "1.0.0")
+          export MY_VERSION
           npm config set allow-same-version true
-          npm version $MY_VERSION
+          npm version "$MY_VERSION"
           npm install
           npm run generate
           npm run build
