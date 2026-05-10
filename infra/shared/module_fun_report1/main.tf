@@ -43,9 +43,7 @@ resource "azurerm_function_app_flex_consumption" "function" {
   site_config {}
 
   app_settings = {
-    "AzureWebJobsStorage__accountName"      = azurerm_storage_account.function.name
-    "WEBSITE_RUN_FROM_PACKAGE"              = "1"
-    "SCM_DO_BUILD_DURING_DEPLOYMENT"        = "true"
+    "AzureWebJobsStorage__accountName" = azurerm_storage_account.function.name
   }
 
   identity {
