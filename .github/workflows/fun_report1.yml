@@ -93,4 +93,4 @@ jobs:
         uses: Azure/functions-action@v1
         with:
           app-name: ${{ vars.ONLEXNET_SINNET_PRD01_FUNCTION_REPORT_NAME }}
-          package: fun_raport1
+          package: fun_report1
