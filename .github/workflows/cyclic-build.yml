@@ -22,7 +22,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Java Environment
         uses: ./.github/actions/setup-java-environment
@@ -37,13 +37,15 @@ jobs:
       - name: Build Timeentries Service
         working-directory: uservice-timeentries
         run: |
-          export SEMVERSION=$(cat .version || echo "1.0.0-SNAPSHOT")
+          SEMVERSION=$(cat .version || echo "1.0.0-SNAPSHOT")
+          export SEMVERSION
           mvn -ntp clean install -pl host -am
 
       - name: Build WebAPI Service
         working-directory: uservice-webapi
         run: |
-          export SEMVERSION=$(cat .semversion || echo "1.0.0-SNAPSHOT")
+          SEMVERSION=$(cat .semversion || echo "1.0.0-SNAPSHOT")
+          export SEMVERSION
           mvn -ntp clean install -Drevision=$SEMVERSION
 
   build-static-webapp:
@@ -65,7 +67,7 @@ jobs:
         id: build_version
         run: |
           BUILD_DATE=$(date +%Y%m%d)
-          BUILD_SHA=${GITHUB_SHA:0:7}
+          BUILD_SHA="${GITHUB_SHA:0:7}"
           BUILD_VERSION="${BUILD_DATE}-${BUILD_SHA}"
           echo "BUILD_VERSION=${BUILD_VERSION}" >> $GITHUB_OUTPUT
           echo "Generated BUILD_VERSION: ${BUILD_VERSION}"
