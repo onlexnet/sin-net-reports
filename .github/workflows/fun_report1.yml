@@ -93,19 +93,10 @@ jobs:
         with:
           creds: '{"clientId":"${{ secrets.ONLEXNET_INFRA_CLIENT_ID }}","clientSecret":"${{ secrets.ONLEXNET_INFRA_SECRET }}","subscriptionId":"${{ secrets.ONLEXNET_SINNET_PRD01_SUBSCRIPTION_ID }}","tenantId":"${{ secrets.ONLEXNET_TENANT_ID }}"}'
 
-      - name: Setup Python ${{ env.PYTHON_VERSION }} Environment
-        uses: actions/setup-python@v6
-        with:
-          python-version: ${{ env.PYTHON_VERSION }}
-
-      - name: 'Resolve Project Dependencies Using Pip'
-        shell: bash
-        run: |
-          pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt --target=".python_packages/lib/site-packages"
-          popd
-
+      # Deploy source code to Azure Functions with remote build
+      # scm-do-build-during-deployment: Enables remote build on Azure (required for Linux Consumption + RBAC)
+      # enable-oryx-build: Uses Oryx to install dependencies from requirements.txt on Azure side
+      # Do NOT install dependencies locally - Azure Oryx handles this automatically
       - name: 'Run Azure Functions Action'
         uses: Azure/functions-action@v1
         id: fa
