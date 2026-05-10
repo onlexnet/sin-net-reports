@@ -34,7 +34,8 @@ jobs:
           curl -sSfL https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash | bash
           # Extract workflow file path from GITHUB_WORKFLOW_REF (e.g., "owner/repo/.github/workflows/fun_report1.yml@refs/heads/main")
           # This ensures actionlint only checks the current workflow file, not all workflows
-          WORKFLOW_FILE=$(echo "$GITHUB_WORKFLOW_REF" | sed 's|.*/\(.github/workflows/[^@]*\)@.*|\1|')
+          temp="${GITHUB_WORKFLOW_REF%@*}"
+          WORKFLOW_FILE=".github${temp##*/.github}"
           ./actionlint -color "$WORKFLOW_FILE"
 
       - name: Set up Python 3.13
