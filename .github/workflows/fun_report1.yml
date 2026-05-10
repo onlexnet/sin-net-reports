@@ -82,26 +82,30 @@ jobs:
     environment: PRD01
     env:
       AZURE_FUNCTIONAPP_NAME: ${{ vars.ONLEXNET_SINNET_PRD01_FUNCTION_REPORT_NAME }}
-      AZURE_FUNCTIONAPP_PACKAGE_PATH: 'fun_report1'       # set this to the path to your function app project, defaults to the repository root
+      AZURE_FUNCTIONAPP_PACKAGE_PATH: 'fun_report1'
       PYTHON_VERSION: '3.13'
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install app dependencies into package
+        working-directory: fun_report1
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt --target=".python_packages/lib/site-packages"
+
       - name: Log in to Azure
         uses: azure/login@v2
         with:
-          creds: '{"clientId":"${{ secrets.ONLEXNET_INFRA_CLIENT_ID }}","clientSecret":"${{ secrets.ONLEXNET_INFRA_SECRET }}","subscriptionId":"${{ secrets.ONLEXNET_SINNET_PRD01_SUBSCRIPTION_ID }}","tenantId":"${{ secrets.ONLEXNET_TENANT_ID }}"}'
+          creds: '{"clientId":"${{ secrets.ONLEXNET_INFRA_CLIENT_ID }}","clientSecret":"${{ secrets.ONLEXNET_INFRA_SECRET }}","subscriptionId":"${{ secrets.ONLEXNET_SINNET_PRD01_SUBSCRIPTION_ID }}","tenantId":"${{ secrets.ONLEXNET_INFRA_TENANT_ID }}"}'
 
-      # Deploy source code to Azure Functions with remote build
-      # scm-do-build-during-deployment: Enables remote build on Azure (required for Linux Consumption + RBAC)
-      # enable-oryx-build: Uses Oryx to install dependencies from requirements.txt on Azure side
-      # Do NOT install dependencies locally - Azure Oryx handles this automatically
-      - name: 'Run Azure Functions Action'
+      - name: Run Azure Functions Action
         uses: Azure/functions-action@v1
-        id: fa
         with:
           app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
           package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
-          scm-do-build-during-deployment: true
-          enable-oryx-build: true
