@@ -80,6 +80,10 @@ jobs:
     needs: [ Quality ]
     runs-on: ubuntu-22.04
     environment: PRD01
+    env:
+      AZURE_FUNCTIONAPP_NAME: ${{ vars.ONLEXNET_SINNET_PRD01_FUNCTION_REPORT_NAME }}
+      AZURE_FUNCTIONAPP_PACKAGE_PATH: 'fun_report1'       # set this to the path to your function app project, defaults to the repository root
+      PYTHON_VERSION: '3.13'
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -89,8 +93,25 @@ jobs:
         with:
           creds: '{"clientId":"${{ secrets.ONLEXNET_INFRA_CLIENT_ID }}","clientSecret":"${{ secrets.ONLEXNET_INFRA_SECRET }}","subscriptionId":"${{ secrets.ONLEXNET_SINNET_PRD01_SUBSCRIPTION_ID }}","tenantId":"${{ secrets.ONLEXNET_TENANT_ID }}"}'
 
-      - name: Deploy Azure Function App
-        uses: Azure/functions-action@v1
+      - name: Setup Python ${{ env.PYTHON_VERSION }} Environment
+        uses: actions/setup-python@v4
         with:
-          app-name: ${{ vars.ONLEXNET_SINNET_PRD01_FUNCTION_REPORT_NAME }}
-          package: fun_report1
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: 'Resolve Project Dependencies Using Pip'
+        shell: bash
+        working-directory: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
+        run: |
+          pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt --target=".python_packages/lib/site-packages"
+          popd
+
+      - name: 'Run Azure Functions Action'
+        uses: Azure/functions-action@v1
+        id: fa
+        with:
+          app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
+          package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
+          scm-do-build-during-deployment: true
+          enable-oryx-build: true
