@@ -100,7 +100,6 @@ jobs:
 
       - name: 'Resolve Project Dependencies Using Pip'
         shell: bash
-        working-directory: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
         run: |
           pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
           python -m pip install --upgrade pip
