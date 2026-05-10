@@ -28,7 +28,6 @@ Prerequisites:
 Commands:
 
 ```bash
-cd app_raport1
 python3.13 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
