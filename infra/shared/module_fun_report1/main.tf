@@ -15,41 +15,41 @@ resource "azurerm_service_plan" "function" {
   resource_group_name = var.resource_group.name
   location            = var.resource_group.location
   os_type             = "Linux"
-  sku_name            = "Y1"
+  sku_name            = "FC1"
 
   tags = {
     environment = var.environment_name
   }
 }
 
-resource "azurerm_linux_function_app" "function" {
-  name                       = "${var.application_name}-${var.environment_name}-report1-fn"
-  resource_group_name        = var.resource_group.name
-  location                   = var.resource_group.location
-  service_plan_id            = azurerm_service_plan.function.id
-  storage_account_name       = azurerm_storage_account.function.name
-  storage_account_access_key = azurerm_storage_account.function.primary_access_key
-  https_only                 = true
+resource "azurerm_storage_container" "deployments" {
+  name                  = "app-package-${lower("${var.application_name}${var.environment_name}report1")}"
+  storage_account_id    = azurerm_storage_account.function.id
+  container_access_type = "private"
+}
 
-  functions_extension_version = "~4"
+resource "azurerm_function_app_flex_consumption" "function" {
+  name                = "${var.application_name}-${var.environment_name}-report1-fn"
+  resource_group_name = var.resource_group.name
+  location            = var.resource_group.location
+  service_plan_id     = azurerm_service_plan.function.id
+
+  runtime_name                  = "python"
+  runtime_version               = var.python_version
+  storage_container_type        = "blobContainer"
+  storage_container_endpoint    = azurerm_storage_container.deployments.id
+  storage_authentication_type   = "SystemAssignedIdentity"
+
+  site_config {}
+
+  app_settings = {
+    "AzureWebJobsStorage__accountName"      = azurerm_storage_account.function.name
+    "WEBSITE_RUN_FROM_PACKAGE"              = "1"
+    "SCM_DO_BUILD_DURING_DEPLOYMENT"        = "true"
+  }
 
   identity {
     type = "SystemAssigned"
-  }
-
-  site_config {
-    application_stack {
-      python_version = var.python_version
-    }
-
-    ftps_state = "Disabled"
-  }
-
-  app_settings = {
-    FUNCTIONS_WORKER_RUNTIME       = "python"
-    FUNCTIONS_EXTENSION_VERSION    = "~4"
-    WEBSITE_RUN_FROM_PACKAGE       = "1"
-    SCM_DO_BUILD_DURING_DEPLOYMENT = "false"
   }
 
   tags = {
