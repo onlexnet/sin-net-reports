@@ -23,6 +23,7 @@ Minimal Azure Functions (Python v2) scaffold for the first public endpoint set.
 Prerequisites:
 - Python 3.13
 - Azure Functions Core Tools v4 (`func` command)
+  install: *npm install -g azure-functions-core-tools@4 --unsafe-perm true*
 
 Commands:
 
