@@ -6,6 +6,12 @@ concurrency:
 
 on:
   workflow_dispatch:
+    inputs:
+      deploy:
+        description: 'Run deploy to PRD01'
+        required: false
+        default: true
+        type: boolean
   push:
     branches: [ main ]
     paths:
@@ -76,7 +82,7 @@ jobs:
 
   Deploy:
     name: Deploy to PRD01
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.deploy == true))
     needs: [ Quality ]
     runs-on: ubuntu-22.04
     environment: PRD01
