@@ -64,3 +64,13 @@ resource "azurerm_function_app_flex_consumption" "function" {
     environment = var.environment_name
   }
 }
+
+resource "azurerm_role_assignment" "function_storage_deployments" {
+  scope                = "${azurerm_storage_account.function.id}/blobServices/default/containers/${azurerm_storage_container.deployments.name}"
+  role_definition_name = "Storage Blob Data Contributor"
+  principal_id         = azurerm_function_app_flex_consumption.function.identity[0].principal_id
+
+  depends_on = [
+    azurerm_function_app_flex_consumption.function,
+  ]
+}
