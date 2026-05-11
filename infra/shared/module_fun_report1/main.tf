@@ -65,9 +65,22 @@ resource "azurerm_function_app_flex_consumption" "function" {
   }
 }
 
-resource "azurerm_role_assignment" "function_storage_deployments" {
-  scope                = "${azurerm_storage_account.function.id}/blobServices/default/containers/${azurerm_storage_container.deployments.name}"
-  role_definition_name = "Storage Blob Data Contributor"
+# resource "azurerm_role_assignment" "function_storage_deployments" {
+#   scope                = "${azurerm_storage_account.function.id}/blobServices/default/containers/${azurerm_storage_container.deployments.name}"
+#   role_definition_name = "Storage Blob Data Contributor"
+#   principal_id         = azurerm_function_app_flex_consumption.function.identity[0].principal_id
+
+#   depends_on = [
+#     azurerm_function_app_flex_consumption.function,
+#   ]
+# }
+
+# Required for AzureWebJobsStorage with identity-based auth on Flex Consumption.
+# Without account-scoped access, Kudu [StorageAccessibleCheck] fails during deploy
+# with a misleading "MSITokenUnavailableException".
+resource "azurerm_role_assignment" "function_storage_account" {
+  scope                = azurerm_storage_account.function.id
+  role_definition_name = "Storage Blob Data Owner"
   principal_id         = azurerm_function_app_flex_consumption.function.identity[0].principal_id
 
   depends_on = [
