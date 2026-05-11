@@ -47,7 +47,7 @@ resource "azurerm_function_app_flex_consumption" "function" {
   runtime_name                = "python"
   runtime_version             = var.python_version
   storage_container_type      = "blobContainer"
-  storage_container_endpoint  = azurerm_storage_container.deployments.id
+  storage_container_endpoint  = "${azurerm_storage_account.function.primary_blob_endpoint}${azurerm_storage_container.deployments.name}"
   storage_authentication_type = "SystemAssignedIdentity"
 
   site_config {}
