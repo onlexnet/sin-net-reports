@@ -28,17 +28,27 @@ resource "azurerm_storage_container" "deployments" {
   container_access_type = "private"
 }
 
+resource "azurerm_role_assignment" "onlex_infra_storage" {
+  scope                = azurerm_storage_account.function.id
+  role_definition_name = "Storage Blob Data Contributor"
+  principal_id         = data.azuread_service_principal.onlex_infra.object_id
+}
+
+data "azuread_service_principal" "onlex_infra" {
+  display_name = "onlex-infra"
+}
+
 resource "azurerm_function_app_flex_consumption" "function" {
   name                = "${var.application_name}-${var.environment_name}-report1-fn"
   resource_group_name = var.resource_group.name
   location            = var.resource_group.location
   service_plan_id     = azurerm_service_plan.function.id
 
-  runtime_name                  = "python"
-  runtime_version               = var.python_version
-  storage_container_type        = "blobContainer"
-  storage_container_endpoint    = azurerm_storage_container.deployments.id
-  storage_authentication_type   = "SystemAssignedIdentity"
+  runtime_name                = "python"
+  runtime_version             = var.python_version
+  storage_container_type      = "blobContainer"
+  storage_container_endpoint  = azurerm_storage_container.deployments.id
+  storage_authentication_type = "SystemAssignedIdentity"
 
   site_config {}
 
