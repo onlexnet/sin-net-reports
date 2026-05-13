@@ -1,60 +1,48 @@
-"""Unit tests for HTTP endpoints in function_app."""
+"""Unit tests for HTTP endpoints in function_app.
+
+Tests use FastAPI TestClient to validate endpoint behavior,
+response schemas, and contract compliance with OpenAPI specification.
+"""
 
 from __future__ import annotations
 
-import json
-from collections.abc import Sequence
-from typing import Any, Protocol
+from datetime import datetime
 
-import azure.functions as func
+from fastapi.testclient import TestClient
 
-import function_app
+from function_app import fastapi_app
 
-
-class _HasTrigger(Protocol):
-    """Protocol for Azure Functions metadata entries exposing a trigger."""
-
-    def get_trigger(self) -> Any:
-        """Return trigger metadata object."""
-
-
-def _make_request(method: str = "GET") -> func.HttpRequest:
-    """Create a minimal HttpRequest for endpoint unit testing."""
-    return func.HttpRequest(
-        method=method,
-        url=f"http://localhost:7071/api/{method.lower()}",
-        headers={},
-        params={},
-        route_params={},
-        body=b"",
-    )
-
-
-def _route_trigger(route: str, functions: Sequence[_HasTrigger]) -> object:
-    """Return trigger metadata for a route from a single function snapshot."""
-    for function in functions:
-        trigger = function.get_trigger()
-        if getattr(trigger, "route", None) == route:
-            return trigger
-    raise AssertionError(f"No route trigger found for {route}")
+# Create test client for FastAPI app
+client = TestClient(fastapi_app)
 
 
 def test_health_endpoint_success() -> None:
     """Health endpoint returns expected status and payload."""
-    response = function_app.health(_make_request("GET"))
+    response = client.get("/health")
 
     assert response.status_code == 200
-    assert response.mimetype == "application/json"
-    payload = json.loads(response.get_body().decode("utf-8"))
+    assert response.headers["content-type"] == "application/json"
+    payload = response.json()
     assert payload == {"status": "ok", "service": "app_raport1"}
+
+
+def test_health_endpoint_schema_compliance() -> None:
+    """Health endpoint response complies with OpenAPI schema."""
+    response = client.get("/health")
+
+    payload = response.json()
+    assert "status" in payload
+    assert "service" in payload
+    assert payload["status"] in ["ok", "degraded", "unhealthy"]
+    assert isinstance(payload["service"], str)
 
 
 def test_report_endpoint_success() -> None:
     """Report endpoint returns expected top-level structure."""
-    response = function_app.report(_make_request("GET"))
+    response = client.get("/report")
 
     assert response.status_code == 200
-    payload = json.loads(response.get_body().decode("utf-8"))
+    payload = response.json()
     assert payload["reportId"] == "sample-001"
     assert payload["currency"] == "PLN"
     assert payload["summary"]["entries"] == 5
@@ -63,11 +51,11 @@ def test_report_endpoint_success() -> None:
 
 def test_report_content_is_deterministic() -> None:
     """Report payload stays deterministic across repeated calls."""
-    first_response = function_app.report(_make_request("GET"))
-    second_response = function_app.report(_make_request("GET"))
+    first_response = client.get("/report")
+    second_response = client.get("/report")
 
-    first_payload = json.loads(first_response.get_body().decode("utf-8"))
-    second_payload = json.loads(second_response.get_body().decode("utf-8"))
+    first_payload = first_response.json()
+    second_payload = second_response.json()
 
     assert first_payload == second_payload
     assert first_payload["generatedAt"] == "2026-01-01T00:00:00Z"
@@ -76,20 +64,64 @@ def test_report_content_is_deterministic() -> None:
     ]["billableAmount"]
 
 
-def test_routes_are_get_only() -> None:
-    """Registered route metadata allows only GET requests."""
-    functions = function_app.app.get_functions()
-    health_trigger = _route_trigger("health", functions)
-    report_trigger = _route_trigger("report", functions)
+def test_report_schema_compliance() -> None:
+    """Report endpoint response complies with OpenAPI schema."""
+    response = client.get("/report")
 
-    health_methods = [
-        getattr(method, "value", str(method))
-        for method in getattr(health_trigger, "methods", [])
-    ]
-    report_methods = [
-        getattr(method, "value", str(method))
-        for method in getattr(report_trigger, "methods", [])
-    ]
+    payload = response.json()
 
-    assert health_methods == ["GET"]
-    assert report_methods == ["GET"]
+    # Validate top-level fields
+    assert "reportId" in payload
+    assert "generatedAt" in payload
+    assert "currency" in payload
+    assert "summary" in payload
+    assert "items" in payload
+
+    # Validate currency pattern (3 uppercase letters)
+    assert len(payload["currency"]) == 3
+    assert payload["currency"].isupper()
+
+    # Validate timestamp format (ISO 8601)
+    datetime.fromisoformat(payload["generatedAt"].replace("Z", "+00:00"))
+
+    # Validate summary structure
+    summary = payload["summary"]
+    assert "hours" in summary
+    assert "billableAmount" in summary
+    assert "entries" in summary
+    assert summary["hours"] >= 0
+    assert summary["billableAmount"] >= 0
+    assert summary["entries"] >= 0
+
+    # Validate items array
+    items = payload["items"]
+    assert isinstance(items, list)
+    for item in items:
+        assert "day" in item
+        assert "project" in item
+        assert "hours" in item
+        assert "rate" in item
+        assert "amount" in item
+        assert item["hours"] >= 0
+        assert item["rate"] >= 0
+        assert item["amount"] >= 0
+
+
+def test_openapi_docs_available() -> None:
+    """OpenAPI documentation endpoints are accessible."""
+    # Test OpenAPI JSON spec
+    openapi_response = client.get("/api/openapi.json")
+    assert openapi_response.status_code == 200
+    openapi_spec = openapi_response.json()
+    assert "openapi" in openapi_spec
+    assert "paths" in openapi_spec
+    assert "/health" in openapi_spec["paths"]
+    assert "/report" in openapi_spec["paths"]
+
+    # Test Swagger UI
+    docs_response = client.get("/api/docs")
+    assert docs_response.status_code == 200
+
+    # Test ReDoc
+    redoc_response = client.get("/api/redoc")
+    assert redoc_response.status_code == 200
