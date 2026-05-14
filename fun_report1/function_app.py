@@ -10,6 +10,7 @@ from __future__ import annotations
 from datetime import UTC, datetime
 
 import azure.functions as func
+from azure.functions import AsgiMiddleware
 from fastapi import FastAPI
 
 from models_generated import (
@@ -109,7 +110,7 @@ async def report() -> ReportResponse:
 
 # Azure Functions HTTP trigger bridging requests to FastAPI.
 app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
-asgi_middleware = func.AsgiMiddleware(fastapi_app)
+asgi_middleware: AsgiMiddleware = AsgiMiddleware(fastapi_app)
 
 
 @app.function_name(name="http_app_func")
