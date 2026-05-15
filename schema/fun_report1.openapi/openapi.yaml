@@ -1,0 +1,191 @@
+openapi: 3.0.3
+info:
+  title: Fun Report1 API
+  description: |
+    Azure Function app providing health checks and sample report generation.
+    This service is part of the SinNet Reports microservices architecture.
+  version: 1.0.0
+  contact:
+    name: SinNet Reports Team
+servers:
+  - url: http://localhost:7071/api
+    description: Local development
+  - url: https://fun-report1-prd01.azurewebsites.net/api
+    description: Production (Azure Functions)
+
+paths:
+  /health:
+    get:
+      operationId: getHealth
+      summary: Health check endpoint
+      description: Returns service health status for smoke checks and monitoring.
+      tags:
+        - Health
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+              examples:
+                success:
+                  value:
+                    status: ok
+                    service: app_raport1
+
+  /report:
+    get:
+      operationId: getReport
+      summary: Generate sample report
+      description: |
+        Returns a deterministic sample report for manual verification and testing.
+        The report contains billable hours, amounts, and detailed line items.
+      tags:
+        - Reports
+      responses:
+        '200':
+          description: Report generated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportResponse'
+              examples:
+                sampleReport:
+                  value:
+                    reportId: sample-001
+                    generatedAt: '2026-01-01T00:00:00Z'
+                    currency: PLN
+                    summary:
+                      hours: 40.0
+                      billableAmount: 5000.0
+                      entries: 5
+                    items:
+                      - day: '2026-01-05'
+                        project: Internal
+                        hours: 8.0
+                        rate: 125.0
+                        amount: 1000.0
+                      - day: '2026-01-06'
+                        project: Internal
+                        hours: 8.0
+                        rate: 125.0
+                        amount: 1000.0
+
+components:
+  schemas:
+    HealthResponse:
+      type: object
+      required:
+        - status
+        - service
+      properties:
+        status:
+          type: string
+          enum: [ok, degraded, unhealthy]
+          description: Current health status of the service
+          example: ok
+        service:
+          type: string
+          description: Service identifier
+          example: app_raport1
+
+    ReportResponse:
+      type: object
+      required:
+        - reportId
+        - generatedAt
+        - currency
+        - summary
+        - items
+      properties:
+        reportId:
+          type: string
+          description: Unique identifier for the report
+          example: sample-001
+        generatedAt:
+          type: string
+          format: date-time
+          description: ISO 8601 timestamp when the report was generated
+          example: '2026-01-01T00:00:00Z'
+        currency:
+          type: string
+          description: Currency code for all monetary amounts
+          example: PLN
+          pattern: '^[A-Z]{3}$'
+        summary:
+          $ref: '#/components/schemas/ReportSummary'
+        items:
+          type: array
+          description: Individual report line items
+          items:
+            $ref: '#/components/schemas/ReportItem'
+          minItems: 0
+
+    ReportSummary:
+      type: object
+      required:
+        - hours
+        - billableAmount
+        - entries
+      properties:
+        hours:
+          type: number
+          format: double
+          description: Total hours across all entries
+          example: 40.0
+          minimum: 0
+        billableAmount:
+          type: number
+          format: double
+          description: Total billable amount in the report currency
+          example: 5000.0
+          minimum: 0
+        entries:
+          type: integer
+          description: Count of line items in the report
+          example: 5
+          minimum: 0
+
+    ReportItem:
+      type: object
+      required:
+        - day
+        - project
+        - hours
+        - rate
+        - amount
+      properties:
+        day:
+          type: string
+          format: date
+          description: Date of the time entry (YYYY-MM-DD)
+          example: '2026-01-05'
+        project:
+          type: string
+          description: Project name or identifier
+          example: Internal
+        hours:
+          type: number
+          format: double
+          description: Hours worked on this day/project
+          example: 8.0
+          minimum: 0
+        rate:
+          type: number
+          format: double
+          description: Hourly rate for this entry
+          example: 125.0
+          minimum: 0
+        amount:
+          type: number
+          format: double
+          description: Calculated amount (hours × rate)
+          example: 1000.0
+          minimum: 0
+
+tags:
+  - name: Health
+    description: Service health and status endpoints
+  - name: Reports
+    description: Report generation endpoints

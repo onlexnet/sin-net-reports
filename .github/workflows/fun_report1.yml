@@ -62,7 +62,7 @@ jobs:
 
       - name: Mypy
         working-directory: fun_report1
-        run: mypy --config-file mypy.ini
+        run: mypy
 
       - name: Pytest with coverage and JUnit
         working-directory: fun_report1

@@ -56,7 +56,8 @@
 				"github.vscode-github-actions",
 				"ms-python.python",
 				"Orta.vscode-jest",
-				"matangover.mypy"
+				"matangover.mypy",
+				"ms-vscode.vscode-chat-customizations-evaluations"
 			],
             "settings": {
                 "terraform.languageServer": {

@@ -9,5 +9,8 @@
     }
   },
   "terminal.integrated.defaultProfile.linux": "bash (auto venv)",
-  "python.terminal.activateEnvironment": false
+  "python.terminal.activateEnvironment": false,
+  "chat.tools.terminal.autoApprove": {
+    ".venv/bin/mypy": true
+  }
 }
