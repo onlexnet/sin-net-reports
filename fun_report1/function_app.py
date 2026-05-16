@@ -35,7 +35,7 @@ fastapi_app = FastAPI(
 
 
 @fastapi_app.get(
-    "/health",
+    "/api/health",
     response_model=HealthResponse,
     tags=["Health"],
     summary="Health check endpoint",
@@ -47,7 +47,7 @@ async def health() -> HealthResponse:
 
 
 @fastapi_app.get(
-    "/report",
+    "/api/report",
     response_model=ReportResponse,
     tags=["Reports"],
     summary="Generate sample report",

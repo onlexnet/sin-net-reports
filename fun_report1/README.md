@@ -152,7 +152,7 @@ python scripts/check_generated.py
 pytest --junitxml=reports/junit.xml --cov-report=xml:reports/coverage.xml
 
 # 4. Type checking
-mypy --config-file mypy.ini
+mypy
 
 # 5. Linting
 ruff check .
