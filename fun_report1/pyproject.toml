@@ -1,5 +1,5 @@
 [tool.pytest.ini_options]
-addopts = "-q --cov=function_app --cov-config=.coveragerc --cov-report=term-missing"
+addopts = "-q --cov=src --cov-config=.coveragerc --cov-report=term-missing"
 testpaths = ["tests"]
 python_files = ["test_*.py"]
 
@@ -22,7 +22,7 @@ strict = true
 warn_unused_configs = true
 show_error_codes = true
 pretty = true
-files = ["function_app.py", "tests"]
+files = ["function_app.py", "src", "tests"]
 mypy_path = "typings"
 disallow_untyped_defs = true
 disallow_untyped_calls = true
