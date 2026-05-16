@@ -18,7 +18,7 @@ def main() -> int:
     schema_path = (
         project_root.parent / "schema" / "fun_report1.openapi" / "openapi.yaml"
     )
-    output_path = project_root / "models_generated.py"
+    output_path = project_root / "src" / "models_generated.py"
 
     if not schema_path.exists():
         print(f"❌ Schema file not found: {schema_path}", file=sys.stderr)

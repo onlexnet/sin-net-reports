@@ -42,7 +42,7 @@ def main() -> int:
         / "fun_report1.openapi"
         / "openapi.yaml"
     )
-    current_models = project_root / "models_generated.py"
+    current_models = project_root / "src" / "models_generated.py"
 
     if not schema_path.exists():
         print(f"❌ Schema file not found: {schema_path}", file=sys.stderr)

@@ -10,7 +10,7 @@ from datetime import datetime
 
 from fastapi.testclient import TestClient
 
-from function_app import fastapi_app
+from src.app import fastapi_app
 
 # Create test client for FastAPI app
 client = TestClient(fastapi_app)
@@ -18,7 +18,7 @@ client = TestClient(fastapi_app)
 
 def test_health_endpoint_success() -> None:
     """Health endpoint returns expected status and payload."""
-    response = client.get("/health")
+    response = client.get("/api/health")
 
     assert response.status_code == 200
     assert response.headers["content-type"] == "application/json"
@@ -28,7 +28,7 @@ def test_health_endpoint_success() -> None:
 
 def test_health_endpoint_schema_compliance() -> None:
     """Health endpoint response complies with OpenAPI schema."""
-    response = client.get("/health")
+    response = client.get("/api/health")
 
     payload = response.json()
     assert "status" in payload
@@ -39,7 +39,7 @@ def test_health_endpoint_schema_compliance() -> None:
 
 def test_report_endpoint_success() -> None:
     """Report endpoint returns expected top-level structure."""
-    response = client.get("/report")
+    response = client.get("/api/report")
 
     assert response.status_code == 200
     payload = response.json()
@@ -51,8 +51,8 @@ def test_report_endpoint_success() -> None:
 
 def test_report_content_is_deterministic() -> None:
     """Report payload stays deterministic across repeated calls."""
-    first_response = client.get("/report")
-    second_response = client.get("/report")
+    first_response = client.get("/api/report")
+    second_response = client.get("/api/report")
 
     first_payload = first_response.json()
     second_payload = second_response.json()
@@ -66,7 +66,7 @@ def test_report_content_is_deterministic() -> None:
 
 def test_report_schema_compliance() -> None:
     """Report endpoint response complies with OpenAPI schema."""
-    response = client.get("/report")
+    response = client.get("/api/report")
 
     payload = response.json()
 
@@ -115,8 +115,8 @@ def test_openapi_docs_available() -> None:
     openapi_spec = openapi_response.json()
     assert "openapi" in openapi_spec
     assert "paths" in openapi_spec
-    assert "/health" in openapi_spec["paths"]
-    assert "/report" in openapi_spec["paths"]
+    assert "/api/health" in openapi_spec["paths"]
+    assert "/api/report" in openapi_spec["paths"]
 
     # Test Swagger UI
     docs_response = client.get("/api/docs")
