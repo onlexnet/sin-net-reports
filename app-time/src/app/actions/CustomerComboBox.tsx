@@ -10,6 +10,62 @@ export interface CustomerComboBoxProps {
   useListCustomersQuery: typeof useListCustomersQuery
 }
 
+type OptionType = { key: string, text: string }
+type SearchableOptionType = OptionType & { secretsEx: any, rank: number }
+
+export interface SearchableCustomerItem {
+  id: { entityId: string },
+  data: { customerName?: string | null },
+  secretsEx?: any,
+}
+
+export const rankAndFilterCustomers = (
+  items: SearchableCustomerItem[] | undefined,
+  partName: string
+): OptionType[] => {
+  const normalizedQuery = partName.trim().toUpperCase();
+
+  const getRank = (customerName: string): number | undefined => {
+    if (!normalizedQuery) return undefined;
+
+    const normalizedName = customerName.toUpperCase();
+    if (normalizedName.startsWith(normalizedQuery)) return 1;
+
+    const words = normalizedName.split(/\s+/).filter(Boolean);
+    if (words.some(word => word.startsWith(normalizedQuery))) return 2;
+
+    if (normalizedName.includes(normalizedQuery)) return 3;
+
+    return undefined;
+  };
+
+  return _.chain(items)
+    .map(it => {
+      const text = it.data.customerName ?? "";
+      return {
+        key: it.id.entityId,
+        text,
+        secretsEx: it.secretsEx,
+        rank: getRank(text) ?? 4,
+      } as SearchableOptionType;
+    })
+    .filter(it => {
+      if (!normalizedQuery) return true;
+
+      return it.rank <= 3;
+    })
+    .orderBy(
+      [
+        it => normalizedQuery ? it.rank : 0,
+        it => it.text.toUpperCase(),
+        it => it.key
+      ],
+      ["asc", "asc", "asc"]
+    )
+    .map(it => ({ key: it.key, text: it.text }))
+    .value();
+}
+
 
 /**
  * Allows to find customer based on part of name of value from secret 'Portal świadczeniodawcy'
@@ -17,8 +73,6 @@ export interface CustomerComboBoxProps {
  * @returns 
  */
 export const CustomerComboBox: React.FC<CustomerComboBoxProps> = props => {
-
-  type OptionType = { key: string, text: string }
   const { useListCustomersQuery: listCustomers } = props;
 
   const [filteredCustomers, setFilteredCustomers] = useState<OptionType[]>([])
@@ -31,23 +85,7 @@ export const CustomerComboBox: React.FC<CustomerComboBoxProps> = props => {
 })
   const items = data?.Customers.list;
 
-  const filteredElements = (partName: string) => {
-    return _.chain(items)
-      .map(it => ({ key: it.id.entityId, text: it.data.customerName, secretsEx: it.secretsEx }))
-      .filter(it => {
-        if (!partName) return true;
-
-        var customerName = it.text;
-        if (customerName.toUpperCase().indexOf(partName.toUpperCase()) !== -1) return true;
-
-        const specialAuth = _.chain(it.secretsEx).filter(o => o.location === 'Portal świadczeniodawcy').first().value();
-        if (specialAuth && specialAuth.entityCode?.toUpperCase().indexOf(partName.toUpperCase()) !== -1) return true;
-
-        return false;
-      })
-      .map(it => it as OptionType)
-      .value()
-  }
+  const filteredElements = (partName: string) => rankAndFilterCustomers(items, partName)
 
   const renderAfterLostLoad = useRef(0);
   if (renderAfterLostLoad.current === 0 && data) {
