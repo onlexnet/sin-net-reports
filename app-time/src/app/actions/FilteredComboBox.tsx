@@ -2,6 +2,8 @@ import React, { useCallback, useState } from "react";
 import { Input } from "components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "components/ui/select";
 
+const escapeRegExp = (value: string): string => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
 export interface FilteredComboBoxProps {
   /** Key value of just selected option to allow select proper element */
   selectedKey?: string,
@@ -10,6 +12,26 @@ export interface FilteredComboBoxProps {
   onChange: (key?: string) => void,
   onSearch: (value: string) => void,
 }
+
+export const renderHighlightedText = (text: string, searchText: string): React.ReactNode => {
+  const query = searchText.trim();
+  if (!query) {
+    return text;
+  }
+
+  const safeQuery = escapeRegExp(query);
+  const parts = text.split(new RegExp(`(${safeQuery})`, "ig"));
+
+  return (
+    <>
+      {parts.map((part, index) => (
+        index % 2 === 1
+          ? <span key={`${part}-${index}`} className="font-medium bg-accent/30 rounded-sm px-0.5">{part}</span>
+          : <React.Fragment key={`${part}-${index}`}>{part}</React.Fragment>
+      ))}
+    </>
+  );
+};
 
 /**
  * Simplified version of ComboBox used in selection key-value options.
@@ -27,6 +49,10 @@ export const FilteredComboBox: React.FC<FilteredComboBoxProps> = props => {
     onSearch(value);
   }, [onSearch])
 
+  const renderItemText = useCallback((text: string): React.ReactNode => {
+    return renderHighlightedText(text, searchText);
+  }, [searchText]);
+
   return (
       <div className="w-full flex flex-col gap-2">
         <Input
@@ -43,7 +69,7 @@ export const FilteredComboBox: React.FC<FilteredComboBoxProps> = props => {
           </SelectTrigger>
           <SelectContent>
             {items.map(item => (
-              <SelectItem key={item.key} value={item.key}>{item.text}</SelectItem>
+              <SelectItem key={item.key} value={item.key}>{renderItemText(item.text)}</SelectItem>
             ))}
           </SelectContent>
         </Select>

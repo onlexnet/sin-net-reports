@@ -60,8 +60,8 @@ export const CustomersView: React.FC<CustomersProps> = (props) => {
     });
 
     return (
-        <PageContentContainer>
-            <div className="w-full space-y-4">
+        <PageContentContainer className="h-full">
+            <div className="flex h-full min-h-0 w-full flex-col gap-4">
                 <Button className="w-full" onClick={() => props.onNewClientCommand()}>
                     Dodaj nowego klienta
                 </Button>
@@ -71,8 +71,8 @@ export const CustomersView: React.FC<CustomersProps> = (props) => {
                     value={searchPhrase}
                     onChange={e => setSearchPhrase(e.target.value)}
                 />
-                <div className="w-full overflow-y-auto" style={{ maxHeight: "calc(100vh - 250px)" }}>
-                    <TanStackTableView table={table} showPagination={false} className="w-full" />
+                <div className="min-h-0 w-full flex-1 overflow-y-auto">
+                    <TanStackTableView table={table} showPagination={false} className="h-full w-full" />
                 </div>
             </div>
         </PageContentContainer>
