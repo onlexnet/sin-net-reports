@@ -26,7 +26,7 @@
 		"ghcr.io/devcontainers/features/python:1": {
 			"version": "3.13"
 		},
-		"ghcr.io/devcontainers/features/azure-cli:1": {
+		"ghcr.io/devcontainers/features/azure-cli:": {
 			"installUsingPython": true,
 			"version": "latest"
 		},
