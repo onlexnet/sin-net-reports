@@ -35,6 +35,7 @@ describe("rankAndFilterCustomers", () => {
       "g2-a",
       "g2-b",
       "g3-a",
+      "fallback",
       "g3-b",
     ]);
   });
@@ -53,7 +54,7 @@ describe("rankAndFilterCustomers", () => {
 
     expect(result.slice(0, 2).map(o => o.text)).toEqual(["Poz Auto", "POZ Centrum"]);
     expect(result.slice(2, 4).map(o => o.text)).toEqual(["Alfa Poznan", "Beta Pozor"]);
-    expect(result.slice(4, 6).map(o => o.text)).toEqual(["ApoZnak", "XxpoZyy"]);
+    expect(result.slice(4, 7).map(o => o.text)).toEqual(["ApoZnak", "Klient Bez Dopasowania", "XxpoZyy"]);
   });
 
   it("keeps empty query behavior sane by returning all items sorted ascending", () => {
@@ -74,10 +75,32 @@ describe("rankAndFilterCustomers", () => {
     ]);
   });
 
-  it("does not include non-name matches for non-empty query", () => {
+  it("includes customer matched by NFZ code when query matches code", () => {
     const result = rankAndFilterCustomers(items, "poz");
 
-    expect(result.some(o => o.key === "fallback")).toBe(false);
+    expect(result.some(o => o.key === "fallback")).toBe(true);
     expect(result.some(o => o.key === "excluded")).toBe(false);
+  });
+
+  it("finds customer by NFZ code prefix", () => {
+    const result = rankAndFilterCustomers(items, "AA-POZ");
+
+    expect(result.map(o => o.key)).toContain("fallback");
+    expect(result.some(o => o.key === "excluded")).toBe(false);
+  });
+
+  it("returns code-matched customer with rank 3 (contains match)", () => {
+    const codeOnlyItems: SearchableCustomerItem[] = [
+      customer("code-match", "Klient Bez Dopasowania", [
+        { location: "Portal \u015bwiadczeniodawcy", entityCode: "AA-POZ-99" },
+      ]),
+      customer("name-match", "POZ Centrum"),
+    ];
+
+    const result = rankAndFilterCustomers(codeOnlyItems, "POZ");
+
+    // name-match starts with POZ (rank 1), code-match contains POZ in code (rank 3)
+    expect(result[0].key).toBe("name-match");
+    expect(result[1].key).toBe("code-match");
   });
 });
