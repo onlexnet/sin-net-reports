@@ -112,7 +112,7 @@ export const CustomerComboBox: React.FC<CustomerComboBoxProps> = props => {
   }, [highlightedIndex]);
 
   const handleFocus = () => {
-    setInputValue(selectedName);
+    setInputValue('');
     setIsOpen(true);
   };
 
