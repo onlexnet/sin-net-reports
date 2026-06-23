@@ -1,96 +1,96 @@
-# TKT-00 — Baseline techniczny i smoke scope
+# TKT-00 — Technical Baseline and Smoke Scope
 
-Data: 2026-03-18
+Date: 2026-03-18
 Repo: `static-webapp-time`
 
-## 1) Baseline techniczny
+## 1) Technical baseline
 
-### Środowisko
+### Environment
 - Node.js: `v22.12.0`
 - npm: `10.9.0`
 
-### Instalacja zależności
-- Komenda: `npm ci`
-- Status: ✅ sukces
-- Uwagi:
-  - Wystąpiły ostrzeżenia deprecacji pakietów transytywnych.
-  - `npm audit`: 51 podatności (16 low, 9 moderate, 25 high, 1 critical) — poza zakresem TKT-00.
+### Dependency installation
+- Command: `npm ci`
+- Status: ✅ success
+- Notes:
+  - Deprecation warnings from transitive packages appeared.
+  - `npm audit`: 51 vulnerabilities (16 low, 9 moderate, 25 high, 1 critical) — out of scope for TKT-00.
 
 ### Build baseline
-- Komenda: `npm run build`
-- Status: ✅ sukces
-- Uwagi:
-  - Build kończy się ostrzeżeniami ESLint o nieużywanych zmiennych/importach.
-  - Ostrzeżenia source-map dla zależności (`graphql-request`, `totp-generator`).
-  - Ostrzeżenie CRA/Babel o `@babel/plugin-proposal-private-property-in-object` (pakiet pośredni).
-  - Artefakt build wygenerowany poprawnie.
+- Command: `npm run build`
+- Status: ✅ success
+- Notes:
+  - Build completes with ESLint warnings about unused variables/imports.
+  - Source-map warnings for dependencies (`graphql-request`, `totp-generator`).
+  - CRA/Babel warning about `@babel/plugin-proposal-private-property-in-object` (transitive package).
+  - Build artefact generated correctly.
 
 ### Test baseline
-- Komenda: `CI=true npm test -- --watch=false`
-- Status: ✅ sukces
-- Wynik:
+- Command: `CI=true npm test -- --watch=false`
+- Status: ✅ success
+- Result:
   - Test Suites: `7 passed, 7 total`
   - Tests: `20 passed, 20 total`
-- Uwagi:
-  - Pojawia się ostrzeżenie o worker process force-exit (możliwy test leak/open handles), bez wpływu na status PASS.
-  - Pojawiają się deprecation warnings modułu `punycode`.
+- Notes:
+  - Warning about worker process force-exit appears (possible test leak / open handles), no impact on PASS status.
+  - Deprecation warnings from the `punycode` module appear.
 
-## 2) Krytyczne ścieżki smoke (scope)
+## 2) Critical smoke paths (scope)
 
-> Cel: odtworzyć najważniejsze przepływy biznesowe po każdej fazie migracji UI.
+> Goal: reproduce the most important business flows after each UI migration phase.
 
-### Smoke-01 — Logowanie
-- Wejście: `src/app/App.tsx`, `src/app/AppInProgress.tsx`, `src/app/AppAuthenticated.tsx`, `src/app/AppTestLogin.tsx`
-- Kryterium PASS:
-  - Użytkownik przechodzi do stanu zalogowanego (MSAL lub test login).
-  - Aplikacja renderuje widok po autoryzacji bez błędów UI.
-- Status TKT-00: ⏳ do wykonania manualnego
+### Smoke-01 — Login
+- Entry points: `src/app/App.tsx`, `src/app/AppInProgress.tsx`, `src/app/AppAuthenticated.tsx`, `src/app/AppTestLogin.tsx`
+- PASS criteria:
+  - User reaches the authenticated state (MSAL or test login).
+  - Application renders the post-authorisation view without UI errors.
+- Status TKT-00: ⏳ pending manual execution
 
-### Smoke-02 — Listy/tabele (services/customers/reports)
-- Wejście: `src/services/ActionList.tsx`, `src/app/customers/Customers.tsx`, `src/app/reports/Reports.tsx`
-- Kryterium PASS:
-  - Dane list/tabel renderują się.
-  - Sortowanie/filtrowanie/paginacja (jeśli dostępne) działają bez regresji.
-- Status TKT-00: ⏳ do wykonania manualnego
+### Smoke-02 — Lists / tables (services / customers / reports)
+- Entry points: `src/services/ActionList.tsx`, `src/app/customers/Customers.tsx`, `src/app/reports/Reports.tsx`
+- PASS criteria:
+  - List/table data renders correctly.
+  - Sorting / filtering / pagination (where available) work without regression.
+- Status TKT-00: ⏳ pending manual execution
 
-### Smoke-03 — Edycja klienta
-- Wejście: `src/app/customer/CustomerView.tsx` (+ routed edit/new)
-- Kryterium PASS:
-  - Formularz ładuje dane i pozwala zapisać/edytować bez zmiany logiki.
-  - Disabled/read-only/focus navigation działają poprawnie.
-- Status TKT-00: ⏳ do wykonania manualnego
+### Smoke-03 — Customer edit
+- Entry points: `src/app/customer/CustomerView.tsx` (+ routed edit/new)
+- PASS criteria:
+  - Form loads data and allows saving/editing without logic changes.
+  - Disabled / read-only / focus navigation work correctly.
+- Status TKT-00: ⏳ pending manual execution
 
-### Smoke-04 — Raporty
-- Wejście: `src/reports/ReportsView.tsx`, `src/app/reports/Reports.tsx`
-- Kryterium PASS:
-  - Widok raportowy renderuje się poprawnie.
-  - Akcje raportowe uruchamiają się bez błędów UI.
-- Status TKT-00: ⏳ do wykonania manualnego
+### Smoke-04 — Reports
+- Entry points: `src/reports/ReportsView.tsx`, `src/app/reports/Reports.tsx`
+- PASS criteria:
+  - Report view renders correctly.
+  - Report actions execute without UI errors.
+- Status TKT-00: ⏳ pending manual execution
 
-### Smoke-05 — Pobranie pliku
-- Wejście: `src/services/ServicesDefault.tsx`, `src/api/useDownloadFile.ts`, `src/utils/fileDownloadUtils.ts`
-- Kryterium PASS:
-  - Akcja pobrania zwraca i zapisuje plik poprawnie.
-  - Obsługa błędów nie blokuje UI.
-- Status TKT-00: ⏳ do wykonania manualnego
+### Smoke-05 — File download
+- Entry points: `src/services/ServicesDefault.tsx`, `src/api/useDownloadFile.ts`, `src/utils/fileDownloadUtils.ts`
+- PASS criteria:
+  - Download action returns and saves the file correctly.
+  - Error handling does not block the UI.
+- Status TKT-00: ⏳ pending manual execution
 
-## 3) Strategia rolloutu / rollbacku
+## 3) Rollout / rollback strategy
 
 ### Rollout
-- Potwierdzone: `1 ticket = 1 PR`.
-- Kolejność: `TKT-00 -> TKT-01 -> (TKT-02 + TKT-03) -> TKT-04 -> TKT-05 -> TKT-06 -> TKT-07 -> TKT-08`.
-- Zasada: nie łączyć migracji UI z refaktorem logiki biznesowej/API.
+- Confirmed: `1 ticket = 1 PR`.
+- Order: `TKT-00 -> TKT-01 -> (TKT-02 + TKT-03) -> TKT-04 -> TKT-05 -> TKT-06 -> TKT-07 -> TKT-08`.
+- Rule: do not mix UI migration with business logic / API refactoring.
 
 ### Rollback
-- Rollback przez revert pojedynczego PR (per ticket/faza).
-- Dla ekranów krytycznych utrzymać możliwość szybkiego wycofania zmian widoku.
+- Rollback by reverting a single PR (per ticket / phase).
+- For critical screens, keep the ability to quickly revert view changes.
 
 ## 4) Exit criteria TKT-00
-- ✅ Baseline build/test uruchomiony i zapisany.
-- ✅ Scope smoke testów spisany i powiązany z entrypointami.
-- ✅ Strategia rolloutu i rollbacku zapisana.
-- ⏳ Pozostało: manualne odhaczenie smoke checklisty przez zespół (środowisko aplikacyjne).
+- ✅ Baseline build/test executed and recorded.
+- ✅ Smoke test scope written and linked to entry points.
+- ✅ Rollout and rollback strategy recorded.
+- ⏳ Remaining: manual sign-off of the smoke checklist by the team (application environment).
 
-## 5) Status gotowości do TKT-01
-- Status: ✅ **Ready for TKT-01 (technicznie)**
-- Warunek domknięcia operacyjnego TKT-00: ręczne wykonanie checklisty smoke-01..05 i zapis PASS/FAIL.
+## 5) Readiness for TKT-01
+- Status: ✅ **Ready for TKT-01 (technically)**
+- Condition for operational closure of TKT-00: manual execution of smoke-01..05 checklist and recording PASS/FAIL.

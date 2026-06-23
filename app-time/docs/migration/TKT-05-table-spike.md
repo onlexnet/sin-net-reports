@@ -1,63 +1,63 @@
-# TKT-05 — Spike tabel (TanStack adapter)
+# TKT-05 — Table Spike (TanStack adapter)
 
-Data: 2026-03-18
+Date: 2026-03-18
 Repo: `static-webapp-time`
 
-## 1) Cel spike
+## 1) Spike goal
 
-Zweryfikować wspólny adapter tabel oparty o `@tanstack/react-table` i prymitywy tabeli zgodne z `shadcn/ui`, tak aby w TKT-06 migrować ekrany tabelaryczne bez zmiany kontraktów danych i callbacków biznesowych.
+Validate a shared table adapter based on `@tanstack/react-table` and table primitives compatible with `shadcn/ui`, so that TKT-06 can migrate tabular screens without changing data contracts or business callbacks.
 
-## 2) Zakres wykonany
+## 2) Work completed
 
-- Dodano zależność: `@tanstack/react-table`.
-- Dodano prymitywy tabeli UI: `src/components/ui/table.tsx`.
-- Dodano wspólny adapter: `src/components/table/tanstackTableAdapter.tsx`.
-- Dodano eksporty adaptera: `src/components/table/index.ts`.
-- Dodano test POC: `src/components/table/tanstackTableAdapter.test.tsx`.
+- Added dependency: `@tanstack/react-table`.
+- Added UI table primitives: `src/components/ui/table.tsx`.
+- Added shared adapter: `src/components/table/tanstackTableAdapter.tsx`.
+- Added adapter exports: `src/components/table/index.ts`.
+- Added POC test: `src/components/table/tanstackTableAdapter.test.tsx`.
 
-## 3) Finalny interfejs adaptera (zatwierdzony po spike)
+## 3) Final adapter interface (approved after spike)
 
-### Wejście kolumn (mapowanie z podejścia antd-like)
+### Column input (mapping from antd-like approach)
 
 `TableAdapterColumn<TData>`:
-- `key` — stabilny identyfikator kolumny,
-- `title` — nagłówek,
-- `dataIndex?` lub `accessorFn?` — źródło wartości,
-- `render?` — renderer komórki,
-- `sortable?` — sortowanie,
-- `filterable?` — filtrowanie,
-- `width?` — szerokość kolumny.
+- `key` — stable column identifier,
+- `title` — column header,
+- `dataIndex?` or `accessorFn?` — value source,
+- `render?` — cell renderer,
+- `sortable?` — enable sorting,
+- `filterable?` — enable filtering,
+- `width?` — column width.
 
-### Hook adaptera
+### Adapter hook
 
-`useTanStackTableAdapter<TData>(options)` zwraca:
-- `table` — instancję TanStack,
-- `sorting`, `columnFilters`, `pagination` — kontrolowany stan,
-- `setColumnFilterValue(columnId, value)` — uproszczone API filtrowania.
+`useTanStackTableAdapter<TData>(options)` returns:
+- `table` — TanStack table instance,
+- `sorting`, `columnFilters`, `pagination` — controlled state,
+- `setColumnFilterValue(columnId, value)` — simplified filter API.
 
-Obsługiwane mechanizmy:
-- sortowanie (`getSortedRowModel`),
-- filtrowanie kolumn (`getFilteredRowModel`),
-- paginacja (`getPaginationRowModel`),
-- mapowanie kolumn (`mapColumnsToTanStack`).
+Supported mechanisms:
+- sorting (`getSortedRowModel`),
+- column filtering (`getFilteredRowModel`),
+- pagination (`getPaginationRowModel`),
+- column mapping (`mapColumnsToTanStack`).
 
 ### Renderer
 
 `TanStackTableView<TData>`:
-- renderuje nagłówki i wiersze przez `flexRender`,
-- obsługuje sortowanie z UI,
-- pokazuje prostą paginację (`Poprzednia` / `Następna`),
-- ma fallback `emptyLabel` dla pustej tabeli.
+- renders headers and rows via `flexRender`,
+- handles sorting in the UI,
+- shows simple pagination (`Previous` / `Next`),
+- has an `emptyLabel` fallback for empty tables.
 
-## 4) Wynik POC vs wymagania
+## 4) POC result vs. requirements
 
-Wymagania spike (`mapowanie kolumn`, `sortowanie`, `filtrowanie`, `paginacja`) zostały potwierdzone testem `tanstackTableAdapter.test.tsx`.
+Spike requirements (`column mapping`, `sorting`, `filtering`, `pagination`) were confirmed by the `tanstackTableAdapter.test.tsx` test.
 
-## 5) Wniosek techniczny do TKT-06
+## 5) Technical conclusion for TKT-06
 
-Adapter spełnia wymagania migracyjne dla warstwy widoku i pozwala przepinać istniejące tabele `antd` ekran po ekranie, utrzymując dotychczasowe modele danych i callbacki domenowe.
+The adapter meets the migration requirements for the view layer and allows existing `antd` tables to be replaced screen by screen while keeping current data models and domain callbacks.
 
-Rekomendacja implementacyjna dla TKT-06:
-- migrować tabele etapowo (`services` -> `customers` -> `reports`),
-- zostawić logikę pobierania/filterów domenowych w aktualnych kontenerach,
-- ograniczyć zmiany do mapowania kolumn i renderera.
+Implementation recommendation for TKT-06:
+- migrate tables incrementally (`services` -> `customers` -> `reports`),
+- keep domain fetch / filter logic in the existing container components,
+- limit changes to column mapping and the renderer.
