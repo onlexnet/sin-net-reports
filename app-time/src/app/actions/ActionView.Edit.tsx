@@ -254,7 +254,7 @@ export const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
                         current={actionDate} />
                 </Col>
             </Row>
-            <Row gutter={[8, 8]} align="middle">
+            <Row gutter={[8, 8]} align="top">
                 <LabelCol span={3} text="Wybór klienta:" />
                 <Col span={9}>
                     <CustomerComboBox
@@ -268,6 +268,7 @@ export const ActionViewEditLocal: React.FC<ActionViewEditProps> = props => {
                     <Textarea
                         value={description}
                         onChange={onChangeDescription}
+                        placeholder="Opis usługi..."
                         className={descriptionError ? "border-destructive" : undefined}
                     />
                     {descriptionError && <div className="mt-1 text-sm text-destructive">{descriptionError}</div>}
