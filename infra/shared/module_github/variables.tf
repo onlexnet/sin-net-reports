@@ -19,10 +19,6 @@ variable "github_app_pem" {
 variable "environment_name" {
 }
 
-variable "webapp_prod_api_token" {
-  sensitive = true
-}
-
 variable "ONLEXNET_TENANT_ID" {
   sensitive = true
 }
@@ -53,7 +49,7 @@ variable "APPLICATIONINSIGHTS_CONNECTION_STRING" {
 }
 
 variable "BACKEND_BASE_URL" {
-  description = "The backend WebAPI URL for the static webapp"
+  description = "The backend WebAPI URL for the frontend application"
   type        = string
 }
 

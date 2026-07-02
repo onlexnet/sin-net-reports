@@ -38,7 +38,7 @@ Services communicate through **Dapr sidecars**, not direct gRPC:
 **Three separate version files** with different formats:
 - `uservice-timeentries/.version` → `SEMVERSION` env var (e.g., "1.0.9")
 - `uservice-webapi/.semversion` → Maven `-Drevision` property (e.g., "0.1.3")
-- `static-webapp/.version` → npm version (e.g., "1.4.3")
+- `app-time/.version` → npm version (e.g., "1.4.3")
 
 Always use `$(cat .version)` pattern, never hardcode versions.
 
@@ -47,7 +47,7 @@ Always use `$(cat .version)` pattern, never hardcode versions.
 ### GraphQL Schema → Frontend Code Generation
 React app **requires generated types** before build:
 ```bash
-cd static-webapp
+cd app-time
 npm run generate  # Reads ../uservice-webapi/**/*.graphqls, outputs to src/components/.generated/
 npm run build
 ```
@@ -109,7 +109,7 @@ Example: `smoke-test/setup-k3d.sh` builds from parent, then imports images into 
 **Key Terraform modules:**
 - `module_container_app_timeentries` - init container downloads AppInsights agent
 - `module_container_app_webapi` - same pattern
-- `module_static_webapp` - Azure Static Web Apps
+- `module_static_app` - Azure Static Web Apps
 
 ## Critical Non-Obvious Patterns
 

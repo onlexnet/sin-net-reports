@@ -32,7 +32,7 @@ updates:
      interval: weekly
 
  - package-ecosystem: "npm"
-   directory: "/static-webapp"
+   directory: "/app-time"
    schedule:
      interval: weekly
 

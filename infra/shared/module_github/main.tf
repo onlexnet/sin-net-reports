@@ -5,7 +5,7 @@ data "github_repository" "sinnet" {
 resource "github_repository_environment" "main" {
   environment = var.environment_name
   repository  = data.github_repository.sinnet.name
-  
+
   # Reviewers can be configured here if needed
   # reviewers {
   #   users = [12345]  # GitHub user IDs
@@ -17,20 +17,6 @@ resource "github_repository_environment" "main" {
 
     custom_branch_policies = true
   }
-}
-
-resource "github_repository_environment_deployment_policy" "main" {
-  repository  = data.github_repository.sinnet.name
-  environment = github_repository_environment.main.environment
-  # simple single name just to allow me deploy secondary version of WebApp
-  branch_pattern = "webapp-test"
-}
-
-resource "github_actions_environment_secret" "webapp_prod_api_token" {
-  environment     = github_repository_environment.main.environment
-  repository      = data.github_repository.sinnet.name
-  secret_name     = "WEBAPP_PROD_API_TOKEN"
-  plaintext_value = var.webapp_prod_api_token
 }
 
 resource "github_actions_environment_secret" "ONLEXNET_TENANT_ID" {

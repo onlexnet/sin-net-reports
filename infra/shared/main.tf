@@ -27,7 +27,6 @@ module "github" {
   github_app_id                                       = var.github_app_id
   github_app_installation_id                          = var.github_app_installation_id
   github_app_pem                                      = var.github_app_pem
-  webapp_prod_api_token                               = module.static_app_prod.static_app_api_key
   webapp_time_prod_api_token                          = module.static_app_time.static_app_api_key
   ONLEXNET_INFRA_SECRET                               = module.keyvault.env.ONLEXNET_INFRA_SECRET
   ONLEXNET_TENANT_ID                                  = module.keyvault.env.ONLEXNET_TENANT_ID
@@ -41,28 +40,11 @@ module "github" {
 }
 
 locals {
-  webapp_subdomain_prod = var.environment_name != "prd01" ? "${var.application_name}-${var.environment_name}" : var.application_name
-  domain_name           = "onlex.net"
-}
-
-module "static_app_prod" {
-  source         = "./module_static_app"
-  name           = "webapp"
-  resource_group = module.resourcegroup.main
-}
-
-module "static_app_prod_domain" {
-  source            = "./module_static_webapp_custom_domain"
-  domain_name       = "${local.webapp_subdomain_prod}.${local.domain_name}"
-  static_web_app_id = module.static_app_prod.static_web_app_id
-  resource_group    = module.resourcegroup.main
-  depends_on        = [module.cloudflare]
+  domain_name = "onlex.net"
 }
 
 module "cloudflare" {
   source                         = "./module_cloudflare"
-  webapp_prefix_prod             = local.webapp_subdomain_prod
-  webapp_fqdn_prod               = module.static_app_prod.webapp_fqdn
   webapi_prefix                  = "${var.application_name}-${var.environment_name}-api"
   webapi_fqdn                    = module.container_apps_webapi.webapi_fqdn
   webapp_prefix_time             = "time"

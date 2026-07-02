@@ -12,26 +12,26 @@ Application Insights has been integrated into the React webapp to provide teleme
    - Package is automatically included during npm install
 
 2. **Created Configuration Module**
-   - Location: `static-webapp/src/app/configuration/ApplicationInsights.ts`
+   - Location: `app-time/src/app/configuration/ApplicationInsights.ts`
    - Exports functions to:
      - Initialize Application Insights
      - Set authenticated user context
      - Clear authenticated user context
 
 3. **Initialization**
-   - Application Insights is initialized in `static-webapp/src/index.tsx`
+   - Application Insights is initialized in `app-time/src/index.tsx`
    - Reads connection string from `REACT_APP_APPLICATIONINSIGHTS_CONNECTION_STRING` environment variable
    - If connection string is not configured, a warning is logged and telemetry is disabled
 
 4. **User Tracking**
    - When a user logs in via Azure B2C, their email is set as the authenticated user context
-   - Implementation in `static-webapp/src/app/AppInProgress.tsx`
+   - Implementation in `app-time/src/app/AppInProgress.tsx`
    - When a user logs out, the authenticated user context is cleared
-   - Implementation in `static-webapp/src/debug/Debug.tsx`
+   - Implementation in `app-time/src/debug/Debug.tsx`
 
 5. **Build Configuration**
    - GitHub workflow updated to pass `REACT_APP_APPLICATIONINSIGHTS_CONNECTION_STRING` during build
-   - Location: `.github/workflows/static-webapp.yml`
+   - Location: `.github/workflows/app-time.yml`
 
 ## Configuration Required
 
@@ -57,7 +57,7 @@ To find the connection string:
 ```
 
 ### Local Development
-For local development, create a `.env.local` file in the `static-webapp` directory:
+For local development, create a `.env.local` file in the `app-time` directory:
 ```
 REACT_APP_APPLICATIONINSIGHTS_CONNECTION_STRING=InstrumentationKey=...;IngestionEndpoint=...
 ```
