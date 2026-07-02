@@ -14,13 +14,13 @@
 			"installMaven": true,
 			"installGradle": false,
 			"installAnt": false,
-			"version": "25.0.2",
+			"version": "25.0",
 			"jdkDistro": "librca",
 			"mavenVersion": "3.9.9"
 		},
 		"ghcr.io/dapr/cli/dapr-cli:0": {
 		},
-		"ghcr.io/devcontainers/features/node:2": {
+		"ghcr.io/devcontainers/features/node:2.1.0": {
 			"version": "22.12.0"
 		},
 		"ghcr.io/devcontainers/features/python:1": {
@@ -76,7 +76,12 @@
     "remoteEnv": {
         "TF_LOG": "'info",
         "TF_LOG_PATH": "'./terraform.log"
-    }
+	},
+	"mounts": [
+		"source=sinnet-terraform-config,target=/home/vscode/.terraform.d,type=volume"
+	],
+	"postCreateCommand": "sudo mkdir -p /home/vscode/.terraform.d && sudo chown -R vscode:vscode /home/vscode/.terraform.d && chmod 700 /home/vscode/.terraform.d && if [ -f /home/vscode/.terraform.d/credentials.tfrc.json ]; then chmod 600 /home/vscode/.terraform.d/credentials.tfrc.json; fi",
+	"postStartCommand": "sudo mkdir -p /home/vscode/.terraform.d && sudo chown -R vscode:vscode /home/vscode/.terraform.d && chmod 700 /home/vscode/.terraform.d && if [ -f /home/vscode/.terraform.d/credentials.tfrc.json ]; then chmod 600 /home/vscode/.terraform.d/credentials.tfrc.json; fi"
 	
 	// https://stackoverflow.com/a/75644266
 	// "mounts": [
