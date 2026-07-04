@@ -4,7 +4,7 @@ FROM eclipse-temurin:25-jdk-jammy AS builder
 
 WORKDIR /workspace
 
-# Install Maven 3.9+ (required by lib-api-java maven-enforcer-plugin)
+# Install Maven 3.9+ (required by lib_api-java maven-enforcer-plugin)
 RUN apt-get update && \
     apt-get install -y wget && \
     wget --no-verbose https://archive.apache.org/dist/maven/maven-3/3.9.9/binaries/apache-maven-3.9.9-bin.tar.gz && \
@@ -17,8 +17,8 @@ ENV MAVEN_HOME=/opt/maven
 ENV PATH=$PATH:$MAVEN_HOME/bin
 
 # Copy pom files for dependency resolution
-# Copy lib-api-java dependency (entire structure for Maven modules and schema generation)
-COPY lib-api-java lib-api-java
+# Copy lib_api-java dependency (entire structure for Maven modules and schema generation)
+COPY lib_api-java lib_api_java
 COPY schema schema
 
 # Copy pom files for dependency resolution
@@ -44,10 +44,10 @@ COPY uservice-webapi/gql-model/src uservice-webapi/gql-model/src
 COPY uservice-webapi/gql-test/src uservice-webapi/gql-test/src
 COPY uservice-webapi/host/src uservice-webapi/host/src
 
-# Build lib-api-java dependency (gRPC client for Dapr communication)
+# Build lib_api-java dependency (gRPC client for Dapr communication)
 # CACHE MOUNT: Reuses Maven cache, avoiding dependency re-downloads
 RUN --mount=type=cache,target=/root/.m2 \
-    cd lib-api-java && \
+    cd lib_api_java && \
     mvn clean install -B -ntp -DskipTests || true
 
 # Build the WebAPI application (GraphQL schema processing + compilation)

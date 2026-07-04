@@ -11,14 +11,14 @@ on:
   push:
     branches: [ main ]
     paths: 
-      - lib-api-java/**
+      - lib_api-java/**
       - schema/**
       - uservice-webapi/**
       - .github/workflows/uservice-webapi.yml
   pull_request:
     branches: [ main ]
     paths: 
-      - lib-api-java/**
+      - lib_api-java/**
       - schema/**
       - uservice-webapi/**
       - .github/workflows/uservice-webapi.yml
@@ -106,4 +106,3 @@ jobs:
           echo "image_name: $IMAGE_NAME_INITDB_HOST"
           # TODO replace hardcoded params below with proper values
           az containerapp update -n "$CONTAINERAPP_NAME" -g sinnet-env-prd01 --container-name uservice-webapi --image "$IMAGE_NAME_INITDB_HOST"
-
