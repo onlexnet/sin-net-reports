@@ -37,7 +37,7 @@ Services communicate through **Dapr sidecars**, not direct gRPC:
 ### Version Management Pattern
 **Three separate version files** with different formats:
 - `uservice-timeentries/.version` → `SEMVERSION` env var (e.g., "1.0.9")
-- `uservice-webapi/.semversion` → Maven `-Drevision` property (e.g., "0.1.3")
+- `uservice-webapi/.semversion` → Maven `-Drevision` property (e.g., "0.1.2")
 - `app-time/.version` → npm version (e.g., "1.4.3")
 
 Always use `$(cat .version)` pattern, never hardcode versions.
