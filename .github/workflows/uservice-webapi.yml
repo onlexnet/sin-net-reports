@@ -11,14 +11,12 @@ on:
   push:
     branches: [ main ]
     paths: 
-      - lib_api-java/**
       - schema/**
       - uservice-webapi/**
       - .github/workflows/uservice-webapi.yml
   pull_request:
     branches: [ main ]
     paths: 
-      - lib_api-java/**
       - schema/**
       - uservice-webapi/**
       - .github/workflows/uservice-webapi.yml
