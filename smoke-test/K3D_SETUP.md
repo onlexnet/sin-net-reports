@@ -80,7 +80,7 @@ This destroys the cluster and frees all resources.
 
 ### Making changes to code
 
-1. Edit code in `uservice-timeentries/`, `svc_webapi/`, or `app-time/`
+1. Edit code in `svc_timeentries/`, `svc_webapi/`, or `app-time/`
 2. Rebuild and reload the image:
 
 ```bash
@@ -88,8 +88,8 @@ This destroys the cluster and frees all resources.
 cd ..
 
 # Rebuild specific service
-docker build -t sinnet/uservice-timeentries:local -f uservice-timeentries/Dockerfile.e2e .
-k3d image import sinnet/uservice-timeentries:local --cluster sinnet-local
+docker build -t sinnet/svc_timeentries:local -f svc_timeentries/Dockerfile.e2e .
+k3d image import sinnet/svc_timeentries:local --cluster sinnet-local
 
 # Force pod restart to pick up new image
 kubectl rollout restart deployment/timeentries -n sinnet

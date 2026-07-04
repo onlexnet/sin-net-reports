@@ -35,7 +35,7 @@ jobs:
         working-directory: lib_api-java
 
       - name: Build Timeentries Service
-        working-directory: uservice-timeentries
+        working-directory: svc_timeentries
         run: |
           SEMVERSION=$(cat .version || echo "1.0.0-SNAPSHOT")
           export SEMVERSION
@@ -102,7 +102,7 @@ jobs:
 
       - name: Check for dependency updates in timeentries
         run: mvn versions:display-dependency-updates -ntp
-        working-directory: uservice-timeentries
+        working-directory: svc_timeentries
         continue-on-error: true
 
       - name: Check for dependency updates in webapi

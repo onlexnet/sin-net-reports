@@ -1,4 +1,4 @@
-# Multi-stage build for uservice-timeentries
+# Multi-stage build for svc_timeentries
 # Stage 1: Build the application
 FROM eclipse-temurin:25-jdk-jammy AS builder
 
@@ -21,20 +21,20 @@ COPY lib_api-java lib_api-java
 COPY schema schema
 
 # Copy Maven wrapper and pom files for timeentries
-COPY uservice-timeentries/mvnw uservice-timeentries/
-COPY uservice-timeentries/.mvn uservice-timeentries/.mvn
-COPY uservice-timeentries/pom.xml uservice-timeentries/
-COPY uservice-timeentries/.version uservice-timeentries/
-COPY uservice-timeentries/base-pom/pom.xml uservice-timeentries/base-pom/
-COPY uservice-timeentries/host/pom.xml uservice-timeentries/host/
-COPY uservice-timeentries/initdb-host/pom.xml uservice-timeentries/initdb-host/
-COPY uservice-timeentries/initdb-migrate/pom.xml uservice-timeentries/initdb-migrate/
-COPY uservice-timeentries/initdb-test/pom.xml uservice-timeentries/initdb-test/
-COPY uservice-timeentries/report-aggregate/pom.xml uservice-timeentries/report-aggregate/
-COPY uservice-timeentries/lombok.config uservice-timeentries/
+COPY svc_timeentries/mvnw svc_timeentries/
+COPY svc_timeentries/.mvn svc_timeentries/.mvn
+COPY svc_timeentries/pom.xml svc_timeentries/
+COPY svc_timeentries/.version svc_timeentries/
+COPY svc_timeentries/base-pom/pom.xml svc_timeentries/base-pom/
+COPY svc_timeentries/host/pom.xml svc_timeentries/host/
+COPY svc_timeentries/initdb-host/pom.xml svc_timeentries/initdb-host/
+COPY svc_timeentries/initdb-migrate/pom.xml svc_timeentries/initdb-migrate/
+COPY svc_timeentries/initdb-test/pom.xml svc_timeentries/initdb-test/
+COPY svc_timeentries/report-aggregate/pom.xml svc_timeentries/report-aggregate/
+COPY svc_timeentries/lombok.config svc_timeentries/
 
 # Make Maven wrapper executable
-RUN chmod +x uservice-timeentries/mvnw
+RUN chmod +x svc_timeentries/mvnw
 
 # Download dependencies (cached layer)
 # CACHE MOUNT: --mount=type=cache,target=/root/.m2
@@ -46,15 +46,15 @@ RUN chmod +x uservice-timeentries/mvnw
 #   - Significantly speeds up builds (from minutes to seconds for deps)
 # Note: The "|| true" allows partial downloads to not fail the build
 RUN --mount=type=cache,target=/root/.m2 \
-    cd uservice-timeentries && \
+    cd svc_timeentries && \
     mvn dependency:go-offline -B -ntp -DskipTests || true
 
 # Copy source code (only modules with src directories - base-pom has no src, components is empty)
-COPY uservice-timeentries/host/src uservice-timeentries/host/src
-COPY uservice-timeentries/initdb-host/src uservice-timeentries/initdb-host/src
-COPY uservice-timeentries/initdb-migrate/src uservice-timeentries/initdb-migrate/src
-COPY uservice-timeentries/initdb-test/src uservice-timeentries/initdb-test/src
-COPY uservice-timeentries/report-aggregate/src uservice-timeentries/report-aggregate/src
+COPY svc_timeentries/host/src svc_timeentries/host/src
+COPY svc_timeentries/initdb-host/src svc_timeentries/initdb-host/src
+COPY svc_timeentries/initdb-migrate/src svc_timeentries/initdb-migrate/src
+COPY svc_timeentries/initdb-test/src svc_timeentries/initdb-test/src
+COPY svc_timeentries/report-aggregate/src svc_timeentries/report-aggregate/src
 
 # Build lib_api-java dependency (required by timeentries service)
 # CACHE MOUNT: Reuses the same Maven cache from previous step
@@ -67,7 +67,7 @@ RUN --mount=type=cache,target=/root/.m2 \
 # CACHE MOUNT: Final build step also benefits from cached Maven dependencies
 # Only source code changes will trigger recompilation, not dependency downloads
 RUN --mount=type=cache,target=/root/.m2 \
-    cd uservice-timeentries && \
+    cd svc_timeentries && \
     export SEMVERSION=$(cat .version) && \
     mvn clean install -pl host -am -DskipTests -B -ntp
 
@@ -80,7 +80,7 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
 
 # Copy the built JAR from builder stage
-COPY --from=builder /workspace/uservice-timeentries/host/target/*.jar app.jar
+COPY --from=builder /workspace/svc_timeentries/host/target/*.jar app.jar
 
 # Create non-root user
 RUN groupadd -r appuser && useradd -r -g appuser appuser
