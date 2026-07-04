@@ -1,9 +1,9 @@
-name: CI uservice-timeentries
+name: CI svc_timeentries
 
 # Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
 # However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
 concurrency:
-  group: "uservice-timeentries"
+  group: "svc_timeentries"
   cancel-in-progress: false
 
 on:
@@ -12,21 +12,21 @@ on:
     branches: [ main ]
     paths: 
       - schema/**
-      - uservice-timeentries/**
-      - .github/workflows/uservice-timeentries.yml
+      - svc_timeentries/**
+      - .github/workflows/svc_timeentries.yml
   pull_request:
     branches: [ main ]
     paths: 
       - schema/**
-      - uservice-timeentries/**
-      - .github/workflows/uservice-timeentries.yml
+      - svc_timeentries/**
+      - .github/workflows/svc_timeentries.yml
 
 jobs:
   Build:
     runs-on: ubuntu-24.04
 
     outputs:
-      uservice_timeentries_image_name: ${{ steps.PushDockerImage.outputs.image_name }}
+      svc_timeentries_image_name: ${{ steps.PushDockerImage.outputs.image_name }}
 
     steps:
 
@@ -47,15 +47,15 @@ jobs:
           SEMVERSION=$(cat .version)
           export SEMVERSION
           mvn -ntp install -pl host -am
-        working-directory: uservice-timeentries
+        working-directory: svc_timeentries
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
       - id: BuildDockerImage
         name: Build Docker Image
-        working-directory: uservice-timeentries
+        working-directory: svc_timeentries
         run: |
-          export IMAGE_NAME_BASE=ghcr.io/onlexnet/uservice-timeentries
+          export IMAGE_NAME_BASE=ghcr.io/onlexnet/svc_timeentries
 
           export IMAGE_NAME_HOST=$IMAGE_NAME_BASE
 
@@ -65,9 +65,9 @@ jobs:
       - id: PushDockerImage
         name: Push Docker Image
         if: github.event_name == 'push'
-        working-directory: uservice-timeentries
+        working-directory: svc_timeentries
         run: |
-          export IMAGE_NAME_BASE=ghcr.io/onlexnet/uservice-timeentries
+          export IMAGE_NAME_BASE=ghcr.io/onlexnet/svc_timeentries
           export IMAGE_NAME_HOST=$IMAGE_NAME_BASE
 
           # add proper ID to distinguish image from other images built in this workflow
@@ -96,7 +96,7 @@ jobs:
       
       - name: Display Image Name
         env:
-          IMAGE_NAME_INITDB_HOST: ${{needs.Build.outputs.uservice_timeentries_image_name}}
+          IMAGE_NAME_INITDB_HOST: ${{needs.Build.outputs.svc_timeentries_image_name}}
           CONTAINERAPP_NAME: ${{ vars.ONLEXNET_SINNET_PRD01_CONTAINERAPP_NAME_TIMEENTRIES }}
         run: |
           echo "image_name: $IMAGE_NAME_INITDB_HOST"

@@ -36,7 +36,7 @@ Services communicate through **Dapr sidecars**, not direct gRPC:
 
 ### Version Management Pattern
 **Three separate version files** with different formats:
-- `uservice-timeentries/.version` → `SEMVERSION` env var (e.g., "1.0.9")
+- `svc_timeentries/.version` → `SEMVERSION` env var (e.g., "1.0.9")
 - `svc_webapi/.semversion` → Maven `-Drevision` property (e.g., "0.1.2")
 - `app-time/.version` → npm version (e.g., "1.4.3")
 
@@ -60,7 +60,7 @@ npm run build
 Always build in this order (dependencies matter):
 ```bash
 mvn install -f lib_api-java              # Generates gRPC clients from .proto
-mvn install -pl host -am -f uservice-timeentries  # Uses lib_api-java
+mvn install -pl host -am -f svc_timeentries  # Uses lib_api-java
 mvn install -f svc_webapi              # Uses lib_api-java
 ```
 

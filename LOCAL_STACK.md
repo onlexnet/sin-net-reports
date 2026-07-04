@@ -53,7 +53,7 @@ cd smoke-test
 ## Development Workflow
 
 1. Edit code in:
-   - `uservice-timeentries/`
+   - `svc_timeentries/`
    - `svc_webapi/`
    - `app-time/`
 2. Rebuild and redeploy:

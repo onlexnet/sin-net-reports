@@ -197,9 +197,9 @@ build_and_deploy_services() {
     }
     
     # Build TimeEntries
-    log_info "Building uservice-timeentries..."
-    build_image sinnet/uservice-timeentries:local uservice-timeentries/Dockerfile.e2e
-    k3d image import sinnet/uservice-timeentries:local --cluster "${CLUSTER_NAME}"
+    log_info "Building svc_timeentries..."
+    build_image sinnet/svc_timeentries:local svc_timeentries/Dockerfile.e2e
+    k3d image import sinnet/svc_timeentries:local --cluster "${CLUSTER_NAME}"
     
     # Build WebAPI
     log_info "Building svc_webapi..."

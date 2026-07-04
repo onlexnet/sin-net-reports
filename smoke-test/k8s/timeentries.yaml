@@ -43,7 +43,7 @@ spec:
     spec:
       containers:
         - name: timeentries
-          image: sinnet/uservice-timeentries:local
+          image: sinnet/svc_timeentries:local
           imagePullPolicy: Never  # Use local image loaded by k3d
           args:
             - --spring.profiles.active=prod
