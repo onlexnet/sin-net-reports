@@ -18,7 +18,7 @@ ENV PATH=$PATH:$MAVEN_HOME/bin
 
 # Copy pom files for dependency resolution
 # Copy lib_api-java dependency (entire structure for Maven modules and schema generation)
-COPY lib_api-java lib_api_java
+COPY lib_api-java lib_api-java
 COPY schema schema
 
 # Copy pom files for dependency resolution
@@ -47,8 +47,8 @@ COPY uservice-webapi/host/src uservice-webapi/host/src
 # Build lib_api-java dependency (gRPC client for Dapr communication)
 # CACHE MOUNT: Reuses Maven cache, avoiding dependency re-downloads
 RUN --mount=type=cache,target=/root/.m2 \
-    cd lib_api_java && \
-    mvn clean install -B -ntp -DskipTests || true
+    cd lib_api-java && \
+    mvn clean install -B -ntp -DskipTests
 
 # Build the WebAPI application (GraphQL schema processing + compilation)
 # CACHE MOUNT: Final build step benefits from all previously cached dependencies
