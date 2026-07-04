@@ -30,7 +30,7 @@ spec:
     spec:
       containers:
         - name: webapi
-          image: sinnet/uservice-webapi:local
+          image: sinnet/svc_webapi:local
           imagePullPolicy: Never  # Use local image loaded by k3d
           ports:
             - containerPort: 8080

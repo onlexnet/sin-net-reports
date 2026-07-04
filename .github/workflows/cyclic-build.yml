@@ -42,7 +42,7 @@ jobs:
           mvn -ntp clean install -pl host -am
 
       - name: Build WebAPI Service
-        working-directory: uservice-webapi
+        working-directory: svc_webapi
         run: |
           SEMVERSION=$(cat .semversion || echo "1.0.0-SNAPSHOT")
           export SEMVERSION
@@ -107,5 +107,5 @@ jobs:
 
       - name: Check for dependency updates in webapi
         run: mvn versions:display-dependency-updates -ntp
-        working-directory: uservice-webapi
+        working-directory: svc_webapi
         continue-on-error: true

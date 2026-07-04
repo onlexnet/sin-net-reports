@@ -27,7 +27,7 @@ updates:
      interval: weekly
 
  - package-ecosystem: "maven"
-   directory: "/uservice-webapi"
+   directory: "/svc_webapi"
    schedule:
      interval: weekly
 

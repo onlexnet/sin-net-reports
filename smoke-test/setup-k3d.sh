@@ -202,9 +202,9 @@ build_and_deploy_services() {
     k3d image import sinnet/uservice-timeentries:local --cluster "${CLUSTER_NAME}"
     
     # Build WebAPI
-    log_info "Building uservice-webapi..."
-    build_image sinnet/uservice-webapi:local uservice-webapi/Dockerfile.e2e
-    k3d image import sinnet/uservice-webapi:local --cluster "${CLUSTER_NAME}"
+    log_info "Building svc_webapi..."
+    build_image sinnet/svc_webapi:local svc_webapi/Dockerfile.e2e
+    k3d image import sinnet/svc_webapi:local --cluster "${CLUSTER_NAME}"
     
     # Build Frontend
     log_info "Building app-time..."

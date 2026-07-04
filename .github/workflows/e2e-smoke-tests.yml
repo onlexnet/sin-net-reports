@@ -23,7 +23,7 @@ on:
     branches: [ main ]
     paths:
       - app-time/**
-      - uservice-webapi/**
+      - svc_webapi/**
       - uservice-timeentries/**
       - smoke-test/**
       - lib_api-java/**
@@ -111,7 +111,7 @@ jobs:
         uses: actions/cache@v5
         with:
           path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-e2e-buildx-${{ hashFiles('uservice-timeentries/Dockerfile', 'uservice-timeentries/**/pom.xml', 'uservice-webapi/Dockerfile', 'uservice-webapi/**/pom.xml', 'app-time/Dockerfile.e2e', 'app-time/package-lock.json', 'lib_api-java/**/pom.xml', 'schema/**/*.proto') }}
+          key: ${{ runner.os }}-e2e-buildx-${{ hashFiles('uservice-timeentries/Dockerfile.e2e', 'uservice-timeentries/**/pom.xml', 'svc_webapi/Dockerfile.e2e', 'svc_webapi/**/pom.xml', 'app-time/Dockerfile.e2e', 'app-time/package-lock.json', 'lib_api-java/**/pom.xml', 'schema/**/*.proto') }}
           restore-keys: |
             ${{ runner.os }}-e2e-buildx-
 

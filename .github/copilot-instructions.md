@@ -25,7 +25,7 @@ See [K3D_SETUP.md](../smoke-test/K3D_SETUP.md) for k3d-specific documentation.
 
 ### Service Communication via Dapr
 Services communicate through **Dapr sidecars**, not direct gRPC:
-- `uservice-timeentries` (port 11021) ← Dapr sidecar → `uservice-webapi` (port 11031)
+- `uservice-timeentries` (port 11021) ← Dapr sidecar → `svc_webapi` (port 11031)
 - gRPC schemas in `schema/uservice-timeentries.rpc/*.proto`
 - Client code generated in `lib_api-java` (build this first!)
 
@@ -37,7 +37,7 @@ Services communicate through **Dapr sidecars**, not direct gRPC:
 ### Version Management Pattern
 **Three separate version files** with different formats:
 - `uservice-timeentries/.version` → `SEMVERSION` env var (e.g., "1.0.9")
-- `uservice-webapi/.semversion` → Maven `-Drevision` property (e.g., "0.1.2")
+- `svc_webapi/.semversion` → Maven `-Drevision` property (e.g., "0.1.2")
 - `app-time/.version` → npm version (e.g., "1.4.3")
 
 Always use `$(cat .version)` pattern, never hardcode versions.
@@ -48,20 +48,20 @@ Always use `$(cat .version)` pattern, never hardcode versions.
 React app **requires generated types** before build:
 ```bash
 cd app-time
-npm run generate  # Reads ../uservice-webapi/**/*.graphqls, outputs to src/components/.generated/
+npm run generate  # Reads ../svc_webapi/**/*.graphqls, outputs to src/components/.generated/
 npm run build
 ```
 
 **Dual schema paths** in `graphql-codegen-config.yml`:
-- `../uservice-webapi/**/*.graphqls` - local dev (parent directory context)
-- `uservice-webapi/**/*.graphqls` - Docker build (schema copied to build context)
+- `../svc_webapi/**/*.graphqls` - local dev (parent directory context)
+- `svc_webapi/**/*.graphqls` - Docker build (schema copied to build context)
 
 ### Maven Module Build Order
 Always build in this order (dependencies matter):
 ```bash
 mvn install -f lib_api-java              # Generates gRPC clients from .proto
 mvn install -pl host -am -f uservice-timeentries  # Uses lib_api-java
-mvn install -f uservice-webapi              # Uses lib_api-java
+mvn install -f svc_webapi              # Uses lib_api-java
 ```
 
 Use `-DskipTests` - Testcontainers tests often fail in containerized dev environments.
@@ -129,4 +129,4 @@ Key files for understanding architecture:
 - `LOCAL_STACK.md` - comprehensive local development guide
 - `infra/shared/main.tf` - Azure infrastructure modules
 - `schema/` - gRPC service definitions
-- `uservice-webapi/host/src/main/resources/graphql/schema.graphqls` - GraphQL schema consumed by frontend
+- `svc_webapi/host/src/main/resources/graphql/schema.graphqls` - GraphQL schema consumed by frontend

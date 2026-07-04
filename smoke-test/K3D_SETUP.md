@@ -80,7 +80,7 @@ This destroys the cluster and frees all resources.
 
 ### Making changes to code
 
-1. Edit code in `uservice-timeentries/`, `uservice-webapi/`, or `app-time/`
+1. Edit code in `uservice-timeentries/`, `svc_webapi/`, or `app-time/`
 2. Rebuild and reload the image:
 
 ```bash
@@ -127,7 +127,7 @@ kubectl get configurations,components -n sinnet
 # Visit http://localhost:18080
 # You'll see:
 # - uservice-timeentries
-# - uservice-webapi
+# - svc_webapi
 # - Their health status
 # - Metadata
 ```
