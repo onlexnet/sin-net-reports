@@ -27,7 +27,7 @@ See [K3D_SETUP.md](../smoke-test/K3D_SETUP.md) for k3d-specific documentation.
 Services communicate through **Dapr sidecars**, not direct gRPC:
 - `uservice-timeentries` (port 11021) ← Dapr sidecar → `uservice-webapi` (port 11031)
 - gRPC schemas in `schema/uservice-timeentries.rpc/*.proto`
-- Client code generated in `lib-api-java` (build this first!)
+- Client code generated in `lib_api-java` (build this first!)
 
 **In production (Azure Container Apps):**
 - Init containers download ApplicationInsights agent to ephemeral volume
@@ -59,9 +59,9 @@ npm run build
 ### Maven Module Build Order
 Always build in this order (dependencies matter):
 ```bash
-mvn install -f lib-api-java              # Generates gRPC clients from .proto
-mvn install -pl host -am -f uservice-timeentries  # Uses lib-api-java
-mvn install -f uservice-webapi              # Uses lib-api-java
+mvn install -f lib_api-java              # Generates gRPC clients from .proto
+mvn install -pl host -am -f uservice-timeentries  # Uses lib_api-java
+mvn install -f uservice-webapi              # Uses lib_api-java
 ```
 
 Use `-DskipTests` - Testcontainers tests often fail in containerized dev environments.
@@ -93,7 +93,7 @@ FROM eclipse-temurin:25-jre-jammy
 
 ### Docker Build Context
 All Dockerfiles use **parent directory context** (`..` from smoke-test/) because they need:
-- `lib-api-java` - shared gRPC libraries
+- `lib_api-java` - shared gRPC libraries
 - `schema` - proto definitions
 - Service source code
 

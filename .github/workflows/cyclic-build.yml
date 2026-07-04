@@ -32,7 +32,7 @@ jobs:
 
       - name: Build gRPC API Client Java
         run: mvn -ntp clean install
-        working-directory: lib-api-java
+        working-directory: lib_api-java
 
       - name: Build Timeentries Service
         working-directory: uservice-timeentries
@@ -109,4 +109,3 @@ jobs:
         run: mvn versions:display-dependency-updates -ntp
         working-directory: uservice-webapi
         continue-on-error: true
-

@@ -1,4 +1,4 @@
-name: CI lib-api-java
+name: CI lib_api-java
 
 # Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
 # However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
@@ -11,13 +11,13 @@ on:
   push:
     branches: [ main ]
     paths:
-      - lib-api-java/**
+      - lib_api-java/**
       - schema/**
       - .github/workflows/api-client-java.yml
   pull_request:
     branches: [ main ]
     paths:
-      - lib-api-java/**
+      - lib_api-java/**
       - schema/**
       - .github/workflows/api-client-java.yml
 
@@ -44,13 +44,13 @@ jobs:
 
       - name: Build
         run: mvn -ntp verify
-        working-directory: lib-api-java
+        working-directory: lib_api-java
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Publish to GitHub Packages
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: mvn -ntp deploy -DskipTests
-        working-directory: lib-api-java
+        working-directory: lib_api-java
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
