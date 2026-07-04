@@ -9,7 +9,7 @@
             "name": "Launch Program",
             "request": "launch",
             "mainClass": "sinnet.Program",
-            "projectName": "uservice-webapi-host",
+            "projectName": "svc_webapi-host",
             "env": {
                 "DAPR_GRPC_PORT": 11019,
             },

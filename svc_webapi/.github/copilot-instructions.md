@@ -1,4 +1,4 @@
-# uservice-webapi: AI Coding Agent Guide
+# svc_webapi: AI Coding Agent Guide
 
 ## Project Overview
 
@@ -17,7 +17,7 @@
 ### Maven Modules
 
 ```
-uservice-webapi-build/          (parent aggregator)
+svc_webapi-build/          (parent aggregator)
 ├── base-pom/                   (dependency management, shared plugins)
 ├── gql-model/                  (GraphQL DTOs - shared between modules)
 ├── gql-test/                   (GraphQL test utilities and .graphql files)
@@ -52,7 +52,7 @@ sinnet/
 ### Building & Testing
 
 ```bash
-# Build entire project (from uservice-webapi root)
+# Build entire project (from svc_webapi root)
 mvn clean install
 
 # Skip tests during build

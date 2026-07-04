@@ -10,13 +10,13 @@ on:
     branches: [ main ]
     paths:
       - app-time/**
-      - uservice-webapi/**
+      - svc_webapi/**
       - .github/workflows/app-time.yml
   pull_request:
     branches: [ main ]
     paths:
       - app-time/**
-      - uservice-webapi/**
+      - svc_webapi/**
       - .github/workflows/app-time.yml
 
 jobs:

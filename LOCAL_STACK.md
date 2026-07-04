@@ -54,7 +54,7 @@ cd smoke-test
 
 1. Edit code in:
    - `uservice-timeentries/`
-   - `uservice-webapi/`
+   - `svc_webapi/`
    - `app-time/`
 2. Rebuild and redeploy:
    ```bash

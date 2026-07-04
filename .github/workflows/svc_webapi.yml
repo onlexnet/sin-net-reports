@@ -1,9 +1,9 @@
-name: CI uservice-webapi
+name: CI svc_webapi
 
 # Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
 # However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
 concurrency:
-  group: "uservice-webapi"
+  group: "svc_webapi"
   cancel-in-progress: false
 
 on:
@@ -12,14 +12,14 @@ on:
     branches: [ main ]
     paths: 
       - schema/**
-      - uservice-webapi/**
-      - .github/workflows/uservice-webapi.yml
+      - svc_webapi/**
+      - .github/workflows/svc_webapi.yml
   pull_request:
     branches: [ main ]
     paths: 
       - schema/**
-      - uservice-webapi/**
-      - .github/workflows/uservice-webapi.yml
+      - svc_webapi/**
+      - .github/workflows/svc_webapi.yml
 
 jobs:
   Build:
@@ -47,15 +47,15 @@ jobs:
           SEMVERSION=$(cat .semversion)
           export SEMVERSION
           mvn -ntp install -Drevision="$SEMVERSION"
-        working-directory: uservice-webapi
+        working-directory: svc_webapi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
       - id: BuildDockerImage
         name: Build Docker Image
-        working-directory: uservice-webapi
+        working-directory: svc_webapi
         run: |
-          export IMAGE_NAME_BASE=ghcr.io/onlexnet/uservice-webapi
+          export IMAGE_NAME_BASE=ghcr.io/onlexnet/svc_webapi
 
           export IMAGE_NAME_HOST=$IMAGE_NAME_BASE
 
@@ -65,9 +65,9 @@ jobs:
       - id: PushDockerImage
         name: Push Docker Image
         if: github.event_name == 'push'
-        working-directory: uservice-webapi
+        working-directory: svc_webapi
         run: |
-          export IMAGE_NAME_BASE=ghcr.io/onlexnet/uservice-webapi
+          export IMAGE_NAME_BASE=ghcr.io/onlexnet/svc_webapi
           export IMAGE_NAME_HOST=$IMAGE_NAME_BASE
 
           # add proper ID to distinguish image from other images built in this workflow

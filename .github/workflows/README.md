@@ -6,7 +6,7 @@ This directory contains automated CI/CD workflows for the sin-net-reports projec
 
 ### Production Workflows (with deployment)
 - **`uservice-timeentries.yml`** - Builds and deploys the timeentries microservice
-- **`uservice-webapi.yml`** - Builds and deploys the webapi microservice  
+- **`svc_webapi.yml`** - Builds and deploys the webapi microservice  
 - **`app-time.yml`** - Builds and deploys the app-time static web application
 
 ### Maintenance Workflows (no deployment)
@@ -30,7 +30,7 @@ The `cyclic-build.yml` workflow was created to address dependency-related build 
 1. **Java Components**:
    - gRPC API Client (`lib_api-java`)
    - Timeentries Service (`uservice-timeentries`)
-   - WebAPI Service (`uservice-webapi`)
+   - WebAPI Service (`svc_webapi`)
 
 2. **Frontend**:
    - App Time (`app-time`)

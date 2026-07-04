@@ -5,7 +5,7 @@ FROM node:22.12.0-bookworm AS build
 WORKDIR /app
 
 # Copy GraphQL schema files from webapi (needed for codegen)
-COPY uservice-webapi/host/src/main/resources/graphql uservice-webapi/host/src/main/resources/graphql
+COPY svc_webapi/host/src/main/resources/graphql svc_webapi/host/src/main/resources/graphql
 
 # Copy package files
 COPY app-time/package*.json ./
