@@ -48,7 +48,7 @@ jobs:
           export SEMVERSION
           mvn -ntp clean install -Drevision="$SEMVERSION"
 
-  build-app-time:
+  build-app_time:
     name: Build App Time
     runs-on: ubuntu-22.04
 
@@ -61,7 +61,7 @@ jobs:
         with:
           node-version: '22.12.0'
           cache: 'npm'
-          cache-dependency-path: app-time/package-lock.json
+          cache-dependency-path: app_time/package-lock.json
 
       - name: Generate BUILD_VERSION
         id: build_version
@@ -73,7 +73,7 @@ jobs:
           echo "Generated BUILD_VERSION: ${BUILD_VERSION}"
 
       - name: Build App Time
-        working-directory: app-time
+        working-directory: app_time
         env:
           REACT_APP_BUILD_VERSION: ${{ steps.build_version.outputs.BUILD_VERSION }}
         run: |

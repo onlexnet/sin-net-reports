@@ -8,22 +8,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: app-time
+  name: app_time
   labels:
-    app: app-time
+    app: app_time
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: app-time
+      app: app_time
   template:
     metadata:
       labels:
-        app: app-time
+        app: app_time
     spec:
       containers:
-        - name: app-time
-          image: sinnet/app-time:local
+        - name: app_time
+          image: sinnet/app_time:local
           imagePullPolicy: Never  # Use local image loaded by k3d
           ports:
             - containerPort: 3000
@@ -54,13 +54,13 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: app-time
+  name: app_time
   labels:
-    app: app-time
+    app: app_time
 spec:
   type: LoadBalancer
   selector:
-    app: app-time
+    app: app_time
   ports:
     - port: 30000
       targetPort: 3000

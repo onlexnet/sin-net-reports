@@ -22,7 +22,7 @@ on:
   pull_request:
     branches: [ main ]
     paths:
-      - app-time/**
+      - app_time/**
       - svc_webapi/**
       - svc_timeentries/**
       - e2e_tests/**
@@ -94,7 +94,7 @@ jobs:
         with:
           node-version: '22.12.0'
           cache: 'npm'
-          cache-dependency-path: app-time/package-lock.json
+          cache-dependency-path: app_time/package-lock.json
       
       - name: Set up Python 3.12
         # Required for running pytest-bdd E2E tests
@@ -111,7 +111,7 @@ jobs:
         uses: actions/cache@v5
         with:
           path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-e2e-buildx-${{ hashFiles('svc_timeentries/Dockerfile.e2e', 'svc_timeentries/**/pom.xml', 'svc_webapi/Dockerfile.e2e', 'svc_webapi/**/pom.xml', 'app-time/Dockerfile.e2e', 'app-time/package-lock.json', 'lib_api-java/**/pom.xml', 'schema/**/*.proto') }}
+          key: ${{ runner.os }}-e2e-buildx-${{ hashFiles('svc_timeentries/Dockerfile.e2e', 'svc_timeentries/**/pom.xml', 'svc_webapi/Dockerfile.e2e', 'svc_webapi/**/pom.xml', 'app_time/Dockerfile.e2e', 'app_time/package-lock.json', 'lib_api-java/**/pom.xml', 'schema/**/*.proto') }}
           restore-keys: |
             ${{ runner.os }}-e2e-buildx-
 
@@ -191,7 +191,7 @@ jobs:
           echo "📜 Recent service logs:"
           kubectl logs -n sinnet -l app=timeentries --all-containers=true --tail=50 || true
           kubectl logs -n sinnet -l app=webapi --all-containers=true --tail=50 || true
-          kubectl logs -n sinnet -l app=app-time --all-containers=true --tail=50 || true
+          kubectl logs -n sinnet -l app=app_time --all-containers=true --tail=50 || true
       
       # ========================================================================
       # TEST: Install dependencies and run E2E tests
