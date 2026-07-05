@@ -31,7 +31,7 @@ This installs:
 ### 1. Start the cluster
 
 ```bash
-cd smoke-test
+cd e2e_tests
 ./setup-k3d.sh up
 ```
 
@@ -84,7 +84,7 @@ This destroys the cluster and frees all resources.
 2. Rebuild and reload the image:
 
 ```bash
-# From smoke-test directory
+# From e2e_tests directory
 cd ..
 
 # Rebuild specific service
@@ -261,7 +261,7 @@ k3d cluster delete <name>
 ## Files Structure
 
 ```
-smoke-test/
+e2e_tests/
 ├── setup-k3d.sh                # Main automation script
 ├── install-prerequisites.sh    # Install k3d, kubectl, helm
 └── k8s/                        # Kubernetes manifests

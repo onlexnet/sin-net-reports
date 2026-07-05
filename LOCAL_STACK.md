@@ -1,6 +1,6 @@
 # Local Development Stack
 
-**Location**: `smoke-test/`
+**Location**: `e2e_tests/`
 
 SinNet local development uses **k3d (k3s in Docker) with Dapr**.
 
@@ -14,7 +14,7 @@ details.
 ## Quick Start
 
 ```bash
-cd smoke-test
+cd e2e_tests
 ./install-prerequisites.sh  # First time only
 ./setup-k3d.sh up
 ```
@@ -58,7 +58,7 @@ cd smoke-test
    - `app-time/`
 2. Rebuild and redeploy:
    ```bash
-   cd smoke-test
+   cd e2e_tests
    ./setup-k3d.sh deploy
    ```
 3. Check status/logs:
@@ -96,6 +96,6 @@ kubectl logs -n sinnet -l app=webapi -c daprd --tail=200
 
 ## Related Documentation
 
-- [smoke-test/K3D_SETUP.md](smoke-test/K3D_SETUP.md)
-- [smoke-test/README.md](smoke-test/README.md)
+- [e2e_tests/K3D_SETUP.md](e2e_tests/K3D_SETUP.md)
+- [e2e_tests/README.md](e2e_tests/README.md)
 - [README.md](README.md)

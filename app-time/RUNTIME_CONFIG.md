@@ -162,7 +162,7 @@ RUN sed -i 's|"applicationInsightsConnectionString": ""|"applicationInsightsConn
     sed -i 's|"environment": "development"|"environment": "'"$ENVIRONMENT"'"|g' build/runtime-config.json
 ```
 
-Values are provided in the image build command (for example via `smoke-test/setup-k3d.sh`):
+Values are provided in the image build command (for example via `e2e_tests/setup-k3d.sh`):
 
 ```yaml
 build:

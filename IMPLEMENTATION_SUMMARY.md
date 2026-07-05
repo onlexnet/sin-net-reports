@@ -3,7 +3,7 @@
 ## Overview
 Local development and smoke testing now use **k3d/k3s only**.
 
-The stack is deployed through `smoke-test/setup-k3d.sh`, which provisions:
+The stack is deployed through `e2e_tests/setup-k3d.sh`, which provisions:
 - k3d cluster
 - Dapr control plane + dashboard
 - SQL Server
@@ -14,7 +14,7 @@ The stack is deployed through `smoke-test/setup-k3d.sh`, which provisions:
 ## Operational Commands
 
 ```bash
-cd smoke-test
+cd e2e_tests
 
 # create cluster and deploy all services
 ./setup-k3d.sh up
@@ -41,4 +41,4 @@ cd smoke-test
 
 - Legacy local stack paths were removed in favor of k3d/k3s.
 - Documentation and setup references now point to k3d/k3s paths.
-- For detailed setup and troubleshooting, use [LOCAL_STACK.md](LOCAL_STACK.md) and [smoke-test/K3D_SETUP.md](smoke-test/K3D_SETUP.md).
+- For detailed setup and troubleshooting, use [LOCAL_STACK.md](LOCAL_STACK.md) and [e2e_tests/K3D_SETUP.md](e2e_tests/K3D_SETUP.md).
