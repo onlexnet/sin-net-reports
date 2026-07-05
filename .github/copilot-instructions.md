@@ -38,7 +38,7 @@ Services communicate through **Dapr sidecars**, not direct gRPC:
 **Three separate version files** with different formats:
 - `svc_timeentries/.version` → `SEMVERSION` env var (e.g., "1.0.9")
 - `svc_webapi/.semversion` → Maven `-Drevision` property (e.g., "0.1.2")
-- `app-time/.version` → npm version (e.g., "1.4.3")
+- `app_time/.version` → npm version (e.g., "1.4.3")
 
 Always use `$(cat .version)` pattern, never hardcode versions.
 
@@ -47,7 +47,7 @@ Always use `$(cat .version)` pattern, never hardcode versions.
 ### GraphQL Schema → Frontend Code Generation
 React app **requires generated types** before build:
 ```bash
-cd app-time
+cd app_time
 npm run generate  # Reads ../svc_webapi/**/*.graphqls, outputs to src/components/.generated/
 npm run build
 ```

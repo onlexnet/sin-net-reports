@@ -80,7 +80,7 @@ This destroys the cluster and frees all resources.
 
 ### Making changes to code
 
-1. Edit code in `svc_timeentries/`, `svc_webapi/`, or `app-time/`
+1. Edit code in `svc_timeentries/`, `svc_webapi/`, or `app_time/`
 2. Rebuild and reload the image:
 
 ```bash
@@ -149,8 +149,8 @@ kubectl get configurations,components -n sinnet
 │  ┌─────────────────────────────────────────────────┐  │
 │  │  Namespace: sinnet                              │  │
 │  │                                                 │  │
-│  │  Pod: app-time-xxx                              │  │
-│  │    └─ Container: app-time (nginx)               │  │
+│  │  Pod: app_time-xxx                              │  │
+│  │    └─ Container: app_time (nginx)               │  │
 │  │                                                 │  │
 │  │  Pod: webapi-xxx                                │  │
 │  │    ├─ Container: webapi (Spring Boot)           │  │
@@ -270,7 +270,7 @@ e2e_tests/
     ├── sqlserver.yaml          # SQL Server deployment + service
     ├── timeentries.yaml        # TimeEntries + Dapr sidecar
     ├── webapi.yaml             # WebAPI + Dapr sidecar
-    └── app-time.yaml           # React frontend
+    └── app_time.yaml           # React frontend
 ```
 
 ## Next Steps

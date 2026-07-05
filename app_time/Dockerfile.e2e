@@ -1,4 +1,4 @@
-# Multi-stage build for app-time
+# Multi-stage build for app_time
 # Stage 1: Build the React application
 FROM node:22.12.0-bookworm AS build
 
@@ -8,8 +8,8 @@ WORKDIR /app
 COPY svc_webapi/host/src/main/resources/graphql svc_webapi/host/src/main/resources/graphql
 
 # Copy package files
-COPY app-time/package*.json ./
-COPY app-time/.version ./
+COPY app_time/package*.json ./
+COPY app_time/.version ./
 
 # Install npm dependencies
 # CACHE MOUNT: --mount=type=cache,target=/root/.npm
@@ -24,12 +24,12 @@ RUN --mount=type=cache,target=/root/.npm \
     npm ci
 
 # Copy source code and configuration files
-COPY app-time/graphql-codegen-config.yml ./
-COPY app-time/tsconfig.json ./
-COPY app-time/postcss.config.js ./
-COPY app-time/tailwind.config.js ./
-COPY app-time/public ./public
-COPY app-time/src ./src
+COPY app_time/graphql-codegen-config.yml ./
+COPY app_time/tsconfig.json ./
+COPY app_time/postcss.config.js ./
+COPY app_time/tailwind.config.js ./
+COPY app_time/public ./public
+COPY app_time/src ./src
 
 # Generate GraphQL types from backend schema and build React application
 # npm run generate: Creates TypeScript types from GraphQL schema (required for build)

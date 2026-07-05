@@ -18,7 +18,7 @@ This approach provides a clean separation between the application bundle and con
 The default `public/runtime-config.json` is configured with the production backend URL, allowing you to run the frontend locally without backend setup:
 
 ```bash
-cd app-time
+cd app_time
 npm start  # Opens http://localhost:3000
 ```
 

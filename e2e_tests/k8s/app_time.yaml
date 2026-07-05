@@ -23,7 +23,7 @@ spec:
     spec:
       containers:
         - name: app-time
-          image: sinnet/app-time:local
+          image: sinnet/app_time:local
           imagePullPolicy: Never  # Use local image loaded by k3d
           ports:
             - containerPort: 3000
