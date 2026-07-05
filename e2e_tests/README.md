@@ -5,7 +5,7 @@ This directory contains the local k3d/k3s setup used for smoke tests and day-to-
 ## Quick Start
 
 ```bash
-cd smoke-test
+cd e2e_tests
 ./install-prerequisites.sh  # First time only
 ./setup-k3d.sh up
 ```
@@ -43,11 +43,11 @@ cd smoke-test
 
 ```bash
 # 1) Start stack
-cd smoke-test
+cd e2e_tests
 ./setup-k3d.sh up
 
 # 2) Run tests in another terminal
-cd smoke-test/e2e
+cd e2e_tests/e2e
 pip install -r requirements.txt
 playwright install
 pytest

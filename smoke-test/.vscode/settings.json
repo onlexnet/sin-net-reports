@@ -1,8 +1,0 @@
-{
-    "chat.tools.terminal.autoApprove": {
-        "/^cd /workspaces/sin-net-reports/smoke-test/e2e && python3 -m pip index versions pytest-playwright \\| head -n 30 && echo '---' && python3 -m pip index versions playwright \\| head -n 30$/": {
-            "approve": true,
-            "matchCommandLine": true
-        }
-    }
-}

@@ -1,7 +1,7 @@
 # This workflow:
 # 1. Builds and deploys the complete k3d/k3s stack (all services)
 # 2. Starts the services in background
-name: E2E Smoke Tests
+name: e2e_tests
 
 # ============================================================================
 # Workflow: Browser-based smoke tests for the complete application stack
@@ -25,10 +25,10 @@ on:
       - app-time/**
       - svc_webapi/**
       - svc_timeentries/**
-      - smoke-test/**
+      - e2e_tests/**
       - lib_api-java/**
       - schema/**
-      - .github/workflows/e2e-smoke-tests.yml
+      - .github/workflows/e2e_tests.yml
   workflow_dispatch:  # Allow manual trigger
 
 # Limit permissions following the principle of least privilege
@@ -52,24 +52,24 @@ jobs:
         with:
           python-version: '3.12'
           cache: 'pip'
-          cache-dependency-path: smoke-test/e2e/requirements.txt
+          cache-dependency-path: e2e_tests/e2e/requirements.txt
 
       - name: Install Python typing dependencies
-        working-directory: smoke-test/e2e
+        working-directory: e2e_tests/e2e
         run: |
           echo "📦 Installing Python dependencies for typing..."
           pip install -r requirements.txt
           echo "✅ Dependencies installed"
 
       - name: Run mypy type checks
-        working-directory: smoke-test/e2e
+        working-directory: e2e_tests/e2e
         run: |
           echo "🔎 Running mypy type checks..."
           mypy --config-file mypy.ini
           echo "✅ mypy checks passed"
 
   e2e-tests:
-    name: Run E2E Smoke Tests
+    name: Run e2e_tests
     runs-on: ubuntu-22.04
     timeout-minutes: 45
     
@@ -102,7 +102,7 @@ jobs:
         with:
           python-version: '3.12'
           cache: 'pip'
-          cache-dependency-path: smoke-test/e2e/requirements.txt
+          cache-dependency-path: e2e_tests/e2e/requirements.txt
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@4d04d5d9486b7bd6fa91e7baf45bbb4f8b9deedd
@@ -120,12 +120,12 @@ jobs:
         uses: actions/cache@v5
         with:
           path: ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-${{ hashFiles('smoke-test/e2e/requirements.txt') }}
+          key: ${{ runner.os }}-playwright-${{ hashFiles('e2e_tests/e2e/requirements.txt') }}
           restore-keys: |
             ${{ runner.os }}-playwright-
       
       - name: Install k3d prerequisites
-        working-directory: smoke-test
+        working-directory: e2e_tests
         run: |
           echo "🔧 Installing k3d prerequisites..."
           ./install-prerequisites.sh
@@ -136,7 +136,7 @@ jobs:
       # ========================================================================
       
       - name: Start k3d stack
-        working-directory: smoke-test
+        working-directory: e2e_tests
         env:
           DOCKER_BUILD_CACHE_DIR: /tmp/.buildx-cache
         run: |
@@ -198,7 +198,7 @@ jobs:
       # ========================================================================
       
       - name: Install Python test dependencies
-        working-directory: smoke-test/e2e
+        working-directory: e2e_tests/e2e
         # Install pytest, pytest-bdd, playwright, and other dependencies
         run: |
           echo "📦 Installing Python dependencies..."
@@ -216,7 +216,7 @@ jobs:
       - name: Run E2E smoke tests
         id: e2e_tests
         continue-on-error: true
-        working-directory: smoke-test/e2e
+        working-directory: e2e_tests/e2e
         # Run pytest with JUnit output for GitHub checks
         # Tests are defined in features/*.feature files
         # Step definitions are in step_defs/*.py files
@@ -232,7 +232,7 @@ jobs:
         uses: dorny/test-reporter@d61b558e8df85cb60d09ca3e5b09653b4477cea7
         with:
           name: E2E Tests
-          path: smoke-test/e2e/reports/junit.xml
+          path: e2e_tests/e2e/reports/junit.xml
           reporter: java-junit
           fail-on-error: false
 
@@ -243,8 +243,8 @@ jobs:
           import os
           import xml.etree.ElementTree as ET
 
-          report_path = "smoke-test/e2e/reports/junit.xml"
-          summary_path = "smoke-test/e2e/reports/pr-summary.md"
+          report_path = "e2e_tests/e2e/reports/junit.xml"
+          summary_path = "e2e_tests/e2e/reports/pr-summary.md"
 
           tests = failures = errors = skipped = 0
 
@@ -286,8 +286,8 @@ jobs:
       - name: Publish test summary to job summary
         if: always()
         run: |
-          if [ -f smoke-test/e2e/reports/pr-summary.md ]; then
-            cat smoke-test/e2e/reports/pr-summary.md >> "$GITHUB_STEP_SUMMARY"
+          if [ -f e2e_tests/e2e/reports/pr-summary.md ]; then
+            cat e2e_tests/e2e/reports/pr-summary.md >> "$GITHUB_STEP_SUMMARY"
           else
             {
               echo "## E2E Smoke Tests"
@@ -302,8 +302,8 @@ jobs:
         with:
           name: e2e-failure-evidence
           path: |
-            smoke-test/e2e/reports/screenshots/
-            smoke-test/e2e/test-results/
+            e2e_tests/e2e/reports/screenshots/
+            e2e_tests/e2e/test-results/
           if-no-files-found: warn
           retention-days: 30
 
@@ -313,7 +313,7 @@ jobs:
       
       - name: Stop k3d stack
         if: always()
-        working-directory: smoke-test
+        working-directory: e2e_tests
         # Stop and remove cluster
         run: |
           echo "🛑 Stopping services..."

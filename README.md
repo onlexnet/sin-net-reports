@@ -28,7 +28,7 @@ In scope:
 Start the complete local stack (all services + database + Dapr) with:
 
 ```bash
-cd smoke-test
+cd e2e_tests
 ./install-prerequisites.sh  # first time only
 ./setup-k3d.sh up
 ```
@@ -37,7 +37,7 @@ Access the application:
 - **Frontend**: http://localhost:3000
 - **GraphQL API**: http://localhost:11031/graphiql
 - **Dapr Dashboard**: http://localhost:18080
-- **API Documentation**: See [LOCAL_STACK.md](LOCAL_STACK.md) or [smoke-test/README.md](smoke-test/README.md)
+- **API Documentation**: See [LOCAL_STACK.md](LOCAL_STACK.md) or [e2e_tests/README.md](e2e_tests/README.md)
 
 ### Manual Development
 

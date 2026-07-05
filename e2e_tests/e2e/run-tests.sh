@@ -67,8 +67,8 @@ echo ""
 # Check if we're in the correct directory
 if [ ! -f "requirements.txt" ]; then
   echo -e "${RED}❌ Error: requirements.txt not found${NC}"
-  echo -e "${YELLOW}Please run this script from the smoke-test/e2e directory:${NC}"
-  echo "  cd smoke-test/e2e"
+  echo -e "${YELLOW}Please run this script from the e2e_tests/e2e directory:${NC}"
+  echo "  cd e2e_tests/e2e"
   echo "  ./run-tests.sh"
   exit 1
 fi
@@ -99,7 +99,7 @@ if curl -sf http://localhost:11031/actuator/health > /dev/null 2>&1; then
 else
   echo -e "${YELLOW}⚠️  WebAPI is not responding on port 11031${NC}"
   echo -e "${YELLOW}Please start the k3d stack first:${NC}"
-  echo "  cd ../  # Go to smoke-test directory"
+  echo "  cd ../  # Go to e2e_tests directory"
   echo "  ./setup-k3d.sh up"
   echo ""
   echo -e "${YELLOW}Then run this script again in another terminal.${NC}"

@@ -13,7 +13,7 @@ Browser-based smoke tests for SinNet Reports using Playwright and pytest-bdd (BD
 
 1. **Install Python dependencies:**
    ```bash
-   cd smoke-test/e2e
+   cd e2e_tests/e2e
    pip install -r requirements.txt
    ```
 
@@ -25,13 +25,13 @@ Browser-based smoke tests for SinNet Reports using Playwright and pytest-bdd (BD
 
 3. **Start the application stack:**
    ```bash
-   cd ../  # Back to smoke-test directory
+   cd ../  # Back to e2e_tests directory
     ./setup-k3d.sh up
    ```
 
 4. **Run tests (in another terminal):**
    ```bash
-   cd smoke-test/e2e
+   cd e2e_tests/e2e
    pytest
    ```
 
@@ -198,7 +198,7 @@ Tests can run in GitHub Actions or any CI system:
 ```yaml
 - name: Run E2E Tests
   run: |
-    cd smoke-test/e2e
+    cd e2e_tests/e2e
     pip install -r requirements.txt
     playwright install --with-deps chromium
         pytest --browser chromium \
@@ -219,7 +219,7 @@ Tests can run in GitHub Actions or any CI system:
 ### "Connection refused" errors
 Make sure the k3d stack is running:
 ```bash
-cd smoke-test
+cd e2e_tests
 ./setup-k3d.sh up
 ```
 
