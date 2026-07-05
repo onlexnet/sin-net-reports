@@ -26,6 +26,8 @@ RUN --mount=type=cache,target=/root/.npm \
 # Copy source code and configuration files
 COPY app-time/graphql-codegen-config.yml ./
 COPY app-time/tsconfig.json ./
+COPY app-time/postcss.config.js ./
+COPY app-time/tailwind.config.js ./
 COPY app-time/public ./public
 COPY app-time/src ./src
 
