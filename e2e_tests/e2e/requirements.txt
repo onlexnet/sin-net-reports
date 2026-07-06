@@ -20,7 +20,7 @@
 
 # Testing Framework
 pytest==9.0.3
-pytest-bdd==7.0.1
+pytest-bdd==7.3.0
 
 # Browser Automation (Playwright - modern alternative to Selenium)
 playwright==1.61.0

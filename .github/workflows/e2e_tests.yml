@@ -279,6 +279,7 @@ jobs:
               "Failure evidence artifact: `e2e-failure-evidence`",
           ])
 
+          os.makedirs(os.path.dirname(summary_path), exist_ok=True)
           with open(summary_path, "w", encoding="utf-8") as f:
               f.write(body + "\n")
           PY
