@@ -9,7 +9,7 @@
   <artifactId>uservice-projects.rpc</artifactId>
 
   <properties>
-    <proto.dir>../../schema/uservice-projects.rpc</proto.dir>
+    <proto.dir>../../res_schema/uservice-projects.rpc</proto.dir>
   </properties>
 
 </project>

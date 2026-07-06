@@ -12,13 +12,13 @@ on:
     branches: [ main ]
     paths:
       - lib_api-java/**
-      - schema/**
+      - res_schema/**
       - .github/workflows/api-client-java.yml
   pull_request:
     branches: [ main ]
     paths:
       - lib_api-java/**
-      - schema/**
+      - res_schema/**
       - .github/workflows/api-client-java.yml
 
 permissions:

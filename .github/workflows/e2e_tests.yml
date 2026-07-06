@@ -27,7 +27,7 @@ on:
       - svc_timeentries/**
       - e2e_tests/**
       - lib_api-java/**
-      - schema/**
+      - res_schema/**
       - .github/workflows/e2e_tests.yml
   workflow_dispatch:  # Allow manual trigger
 
@@ -111,7 +111,7 @@ jobs:
         uses: actions/cache@v5
         with:
           path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-e2e-buildx-${{ hashFiles('svc_timeentries/Dockerfile.e2e', 'svc_timeentries/**/pom.xml', 'svc_webapi/Dockerfile.e2e', 'svc_webapi/**/pom.xml', 'app_time/Dockerfile.e2e', 'app_time/package-lock.json', 'lib_api-java/**/pom.xml', 'schema/**/*.proto') }}
+          key: ${{ runner.os }}-e2e-buildx-${{ hashFiles('svc_timeentries/Dockerfile.e2e', 'svc_timeentries/**/pom.xml', 'svc_webapi/Dockerfile.e2e', 'svc_webapi/**/pom.xml', 'app_time/Dockerfile.e2e', 'app_time/package-lock.json', 'lib_api-java/**/pom.xml', 'res_schema/**/*.proto') }}
           restore-keys: |
             ${{ runner.os }}-e2e-buildx-
 

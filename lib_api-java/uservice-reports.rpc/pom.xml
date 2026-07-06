@@ -9,7 +9,7 @@
   <artifactId>uservice-reports.rpc</artifactId>
 
   <properties>
-    <proto.dir>../../schema/uservice-reports.rpc</proto.dir>
+    <proto.dir>../../res_schema/uservice-reports.rpc</proto.dir>
   </properties>
 
 </project>

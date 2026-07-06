@@ -9,6 +9,6 @@
   <artifactId>uservice-projects.events</artifactId>
 
   <properties>
-    <avro.dir>../../schema/uservice-projects.events</avro.dir>
+    <avro.dir>../../res_schema/uservice-projects.events</avro.dir>
   </properties>
 </project>
