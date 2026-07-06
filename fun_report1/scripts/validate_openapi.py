@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Validate OpenAPI specification for fun_report1.
 
-This script validates the OpenAPI schema located in schema/fun_report1.openapi/
+This script validates the OpenAPI schema located in res_schema/fun_report1.openapi/
 against the OpenAPI 3.0 specification. It's used in local development and CI
 to ensure the contract remains valid.
 """
@@ -19,7 +19,7 @@ def main() -> int:
     """Validate the OpenAPI specification and return exit code."""
     schema_path = (
         Path(__file__).parent.parent.parent
-        / "schema"
+        / "res_schema"
         / "fun_report1.openapi"
         / "openapi.yaml"
     )

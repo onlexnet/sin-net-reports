@@ -18,7 +18,7 @@ ENV PATH=$PATH:$MAVEN_HOME/bin
 
 # Copy lib_api-java dependency first (needed by timeentries)
 COPY lib_api-java lib_api-java
-COPY schema schema
+COPY res_schema res_schema
 
 # Copy Maven wrapper and pom files for timeentries
 COPY svc_timeentries/mvnw svc_timeentries/

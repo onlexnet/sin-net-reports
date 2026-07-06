@@ -19,7 +19,7 @@ ENV PATH=$PATH:$MAVEN_HOME/bin
 # Copy pom files for dependency resolution
 # Copy lib_api-java dependency (entire structure for Maven modules and schema generation)
 COPY lib_api-java lib_api-java
-COPY schema schema
+COPY res_schema res_schema
 
 # Copy pom files for dependency resolution
 COPY svc_webapi/pom.xml svc_webapi/

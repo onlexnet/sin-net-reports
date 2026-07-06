@@ -38,7 +38,7 @@ def main() -> int:
     project_root = Path(__file__).parent.parent
     schema_path = (
         project_root.parent
-        / "schema"
+        / "res_schema"
         / "fun_report1.openapi"
         / "openapi.yaml"
     )

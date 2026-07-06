@@ -26,7 +26,7 @@ See [K3D_SETUP.md](../e2e_tests/K3D_SETUP.md) for k3d-specific documentation.
 ### Service Communication via Dapr
 Services communicate through **Dapr sidecars**, not direct gRPC:
 - `uservice-timeentries` (port 11021) ← Dapr sidecar → `svc_webapi` (port 11031)
-- gRPC schemas in `schema/uservice-timeentries.rpc/*.proto`
+- gRPC schemas in `res_schema/uservice-timeentries.rpc/*.proto`
 - Client code generated in `lib_api-java` (build this first!)
 
 **In production (Azure Container Apps):**
@@ -94,7 +94,7 @@ FROM eclipse-temurin:25-jre-jammy
 ### Docker Build Context
 All Dockerfiles use **parent directory context** (`..` from e2e_tests/) because they need:
 - `lib_api-java` - shared gRPC libraries
-- `schema` - proto definitions
+- `res_schema` - proto definitions
 - Service source code
 
 Example: `e2e_tests/setup-k3d.sh` builds from parent, then imports images into the k3d cluster.
@@ -128,5 +128,5 @@ Key files for understanding architecture:
 - `e2e_tests/dapr-local/` - Dapr configuration for local development
 - `LOCAL_STACK.md` - comprehensive local development guide
 - `infra/shared/main.tf` - Azure infrastructure modules
-- `schema/` - gRPC service definitions
+- `res_schema/` - gRPC service definitions
 - `svc_webapi/host/src/main/resources/graphql/schema.graphqls` - GraphQL schema consumed by frontend
