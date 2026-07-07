@@ -16,7 +16,7 @@ def main() -> int:
     """Generate Pydantic models from OpenAPI spec."""
     project_root = Path(__file__).parent.parent
     schema_path = (
-        project_root.parent / "schema" / "fun_report1.openapi" / "openapi.yaml"
+        project_root.parent / "res_schema" / "fun_report1.openapi" / "openapi.yaml"
     )
     output_path = project_root / "src" / "models_generated.py"
 

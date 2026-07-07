@@ -22,7 +22,7 @@ updates:
      interval: weekly
 
  - package-ecosystem: "maven"
-   directory: "/uservice-timeentries"
+   directory: "/svc_timeentries"
    schedule:
      interval: weekly
 
@@ -32,7 +32,7 @@ updates:
      interval: weekly
 
  - package-ecosystem: "npm"
-   directory: "/app-time"
+   directory: "/app_time"
    schedule:
      interval: weekly
 

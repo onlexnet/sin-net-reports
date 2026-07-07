@@ -80,7 +80,7 @@
 	"mounts": [
 		"source=sinnet-terraform-config,target=/home/vscode/.terraform.d,type=volume"
 	],
-	"postCreateCommand": "sudo mkdir -p /home/vscode/.terraform.d && sudo chown -R vscode:vscode /home/vscode/.terraform.d && chmod 700 /home/vscode/.terraform.d && if [ -f /home/vscode/.terraform.d/credentials.tfrc.json ]; then chmod 600 /home/vscode/.terraform.d/credentials.tfrc.json; fi",
+	"postCreateCommand": "sudo apt-get update && sudo apt-get install -y ripgrep && sudo mkdir -p /home/vscode/.terraform.d && sudo chown -R vscode:vscode /home/vscode/.terraform.d && chmod 700 /home/vscode/.terraform.d && if [ -f /home/vscode/.terraform.d/credentials.tfrc.json ]; then chmod 600 /home/vscode/.terraform.d/credentials.tfrc.json; fi",
 	"postStartCommand": "sudo mkdir -p /home/vscode/.terraform.d && sudo chown -R vscode:vscode /home/vscode/.terraform.d && chmod 700 /home/vscode/.terraform.d && if [ -f /home/vscode/.terraform.d/credentials.tfrc.json ]; then chmod 600 /home/vscode/.terraform.d/credentials.tfrc.json; fi"
 	
 	// https://stackoverflow.com/a/75644266

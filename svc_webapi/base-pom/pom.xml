@@ -12,10 +12,10 @@
     <!-- Disable warning
       [WARNING] Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent! -->
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <jacoco-maven-plugin.version>0.8.14</jacoco-maven-plugin.version>
+    <jacoco-maven-plugin.version>0.8.15</jacoco-maven-plugin.version>
     <sonar-maven-plugin.version>3.7.0.1746</sonar-maven-plugin.version>
     <errorprone.version>2.39.0</errorprone.version>
-    <cucumber.version>7.20.0</cucumber.version>
+    <cucumber.version>7.34.4</cucumber.version>
     <commons-lang3.version>3.18.0</commons-lang3.version>
     <nullaway.version>0.12.10</nullaway.version>
     <lombok.version>1.18.42</lombok.version>
@@ -196,7 +196,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.11.0</version>
+        <version>3.15.0</version>
         <configuration>
           <release>25</release>
           <fork>true</fork>

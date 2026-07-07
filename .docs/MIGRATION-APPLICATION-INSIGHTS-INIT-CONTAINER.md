@@ -18,14 +18,14 @@ Move the Application Insights agent to an init container that downloads the agen
 
 ## Changes Made
 
-### 1. GitHub Actions Workflow (`.github/workflows/uservice-timeentries.yml`)
+### 1. GitHub Actions Workflow (`.github/workflows/svc_timeentries.yml`)
 **Removed:**
 - Download of Application Insights agent during build process
 - wget command that downloaded `applicationinsights-agent-3.7.6.jar`
 
 **Result:** The build process no longer includes the agent in the Docker image.
 
-### 2. Maven Configuration (`uservice-timeentries/host/pom.xml`)
+### 2. Maven Configuration (`svc_timeentries/host/pom.xml`)
 **Removed:**
 - `BPE_DELIM_JAVA_TOOL_OPTIONS` buildpack environment variable
 - `BPE_PREPEND_JAVA_TOOL_OPTIONS` configuration pointing to embedded agent
@@ -50,7 +50,7 @@ Move the Application Insights agent to an init container that downloads the agen
 
 ### 4. Documentation Updates
 - Updated ADR-006 (Observability Strategy) to reflect new implementation
-- Updated README in `uservice-timeentries/host/src/main/resources/applicationinsights/`
+- Updated README in `svc_timeentries/host/src/main/resources/applicationinsights/`
 - Updated `.github/copilot-instructions.md` with new build process
 
 ### 5. Cyclic Build Workflow (`.github/workflows/cyclic-build.yml`)

@@ -6,7 +6,7 @@ Built with **FastAPI + OpenAPI** for automatic validation and interactive docume
 ## Architecture
 
 This service follows a **contract-first approach**:
-1. OpenAPI specification defines the API contract (`../schema/fun_report1.openapi/openapi.yaml`)
+1. OpenAPI specification defines the API contract (`../res_schema/fun_report1.openapi/openapi.yaml`)
 2. Pydantic models are **generated** from the schema (`models_generated.py`)
 3. FastAPI endpoints use generated models for request/response validation
 4. Azure Functions ASGI wrapper enables deployment to Azure Functions
@@ -43,7 +43,7 @@ This service follows a **contract-first approach**:
 - `requirements-dev.txt` - Development/testing dependencies
 
 ### OpenAPI contract
-- `../schema/fun_report1.openapi/openapi.yaml` - **Source of truth** API contract
+- `../res_schema/fun_report1.openapi/openapi.yaml` - **Source of truth** API contract
 
 ### Scripts
 - `scripts/validate_openapi.py` - Validate OpenAPI schema
@@ -78,7 +78,7 @@ cp local.settings.json.example local.settings.json
 Edit the API contract:
 ```bash
 # Edit the OpenAPI specification
-code ../schema/fun_report1.openapi/openapi.yaml
+code ../res_schema/fun_report1.openapi/openapi.yaml
 ```
 
 #### 2. Validate schema

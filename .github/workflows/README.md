@@ -5,9 +5,9 @@ This directory contains automated CI/CD workflows for the sin-net-reports projec
 ## Workflows
 
 ### Production Workflows (with deployment)
-- **`uservice-timeentries.yml`** - Builds and deploys the timeentries microservice
+- **`svc_timeentries.yml`** - Builds and deploys the timeentries microservice
 - **`svc_webapi.yml`** - Builds and deploys the webapi microservice  
-- **`app-time.yml`** - Builds and deploys the app-time static web application
+- **`app_time.yml`** - Builds and deploys the app_time static web application
 
 ### Maintenance Workflows (no deployment)
 - **`cyclic-build.yml`** - Cyclic build verification without deployment
@@ -19,7 +19,7 @@ The `cyclic-build.yml` workflow was created to address dependency-related build 
 ### Purpose
 - **Early Detection**: Catch build failures caused by dependency changes
 - **No Risk**: Builds only, no deployments to production
-- **Comprehensive**: Tests all major components (Java services, app-time frontend)
+- **Comprehensive**: Tests all major components (Java services, app_time frontend)
 - **Monitoring**: Checks for available dependency and plugin updates
 
 ### Schedule
@@ -29,11 +29,11 @@ The `cyclic-build.yml` workflow was created to address dependency-related build 
 ### Components Tested
 1. **Java Components**:
    - gRPC API Client (`lib_api-java`)
-   - Timeentries Service (`uservice-timeentries`)
+   - Timeentries Service (`svc_timeentries`)
    - WebAPI Service (`svc_webapi`)
 
 2. **Frontend**:
-   - App Time (`app-time`)
+   - App Time (`app_time`)
 
 3. **Dependency Checks**:
    - Maven dependency updates

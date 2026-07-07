@@ -6,7 +6,7 @@ Time tracking and reporting microservices application: Java Spring Boot backends
 
 **Recommended: k3d (Kubernetes + Dapr with working dashboard)**
 ```bash
-cd smoke-test
+cd e2e_tests
 ./install-prerequisites.sh  # First time only
 ./setup-k3d.sh up           # ~2 min (cached images)
 ```
@@ -19,14 +19,14 @@ Access points:
 - SQL Server: localhost:1433 (sa/P@ssw0rd123!)
 
 See [LOCAL_STACK.md](../LOCAL_STACK.md) for detailed local development guide.
-See [K3D_SETUP.md](../smoke-test/K3D_SETUP.md) for k3d-specific documentation.
+See [K3D_SETUP.md](../e2e_tests/K3D_SETUP.md) for k3d-specific documentation.
 
 ## Architecture & Communication Patterns
 
 ### Service Communication via Dapr
 Services communicate through **Dapr sidecars**, not direct gRPC:
 - `uservice-timeentries` (port 11021) ← Dapr sidecar → `svc_webapi` (port 11031)
-- gRPC schemas in `schema/uservice-timeentries.rpc/*.proto`
+- gRPC schemas in `res_schema/uservice-timeentries.rpc/*.proto`
 - Client code generated in `lib_api-java` (build this first!)
 
 **In production (Azure Container Apps):**
@@ -36,9 +36,9 @@ Services communicate through **Dapr sidecars**, not direct gRPC:
 
 ### Version Management Pattern
 **Three separate version files** with different formats:
-- `uservice-timeentries/.version` → `SEMVERSION` env var (e.g., "1.0.9")
+- `svc_timeentries/.version` → `SEMVERSION` env var (e.g., "1.0.9")
 - `svc_webapi/.semversion` → Maven `-Drevision` property (e.g., "0.1.2")
-- `app-time/.version` → npm version (e.g., "1.4.3")
+- `app_time/.version` → npm version (e.g., "1.4.3")
 
 Always use `$(cat .version)` pattern, never hardcode versions.
 
@@ -47,7 +47,7 @@ Always use `$(cat .version)` pattern, never hardcode versions.
 ### GraphQL Schema → Frontend Code Generation
 React app **requires generated types** before build:
 ```bash
-cd app-time
+cd app_time
 npm run generate  # Reads ../svc_webapi/**/*.graphqls, outputs to src/components/.generated/
 npm run build
 ```
@@ -60,7 +60,7 @@ npm run build
 Always build in this order (dependencies matter):
 ```bash
 mvn install -f lib_api-java              # Generates gRPC clients from .proto
-mvn install -pl host -am -f uservice-timeentries  # Uses lib_api-java
+mvn install -pl host -am -f svc_timeentries  # Uses lib_api-java
 mvn install -f svc_webapi              # Uses lib_api-java
 ```
 
@@ -71,7 +71,7 @@ Use `-DskipTests` - Testcontainers tests often fail in containerized dev environ
 **Dev profile** (`SPRING_PROFILES_ACTIVE=dev`):
 - Uses SQL Server with `tempdb` database
 - Relaxed security, auto-schema creation
-- See `smoke-test/k8s/*.yaml` environment vars
+- See `e2e_tests/k8s/*.yaml` environment vars
 
 **Prod profile** (Azure):
 - Full authentication via Azure B2C
@@ -92,12 +92,12 @@ FROM eclipse-temurin:25-jre-jammy
 ```
 
 ### Docker Build Context
-All Dockerfiles use **parent directory context** (`..` from smoke-test/) because they need:
+All Dockerfiles use **parent directory context** (`..` from e2e_tests/) because they need:
 - `lib_api-java` - shared gRPC libraries
-- `schema` - proto definitions
+- `res_schema` - proto definitions
 - Service source code
 
-Example: `smoke-test/setup-k3d.sh` builds from parent, then imports images into the k3d cluster.
+Example: `e2e_tests/setup-k3d.sh` builds from parent, then imports images into the k3d cluster.
 
 ## Deployment & Infrastructure
 
@@ -123,10 +123,10 @@ Example: `smoke-test/setup-k3d.sh` builds from parent, then imports images into 
 ## File References
 
 Key files for understanding architecture:
-- `smoke-test/setup-k3d.sh` - local stack lifecycle + image build/import logic
-- `smoke-test/k8s/` - Kubernetes manifests for local services
-- `smoke-test/dapr-local/` - Dapr configuration for local development
+- `e2e_tests/setup-k3d.sh` - local stack lifecycle + image build/import logic
+- `e2e_tests/k8s/` - Kubernetes manifests for local services
+- `e2e_tests/dapr-local/` - Dapr configuration for local development
 - `LOCAL_STACK.md` - comprehensive local development guide
 - `infra/shared/main.tf` - Azure infrastructure modules
-- `schema/` - gRPC service definitions
+- `res_schema/` - gRPC service definitions
 - `svc_webapi/host/src/main/resources/graphql/schema.graphqls` - GraphQL schema consumed by frontend

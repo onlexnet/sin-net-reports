@@ -1,0 +1,328 @@
+# This workflow:
+# 1. Builds and deploys the complete k3d/k3s stack (all services)
+# 2. Starts the services in background
+name: e2e_tests
+
+# ============================================================================
+# Workflow: Browser-based smoke tests for the complete application stack
+# ============================================================================
+#
+# This workflow:
+# 1. Builds and deploys the complete k3d/k3s stack (all services)
+# 2. Starts the services in background
+# 3. Runs Playwright-based E2E tests with pytest-bdd
+# 4. Publishes test results directly in GitHub checks/summary
+#
+# Tests are written in Gherkin (Cucumber-style BDD)
+# Test execution uses Playwright for browser automation
+#
+# ============================================================================
+
+on:
+  pull_request:
+    branches: [ main ]
+    paths:
+      - app_time/**
+      - svc_webapi/**
+      - svc_timeentries/**
+      - e2e_tests/**
+      - lib_api-java/**
+      - res_schema/**
+      - .github/workflows/e2e_tests.yml
+  workflow_dispatch:  # Allow manual trigger
+
+# Limit permissions following the principle of least privilege
+permissions:
+  contents: read  # Read repository contents
+  actions: read   # Read workflow actions metadata
+  checks: write   # Publish test report checks
+
+jobs:
+  e2e-python-typing:
+    name: E2E Python Typing
+    runs-on: ubuntu-22.04
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+          cache-dependency-path: e2e_tests/e2e/requirements.txt
+
+      - name: Install Python typing dependencies
+        working-directory: e2e_tests/e2e
+        run: |
+          echo "📦 Installing Python dependencies for typing..."
+          pip install -r requirements.txt
+          echo "✅ Dependencies installed"
+
+      - name: Run mypy type checks
+        working-directory: e2e_tests/e2e
+        run: |
+          echo "🔎 Running mypy type checks..."
+          mypy --config-file mypy.ini
+          echo "✅ mypy checks passed"
+
+  e2e-tests:
+    name: Run e2e_tests
+    runs-on: ubuntu-22.04
+    timeout-minutes: 45
+    
+    steps:
+      # ========================================================================
+      # SETUP: Checkout and prepare environment
+      # ========================================================================
+      
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Java Environment
+        # Required for building Java services in Docker
+        uses: ./.github/actions/setup-java-environment
+        with:
+          java-version: '25'
+          java-distribution: 'liberica'
+      
+      - name: Set up Node.js 22
+        # Required for building React frontend in Docker
+        uses: actions/setup-node@v6
+        with:
+          node-version: '22.12.0'
+          cache: 'npm'
+          cache-dependency-path: app_time/package-lock.json
+      
+      - name: Set up Python 3.12
+        # Required for running pytest-bdd E2E tests
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+          cache-dependency-path: e2e_tests/e2e/requirements.txt
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@4d04d5d9486b7bd6fa91e7baf45bbb4f8b9deedd
+
+      - name: Restore Docker build cache
+        uses: actions/cache@v5
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-e2e-buildx-${{ hashFiles('svc_timeentries/Dockerfile.e2e', 'svc_timeentries/**/pom.xml', 'svc_webapi/Dockerfile.e2e', 'svc_webapi/**/pom.xml', 'app_time/Dockerfile.e2e', 'app_time/package-lock.json', 'lib_api-java/**/pom.xml', 'res_schema/**/*.proto') }}
+          restore-keys: |
+            ${{ runner.os }}-e2e-buildx-
+
+      - name: Restore Playwright browser cache
+        id: playwright-cache
+        uses: actions/cache@v5
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('e2e_tests/e2e/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-playwright-
+      
+      - name: Install k3d prerequisites
+        working-directory: e2e_tests
+        run: |
+          echo "🔧 Installing k3d prerequisites..."
+          ./install-prerequisites.sh
+          echo "✅ Prerequisites installed"
+      
+      # ========================================================================
+      # START: Launch all services in k3d
+      # ========================================================================
+      
+      - name: Start k3d stack
+        working-directory: e2e_tests
+        env:
+          DOCKER_BUILD_CACHE_DIR: /tmp/.buildx-cache
+        run: |
+          echo "🚀 Starting all services..."
+          ./setup-k3d.sh up
+          echo "✅ Services started"
+      
+      - name: Wait for services to be healthy
+        # Give services time to initialize and become ready
+        run: |
+          echo "⏳ Waiting for services to be healthy..."
+          sleep 20
+          
+          echo "📊 Checking service health..."
+          
+          # Check TimeEntries health
+          curl -f http://localhost:11021/actuator/health || echo "⚠️ TimeEntries not ready yet"
+          
+          # Check WebAPI health
+          curl -f http://localhost:11031/actuator/health || echo "⚠️ WebAPI not ready yet"
+          
+          # Check Frontend
+          curl -f http://localhost:3000 || echo "⚠️ Frontend not ready yet"
+          
+          echo "⏳ Waiting additional time for full initialization..."
+          sleep 15
+          
+          echo "✅ Services should be ready for testing"
+      
+      - name: Show running pods
+        # Display status of all pods for debugging
+        run: |
+          echo "📦 Running pods:"
+          kubectl get pods -n sinnet -o wide
+
+      - name: Verify frontend runtime config for E2E login
+        run: |
+          echo "🔎 Verifying frontend runtime configuration..."
+          curl -sSf http://localhost:3000/runtime-config.json > /tmp/runtime-config.json
+          python3 - <<'PY'
+          import json
+          with open('/tmp/runtime-config.json', 'r', encoding='utf-8') as f:
+              config = json.load(f)
+          assert config.get('useTestLogin') is True, f"Expected useTestLogin=true, got: {config}"
+          print('✅ runtime-config.json has useTestLogin=true')
+          PY
+      
+      - name: Show service logs (last 50 lines)
+        if: always()
+        # Display recent logs from service pods for debugging
+        run: |
+          echo "📜 Recent service logs:"
+          kubectl logs -n sinnet -l app=timeentries --all-containers=true --tail=50 || true
+          kubectl logs -n sinnet -l app=webapi --all-containers=true --tail=50 || true
+          kubectl logs -n sinnet -l app=app_time --all-containers=true --tail=50 || true
+      
+      # ========================================================================
+      # TEST: Install dependencies and run E2E tests
+      # ========================================================================
+      
+      - name: Install Python test dependencies
+        working-directory: e2e_tests/e2e
+        # Install pytest, pytest-bdd, playwright, and other dependencies
+        run: |
+          echo "📦 Installing Python dependencies..."
+          pip install -r requirements.txt
+          echo "✅ Dependencies installed"
+      
+      - name: Install Playwright browsers
+        # Download Chromium browser binary for Playwright
+        # Using --with-deps installs system dependencies (for Linux)
+        run: |
+          echo "🌐 Installing Playwright browsers..."
+          playwright install chromium --with-deps
+          echo "✅ Browser installed"
+
+      - name: Run E2E smoke tests
+        id: e2e_tests
+        continue-on-error: true
+        working-directory: e2e_tests/e2e
+        # Run pytest with JUnit output for GitHub checks
+        # Tests are defined in features/*.feature files
+        # Step definitions are in step_defs/*.py files
+        run: |
+          echo "🧪 Running E2E smoke tests..."
+          pytest -v --browser chromium \
+            --screenshot=only-on-failure \
+            --tracing=retain-on-failure \
+            --junitxml=reports/junit.xml
+
+      - name: Publish E2E test results
+        if: always()
+        uses: dorny/test-reporter@d61b558e8df85cb60d09ca3e5b09653b4477cea7
+        with:
+          name: E2E Tests
+          path: e2e_tests/e2e/reports/junit.xml
+          reporter: java-junit
+          fail-on-error: false
+
+      - name: Build test summary markdown
+        if: always()
+        run: |
+          python3 - <<'PY'
+          import os
+          import xml.etree.ElementTree as ET
+
+          report_path = "e2e_tests/e2e/reports/junit.xml"
+          summary_path = "e2e_tests/e2e/reports/pr-summary.md"
+
+          tests = failures = errors = skipped = 0
+
+          if os.path.exists(report_path):
+              root = ET.parse(report_path).getroot()
+              suites = [root] if root.tag == "testsuite" else root.findall("testsuite")
+              for suite in suites:
+                  tests += int(float(suite.attrib.get("tests", 0)))
+                  failures += int(float(suite.attrib.get("failures", 0)))
+                  errors += int(float(suite.attrib.get("errors", 0)))
+                  skipped += int(float(suite.attrib.get("skipped", 0)))
+
+          failed_total = failures + errors
+          passed = max(tests - failed_total - skipped, 0)
+          status = "✅ Passed" if failed_total == 0 else "❌ Failed"
+          run_url = f"https://github.com/{os.environ['GITHUB_REPOSITORY']}/actions/runs/{os.environ['GITHUB_RUN_ID']}"
+
+          body = "\n".join([
+              "## E2E Smoke Tests",
+              "",
+              f"**Status:** {status}",
+              "",
+              "| Metric | Count |",
+              "|---|---:|",
+              f"| Total | {tests} |",
+              f"| Passed | {passed} |",
+              f"| Failed | {failed_total} |",
+              f"| Skipped | {skipped} |",
+              "",
+              f"Run details: {run_url}",
+              "",
+              "Failure evidence artifact: `e2e-failure-evidence`",
+          ])
+
+          os.makedirs(os.path.dirname(summary_path), exist_ok=True)
+          with open(summary_path, "w", encoding="utf-8") as f:
+              f.write(body + "\n")
+          PY
+
+      - name: Publish test summary to job summary
+        if: always()
+        run: |
+          if [ -f e2e_tests/e2e/reports/pr-summary.md ]; then
+            cat e2e_tests/e2e/reports/pr-summary.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            {
+              echo "## E2E Smoke Tests"
+              echo ""
+              echo "No summary generated."
+            } >> "$GITHUB_STEP_SUMMARY"
+            fi
+
+      - name: Upload failure screenshots and traces
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: e2e-failure-evidence
+          path: |
+            e2e_tests/e2e/reports/screenshots/
+            e2e_tests/e2e/test-results/
+          if-no-files-found: warn
+          retention-days: 30
+
+      # ========================================================================
+      # CLEANUP: Stop services and clean up
+      # ========================================================================
+      
+      - name: Stop k3d stack
+        if: always()
+        working-directory: e2e_tests
+        # Stop and remove cluster
+        run: |
+          echo "🛑 Stopping services..."
+          ./setup-k3d.sh down
+          echo "✅ Services stopped"
+
+      - name: Fail workflow if tests failed
+        if: always() && steps.e2e_tests.outcome == 'failure'
+        run: |
+          echo "❌ E2E tests failed"
+          exit 1
