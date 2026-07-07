@@ -1,10 +1,10 @@
 name: CI lib_api-java
 
 # Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
-# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
+# Cancel the in-progress run when a newer run is queued.
 concurrency:
   group: "lib_api-java"
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 on:
   workflow_dispatch:
@@ -42,6 +42,39 @@ jobs:
           server-username: GITHUB_ACTOR
           server-password: GITHUB_TOKEN
 
+      - name: Determine release version
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        id: release_version
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          package_name="client-java-build"
+          today="$(date -u +%Y%m%d)"
+          latest_incremental=0
+          page=1
+
+          while :; do
+            page_json="$(gh api "orgs/${{ github.repository_owner }}/packages/maven/${package_name}/versions?state=active&per_page=100&page=${page}" 2>/dev/null || true)"
+
+            if [[ -z "${page_json}" || "${page_json}" == "[]" ]]; then
+              break
+            fi
+
+            page_latest="$(printf '%s' "${page_json}" | jq -r --arg today "${today}" '[ .[] | select(.name | test("^" + $today + "\\.[0-9]+$")) | (.name | split(".")[1] | tonumber) ] | max // 0')"
+
+            if (( page_latest > latest_incremental )); then
+              latest_incremental=${page_latest}
+            fi
+
+            page=$((page + 1))
+          done
+
+          release_version="${today}.$((latest_incremental + 1))"
+          echo "release_version=${release_version}" >> "$GITHUB_OUTPUT"
+          echo "Computed release version: ${release_version}"
+
       - name: Build
         run: mvn -ntp verify
         working-directory: lib_api-java
@@ -50,7 +83,7 @@ jobs:
 
       - name: Publish to GitHub Packages
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        run: mvn -ntp deploy -DskipTests
+        run: mvn -ntp deploy -DskipTests -Drevision="${{ steps.release_version.outputs.release_version }}"
         working-directory: lib_api-java
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

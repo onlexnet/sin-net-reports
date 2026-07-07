@@ -11,13 +11,11 @@ on:
   push:
     branches: [ main ]
     paths: 
-      - res_schema/**
       - svc_timeentries/**
       - .github/workflows/svc_timeentries.yml
   pull_request:
     branches: [ main ]
     paths: 
-      - res_schema/**
       - svc_timeentries/**
       - .github/workflows/svc_timeentries.yml
 
