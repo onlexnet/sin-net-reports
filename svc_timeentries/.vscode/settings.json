@@ -8,11 +8,11 @@
     "java.jdt.ls.vmargs": "-XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx8G -Xms100m -javaagent:\"/home/siudeks/.vscode-server/extensions/vscjava.vscode-lombok-1.0.1/server/lombok.jar\"",
     "java.compile.nullAnalysis.mode": "automatic",
     "java.debug.settings.onBuildFailureProceed": true,
-    "graalvm.home": "/usr/local/sdkman/candidates/java/17.0.8-graal",
+    "graalvm.home": "/usr/local/sdkman/candidates/java/current",
     "graalvm.installations": [
-        "/usr/local/sdkman/candidates/java/17.0.8-graal"
+        "/usr/local/sdkman/candidates/java/current"
     ],
     "terminal.integrated.env.linux": {
-        "GRAALVM_HOME": "/usr/local/sdkman/candidates/java/17.0.8-graal"
+        "GRAALVM_HOME": "/usr/local/sdkman/candidates/java/current"
     },
 }
