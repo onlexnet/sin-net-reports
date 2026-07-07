@@ -58,7 +58,9 @@ jobs:
           while :; do
             page_json="$(gh api "orgs/${{ github.repository_owner }}/packages/maven/${package_name}/versions?state=active&per_page=100&page=${page}" 2>/dev/null || true)"
 
-            if [[ -z "${page_json}" || "${page_json}" == "[]" ]]; then
+            # Continue only when a non-empty JSON array is returned; break on empty response,
+            # empty array, or an error object (e.g. {"message":"Not Found"} on 404).
+            if [[ -z "${page_json}" ]] || ! printf '%s' "${page_json}" | jq -e 'type == "array" and length > 0' > /dev/null 2>&1; then
               break
             fi
 
