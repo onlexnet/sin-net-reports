@@ -4,6 +4,8 @@ FROM eclipse-temurin:25-jdk-jammy AS builder
 
 WORKDIR /workspace
 
+ARG API_VERSION=00000000.0
+
 # Install Maven 3.9+ (required by lib_api-java maven-enforcer-plugin)
 RUN apt-get update && \
     apt-get install -y wget && \
@@ -37,7 +39,7 @@ COPY svc_webapi/lombok.config svc_webapi/
 RUN --mount=type=cache,target=/root/.m2 \
     cd svc_webapi && \
     export SEMVERSION=$(cat .semversion) && \
-    mvn dependency:go-offline -B -ntp -DskipTests -Drevision=$SEMVERSION || true
+    mvn dependency:go-offline -B -ntp -DskipTests -Drevision=$SEMVERSION -Dapi.version=$API_VERSION || true
 
 # Copy source code (only modules with src directories - base-pom has no src)
 COPY svc_webapi/gql-model/src svc_webapi/gql-model/src
@@ -55,7 +57,7 @@ RUN --mount=type=cache,target=/root/.m2 \
 RUN --mount=type=cache,target=/root/.m2 \
     cd svc_webapi && \
     export SEMVERSION=$(cat .semversion) && \
-    mvn clean install -Drevision=$SEMVERSION -DskipTests -B -ntp
+    mvn clean install -Drevision=$SEMVERSION -DskipTests -B -ntp -Dapi.version=$API_VERSION
 
 FROM eclipse-temurin:25-jre-jammy
 
