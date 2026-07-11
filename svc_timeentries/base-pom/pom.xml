@@ -13,7 +13,7 @@
     <jacoco-maven-plugin.version>0.8.14</jacoco-maven-plugin.version>
     <instancio-junit5.version>5.4.0</instancio-junit5.version>
     <org.mapstruct.version>1.6.3</org.mapstruct.version>
-    <sonar-maven-plugin.version>3.7.0.1746</sonar-maven-plugin.version>
+    <sonar-maven-plugin.version>5.7.0.6970</sonar-maven-plugin.version>
     <testcontainers.version>2.0.3</testcontainers.version>
     <commons-io.version>2.20.0</commons-io.version>
 
