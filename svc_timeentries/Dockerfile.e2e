@@ -4,6 +4,8 @@ FROM eclipse-temurin:25-jdk-jammy AS builder
 
 WORKDIR /workspace
 
+ARG API_VERSION=00000000.0
+
 # Install Maven 3.9+ (required by lib_api-java maven-enforcer-plugin)
 RUN apt-get update && \
     apt-get install -y wget && \
@@ -47,7 +49,7 @@ RUN chmod +x svc_timeentries/mvnw
 # Note: The "|| true" allows partial downloads to not fail the build
 RUN --mount=type=cache,target=/root/.m2 \
     cd svc_timeentries && \
-    mvn dependency:go-offline -B -ntp -DskipTests || true
+    mvn dependency:go-offline -B -ntp -DskipTests -Dapi.version=$API_VERSION || true
 
 # Copy source code (only modules with src directories - base-pom has no src, components is empty)
 COPY svc_timeentries/host/src svc_timeentries/host/src
@@ -69,7 +71,7 @@ RUN --mount=type=cache,target=/root/.m2 \
 RUN --mount=type=cache,target=/root/.m2 \
     cd svc_timeentries && \
     export SEMVERSION=$(cat .version) && \
-    mvn clean install -pl host -am -DskipTests -B -ntp
+    mvn clean install -pl host -am -DskipTests -B -ntp -Dapi.version=$API_VERSION
 
 # Stage 2: Runtime
 FROM eclipse-temurin:25-jre-jammy
