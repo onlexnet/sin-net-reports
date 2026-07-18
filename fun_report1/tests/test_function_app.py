@@ -6,7 +6,9 @@ response schemas, and contract compliance with OpenAPI specification.
 
 from __future__ import annotations
 
-from datetime import datetime
+import io
+import re
+import zipfile
 
 from fastapi.testclient import TestClient
 
@@ -37,74 +39,92 @@ def test_health_endpoint_schema_compliance() -> None:
     assert isinstance(payload["service"], str)
 
 
-def test_report_endpoint_success() -> None:
-    """Report endpoint returns expected top-level structure."""
-    response = client.get("/api/report")
+def test_generate_report1_zip_endpoint() -> None:
+    """POST /api/report1/zip returns a valid ZIP archive with application/zip content-type."""
+    payload = {
+        "items": [
+            {
+                "customer": {
+                    "customer_id": "cust-001",
+                    "customer_name": "Test Firma",
+                    "customer_city": "Warszawa",
+                    "customer_address": "Testowa 1",
+                },
+                "activities": [
+                    {
+                        "description": "Naprawa serwera",
+                        "who": "Jan Kowalski",
+                        "when": {"year": 2024, "month": 6, "day": 15},
+                        "how_long_in_mins": 90,
+                        "how_far_in_kms": 15,
+                    },
+                    {
+                        "description": "Konsultacja",
+                        "who": "Anna Nowak",
+                        "when": {"year": 2024, "month": 6, "day": 16},
+                        "how_long_in_mins": 0,
+                        "how_far_in_kms": 5,
+                    },
+                ],
+            }
+        ]
+    }
+
+    response = client.post("/api/report1/zip", json=payload)
 
     assert response.status_code == 200
-    payload = response.json()
-    assert payload["reportId"] == "sample-001"
-    assert payload["currency"] == "PLN"
-    assert payload["summary"]["entries"] == 5
-    assert len(payload["items"]) == 5
+    assert "application/zip" in response.headers["content-type"]
+    assert response.content[:2] == b"PK", "Response body must be a ZIP archive"
 
 
-def test_report_content_is_deterministic() -> None:
-    """Report payload stays deterministic across repeated calls."""
-    first_response = client.get("/api/report")
-    second_response = client.get("/api/report")
+def test_generate_report1_pdf_endpoint_matches_pdf_inside_zip() -> None:
+    """POST /api/report1/pdf returns the same PDF bytes as the ZIP endpoint for one customer."""
+    single_customer_payload = {
+        "customer": {
+            "customer_id": "cust-001",
+            "customer_name": "Test Firma",
+            "customer_city": "Warszawa",
+            "customer_address": "Testowa 1",
+        },
+        "activities": [
+            {
+                "description": "Naprawa serwera",
+                "who": "Jan Kowalski",
+                "when": {"year": 2024, "month": 6, "day": 15},
+                "how_long_in_mins": 90,
+                "how_far_in_kms": 15,
+            },
+            {
+                "description": "Konsultacja",
+                "who": "Anna Nowak",
+                "when": {"year": 2024, "month": 6, "day": 16},
+                "how_long_in_mins": 0,
+                "how_far_in_kms": 5,
+            },
+        ],
+    }
 
-    first_payload = first_response.json()
-    second_payload = second_response.json()
+    pdf_response = client.post("/api/report1/pdf", json=single_customer_payload)
+    assert pdf_response.status_code == 200
+    assert "application/pdf" in pdf_response.headers["content-type"]
+    assert pdf_response.content.startswith(b"%PDF-")
 
-    assert first_payload == second_payload
-    assert first_payload["generatedAt"] == "2026-01-01T00:00:00Z"
-    assert sum(item["amount"] for item in first_payload["items"]) == first_payload[
-        "summary"
-    ]["billableAmount"]
+    zip_response = client.post(
+        "/api/report1/zip", json={"items": [single_customer_payload]}
+    )
+    assert zip_response.status_code == 200
+    assert "application/zip" in zip_response.headers["content-type"]
 
+    with zipfile.ZipFile(io.BytesIO(zip_response.content), mode="r") as zf:
+        names = zf.namelist()
+        assert len(names) == 1
+        zipped_pdf = zf.read(names[0])
 
-def test_report_schema_compliance() -> None:
-    """Report endpoint response complies with OpenAPI schema."""
-    response = client.get("/api/report")
-
-    payload = response.json()
-
-    # Validate top-level fields
-    assert "reportId" in payload
-    assert "generatedAt" in payload
-    assert "currency" in payload
-    assert "summary" in payload
-    assert "items" in payload
-
-    # Validate currency pattern (3 uppercase letters)
-    assert len(payload["currency"]) == 3
-    assert payload["currency"].isupper()
-
-    # Validate timestamp format (ISO 8601)
-    datetime.fromisoformat(payload["generatedAt"].replace("Z", "+00:00"))
-
-    # Validate summary structure
-    summary = payload["summary"]
-    assert "hours" in summary
-    assert "billableAmount" in summary
-    assert "entries" in summary
-    assert summary["hours"] >= 0
-    assert summary["billableAmount"] >= 0
-    assert summary["entries"] >= 0
-
-    # Validate items array
-    items = payload["items"]
-    assert isinstance(items, list)
-    for item in items:
-        assert "day" in item
-        assert "project" in item
-        assert "hours" in item
-        assert "rate" in item
-        assert "amount" in item
-        assert item["hours"] >= 0
-        assert item["rate"] >= 0
-        assert item["amount"] >= 0
+    # ReportLab embeds a per-document trailer ID; normalize it before comparison.
+    id_pattern = rb"/ID\s*\[\s*<[^>]+>\s*<[^>]+>\s*\]"
+    normalized_pdf_response = re.sub(id_pattern, b"/ID [<fixed><fixed>]", pdf_response.content)
+    normalized_zipped_pdf = re.sub(id_pattern, b"/ID [<fixed><fixed>]", zipped_pdf)
+    assert normalized_pdf_response == normalized_zipped_pdf
 
 
 def test_openapi_docs_available() -> None:
@@ -116,7 +136,7 @@ def test_openapi_docs_available() -> None:
     assert "openapi" in openapi_spec
     assert "paths" in openapi_spec
     assert "/api/health" in openapi_spec["paths"]
-    assert "/api/report" in openapi_spec["paths"]
+    assert "/api/report1/pdf" in openapi_spec["paths"]
 
     # Test Swagger UI
     docs_response = client.get("/api/docs")
