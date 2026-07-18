@@ -43,8 +43,9 @@ _PAGE_WIDTH, _PAGE_HEIGHT = A4
 _MARGIN = 36  # 0.5 inch margins on each side (in points)
 _CONTENT_WIDTH = _PAGE_WIDTH - 2 * _MARGIN  # ~523 pt for A4
 
-# Java reference column widths (sum = 225) → scaled to _CONTENT_WIDTH
-_JAVA_COLS = [50, 25, 120, 15, 15]
+# Slightly widen the date column so dd-mm-yyyy fits reliably at 10pt.
+# Keep total at 225 by reducing only the description column.
+_JAVA_COLS = [50, 30, 115, 15, 15]
 _JAVA_TOTAL = sum(_JAVA_COLS)
 _COL_WIDTHS = [w * _CONTENT_WIDTH / _JAVA_TOTAL for w in _JAVA_COLS]
 
