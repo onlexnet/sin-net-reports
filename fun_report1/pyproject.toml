@@ -35,3 +35,7 @@ warn_unreachable = true
 module = ["azure.functions.*"]
 ignore_missing_imports = true
 
+[[tool.mypy.overrides]]
+module = ["reportlab.*"]
+ignore_missing_imports = true
+

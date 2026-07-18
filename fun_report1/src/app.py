@@ -2,23 +2,20 @@
 
 from __future__ import annotations
 
-from datetime import UTC, datetime
-
 from fastapi import FastAPI
+from fastapi.responses import Response
 
 from src.models_generated import (
     HealthResponse,
-    ReportItem,
-    ReportResponse,
-    ReportSummary,
     Status,
 )
+from src.models_report1 import ReportRequest, ReportRequests
 
 # FastAPI application instance
 fastapi_app = FastAPI(
     title="Fun Report1 API",
     description=(
-        "Azure Function app providing health checks and sample report generation"
+        "Azure Function app providing health checks and report generation"
     ),
     version="1.0.0",
     openapi_url="/api/openapi.json",
@@ -39,63 +36,51 @@ async def health() -> HealthResponse:
     return HealthResponse(status=Status.ok, service="app_raport1")
 
 
-@fastapi_app.get(
-    "/api/report",
-    response_model=ReportResponse,
+@fastapi_app.post(
+    "/api/report1/zip",
     tags=["Reports"],
-    summary="Generate sample report",
-    operation_id="getReport",
+    summary="Generate Raport miesięczny - załączniki do faktur",
+    operation_id="generateReport1Zip",
+    response_class=Response,
+    responses={
+        200: {
+            "content": {"application/zip": {}},
+            "description": "ZIP archive with PDF attachments",
+        }
+    },
 )
-async def report() -> ReportResponse:
-    """Return deterministic sample report JSON for manual verification."""
-    summary = ReportSummary(
-        hours=40.0,
-        billableAmount=5000.0,
-        entries=5,
+async def generate_report1_zip(request: ReportRequests) -> Response:
+    """Generate ZIP archive with PDF invoice attachments for all customers."""
+    from src.zip_generator import generate_zip
+
+    zip_bytes = generate_zip(request)
+    return Response(
+        content=zip_bytes,
+        media_type="application/zip",
+        headers={"Content-Disposition": "attachment; filename=report1.zip"},
     )
 
-    items = [
-        ReportItem(
-            day=datetime(2026, 1, 5, tzinfo=UTC).date(),
-            project="Internal",
-            hours=8.0,
-            rate=125.0,
-            amount=1000.0,
-        ),
-        ReportItem(
-            day=datetime(2026, 1, 6, tzinfo=UTC).date(),
-            project="Internal",
-            hours=8.0,
-            rate=125.0,
-            amount=1000.0,
-        ),
-        ReportItem(
-            day=datetime(2026, 1, 7, tzinfo=UTC).date(),
-            project="Internal",
-            hours=8.0,
-            rate=125.0,
-            amount=1000.0,
-        ),
-        ReportItem(
-            day=datetime(2026, 1, 8, tzinfo=UTC).date(),
-            project="Internal",
-            hours=8.0,
-            rate=125.0,
-            amount=1000.0,
-        ),
-        ReportItem(
-            day=datetime(2026, 1, 9, tzinfo=UTC).date(),
-            project="Internal",
-            hours=8.0,
-            rate=125.0,
-            amount=1000.0,
-        ),
-    ]
 
-    return ReportResponse(
-        reportId="sample-001",
-        generatedAt=datetime(2026, 1, 1, 0, 0, 0, tzinfo=UTC),
-        currency="PLN",
-        summary=summary,
-        items=items,
+@fastapi_app.post(
+    "/api/report1/pdf",
+    tags=["Reports"],
+    summary="Generate single PDF attachment for one customer",
+    operation_id="generateReport1Pdf",
+    response_class=Response,
+    responses={
+        200: {
+            "content": {"application/pdf": {}},
+            "description": "Single PDF attachment for the provided customer",
+        }
+    },
+)
+async def generate_report1_pdf(request: ReportRequest) -> Response:
+    """Generate a single customer PDF using the same renderer as ZIP generation."""
+    from src.pdf_generator import generate_pdf
+
+    pdf_bytes = generate_pdf(request)
+    return Response(
+        content=pdf_bytes,
+        media_type="application/pdf",
+        headers={"Content-Disposition": "attachment; filename=report1.pdf"},
     )
