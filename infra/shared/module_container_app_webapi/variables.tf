@@ -25,6 +25,7 @@ variable "env" {
     DATABASE_USERNAME                     = string
     DATABASE_PASSWORD                     = string
     SINNETAPP_PROD_SECRET                 = string
+    REPORT1_FUNCTION_BASE_URL             = string
   })
 }
 
