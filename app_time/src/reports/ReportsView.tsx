@@ -121,7 +121,16 @@ export const ReportsView: React.FC<ReportsViewProps> = props => {
             className={reportLinkClassName}
             onClick={() => { openInNewTab(addressProvider().host + `/api/raporty/klienci/${projectId}/${fromYear}/${fromMonth}`); }}
           >
-            Raport miesięczny - załączniki do faktur
+            Raport miesięczny (legacy) - załączniki do faktur
+          </Button>
+
+          <Button
+            disabled={fromYear == null || fromMonth == null}
+            variant="link"
+            className={reportLinkClassName}
+            onClick={() => { openInNewTab(addressProvider().host + `/api/raporty/klienci-fun/${projectId}/${fromYear}/${fromMonth}`); }}
+          >
+            Raport miesięczny (function proxy) - załączniki do faktur
           </Button>
 
           <Button

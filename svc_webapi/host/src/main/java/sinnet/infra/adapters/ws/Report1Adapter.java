@@ -24,4 +24,12 @@ class Report1Adapter {
     return Response.asResponseEntity(result, "report " + year + "-" + month + ".zip");
   }
 
+  @GetMapping("/klienci-fun/{projectId}/{year}/{month}")
+  public ResponseEntity<byte[]> downloadPdfFileUsingFunction(@PathVariable UUID projectId,
+      @PathVariable int year,
+      @PathVariable int month) {
+    var result = report1PortIn.downloadPdfFileUsingFunction(projectId, year, month);
+    return Response.asResponseEntity(result, "report " + year + "-" + month + "-fun.zip");
+  }
+
 }

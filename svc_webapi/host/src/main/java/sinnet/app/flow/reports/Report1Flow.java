@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import sinnet.app.ports.in.Report1PortIn;
 import sinnet.app.ports.out.TimeentriesPortOut;
 import sinnet.app.ports.out.CustomersPortOut;
+import sinnet.app.ports.out.Report1FunctionOutPort;
 import sinnet.app.ports.out.Report1OutPort;
 import sinnet.app.ports.out.UsersServicePortOut;
 import sinnet.domain.models.Email;
@@ -33,20 +34,20 @@ public class Report1Flow implements Report1PortIn {
   private final TimeentriesPortOut timeentries;
   private final CustomersPortOut customersClient;
   private final Report1OutPort reportsClient;
+  private final Report1FunctionOutPort report1FunctionClient;
   private final UsersServicePortOut usersService;
 
   @Override
   public byte[] downloadPdfFile(UUID projectId, int year, int month) {
-    var dateFrom = LocalDate.of(year, month, 1);
-    var dateTo = LocalDate.of(year, month, 1).plusMonths(1).minusDays(1);
-    var projectIdAsString = projectId.toString();
-    var entries = getTimeentries(projectIdAsString, dateFrom, dateTo);
-    var customers = getCustomers(projectIdAsString);
-    var users = emailToName(projectId);
-    var reportRequest = asReportRequests(entries, customers, users);
-    var data = reportsClient.producePack(reportRequest);
-    var result = data.getData().toByteArray();
-    return result;
+    var request = buildReportRequest(projectId, year, month);
+    var data = reportsClient.producePack(request);
+    return data.getData().toByteArray();
+  }
+
+  @Override
+  public byte[] downloadPdfFileUsingFunction(UUID projectId, int year, int month) {
+    var request = buildReportRequest(projectId, year, month);
+    return report1FunctionClient.producePack(request);
   }
 
 
@@ -94,6 +95,16 @@ public class Report1Flow implements Report1PortIn {
           ? customName
           : "brak danych";
     };
+  }
+
+  private ReportRequests buildReportRequest(UUID projectId, int year, int month) {
+    var dateFrom = LocalDate.of(year, month, 1);
+    var dateTo = LocalDate.of(year, month, 1).plusMonths(1).minusDays(1);
+    var projectIdAsString = projectId.toString();
+    var entries = getTimeentries(projectIdAsString, dateFrom, dateTo);
+    var customers = getCustomers(projectIdAsString);
+    var users = emailToName(projectId);
+    return asReportRequests(entries, customers, users);
   }
 
   /**

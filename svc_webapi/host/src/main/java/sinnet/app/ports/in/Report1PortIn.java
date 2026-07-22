@@ -16,4 +16,14 @@ public interface Report1PortIn {
    * @return the PDF bytes
    */
   byte[] downloadPdfFile(UUID projectId, int year, int month);
+
+  /**
+   * Downloads a ZIP file for the given project and month using the Azure Function proxy.
+   *
+   * @param projectId the project UUID
+   * @param year the year
+   * @param month the month
+   * @return the ZIP bytes
+   */
+  byte[] downloadPdfFileUsingFunction(UUID projectId, int year, int month);
 }

@@ -13,7 +13,8 @@ describe("ReportsView", () => {
       />
     );
 
-    expect(screen.getByRole("button", { name: /raport miesięczny - załączniki do faktur/i })).toHaveClass("text-foreground");
+    expect(screen.getByRole("button", { name: /raport miesięczny \(legacy\) - załączniki do faktur/i })).toHaveClass("text-foreground");
+    expect(screen.getByRole("button", { name: /raport miesięczny \(function proxy\) - załączniki do faktur/i })).toHaveClass("text-foreground");
     expect(screen.getByRole("button", { name: /zestawienie sumaryczne godzin/i })).toHaveClass("text-foreground");
     expect(screen.getByRole("button", { name: /lista klientów przypisanych do operatorów/i })).toHaveClass("text-foreground");
   });
