@@ -28,6 +28,7 @@ import sinnet.app.flow.reports.Report1Flow;
 import sinnet.app.flow.request.UsersSearchResult;
 import sinnet.app.ports.out.TimeentriesPortOut;
 import sinnet.app.ports.out.CustomersPortOut;
+import sinnet.app.ports.out.Report1FunctionOutPort;
 import sinnet.app.ports.out.Report1OutPort;
 import sinnet.app.ports.out.UsersServicePortOut;
 import sinnet.domain.models.Email;
@@ -54,6 +55,9 @@ class Report1ControllerTest {
 
   @MockitoBean
   private Report1OutPort reports1GrpcAdapter;
+
+  @MockitoBean
+  private Report1FunctionOutPort report1FunctionOutPort;
 
   @MockitoBean
   private UsersServicePortOut usersGrpcService;
@@ -224,5 +228,38 @@ class Report1ControllerTest {
         eq(LocalDate.of(2024, 12, 1)),
         eq(LocalDate.of(2024, 12, 31))
     );
+  }
+
+  @Test
+  void downloadPdfFileUsingFunction_shouldReturnZipFileWithCorrectHeaders() throws Exception {
+    var projectId = UUID.randomUUID();
+    var year = 2024;
+    var month = 7;
+    var expectedZipData = new byte[]{0x50, 0x4B, 0x03, 0x04};
+
+    when(actionsGrpcFacade.searchInternal(any(UUID.class), any(LocalDate.class), any(LocalDate.class)))
+        .thenReturn(List.of());
+    when(customersPortOut.customerList(anyString(), anyString(), any()))
+        .thenReturn(List.of());
+    when(usersGrpcService.search(any(), any()))
+        .thenReturn(new UsersSearchResult(List.of()));
+    when(report1FunctionOutPort.producePack(any(ReportRequests.class)))
+        .thenReturn(expectedZipData);
+
+    mockMvc.perform(get("/api/raporty/klienci-fun/{projectId}/{year}/{month}", projectId, year, month))
+        .andExpect(status().isOk())
+        .andExpect(content().contentType("application/zip"))
+        .andExpect(header().string("Content-Disposition", "inline; filename=report 2024-7-fun.zip"))
+        .andExpect(header().string("Cache-Control", "no-cache, no-store, must-revalidate"))
+        .andExpect(header().string("Expires", "0"))
+        .andExpect(header().string("Content-Length", String.valueOf(expectedZipData.length)))
+        .andExpect(content().bytes(expectedZipData));
+
+    verify(actionsGrpcFacade).searchInternal(
+        eq(projectId),
+        eq(LocalDate.of(2024, 7, 1)),
+        eq(LocalDate.of(2024, 7, 31))
+    );
+    verify(report1FunctionOutPort).producePack(any(ReportRequests.class));
   }
 }
