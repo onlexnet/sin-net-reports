@@ -186,6 +186,11 @@ resource "azurerm_container_app" "default" {
         name  = "JAVA_TOOL_OPTIONS"
         value = "-javaagent:/appinsights/applicationinsights-agent.jar"
       }
+
+      env {
+        name  = "REPORT1_FUNCTION_BASE_URL"
+        value = var.env.REPORT1_FUNCTION_BASE_URL
+      }
     }
   }
 }

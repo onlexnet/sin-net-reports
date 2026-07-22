@@ -15,5 +15,5 @@ output "function_report1_fqdn" {
 
 output "report1_url" {
   description = "The public URL of report1 (via Cloudflare)"
-  value       = "https://report1.onlex.net"
+  value       = local.report1_base_url
 }

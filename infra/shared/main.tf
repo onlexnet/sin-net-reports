@@ -40,7 +40,10 @@ module "github" {
 }
 
 locals {
-  domain_name = "onlex.net"
+  domain_name       = "onlex.net"
+  report1_prefix    = "report1"
+  report1_hostname  = "${local.report1_prefix}.${local.domain_name}"
+  report1_base_url  = "https://${local.report1_hostname}"
 }
 
 module "cloudflare" {
@@ -49,7 +52,7 @@ module "cloudflare" {
   webapi_fqdn                    = module.container_apps_webapi.webapi_fqdn
   webapp_prefix_time             = "time"
   webapp_fqdn_time               = module.static_app_time.webapp_fqdn
-  report1_prefix                 = "report1"
+  report1_prefix                 = local.report1_prefix
   report1_fqdn                   = module.fun_report1.function_app_fqdn
   report1_domain_verification_id = module.fun_report1.custom_domain_verification_id
 }
@@ -93,6 +96,7 @@ module "container_apps_webapi" {
     DATABASE_USERNAME                     = module.database.database_username
     DATABASE_PASSWORD                     = module.database.database_password
     SINNETAPP_PROD_SECRET                 = module.keyvault.env.SINNETAPP_PROD_SECRET
+    REPORT1_FUNCTION_BASE_URL             = local.report1_base_url
   }
 
 }
@@ -127,7 +131,7 @@ module "fun_report1" {
 }
 
 resource "azurerm_app_service_custom_hostname_binding" "module_fun_report1" {
-  hostname            = "report1.onlex.net"
+  hostname            = local.report1_hostname
   app_service_name    = module.fun_report1.function_app_name
   resource_group_name = module.resourcegroup.main.name
 
