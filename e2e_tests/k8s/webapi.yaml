@@ -40,6 +40,8 @@ spec:
               value: "prod"
             - name: DAPR_GRPC_PORT
               value: "50001"
+            - name: REPORT1_FUNCTION_BASE_URL
+              value: "http://host.k3d.internal:7071"
           livenessProbe:
             httpGet:
               path: /actuator/health/liveness
