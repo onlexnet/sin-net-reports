@@ -8,12 +8,10 @@ interface ReportsViewProps {
   projectId: string;
   from: LocalDate;
   idToken: string;
-  email: string;
 }
 
 export const ReportsView: React.FC<ReportsViewProps> = props => {
-  const { projectId, from, idToken, email } = props;
-  const canUseExperimentalReport = ["siudeks@gmail.com", "biuro@sin.net.pl"].includes(email.toLowerCase());
+  const { projectId, from, idToken } = props;
   const reportLinkClassName = "justify-start px-0 text-foreground hover:text-foreground/90";
   const openInNewTab = (url: string) => {
     window.open(url, '_blank');
@@ -149,16 +147,14 @@ export const ReportsView: React.FC<ReportsViewProps> = props => {
             Raport miesięczny - załączniki do faktur
           </Button>
 
-          {canUseExperimentalReport && (
-            <Button
-              disabled={fromYear == null || fromMonth == null}
-              variant="link"
-              className={reportLinkClassName}
-              onClick={() => { openReportLinkInNewTab(addressProvider().host + `/api/raporty/klienci-fun/${projectId}/${fromYear}/${fromMonth}`); }}
-            >
-              Raport miesięczny (eksperymentalne) - załączniki do faktur
-            </Button>
-          )}
+          <Button
+            disabled={fromYear == null || fromMonth == null}
+            variant="link"
+            className={reportLinkClassName}
+            onClick={() => { openReportLinkInNewTab(addressProvider().host + `/api/raporty/klienci-fun/${projectId}/${fromYear}/${fromMonth}`); }}
+          >
+            Raport miesięczny (eksperymentalne) - załączniki do faktur
+          </Button>
 
           <Button
             variant="link"

@@ -23,7 +23,7 @@ const ReportsViewRoutedLocal: React.FC<ReportsViewRoutedProps> = props => {
     const projectId = props.appState.projectId;
     const { dateFrom } = props.viewContext.period.getValue();
     const idToken = props.auth.idToken;
-    return <ReportsView projectId={projectId} from={dateFrom} idToken={idToken} email={props.auth.email} />
+    return <ReportsView projectId={projectId} from={dateFrom} idToken={idToken} />
 
 }
 
