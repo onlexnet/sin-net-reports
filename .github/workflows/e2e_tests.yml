@@ -46,6 +46,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          submodules: true
 
       - name: Set up Python 3.12
         uses: actions/setup-python@v6
@@ -80,6 +82,8 @@ jobs:
       
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          submodules: true
       
       - name: Setup Java Environment
         # Required for building Java services in Docker

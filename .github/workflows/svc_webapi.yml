@@ -29,6 +29,8 @@ jobs:
     steps:
 
       - uses: actions/checkout@v4
+        with:
+          submodules: true
 
       - name: Setup Java Environment
         uses: ./.github/actions/setup-java-environment
