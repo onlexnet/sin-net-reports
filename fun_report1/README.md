@@ -25,13 +25,37 @@ This service follows a **contract-first approach**:
 
 ## Public endpoints
 
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/health` | GET | Health check for monitoring |
-| `/report` | GET | Sample report generation |
-| `/api/docs` | GET | Interactive Swagger UI |
-| `/api/redoc` | GET | Alternative API documentation |
-| `/api/openapi.json` | GET | OpenAPI specification (JSON) |
+| Endpoint | Method | Auth | Description |
+|----------|--------|------|-------------|
+| `/health` | GET | none | Health check for monitoring |
+| `/report` | GET | none | Sample report generation |
+| `/api/report1/zip` | POST | shared secret | Generates a ZIP of PDF invoice attachments, uploads it to blob storage, and returns a JSON `{url, expires_at}` download link |
+| `/api/report1/pdf` | POST | shared secret | Generates a single customer PDF, uploads it to blob storage, and returns a JSON `{url, expires_at}` download link |
+| `/api/docs` | GET | none | Interactive Swagger UI |
+| `/api/redoc` | GET | none | Alternative API documentation |
+| `/api/openapi.json` | GET | none | OpenAPI specification (JSON) |
+
+### Report generation: storage-backed download links
+
+`/api/report1/zip` and `/api/report1/pdf` no longer stream the generated
+file back in the HTTP response. Instead:
+
+1. The caller (webapi) must send a shared secret in the `X-Report1-Secret`
+   header, matching the `REPORT1_SHARED_SECRET` app setting
+   (see `src/auth.py`). Requests without it get `401 Unauthorized`.
+2. The generated PDF/ZIP is uploaded to the `reports` container in the
+   function's storage account (`src/blob_storage.py`).
+3. A **24-hour** read-only SAS link (via a user delegation key — no
+   storage account key is ever used) is returned as
+   `{"url": "...", "expires_at": "..."}`.
+4. Blobs in the `reports` container are automatically deleted **7 days**
+   after creation by a storage account lifecycle management policy
+   (see `infra/shared/module_fun_report1`).
+
+Required environment variables for these endpoints:
+- `REPORT1_SHARED_SECRET` - shared secret expected in `X-Report1-Secret`
+- `REPORT1_STORAGE_ACCOUNT_NAME` - storage account holding the `reports` container
+- `REPORT1_STORAGE_CONTAINER_NAME` - container name (`reports` in Azure)
 
 ## Files
 

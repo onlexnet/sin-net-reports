@@ -85,6 +85,11 @@ resource "azurerm_container_app" "default" {
     value = var.env.CR_PAT
   }
 
+  secret {
+    name  = "report1-function-shared-secret"
+    value = var.env.REPORT1_FUNCTION_SHARED_SECRET
+  }
+
   dapr {
     app_id       = "uservice-webapi"
     app_port     = "8080"
@@ -190,6 +195,11 @@ resource "azurerm_container_app" "default" {
       env {
         name  = "REPORT1_FUNCTION_BASE_URL"
         value = var.env.REPORT1_FUNCTION_BASE_URL
+      }
+
+      env {
+        name        = "REPORT1_FUNCTION_SHARED_SECRET"
+        secret_name = "report1-function-shared-secret"
       }
     }
   }

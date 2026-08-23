@@ -97,6 +97,7 @@ module "container_apps_webapi" {
     DATABASE_PASSWORD                     = module.database.database_password
     SINNETAPP_PROD_SECRET                 = module.keyvault.env.SINNETAPP_PROD_SECRET
     REPORT1_FUNCTION_BASE_URL             = local.report1_base_url
+    REPORT1_FUNCTION_SHARED_SECRET        = module.fun_report1.shared_secret
   }
 
 }

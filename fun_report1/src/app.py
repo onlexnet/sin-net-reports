@@ -2,21 +2,19 @@
 
 from __future__ import annotations
 
-from fastapi import FastAPI
-from fastapi.responses import Response
+from fastapi import Depends, FastAPI
 
+from src.auth import require_shared_secret
 from src.models_generated import (
     HealthResponse,
     Status,
 )
-from src.models_report1 import ReportRequest, ReportRequests
+from src.models_report1 import ReportLinkResponse, ReportRequest, ReportRequests
 
 # FastAPI application instance
 fastapi_app = FastAPI(
     title="Fun Report1 API",
-    description=(
-        "Azure Function app providing health checks and report generation"
-    ),
+    description=("Azure Function app providing health checks and report generation"),
     version="1.0.0",
     openapi_url="/api/openapi.json",
     docs_url="/api/docs",
@@ -41,24 +39,21 @@ async def health() -> HealthResponse:
     tags=["Reports"],
     summary="Generate Raport miesięczny - załączniki do faktur",
     operation_id="generateReport1Zip",
-    response_class=Response,
-    responses={
-        200: {
-            "content": {"application/zip": {}},
-            "description": "ZIP archive with PDF attachments",
-        }
-    },
+    response_model=ReportLinkResponse,
+    dependencies=[Depends(require_shared_secret)],
 )
-async def generate_report1_zip(request: ReportRequests) -> Response:
-    """Generate ZIP archive with PDF invoice attachments for all customers."""
+async def generate_report1_zip(request: ReportRequests) -> ReportLinkResponse:
+    """Generate a ZIP archive of PDF invoice attachments and return a download link.
+
+    The archive is uploaded to blob storage (retained for 7 days); the
+    returned URL is a SAS link valid for 24 hours.
+    """
+    from src.blob_storage import upload_report
     from src.zip_generator import generate_zip
 
     zip_bytes = generate_zip(request)
-    return Response(
-        content=zip_bytes,
-        media_type="application/zip",
-        headers={"Content-Disposition": "attachment; filename=report1.zip"},
-    )
+    link = upload_report(zip_bytes, extension="zip")
+    return ReportLinkResponse(url=link.url, expires_at=link.expires_at)
 
 
 @fastapi_app.post(
@@ -66,21 +61,19 @@ async def generate_report1_zip(request: ReportRequests) -> Response:
     tags=["Reports"],
     summary="Generate single PDF attachment for one customer",
     operation_id="generateReport1Pdf",
-    response_class=Response,
-    responses={
-        200: {
-            "content": {"application/pdf": {}},
-            "description": "Single PDF attachment for the provided customer",
-        }
-    },
+    response_model=ReportLinkResponse,
+    dependencies=[Depends(require_shared_secret)],
 )
-async def generate_report1_pdf(request: ReportRequest) -> Response:
-    """Generate a single customer PDF using the same renderer as ZIP generation."""
+async def generate_report1_pdf(request: ReportRequest) -> ReportLinkResponse:
+    """Generate a single customer PDF and return a download link.
+
+    Uses the same renderer as ZIP generation. The PDF is uploaded to blob
+    storage (retained for 7 days); the returned URL is a SAS link valid for
+    24 hours.
+    """
+    from src.blob_storage import upload_report
     from src.pdf_generator import generate_pdf
 
     pdf_bytes = generate_pdf(request)
-    return Response(
-        content=pdf_bytes,
-        media_type="application/pdf",
-        headers={"Content-Disposition": "attachment; filename=report1.pdf"},
-    )
+    link = upload_report(pdf_bytes, extension="pdf")
+    return ReportLinkResponse(url=link.url, expires_at=link.expires_at)

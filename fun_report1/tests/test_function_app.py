@@ -2,24 +2,90 @@
 
 Tests use FastAPI TestClient to validate endpoint behavior,
 response schemas, and contract compliance with OpenAPI specification.
+
+Blob storage uploads are monkeypatched so tests never touch a real Azure
+Storage account; the shared-secret header is exercised explicitly to make
+sure unauthenticated/incorrectly authenticated calls are rejected.
 """
 
 from __future__ import annotations
 
-import io
-import re
-import zipfile
+from datetime import UTC, datetime
+from typing import Any
 
+import pytest
 from fastapi.testclient import TestClient
 
 from src.app import fastapi_app
+from src.auth import SHARED_SECRET_HEADER
+from src.blob_storage import ReportLink
 
 # Create test client for FastAPI app
 client = TestClient(fastapi_app)
 
+TEST_SECRET = "unit-test-shared-secret"
+
+
+@pytest.fixture(autouse=True)
+def _shared_secret_env(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Configure the shared secret expected by fun_report1 for every test."""
+    monkeypatch.setenv("REPORT1_SHARED_SECRET", TEST_SECRET)
+
+
+@pytest.fixture
+def _stub_upload_report(monkeypatch: pytest.MonkeyPatch) -> list[tuple[bytes, str]]:
+    """Replace blob upload with an in-memory stub and record calls made to it."""
+    calls: list[tuple[bytes, str]] = []
+
+    def fake_upload_report(content: bytes, extension: str) -> ReportLink:
+        calls.append((content, extension))
+        return ReportLink(
+            url=f"https://stub.blob.core.windows.net/reports/report1/stub.{extension}?sig=stub",
+            expires_at=datetime(2026, 1, 1, tzinfo=UTC),
+        )
+
+    monkeypatch.setattr("src.blob_storage.upload_report", fake_upload_report)
+    return calls
+
+
+def _auth_headers(secret: str = TEST_SECRET) -> dict[str, str]:
+    return {SHARED_SECRET_HEADER: secret}
+
+
+ZIP_PAYLOAD: dict[str, Any] = {
+    "items": [
+        {
+            "customer": {
+                "customer_id": "cust-001",
+                "customer_name": "Test Firma",
+                "customer_city": "Warszawa",
+                "customer_address": "Testowa 1",
+            },
+            "activities": [
+                {
+                    "description": "Naprawa serwera",
+                    "who": "Jan Kowalski",
+                    "when": {"year": 2024, "month": 6, "day": 15},
+                    "how_long_in_mins": 90,
+                    "how_far_in_kms": 15,
+                },
+                {
+                    "description": "Konsultacja",
+                    "who": "Anna Nowak",
+                    "when": {"year": 2024, "month": 6, "day": 16},
+                    "how_long_in_mins": 0,
+                    "how_far_in_kms": 5,
+                },
+            ],
+        }
+    ]
+}
+
+PDF_PAYLOAD: dict[str, Any] = ZIP_PAYLOAD["items"][0]
+
 
 def test_health_endpoint_success() -> None:
-    """Health endpoint returns expected status and payload."""
+    """Health endpoint returns expected status and payload without any auth header."""
     response = client.get("/api/health")
 
     assert response.status_code == 200
@@ -39,92 +105,59 @@ def test_health_endpoint_schema_compliance() -> None:
     assert isinstance(payload["service"], str)
 
 
-def test_generate_report1_zip_endpoint() -> None:
-    """POST /api/report1/zip returns a valid ZIP archive with application/zip content-type."""
-    payload = {
-        "items": [
-            {
-                "customer": {
-                    "customer_id": "cust-001",
-                    "customer_name": "Test Firma",
-                    "customer_city": "Warszawa",
-                    "customer_address": "Testowa 1",
-                },
-                "activities": [
-                    {
-                        "description": "Naprawa serwera",
-                        "who": "Jan Kowalski",
-                        "when": {"year": 2024, "month": 6, "day": 15},
-                        "how_long_in_mins": 90,
-                        "how_far_in_kms": 15,
-                    },
-                    {
-                        "description": "Konsultacja",
-                        "who": "Anna Nowak",
-                        "when": {"year": 2024, "month": 6, "day": 16},
-                        "how_long_in_mins": 0,
-                        "how_far_in_kms": 5,
-                    },
-                ],
-            }
-        ]
-    }
+def test_generate_report1_zip_requires_shared_secret() -> None:
+    """POST /api/report1/zip rejects requests without the shared-secret header."""
+    response = client.post("/api/report1/zip", json=ZIP_PAYLOAD)
 
-    response = client.post("/api/report1/zip", json=payload)
+    assert response.status_code == 401
+
+
+def test_generate_report1_zip_rejects_wrong_secret() -> None:
+    """POST /api/report1/zip rejects requests with an incorrect shared secret."""
+    response = client.post("/api/report1/zip", json=ZIP_PAYLOAD, headers=_auth_headers("wrong-secret"))
+
+    assert response.status_code == 401
+
+
+def test_generate_report1_zip_endpoint_returns_link(
+    _stub_upload_report: list[tuple[bytes, str]],
+) -> None:
+    """POST /api/report1/zip uploads the ZIP and returns a JSON download link."""
+    response = client.post("/api/report1/zip", json=ZIP_PAYLOAD, headers=_auth_headers())
 
     assert response.status_code == 200
-    assert "application/zip" in response.headers["content-type"]
-    assert response.content[:2] == b"PK", "Response body must be a ZIP archive"
+    payload = response.json()
+    assert payload["url"].startswith("https://stub.blob.core.windows.net/")
+    assert payload["expires_at"] == "2026-01-01T00:00:00Z"
+
+    # Exactly one upload happened, with ZIP bytes and the right extension.
+    assert len(_stub_upload_report) == 1
+    uploaded_bytes, extension = _stub_upload_report[0]
+    assert uploaded_bytes[:2] == b"PK"
+    assert extension == "zip"
 
 
-def test_generate_report1_pdf_endpoint_matches_pdf_inside_zip() -> None:
-    """POST /api/report1/pdf returns the same PDF bytes as the ZIP endpoint for one customer."""
-    single_customer_payload = {
-        "customer": {
-            "customer_id": "cust-001",
-            "customer_name": "Test Firma",
-            "customer_city": "Warszawa",
-            "customer_address": "Testowa 1",
-        },
-        "activities": [
-            {
-                "description": "Naprawa serwera",
-                "who": "Jan Kowalski",
-                "when": {"year": 2024, "month": 6, "day": 15},
-                "how_long_in_mins": 90,
-                "how_far_in_kms": 15,
-            },
-            {
-                "description": "Konsultacja",
-                "who": "Anna Nowak",
-                "when": {"year": 2024, "month": 6, "day": 16},
-                "how_long_in_mins": 0,
-                "how_far_in_kms": 5,
-            },
-        ],
-    }
+def test_generate_report1_pdf_requires_shared_secret() -> None:
+    """POST /api/report1/pdf rejects requests without the shared-secret header."""
+    response = client.post("/api/report1/pdf", json=PDF_PAYLOAD)
 
-    pdf_response = client.post("/api/report1/pdf", json=single_customer_payload)
-    assert pdf_response.status_code == 200
-    assert "application/pdf" in pdf_response.headers["content-type"]
-    assert pdf_response.content.startswith(b"%PDF-")
+    assert response.status_code == 401
 
-    zip_response = client.post(
-        "/api/report1/zip", json={"items": [single_customer_payload]}
-    )
-    assert zip_response.status_code == 200
-    assert "application/zip" in zip_response.headers["content-type"]
 
-    with zipfile.ZipFile(io.BytesIO(zip_response.content), mode="r") as zf:
-        names = zf.namelist()
-        assert len(names) == 1
-        zipped_pdf = zf.read(names[0])
+def test_generate_report1_pdf_endpoint_returns_link(
+    _stub_upload_report: list[tuple[bytes, str]],
+) -> None:
+    """POST /api/report1/pdf uploads the PDF and returns a JSON download link."""
+    response = client.post("/api/report1/pdf", json=PDF_PAYLOAD, headers=_auth_headers())
 
-    # ReportLab embeds a per-document trailer ID; normalize it before comparison.
-    id_pattern = rb"/ID\s*\[\s*<[^>]+>\s*<[^>]+>\s*\]"
-    normalized_pdf_response = re.sub(id_pattern, b"/ID [<fixed><fixed>]", pdf_response.content)
-    normalized_zipped_pdf = re.sub(id_pattern, b"/ID [<fixed><fixed>]", zipped_pdf)
-    assert normalized_pdf_response == normalized_zipped_pdf
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["url"].startswith("https://stub.blob.core.windows.net/")
+
+    assert len(_stub_upload_report) == 1
+    uploaded_bytes, extension = _stub_upload_report[0]
+    assert uploaded_bytes[:4] == b"%PDF"
+    assert extension == "pdf"
 
 
 def test_openapi_docs_available() -> None:

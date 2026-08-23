@@ -18,6 +18,29 @@ export const ReportsView: React.FC<ReportsViewProps> = props => {
   }
 
   /**
+   * Requests a report link from the "function proxy" endpoint (which responds with
+   * `{ url, expires_at }` JSON instead of the file itself) and opens the returned
+   * SAS-secured blob URL in a new tab to trigger the actual download.
+   *
+   * @param url - The webapi endpoint that returns the report link JSON
+   */
+  const openReportLinkInNewTab = async (url: string) => {
+    try {
+      const response = await fetch(url);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const reportLink: { url: string; expires_at: string } = await response.json();
+      openInNewTab(reportLink.url);
+    } catch (error) {
+      console.error('❌ Error fetching report link:', error);
+      alert(`Failed to fetch report link: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+  }
+
+  /**
    * Downloads a file from the server with JWT token authentication.
    * Uses fetch API to send the token in the Authorization header.
    * 
@@ -121,7 +144,16 @@ export const ReportsView: React.FC<ReportsViewProps> = props => {
             className={reportLinkClassName}
             onClick={() => { openInNewTab(addressProvider().host + `/api/raporty/klienci/${projectId}/${fromYear}/${fromMonth}`); }}
           >
-            Raport miesięczny - załączniki do faktur
+            Raport miesięczny (legacy) - załączniki do faktur
+          </Button>
+
+          <Button
+            disabled={fromYear == null || fromMonth == null}
+            variant="link"
+            className={reportLinkClassName}
+            onClick={() => { openReportLinkInNewTab(addressProvider().host + `/api/raporty/klienci-fun/${projectId}/${fromYear}/${fromMonth}`); }}
+          >
+            Raport miesięczny (function proxy) - załączniki do faktur
           </Button>
 
           <Button

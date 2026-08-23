@@ -40,6 +40,11 @@ spec:
               value: "prod"
             - name: DAPR_GRPC_PORT
               value: "50001"
+            - name: REPORT1_FUNCTION_BASE_URL
+              value: "http://host.k3d.internal:7071"
+            - name: REPORT1_FUNCTION_SHARED_SECRET
+              # Local dev only: must match REPORT1_SHARED_SECRET in fun_report1/local.settings.json
+              value: "local-dev-shared-secret"
           livenessProbe:
             httpGet:
               path: /actuator/health/liveness
