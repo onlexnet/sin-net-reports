@@ -32,4 +32,17 @@ describe("ReportsView", () => {
 
     expect(screen.queryByRole("button", { name: /raport miesięczny \(eksperymentalne\)/i })).not.toBeInTheDocument();
   });
+
+  it("shows the experimental report for biuro@sin.net.pl", () => {
+    render(
+      <ReportsView
+        projectId="proj-1"
+        idToken="token"
+        email="biuro@sin.net.pl"
+        from={{ year: 2026, month: 4, day: 1 }}
+      />
+    );
+
+    expect(screen.getByRole("button", { name: /raport miesięczny \(eksperymentalne\)/i })).toBeInTheDocument();
+  });
 });
