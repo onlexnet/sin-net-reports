@@ -149,7 +149,7 @@ Test endpoints:
 
 ```bash
 # Type checking
-mypy --config-file mypy.ini
+mypy
 
 # Linting
 ruff check .
@@ -158,10 +158,10 @@ ruff check .
 ruff format .
 
 # All checks + tests
-pytest && mypy --config-file mypy.ini && ruff check .
+pytest && mypy && ruff check .
 ```
 
-## CI/CD integration
+from datetime import UTC, datetime## CI/CD integration
 
 The CI pipeline **must** include these checks:
 

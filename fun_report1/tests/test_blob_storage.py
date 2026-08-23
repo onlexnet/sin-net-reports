@@ -6,7 +6,7 @@ so the tests never make real network/identity calls.
 
 from __future__ import annotations
 
-from datetime import UTC, datetime
+from datetime import datetime
 from typing import Any
 
 import pytest

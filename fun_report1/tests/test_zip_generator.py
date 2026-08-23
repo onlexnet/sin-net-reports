@@ -46,7 +46,10 @@ def _make_request(customer_name: str = "Acme Corp") -> ReportRequest:
 
 def test_generate_zip_returns_bytes() -> None:
     """generate_zip returns bytes starting with the ZIP magic bytes 'PK'."""
-    requests = ReportRequests(items=[_make_request("Acme Corp"), _make_request("Beta Ltd")])
+    requests = ReportRequests(
+        items=[_make_request("Acme Corp"), _make_request("Beta Ltd")],
+        filename=None,
+    )
 
     result = generate_zip(requests)
 
@@ -60,7 +63,8 @@ def test_generate_zip_contains_correct_files() -> None:
         items=[
             _make_request("Acme Corp"),
             _make_request("Test/Co"),
-        ]
+        ],
+        filename=None,
     )
 
     result = generate_zip(requests)
@@ -73,7 +77,7 @@ def test_generate_zip_contains_correct_files() -> None:
 
 def test_generate_zip_files_are_valid_pdfs() -> None:
     """Each file extracted from the ZIP is a valid PDF (starts with %PDF)."""
-    requests = ReportRequests(items=[_make_request("Acme Corp")])
+    requests = ReportRequests(items=[_make_request("Acme Corp")], filename=None)
 
     result = generate_zip(requests)
 
@@ -85,7 +89,7 @@ def test_generate_zip_files_are_valid_pdfs() -> None:
 
 def test_generate_zip_empty_requests() -> None:
     """generate_zip with zero items returns a valid, empty ZIP archive."""
-    requests = ReportRequests(items=[])
+    requests = ReportRequests(items=[], filename=None)
 
     result = generate_zip(requests)
 
