@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 import sinnet.app.ports.in.Report1PortIn;
+import sinnet.app.ports.out.Report1FileNaming;
 import sinnet.app.ports.out.Report1FunctionOutPort.ReportLink;
 
 @RestController
@@ -22,7 +23,7 @@ class Report1Adapter {
   @GetMapping("/klienci/{projectId}/{year}/{month}")
   public ResponseEntity<byte[]> downloadPdfFile(@PathVariable UUID projectId, @PathVariable int year, @PathVariable int month) {
     var result = report1PortIn.downloadPdfFile(projectId, year, month);
-    return Response.asResponseEntity(result, "report " + year + "-" + month + ".zip");
+    return Response.asResponseEntity(result, Report1FileNaming.zipFileName(year, month));
   }
 
   /**

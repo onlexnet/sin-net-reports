@@ -248,7 +248,7 @@ class Report1ControllerTest {
         .thenReturn(List.of());
     when(usersGrpcService.search(any(), any()))
         .thenReturn(new UsersSearchResult(List.of()));
-    when(report1FunctionOutPort.producePack(any(ReportRequests.class)))
+    when(report1FunctionOutPort.producePack(any(ReportRequests.class), anyString()))
         .thenReturn(expectedLink);
 
     mockMvc.perform(get("/api/raporty/klienci-fun/{projectId}/{year}/{month}", projectId, year, month))
@@ -262,6 +262,6 @@ class Report1ControllerTest {
         eq(LocalDate.of(2024, 7, 1)),
         eq(LocalDate.of(2024, 7, 31))
     );
-    verify(report1FunctionOutPort).producePack(any(ReportRequests.class));
+    verify(report1FunctionOutPort).producePack(any(ReportRequests.class), eq("report 2024-7.zip"));
   }
 }

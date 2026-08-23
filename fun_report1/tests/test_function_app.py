@@ -33,12 +33,12 @@ def _shared_secret_env(monkeypatch: pytest.MonkeyPatch) -> None:
 
 
 @pytest.fixture
-def _stub_upload_report(monkeypatch: pytest.MonkeyPatch) -> list[tuple[bytes, str]]:
+def _stub_upload_report(monkeypatch: pytest.MonkeyPatch) -> list[tuple[bytes, str, str | None]]:
     """Replace blob upload with an in-memory stub and record calls made to it."""
-    calls: list[tuple[bytes, str]] = []
+    calls: list[tuple[bytes, str, str | None]] = []
 
-    def fake_upload_report(content: bytes, extension: str) -> ReportLink:
-        calls.append((content, extension))
+    def fake_upload_report(content: bytes, extension: str, download_filename: str | None = None) -> ReportLink:
+        calls.append((content, extension, download_filename))
         return ReportLink(
             url=f"https://stub.blob.core.windows.net/reports/report1/stub.{extension}?sig=stub",
             expires_at=datetime(2026, 1, 1, tzinfo=UTC),
@@ -120,7 +120,7 @@ def test_generate_report1_zip_rejects_wrong_secret() -> None:
 
 
 def test_generate_report1_zip_endpoint_returns_link(
-    _stub_upload_report: list[tuple[bytes, str]],
+    _stub_upload_report: list[tuple[bytes, str, str | None]],
 ) -> None:
     """POST /api/report1/zip uploads the ZIP and returns a JSON download link."""
     response = client.post("/api/report1/zip", json=ZIP_PAYLOAD, headers=_auth_headers())
@@ -132,9 +132,23 @@ def test_generate_report1_zip_endpoint_returns_link(
 
     # Exactly one upload happened, with ZIP bytes and the right extension.
     assert len(_stub_upload_report) == 1
-    uploaded_bytes, extension = _stub_upload_report[0]
+    uploaded_bytes, extension, download_filename = _stub_upload_report[0]
     assert uploaded_bytes[:2] == b"PK"
     assert extension == "zip"
+    assert download_filename is None
+
+
+def test_generate_report1_zip_endpoint_forwards_filename(
+    _stub_upload_report: list[tuple[bytes, str, str | None]],
+) -> None:
+    """POST /api/report1/zip forwards the requested filename to the blob upload."""
+    payload = {**ZIP_PAYLOAD, "filename": "report 2025-11.zip"}
+    response = client.post("/api/report1/zip", json=payload, headers=_auth_headers())
+
+    assert response.status_code == 200
+    assert len(_stub_upload_report) == 1
+    _, _, download_filename = _stub_upload_report[0]
+    assert download_filename == "report 2025-11.zip"
 
 
 def test_generate_report1_pdf_requires_shared_secret() -> None:
@@ -145,7 +159,7 @@ def test_generate_report1_pdf_requires_shared_secret() -> None:
 
 
 def test_generate_report1_pdf_endpoint_returns_link(
-    _stub_upload_report: list[tuple[bytes, str]],
+    _stub_upload_report: list[tuple[bytes, str, str | None]],
 ) -> None:
     """POST /api/report1/pdf uploads the PDF and returns a JSON download link."""
     response = client.post("/api/report1/pdf", json=PDF_PAYLOAD, headers=_auth_headers())
@@ -155,7 +169,7 @@ def test_generate_report1_pdf_endpoint_returns_link(
     assert payload["url"].startswith("https://stub.blob.core.windows.net/")
 
     assert len(_stub_upload_report) == 1
-    uploaded_bytes, extension = _stub_upload_report[0]
+    uploaded_bytes, extension, _ = _stub_upload_report[0]
     assert uploaded_bytes[:4] == b"%PDF"
     assert extension == "pdf"
 
