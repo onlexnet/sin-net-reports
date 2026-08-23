@@ -130,6 +130,14 @@ class ReportRequests(BaseModel):
     )
 
     items: list[ReportRequest] = Field(default_factory=list, description="One entry per customer to include in the ZIP")
+    filename: str | None = Field(
+        None,
+        description=(
+            "Desired download filename for the generated ZIP archive, e.g. 'report 2025-11.zip'. "
+            "When provided, it is set as the blob's Content-Disposition so browsers use it instead "
+            "of the internal storage name."
+        ),
+    )
 
 
 class ReportLinkResponse(BaseModel):

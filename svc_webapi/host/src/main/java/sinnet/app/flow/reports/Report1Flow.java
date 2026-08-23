@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import sinnet.app.ports.in.Report1PortIn;
 import sinnet.app.ports.out.TimeentriesPortOut;
 import sinnet.app.ports.out.CustomersPortOut;
+import sinnet.app.ports.out.Report1FileNaming;
 import sinnet.app.ports.out.Report1FunctionOutPort;
 import sinnet.app.ports.out.Report1OutPort;
 import sinnet.app.ports.out.UsersServicePortOut;
@@ -47,7 +48,8 @@ public class Report1Flow implements Report1PortIn {
   @Override
   public Report1FunctionOutPort.ReportLink downloadPdfFileUsingFunction(UUID projectId, int year, int month) {
     var request = buildReportRequest(projectId, year, month);
-    return report1FunctionClient.producePack(request);
+    var downloadFileName = Report1FileNaming.zipFileName(year, month);
+    return report1FunctionClient.producePack(request, downloadFileName);
   }
 
 

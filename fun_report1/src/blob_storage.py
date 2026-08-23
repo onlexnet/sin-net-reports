@@ -15,7 +15,7 @@ from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
 
 from azure.identity import DefaultAzureCredential
-from azure.storage.blob import BlobSasPermissions, BlobServiceClient, generate_blob_sas
+from azure.storage.blob import BlobSasPermissions, BlobServiceClient, ContentSettings, generate_blob_sas
 
 # The SAS link is deliberately shorter-lived than the blob retention period,
 # so a leaked link expires long before the report itself is deleted.
@@ -41,7 +41,7 @@ def _blob_service_client(account_name: str) -> BlobServiceClient:
     return BlobServiceClient(account_url=_account_url(account_name), credential=credential)
 
 
-def upload_report(content: bytes, extension: str) -> ReportLink:
+def upload_report(content: bytes, extension: str, download_filename: str | None = None) -> ReportLink:
     """Upload a generated report and return a 24h read-only SAS link to it.
 
     Parameters
@@ -50,6 +50,12 @@ def upload_report(content: bytes, extension: str) -> ReportLink:
         Raw bytes of the generated report (PDF or ZIP).
     extension:
         File extension without a leading dot, e.g. "pdf" or "zip".
+    download_filename:
+        Optional, human-meaningful filename (e.g. "report 2025-11.zip") to present to the
+        browser on download. The blob itself is still stored under a random, collision-free
+        name; this value is only set as the blob's Content-Disposition header so that clients
+        opening the SAS URL directly (without proxying through webapi) still get a meaningful
+        filename instead of the random blob name.
 
     Returns
     -------
@@ -59,10 +65,17 @@ def upload_report(content: bytes, extension: str) -> ReportLink:
     account_name = os.environ["REPORT1_STORAGE_ACCOUNT_NAME"]
     container_name = os.environ["REPORT1_STORAGE_CONTAINER_NAME"]
     blob_name = f"report1/{uuid.uuid4()}.{extension}"
+    content_settings = (
+        ContentSettings(content_disposition=f'attachment; filename="{download_filename}"')
+        if download_filename
+        else None
+    )
 
     service_client = _blob_service_client(account_name)
     container_client = service_client.get_container_client(container_name)
-    container_client.upload_blob(name=blob_name, data=content, overwrite=False)
+    container_client.upload_blob(
+        name=blob_name, data=content, overwrite=False, content_settings=content_settings
+    )
 
     now = datetime.now(UTC)
     expires_at = now + SAS_VALIDITY

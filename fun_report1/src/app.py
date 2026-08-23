@@ -52,7 +52,7 @@ async def generate_report1_zip(request: ReportRequests) -> ReportLinkResponse:
     from src.zip_generator import generate_zip
 
     zip_bytes = generate_zip(request)
-    link = upload_report(zip_bytes, extension="zip")
+    link = upload_report(zip_bytes, extension="zip", download_filename=request.filename)
     return ReportLinkResponse(url=link.url, expires_at=link.expires_at)
 
 

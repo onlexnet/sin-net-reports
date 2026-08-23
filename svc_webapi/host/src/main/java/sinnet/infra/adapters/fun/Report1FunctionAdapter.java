@@ -25,8 +25,8 @@ class Report1FunctionAdapter implements Report1FunctionOutPort {
   private final Report1FunctionProperties properties;
 
   @Override
-  public ReportLink producePack(ReportRequests request) {
-    var requestBody = mapRequest(request);
+  public ReportLink producePack(ReportRequests request, String downloadFileName) {
+    var requestBody = mapRequest(request, downloadFileName);
     var client = restClientBuilder
         .baseUrl(properties.baseUrl())
         .build();
@@ -45,7 +45,7 @@ class Report1FunctionAdapter implements Report1FunctionOutPort {
         .toReportLink();
   }
 
-  private static ReportRequestsDto mapRequest(ReportRequests request) {
+  private static ReportRequestsDto mapRequest(ReportRequests request, String downloadFileName) {
     var items = request.getItemsList().stream()
         .map(it -> {
           var customer = it.getCustomer();
@@ -76,10 +76,10 @@ class Report1FunctionAdapter implements Report1FunctionOutPort {
         })
         .toList();
 
-    return new ReportRequestsDto(items);
+    return new ReportRequestsDto(items, downloadFileName);
   }
 
-  private record ReportRequestsDto(List<ReportRequestDto> items) {
+  private record ReportRequestsDto(List<ReportRequestDto> items, String filename) {
   }
 
   private record ReportRequestDto(CustomerDetailsDto customer, List<ActivityDetailsDto> activities) {
