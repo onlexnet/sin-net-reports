@@ -9,13 +9,27 @@ describe("ReportsView", () => {
       <ReportsView
         projectId="proj-1"
         idToken="token"
+        email="siudeks@gmail.com"
         from={{ year: 2026, month: 4, day: 1 }}
       />
     );
 
-    expect(screen.getByRole("button", { name: /raport miesięczny \(legacy\) - załączniki do faktur/i })).toHaveClass("text-foreground");
-    expect(screen.getByRole("button", { name: /raport miesięczny \(function proxy\) - załączniki do faktur/i })).toHaveClass("text-foreground");
+    expect(screen.getByRole("button", { name: /raport miesięczny - załączniki do faktur/i })).toHaveClass("text-foreground");
+    expect(screen.getByRole("button", { name: /raport miesięczny \(eksperymentalne\) - załączniki do faktur/i })).toHaveClass("text-foreground");
     expect(screen.getByRole("button", { name: /zestawienie sumaryczne godzin/i })).toHaveClass("text-foreground");
     expect(screen.getByRole("button", { name: /lista klientów przypisanych do operatorów/i })).toHaveClass("text-foreground");
+  });
+
+  it("hides the experimental report for other users", () => {
+    render(
+      <ReportsView
+        projectId="proj-1"
+        idToken="token"
+        email="other@example.com"
+        from={{ year: 2026, month: 4, day: 1 }}
+      />
+    );
+
+    expect(screen.queryByRole("button", { name: /raport miesięczny \(eksperymentalne\)/i })).not.toBeInTheDocument();
   });
 });
