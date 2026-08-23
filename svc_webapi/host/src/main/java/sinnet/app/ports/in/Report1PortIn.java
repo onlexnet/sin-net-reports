@@ -2,6 +2,8 @@ package sinnet.app.ports.in;
 
 import java.util.UUID;
 
+import sinnet.app.ports.out.Report1FunctionOutPort.ReportLink;
+
 /**
  * Port-in interface for report1 download operations.
  */
@@ -18,12 +20,12 @@ public interface Report1PortIn {
   byte[] downloadPdfFile(UUID projectId, int year, int month);
 
   /**
-   * Downloads a ZIP file for the given project and month using the Azure Function proxy.
+   * Requests ZIP generation for the given project and month via the Azure Function proxy.
    *
    * @param projectId the project UUID
    * @param year the year
    * @param month the month
-   * @return the ZIP bytes
+   * @return a time-limited download link to the generated ZIP archive
    */
-  byte[] downloadPdfFileUsingFunction(UUID projectId, int year, int month);
+  ReportLink downloadPdfFileUsingFunction(UUID projectId, int year, int month);
 }

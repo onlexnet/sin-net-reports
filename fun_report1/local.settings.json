@@ -3,6 +3,9 @@
   "Values": {
     "FUNCTIONS_WORKER_RUNTIME": "python",
     "AzureWebJobsStorage": "UseDevelopmentStorage=true",
-    "PYTHON_ISOLATE_WORKER_DEPENDENCIES": "1"
+    "PYTHON_ISOLATE_WORKER_DEPENDENCIES": "1",
+    "REPORT1_SHARED_SECRET": "local-dev-shared-secret",
+    "REPORT1_STORAGE_ACCOUNT_NAME": "your-reports-storage-account",
+    "REPORT1_STORAGE_CONTAINER_NAME": "reports"
   }
 }

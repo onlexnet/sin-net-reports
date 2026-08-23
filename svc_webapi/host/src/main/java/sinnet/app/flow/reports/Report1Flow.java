@@ -45,7 +45,7 @@ public class Report1Flow implements Report1PortIn {
   }
 
   @Override
-  public byte[] downloadPdfFileUsingFunction(UUID projectId, int year, int month) {
+  public Report1FunctionOutPort.ReportLink downloadPdfFileUsingFunction(UUID projectId, int year, int month) {
     var request = buildReportRequest(projectId, year, month);
     return report1FunctionClient.producePack(request);
   }

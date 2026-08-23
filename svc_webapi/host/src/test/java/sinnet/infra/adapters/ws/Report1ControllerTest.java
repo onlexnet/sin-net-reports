@@ -8,8 +8,10 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
@@ -29,6 +31,7 @@ import sinnet.app.flow.request.UsersSearchResult;
 import sinnet.app.ports.out.TimeentriesPortOut;
 import sinnet.app.ports.out.CustomersPortOut;
 import sinnet.app.ports.out.Report1FunctionOutPort;
+import sinnet.app.ports.out.Report1FunctionOutPort.ReportLink;
 import sinnet.app.ports.out.Report1OutPort;
 import sinnet.app.ports.out.UsersServicePortOut;
 import sinnet.domain.models.Email;
@@ -231,11 +234,13 @@ class Report1ControllerTest {
   }
 
   @Test
-  void downloadPdfFileUsingFunction_shouldReturnZipFileWithCorrectHeaders() throws Exception {
+    void getReportZipLinkUsingFunction_shouldReturnDownloadLinkAsJson() throws Exception {
     var projectId = UUID.randomUUID();
     var year = 2024;
     var month = 7;
-    var expectedZipData = new byte[]{0x50, 0x4B, 0x03, 0x04};
+    var expectedLink = new ReportLink(
+        "https://stub.blob.core.windows.net/reports/report1/stub.zip?sig=stub",
+        Instant.parse("2026-01-01T00:00:00Z"));
 
     when(actionsGrpcFacade.searchInternal(any(UUID.class), any(LocalDate.class), any(LocalDate.class)))
         .thenReturn(List.of());
@@ -244,16 +249,13 @@ class Report1ControllerTest {
     when(usersGrpcService.search(any(), any()))
         .thenReturn(new UsersSearchResult(List.of()));
     when(report1FunctionOutPort.producePack(any(ReportRequests.class)))
-        .thenReturn(expectedZipData);
+        .thenReturn(expectedLink);
 
     mockMvc.perform(get("/api/raporty/klienci-fun/{projectId}/{year}/{month}", projectId, year, month))
         .andExpect(status().isOk())
-        .andExpect(content().contentType("application/zip"))
-        .andExpect(header().string("Content-Disposition", "inline; filename=report 2024-7-fun.zip"))
-        .andExpect(header().string("Cache-Control", "no-cache, no-store, must-revalidate"))
-        .andExpect(header().string("Expires", "0"))
-        .andExpect(header().string("Content-Length", String.valueOf(expectedZipData.length)))
-        .andExpect(content().bytes(expectedZipData));
+        .andExpect(content().contentType("application/json"))
+        .andExpect(jsonPath("$.url").value(expectedLink.url()))
+        .andExpect(jsonPath("$.expires_at").exists());
 
     verify(actionsGrpcFacade).searchInternal(
         eq(projectId),

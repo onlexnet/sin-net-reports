@@ -6,6 +6,8 @@ as FastAPI request bodies for the report generation endpoints.
 
 from __future__ import annotations
 
+from datetime import datetime
+
 from pydantic import BaseModel, ConfigDict, Field
 
 
@@ -127,6 +129,23 @@ class ReportRequests(BaseModel):
         }
     )
 
-    items: list[ReportRequest] = Field(
-        default_factory=list, description="One entry per customer to include in the ZIP"
+    items: list[ReportRequest] = Field(default_factory=list, description="One entry per customer to include in the ZIP")
+
+
+class ReportLinkResponse(BaseModel):
+    """A time-limited download link to a generated report stored in blob storage."""
+
+    model_config = ConfigDict(
+        json_schema_extra={
+            "example": {
+                "url": (
+                    "https://funreport1prd01storage.blob.core.windows.net/reports/"
+                    "report1/6e2c9e0a-....pdf?sv=2025-05-05&se=...&sr=b&sp=r&sig=..."
+                ),
+                "expires_at": "2026-07-25T09:20:19Z",
+            }
+        }
     )
+
+    url: str = Field(..., description="SAS URL granting read-only access to the generated report")
+    expires_at: datetime = Field(..., description="UTC timestamp after which the URL SAS token no longer grants access")

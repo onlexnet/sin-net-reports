@@ -1,5 +1,6 @@
 package sinnet.infra.adapters.fun;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
 
@@ -18,11 +19,13 @@ import sinnet.report1.grpc.ReportRequests;
 @RequiredArgsConstructor
 class Report1FunctionAdapter implements Report1FunctionOutPort {
 
+  private static final String SHARED_SECRET_HEADER = "X-Report1-Secret";
+
   private final RestClient.Builder restClientBuilder;
   private final Report1FunctionProperties properties;
 
   @Override
-  public byte[] producePack(ReportRequests request) {
+  public ReportLink producePack(ReportRequests request) {
     var requestBody = mapRequest(request);
     var client = restClientBuilder
         .baseUrl(properties.baseUrl())
@@ -32,12 +35,14 @@ class Report1FunctionAdapter implements Report1FunctionOutPort {
         .post()
         .uri(properties.zipPath())
         .contentType(MediaType.APPLICATION_JSON)
-        .accept(MediaType.APPLICATION_OCTET_STREAM)
+        .accept(MediaType.APPLICATION_JSON)
+        .header(SHARED_SECRET_HEADER, properties.sharedSecret())
         .body(requestBody)
         .retrieve()
-        .body(byte[].class);
+        .body(ReportLinkDto.class);
 
-    return Objects.requireNonNullElseGet(response, () -> new byte[0]);
+    return Objects.requireNonNull(response, "fun_report1 returned an empty body")
+        .toReportLink();
   }
 
   private static ReportRequestsDto mapRequest(ReportRequests request) {
@@ -96,5 +101,12 @@ class Report1FunctionAdapter implements Report1FunctionOutPort {
   }
 
   private record ActivityDateDto(int year, int month, int day) {
+  }
+
+  /** Mirrors fun_report1's ReportLinkResponse JSON body ({@code url}, {@code expires_at}). */
+  private record ReportLinkDto(String url, @JsonProperty("expires_at") Instant expiresAt) {
+    ReportLink toReportLink() {
+      return new ReportLink(url, expiresAt);
+    }
   }
 }

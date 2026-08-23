@@ -9,5 +9,6 @@ import jakarta.validation.constraints.NotBlank;
 @Validated
 record Report1FunctionProperties(
     @NotBlank String baseUrl,
-    @NotBlank String zipPath) {
+    @NotBlank String zipPath,
+    @NotBlank String sharedSecret) {
 }

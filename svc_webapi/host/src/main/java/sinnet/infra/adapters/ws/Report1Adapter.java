@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 import sinnet.app.ports.in.Report1PortIn;
+import sinnet.app.ports.out.Report1FunctionOutPort.ReportLink;
 
 @RestController
 @RequestMapping("/api/raporty")
@@ -24,12 +25,15 @@ class Report1Adapter {
     return Response.asResponseEntity(result, "report " + year + "-" + month + ".zip");
   }
 
+  /**
+   * Requests ZIP generation via fun_report1 and returns a time-limited download link as JSON,
+   * instead of proxying the archive's bytes through webapi.
+   */
   @GetMapping("/klienci-fun/{projectId}/{year}/{month}")
-  public ResponseEntity<byte[]> downloadPdfFileUsingFunction(@PathVariable UUID projectId,
+  public ReportLink getReportZipLinkUsingFunction(@PathVariable UUID projectId,
       @PathVariable int year,
       @PathVariable int month) {
-    var result = report1PortIn.downloadPdfFileUsingFunction(projectId, year, month);
-    return Response.asResponseEntity(result, "report " + year + "-" + month + "-fun.zip");
+    return report1PortIn.downloadPdfFileUsingFunction(projectId, year, month);
   }
 
 }
