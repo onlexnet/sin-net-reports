@@ -58,7 +58,7 @@ def test_generate_zip_returns_bytes() -> None:
 
 
 def test_generate_zip_contains_correct_files() -> None:
-    """ZIP contains correctly named files with slash-to-underscore sanitisation."""
+    """ZIP contains correctly named files with pipe-based sanitisation."""
     requests = ReportRequests(
         items=[
             _make_request("Acme Corp"),
@@ -72,7 +72,30 @@ def test_generate_zip_contains_correct_files() -> None:
     with zipfile.ZipFile(io.BytesIO(result)) as zf:
         names = zf.namelist()
 
-    assert names == ["001-Acme Corp.pdf", "002-Test_Co.pdf"]
+    assert names == ["001-Acme Corp.pdf", "002-Test|Co.pdf"]
+
+
+def test_generate_zip_replaces_invalid_filename_characters_with_pipe() -> None:
+    """Filesystem-invalid characters are replaced with a safe separator."""
+    requests = ReportRequests(
+        items=[_make_request('Test: "Bad" <Name>?* / Co')],
+        filename=None,
+    )
+
+    result = generate_zip(requests)
+
+    with zipfile.ZipFile(io.BytesIO(result)) as zf:
+        names = zf.namelist()
+
+    assert names[0].startswith("001-")
+    assert "|" in names[0]
+    assert ":" not in names[0]
+    assert '"' not in names[0]
+    assert "<" not in names[0]
+    assert ">" not in names[0]
+    assert "?" not in names[0]
+    assert "*" not in names[0]
+    assert "/" not in names[0]
 
 
 def test_generate_zip_files_are_valid_pdfs() -> None:
