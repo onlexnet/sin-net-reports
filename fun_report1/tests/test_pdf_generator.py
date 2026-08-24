@@ -16,7 +16,12 @@ import re
 import zlib
 
 from src.models_report1 import ActivityDate, ActivityDetails, CustomerDetails, ReportRequest
-from src.pdf_generator import generate_pdf
+from src.pdf_generator import (
+    _build_timed_table,
+    _build_untimed_table,
+    _ensure_fonts_registered,
+    generate_pdf,
+)
 
 # ---------------------------------------------------------------------------
 # Fixtures / helpers
@@ -158,3 +163,21 @@ def test_generate_pdf_untimed_activity_appears() -> None:
 
     # "USŁUGI DODATKOWE" — the ASCII portion "DODATKOWE" is safe to check
     assert "DODATKOWE" in content_str
+
+
+def test_long_timeentry_descriptions_wrap_within_their_column() -> None:
+    """Long descriptions expand data rows instead of overlapping later columns."""
+    long_description = "bardzo dlugi opis pracy " * 12
+    timed = _make_timed_activity()
+    timed.description = long_description
+    untimed = _make_untimed_activity()
+    untimed.description = long_description
+
+    _ensure_fonts_registered()
+    timed_table = _build_timed_table([timed])
+    untimed_table = _build_untimed_table([untimed])
+    timed_table.wrapOn(None, 0, 0)
+    untimed_table.wrapOn(None, 0, 0)
+
+    assert timed_table._rowHeights[1] > 18
+    assert untimed_table._rowHeights[2] > 18

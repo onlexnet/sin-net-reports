@@ -16,6 +16,7 @@ total) to fit a 450 pt content width on an A4 portrait page.
 
 from __future__ import annotations
 
+from html import escape
 from io import BytesIO
 from pathlib import Path
 from typing import Any
@@ -67,6 +68,11 @@ def _ensure_fonts_registered() -> None:
         pdfmetrics.registerFont(TTFont(_FONT_REGULAR, str(_FONT_REGULAR_PATH)))
     if _FONT_BOLD not in registered_fonts:
         pdfmetrics.registerFont(TTFont(_FONT_BOLD, str(_FONT_BOLD_PATH)))
+    pdfmetrics.registerFontFamily(
+        _FONT_REGULAR,
+        normal=_FONT_REGULAR,
+        bold=_FONT_BOLD,
+    )
 
 # ---------------------------------------------------------------------------
 # Style helpers
@@ -96,6 +102,7 @@ _CELL_NORMAL = ParagraphStyle(
     parent=_STYLES["Normal"],
     fontName=_FONT_REGULAR,
     fontSize=_BASE_FONT_SIZE,
+    splitLongWords=True,
 )
 
 _CELL_BOLD = ParagraphStyle(
@@ -131,6 +138,11 @@ def _format_date(activity: ActivityDetails) -> str:
         return ""
     d = activity.when
     return f"{d.day:02d}-{d.month:02d}-{d.year:04d}"
+
+
+def _description_cell(description: str) -> Paragraph:
+    """Create a description cell that wraps within its table column."""
+    return Paragraph(escape(description), _CELL_NORMAL)
 
 
 # ---------------------------------------------------------------------------
@@ -192,7 +204,7 @@ def _build_timed_table(timed: list[ActivityDetails]) -> Table:
             [
                 act.who,
                 _format_date(act),
-                act.description,
+                _description_cell(act.description),
                 _format_duration(act.how_long_in_mins),
                 str(act.how_far_in_kms),
             ]
@@ -229,7 +241,7 @@ def _build_untimed_table(untimed: list[ActivityDetails]) -> Table:
             [
                 act.who,
                 _format_date(act),
-                act.description,
+                _description_cell(act.description),
                 "0:00",
                 str(act.how_far_in_kms),
             ]
