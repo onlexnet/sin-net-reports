@@ -33,5 +33,5 @@ variable "env" {
 variable "applicationinsights_agent_version" {
   type        = string
   description = "Version of Application Insights Java agent to download"
-  default     = "3.7.6"
+  default     = "3.7.9"
 }

@@ -99,3 +99,4 @@ kubectl logs -n sinnet -l app=webapi -c daprd --tail=200
 - [e2e_tests/K3D_SETUP.md](e2e_tests/K3D_SETUP.md)
 - [e2e_tests/README.md](e2e_tests/README.md)
 - [README.md](README.md)
+- [docs/OBSERVABILITY.md](docs/OBSERVABILITY.md) - OpenTelemetry / Application Insights instrumentation

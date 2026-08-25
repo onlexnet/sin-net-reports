@@ -119,6 +119,7 @@ Example: `e2e_tests/setup-k3d.sh` builds from parent, then imports images into t
 4. **Three version systems** - timeentries uses `.version`, webapi uses `.semversion`, frontend uses `.version`
 5. **Maven revision property** - webapi requires `-Drevision=$SEMVERSION`, not standard versioning
 6. **Dual-path schemas** - graphql-codegen-config.yml needs both `../` and non-`../` paths for local + Docker
+7. **AppInsights Java agent is already OpenTelemetry** - `applicationinsights-agent-*.jar` (v3.x) IS Microsoft's official "Azure Monitor OpenTelemetry Distro for Java"; it is not a legacy proprietary SDK, so there is no pending "migrate Java services to OpenTelemetry" work. See `docs/OBSERVABILITY.md` for details and why the frontend intentionally stays on `@microsoft/applicationinsights-web` (no supported OTel-to-Azure-Monitor path exists for browsers).
 
 ## File References
 
@@ -130,3 +131,4 @@ Key files for understanding architecture:
 - `infra/shared/main.tf` - Azure infrastructure modules
 - `res_schema/` - gRPC service definitions
 - `svc_webapi/host/src/main/resources/graphql/schema.graphqls` - GraphQL schema consumed by frontend
+- `docs/OBSERVABILITY.md` - OpenTelemetry / Application Insights instrumentation rationale
