@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "components/ui/button";
 import { addressProvider } from "../addressProvider";
 import { LocalDate } from "../store/viewcontext/TimePeriod";
 import { PeriodSelector } from "./PeriodSelector";
+
+type DownloadingAction = "monthly" | "experimental" | "summary" | "customer-list" | null;
 
 interface ReportsViewProps {
   projectId: string;
@@ -13,9 +15,49 @@ interface ReportsViewProps {
 export const ReportsView: React.FC<ReportsViewProps> = props => {
   const { projectId, from, idToken } = props;
   const reportLinkClassName = "justify-start px-0 text-foreground hover:text-foreground/90";
+  const [downloadingAction, setDownloadingAction] = useState<DownloadingAction>(null);
+  const [loadingDots, setLoadingDots] = useState(".");
+  const isBusy = downloadingAction !== null;
+
+  useEffect(() => {
+    if (!downloadingAction) {
+      setLoadingDots(".");
+      return;
+    }
+
+    const timer = window.setInterval(() => {
+      setLoadingDots((current) => current === "." ? ".." : current === ".." ? "..." : ".");
+    }, 400);
+
+    return () => window.clearInterval(timer);
+  }, [downloadingAction]);
+
+  const renderDownloadButtonLabel = (label: string, activeAction: DownloadingAction) => {
+    if (downloadingAction !== activeAction) {
+      return label;
+    }
+
+    return (
+      <>
+        <span className="inline-block h-3 w-3 animate-spin rounded-full border-2 border-current border-t-transparent" />
+        Pobieranie raportu{loadingDots}
+      </>
+    );
+  };
+
   const openInNewTab = (url: string) => {
     window.open(url, '_blank');
   }
+
+  const runWithDownloadState = async (action: string, callback: () => Promise<void> | void) => {
+    setDownloadingAction(action as DownloadingAction);
+    try {
+      await callback();
+    } finally {
+      setDownloadingAction(null);
+      setLoadingDots(".");
+    }
+  };
 
   /**
    * Requests a report link from the "function proxy" endpoint (which responds with
@@ -139,39 +181,63 @@ export const ReportsView: React.FC<ReportsViewProps> = props => {
           <PeriodSelector suffix="DO:" year={toYear} month={toMonth} onYearChanged={setToYear} onMonthChanged={setToMonth} />
 
           <Button
-            disabled={fromYear == null || fromMonth == null}
-            variant="link"
-            className={reportLinkClassName}
-            onClick={() => { openInNewTab(addressProvider().host + `/api/raporty/klienci/${projectId}/${fromYear}/${fromMonth}`); }}
-          >
-            Raport miesięczny - załączniki do faktur
-          </Button>
-
-          <Button
-            disabled={fromYear == null || fromMonth == null}
-            variant="link"
-            className={reportLinkClassName}
-            onClick={() => { openReportLinkInNewTab(addressProvider().host + `/api/raporty/klienci-fun/${projectId}/${fromYear}/${fromMonth}`); }}
-          >
-            Raport miesięczny (eksperymentalne) - załączniki do faktur
-          </Button>
-
-          <Button
+            aria-busy={downloadingAction === "monthly"}
+            aria-live="polite"
+            disabled={fromYear == null || fromMonth == null || isBusy}
             variant="link"
             className={reportLinkClassName}
             onClick={() => {
-            downloadWithToken(addressProvider().host + `/api/raporty/2/${projectId}?yearFrom=${fromYear}&monthFrom=${fromMonth}&yearTo=${toYear}&monthTo=${toMonth}`);
-          }}>
-            Zestawienie sumaryczne godzin
+              runWithDownloadState("monthly", () => {
+                openInNewTab(addressProvider().host + `/api/raporty/klienci/${projectId}/${fromYear}/${fromMonth}`);
+              });
+            }}
+          >
+            {renderDownloadButtonLabel("Raport miesięczny - załączniki do faktur", "monthly")}
           </Button>
 
           <Button
+            aria-busy={downloadingAction === "experimental"}
+            aria-live="polite"
+            disabled={fromYear == null || fromMonth == null || isBusy}
             variant="link"
             className={reportLinkClassName}
             onClick={() => {
-            openInNewTab(addressProvider().host + `/api/raporty/3/${projectId}`);
-          }}>
-            Lista klientów przypisanych do operatorów
+              runWithDownloadState("experimental", async () => {
+                await openReportLinkInNewTab(addressProvider().host + `/api/raporty/klienci-fun/${projectId}/${fromYear}/${fromMonth}`);
+              });
+            }}
+          >
+            {renderDownloadButtonLabel("Raport miesięczny (eksperymentalne) - załączniki do faktur", "experimental")}
+          </Button>
+
+          <Button
+            aria-busy={downloadingAction === "summary"}
+            aria-live="polite"
+            variant="link"
+            className={reportLinkClassName}
+            disabled={isBusy}
+            onClick={() => {
+              runWithDownloadState("summary", async () => {
+                await downloadWithToken(addressProvider().host + `/api/raporty/2/${projectId}?yearFrom=${fromYear}&monthFrom=${fromMonth}&yearTo=${toYear}&monthTo=${toMonth}`);
+              });
+            }}
+          >
+            {renderDownloadButtonLabel("Zestawienie sumaryczne godzin", "summary")}
+          </Button>
+
+          <Button
+            aria-busy={downloadingAction === "customer-list"}
+            aria-live="polite"
+            variant="link"
+            className={reportLinkClassName}
+            disabled={isBusy}
+            onClick={() => {
+              runWithDownloadState("customer-list", () => {
+                openInNewTab(addressProvider().host + `/api/raporty/3/${projectId}`);
+              });
+            }}
+          >
+            {renderDownloadButtonLabel("Lista klientów przypisanych do operatorów", "customer-list")}
           </Button>
         </div>
     </div>
