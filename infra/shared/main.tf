@@ -8,11 +8,6 @@ module "resourcegroup" {
   subscription_id      = data.azurerm_client_config.current.subscription_id
 }
 
-module "dns" {
-  source              = "./module_dns"
-  resource_group_name = module.resourcegroup.main.name
-}
-
 module "keyvault" {
   source            = "./module_keyvault"
   organization_name = local.organization_name
