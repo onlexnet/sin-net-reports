@@ -42,7 +42,6 @@
 		},
 		// required by azure functions, e.g. report1
 	   	"ghcr.io/jlaundry/devcontainer-features/azure-functions-core-tools:1": {
-
 		}
 	},
 	"customizations": {
