@@ -1,37 +1,37 @@
 ## Plan: Direct OAuth Across WebAPI, Report1, and E2E
 
-Move authentication ownership into svc_webapi using Azure AD B2C JWT validation, preserve a temporary dual-mode bridge for legacy X-MS headers, propagate user identity to fun_report1, and add locally signed JWT support for e2e so roles can be tested without external IdP dependency. This minimizes production risk while enabling role-aware authorization end-to-end.
+Move authentication ownership into svc_webapi using Azure AD B2C JWT validation, preserve a temporary dual-mode bridge for legacy X-MS headers, propagate user identity to fun_report1, and add locally signed JWT support for e2e without external IdP dependency. This minimizes production risk while keeping authorization ready for future ReBAC checks at resource boundaries.
 
 **Steps**
-1. Phase 1 - Foundation and compatibility guardrails
-2. Add auth feature flags in svc_webapi configuration:
-3. Add flag to allow legacy header auth during migration (default true in prod for transition, false target-state).
-4. Add flag to require JWT for protected endpoints once migration completes.
-5. Define one principal extraction utility in svc_webapi to normalize current AuthenticationToken and Spring JWT authentication into a single internal principal model (id, email, roles).
-6. Replace direct casts to AuthenticationToken in GraphQL and report flows with the principal utility so both auth modes are supported safely.
+1. Phase 1 - Foundation and compatibility guardrails [DONE]
+2. [x] Add auth feature flags in svc_webapi configuration:
+3. [x] Add flag to allow legacy header auth during migration (default true in prod for transition, false target-state).
+4. [x] Add flag to require JWT for protected endpoints once migration completes.
+5. [x] Define one principal extraction utility in svc_webapi to normalize current AuthenticationToken and Spring JWT authentication into a single internal principal model (id, email).
+6. [x] Replace direct casts to AuthenticationToken in GraphQL and report flows with the principal utility so both auth modes are supported safely.
 7. Phase 2 - Enable direct OAuth in svc_webapi
 8. Enable Spring OAuth2 resource server dependency and configuration.
 9. Update WebSecurityConfig to register OAuth2 resource server JWT handling while keeping legacy header filter path behind the migration flag.
-10. Add JWT-to-authorities converter mapping roles claim into GrantedAuthority entries.
+10. Keep JWT validation identity-only; do not require roles claims or map token roles into application authorization state.
 11. Ensure JWT issuer/JWK/audience are environment-driven for B2C in production.
-12. Add explicit unauthorized/forbidden behavior and consistent audit logging fields (subject/email/roles/auth-mode).
+12. Add explicit unauthorized/forbidden behavior and consistent audit logging fields (subject/email/auth-mode).
 13. Phase 3 - Keep legacy bridge during rollout (parallel with Phase 2 verification)
 14. Refactor CustomAuthenticationFilter to execute only when legacy-header mode is enabled and no valid JWT authentication already exists.
 15. Keep existing X-MS header test helpers operational under dual mode for short-term compatibility.
 16. Publish migration timeline to disable legacy-header mode after e2e and staging sign-off.
-17. Phase 4 - Propagate user identity and enforce in fun_report1
+17. Phase 4 - Propagate user identity and prepare fun_report1 for future ReBAC
 18. Propagate inbound Authorization bearer token from svc_webapi to fun_report1 calls (in addition to existing X-Report1-Secret).
-19. Optionally propagate normalized identity headers from svc_webapi (email/id/roles) for diagnostics only; do not trust them as primary auth.
-20. Implement JWT validation in fun_report1 using B2C issuer/JWK/audience settings and roles claim extraction.
+19. Optionally propagate normalized identity headers from svc_webapi (email/id) for diagnostics only; do not trust them as primary auth.
+20. Implement JWT validation in fun_report1 using B2C issuer/JWK/audience settings and identity claim extraction.
 21. Keep shared-secret validation as defense-in-depth.
-22. Add role guard dependency in fun_report1 endpoints for report generation permissions.
-23. Add structured audit logging in fun_report1 for authenticated user and role decisions.
+22. Defer report generation authorization checks to a future ReBAC integration once the relationship service contract is available.
+23. Add structured audit logging in fun_report1 for authenticated user and future authorization decisions.
 24. Phase 5 - Local JWT lane for e2e tests
 25. Add local JWT profile in svc_webapi (issuerLocal) with deterministic test validation strategy and explicit test-only secret/source.
-26. Add pytest token factory in e2e tests to mint locally signed JWTs containing email and roles claims.
+26. Add pytest token factory in e2e tests to mint locally signed JWTs containing stable identity claims (sub, email, preferred_username).
 27. Add e2e request path that sends generated JWT to GraphQL endpoints for auth validation scenarios.
 28. Keep existing UI smoke login path during transition; add a dedicated JWT-auth e2e suite first, then optionally migrate UI flow to consume generated tokens.
-29. Add negative e2e cases: expired token, missing roles, malformed token.
+29. Add negative e2e cases: expired token, malformed token, and future ReBAC denial once relationship checks exist.
 30. Phase 6 - Hardening and cutover
 31. Disable legacy header mode in non-local environments after successful rollout.
 32. Remove dead/commented auth config and obsolete assumptions in docs.
@@ -66,25 +66,25 @@ Move authentication ownership into svc_webapi using Azure AD B2C JWT validation,
 1. Build and unit/integration checks for webapi auth path:
 2. Maven build and tests for svc_webapi host including authentication-related tests.
 3. Verify both auth modes during transition:
-4. Request with valid JWT succeeds and principal/roles are extracted.
+4. Request with valid JWT succeeds and principal identity is extracted.
 5. Request with legacy X-MS headers succeeds only when legacy mode is enabled.
 6. Request with invalid/expired JWT returns 401.
 7. fun_report1 verification:
 8. Direct call with correct shared secret but invalid JWT returns 401.
-9. Direct call with valid shared secret + valid JWT + required role returns report link.
-10. Role-missing token returns 403.
+9. Direct call with valid shared secret + valid JWT returns report link while ReBAC enforcement is not yet enabled.
+10. Future ReBAC denial returns 403 once relationship checks exist.
 11. e2e verification:
 12. Smoke UI suite still passes in transition mode.
-13. New JWT-auth e2e scenarios pass with locally minted tokens and role-specific assertions.
+13. New JWT-auth e2e scenarios pass with locally minted identity-only tokens.
 14. Negative e2e scenarios fail with expected HTTP status and error shape.
 15. Local stack verification via setup-k3d and pytest smoke/integration markers.
 
 **Decisions**
 - Identity provider: Azure AD B2C is retained for production.
 - Migration strategy: dual mode (JWT + legacy headers) with feature flag.
-- fun_report1 strategy: validate JWT directly and use roles claim for authorization decisions.
+- fun_report1 strategy: validate JWT directly for identity; defer authorization decisions to future ReBAC checks.
 - e2e local auth: locally signed JWTs first (no mandatory local OAuth server initially).
-- Roles source claim: roles.
+- Authorization source: future ReBAC service; JWT roles are intentionally not required.
 - Included scope: svc_webapi direct OAuth, fun_report1 JWT recognition, local JWT e2e lane, migration safety controls.
 - Excluded for now: introducing Keycloak/local OAuth server, frontend UI login full rewrite in this first iteration.
 
