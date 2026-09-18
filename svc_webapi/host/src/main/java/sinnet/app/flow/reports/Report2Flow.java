@@ -7,7 +7,6 @@ import java.time.YearMonth;
 import java.util.List;
 import java.util.UUID;
 
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import io.vavr.Tuple;
@@ -19,7 +18,7 @@ import sinnet.app.ports.in.Report2PortIn;
 import sinnet.app.ports.out.TimeentriesPortOut;
 import sinnet.report2.grpc.ReportRequest;
 import sinnet.report2.grpc.ReportsGrpc.ReportsBlockingStub;
-import sinnet.web.AuthenticationToken;
+import sinnet.web.AuthenticatedPrincipalResolver;
 
 @Component
 @RequiredArgsConstructor
@@ -27,12 +26,12 @@ class Report2Flow implements Report2PortIn {
 
   private final TimeentriesPortOut timeentries;
   private final ReportsBlockingStub reportsClient;
+  private final AuthenticatedPrincipalResolver principalResolver;
 
   @Override
   public byte[] downloadPdfFile(UUID projectId, YearMonth from, YearMonth to) {
 
-    var authentication = (AuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
-    var primaryEmail = authentication.getPrincipal();
+    var primaryEmail = principalResolver.currentPrincipal().email();
 
     var dateFrom = from.atDay(1);
     var dateTo = to.atDay(1).plusMonths(1).minusDays(1);

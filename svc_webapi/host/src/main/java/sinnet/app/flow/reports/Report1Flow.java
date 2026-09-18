@@ -26,6 +26,7 @@ import sinnet.report1.grpc.CustomerDetails;
 import sinnet.report1.grpc.ReportRequest;
 import sinnet.report1.grpc.ReportRequests;
 import sinnet.reports.grpc.Date;
+import sinnet.web.AuthenticatedPrincipalResolver;
 
 /** Refactor - shouuld not be public. */
 @Component
@@ -37,17 +38,20 @@ public class Report1Flow implements Report1PortIn {
   private final Report1OutPort reportsClient;
   private final Report1FunctionOutPort report1FunctionClient;
   private final UsersServicePortOut usersService;
+  private final AuthenticatedPrincipalResolver principalResolver;
 
   @Override
   public byte[] downloadPdfFile(UUID projectId, int year, int month) {
-    var request = buildReportRequest(projectId, year, month);
+    var requestorEmail = principalResolver.currentPrincipal().email();
+    var request = buildReportRequest(projectId, year, month, requestorEmail);
     var data = reportsClient.producePack(request);
     return data.getData().toByteArray();
   }
 
   @Override
   public Report1FunctionOutPort.ReportLink downloadPdfFileUsingFunction(UUID projectId, int year, int month) {
-    var request = buildReportRequest(projectId, year, month);
+    var requestorEmail = principalResolver.currentPrincipal().email();
+    var request = buildReportRequest(projectId, year, month, requestorEmail);
     var downloadFileName = Report1FileNaming.zipFileName(year, month);
     return report1FunctionClient.producePack(request, downloadFileName);
   }
@@ -74,10 +78,8 @@ public class Report1Flow implements Report1PortIn {
                               String customerAddress) {
   }
 
-  private Iterable<CustomerModel> getCustomers(String projectId) {
-    // var authentication = (AuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
-    // var primaryEmail = authentication.getPrincipal();
-    var reply = customersClient.customerList(projectId, "ignored@owner", it -> new CustomerModel(
+  private Iterable<CustomerModel> getCustomers(String projectId, String requestorEmail) {
+    var reply = customersClient.customerList(projectId, requestorEmail, it -> new CustomerModel(
       it.id().id().toString(), 
       it.value().entry().customerName(),
       it.value().entry().customerCityName(),
@@ -85,9 +87,9 @@ public class Report1Flow implements Report1PortIn {
     return reply;
   }
 
-  private Function<String, String> emailToName(UUID projectId) {
+  private Function<String, String> emailToName(UUID projectId, String requestorEmail) {
 
-    var response = usersService.search(projectId, Email.of("ignored@owner"));
+    var response = usersService.search(projectId, Email.of(requestorEmail));
     var emailToName = response.items().stream()
       .collect(Collectors.toMap(it -> it.email(), it -> it.customName()));
 
@@ -99,13 +101,13 @@ public class Report1Flow implements Report1PortIn {
     };
   }
 
-  private ReportRequests buildReportRequest(UUID projectId, int year, int month) {
+  private ReportRequests buildReportRequest(UUID projectId, int year, int month, String requestorEmail) {
     var dateFrom = LocalDate.of(year, month, 1);
     var dateTo = LocalDate.of(year, month, 1).plusMonths(1).minusDays(1);
     var projectIdAsString = projectId.toString();
     var entries = getTimeentries(projectIdAsString, dateFrom, dateTo);
-    var customers = getCustomers(projectIdAsString);
-    var users = emailToName(projectId);
+    var customers = getCustomers(projectIdAsString, requestorEmail);
+    var users = emailToName(projectId, requestorEmail);
     return asReportRequests(entries, customers, users);
   }
 
