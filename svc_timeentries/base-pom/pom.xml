@@ -9,7 +9,7 @@
     <spring-boot.version>3.5.10</spring-boot.version>
     <api.version>0.1.4</api.version>
     <dapr.version>1.7.0</dapr.version>
-    <guava.version>32.0.0-jre</guava.version>
+    <guava.version>33.7.1-jre</guava.version>
     <jacoco-maven-plugin.version>0.8.14</jacoco-maven-plugin.version>
     <instancio-junit5.version>5.4.0</instancio-junit5.version>
     <org.mapstruct.version>1.6.3</org.mapstruct.version>
