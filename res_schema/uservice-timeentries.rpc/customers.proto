@@ -93,6 +93,11 @@ message CustomerValue {
   string daneTechniczne = 27;
 }
 
+enum AuthorizationGroup {
+  SINNET = 0;
+  CUSTOMER = 1;
+}
+
 message CustomerSecret {
   string location = 1;
   string username = 2;
@@ -101,6 +106,7 @@ message CustomerSecret {
   LocalDateTime changedWhen = 5;
   string otpSecret = 6;
   string otpRecoveryKeys = 7;
+  AuthorizationGroup authorizationGroup = 8;
 }
 
 message CustomerSecretEx {
@@ -113,6 +119,7 @@ message CustomerSecretEx {
   LocalDateTime changedWhen = 7;
   string otpSecret = 8;
   string otpRecoveryKeys = 9;
+  AuthorizationGroup authorizationGroup = 10;
 }
 
 message CustomerContact {
