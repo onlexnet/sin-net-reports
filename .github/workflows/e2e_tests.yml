@@ -26,8 +26,6 @@ on:
       - svc_webapi/**
       - svc_timeentries/**
       - e2e_tests/**
-      - lib_api-java/**
-      - res_schema/**
       - .github/workflows/e2e_tests.yml
   workflow_dispatch:  # Allow manual trigger
 
