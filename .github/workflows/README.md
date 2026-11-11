@@ -12,6 +12,18 @@ This directory contains automated CI/CD workflows for the sin-net-reports projec
 ### Maintenance Workflows (no deployment)
 - **`cyclic-build.yml`** - Cyclic build verification without deployment
 
+## E2E Workflow
+
+The `e2e_tests.yml` workflow runs on pull requests changing `app_time/`,
+`svc_webapi/`, `svc_timeentries/`, `e2e_tests/`, or the E2E workflow itself.
+Library-only changes (`lib_api-java/` and `res_schema/`) do not trigger E2E.
+They are still built and verified by `lib_api-java.yml`, which publishes the
+library on push to `main`. This allows incompatible library versions to be
+published before services are updated to consume them.
+
+Pull requests that also change a service, frontend, or E2E files still run E2E.
+Manual E2E runs remain available through `workflow_dispatch`.
+
 ## Cyclic Build Workflow
 
 The `cyclic-build.yml` workflow was created to address dependency-related build failures by running regular builds without any deployments.

@@ -3,22 +3,23 @@
 {
 	"name": "onlexnet-sinnet",
 	// Alternative base setup guidance: https://containers.dev/guide/dockerfile
-    "image": "mcr.microsoft.com/vscode/devcontainers/base:ubuntu-22.04",
+    "image": "mcr.microsoft.com/vscode/devcontainers/base:ubuntu-24.04",
+	// https://containers.dev/features
 	"features": {
-		"ghcr.io/devcontainers/features/github-cli:1": {
+		"ghcr.io/devcontainers/features/github-cli:1.1.3": {
 			// GitHub CLI
 		},
 		"ghcr.io/devcontainers/features/copilot-cli:1": {
 		},
 		"ghcr.io/jrussellsmyth/devcontainer-features/openspec:1": {
 		},
-		"ghcr.io/devcontainers/features/docker-in-docker:2": {
+		"ghcr.io/devcontainers/features/docker-in-docker:4.1.3": {
 		},
-		"ghcr.io/devcontainers/features/java:1": {
+		"ghcr.io/devcontainers/features/java:1.8.3": {
 			"installMaven": true,
 			"installGradle": false,
 			"installAnt": false,
-			"version": "25.0",
+			"version": "25.0.5",
 			"jdkDistro": "librca",
 			"mavenVersion": "3.9.9"
 		},
@@ -27,26 +28,26 @@
 		"ghcr.io/devcontainers/features/node:2.1.0": {
 			"version": "22.12.0"
 		},
-		"ghcr.io/devcontainers/features/python:1": {
-			"version": "3.13"
-		},
+		// "ghcr.io/devcontainers/features/python:1": {
+		// 	"version": "3.13"
+		// },
 		"ghcr.io/devcontainers/features/azure-cli:": {
 			"installUsingPython": true,
 			"version": "latest"
 		},
-        "ghcr.io/devcontainers/features/terraform:1": {
-            "version": "1.15.2"
-        },
-        "ghcr.io/dhoeric/features/terraform-docs:1": {
-            "version": "latest"
-        },
+        // "ghcr.io/devcontainers/features/terraform:1": {
+        //     "version": "1.15.2"
+        // },
+        // "ghcr.io/dhoeric/features/terraform-docs:1": {
+        //     "version": "latest"
+        // },
 		// required for MPC from Microsoft
 	    "ghcr.io/devcontainers/features/dotnet:2": {
 			"version": "10.0.103"
-		},
-		// required by azure functions, e.g. report1
-	   	"ghcr.io/jlaundry/devcontainer-features/azure-functions-core-tools:1": {
 		}
+		// required by azure functions, e.g. report1
+	   	// "ghcr.io/jlaundry/devcontainer-features/azure-functions-core-tools:1": {
+		// }
 	},
 	"customizations": {
         "vscode": {
