@@ -106,7 +106,8 @@ public interface CustomerMapper {
         it.getOtpSecret(),
         it.getOtpRecoveryKeys(),
         it.getChangedWho(),
-        toDomain(it.getChangedWhen()));
+        toDomain(it.getChangedWhen()),
+        toDomain(it.getAuthorizationGroup()));
   }
 
   static CustomerSecret toDomain(sinnet.grpc.customers.CustomerSecret it) {
@@ -120,7 +121,8 @@ public interface CustomerMapper {
         it.getOtpSecret(),
         it.getOtpRecoveryKeys(),
         it.getChangedWho(),
-        toDomain(it.getChangedWhen()));
+        toDomain(it.getChangedWhen()),
+        toDomain(it.getAuthorizationGroup()));
   }
 
   static CustomerContact toDomain(sinnet.grpc.customers.CustomerContact it) {
@@ -176,6 +178,7 @@ public interface CustomerMapper {
       return null;
     }
     return PropsBuilder.build(sinnet.grpc.customers.CustomerSecretEx.newBuilder())
+        .set(b -> b::setAuthorizationGroup, toGrpc(it.authorizationGroup()))
         .set(b -> b::setLocation, it.location())
         .set(b -> b::setUsername, it.username())
         .set(b -> b::setPassword, it.password())
@@ -193,6 +196,7 @@ public interface CustomerMapper {
       return null;
     }
     return PropsBuilder.build(sinnet.grpc.customers.CustomerSecret.newBuilder())
+        .set(b -> b::setAuthorizationGroup, toGrpc(it.authorizationGroup()))
         .set(b -> b::setLocation, it.location())
         .set(b -> b::setUsername, it.username())
         .set(b -> b::setPassword, it.password())
@@ -201,6 +205,21 @@ public interface CustomerMapper {
         .set(b -> b::setOtpSecret, it.otpSecret())
         .set(b -> b::setOtpRecoveryKeys, it.otpRecoveryKeys())
         .done().build();
+  }
+
+  static sinnet.domain.models.AuthorizationGroup toDomain(sinnet.grpc.customers.AuthorizationGroup group) {
+    return switch (group) {
+      case SINNET -> sinnet.domain.models.AuthorizationGroup.SINNET;
+      case CUSTOMER -> sinnet.domain.models.AuthorizationGroup.CUSTOMER;
+      case UNRECOGNIZED -> throw new IllegalArgumentException("Unrecognized authorization group");
+    };
+  }
+
+  static sinnet.grpc.customers.AuthorizationGroup toGrpc(sinnet.domain.models.AuthorizationGroup group) {
+    return switch (group) {
+      case SINNET -> sinnet.grpc.customers.AuthorizationGroup.SINNET;
+      case CUSTOMER -> sinnet.grpc.customers.AuthorizationGroup.CUSTOMER;
+    };
   }
 
   static sinnet.grpc.customers.LocalDateTime toGrpc(LocalDateTime from) {

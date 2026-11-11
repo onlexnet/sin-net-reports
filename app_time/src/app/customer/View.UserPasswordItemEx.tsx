@@ -5,19 +5,7 @@ import { Input } from "components/ui/input";
 import { Col, Row } from "components/ui/layout";
 import { Textarea } from "components/ui/textarea";
 import { Separator } from "components/ui/separator";
-
-interface UserPasswordExtModel {
-    // internal ID used by React to identify the element on list of elements
-    localKey: string,
-    // editable properties of the component
-    location: string
-    username?: string,
-    password?: string,
-    entityName?: string,
-    entityCode?: string
-    otpSecret?: string
-    otpRecoveryKeys?: string
-}
+import type { SecretExModel as UserPasswordExtModel } from "./CustomerView";
 
 interface UserPasswordExtItemProps {
     model: UserPasswordExtModel,
@@ -30,7 +18,7 @@ interface UserPasswordExtItemProps {
 export const UserPasswordItemExt: React.FC<UserPasswordExtItemProps> = props => {
     const init = new Date()
 
-    const [date, setDate] = useState(init)
+    const [, setDate] = useState(init)
     const tick = () => {
         setDate(new Date())
     }
@@ -44,18 +32,11 @@ export const UserPasswordItemExt: React.FC<UserPasswordExtItemProps> = props => 
         }
     }, [])
 
-    const { localKey, location, username, password, entityName, entityCode, otpSecret, otpRecoveryKeys } = props.model;
+    const { username, password, entityName, entityCode, otpSecret, otpRecoveryKeys } = props.model;
     const handler = (action: (m: UserPasswordExtModel, v?: string) => void) => {
         return (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
             var newModel: UserPasswordExtModel = {
-                localKey,
-                location,
-                username,
-                password,
-                entityName,
-                entityCode,
-                otpSecret,
-                otpRecoveryKeys
+                ...props.model
             };
             action(newModel, event.target.value);
             props.onChange(newModel);
@@ -91,16 +72,16 @@ export const UserPasswordItemExt: React.FC<UserPasswordExtItemProps> = props => 
             </div>
             <Row gutter={16}>
                 <Col offset={2} span={4}>
-                    <Input placeholder="Oddział NFZ" value={entityName} onChange={handler((m, v) => m.entityName = v)} />
+                    <Input placeholder="Oddział NFZ" value={entityName ?? ""} onChange={handler((m, v) => m.entityName = v)} />
                 </Col>
                 <Col span={4}>
-                    <Input placeholder="kod świadczeniodawcy" value={entityCode} onChange={handler((m, v) => m.entityCode = v)} />
+                    <Input placeholder="kod świadczeniodawcy" value={entityCode ?? ""} onChange={handler((m, v) => m.entityCode = v)} />
                 </Col>
                 <Col span={6}>
-                    <Input placeholder="Użytkownik" value={username} onChange={handler((m, v) => m.username = v)} />
+                    <Input placeholder="Użytkownik" value={username ?? ""} onChange={handler((m, v) => m.username = v)} />
                 </Col>
                 <Col span={6}>
-                    <Input placeholder="Hasło" value={password} onChange={handler((m, v) => m.password = v)} />
+                    <Input placeholder="Hasło" value={password ?? ""} onChange={handler((m, v) => m.password = v)} />
                 </Col>
                 <Col span={2}>
                     <Button variant="destructive" onClick={() => props.onRemove(props.model.localKey)}>Usuń</Button>
@@ -114,18 +95,18 @@ export const UserPasswordItemExt: React.FC<UserPasswordExtItemProps> = props => 
                     <Input value={expiresDesc} disabled />
                 </Col>
                 <Col span={6}>
-                    <Input placeholder="TOTP secret" value={otpSecret} onChange={handler((m, v) => m.otpSecret = v)} />
+                    <Input placeholder="TOTP secret" value={otpSecret ?? ""} onChange={handler((m, v) => m.otpSecret = v)} />
                 </Col>
                 <Col span={6}>
-                    <Textarea value={otpRecoveryKeys} placeholder="TOTP recovery keys" onChange={handler((m, v) => m.otpRecoveryKeys = v)} />
+                    <Textarea value={otpRecoveryKeys ?? ""} placeholder="TOTP recovery keys" onChange={handler((m, v) => m.otpRecoveryKeys = v)} />
                 </Col>
             </Row>
             <Row gutter={16}>
                 <Col offset={2} span={4}>
-                    <Input value={props.changedBy} disabled defaultValue="-" />
+                    <Input value={props.changedBy} disabled />
                 </Col>
                 <Col span={4}>
-                <Input value={props.changedWhen} disabled defaultValue="-" />
+                <Input value={props.changedWhen} disabled />
                 </Col>
             </Row>
         </>

@@ -75,7 +75,13 @@ type CustomerModel {
   supportStatus: String
 }
 
+enum AuthorizationGroup {
+  SINNET
+  CUSTOMER
+}
+
 type CustomerSecret {
+  authorizationGroup: AuthorizationGroup!
   changedWhen: String!
   changedWho: String!
   location: String!
@@ -86,6 +92,7 @@ type CustomerSecret {
 }
 
 type CustomerSecretEx {
+  authorizationGroup: AuthorizationGroup!
   changedWhen: String!
   changedWho: String!
   entityCode: String
@@ -224,6 +231,7 @@ input CustomerInput {
 }
 
 input CustomerSecretExInput {
+  authorizationGroup: AuthorizationGroup! = SINNET
   entityCode: String
   entityName: String
   location: String!
@@ -234,6 +242,7 @@ input CustomerSecretExInput {
 }
 
 input CustomerSecretInput {
+  authorizationGroup: AuthorizationGroup! = SINNET
   location: String!
   password: String
   username: String

@@ -1,4 +1,5 @@
 import { CustomerType, ListCustomersItem, useListCustomersMapper } from "./useListCustomers";
+import { AuthorizationGroup } from "../components/.generated/components";
 
 describe('useListCustomers', () => {
 
@@ -8,9 +9,10 @@ describe('useListCustomers', () => {
       id: customerId,
       data: { customerName: 'my name' },
       secretsEx: [
-        { location: 'my location1', entityCode: 'my code1' },
-        { location: 'Portal świadczeniodawcy', entityCode: 'my code2' },
-        { location: 'my location3', entityCode: 'my code3' }
+        { authorizationGroup: AuthorizationGroup.Sinnet, location: 'my location1', entityCode: 'my code1' },
+        { authorizationGroup: AuthorizationGroup.Customer, location: 'Portal świadczeniodawcy', entityCode: 'customer code' },
+        { authorizationGroup: AuthorizationGroup.Sinnet, location: 'Portal świadczeniodawcy', entityCode: 'my code2' },
+        { authorizationGroup: AuthorizationGroup.Sinnet, location: 'my location3', entityCode: 'my code3' }
       ]
     };
     var actual = useListCustomersMapper(given);

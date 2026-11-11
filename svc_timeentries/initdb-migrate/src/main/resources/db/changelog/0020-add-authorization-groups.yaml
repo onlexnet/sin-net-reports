@@ -1,0 +1,38 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20261111-authorization-groups
+      author: siudeks
+      changes:
+        - addColumn:
+            tableName: secret
+            columns:
+              - column:
+                  name: authorization_group
+                  type: varchar(16)
+                  defaultValue: SINNET
+                  constraints:
+                    nullable: false
+        - addColumn:
+            tableName: secret_ex
+            columns:
+              - column:
+                  name: authorization_group
+                  type: varchar(16)
+                  defaultValue: SINNET
+                  constraints:
+                    nullable: false
+        - sql:
+            sql: ALTER TABLE secret ADD CONSTRAINT secret_authorization_group_check CHECK (authorization_group IN ('SINNET', 'CUSTOMER'))
+        - sql:
+            sql: ALTER TABLE secret_ex ADD CONSTRAINT secret_ex_authorization_group_check CHECK (authorization_group IN ('SINNET', 'CUSTOMER'))
+      rollback:
+        - sql:
+            sql: ALTER TABLE secret_ex DROP CONSTRAINT secret_ex_authorization_group_check
+        - sql:
+            sql: ALTER TABLE secret DROP CONSTRAINT secret_authorization_group_check
+        - dropColumn:
+            tableName: secret_ex
+            columnName: authorization_group
+        - dropColumn:
+            tableName: secret
+            columnName: authorization_group

@@ -2,7 +2,7 @@ import _ from "lodash";
 import React, { MouseEventHandler } from "react";
 import { v1 as uuid } from 'uuid';
 import { useGetUsers } from "../../api/useGetUsers";
-import { CustomerContactInput, CustomerInput, CustomerSecretExInput, CustomerSecretInput, useRemoveCustomerMutation, useSaveCustomerMutation } from "../../components/.generated/components";
+import { AuthorizationGroup, CustomerContactInput, CustomerInput, CustomerSecretExInput, CustomerSecretInput, useRemoveCustomerMutation, useSaveCustomerMutation } from "../../components/.generated/components";
 import { Button } from "components/ui/button";
 import { Checkbox } from "components/ui/checkbox";
 import { Input } from "components/ui/input";
@@ -94,6 +94,7 @@ export interface ContactDetails {
 
 export interface SecretModel {
     localKey: string,
+    authorizationGroup: AuthorizationGroup,
     location: string
     username?: string
     password?: string
@@ -106,6 +107,7 @@ export interface SecretModel {
 export interface SecretExModel {
     // Used by React to identify elements during rendering of list elements
     localKey: string
+    authorizationGroup: AuthorizationGroup
     location: string
     username?: string
     password?: string
@@ -276,6 +278,7 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
         const secrets = _.chain(model.Autoryzacje)
             .map(it => {
                 const ret: CustomerSecretInput = {
+                    authorizationGroup: it.authorizationGroup,
                     location: it.location ?? '---',
                     username: it.username,
                     password: it.password,
@@ -288,6 +291,7 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
         const secretsEx = _.chain(model.AutoryzacjeEx)
             .map(it => {
                 const ret: CustomerSecretExInput = {
+                    authorizationGroup: it.authorizationGroup,
                     location: it.location ?? '---',
                     username: it.username,
                     password: it.password,
@@ -585,72 +589,83 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
                     </Col>
                 </Row>
 
+                {[
+                    { group: AuthorizationGroup.Sinnet, label: "Autoryzacje SinNet" },
+                    { group: AuthorizationGroup.Customer, label: "Autoryzacje Klienta" }
+                ].map(({ group, label }) => (
+                <section key={group} aria-label={label}>
                 <div className="flex items-center gap-3 my-3">
-                    <span className="text-sm font-semibold text-muted-foreground whitespace-nowrap">Autoryzacje:</span>
+                    <span className="text-sm font-semibold text-muted-foreground whitespace-nowrap">{label}:</span>
                     <Separator className="flex-1" />
                 </div>
-                {model.AutoryzacjeEx.map(item => (
+                {model.AutoryzacjeEx.filter(item => item.authorizationGroup === group).map(item => (
                     <UserPasswordItemExt
+                        key={item.localKey}
                         model={item}
                         changedBy={item.who ?? "-"}
                         changedWhen={item.when?.value ?? "-"}
                         onChange={v => {
-                            const clone = _.clone(model);
-                            const index = _.findIndex(clone.AutoryzacjeEx, it => it.localKey === v.localKey);
-                            const readOnlyValues = {};
-                            const newValue = { ...v, ...readOnlyValues };
-                            clone.AutoryzacjeEx[index] = newValue;
-                            setModel(clone);
+                            setModel(current => ({
+                                ...current,
+                                AutoryzacjeEx: current.AutoryzacjeEx.map(it => it.localKey === v.localKey ? v : it)
+                            }));
                         }}
                         onRemove={localKey => {
-                            const clone = _.clone(model);
-                            const index = _.findIndex(clone.AutoryzacjeEx, it => it.localKey === localKey);
-                            clone.AutoryzacjeEx.splice(index, 1);
-                            setModel(clone);
+                            setModel(current => ({
+                                ...current,
+                                AutoryzacjeEx: current.AutoryzacjeEx.filter(it => it.localKey !== localKey)
+                            }));
                         }}
                     />
                 ))}
-                {model.Autoryzacje.map(item => (
+                {model.Autoryzacje.filter(item => item.authorizationGroup === group).map(item => (
                     <UserPasswordItem
+                        key={item.localKey}
                         model={item}
                         changedBy={item.who ?? "-"}
                         changedWhen={item.when?.value ?? "-"}
                         onChange={v => {
-                            const clone = _.clone(model);
-                            const index = _.findIndex(clone.Autoryzacje, it => it.localKey === v.localKey);
-                            clone.Autoryzacje[index] = v;
-                            setModel(clone);
+                            setModel(current => ({
+                                ...current,
+                                Autoryzacje: current.Autoryzacje.map(it => it.localKey === v.localKey ? v : it)
+                            }));
                         }}
                         onRemove={localKey => {
-                            const clone = _.clone(model);
-                            const index = _.findIndex(clone.Autoryzacje, it => it.localKey === localKey);
-                            clone.Autoryzacje.splice(index, 1);
-                            setModel(clone);
+                            setModel(current => ({
+                                ...current,
+                                Autoryzacje: current.Autoryzacje.filter(it => it.localKey !== localKey)
+                            }));
                         }}
                     />
                 ))}
                 <NewSecret
                     newAuthorisationExRequested={name => {
-                        const clone = _.clone(model);
                         const localKey = uuid();
                         const newItem: SecretExModel = {
                             localKey,
+                            authorizationGroup: group,
                             location: name
                         };
-                        clone.AutoryzacjeEx.push(newItem);
-                        setModel(clone);
+                        setModel(current => ({
+                            ...current,
+                            AutoryzacjeEx: [...current.AutoryzacjeEx, newItem]
+                        }));
                     }}
                     newAuthorisationRequested={name => {
-                        const clone = _.clone(model);
                         const localKey = uuid();
                         const newItem: SecretModel = {
                             localKey,
+                            authorizationGroup: group,
                             location: name
                         };
-                        clone.Autoryzacje.push(newItem);
-                        setModel(clone);
+                        setModel(current => ({
+                            ...current,
+                            Autoryzacje: [...current.Autoryzacje, newItem]
+                        }));
                     }}
                 />
+                </section>
+                ))}
                 <div className="flex items-center gap-3 my-3">
                     <span className="text-sm font-semibold text-muted-foreground whitespace-nowrap">Dane kontaktowe:</span>
                     <Separator className="flex-1" />

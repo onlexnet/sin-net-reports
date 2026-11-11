@@ -12,6 +12,7 @@ query ListCustomers($projectId: ID!) {
         customerAddress
       }
       secretsEx {
+        authorizationGroup
         location,
         entityCode
       }

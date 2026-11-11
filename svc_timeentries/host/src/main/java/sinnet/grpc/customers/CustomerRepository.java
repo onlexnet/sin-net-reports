@@ -14,6 +14,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Table;
@@ -23,6 +25,7 @@ import jakarta.transaction.Transactional.TxType;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import sinnet.models.AuthorizationGroup;
 
 /**
  * TBD.
@@ -202,6 +205,10 @@ public interface CustomerRepository extends JpaRepository<CustomerRepository.Cus
   @Embeddable
   class CustomerDboSecret {
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "authorization_group", nullable = false)
+    private AuthorizationGroup authorizationGroup = AuthorizationGroup.SINNET;
+
     @Column(name = "location")
     private String location;
 
@@ -231,6 +238,10 @@ public interface CustomerRepository extends JpaRepository<CustomerRepository.Cus
   @Accessors(chain = true)
   @Embeddable
   class CustomerDboSecretEx {
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "authorization_group", nullable = false)
+    private AuthorizationGroup authorizationGroup = AuthorizationGroup.SINNET;
 
     @Column(name = "location")
     private String location;

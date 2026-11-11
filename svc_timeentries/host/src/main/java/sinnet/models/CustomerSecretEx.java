@@ -12,6 +12,7 @@ import sinnet.domain.model.ValEmail;
 @Data
 @Accessors(chain = true)
 public final class CustomerSecretEx {
+  private AuthorizationGroup authorizationGroup = AuthorizationGroup.SINNET;
   private String location;
   private String username;
   private String password;

@@ -1,6 +1,6 @@
 import _ from "lodash";
 import React from "react"
-import { useGetCustomerQuery } from "../../components/.generated/components";
+import { AuthorizationGroup, useGetCustomerQuery } from "../../components/.generated/components";
 import { Col, Row } from "components/ui/layout";
 import { Separator } from "components/ui/separator";
 
@@ -32,7 +32,7 @@ const View: React.FC<ViewProps> = props => {
     }
 
   const { customerName, customerCityName, customerAddress, operatorEmail, distance } = it.data ;
-  const specialAuth = _.chain(it.secretsEx).filter(it => it.location === 'Portal świadczeniodawcy').first().value();
+  const specialAuth = _.chain(it.secretsEx).filter(it => it.authorizationGroup === AuthorizationGroup.Sinnet && it.location === 'Portal świadczeniodawcy').first().value();
   const specialAuthValue = specialAuth?.entityCode;
 
   return (

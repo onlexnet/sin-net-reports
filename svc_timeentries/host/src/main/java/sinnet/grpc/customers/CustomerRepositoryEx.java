@@ -106,6 +106,7 @@ public final class CustomerRepositoryEx implements MapperDbo {
 
   CustomerDboSecret toDbo(CustomerSecret it) {
     return new CustomerDboSecret()
+        .setAuthorizationGroup(it.getAuthorizationGroup())
         .setLocation(it.getLocation())
         .setPassword(it.getPassword())
         .setUsername(it.getUsername())
@@ -117,6 +118,7 @@ public final class CustomerRepositoryEx implements MapperDbo {
 
   CustomerDboSecretEx toDbo(CustomerSecretEx it) {
     return new CustomerDboSecretEx()
+        .setAuthorizationGroup(it.getAuthorizationGroup())
         .setLocation(it.getLocation())
         .setPassword(it.getPassword())
         .setUsername(it.getUsername())

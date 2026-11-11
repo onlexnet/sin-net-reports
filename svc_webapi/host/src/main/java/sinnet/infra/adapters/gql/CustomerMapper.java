@@ -95,6 +95,7 @@ public interface CustomerMapper {
       return null;
     }
     var result = new CustomerSecretExGql();
+    result.setAuthorizationGroup(toGql(it.authorizationGroup()));
     result.setLocation(it.location());
     result.setUsername(it.username());
     result.setPassword(it.password());
@@ -120,6 +121,7 @@ public interface CustomerMapper {
       return null;
     }
     var result = new CustomerSecretGql();
+    result.setAuthorizationGroup(toGql(it.authorizationGroup()));
     result.setLocation(it.location());
     result.setUsername(it.username());
     result.setPassword(it.password());
@@ -129,6 +131,8 @@ public interface CustomerMapper {
     result.setOtpRecoveryKeys(it.otpRecoveryKeys());
     return result;
   }
+
+  sinnet.gql.models.AuthorizationGroupGql toGql(sinnet.domain.models.AuthorizationGroup group);
 
   default CustomerEntityGql toGql(Customer item) {
     if (item == null) {

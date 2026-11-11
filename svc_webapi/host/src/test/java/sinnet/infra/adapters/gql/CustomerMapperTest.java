@@ -26,6 +26,22 @@ class CustomerMapperTest {
 
   private final CustomerMapper mapper = CustomerMapper.INSTANCE;
 
+  @Test
+  void shouldRoundTripBothCredentialFormatsInEachGroup() {
+    for (var group : sinnet.gql.models.AuthorizationGroupGql.values()) {
+      var standard = new CustomerSecretInput().setLocation("Portal").setUsername("user")
+          .setPassword("password").setOtpSecret("seed").setOtpRecoveryKeys("recovery")
+          .setAuthorizationGroup(group);
+      var extended = new CustomerSecretExInput().setLocation("Portal").setUsername("user")
+          .setPassword("password").setOtpSecret("seed").setOtpRecoveryKeys("recovery")
+          .setEntityName("Branch").setEntityCode("123").setAuthorizationGroup(group);
+      assertThat(List.of(mapper.toGql(mapper.toDomain(standard)),
+          mapper.toGql(mapper.toDomain(extended))))
+          .usingRecursiveComparison().ignoringFields("changedWhen", "changedWho")
+          .isEqualTo(List.of(standard, extended));
+    }
+  }
+
   @Nested
   @DisplayName("gql -> domain mappings")
   class GqlToDomainTests {

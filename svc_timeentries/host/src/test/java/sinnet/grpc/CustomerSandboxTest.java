@@ -110,6 +110,30 @@ public class CustomerSandboxTest {
 
     @Test
     @Transactional
+    void shouldPreserveIdenticalCredentialsInDifferentGroups() {
+      var expected = Instancio.of(CustomerModel.class)
+          .supply(Select.all(LocalDateTime.class), () -> LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS))
+          .create();
+      expected.setId(ShardedId.of(projectId, UUID.randomUUID(), -1));
+      var standard = expected.getSecrets().getFirst()
+          .setAuthorizationGroup(sinnet.models.AuthorizationGroup.SINNET);
+      var extended = expected.getSecretsEx().getFirst()
+          .setAuthorizationGroup(sinnet.models.AuthorizationGroup.SINNET);
+      expected.setSecrets(java.util.List.of(standard, sinnet.models.Clone.INSTANCE.of(standard)
+          .setAuthorizationGroup(sinnet.models.AuthorizationGroup.CUSTOMER)));
+      expected.setSecretsEx(java.util.List.of(extended, sinnet.models.Clone.INSTANCE.of(extended)
+          .setAuthorizationGroup(sinnet.models.AuthorizationGroup.CUSTOMER)));
+      customerRepository.saveAndFlush(CustomerMapper.INSTANCE.toJpaDbo(expected));
+      em.clear();
+
+      var stored = customerRepository.findByProjectIdAndEntityId(projectId, expected.getId().id());
+      var actual = CustomerMapper.INSTANCE.fromDbo2(stored);
+      expected.setId(expected.getId().next());
+      Assertions.assertThat(actual).usingRecursiveComparison().ignoringCollectionOrder().isEqualTo(expected);
+    }
+
+    @Test
+    @Transactional
     void shouldPersistAndReadCustomer() {
 
       var expected = Instancio.of(CustomerModel.class)

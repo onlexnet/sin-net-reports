@@ -5,6 +5,7 @@ import lombok.Data;
 /** Fixme. */
 @Data
 public class CustomerSecretGql {
+  private AuthorizationGroupGql authorizationGroup;
   private String location;
   private String username;
   private String password;

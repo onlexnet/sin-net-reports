@@ -1,9 +1,10 @@
 import { rankAndFilterCustomers, SearchableCustomerItem } from "./CustomerComboBox";
+import { AuthorizationGroup } from "../../components/.generated/components";
 
 const customer = (
   entityId: string,
   customerName: string,
-  secretsEx?: any
+  secretsEx?: SearchableCustomerItem['secretsEx']
 ): SearchableCustomerItem => ({
   id: { entityId },
   data: { customerName },
@@ -19,10 +20,10 @@ describe("rankAndFilterCustomers", () => {
     customer("g2-a", "Alfa Poznan"),
     customer("g1-a", "Poz Auto"),
     customer("fallback", "Klient Bez Dopasowania", [
-      { location: "Portal świadczeniodawcy", entityCode: "AA-POZ-99" },
+      { authorizationGroup: AuthorizationGroup.Sinnet, location: "Portal świadczeniodawcy", entityCode: "AA-POZ-99" },
     ]),
     customer("excluded", "Inny Klient", [
-      { location: "Portal świadczeniodawcy", entityCode: "AA-XYZ-99" },
+      { authorizationGroup: AuthorizationGroup.Sinnet, location: "Portal świadczeniodawcy", entityCode: "AA-XYZ-99" },
     ]),
   ];
 
@@ -92,7 +93,7 @@ describe("rankAndFilterCustomers", () => {
   it("returns code-matched customer with rank 3 (contains match)", () => {
     const codeOnlyItems: SearchableCustomerItem[] = [
       customer("code-match", "Klient Bez Dopasowania", [
-        { location: "Portal \u015bwiadczeniodawcy", entityCode: "AA-POZ-99" },
+        { authorizationGroup: AuthorizationGroup.Sinnet, location: "Portal \u015bwiadczeniodawcy", entityCode: "AA-POZ-99" },
       ]),
       customer("name-match", "POZ Centrum"),
     ];
@@ -102,5 +103,14 @@ describe("rankAndFilterCustomers", () => {
     // name-match starts with POZ (rank 1), code-match contains POZ in code (rank 3)
     expect(result[0].key).toBe("name-match");
     expect(result[1].key).toBe("code-match");
+  });
+
+  it("uses only the SinNet provider code when both groups contain the portal", () => {
+    const mixed = [customer("mixed", "Clinic", [
+      { authorizationGroup: AuthorizationGroup.Customer, location: "Portal \u015bwiadczeniodawcy", entityCode: "CUSTOMER-123" },
+      { authorizationGroup: AuthorizationGroup.Sinnet, location: "Portal \u015bwiadczeniodawcy", entityCode: "SINNET-456" },
+    ])];
+    expect(rankAndFilterCustomers(mixed, "CUSTOMER")).toEqual([]);
+    expect(rankAndFilterCustomers(mixed, "SINNET")).toEqual([{ key: "mixed", text: "Clinic" }]);
   });
 });
