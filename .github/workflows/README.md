@@ -12,6 +12,11 @@ This directory contains automated CI/CD workflows for the sin-net-reports projec
 ### Maintenance Workflows (no deployment)
 - **`cyclic-build.yml`** - Cyclic build verification without deployment
 
+### Security Workflows
+- **`codeql.yml`** - CodeQL static analysis (security-extended query pack) on pull requests and a weekly schedule
+- **`checkov.yml`** - Checkov scan of Terraform in `infra/` (OWASP A05 misconfiguration); findings are uploaded to code scanning alerts
+- **`dependency-review.yml`** - Blocks pull requests introducing dependencies with known high/critical CVEs (OWASP A06)
+
 ## E2E Workflow
 
 The `e2e_tests.yml` workflow runs on pull requests changing `app_time/`,

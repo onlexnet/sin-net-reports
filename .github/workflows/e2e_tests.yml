@@ -38,7 +38,7 @@ permissions:
 jobs:
   e2e-python-typing:
     name: E2E Python Typing
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
 
     steps:
@@ -70,7 +70,7 @@ jobs:
 
   e2e-tests:
     name: Run e2e_tests
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     timeout-minutes: 45
     
     steps:
