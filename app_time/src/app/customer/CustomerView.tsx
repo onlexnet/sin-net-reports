@@ -219,6 +219,34 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
         }
     }
 
+    const onChangeSecret = (value: SecretModel) => {
+        setModel(current => ({
+            ...current,
+            Autoryzacje: current.Autoryzacje.map(item => item.localKey === value.localKey ? value : item)
+        }));
+    }
+
+    const onRemoveSecret = (localKey: string) => {
+        setModel(current => ({
+            ...current,
+            Autoryzacje: current.Autoryzacje.filter(item => item.localKey !== localKey)
+        }));
+    }
+
+    const onChangeSecretEx = (value: SecretExModel) => {
+        setModel(current => ({
+            ...current,
+            AutoryzacjeEx: current.AutoryzacjeEx.map(item => item.localKey === value.localKey ? value : item)
+        }));
+    }
+
+    const onRemoveSecretEx = (localKey: string) => {
+        setModel(current => ({
+            ...current,
+            AutoryzacjeEx: current.AutoryzacjeEx.filter(item => item.localKey !== localKey)
+        }));
+    }
+
     const [saveCustomerMutation, { data: saveResult, loading: saveInProgress }] = useSaveCustomerMutation();
     const [removeCustomerMutation, { data: removeResult }] = useRemoveCustomerMutation();
 
@@ -604,18 +632,8 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
                         model={item}
                         changedBy={item.who ?? "-"}
                         changedWhen={item.when?.value ?? "-"}
-                        onChange={v => {
-                            setModel(current => ({
-                                ...current,
-                                AutoryzacjeEx: current.AutoryzacjeEx.map(it => it.localKey === v.localKey ? v : it)
-                            }));
-                        }}
-                        onRemove={localKey => {
-                            setModel(current => ({
-                                ...current,
-                                AutoryzacjeEx: current.AutoryzacjeEx.filter(it => it.localKey !== localKey)
-                            }));
-                        }}
+                        onChange={onChangeSecretEx}
+                        onRemove={onRemoveSecretEx}
                     />
                 ))}
                 {model.Autoryzacje.filter(item => item.authorizationGroup === group).map(item => (
@@ -624,18 +642,8 @@ export const CustomerView: React.FC<CustomerViewProps> = props => {
                         model={item}
                         changedBy={item.who ?? "-"}
                         changedWhen={item.when?.value ?? "-"}
-                        onChange={v => {
-                            setModel(current => ({
-                                ...current,
-                                Autoryzacje: current.Autoryzacje.map(it => it.localKey === v.localKey ? v : it)
-                            }));
-                        }}
-                        onRemove={localKey => {
-                            setModel(current => ({
-                                ...current,
-                                Autoryzacje: current.Autoryzacje.filter(it => it.localKey !== localKey)
-                            }));
-                        }}
+                        onChange={onChangeSecret}
+                        onRemove={onRemoveSecret}
                     />
                 ))}
                 <NewSecret
