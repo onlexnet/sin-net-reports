@@ -66,6 +66,7 @@ query GetCustomer($projectId: ID!, $entityId: ID!) {
         daneTechniczne
       }
       secrets {
+        authorizationGroup
         location
         username
         password
@@ -75,6 +76,7 @@ query GetCustomer($projectId: ID!, $entityId: ID!) {
         otpRecoveryKeys
       }
       secretsEx {
+        authorizationGroup
         location
         username
         password

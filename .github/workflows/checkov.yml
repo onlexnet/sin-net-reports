@@ -1,0 +1,46 @@
+name: "Checkov IaC Scan"
+
+concurrency:
+  group: "checkov-${{ github.ref }}"
+  cancel-in-progress: true
+
+on:
+  pull_request:
+    branches: [ main ]
+    paths:
+      - infra/**
+      - .github/workflows/checkov.yml
+  schedule:
+    - cron: '40 11 * * 4'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  checkov:
+    name: Scan Terraform (infra/)
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Run Checkov
+        uses: bridgecrewio/checkov-action@a32f8b5c5c7c958bc38947c65dfe139debaf0607 # v12.3140.0
+        with:
+          directory: infra
+          framework: terraform
+          output_format: cli,sarif
+          output_file_path: console,results.sarif
+          # soft_fail: findings do not block the PR; they appear as alerts in
+          # Security -> Code scanning. Remove once existing findings are triaged
+          # to make the scan blocking.
+          soft_fail: true
+
+      - name: Upload SARIF to code scanning
+        if: always()
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: results.sarif
+          category: checkov-infra

@@ -57,6 +57,7 @@ export const CustomerViewEditLocal: React.FC<CustomerViewEditProps> = props => {
             .map(it => {
                 const ret: SecretModel = {
                     localKey: uuid(),
+                    authorizationGroup: it.authorizationGroup,
                     location: it.location,
                     username: it.username ?? undefined,
                     password: it.password ?? undefined,
@@ -73,6 +74,7 @@ export const CustomerViewEditLocal: React.FC<CustomerViewEditProps> = props => {
         .map(it => {
             const ret: SecretExModel = {
                 localKey: uuid(),
+                authorizationGroup: it.authorizationGroup,
                 location: it.location,
                 username: it.username ?? undefined,
                 password: it.password ?? undefined,

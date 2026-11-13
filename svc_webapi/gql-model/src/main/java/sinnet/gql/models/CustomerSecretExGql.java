@@ -7,6 +7,7 @@ import lombok.experimental.Accessors;
 @Data
 @Accessors(chain = true)
 public class CustomerSecretExGql {
+  private AuthorizationGroupGql authorizationGroup;
   private String location;
   private String username;
   private String password;

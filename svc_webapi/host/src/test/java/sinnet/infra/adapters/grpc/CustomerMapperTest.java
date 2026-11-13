@@ -21,6 +21,21 @@ import sinnet.domain.models.EntityId;
 @DisplayName("CustomerMapper (grpc adapter) Tests")
 class CustomerMapperTest {
 
+  @Test
+  void shouldRoundTripBothCredentialFormatsInEachGroup() {
+    var changedAt = LocalDateTime.of(2020, 1, 2, 3, 4);
+    for (var group : sinnet.domain.models.AuthorizationGroup.values()) {
+      var standard = new CustomerSecret("Portal", "user", "password", "seed", "recovery",
+          "operator@example.test", changedAt, group);
+      var extended = new CustomerSecretEx("Portal", "user", "password", "Branch", "123",
+          "seed", "recovery", "operator@example.test", changedAt, group);
+      assertThat(List.of(
+          CustomerMapper.toDomain(CustomerMapper.toGrpc(standard, changedAt, standard.changedWho())),
+          CustomerMapper.toDomain(CustomerMapper.toGrpc(extended, changedAt, extended.changedWho()))))
+          .isEqualTo(List.of(standard, extended));
+    }
+  }
+
   @Nested
   @DisplayName("LocalDateTime -> grpc LocalDateTime")
   class DateTimeMappingTests {

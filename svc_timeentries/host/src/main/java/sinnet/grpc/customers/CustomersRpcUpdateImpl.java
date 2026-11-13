@@ -44,9 +44,11 @@ class CustomersRpcUpdateImpl extends RpcCommandHandlerBase<UpdateCommand, Update
       case EntityVersion.Reserved it -> {
         for (var secret : model.getSecrets()) {
           secret.setChangedWhen(now);
+          secret.setChangedWho(emailOfRequestor);
         }
         for (var secret : model.getSecretsEx()) {
           secret.setChangedWhen(now);
+          secret.setChangedWho(emailOfRequestor);
         }
       }
       case EntityVersion.Existing existingVersion -> { }
@@ -154,6 +156,9 @@ class CustomersRpcUpdateImpl extends RpcCommandHandlerBase<UpdateCommand, Update
   }
 
   static boolean equalityComparer(sinnet.models.CustomerSecret s1, sinnet.models.CustomerSecret s2) {
+    if (!fieldComparer(s1, s2, sinnet.models.CustomerSecret::getAuthorizationGroup)) {
+      return false;
+    }
     if (!fieldComparer(s1, s2, sinnet.models.CustomerSecret::getLocation)) { 
       return false; 
     }
@@ -173,6 +178,9 @@ class CustomersRpcUpdateImpl extends RpcCommandHandlerBase<UpdateCommand, Update
   }
 
   static boolean equalityComparer(sinnet.models.CustomerSecretEx s1, sinnet.models.CustomerSecretEx s2) {
+    if (!fieldComparer(s1, s2, sinnet.models.CustomerSecretEx::getAuthorizationGroup)) {
+      return false;
+    }
     if (!fieldComparer(s1, s2, sinnet.models.CustomerSecretEx::getLocation)) { 
       return false; 
     }

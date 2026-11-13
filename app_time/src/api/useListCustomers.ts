@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { useState } from 'react';
-import { ListCustomersQuery, useListCustomersQuery } from '../components/.generated/components';
+import { AuthorizationGroup, ListCustomersQuery, useListCustomersQuery } from '../components/.generated/components';
 import { EntityId } from '../store/actions/ServiceModel';
 
 export interface ListCustomersItem {
@@ -33,7 +33,7 @@ let queryTypeVariable: ListCustomersQuery;
 export type CustomerType = typeof queryTypeVariable.Customers.list[0];
 
 export const useListCustomersMapper: (it: CustomerType) => ListCustomersItem = it => {
-  const term1 = _.chain(it.secretsEx).filter(o => o.location === 'Portal świadczeniodawcy').map(o => o.entityCode).first().value();
+  const term1 = _.chain(it.secretsEx).filter(o => o.authorizationGroup === AuthorizationGroup.Sinnet && o.location === 'Portal świadczeniodawcy').map(o => o.entityCode).first().value();
   return { customerId: it.id, name: it.data.customerName, termNfzKodSwiadczeniodawcy: term1 };
 }
 

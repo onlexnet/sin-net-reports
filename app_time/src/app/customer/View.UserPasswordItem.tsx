@@ -4,15 +4,7 @@ import { Button } from "components/ui/button";
 import { Input } from "components/ui/input";
 import { Col, Row } from "components/ui/layout";
 import { Separator } from "components/ui/separator";
-
-interface UserPasswordModel {
-    localKey: string,
-    location: string
-    username?: string,
-    password?: string
-    otpSecret?: string
-    otpRecoveryKeys?: string
-}
+import type { SecretModel as UserPasswordModel } from "./CustomerView";
 
 interface UserPasswordItemProps {
     model: UserPasswordModel,
@@ -25,7 +17,7 @@ interface UserPasswordItemProps {
 export const UserPasswordItem: React.FC<UserPasswordItemProps> = props => {
     const init = new Date()
 
-    const [date, setDate] = useState(init)
+    const [, setDate] = useState(init)
     const tick = () => {
         setDate(new Date())
     }
@@ -40,16 +32,11 @@ export const UserPasswordItem: React.FC<UserPasswordItemProps> = props => {
     }, [])
 
 
-    const { localKey, location: sectionName, username, password, otpSecret, otpRecoveryKeys } = props.model;
+    const { location: sectionName, username, password, otpSecret, otpRecoveryKeys } = props.model;
     const handler = (action: (m: UserPasswordModel, v?: string) => void) => {
         return (event: React.FormEvent<HTMLInputElement>) => {
             var newModel: UserPasswordModel = {
-                localKey,
-                location: sectionName,
-                username,
-                password,
-                otpSecret,
-                otpRecoveryKeys
+                ...props.model
             };
             const newValue = event.currentTarget.value
             action(newModel, newValue);
@@ -88,10 +75,10 @@ export const UserPasswordItem: React.FC<UserPasswordItemProps> = props => {
             </div>
             <Row gutter={16}>
                 <Col offset={2} span={6}>
-                    <Input placeholder="Użytkownik" value={username} onChange={handler((m, v) => m.username = v)} />
+                    <Input placeholder="Użytkownik" value={username ?? ""} onChange={handler((m, v) => m.username = v)} />
                 </Col>
                 <Col span={6}>
-                    <Input placeholder="Hasło" value={password} onChange={handler((m, v) => m.password = v)} />
+                    <Input placeholder="Hasło" value={password ?? ""} onChange={handler((m, v) => m.password = v)} />
                 </Col>
                 <Col span={4}>
                     <Button variant="destructive" onClick={() => props.onRemove(props.model.localKey)}>Usuń</Button>
@@ -105,10 +92,10 @@ export const UserPasswordItem: React.FC<UserPasswordItemProps> = props => {
                     <Input value={expiresDesc} disabled />
                 </Col>
                 <Col span={6}>
-                    <Input placeholder="TOTP secret" value={otpSecret} onChange={handler((m, v) => m.otpSecret = v)} />
+                    <Input placeholder="TOTP secret" value={otpSecret ?? ""} onChange={handler((m, v) => m.otpSecret = v)} />
                 </Col>
                 <Col span={8}>
-                    <Input placeholder="TOTP recovery keys" value={otpRecoveryKeys} onChange={handler((m, v) => m.otpRecoveryKeys = v)} />
+                    <Input placeholder="TOTP recovery keys" value={otpRecoveryKeys ?? ""} onChange={handler((m, v) => m.otpRecoveryKeys = v)} />
                 </Col>
             </Row>
             <Row gutter={16}>

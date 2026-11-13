@@ -32,6 +32,7 @@ public interface MapperDbo {
    */
   default CustomerSecretEx fromDbo(CustomerRepository.CustomerDboSecretEx dbo) {
     return new CustomerSecretEx()
+      .setAuthorizationGroup(dbo.getAuthorizationGroup())
       .setUsername(dbo.getUsername())
       .setPassword(dbo.getPassword())
       .setLocation(dbo.getLocation())
@@ -48,6 +49,7 @@ public interface MapperDbo {
    */
   default CustomerSecret fromDbo(CustomerRepository.CustomerDboSecret dbo) {
     return new CustomerSecret()
+      .setAuthorizationGroup(dbo.getAuthorizationGroup())
       .setUsername(dbo.getUsername())
       .setPassword(dbo.getPassword())
       .setLocation(dbo.getLocation())

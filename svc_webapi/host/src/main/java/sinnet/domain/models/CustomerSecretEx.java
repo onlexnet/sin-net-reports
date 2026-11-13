@@ -11,4 +11,17 @@ public record CustomerSecretEx(
     String otpSecret,
     String otpRecoveryKeys,
     String changedWho,
-    LocalDateTime changedWhen) { }
+    LocalDateTime changedWhen,
+    AuthorizationGroup authorizationGroup) {
+
+  public CustomerSecretEx {
+    java.util.Objects.requireNonNull(authorizationGroup, "authorizationGroup");
+  }
+
+  public CustomerSecretEx(String location, String username, String password, String entityName,
+                          String entityCode, String otpSecret, String otpRecoveryKeys,
+                          String changedWho, LocalDateTime changedWhen) {
+    this(location, username, password, entityName, entityCode, otpSecret, otpRecoveryKeys,
+        changedWho, changedWhen, AuthorizationGroup.SINNET);
+  }
+}

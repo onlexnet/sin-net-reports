@@ -21,7 +21,7 @@ on:
 
 jobs:
   Build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     outputs:
       uservice_webapi_image_name: ${{ steps.PushDockerImage.outputs.image_name }}
@@ -86,7 +86,7 @@ jobs:
     name: Deploy to PRD01
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed' && github.event.ref == 'refs/heads/main')
     needs: [ Build ]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     environment: PRD01
     steps:
       - name: Log in to Azure

@@ -7,6 +7,7 @@ import lombok.experimental.Accessors;
 @Data
 @Accessors(chain = true)
 public class CustomerSecretExInput {
+  private AuthorizationGroupGql authorizationGroup = AuthorizationGroupGql.SINNET;
   private String location;
   private String username;
   private String password;

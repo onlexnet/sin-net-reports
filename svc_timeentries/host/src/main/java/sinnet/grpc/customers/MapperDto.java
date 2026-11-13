@@ -106,6 +106,7 @@ public interface MapperDto extends Mapper {
    */
   static sinnet.grpc.customers.CustomerSecret toDto(CustomerSecret value) {
     return PropsBuilder.build(sinnet.grpc.customers.CustomerSecret.newBuilder())
+        .set(toDto(value.getAuthorizationGroup()), b -> b::setAuthorizationGroup)
         .set(Option.of(value.getLocation()).getOrElse("?"), b -> b::setLocation)
         .set(value.getUsername(), b -> b::setUsername)
         .set(value.getPassword(), b -> b::setPassword)
@@ -121,6 +122,7 @@ public interface MapperDto extends Mapper {
    */
   static sinnet.grpc.customers.CustomerSecretEx toDto(CustomerSecretEx it) {
     return PropsBuilder.build(sinnet.grpc.customers.CustomerSecretEx.newBuilder())
+        .set(toDto(it.getAuthorizationGroup()), b -> b::setAuthorizationGroup)
         .set(Option.of(it.getLocation()).getOrElse("?"), b -> b::setLocation)
         .set(it.getUsername(), b -> b::setUsername)
         .set(it.getPassword(), b -> b::setPassword)
@@ -159,6 +161,7 @@ public interface MapperDto extends Mapper {
    */
   static CustomerSecret fromDto(sinnet.grpc.customers.CustomerSecret item) {
     return new CustomerSecret()
+        .setAuthorizationGroup(fromDto(item.getAuthorizationGroup()))
         .setLocation(item.getLocation())
         .setPassword(item.getPassword())
         .setUsername(item.getUsername())
@@ -173,6 +176,7 @@ public interface MapperDto extends Mapper {
    */
   static CustomerSecretEx fromDto(sinnet.grpc.customers.CustomerSecretEx item) {
     return new CustomerSecretEx()
+        .setAuthorizationGroup(fromDto(item.getAuthorizationGroup()))
         .setLocation(item.getLocation())
         .setPassword(item.getPassword())
         .setUsername(item.getUsername())
@@ -183,6 +187,21 @@ public interface MapperDto extends Mapper {
         .setOtpSecret(item.getOtpSecret())
         .setOtpRecoveryKeys(item.getOtpRecoveryKeys());
 
+  }
+
+  static sinnet.models.AuthorizationGroup fromDto(AuthorizationGroup group) {
+    return switch (group) {
+      case SINNET -> sinnet.models.AuthorizationGroup.SINNET;
+      case CUSTOMER -> sinnet.models.AuthorizationGroup.CUSTOMER;
+      case UNRECOGNIZED -> throw new IllegalArgumentException("Unrecognized authorization group");
+    };
+  }
+
+  static AuthorizationGroup toDto(sinnet.models.AuthorizationGroup group) {
+    return switch (group) {
+      case SINNET -> AuthorizationGroup.SINNET;
+      case CUSTOMER -> AuthorizationGroup.CUSTOMER;
+    };
   }
 
   /**

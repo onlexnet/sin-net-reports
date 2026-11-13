@@ -29,6 +29,14 @@ public interface CustomerModelMapper {
   
   CustomerModelMapper INSTANCE = Mappers.getMapper(CustomerModelMapper.class);
 
+  default sinnet.models.AuthorizationGroup fromDto(AuthorizationGroup group) {
+    return MapperDto.fromDto(group);
+  }
+
+  default AuthorizationGroup toDto(sinnet.models.AuthorizationGroup group) {
+    return MapperDto.toDto(group);
+  }
+
   @Mapping(target = "secretsEx", source = "secretEx")
   sinnet.models.CustomerModel fromDto(sinnet.grpc.customers.CustomerModel dto);
 

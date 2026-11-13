@@ -1,6 +1,6 @@
 import _ from "lodash"
 import React, { useEffect, useRef, useState } from "react"
-import { useListCustomersQuery } from "../../components/.generated/components"
+import { AuthorizationGroup, useListCustomersQuery } from "../../components/.generated/components"
 import { Input } from "components/ui/input"
 import { renderHighlightedText } from "./FilteredComboBox"
 
@@ -17,13 +17,13 @@ type SearchableOptionType = OptionType & { rank: number }
 export interface SearchableCustomerItem {
   id: { entityId: string },
   data: { customerName?: string | null },
-  secretsEx?: Array<{ location: string, entityCode?: string | null }> | null,
+  secretsEx?: Array<{ authorizationGroup: AuthorizationGroup, location: string, entityCode?: string | null }> | null,
 }
 
 const NFZ_PORTAL_LOCATION = 'Portal świadczeniodawcy';
 
 const extractNfzCode = (secretsEx: SearchableCustomerItem['secretsEx']): string =>
-  secretsEx?.find(o => o.location === NFZ_PORTAL_LOCATION)?.entityCode ?? '';
+  secretsEx?.find(o => o.authorizationGroup === AuthorizationGroup.Sinnet && o.location === NFZ_PORTAL_LOCATION)?.entityCode ?? '';
 
 export const rankAndFilterCustomers = (
   items: SearchableCustomerItem[] | undefined,
